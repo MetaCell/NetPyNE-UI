@@ -3,8 +3,9 @@ import pip
 import os
 from notebook.nbextensions import install_nbextension_python, enable_nbextension_python
 from notebook.serverextensions import toggle_serverextension_python
+import json
 
-# Installs the nbextension
+# Install and enable the Geppetto Jupyter extension 
 def run_nbextension_install(develop):
     # Command: sudo jupyter nbextension install --py geppettoJupyter
     print("Installing geppettoJupyter extension ...")
@@ -24,11 +25,18 @@ def run_nbextension_install(develop):
 print("Cloning Geppetto Jupyter (Python package)...")
 subprocess.call(['git', 'clone', '--recursive', 'https://github.com/openworm/org.geppetto.frontend.jupyter.git'])
 
-print("Checking out development ...")
+print("Checking out development branch for Geppetto Jupyter ...")
 subprocess.call(['git', 'checkout', 'development'], cwd = 'org.geppetto.frontend.jupyter')
+
+#TODO: Remove once merge is done
+subprocess.call(['git', 'checkout', 'enhanceExtension'], cwd = 'org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/')
 
 print("Cloning Geppetto Neuron Configuration ...")
 subprocess.call(['git', 'clone', 'https://github.com/MetaCell/geppetto-neuron.git'], cwd = 'org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/src/main/webapp/extensions/')
+print("Enabling Geppetto Neuron Configuration ...")
+jsonFile = open('org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/src/main/webapp/extensions/extensionsConfiguration.json', "w+")
+jsonFile.write(json.dumps({"geppetto-neuron/ComponentsInitialization": True}))
+jsonFile.close()
 
 print("Installing Geppetto Jupyter python package ...")
 os.chdir('org.geppetto.frontend.jupyter')
