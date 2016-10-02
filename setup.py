@@ -28,8 +28,7 @@ subprocess.call(['git', 'clone', '--recursive', 'https://github.com/openworm/org
 print("Checking out development branch for Geppetto Jupyter ...")
 subprocess.call(['git', 'checkout', 'development'], cwd = 'org.geppetto.frontend.jupyter')
 
-#TODO: Remove once merge is done
-subprocess.call(['git', 'checkout', 'enhanceExtension'], cwd = 'org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/')
+subprocess.call(['git', 'checkout', 'development'], cwd = 'org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/')
 
 print("Cloning Geppetto Neuron Configuration ...")
 subprocess.call(['git', 'clone', 'https://github.com/MetaCell/geppetto-neuron.git'], cwd = 'org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/src/main/webapp/extensions/')
