@@ -1,15 +1,38 @@
 import subprocess
 import pip
 import os
+from notebook.nbextensions import install_nbextension_python, enable_nbextension_python
+from notebook.serverextensions import toggle_serverextension_python
 
+# Installs the nbextension
+def run_nbextension_install(develop):
+    # Command: sudo jupyter nbextension install --py geppettoJupyter
+    print("Installing geppettoJupyter extension ...")
+    install_nbextension_python('geppettoJupyter', symlink=develop)
 
+    # Command: sudo jupyter nbextension enable --py geppettoJupyter
+    print("Enabling geppettoJupyter extensions ...")
+    isEnabled = enable_nbextension_python('geppettoJupyter')
+    if not isEnabled:
+        raise Exception('Problem enabling geppettoJupyter extension')
+    
+    # Command: jupyter serverextension enable --py geppettoJupyter
+    print("Enabling server extensions ...")
+    toggle_serverextension_python('geppettoJupyter', enabled=True)
+    
+    
+print("Cloning Geppetto Jupyter (Python package)...")
 subprocess.call(['git', 'clone', '--recursive', 'https://github.com/openworm/org.geppetto.frontend.jupyter.git'])
+
+print("Checking out development ...")
 subprocess.call(['git', 'checkout', 'development'], cwd = 'org.geppetto.frontend.jupyter')
-subprocess.call(['cp', '-r', '../geppetto-neuron', 'org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/src/main/webapp/extensions/'])
 
+print("Cloning Geppetto Neuron Configuration ...")
+subprocess.call(['git', 'clone', 'https://github.com/MetaCell/geppetto-neuron.git'], cwd = 'org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/src/main/webapp/extensions/')
+
+print("Installing Geppetto Jupyter python package ...")
 os.chdir('org.geppetto.frontend.jupyter')
-pip.main(['sudo', 'pip', 'install', '.', '--install-option=\"--jupyter-notebook-path=\'http://localhost:8888/notebooks/jupyter-frontend/geppetto_demo.ipynb\'\"' ])
-#subprocess.call(['sudo', 'pip', 'install', '.'], cwd = 'org.geppetto.frontend.jupyter')
+pip.main(['install', '.', '--upgrade', '--no-deps', '--force-reinstall', '--install-option','--jupyter-notebook-path="http://localhost:8888/notebooks/jupyter-frontend/geppetto_demo.ipynb"' ])
 
-#, '--install-option=\"--jupyter-notebook-path=\'http://localhost:8888/notebooks/jupyter-frontend/geppetto_demo.ipynb\'\"'
-#http://stackoverflow.com/questions/4585929/how-to-use-cp-command-to-exclude-a-specific-directory
+print("Installing Geppetto Jupyter Extension ...")
+run_nbextension_install(False)
