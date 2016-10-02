@@ -27,7 +27,7 @@ subprocess.call(['git', 'clone', '--recursive', 'https://github.com/openworm/org
 
 print("Checking out development branch for Geppetto Jupyter ...")
 subprocess.call(['git', 'checkout', 'development'], cwd = 'org.geppetto.frontend.jupyter')
-
+#We are checking out development so it's straightforward to commit and push changes
 subprocess.call(['git', 'checkout', 'development'], cwd = 'org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/')
 
 print("Cloning Geppetto Neuron Configuration ...")
