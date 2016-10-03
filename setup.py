@@ -9,6 +9,12 @@ def run_nbextension_install(develop):
     from notebook.nbextensions import install_nbextension_python, enable_nbextension_python
     from notebook.serverextensions import toggle_serverextension_python
 
+    # Command: sudo jupyter nbextension enable --py widgetsnbextension
+    print("Enabling geppettoJupyter extensions ...")
+    isEnabled = enable_nbextension_python('widgetsnbextension')
+    if not isEnabled:
+        raise Exception('Problem enabling widgetsnbextension extension')
+
     # Command: sudo jupyter nbextension install --py geppettoJupyter
     print("Installing geppettoJupyter extension ...")
     install_nbextension_python('geppettoJupyter', symlink=develop)
