@@ -1,10 +1,8 @@
 import setuptools
 from setuptools.command.install import install
 import subprocess
-#import pip
 import os
 import json
-
 
 # Install and enable the Geppetto Jupyter extension
 def run_nbextension_install(develop):
@@ -44,26 +42,8 @@ jsonFile.write(json.dumps({"geppetto-neuron/ComponentsInitialization": True}))
 jsonFile.close()
 
 print("Installing Geppetto Jupyter python package ...")
-#os.chdir('org.geppetto.frontend.jupyter')
-#pip.main(['install', '.', '--upgrade', '--no-deps', '--force-reinstall', '--install-option',
-#           '--jupyter-notebook-path="http://localhost:8888/notebooks/libs/neuron-ui-demo.ipynb"'])
-#subprocess.call(['pip', 'install', '.', '--upgrade', '--no-deps', '--force-reinstall', '''--install-option="--jupyter-notebook-path='http://localhost:8888/notebooks/libs/neuron-ui-demo.ipynb'"'''],
-#                cwd='org.geppetto.frontend.jupyter')
 subprocess.call(['pip', 'install', '.'],
                 cwd='org.geppetto.frontend.jupyter')
 
 print("Installing Geppetto Jupyter Extension ...")
 run_nbextension_install(False)
-
-# setuptools.setup(
-#     name="neuron-ui",
-#     version="0.0.1",
-#     url="https://github.com/MetaCell/NEURON-UI",
-#     author="MetaCell",
-#     description="Experimental UI for NEURON",
-#     long_description=open('README.md').read(),
-#     install_requires = [
-#         'ipywidgets>=5.1.5',
-#         'jupyter>=1.0.0'
-#     ],
-# )
