@@ -11,7 +11,8 @@ The UI connects to [nrnpython](http://www.neuron.yale.edu/neuron/static/docs/hel
 
 To install:
 ```
-python setup.py
+git clone https://github.com/MetaCell/NEURON-UI.git
+python setup.py (In some setups this needs to run as sudo)
 ```
 To run:
 ```
