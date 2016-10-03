@@ -2,4 +2,4 @@ language: python
 sudo: false
 python: 3.5
 script:
-  - python setup.py
+  - pip install .
