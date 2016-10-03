@@ -5,12 +5,6 @@ import GeppettoNeuron
 model = None
 
 def loadModule(targetComponent, args):
-    #from importlib import import_module
-    #global model_analysis
-    #model = import_module(targetComponent.extraData['module'])
-    #model_ = getattr(mod, 'analysis')
-#met()
-    
     global model
     model = __import__(targetComponent.extraData['module'], globals=globals())
 
