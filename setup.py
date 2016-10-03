@@ -47,7 +47,9 @@ print("Installing Geppetto Jupyter python package ...")
 #os.chdir('org.geppetto.frontend.jupyter')
 #pip.main(['install', '.', '--upgrade', '--no-deps', '--force-reinstall', '--install-option',
 #           '--jupyter-notebook-path="http://localhost:8888/notebooks/libs/neuron-ui-demo.ipynb"'])
-subprocess.call(['pip', 'install', '.', '--upgrade', '--no-deps', '--force-reinstall', '--install-option', '--jupyter-notebook-path="http://localhost:8888/notebooks/libs/neuron-ui-demo.ipynb"'],
+#subprocess.call(['pip', 'install', '.', '--upgrade', '--no-deps', '--force-reinstall', '''--install-option="--jupyter-notebook-path='http://localhost:8888/notebooks/libs/neuron-ui-demo.ipynb'"'''],
+#                cwd='org.geppetto.frontend.jupyter')
+subprocess.call(['pip', 'install', '.'],
                 cwd='org.geppetto.frontend.jupyter')
 
 print("Installing Geppetto Jupyter Extension ...")
