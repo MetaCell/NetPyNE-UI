@@ -1,5 +1,7 @@
 # NEURON-UI
 
+https://travis-ci.org/MetaCell/NEURON-UI.svg?branch=master
+
 This repository hosts an experimental prototype for a new user interface for NEURON based on web technologies. 
 The available functionality is currently limited to the RunControl panel.
 This prototype is being developed in collaboration with the [Neurosim Lab](http://neurosimlab.org/) and the [Sense Lab](https://senselab.med.yale.edu/).
