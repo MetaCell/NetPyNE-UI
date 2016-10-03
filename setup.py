@@ -39,7 +39,7 @@ jsonFile.close()
 
 print("Installing Geppetto Jupyter python package ...")
 os.chdir('org.geppetto.frontend.jupyter')
-pip.main(['install', '.', '--upgrade', '--no-deps', '--force-reinstall', '--install-option','--jupyter-notebook-path="http://localhost:8888/notebooks/jupyter-frontend/geppetto_demo.ipynb"' ])
+pip.main(['install', '.', '--upgrade', '--no-deps', '--force-reinstall', '--install-option','--jupyter-notebook-path="http://localhost:8888/notebooks/libs/neuron-ui-demo.ipynb"' ])
 
 print("Installing Geppetto Jupyter Extension ...")
 run_nbextension_install(False)
