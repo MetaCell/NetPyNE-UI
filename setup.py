@@ -42,7 +42,7 @@ jsonFile.write(json.dumps({"geppetto-neuron/ComponentsInitialization": True}))
 jsonFile.close()
 
 print("Installing Geppetto Jupyter python package ...")
-subprocess.call(['pip', 'install', '.'],
+subprocess.call(['pip', 'install', '.', '--upgrade', '--no-deps', '--force-reinstal'],
                 cwd='org.geppetto.frontend.jupyter')
 
 print("Installing Geppetto Jupyter Extension ...")

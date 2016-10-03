@@ -16,13 +16,13 @@ def showSampleModelsPanel():
     loadSimpleCellButton = G.addButton('Simple cell', loadModule,  extraData = {'module': 'simple_cell'})    
     loadSimpleNetworkButton = G.addButton('Simple network', loadModule,  extraData = {'module': 'simple_network'})    
 
-    loadModelPanel = G.addPanel('Load Models', items = [loadVerySimpleCellButton, loadSimpleCellButton, loadSimpleNetworkButton])
+    loadModelPanel = G.addPanel('Load Models', items = [loadVerySimpleCellButton, loadSimpleCellButton, loadSimpleNetworkButton], widget_id = 'loadModelPanel', positionX =10, positionY=10)
     
     display(loadModelPanel)    
     
 def showAnalysisPanel():
     analysisButton = G.addButton('Analysis!', execute_analysis)    
-    analysisPanel = G.addPanel('Analysis', items = [analysisButton])
+    analysisPanel = G.addPanel('Analysis', items = [analysisButton], widget_id = 'analysisPanel', positionX =10, positionY=350)
     display(analysisPanel)    
     
 

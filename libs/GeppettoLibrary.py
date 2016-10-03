@@ -55,11 +55,12 @@ def addTextFieldAndButton(name, value = None, create_checkbox = False, actions =
     panel.setDirection('row')
     return panel
         
-def addPanel(name, items = None):
+def addPanel(name, items = None, widget_id=None, positionX=-1, positionY=-1):
     if items is None: items = []
+    if widget_id is None: widget_id = newId()
     for item in items:
         item.embedded = True
-    panelWidget = PanelWidget(widget_id=newId(), widget_name=name, items=items)
+    panelWidget = PanelWidget(widget_id = widget_id, widget_name=name, items=items, positionX=positionX, positionY=positionY)
     return panelWidget
 
 def addCheckbox(name, sync_value = 'false'):
@@ -197,6 +198,8 @@ class PanelWidget(widgets.Widget):
     items = List(Instance(widgets.Widget)).tag(sync=True, **widgets.widget_serialization) 
     parentStyle = Dict({'flexDirection': 'column'}).tag(sync=True)
     embedded = Bool(False).tag(sync=True)
+    positionX = Float(-1).tag(sync=True)
+    positionY = Float(-1).tag(sync=True)
     
     def __init__(self, **kwargs):
         super(PanelWidget, self).__init__(**kwargs)

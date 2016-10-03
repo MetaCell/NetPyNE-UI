@@ -44,7 +44,7 @@ def showRunControlPanel():
     realTimePanel = G.addTextFieldAndButton("Real Time", 'realtime', False, [])
 
     # Init main panel
-    runControlPanel = G.addPanel('Run Control', items = [initPanel, initRunButton, stopButton, continueTilPanel, continueForPanel, singleStepButton, timePanel, stopPanel, dtPanel, pointsPlottedPanel, scrnUpdateInvlPanel, realTimePanel])
+    runControlPanel = G.addPanel('Run Control', items = [initPanel, initRunButton, stopButton, continueTilPanel, continueForPanel, singleStepButton, timePanel, stopPanel, dtPanel, pointsPlottedPanel, scrnUpdateInvlPanel, realTimePanel], widget_id = 'runControlPanel', positionX =500, positionY=10)
     
     display(runControlPanel)    
     
