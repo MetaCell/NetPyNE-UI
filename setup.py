@@ -1,6 +1,5 @@
 import setuptools
 from setuptools.command.install import install
-import post_setup
 import subprocess
 #import pip
 import os
