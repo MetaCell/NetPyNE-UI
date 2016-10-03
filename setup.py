@@ -52,7 +52,7 @@ setuptools.setup(
     version="0.0.1",
     url="https://github.com/MetaCell/NEURON-UI",
     author="MetaCell",
-    description="Experiment UI for NEURON",
+    description="Experimental UI for NEURON",
     long_description=open('README.md').read(),
     packages=setuptools.find_packages('src'),
     package_dir={'': 'src'},
