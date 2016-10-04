@@ -2,7 +2,6 @@
 
 [![Build Status](https://travis-ci.org/MetaCell/NEURON-UI.svg?branch=master)](https://travis-ci.org/MetaCell/NEURON-UI)
 
-
 This repository hosts an experimental prototype for a new user interface for NEURON based on web technologies. 
 
 ![Screenshot](https://dl.dropboxusercontent.com/u/7538688/Don%27t%20delete%2C%20used%20in%20wikis%20etc/Screen%20Shot%202016-10-04%20at%2019.53.03.png)
@@ -25,3 +24,4 @@ To pull the latest and re-install:
 sudo python update.py
 ```
 
+See the [Wiki](https://github.com/MetaCell/NEURON-UI/wiki) for more info!
