@@ -130,55 +130,18 @@ class ComponentWidget(widgets.Widget):
             cbs(self, args)
         
     def on_click(self, callbacks, remove=False):
-        """Register a callback to execute when the button is clicked.
-
-        The callback will be called with one argument, the clicked button
-        widget instance.
-
-        Parameters
-        ----------
-        remove: bool (optional)
-            Set to true to remove the callback from the list of callbacks.
-        """
         self.clickCallbacks = callbacks    
         self._click_handlers.register_callback(self.fireClickCallbacks, remove=remove)
         
     def on_change(self, callbacks, remove=False):
-        """Register a callback to execute when the button is clicked.
-
-        The callback will be called with one argument, the clicked button
-        widget instance.
-
-        Parameters
-        ----------
-        remove: bool (optional)
-            Set to true to remove the callback from the list of callbacks.
-        """
         self.changeCallbacks = callbacks    
         self._change_handlers.register_callback(self.fireChangeCallbacks, remove=remove)
         
     def on_blur(self, callbacks, remove=False):
-        """Register a callback to execute when the button is clicked.
-
-        The callback will be called with one argument, the clicked button
-        widget instance.
-
-        Parameters
-        ----------
-        remove: bool (optional)
-            Set to true to remove the callback from the list of callbacks.
-        """
         self.blurCallbacks = callbacks    
         self._blur_handlers.register_callback(self.fireBlurCallbacks, remove=remove)    
 
     def _handle_button_msg(self, _, content, buffers):
-        """Handle a msg from the front-end.
-
-        Parameters
-        ----------
-        content: dict
-            Content of the msg.
-        """
         if content.get('event', '') == 'click':
             self._click_handlers(self, content)
         elif content.get('event', '') == 'change':  
@@ -207,26 +170,9 @@ class PanelWidget(widgets.Widget):
         self.on_msg(self._handle_income_msg)
         
     def on_click(self, callback, remove=False):
-        """Register a callback to execute when the button is clicked.
-
-        The callback will be called with one argument, the clicked button
-        widget instance.
-
-        Parameters
-        ----------
-        remove: bool (optional)
-            Set to true to remove the callback from the list of callbacks.
-        """
         self._click_handlers.register_callback(callback, remove=remove)
 
     def _handle_income_msg(self, _, content, buffers):
-        """Handle a msg from the front-end.
-
-        Parameters
-        ----------
-        content: dict
-            Content of the msg.
-        """
         if content.get('event', '') == 'click':
             self._click_handlers(self)
     

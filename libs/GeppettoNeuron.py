@@ -8,8 +8,12 @@ import GeppettoLibrary as G
 def process_events() :
     #h.doEvents()
     #h.doNotify()
-
+    
     for key,value in G.sync_values.items():
+        if key == 'tstop':
+            print(key)
+            print(value)
+            print(eval("h."+key))
         value.sync_value = str(eval("h."+key))
 
 class LoopTimer(threading.Thread) :
