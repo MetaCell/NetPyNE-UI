@@ -11,7 +11,7 @@ The UI connects to [nrnpython](http://www.neuron.yale.edu/neuron/static/docs/hel
 
 To install:
 ```
-python setup.py
+sudo python install.py
 ```
 To run:
 ```
@@ -19,7 +19,6 @@ To run:
 ```
 To pull the latest and re-install:
 ```
-python update.py
-sudo python setup.py
+sudo python update.py
 ```
 

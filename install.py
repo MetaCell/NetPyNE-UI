@@ -1,8 +1,9 @@
 import setuptools
 from setuptools.command.install import install
 import subprocess
-import os
+import sys
 import json
+
 
 # Install and enable the Geppetto Jupyter extension
 def run_nbextension_install(develop):
@@ -29,6 +30,7 @@ def run_nbextension_install(develop):
     print("Enabling server extensions ...")
     toggle_serverextension_python('geppettoJupyter', enabled=True)
 
+
 print("Cloning Geppetto Jupyter (Python package)...")
 subprocess.call(['git', 'clone', '--recursive', 'https://github.com/openworm/org.geppetto.frontend.jupyter.git'])
 
@@ -48,8 +50,12 @@ jsonFile.write(json.dumps({"geppetto-neuron/ComponentsInitialization": True}))
 jsonFile.close()
 
 print("Installing Geppetto Jupyter python package ...")
-subprocess.call(['pip', 'install', '.'],
-                cwd='org.geppetto.frontend.jupyter')
+
+if len(sys.argv) > 1 and sys.argv[1] == 'overwrite':
+    subprocess.call(['pip', 'install', '.', '--upgrade', '--no-deps', '--force-reinstall'],
+                    cwd='org.geppetto.frontend.jupyter')
+else:
+    subprocess.call(['pip', 'install', '.'], cwd='org.geppetto.frontend.jupyter')
 
 print("Installing Geppetto Jupyter Extension ...")
 run_nbextension_install(False)
