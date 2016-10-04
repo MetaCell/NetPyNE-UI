@@ -150,21 +150,23 @@ class Net:
         pyplot.title('Network raster')
         pyplot.show()
 
-# Main code
-net = Net(numcells=10)  # create network 
-net.connect_cells_ring(syn_weight=0.1, syn_delay=1)  # connect cells in a ring 
-net.plot_net()  # plot network cells positions
-net.cells[0].add_current_stim(delay=1)  # add stimulation to a cell
+class SimpleNetwork:
+    def loadModel(self):
+        # Main code
+        self.net = Net(numcells=10)  # create network 
+        self.net.connect_cells_ring(syn_weight=0.1, syn_delay=1)  # connect cells in a ring 
+        self.net.plot_net()  # plot network cells positions
+        self.net.cells[0].add_current_stim(delay=1)  # add stimulation to a cell
 
-h.tstop = 60 # set simulation duration
-#h.init()  # initialize sim
-#h.run()  # run simulation
+        h.tstop = 60 # set simulation duration
+        #h.init()  # initialize sim
+        #h.run()  # run simulation
 
-def analysis():
-    from matplotlib import pyplot
+    def analysis(self):
+        from matplotlib import pyplot
 
-    net.cells[0].plot_voltage()  # plot voltage
-    net.cells[4].plot_voltage()  # plot voltage
+        self.net.cells[0].plot_voltage()  # plot voltage
+        self.net.cells[4].plot_voltage()  # plot voltage
 
-    # plot raster
-    net.plot_raster()
+        # plot raster
+        self.net.plot_raster()
