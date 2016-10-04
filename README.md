@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/MetaCell/NEURON-UI.svg?branch=master)](https://travis-ci.org/MetaCell/NEURON-UI)
 
 
-This repository hosts an experimental prototype for a new user interface for NEURON based on web technologies. 
+This repository hosts an experimental prototype for a new user interface for [NEURON](http://www.neuron.yale.edu/neuron/) based on web technologies. 
 
 
 To install:
