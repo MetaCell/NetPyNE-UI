@@ -1,5 +1,5 @@
 from IPython.display import display
-import GeppettoLibrary as G
+from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 import GeppettoNeuron
 
 currentModel = None

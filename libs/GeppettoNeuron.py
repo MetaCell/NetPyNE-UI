@@ -3,13 +3,14 @@ from neuron import h
 import threading
 import time
 import datetime
-import GeppettoLibrary as G
+from geppettoJupyter.geppetto_comm.GeppettoCore import sync_values
+
 
 def process_events() :
     #h.doEvents()
     #h.doNotify()
     
-    for key,value in G.sync_values.items():
+    for key,value in sync_values.items():
         value.sync_value = str(eval("h."+key))
 
 class LoopTimer(threading.Thread) :

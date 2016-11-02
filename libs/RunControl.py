@@ -1,6 +1,7 @@
 from IPython.display import display
-import GeppettoLibrary as G
 import GeppettoNeuron
+from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
+from geppettoJupyter.geppetto_comm.GeppettoCore import sync_values
 
 from neuron import h
 h.load_file("stdrun.hoc")
@@ -55,7 +56,7 @@ class Event(object):
         self.fih = h.FInitializeHandler(1, self.callback)
 
     def callback(self) :
-        for key,value in G.sync_values.items():
+        for key,value in sync_values.items():
             value.sync_value = str(eval("h._ref_t."+key))
 
         h.cvode.event(h.t + 1, self.callback)
