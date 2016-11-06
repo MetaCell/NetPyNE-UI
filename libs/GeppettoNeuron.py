@@ -3,12 +3,15 @@ from neuron import h
 import threading
 import time
 import datetime
-from geppettoJupyter.geppetto_comm.GeppettoCore import sync_values
+from geppettoJupyter.geppetto_comm.GeppettoCore import sync_values, record_variables
 
 
 def process_events() :
     #h.doEvents()
     #h.doNotify()
+    
+    for key,value in record_variables.items():
+        value.timeSeries = key.to_python() 
     
     for key,value in sync_values.items():
         value.sync_value = str(eval("h."+key))
