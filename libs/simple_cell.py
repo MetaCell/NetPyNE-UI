@@ -1,8 +1,12 @@
 from neuron import h
 
+from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
+
 class SimpleCell:
     
     def loadModel(self):
+        G.createProject(id = "SimpleCell", name = 'Simple Cell')
+
         print('Loading Model...')
         self.soma = h.Section(name='soma')
         self.dend = h.Section(name='dend')
@@ -39,13 +43,19 @@ class SimpleCell:
 
         # record soma voltage and time
         self.t_vec = h.Vector()
-        self.v_vec_soma = h.Vector()
-        self.v_vec_dend = h.Vector()
-        self.v_vec_soma.record(self.soma(1.0)._ref_v) # change recoding pos
-        self.v_vec_dend.record(self.dend(1.0)._ref_v)
         self.t_vec.record(h._ref_t)
+        G.createStateVariable(id = 'time', name = 'time', units = 'mS', neuron_variable = self.t_vec)
 
-        print(self.t_vec.to_python())
+        self.v_vec_soma = h.Vector()
+        self.v_vec_soma.record(self.soma(1.0)._ref_v) # change recoding pos
+        #TODO How do we extract the units?
+        G.createStateVariable(id = 'v_vec_soma', name = 'v_vec_soma', units = 'mV', neuron_variable = self.v_vec_soma)
+        
+        self.v_vec_dend = h.Vector()
+        self.v_vec_dend.record(self.dend(1.0)._ref_v)
+        #TODO How do we extract the units?
+        G.createStateVariable(id = 'v_vec_dend', name = 'v_vec_dend', units = 'mV', neuron_variable = self.v_vec_dend)
+
         # run simulation
         h.tstop = 60 # ms
         #h.run()  
@@ -53,8 +63,11 @@ class SimpleCell:
 
     def analysis(self):
         from matplotlib import pyplot
-        
+
         #plot voltage vs time
+        G.plotVariable('Testing', ['SimpleCell.v_vec_dend', 'SimpleCell.v_vec_soma'])
+
+
         pyplot.figure(figsize=(8,4)) # Default figsize is (8,6)
         pyplot.plot(self.t_vec, self.v_vec_soma, label='soma')
         pyplot.plot(self.t_vec, self.v_vec_dend, 'r', label='dend')
