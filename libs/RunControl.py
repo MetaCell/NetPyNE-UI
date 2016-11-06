@@ -11,7 +11,7 @@ def showRunControlPanel():
     initPanel = G.addTextFieldAndButton("Init", 'v_init', True, ['h.stdinit()'])
     
     # Init Run Button
-    initRunButton = G.addButton('Init & Run', ['h.run()'])    
+    initRunButton = G.addButton('Init & Run', ['current_experiment.state = "IN PROGRESS"', 'h.run()', 'current_experiment.state = "COMPLETED"'])    
     
     # Stop Button
     stopButton = G.addButton('Stop')
