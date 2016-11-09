@@ -44,7 +44,7 @@ class SimpleCell:
         # record soma voltage and time
         self.t_vec = h.Vector()
         self.t_vec.record(h._ref_t)
-        G.createStateVariable(id = 'time', name = 'time', units = 'mS', neuron_variable = self.t_vec)
+        G.createStateVariable(id = 'time', name = 'time', units = 'ms', neuron_variable = self.t_vec)
 
         self.v_vec_soma = h.Vector()
         self.v_vec_soma.record(self.soma(1.0)._ref_v) # change recoding pos
