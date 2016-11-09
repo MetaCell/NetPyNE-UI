@@ -1,10 +1,9 @@
 from IPython.display import display
-import GeppettoNeuron
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
-from geppettoJupyter.geppetto_comm.GeppettoCore import sync_values
 
-from neuron import h
-h.load_file("stdrun.hoc")
+#TODO: Do we really need this?
+#from neuron import h
+#h.load_file("stdrun.hoc")
 
 def showRunControlPanel():
     # Init Panel
@@ -47,21 +46,5 @@ def showRunControlPanel():
     # Init main panel
     runControlPanel = G.addPanel('Run Control', items = [initPanel, initRunButton, stopButton, continueTilPanel, continueForPanel, singleStepButton, timePanel, stopPanel, dtPanel, pointsPlottedPanel, scrnUpdateInvlPanel, realTimePanel], widget_id = 'runControlPanel', positionX =600, positionY=10)
     
-    display(runControlPanel)    
-    
-    
-# Refresh value every 1 
-class Event(object):
-    def __init__(self):
-        self.fih = h.FInitializeHandler(1, self.callback)
-
-    def callback(self) :
-        for key,value in sync_values.items():
-            value.sync_value = str(eval("h._ref_t."+key))
-
-        h.cvode.event(h.t + 1, self.callback)
-
-e = Event()
-
-    
+    display(runControlPanel)        
     
