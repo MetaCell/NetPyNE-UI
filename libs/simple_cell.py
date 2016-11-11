@@ -5,7 +5,7 @@ from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 class SimpleCell:
     
     def loadModel(self):
-        G.createProject(id = "SimpleCell", name = 'Simple Cell')
+        G.createProject(name = 'Simple Cell')
 
         print('Loading Model...')
         self.soma = h.Section(name='soma')
