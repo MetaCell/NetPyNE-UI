@@ -62,19 +62,19 @@ class SimpleCell:
         #print(self.t_vec.to_python())
 
     def analysis(self):
-        from matplotlib import pyplot
+        #from matplotlib import pyplot
 
         #plot voltage vs time
-        G.plotVariable('Testing', ['SimpleCell.v_vec_dend', 'SimpleCell.v_vec_soma'])
+        G.plotVariable('Plot', ['SimpleCell.v_vec_dend', 'SimpleCell.v_vec_soma'])
 
 
-        pyplot.figure(figsize=(8,4)) # Default figsize is (8,6)
-        pyplot.plot(self.t_vec, self.v_vec_soma, label='soma')
-        pyplot.plot(self.t_vec, self.v_vec_dend, 'r', label='dend')
-        pyplot.xlabel('time (ms)')
-        pyplot.ylabel('mV')
-        pyplot.legend()
-        pyplot.show()    
+        # pyplot.figure(figsize=(8,4)) # Default figsize is (8,6)
+        # pyplot.plot(self.t_vec, self.v_vec_soma, label='soma')
+        # pyplot.plot(self.t_vec, self.v_vec_dend, 'r', label='dend')
+        # pyplot.xlabel('time (ms)')
+        # pyplot.ylabel('mV')
+        # pyplot.legend()
+        # pyplot.show()
 
         
 
