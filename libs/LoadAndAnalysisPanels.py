@@ -1,4 +1,3 @@
-from IPython.display import display
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 import GeppettoNeuron
 
@@ -19,13 +18,11 @@ def showSampleModelsPanel():
     loadSimpleNetworkButton = G.addButton('Simple network', loadModule,  extraData = {'module': 'simple_network', 'model':'SimpleNetwork', 'action':'loadModel'})    
 
     loadModelPanel = G.addPanel('Load Models', items = [loadVerySimpleCellButton, loadSimpleCellButton, loadSimpleNetworkButton], widget_id = 'loadModelPanel', positionX =90, positionY=10)
-    
-    display(loadModelPanel)    
+    loadModelPanel.display()    
     
 def showAnalysisPanel():
     analysisButton = G.addButton('Analysis!', loadModule, extraData = {'action':'analysis'})    
     analysisPanel = G.addPanel('Analysis', items = [analysisButton], widget_id = 'analysisPanel', positionX =90, positionY=250)
-    display(analysisPanel)    
-    
+    analysisPanel.display()
 
     
