@@ -1,9 +1,4 @@
-from IPython.display import display
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
-
-#TODO: Do we really need this?
-#from neuron import h
-#h.load_file("stdrun.hoc")
 
 def showRunControlPanel():
     # Init Panel
@@ -46,5 +41,5 @@ def showRunControlPanel():
     # Init main panel
     runControlPanel = G.addPanel('Run Control', items = [initPanel, initRunButton, stopButton, continueTilPanel, continueForPanel, singleStepButton, timePanel, stopPanel, dtPanel, pointsPlottedPanel, scrnUpdateInvlPanel, realTimePanel], widget_id = 'runControlPanel', positionX =600, positionY=10)
     
-    display(runControlPanel)        
+    runControlPanel.display()        
     
