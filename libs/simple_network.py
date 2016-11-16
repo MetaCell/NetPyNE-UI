@@ -162,7 +162,6 @@ class Net:
 
 class SimpleNetwork:
     def loadModel(self):
-        print("taka")
         # Main code
         self.net = Net(numcells=10)  # create network 
         self.net.connect_cells_ring(syn_weight=0.1, syn_delay=1)  # connect cells in a ring 

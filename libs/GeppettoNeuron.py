@@ -28,7 +28,7 @@ class LoopTimer(threading.Thread) :
     def run(self) :
         #TODO With this line it hangs in some setups. Figure out if it's needed
         #h.nrniv_bind_thread(threading.current_thread().ident);
-        self.started = True;
+        self.started = True
         while True:
             self.fun()
             time.sleep(self.interval)
