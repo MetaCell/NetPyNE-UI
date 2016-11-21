@@ -1,6 +1,6 @@
 from neuron import h
 from pylab import sin,cos,pi
-from matplotlib import pyplot
+#from matplotlib import pyplot
 
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 
@@ -70,15 +70,15 @@ class HHCell:
 
     def plot_voltage(self):
         """Plot the recorded traces"""
-        pyplot.figure(figsize=(8,4)) # Default figsize is (8,6)
-        pyplot.plot(self.t_vec, self.soma_v_vec, color='black', label='soma(0.5')
-        pyplot.plot(self.t_vec, self.dend_v_vec, color='red', label='dend(0.5)')
-        pyplot.legend()
-        pyplot.xlabel('time (ms)')
-        pyplot.ylabel('mV')
-        pyplot.ylim(-80,20)
-        pyplot.title('Cell voltage')
-        pyplot.show()
+        #pyplot.figure(figsize=(8,4)) # Default figsize is (8,6)
+        #pyplot.plot(self.t_vec, self.soma_v_vec, color='black', label='soma(0.5')
+        #pyplot.plot(self.t_vec, self.dend_v_vec, color='red', label='dend(0.5)')
+        #pyplot.legend()
+        #pyplot.xlabel('time (ms)')
+        #pyplot.ylabel('mV')
+        #pyplot.ylim(-80,20)
+        #pyplot.title('Cell voltage')
+        #pyplot.show()
 
         G.plotVariable('Plot', ['SimpleNetwork.soma_v_vec_' + str(self.cell_index), 'SimpleNetwork.dend_v_vec_' + str(self.cell_index)])
         
@@ -165,7 +165,7 @@ class SimpleNetwork:
         # Main code
         self.net = Net(numcells=10)  # create network 
         self.net.connect_cells_ring(syn_weight=0.1, syn_delay=1)  # connect cells in a ring 
-        self.net.plot_net()  # plot network cells positions
+        #self.net.plot_net()  # plot network cells positions
         self.net.cells[0].add_current_stim(delay=1)  # add stimulation to a cell
 
         h.tstop = 60 # set simulation duration
@@ -173,10 +173,10 @@ class SimpleNetwork:
         #h.run()  # run simulation
 
     def analysis(self):
-        from matplotlib import pyplot
+        #from matplotlib import pyplot
 
         self.net.cells[0].plot_voltage()  # plot voltage
         self.net.cells[4].plot_voltage()  # plot voltage
 
         # plot raster
-        self.net.plot_raster()
+        #self.net.plot_raster()

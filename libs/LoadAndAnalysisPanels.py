@@ -21,7 +21,7 @@ def showSampleModelsPanel():
     loadModelPanel.display()    
     
 def showAnalysisPanel():
-    analysisButton = G.addButton('Analysis!', loadModule, extraData = {'action':'analysis'})    
+    analysisButton = G.addButton('Plot', loadModule, extraData = {'action':'analysis'})
     analysisPanel = G.addPanel('Analysis', items = [analysisButton], widget_id = 'analysisPanel', positionX =90, positionY=250)
     analysisPanel.display()
 

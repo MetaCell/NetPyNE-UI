@@ -23,11 +23,11 @@ class VerySimpleCell:
         h.tstop = 80.0
 
     def analysis(self):
-        from matplotlib import pyplot
-        pyplot.figure(figsize=(8,4)) # Default figsize is (8,6)
-        pyplot.plot(self.t_vec, self.v_vec)
-        pyplot.xlabel('time (ms)')
-        pyplot.ylabel('mV')
-        pyplot.show()
+        #from matplotlib import pyplot
+        #pyplot.figure(figsize=(8,4)) # Default figsize is (8,6)
+        #pyplot.plot(self.t_vec, self.v_vec)
+        #pyplot.xlabel('time (ms)')
+        #pyplot.ylabel('mV')
+        #pyplot.show()
 
         G.plotVariable('Plot', ['VerySimpleCell.v_vec'])
