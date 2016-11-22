@@ -1,17 +1,21 @@
 from neuron import h
 from pylab import sin,cos,pi
-from matplotlib import pyplot
+#from matplotlib import pyplot
+
+from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 
 class HHCell: 
     """Two-section cell: A soma with active channels and
     a dendrite with passive properties."""
-    def __init__(self):
+    def __init__(self, cell_index):
+        
         self.synlist = []
         self.nclist = []
         self.create_sections()
         self.build_topology()
         self.define_geometry()
         self.define_biophysics()
+        self.cell_index = cell_index
 
     def create_sections(self):
         """Create the sections of the cell."""
@@ -58,20 +62,25 @@ class HHCell:
         self.dend_v_vec = h.Vector()   # Membrane potential vector at dendrite
         self.t_vec = h.Vector()        # Time stamp vector
         self.soma_v_vec.record(self.soma(0.5)._ref_v)
+        G.createStateVariable(id = 'soma_v_vec_' + str(self.cell_index), name = 'soma_v_vec for cell ' + str(self.cell_index), units = 'mV', neuron_variable = self.soma_v_vec)
         self.dend_v_vec.record(self.dend(0.5)._ref_v)
+        G.createStateVariable(id = 'dend_v_vec_' + str(self.cell_index), name = 'dend_v_vec for cell ' + str(self.cell_index), units = 'mV', neuron_variable = self.dend_v_vec)
         self.t_vec.record(h._ref_t)
+        G.createStateVariable(id = 'time', name = 'time', units = 'ms', neuron_variable = self.t_vec)
 
     def plot_voltage(self):
         """Plot the recorded traces"""
-        pyplot.figure(figsize=(8,4)) # Default figsize is (8,6)
-        pyplot.plot(self.t_vec, self.soma_v_vec, color='black', label='soma(0.5')
-        pyplot.plot(self.t_vec, self.dend_v_vec, color='red', label='dend(0.5)')
-        pyplot.legend()
-        pyplot.xlabel('time (ms)')
-        pyplot.ylabel('mV')
-        pyplot.ylim(-80,20)
-        pyplot.title('Cell voltage')
-        pyplot.show()
+        #pyplot.figure(figsize=(8,4)) # Default figsize is (8,6)
+        #pyplot.plot(self.t_vec, self.soma_v_vec, color='black', label='soma(0.5')
+        #pyplot.plot(self.t_vec, self.dend_v_vec, color='red', label='dend(0.5)')
+        #pyplot.legend()
+        #pyplot.xlabel('time (ms)')
+        #pyplot.ylabel('mV')
+        #pyplot.ylim(-80,20)
+        #pyplot.title('Cell voltage')
+        #pyplot.show()
+
+        G.plotVariable('Plot', ['SimpleNetwork.soma_v_vec_' + str(self.cell_index), 'SimpleNetwork.dend_v_vec_' + str(self.cell_index)])
         
     def create_synapse(self, loc=0.5, tau=2, e=0):
         syn = h.ExpSyn(self.dend(loc))
@@ -91,7 +100,8 @@ class HHCell:
         
 
 class Net:
-    def __init__(self, numcells):        
+    def __init__(self, numcells):
+        G.createProject(name = 'Simple Network')
         self.spkt = h.Vector()   # Spike time of all cells
         self.spkid = h.Vector()  # cell ids of spike times
         self.create_cells(numcells)  # call method to create cells
@@ -102,7 +112,7 @@ class Net:
         self.cells = []
         r = numcells*10 # Radius of cell locations from origin (0,0) in microns
         for i in range(numcells):  # for each cell
-            cell = HHCell()  # create cell object
+            cell = HHCell(i)  # create cell object
             cell.set_recording()  # set up voltage recording
             cell.create_synapse(loc=0.5, tau=2, e=0)  # create synapse object            
             xpos = sin(i * 2 * pi / numcells) * r  # calculate x position
@@ -155,7 +165,7 @@ class SimpleNetwork:
         # Main code
         self.net = Net(numcells=10)  # create network 
         self.net.connect_cells_ring(syn_weight=0.1, syn_delay=1)  # connect cells in a ring 
-        self.net.plot_net()  # plot network cells positions
+        #self.net.plot_net()  # plot network cells positions
         self.net.cells[0].add_current_stim(delay=1)  # add stimulation to a cell
 
         h.tstop = 60 # set simulation duration
@@ -163,10 +173,10 @@ class SimpleNetwork:
         #h.run()  # run simulation
 
     def analysis(self):
-        from matplotlib import pyplot
+        #from matplotlib import pyplot
 
         self.net.cells[0].plot_voltage()  # plot voltage
         self.net.cells[4].plot_voltage()  # plot voltage
 
         # plot raster
-        self.net.plot_raster()
+        #self.net.plot_raster()

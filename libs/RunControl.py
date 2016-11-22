@@ -1,16 +1,11 @@
-from IPython.display import display
-import GeppettoLibrary as G
-import GeppettoNeuron
-
-from neuron import h
-h.load_file("stdrun.hoc")
+from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 
 def showRunControlPanel():
     # Init Panel
     initPanel = G.addTextFieldAndButton("Init", 'v_init', True, ['h.stdinit()'])
     
     # Init Run Button
-    initRunButton = G.addButton('Init & Run', ['h.run()'])    
+    initRunButton = G.addButton('Init & Run', ['current_experiment.state = "RUNNING"', 'h.run()', 'current_experiment.state = "COMPLETED"'])    
     
     # Stop Button
     stopButton = G.addButton('Stop')
@@ -46,21 +41,5 @@ def showRunControlPanel():
     # Init main panel
     runControlPanel = G.addPanel('Run Control', items = [initPanel, initRunButton, stopButton, continueTilPanel, continueForPanel, singleStepButton, timePanel, stopPanel, dtPanel, pointsPlottedPanel, scrnUpdateInvlPanel, realTimePanel], widget_id = 'runControlPanel', positionX =600, positionY=10)
     
-    display(runControlPanel)    
-    
-    
-# Refresh value every 1 
-class Event(object):
-    def __init__(self):
-        self.fih = h.FInitializeHandler(1, self.callback)
-
-    def callback(self) :
-        for key,value in G.sync_values.items():
-            value.sync_value = str(eval("h._ref_t."+key))
-
-        h.cvode.event(h.t + 1, self.callback)
-
-e = Event()
-
-    
+    runControlPanel.display()        
     

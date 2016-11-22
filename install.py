@@ -50,11 +50,13 @@ subprocess.call(['git', 'clone', '--recursive', 'https://github.com/openworm/org
 print("Checking out development branch for Geppetto Jupyter ...")
 subprocess.call(['git', 'checkout', 'development'], cwd='org.geppetto.frontend.jupyter')
 # We are checking out development so it's straightforward to commit and push changes
-subprocess.call(['git', 'checkout', 'development'], cwd='org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/')
+subprocess.call(['git', 'checkout', 'integratingPlot'], cwd='org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/')
 
 print("Cloning Geppetto Neuron Configuration ...")
 subprocess.call(['git', 'clone', 'https://github.com/MetaCell/geppetto-neuron.git'],
                 cwd='org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/src/main/webapp/extensions/')
+subprocess.call(['git', 'checkout', 'master'],
+                cwd='org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/src/main/webapp/extensions/geppetto-neuron/')
 print("Enabling Geppetto Neuron Configuration ...")
 jsonFile = open(
     'org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/src/main/webapp/extensions/extensionsConfiguration.json',
