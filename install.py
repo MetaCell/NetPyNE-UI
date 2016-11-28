@@ -20,5 +20,5 @@ subprocess.call(['git', 'clone', 'https://github.com/MetaCell/geppetto-neuron.gi
 #                cwd='org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/src/main/webapp/extensions/geppetto-neuron/')
 
 enable_geppetto_neuron_extension()
-install_geppetto_jupyter_python()
+install_geppetto_jupyter_python((len(sys.argv) > 1 and sys.argv[1] == 'overwrite'))
 run_nbextension_install(False)

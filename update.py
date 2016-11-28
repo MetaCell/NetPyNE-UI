@@ -16,7 +16,7 @@ if reply[0] == 'y':
     subprocess.call(['git', 'pull'], cwd='org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/src/main/webapp/extensions/geppetto-neuron/')
     #subprocess.call(['python','install.py','overwrite'])
     enable_geppetto_neuron_extension()
-    install_geppetto_jupyter_python()
+    install_geppetto_jupyter_python(True)
     run_nbextension_install(False)
 else:
     print("Exit without updating")

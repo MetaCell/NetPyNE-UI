@@ -2,10 +2,10 @@ import sys
 import json
 import subprocess
 
-def install_geppetto_jupyter_python():
+def install_geppetto_jupyter_python(overwrite):
     print("Installing Geppetto Jupyter python package ...")
 
-    if len(sys.argv) > 1 and sys.argv[1] == 'overwrite':
+    if overwrite:
         subprocess.call(['pip', 'install', '.', '--upgrade', '--no-deps', '--force-reinstall'],
                         cwd='org.geppetto.frontend.jupyter')
     else:
