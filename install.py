@@ -1,7 +1,7 @@
 import setuptools
 from setuptools.command.install import install
 import subprocess
-from installation_utils import *
+from utils import *
 
 
 print("Cloning Geppetto Jupyter (Python package)...")

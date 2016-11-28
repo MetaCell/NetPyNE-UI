@@ -1,10 +1,11 @@
 import subprocess
-from installation_utils import *
+from utils import *
 
-# 
+# Hack so that it works in python 2 and 3
 try: input = raw_input
 except NameError: pass
 reply = input("Any uncommited change to your jupyter notebook will be stashed. Are you sure you want to update NEURON-UI? (y/n)")
+
 if reply[0] == 'y':
     subprocess.call(['git', 'stash'])
     subprocess.call(['git', 'pull'])
