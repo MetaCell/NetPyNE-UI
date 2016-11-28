@@ -1,5 +1,6 @@
 import sys
 import json
+import subprocess
 
 def install_geppetto_jupyter_python():
     print("Installing Geppetto Jupyter python package ...")
