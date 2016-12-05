@@ -1,5 +1,4 @@
 from neuron import h
-from netpyne import utils
 
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 
@@ -61,14 +60,6 @@ class SimpleCell:
         h.tstop = 60 # ms
         #h.run()  
 
-        self.extractMorphology()
-
-
-    def extractMorphology(self):
-        secs, secLists, synMechs = utils.getCellParams(None)
-        print(secs, secLists, synMechs)
-
-        #({'soma': {'topol': {}, 'mechs': {}, 'geom': {'diam': 500.0, 'Ra': 35.4, 'nseg': 1, 'L': 100.0, 'cm': 1.0}}}, {}, [])
 
     def analysis(self):
         #from matplotlib import pyplot
