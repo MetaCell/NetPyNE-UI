@@ -9,23 +9,22 @@ def extractMorphology():
     geometries = []
 
     # Convert non pt3d geometries
-    secs = convertTo3DGeoms(secs)
+    #secs = convertTo3DGeoms(secs)
 
     for secName, sec in secs.items():
-        # TODO: What happen when we find more than two points
-        # for pt3d in sec['geom']['pt3d']:
-
-        position = sec['geom']['pt3d'][0]
-        distal = sec['geom']['pt3d'][1]
-        geometries.append(GeppettoCore.GeometrySync(name=secName,
-                                  bottomRadius=position[3],
-                                  positionX=position[0],
-                                  positionY=position[1],
-                                  positionZ=position[2],
-                                  topRadius=distal[3],
-                                  distalX=distal[0],
-                                  distalY=distal[1],
-                                  distalZ=distal[2]))
+        for i in range(len(sec['geom']['pt3d'])-1):
+            position = sec['geom']['pt3d'][i]
+            distal = sec['geom']['pt3d'][i+1]
+            geometries.append(GeppettoCore.GeometrySync(id=secName + str(i),
+                name=secName + " " + str(i),
+                bottomRadius=position[3],
+                positionX=position[0],
+                positionY=position[1],
+                positionZ=position[2],
+                topRadius=distal[3],
+                distalX=distal[0],
+                distalY=distal[1],
+                distalZ=distal[2]))
     return geometries
 
     #print(secs, secLists, synMechs)
