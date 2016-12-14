@@ -1,7 +1,7 @@
 from netpyne import utils
 from neuron import h
 
-from geppettoJupyter.geppetto_comm import GeppettoCore
+from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 
 
 def extractMorphology():
@@ -15,7 +15,7 @@ def extractMorphology():
         for i in range(len(sec['geom']['pt3d'])-1):
             position = sec['geom']['pt3d'][i]
             distal = sec['geom']['pt3d'][i+1]
-            geometries.append(GeppettoCore.GeometrySync(id=secName + str(i),
+            geometries.append(GeppettoJupyterModelSync.GeometrySync(id=secName + str(i),
                 name=secName + " " + str(i),
                 bottomRadius=position[3],
                 positionX=position[0],

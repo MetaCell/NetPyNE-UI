@@ -3,7 +3,8 @@ from neuron import h
 import threading
 import time
 import datetime
-from geppettoJupyter.geppetto_comm import GeppettoCore
+from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
+from geppettoJupyter.geppetto_comm import GeppettoJupyterGUISync
 from RunControl import *
 from LoadAndAnalysisPanels import *
 from collections import defaultdict
@@ -37,11 +38,16 @@ class LoopTimer(threading.Thread) :
         #h.doEvents()
         #h.doNotify()
         
-        for key,value in GeppettoCore.record_variables.items():
+        for key,value in GeppettoJupyterModelSync.record_variables.items():
             value.timeSeries = key.to_python() 
         
-        for key,value in GeppettoCore.sync_values.items():
+        for key,value in GeppettoJupyterGUISync.sync_values.items():
+            if value.sync_value != str(eval("h."+key)):
+                print("taka")
+                print(value.sync_value)
+                print(str(eval("h."+key)))
             value.sync_value = str(eval("h."+key))
+
 
 # Refresh value every 1 
 class Event(object):
@@ -49,7 +55,11 @@ class Event(object):
         self.fih = h.FInitializeHandler(1, self.callback)
 
     def callback(self) :
-        for key,value in GeppettoCore.sync_values.items():
+        for key,value in GeppettoJupyterGUISync.sync_values.items():
+            if value.sync_value != str(eval("h._ref_t."+key)):
+                print("taka1")
+                print(value.sync_value)
+                print(str(eval("h._ref_t."+key)))
             value.sync_value = str(eval("h._ref_t."+key))
 
         h.cvode.event(h.t + 1, self.callback)
@@ -58,11 +68,11 @@ class Event(object):
 
 def init():
     # Reset any previous value
-    GeppettoCore.sync_values = defaultdict(list)
-    GeppettoCore.record_variables = defaultdict(list)
-    GeppettoCore.current_project = None
-    GeppettoCore.current_experiment = None
-    GeppettoCore.current_model = None
+    GeppettoJupyterGUISync.sync_values = defaultdict(list)
+    GeppettoJupyterModelSync.record_variables = defaultdict(list)
+    GeppettoJupyterModelSync.current_project = None
+    GeppettoJupyterModelSync.current_experiment = None
+    GeppettoJupyterModelSync.current_model = None
 
     # Sync values when no sim is running
     timer = LoopTimer(0.1)
