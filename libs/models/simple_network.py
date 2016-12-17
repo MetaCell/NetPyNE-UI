@@ -3,6 +3,7 @@ from pylab import sin,cos,pi
 #from matplotlib import pyplot
 
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
+import GeppettoNeuronUtils
 
 class HHCell: 
     """Two-section cell: A soma with active channels and
@@ -161,7 +162,7 @@ class Net:
         pyplot.show()
 
 class SimpleNetwork:
-    def loadModel(self):
+    def __init__(self):
         # Main code
         self.net = Net(numcells=10)  # create network 
         self.net.connect_cells_ring(syn_weight=0.1, syn_delay=1)  # connect cells in a ring 
@@ -171,6 +172,8 @@ class SimpleNetwork:
         h.tstop = 60 # set simulation duration
         #h.init()  # initialize sim
         #h.run()  # run simulation
+
+        G.createGeometryVariables(GeppettoNeuronUtils.extractMorphology())
 
     def analysis(self):
         #from matplotlib import pyplot

@@ -1,12 +1,12 @@
-from __future__ import print_function
-from neuron import h
+import logging
+from collections import defaultdict
 import threading
 import time
-import datetime
-from geppettoJupyter.geppetto_comm import GeppettoCore
-from RunControl import *
-from LoadAndAnalysisPanels import *
-from collections import defaultdict
+from neuron import h
+from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
+from geppettoJupyter.geppetto_comm import GeppettoJupyterGUISync
+from GeppettoNeuronController import *
+
 
 class LoopTimer(threading.Thread) :
     """
@@ -37,10 +37,10 @@ class LoopTimer(threading.Thread) :
         #h.doEvents()
         #h.doNotify()
         
-        for key,value in GeppettoCore.record_variables.items():
+        for key,value in GeppettoJupyterModelSync.record_variables.items():
             value.timeSeries = key.to_python() 
         
-        for key,value in GeppettoCore.sync_values.items():
+        for key,value in GeppettoJupyterGUISync.sync_values.items():
             value.sync_value = str(eval("h."+key))
 
 # Refresh value every 1 
@@ -49,7 +49,7 @@ class Event(object):
         self.fih = h.FInitializeHandler(1, self.callback)
 
     def callback(self) :
-        for key,value in GeppettoCore.sync_values.items():
+        for key,value in GeppettoJupyterGUISync.sync_values.items():
             value.sync_value = str(eval("h._ref_t."+key))
 
         h.cvode.event(h.t + 1, self.callback)
@@ -57,12 +57,21 @@ class Event(object):
 
 
 def init():
+    # Configure log
+    logger = logging.getLogger()
+    fhandler = logging.FileHandler(filename='GeppettoNeuron.log', mode='a')
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    fhandler.setFormatter(formatter)
+    logger.addHandler(fhandler)
+    logger.setLevel(logging.DEBUG)
+    logging.warning('Initialising GeppettoNeuron')
+
     # Reset any previous value
-    GeppettoCore.sync_values = defaultdict(list)
-    GeppettoCore.record_variables = defaultdict(list)
-    GeppettoCore.current_project = None
-    GeppettoCore.current_experiment = None
-    GeppettoCore.current_model = None
+    GeppettoJupyterGUISync.sync_values = defaultdict(list)
+    GeppettoJupyterModelSync.record_variables = defaultdict(list)
+    GeppettoJupyterModelSync.current_project = None
+    GeppettoJupyterModelSync.current_experiment = None
+    GeppettoJupyterModelSync.current_model = None
 
     # Sync values when no sim is running
     timer = LoopTimer(0.1)
@@ -77,4 +86,5 @@ def init():
     showRunControlPanel()
     showSampleModelsPanel()
     showAnalysisPanel()
+    showCellBuilderPanel()
 

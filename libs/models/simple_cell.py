@@ -1,10 +1,11 @@
 from neuron import h
+import GeppettoNeuronUtils
 
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 
 class SimpleCell:
 
-    def loadModel(self):
+    def __init__(self):
         G.createProject(name = 'Simple Cell')
 
         print('Loading Model...')
@@ -58,7 +59,10 @@ class SimpleCell:
 
         # run simulation
         h.tstop = 60 # ms
-        #h.run()  
+        #h.run()
+
+        G.createGeometryVariables(GeppettoNeuronUtils.extractMorphology())
+
 
     def analysis(self):
         #from matplotlib import pyplot

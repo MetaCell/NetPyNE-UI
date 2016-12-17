@@ -1,10 +1,14 @@
+from __future__ import print_function
 from neuron import h
 
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
+import GeppettoNeuronUtils
+
 
 class VerySimpleCell:
-    
-    def loadModel(self):
+
+    def __init__(self):
+        print("loading very simple cell")
         G.createProject(name = 'Very Simple Cell')
 
         print('Loading Model...')
@@ -21,6 +25,8 @@ class VerySimpleCell:
         G.createStateVariable(id = 'time', name = 'time', units = 'ms', neuron_variable = self.t_vec)
         
         h.tstop = 80.0
+
+        G.createGeometryVariables(GeppettoNeuronUtils.extractMorphology())
 
     def analysis(self):
         #from matplotlib import pyplot
