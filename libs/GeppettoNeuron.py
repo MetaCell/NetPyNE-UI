@@ -1,13 +1,12 @@
-from __future__ import print_function
-from neuron import h
+import logging
+from collections import defaultdict
 import threading
 import time
-import datetime
+from neuron import h
 from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 from geppettoJupyter.geppetto_comm import GeppettoJupyterGUISync
-from RunControl import *
-from LoadAndAnalysisPanels import *
-from collections import defaultdict
+from GeppettoNeuronController import *
+
 
 class LoopTimer(threading.Thread) :
     """
@@ -42,12 +41,7 @@ class LoopTimer(threading.Thread) :
             value.timeSeries = key.to_python() 
         
         for key,value in GeppettoJupyterGUISync.sync_values.items():
-            if value.sync_value != str(eval("h."+key)):
-                print("taka")
-                print(value.sync_value)
-                print(str(eval("h."+key)))
             value.sync_value = str(eval("h."+key))
-
 
 # Refresh value every 1 
 class Event(object):
@@ -56,10 +50,6 @@ class Event(object):
 
     def callback(self) :
         for key,value in GeppettoJupyterGUISync.sync_values.items():
-            if value.sync_value != str(eval("h._ref_t."+key)):
-                print("taka1")
-                print(value.sync_value)
-                print(str(eval("h._ref_t."+key)))
             value.sync_value = str(eval("h._ref_t."+key))
 
         h.cvode.event(h.t + 1, self.callback)
@@ -67,6 +57,15 @@ class Event(object):
 
 
 def init():
+    # Configure log
+    logger = logging.getLogger()
+    fhandler = logging.FileHandler(filename='GeppettoNeuron.log', mode='a')
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    fhandler.setFormatter(formatter)
+    logger.addHandler(fhandler)
+    logger.setLevel(logging.DEBUG)
+    logging.warning('Initialising GeppettoNeuron')
+
     # Reset any previous value
     GeppettoJupyterGUISync.sync_values = defaultdict(list)
     GeppettoJupyterModelSync.record_variables = defaultdict(list)
@@ -87,4 +86,5 @@ def init():
     showRunControlPanel()
     showSampleModelsPanel()
     showAnalysisPanel()
+    showCellBuilderPanel()
 

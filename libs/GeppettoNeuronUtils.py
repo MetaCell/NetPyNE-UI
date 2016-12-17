@@ -7,11 +7,14 @@ from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 def extractMorphology():
     secs, secLists, synMechs = utils.getCellParams(None)
     geometries = []
+    print(secs, secLists, synMechs)
 
-    # Convert non pt3d geometries
-    #secs = convertTo3DGeoms(secs)
+    # Hack to convert non pt3d geometries
+    if 'pt3d' not in list(secs.values())[0]['geom']:
+        secs = convertTo3DGeoms(secs)
 
     for secName, sec in secs.items():
+        print(sec['geom']['pt3d'])
         for i in range(len(sec['geom']['pt3d'])-1):
             position = sec['geom']['pt3d'][i]
             distal = sec['geom']['pt3d'][i+1]

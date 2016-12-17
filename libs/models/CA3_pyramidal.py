@@ -1,17 +1,17 @@
 from neuron import h
-import utils
+import GeppettoNeuronUtils
 
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 
 
 class CA3_pyramidal:
 
-    def loadModel(self):
+    def __init__(self):
         G.createProject(name='CA3 Pyramidal Neuron')
 
-        h.load_file("geo-cell1zr.hoc")
+        h.load_file("models/geo-cell1zr.hoc")
 
-        G.createGeometryVariables(utils.extractMorphology())
+        G.createGeometryVariables(GeppettoNeuronUtils.extractMorphology())
 
     #def analysis(self):
         # plot voltage vs time
