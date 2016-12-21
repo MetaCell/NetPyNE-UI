@@ -1,12 +1,17 @@
+import logging
 from neuron import h
 import GeppettoNeuronUtils
 
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 
+from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
+
+
+
 class SimpleCell:
 
     def __init__(self):
-        G.createProject(name = 'Simple Cell')
+        G.createProject(name='Simple Cell')
 
         print('Loading Model...')
         self.soma = h.Section(name='soma')
@@ -14,9 +19,10 @@ class SimpleCell:
         self.dend.connect(self.soma(1))
 
         # Surface area of cylinder is 2*pi*r*h (sealed ends are implicit).
-        self.soma.L = self.soma.diam = 12.6157 # Makes a soma of 500 microns squared.
-        self.dend.L = 200 # microns
-        self.dend.diam = 1 # microns
+        # Makes a soma of 500 microns squared.
+        self.soma.L = self.soma.diam = 12.6157
+        self.dend.L = 200  # microns
+        self.dend.diam = 1  # microns
 
         for sec in h.allsec():
             sec.Ra = 100   # Axial resistance in Ohm * cm
@@ -40,29 +46,31 @@ class SimpleCell:
         self.syn.e = 0  # equilibrium potential in mV
         self.syn.onset = 20  # turn on after this time in ms
         self.syn.gmax = 0.05  # set conductance in uS
-        self.syn.tau = 0.1 # set time constant 
+        self.syn.tau = 0.1  # set time constant
 
         # record soma voltage and time
         self.t_vec = h.Vector()
         self.t_vec.record(h._ref_t)
-        G.createStateVariable(id = 'time', name = 'time', units = 'ms', neuron_variable = self.t_vec)
+        G.createStateVariable(id='time', name='time',
+                              units='ms', neuron_variable=self.t_vec)
 
         self.v_vec_soma = h.Vector()
-        self.v_vec_soma.record(self.soma(1.0)._ref_v) # change recoding pos
-        #TODO How do we extract the units?
-        G.createStateVariable(id = 'v_vec_soma', name = 'v_vec_soma', units = 'mV', neuron_variable = self.v_vec_soma)
+        self.v_vec_soma.record(self.soma(1.0)._ref_v)  # change recoding pos
+        # TODO How do we extract the units?
+        G.createStateVariable(id='v_vec_soma', name='v_vec_soma',
+                              units='mV', neuron_variable=self.v_vec_soma)
 
         self.v_vec_dend = h.Vector()
         self.v_vec_dend.record(self.dend(1.0)._ref_v)
-        #TODO How do we extract the units?
-        G.createStateVariable(id = 'v_vec_dend', name = 'v_vec_dend', units = 'mV', neuron_variable = self.v_vec_dend)
+        # TODO How do we extract the units?
+        G.createStateVariable(id='v_vec_dend', name='v_vec_dend',
+                              units='mV', neuron_variable=self.v_vec_dend)
 
         # run simulation
-        h.tstop = 60 # ms
-        #h.run()
+        h.tstop = 60  # ms
+        # h.run()
 
         G.createGeometryVariables(GeppettoNeuronUtils.extractMorphology())
-
 
     def analysis(self):
         #from matplotlib import pyplot
@@ -74,5 +82,14 @@ class SimpleCell:
         # pyplot.legend()
         # pyplot.show()
 
-        #plot voltage vs time
-        G.plotVariable('Plot', ['SimpleCell.v_vec_dend', 'SimpleCell.v_vec_soma'])
+        # plot voltage vs time
+        self.plotWidget = G.plotVariable(
+            'Plot', ['SimpleCell.v_vec_dend', 'SimpleCell.v_vec_soma'])
+        self.plotWidget.registerToEvent(
+            [GeppettoJupyterModelSync.events_controller._events['Select']], self.refresh_data)
+
+    def refresh_data(self, data):
+        logging.warning('Updating plot')
+        logging.warning(data)
+        self.plotWidget.data = ['SimpleCell.v_vec_dend']
+
