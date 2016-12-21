@@ -36,6 +36,10 @@ def showCellBuilderPanel():
     from CellBuilder import showCellBuilder
     showCellBuilder()
 
+def showPointProcessPanel():
+    from PointProcess import showPointProcess
+    showPointProcess()
+
 def showRunControlPanel():
     from RunControl import showRunControlPanel
     showRunControlPanel()

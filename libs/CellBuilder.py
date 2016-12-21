@@ -3,8 +3,9 @@ from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 
 
-def updateValues():
+def updateValues(dataId):
     logging.warning('Updating values')
+    logging.warning(dataId)
 
 
 def showCellBuilder():
