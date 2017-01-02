@@ -1,3 +1,7 @@
+"""
+GeppettoNeuron.py
+Initialise geppetto neuron, listeners and variables
+"""
 import logging
 from collections import defaultdict
 import threading
@@ -5,7 +9,7 @@ import time
 from neuron import h
 from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 from geppettoJupyter.geppetto_comm import GeppettoJupyterGUISync
-from GeppettoNeuronController import *
+from GeppettoNeuronController import show_sample_models, show_analysis, show_cell_builder, show_point_process, show_run_control
 
 
 class LoopTimer(threading.Thread):
@@ -42,10 +46,8 @@ class LoopTimer(threading.Thread):
             value.timeSeries = key.to_python()
 
         for key, value in GeppettoJupyterGUISync.sync_values.items():
-            value.sync_value = str(eval("h." + key))
-
-# Refresh value every 1
-
+            if key != '':
+                value.sync_value = str(eval("h." + key))
 
 class Event(object):
 
@@ -54,7 +56,8 @@ class Event(object):
 
     def callback(self):
         for key, value in GeppettoJupyterGUISync.sync_values.items():
-            value.sync_value = str(eval("h._ref_t." + key))
+            if key != '':
+                value.sync_value = str(eval("h._ref_t." + key))
 
         h.cvode.event(h.t + 1, self.callback)
 
@@ -63,7 +66,7 @@ def init():
     try:
         # Configure log
         logger = logging.getLogger()
-        fhandler = logging.FileHandler(filename='GeppettoNeuron.log', mode='a')
+        fhandler = logging.FileHandler(filename='geppetto_neuron.log', mode='a')
         formatter = logging.Formatter(
             '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         fhandler.setFormatter(formatter)
@@ -71,29 +74,38 @@ def init():
         logger.setLevel(logging.DEBUG)
         logging.warning('Initialising GeppettoNeuron')
 
+        # from IPython.core.debugger import Tracer
+        # Tracer()()
+
         # Reset any previous value
+        logging.warning('Initialising Sync and Status Variables')
         GeppettoJupyterGUISync.sync_values = defaultdict(list)
         GeppettoJupyterModelSync.record_variables = defaultdict(list)
         GeppettoJupyterModelSync.current_project = None
         GeppettoJupyterModelSync.current_experiment = None
         GeppettoJupyterModelSync.current_model = None
+        GeppettoJupyterModelSync.current_python_model = None
+        GeppettoJupyterModelSync.events_controller = GeppettoJupyterModelSync.EventsSync()
 
         # Sync values when no sim is running
+        logging.warning('Initialising Sync Mechanism for no-sim environment')
         timer = LoopTimer(0.1)
         timer.start()
         while not timer.started:
             time.sleep(0.001)
 
         # Sync values when a sim is running
+        logging.warning('Initialising Sync Mechanism for sim environment')
         e = Event()
 
         # Init Panels
-        showRunControlPanel()
-        showSampleModelsPanel()
-        showAnalysisPanel()
-        showCellBuilderPanel()
-        showPointProcessPanel()
+        logging.warning('Initialising GUI')
+        show_run_control()
+        show_sample_models()
+        show_analysis()
+        show_cell_builder()
+        show_point_process()
 
     except Exception as e:
-        self.log.error("Unexpected error:")
-        self.log.error(str(e))
+        logging.error("Unexpected error in Geppetto Neuron:")
+        logging.error(str(e))
