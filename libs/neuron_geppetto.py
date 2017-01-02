@@ -9,8 +9,8 @@ import time
 from neuron import h
 from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 from geppettoJupyter.geppetto_comm import GeppettoJupyterGUISync
-from GeppettoNeuronController import show_sample_models, show_analysis, show_cell_builder, show_point_process, show_run_control
-
+from neuron_controller import show_sample_models, show_analysis, show_cell_builder, show_point_process, show_run_control
+import neuron_utils
 
 class LoopTimer(threading.Thread):
     """
@@ -64,16 +64,11 @@ class Event(object):
 
 def init():
     try:
-        # Configure log
-        logger = logging.getLogger()
-        fhandler = logging.FileHandler(filename='geppetto_neuron.log', mode='a')
-        formatter = logging.Formatter(
-            '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        fhandler.setFormatter(formatter)
-        logger.addHandler(fhandler)
-        logger.setLevel(logging.DEBUG)
         logging.warning('Initialising GeppettoNeuron')
 
+        # Configure log
+        neuron_utils.configure_logging()
+        
         # from IPython.core.debugger import Tracer
         # Tracer()()
 
