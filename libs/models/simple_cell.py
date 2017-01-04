@@ -6,12 +6,12 @@ import neuron_utils
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 
+
 class SimpleCell:
 
     def __init__(self):
         G.createProject(name='Simple Cell')
 
-        print('Loading Model...')
         self.soma = h.Section(name='soma')
         self.dend = h.Section(name='dend')
         self.dend.connect(self.soma(1))
@@ -57,6 +57,7 @@ class SimpleCell:
         # TODO How do we extract the units?
         G.createStateVariable(id='v_vec_soma', name='v_vec_soma',
                               units='mV', python_variable=self.v_vec_soma)
+                              
 
         self.v_vec_dend = h.Vector()
         self.v_vec_dend.record(self.dend(1.0)._ref_v)
@@ -70,8 +71,6 @@ class SimpleCell:
 
         neuron_utils.extractGeometries()
 
-        logging.warning('Simple Cell loaded')
-
     def analysis(self):
         # plot voltage vs time
         self.plotWidget = G.plotVariable(
@@ -80,16 +79,14 @@ class SimpleCell:
             [GeppettoJupyterModelSync.events_controller._events['Select']], self.refresh_data)
 
     def refresh_data(self, data, groupNameIdentifier):
-        logging.warning('Updating plot')
-        logging.warning(data)
-        logging.warning(groupNameIdentifier)
+        logging.debug('Refreshing plot with selected geometry: ' +
+                      data + groupNameIdentifier)
 
-        logging.warning("Checking statevariable by selected geometry")
-        # Tracer()()
+        logging.debug("Checking statevariable by selected geometry")
         for stateVariable in GeppettoJupyterModelSync.current_model.stateVariables:
-            logging.warning(stateVariable.python_variable)
-            logging.warning(dir(stateVariable.python_variable))
-        logging.warning("Stated varible checked")
+            logging.debug(stateVariable.python_variable)
+            logging.debug(dir(stateVariable.python_variable))
+        logging.debug("Stated varible checked")
 
         self.plotWidget.data = ['SimpleCell.v_vec_dend']
 
