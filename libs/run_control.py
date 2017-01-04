@@ -8,7 +8,7 @@ from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 class RunControl:
 
     def __init__(self):
-        logging.warning('Initializing Run Control')
+        logging.debug('Initializing Run Control')
         self.initPanel = G.addTextFieldAndButton(
             "Init", 'v_init', True, ['h.stdinit()'])
 

@@ -64,7 +64,7 @@ class Event(object):
 
 def init():
     try:
-        logging.warning('Initialising GeppettoNeuron')
+        logging.debug('Initialising GeppettoNeuron')
 
         # Configure log
         neuron_utils.configure_logging()
@@ -73,7 +73,7 @@ def init():
         # Tracer()()
 
         # Reset any previous value
-        logging.warning('Initialising Sync and Status Variables')
+        logging.debug('Initialising Sync and Status Variables')
         GeppettoJupyterGUISync.sync_values = defaultdict(list)
         GeppettoJupyterModelSync.record_variables = defaultdict(list)
         GeppettoJupyterModelSync.current_project = None
@@ -83,18 +83,18 @@ def init():
         GeppettoJupyterModelSync.events_controller = GeppettoJupyterModelSync.EventsSync()
 
         # Sync values when no sim is running
-        logging.warning('Initialising Sync Mechanism for no-sim environment')
+        logging.debug('Initialising Sync Mechanism for no-sim environment')
         timer = LoopTimer(0.1)
         timer.start()
         while not timer.started:
             time.sleep(0.001)
 
         # Sync values when a sim is running
-        logging.warning('Initialising Sync Mechanism for sim environment')
+        logging.debug('Initialising Sync Mechanism for sim environment')
         e = Event()
 
         # Init Panels
-        logging.warning('Initialising GUI')
+        logging.debug('Initialising GUI')
         show_run_control()
         show_sample_models()
         show_analysis()
@@ -104,3 +104,4 @@ def init():
     except Exception as e:
         logging.error("Unexpected error in Geppetto Neuron:")
         logging.error(str(e))
+        logging.exception("message")

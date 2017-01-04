@@ -10,7 +10,7 @@ from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 class CellBuilder:
 
     def __init__(self):
-        logging.warning('Initializing Cell Builder')
+        logging.debug('Initializing Cell Builder')
 
         self.geometry = None
         self.radiusTextField = G.addTextField('Radius', None)
@@ -24,19 +24,19 @@ class CellBuilder:
         self.cellBuilderPanel.display()
 
     def updateValues(self, dataId, groupNameIdentifier):
-        logging.warning('Loading values for geometry ' +
+        logging.debug('Loading values for geometry ' +
                         str(groupNameIdentifier))
         for geometry in GeppettoJupyterModelSync.current_model.geometries:
             if geometry.id == groupNameIdentifier:
                 self.geometry = geometry
                 self.segment = list(self.geometry.python_variable["section"].allseg())[self.geometry.python_variable["segment"]]
-                logging.warning('Bottom Radius ' + str(self.geometry.bottomRadius))
+                logging.debug('Bottom Radius ' + str(self.geometry.bottomRadius))
                 self.radiusTextField.sync_value = str(self.geometry.bottomRadius)
-                logging.warning('Distal X' + str(self.geometry.distalX))
+                logging.debug('Distal X' + str(self.geometry.distalX))
                 self.lengthTextField.sync_value = str(self.geometry.distalX)
                 return True
         return False
 
     def modify_segment(self, triggeredComponent, args):
-        logging.warning('Modifying segment')
+        logging.debug('Modifying segment')
         G.popupVariable('Segment modified', ['Modify segment: ' + str(self.geometry.python_variable["segment"]) + ' at section ' + self.geometry.python_variable["section"].name()])

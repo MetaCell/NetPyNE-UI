@@ -5,7 +5,7 @@ from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 
 class SampleModels:
     def __init__(self):
-        logging.warning('Initializing Samples panel')
+        logging.debug('Initializing Samples panel')
         self.items = []
         self.items.append(G.addButton('Very simple cell', self.loadModule,  extraData = {'module': 'verysimple_cell', 'model':'VerySimpleCell'}))    
         self.items.append(G.addButton('Simple cell', self.loadModule,  extraData = {'module': 'simple_cell', 'model':'SimpleCell'}))
@@ -18,7 +18,7 @@ class SampleModels:
 
     def loadModule(self, triggeredComponent, args):
         try:
-            logging.warning('Loading model ' + triggeredComponent.extraData['module'])
+            logging.debug('Loading model ' + triggeredComponent.extraData['module'])
             #FIXME: Check if it works in python 2
             module = importlib.import_module("models." + triggeredComponent.extraData['module'])
             GeppettoJupyterModelSync.current_python_model = getattr(module, triggeredComponent.extraData['model'])()
