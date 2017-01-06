@@ -102,6 +102,4 @@ def init():
         show_point_process()
 
     except Exception as e:
-        logging.error("Unexpected error in Geppetto Neuron:")
-        logging.error(str(e))
-        logging.exception("message")
+        logging.exception("Unexpected error in neuron_geppetto initialization:")
