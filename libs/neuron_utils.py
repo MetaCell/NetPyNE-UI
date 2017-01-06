@@ -30,61 +30,40 @@ def extractGeometries():
         secs = neuron_geometries_utils.convertTo3DGeoms(secs)
 
     logging.debug("starting secs extraction")
-    taka = 0
     for secName, sec in secs.items():
-        points = sec['geom']['pt3d']
-        num_segments = range(len(points) - 1)
+        if 'pt3d' in sec['geom']:
+            points = sec['geom']['pt3d']
 
-        for i in num_segments:
-            taka += 1
-            logging.debug("segment number " + str(taka))
+            for i in range(len(points) - 1):
+                position = points[i]
+                distal = points[i + 1]
 
-            #segment = sec['neuronSec'](i)
-            position = points[i]
-            distal = points[i + 1]
+                # geometries.append(G.createGeometry(id=secName + "_" + str(i),
+                #                                    name=secName + " " + str(i),
+                #                                    bottomRadius=position[3],
+                #                                    positionX=position[0],
+                #                                    positionY=position[1],
+                #                                    positionZ=position[2],
+                #                                    topRadius=distal[3],
+                #                                    distalX=distal[0],
+                #                                    distalY=distal[1],
+                #                                    distalZ=distal[2],
+                #                                    python_variable={'section': sec['neuronSec'], 'segment': i}))
 
-            # Takes around 5-6 second
-            # geometries.append(G.createGeometry(id=secName + "_" + str(i),
-            #                                    name=secName + " " + str(i),
-            #                                    bottomRadius=position[3],
-            #                                    positionX=position[0],
-            #                                    positionY=position[1],
-            #                                    positionZ=position[2],
-            #                                    topRadius=distal[3],
-            #                                    distalX=distal[0],
-            #                                    distalY=distal[1],
-            #                                    distalZ=distal[2],
-            #                                    python_variable={'section': sec['neuronSec'], 'segment': i}))
+                geometries.append(GeppettoJupyterModelSync.GeometrySync(id=secName + "_" + str(i),
+                                                                        name=secName + " " + str(i),
+                                                                        bottomRadius=position[3],
+                                                                        positionX=position[0],
+                                                                        positionY=position[1],
+                                                                        positionZ=position[2],
+                                                                        topRadius=distal[3],
+                                                                        distalX=distal[0],
+                                                                        distalY=distal[1],
+                                                                        distalZ=distal[2],
+                                                                        python_variable={'section': sec['neuronSec'], 'segment': (i/len(points))}))
 
-            # Takes around 5-6 second
-            # geometries.append(GeppettoJupyterModelSync.GeometrySync(id=secName + "_" + str(i),
-            #                                    name=secName + " " + str(i),
-            #                                    bottomRadius=position[3],
-            #                                    positionX=position[0],
-            #                                    positionY=position[1],
-            #                                    positionZ=position[2],
-            #                                    topRadius=distal[3],
-            #                                    distalX=distal[0],
-            #                                    distalY=distal[1],
-            #                                    distalZ=distal[2],
-            # python_variable={'section': sec['neuronSec'], 'segment': i}))
-
-            #Takes around 2-3 second
-            # geometries.append({'id': secName + "_" + str(i),
-            #                    'name': secName + " " + str(i),
-            #                    'bottomRadius': position[3],
-            #                    'positionX': position[0],
-            #                    'positionY': position[1],
-            #                    'positionZ': position[2],
-            #                    'topRadius': distal[3],
-            #                    'distalX': distal[0],
-            #                    'distalY': distal[1],
-            #                    'distalZ': distal[2],
-            #                    'python_variable': {'section': sec['neuronSec'], 'segment': i}})
 
     logging.debug("finishing secs extraction")
-    logging.warn("GEOMETRIES")
-    logging.warn(len(geometries))
+    logging.debug("Geometries found: " + str(len(geometries)))
     GeppettoJupyterModelSync.current_model.addGeometries(geometries)
-    # GeppettoJupyterModelSync.current_model.sync()
     return geometries
