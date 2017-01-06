@@ -3,6 +3,8 @@ import importlib
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 
+from neuron import h
+
 class SampleModels:
     def __init__(self):
         logging.debug('Initializing Samples panel')
@@ -18,12 +20,14 @@ class SampleModels:
 
     def loadModule(self, triggeredComponent, args):
         try:
+            #FIXME: Not working when moving from CA3 Pyramidal to simple cell
+            h('forall delete_section()')
+
             logging.debug('Loading model ' + triggeredComponent.extraData['module'])
             #FIXME: Check if it works in python 2
             module = importlib.import_module("models." + triggeredComponent.extraData['module'])
             GeppettoJupyterModelSync.current_python_model = getattr(module, triggeredComponent.extraData['model'])()
 
         except Exception as e:
-            logging.error("Unexpected error loading model")
-            logging.error(str(e))
+            logging.exception("Unexpected error loading model")
             raise
