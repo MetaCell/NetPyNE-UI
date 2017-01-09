@@ -61,13 +61,12 @@ class Event(object):
 
         h.cvode.event(h.t + 1, self.callback)
 
-
 def init():
     try:
-        logging.debug('Initialising GeppettoNeuron')
-
         # Configure log
         neuron_utils.configure_logging()
+
+        logging.debug('Initialising GeppettoNeuron')
         
         # from IPython.core.debugger import Tracer
         # Tracer()()
@@ -101,5 +100,6 @@ def init():
         show_cell_builder()
         show_point_process()
 
-    except Exception as e:
+    except Exception as exception:
         logging.exception("Unexpected error in neuron_geppetto initialization:")
+        raise

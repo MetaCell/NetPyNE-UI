@@ -4,8 +4,7 @@ Neuron Point Process
 """
 import logging
 # from IPython.core.debugger import Tracer
-
-from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
+import neuron_utils
 from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 
 from neuron import h
@@ -18,12 +17,12 @@ class PointProcess:
 
         self.pointProcesses = []
 
-        self.delay = G.addTextField('Delay', None)
-        self.duration = G.addTextField('Duration', None)
-        self.amplitude = G.addTextField('Amplitude', None)
-        self.save_button = G.addButton('Save', self.create_current_clamp)
+        self.delay = neuron_utils.add_text_field('Delay', None)
+        self.duration = neuron_utils.add_text_field('Duration', None)
+        self.amplitude = neuron_utils.add_text_field('Amplitude', None)
+        self.save_button = neuron_utils.add_button('Save', self.create_current_clamp)
 
-        self.pointProcessPanel = G.addPanel('Point Process', items=[
+        self.pointProcessPanel = neuron_utils.add_panel('Point Process', items=[
             self.delay, self.duration, self.amplitude, self.save_button], widget_id='pointProcessPanel', positionX=600, positionY=10)
         self.pointProcessPanel.registerToEvent(
             [GeppettoJupyterModelSync.events_controller._events['Select']], self.updateValues)

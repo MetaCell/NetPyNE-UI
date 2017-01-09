@@ -1,6 +1,6 @@
 import logging
 import importlib
-from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
+import neuron_utils
 from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 
 from neuron import h
@@ -9,13 +9,13 @@ class SampleModels:
     def __init__(self):
         logging.debug('Initializing Samples panel')
         self.items = []
-        self.items.append(G.addButton('Very simple cell', self.loadModule,  extraData = {'module': 'verysimple_cell', 'model':'VerySimpleCell'}))    
-        self.items.append(G.addButton('Simple cell', self.loadModule,  extraData = {'module': 'simple_cell', 'model':'SimpleCell'}))
-        self.items.append(G.addButton('Simple network', self.loadModule,  extraData = {'module': 'simple_network', 'model':'SimpleNetwork'}))
-        self.items.append(G.addButton('CA3 Pyramidal', self.loadModule,  extraData = {'module': 'CA3_pyramidal', 'model':'CA3_pyramidal'}))
-        self.items.append(G.addButton('Ball and stick', self.loadModule,  extraData = {'module': 'ball_and_stick', 'model':'BallAndStick'}))
+        self.items.append(neuron_utils.add_button('Very simple cell', self.loadModule, extraData = {'module': 'verysimple_cell', 'model':'VerySimpleCell'}))    
+        self.items.append(neuron_utils.add_button('Simple cell', self.loadModule, extraData = {'module': 'simple_cell', 'model':'SimpleCell'}))
+        self.items.append(neuron_utils.add_button('Simple network', self.loadModule, extraData = {'module': 'simple_network', 'model':'SimpleNetwork'}))
+        self.items.append(neuron_utils.add_button('CA3 Pyramidal', self.loadModule, extraData = {'module': 'CA3_pyramidal', 'model':'CA3_pyramidal'}))
+        self.items.append(neuron_utils.add_button('Ball and stick', self.loadModule, extraData = {'module': 'ball_and_stick', 'model':'BallAndStick'}))
 
-        self.loadModelPanel = G.addPanel('Load Models', items = self.items, widget_id = 'loadModelPanel', positionX =90, positionY=10)
+        self.loadModelPanel = neuron_utils.add_panel('Load Models', items = self.items, widget_id = 'loadModelPanel', positionX =90, positionY=10)
         self.loadModelPanel.display() 
 
     def loadModule(self, triggeredComponent, args):

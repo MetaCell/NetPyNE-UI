@@ -3,46 +3,59 @@ run_control.py
 Neuron Run Control Panel
 """
 import logging
+import neuron_utils
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
+from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
+
+from neuron import h
+h.load_file("stdrun.hoc")
 
 class RunControl:
 
     def __init__(self):
         logging.debug('Initializing Run Control')
-        self.initPanel = G.addTextFieldAndButton(
-            "Init", 'v_init', True, ['h.stdinit()'])
+        self.initPanel = neuron_utils.add_text_field_and_button(
+            "Init", 'v_init', True, self.execute_neuron_command, extraData={'commands': ['h.stdinit()']})
 
-        self.initRunButton = G.addButton('Init & Run', ['GeppettoJupyterModelSync.current_experiment.state = "RUNNING"',
-                                                        'h.run()', 'GeppettoJupyterModelSync.current_experiment.state = "COMPLETED"'])
+        self.initRunButton = neuron_utils.add_button('Init & Run', self.execute_neuron_command, extraData={'commands': ['GeppettoJupyterModelSync.current_experiment.state = "RUNNING"',
+                                                                                                                        'h.run()', 'GeppettoJupyterModelSync.current_experiment.state = "COMPLETED"']})
 
-        self.stopButton = G.addButton('Stop')
+        self.stopButton = neuron_utils.add_button('Stop')
         self.stopButton.on_click(['h.stoprun = 1'])
 
-        self.continueTilPanel = G.addTextFieldAndButton(
-            "Continue til", 'runStopAt', True, ['h.continuerun(runStopAt)', 'h.stoprun=1'])
+        self.continueTilPanel = neuron_utils.add_text_field_and_button(
+            "Continue til", 'runStopAt', True, self.execute_neuron_command, extraData={'commands': ['h.continuerun(runStopAt)', 'h.stoprun=1']})
 
-        self.continueForPanel = G.addTextFieldAndButton("Continue for", 'runStopIn', True, [
-                                                        'h.continuerun(t + runStopIn)', 'h.stoprun=1'])
+        self.continueForPanel = neuron_utils.add_text_field_and_button("Continue for", 'runStopIn', True, self.execute_neuron_command, extraData={'commands': [
+            'h.continuerun(t + runStopIn)', 'h.stoprun=1']})
 
-        self.singleStepButton = G.addButton('Single Step', ['h.steprun()'])
+        self.singleStepButton = neuron_utils.add_button(
+            'Single Step', self.execute_neuron_command, extraData={'commands': ['h.steprun()']})
 
-        self.timePanel = G.addTextFieldAndButton("t", 't', False, [])
+        self.timePanel = neuron_utils.add_text_field_and_button(
+            "t", 't', False, self.execute_neuron_command, extraData={'commands': []})
 
-        self.stopPanel = G.addTextFieldAndButton(
-            "Tstop", 'tstop', True, ['h.tstop_changed()'])
+        self.stopPanel = neuron_utils.add_text_field_and_button(
+            "Tstop", 'tstop', True, self.execute_neuron_command, extraData={'commands': ['h.tstop_changed()']})
 
-        self.dtPanel = G.addTextFieldAndButton("dt", 'dt', True, ['h.setdt()'])
+        self.dtPanel = neuron_utils.add_text_field_and_button(
+            "dt", 'dt', True, self.execute_neuron_command, extraData={'commands': ['h.setdt()']})
 
-        self.pointsPlottedPanel = G.addTextFieldAndButton(
-            "Points plotted/ms", 'steps_per_ms', True, ['h.setdt()'])
+        self.pointsPlottedPanel = neuron_utils.add_text_field_and_button(
+            "Points plotted/ms", 'steps_per_ms', True, self.execute_neuron_command, extraData={'commands': ['h.setdt()']})
 
-        self.scrnUpdateInvlPanel = G.addTextFieldAndButton(
-            "Scrn update invl", 'screen_update_invl', True, [])
+        self.scrnUpdateInvlPanel = neuron_utils.add_text_field_and_button(
+            "Scrn update invl", 'screen_update_invl', True, self.execute_neuron_command, extraData={'commands': []})
 
-        self.realTimePanel = G.addTextFieldAndButton(
-            "Real Time", 'realtime', False, [])
+        self.realTimePanel = neuron_utils.add_text_field_and_button(
+            "Real Time", 'realtime', False, self.execute_neuron_command, extraData={'commands': []})
 
-        self.runControlPanel = G.addPanel('Run Control', items=[self.initPanel, self.initRunButton, self.stopButton, self.continueTilPanel, self.continueForPanel, self.singleStepButton,
-                                                                self.timePanel, self.stopPanel, self.dtPanel, self.pointsPlottedPanel, self.scrnUpdateInvlPanel, self.realTimePanel], widget_id='runControlPanel', positionX=600, positionY=10)
+        self.runControlPanel = neuron_utils.add_panel('Run Control', items=[self.initPanel, self.initRunButton, self.stopButton, self.continueTilPanel, self.continueForPanel, self.singleStepButton,
+                                                                            self.timePanel, self.stopPanel, self.dtPanel, self.pointsPlottedPanel, self.scrnUpdateInvlPanel, self.realTimePanel], widget_id='runControlPanel', positionX=600, positionY=10)
 
         self.runControlPanel.display()
+
+    def execute_neuron_command(self, component, args):
+        for callback in component.extraData['commands']:
+            exec(callback)
+

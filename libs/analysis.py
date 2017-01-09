@@ -1,12 +1,16 @@
 import logging
-from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
+import neuron_utils
 from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 
+
 class Analysis:
+
     def __init__(self):
-        logging.debug('Initializing Analysis panle')
-        self.analysis_button = G.addButton('Plot', self.run_analysis)
-        self.analysis_panel = G.addPanel('Analysis', items = [self.analysis_button], widget_id = 'analysisPanel', positionX =90, positionY=250)
+        logging.debug('Initializing Analysis panel')
+        self.analysis_button = neuron_utils.add_button(
+            'Plot', self.run_analysis)
+        self.analysis_panel = neuron_utils.add_panel('Analysis', items=[
+                                                     self.analysis_button], widget_id='analysisPanel', positionX=90, positionY=250)
         self.analysis_panel.display()
 
     def run_analysis(self, triggeredComponent, args):

@@ -3,6 +3,7 @@ cell_builder.py
 Neuron Cell Builder
 """
 import logging
+import neuron_utils
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 
@@ -14,11 +15,11 @@ class CellBuilder:
 
         self.geometry = None
         self.segment = None
-        self.radiusTextField = G.addTextField('Radius', None)
-        self.lengthTextField = G.addTextField('Length', None)
-        self.save_button = G.addButton('Save', self.modify_segment)
+        self.radiusTextField = neuron_utils.add_text_field('Radius', None)
+        self.lengthTextField = neuron_utils.add_text_field('Length', None)
+        self.save_button = neuron_utils.add_button('Save', self.modify_segment)
 
-        self.cellBuilderPanel = G.addPanel('Cell Builder', items=[
+        self.cellBuilderPanel = neuron_utils.add_panel('Cell Builder', items=[
             self.radiusTextField, self.lengthTextField, self.save_button], widget_id='cellBuilderPanel', positionX=600, positionY=10)
         self.cellBuilderPanel.registerToEvent(
             [GeppettoJupyterModelSync.events_controller._events['Select']], self.updateValues)
