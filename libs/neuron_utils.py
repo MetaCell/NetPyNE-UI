@@ -30,43 +30,18 @@ def extractGeometries():
 
     # Hack to convert non pt3d geometries
     if 'pt3d' not in list(secs.values())[0]['geom']:
+        logging.debug('Non pt3d geometries. Converting to pt3d')
         secs = neuron_geometries_utils.convertTo3DGeoms(secs)
+        logging.debug('Geometries converted to pt3d')
 
-    logging.debug("starting secs extraction")
-    for secName, sec in secs.items():
+    logging.debug("Converting sections and segments to Geppetto")
+    for sec_name, sec in secs.items():
         if 'pt3d' in sec['geom']:
             points = sec['geom']['pt3d']
-
             for i in range(len(points) - 1):
-                position = points[i]
-                distal = points[i + 1]
+                geometries.append(G.createGeometry(sec_name = sec_name, index = i, position = points[i], distal = points[i + 1], python_variable={'section': sec['neuronSec'], 'segment': (i/len(points))}))
 
-                # geometries.append(G.createGeometry(id=secName + "_" + str(i),
-                #                                    name=secName + " " + str(i),
-                #                                    bottomRadius=position[3],
-                #                                    positionX=position[0],
-                #                                    positionY=position[1],
-                #                                    positionZ=position[2],
-                #                                    topRadius=distal[3],
-                #                                    distalX=distal[0],
-                #                                    distalY=distal[1],
-                #                                    distalZ=distal[2],
-                #                                    python_variable={'section': sec['neuronSec'], 'segment': i}))
-
-                geometries.append(GeppettoJupyterModelSync.GeometrySync(id=secName + "_" + str(i),
-                                                                        name=secName + " " + str(i),
-                                                                        bottomRadius=position[3],
-                                                                        positionX=position[0],
-                                                                        positionY=position[1],
-                                                                        positionZ=position[2],
-                                                                        topRadius=distal[3],
-                                                                        distalX=distal[0],
-                                                                        distalY=distal[1],
-                                                                        distalZ=distal[2],
-                                                                        python_variable={'section': sec['neuronSec'], 'segment': (i/len(points))}))
-
-
-    logging.debug("finishing secs extraction")
+    logging.debug("Sections and segments converted to Geppetto")
     logging.debug("Geometries found: " + str(len(geometries)))
     GeppettoJupyterModelSync.current_model.addGeometries(geometries)
     return geometries
