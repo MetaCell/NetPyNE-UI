@@ -1,9 +1,8 @@
 from __future__ import print_function
 from neuron import h
+import neuron_utils
 
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
-import GeppettoNeuronUtils
-
 
 class VerySimpleCell:
 
@@ -20,20 +19,21 @@ class VerySimpleCell:
         self.v_vec = h.Vector()             # Membrane potential vector
         self.t_vec = h.Vector()             # Time stamp vector
         self.v_vec.record(self.soma(0.5)._ref_v)
-        G.createStateVariable(id = 'v_vec', name = 'v_vec', units = 'mV', neuron_variable = self.v_vec)
+        G.createStateVariable(id = 'v_vec', name = 'v_vec', units = 'mV', python_variable = self.v_vec)
         self.t_vec.record(h._ref_t)
-        G.createStateVariable(id = 'time', name = 'time', units = 'ms', neuron_variable = self.t_vec)
+        G.createStateVariable(id = 'time', name = 'time', units = 'ms', python_variable = self.t_vec)
         
         h.tstop = 80.0
 
-        G.createGeometryVariables(GeppettoNeuronUtils.extractMorphology())
+        neuron_utils.extractGeometries()
 
     def analysis(self):
-        #from matplotlib import pyplot
-        #pyplot.figure(figsize=(8,4)) # Default figsize is (8,6)
-        #pyplot.plot(self.t_vec, self.v_vec)
-        #pyplot.xlabel('time (ms)')
-        #pyplot.ylabel('mV')
-        #pyplot.show()
+        self.plotWidget =G.plotVariable('Plot', ['VerySimpleCell.v_vec'])
 
-        G.plotVariable('Plot', ['VerySimpleCell.v_vec'])
+    def analysis_matplotlib(self):
+        from matplotlib import pyplot
+        pyplot.figure(figsize=(8,4)) # Default figsize is (8,6)
+        pyplot.plot(self.t_vec, self.v_vec)
+        pyplot.xlabel('time (ms)')
+        pyplot.ylabel('mV')
+        pyplot.show()

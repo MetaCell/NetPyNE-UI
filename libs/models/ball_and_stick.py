@@ -1,7 +1,7 @@
 from neuron import h
-import GeppettoNeuronUtils
 
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
+import neuron_utils
 
 class BallAndStick:  # Inherits from Cell
 
@@ -19,7 +19,7 @@ class BallAndStick:  # Inherits from Cell
         self.define_biophysics()
         self.create_synapses()
 
-        G.createGeometryVariables(GeppettoNeuronUtils.extractMorphology())
+        neuron_utils.extractGeometries()
 
     def build_subsets(self):
         """Build subset lists. This defines 'all', but subclasses may

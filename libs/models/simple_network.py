@@ -1,9 +1,9 @@
 from neuron import h
 from pylab import sin,cos,pi
 #from matplotlib import pyplot
+import neuron_utils
 
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
-import GeppettoNeuronUtils
 
 class HHCell: 
     """Two-section cell: A soma with active channels and
@@ -63,11 +63,11 @@ class HHCell:
         self.dend_v_vec = h.Vector()   # Membrane potential vector at dendrite
         self.t_vec = h.Vector()        # Time stamp vector
         self.soma_v_vec.record(self.soma(0.5)._ref_v)
-        G.createStateVariable(id = 'soma_v_vec_' + str(self.cell_index), name = 'soma_v_vec for cell ' + str(self.cell_index), units = 'mV', neuron_variable = self.soma_v_vec)
+        G.createStateVariable(id = 'soma_v_vec_' + str(self.cell_index), name = 'soma_v_vec for cell ' + str(self.cell_index), units = 'mV', python_variable = self.soma_v_vec)
         self.dend_v_vec.record(self.dend(0.5)._ref_v)
-        G.createStateVariable(id = 'dend_v_vec_' + str(self.cell_index), name = 'dend_v_vec for cell ' + str(self.cell_index), units = 'mV', neuron_variable = self.dend_v_vec)
+        G.createStateVariable(id = 'dend_v_vec_' + str(self.cell_index), name = 'dend_v_vec for cell ' + str(self.cell_index), units = 'mV', python_variable = self.dend_v_vec)
         self.t_vec.record(h._ref_t)
-        G.createStateVariable(id = 'time', name = 'time', units = 'ms', neuron_variable = self.t_vec)
+        G.createStateVariable(id = 'time', name = 'time', units = 'ms', python_variable = self.t_vec)
 
     def plot_voltage(self):
         """Plot the recorded traces"""
@@ -173,7 +173,7 @@ class SimpleNetwork:
         #h.init()  # initialize sim
         #h.run()  # run simulation
 
-        G.createGeometryVariables(GeppettoNeuronUtils.extractMorphology())
+        neuron_utils.extractGeometries()
 
     def analysis(self):
         #from matplotlib import pyplot
@@ -183,3 +183,5 @@ class SimpleNetwork:
 
         # plot raster
         #self.net.plot_raster()
+
+    #def analysis_matplotlib(self):

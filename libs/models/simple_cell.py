@@ -1,22 +1,26 @@
+import logging
 from neuron import h
-import GeppettoNeuronUtils
+from IPython.core.debugger import Tracer
+import neuron_utils
 
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
+from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
+
 
 class SimpleCell:
 
     def __init__(self):
-        G.createProject(name = 'Simple Cell')
+        G.createProject(name='Simple Cell')
 
-        print('Loading Model...')
         self.soma = h.Section(name='soma')
         self.dend = h.Section(name='dend')
         self.dend.connect(self.soma(1))
 
         # Surface area of cylinder is 2*pi*r*h (sealed ends are implicit).
-        self.soma.L = self.soma.diam = 12.6157 # Makes a soma of 500 microns squared.
-        self.dend.L = 200 # microns
-        self.dend.diam = 1 # microns
+        # Makes a soma of 500 microns squared.
+        self.soma.L = self.soma.diam = 12.6157
+        self.dend.L = 200  # microns
+        self.dend.diam = 1  # microns
 
         for sec in h.allsec():
             sec.Ra = 100   # Axial resistance in Ohm * cm
@@ -40,39 +44,58 @@ class SimpleCell:
         self.syn.e = 0  # equilibrium potential in mV
         self.syn.onset = 20  # turn on after this time in ms
         self.syn.gmax = 0.05  # set conductance in uS
-        self.syn.tau = 0.1 # set time constant 
+        self.syn.tau = 0.1  # set time constant
 
         # record soma voltage and time
         self.t_vec = h.Vector()
         self.t_vec.record(h._ref_t)
-        G.createStateVariable(id = 'time', name = 'time', units = 'ms', neuron_variable = self.t_vec)
+        G.createStateVariable(id='time', name='time',
+                              units='ms', python_variable=self.t_vec)
 
         self.v_vec_soma = h.Vector()
-        self.v_vec_soma.record(self.soma(1.0)._ref_v) # change recoding pos
-        #TODO How do we extract the units?
-        G.createStateVariable(id = 'v_vec_soma', name = 'v_vec_soma', units = 'mV', neuron_variable = self.v_vec_soma)
+        self.v_vec_soma.record(self.soma(1.0)._ref_v)  # change recoding pos
+        # TODO How do we extract the units?
+        G.createStateVariable(id='v_vec_soma', name='v_vec_soma',
+                              units='mV', python_variable=self.v_vec_soma)
+                              
 
         self.v_vec_dend = h.Vector()
         self.v_vec_dend.record(self.dend(1.0)._ref_v)
-        #TODO How do we extract the units?
-        G.createStateVariable(id = 'v_vec_dend', name = 'v_vec_dend', units = 'mV', neuron_variable = self.v_vec_dend)
+        # TODO How do we extract the units?
+        G.createStateVariable(id='v_vec_dend', name='v_vec_dend',
+                              units='mV', python_variable=self.v_vec_dend)
 
         # run simulation
-        h.tstop = 60 # ms
-        #h.run()
+        h.tstop = 60  # ms
+        # h.run()
 
-        G.createGeometryVariables(GeppettoNeuronUtils.extractMorphology())
-
+        neuron_utils.extractGeometries()
 
     def analysis(self):
-        #from matplotlib import pyplot
-        # pyplot.figure(figsize=(8,4)) # Default figsize is (8,6)
-        # pyplot.plot(self.t_vec, self.v_vec_soma, label='soma')
-        # pyplot.plot(self.t_vec, self.v_vec_dend, 'r', label='dend')
-        # pyplot.xlabel('time (ms)')
-        # pyplot.ylabel('mV')
-        # pyplot.legend()
-        # pyplot.show()
+        # plot voltage vs time
+        self.plotWidget = G.plotVariable(
+            'Plot', ['SimpleCell.v_vec_dend', 'SimpleCell.v_vec_soma'])
+        self.plotWidget.registerToEvent(
+            [GeppettoJupyterModelSync.events_controller._events['Select']], self.refresh_data)
 
-        #plot voltage vs time
-        G.plotVariable('Plot', ['SimpleCell.v_vec_dend', 'SimpleCell.v_vec_soma'])
+    def refresh_data(self, data, groupNameIdentifier):
+        logging.debug('Refreshing plot with selected geometry: ' +
+                      data + groupNameIdentifier)
+
+        logging.debug("Checking statevariable by selected geometry")
+        for stateVariable in GeppettoJupyterModelSync.current_model.stateVariables:
+            logging.debug(stateVariable.python_variable)
+            logging.debug(dir(stateVariable.python_variable))
+        logging.debug("Stated varible checked")
+
+        self.plotWidget.data = ['SimpleCell.v_vec_dend']
+
+    def analysis_matplotlib(self):
+        from matplotlib import pyplot
+        pyplot.figure(figsize=(8, 4))  # Default figsize is (8,6)
+        pyplot.plot(self.t_vec, self.v_vec_soma, label='soma')
+        pyplot.plot(self.t_vec, self.v_vec_dend, 'r', label='dend')
+        pyplot.xlabel('time (ms)')
+        pyplot.ylabel('mV')
+        pyplot.legend()
+        pyplot.show()
