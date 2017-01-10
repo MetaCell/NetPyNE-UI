@@ -42,8 +42,12 @@ def _equal_dicts (d1, d2, ignore_keys):
         if k2 not in ignored and k2 not in d1:
             return False
     return True
-    
+
+section_name_dict = {}    
 def getSecName(sec, dirCellSecNames=None):
+    if sec in section_name_dict:
+        return section_name_dict[sec]
+
     if dirCellSecNames is None:
         dirCellSecNames = {}
 
@@ -62,6 +66,17 @@ def getSecName(sec, dirCellSecNames=None):
         secIndex = -1
     if secName in dirCellSecNames:  # get sec names from python
         secName = dirCellSecNames[secName]
+
+    #Add index for network
+    index = ""
+    while (secName+str(index)) in section_name_dict.values():
+        if index == "":
+            index = 0
+        else:
+            index += 1
+    secName += str(index)
+
+    section_name_dict[sec] = secName
     return secName
 
 
