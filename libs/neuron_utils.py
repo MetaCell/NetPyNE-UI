@@ -73,6 +73,19 @@ def add_text_field(name, value = None):
     textfield.on_blur(sync_value)
     return textfield
 
+def add_label(id, name):
+    return GeppettoJupyterGUISync.ComponentSync(component_name = 'LABEL', widget_id = G.newId(), widget_name = name, sync_value = id)
+
+def add_text_field_with_label(name, value = None):
+    items = []
+    textfield = add_text_field(name, value)
+    items.append(add_label(textfield.widget_id, name))
+    items.append(textfield)
+
+    panel = add_panel(name, items = items)
+    panel.setDirection('row')
+    return panel
+
 def add_text_field_and_button(name, value = None, create_checkbox = False, actions = None, extraData = None):
     items = []
     items.append(add_button(name, actions = None, value = value, extraData = extraData))

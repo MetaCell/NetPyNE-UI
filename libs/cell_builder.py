@@ -15,8 +15,8 @@ class CellBuilder:
 
         self.geometry = None
         self.segment = None
-        self.radiusTextField = neuron_utils.add_text_field('Radius', None)
-        self.lengthTextField = neuron_utils.add_text_field('Length', None)
+        self.radiusTextField = neuron_utils.add_text_field_with_label('Radius', None)
+        self.lengthTextField = neuron_utils.add_text_field_with_label('Length', None)
         self.save_button = neuron_utils.add_button('Save', self.modify_segment)
 
         self.cellBuilderPanel = neuron_utils.add_panel('Cell Builder', items=[

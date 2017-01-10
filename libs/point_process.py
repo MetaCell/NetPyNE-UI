@@ -17,9 +17,9 @@ class PointProcess:
 
         self.pointProcesses = []
 
-        self.delay = neuron_utils.add_text_field('Delay', None)
-        self.duration = neuron_utils.add_text_field('Duration', None)
-        self.amplitude = neuron_utils.add_text_field('Amplitude', None)
+        self.delay = neuron_utils.add_text_field_with_label('Delay', None)
+        self.duration = neuron_utils.add_text_field_with_label('Duration', None)
+        self.amplitude = neuron_utils.add_text_field_with_label ('Amplitude', None)
         self.save_button = neuron_utils.add_button('Save', self.create_current_clamp)
 
         self.pointProcessPanel = neuron_utils.add_panel('Point Process', items=[
