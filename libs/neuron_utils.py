@@ -61,43 +61,50 @@ def add_button(name, actions = None, value = None, extraData = None):
 
 def add_text_field(name, value = None):
     parameters = {'component_name':'TEXTFIELD', 'widget_id': G.newId(), 'widget_name' : name}
-    
+
     if value is not None:
         parameters['sync_value'] = str(eval("h."+ value))
-        extraData = {'originalValue': str(eval("h."+value))}
-        parameters['extraData'] = extraData
+        parameters['extraData'] = {'originalValue': str(eval("h."+value))}
         parameters['value'] = value
     else:
         parameters['value'] = ''
     textfield = GeppettoJupyterGUISync.ComponentSync(**parameters)
-    textfield.on_blur(sync_value)
+    if value is not None:
+        textfield.on_blur(sync_value)
     return textfield
 
 def add_label(id, name):
     return GeppettoJupyterGUISync.ComponentSync(component_name = 'LABEL', widget_id = G.newId(), widget_name = name, sync_value = id)
 
-def add_text_field_with_label(name, value = None):
+def add_text_field_with_label(name, value=None):
     items = []
     textfield = add_text_field(name, value)
     items.append(add_label(textfield.widget_id, name))
     items.append(textfield)
 
-    panel = add_panel(name, items = items)
+    panel = add_panel(name, items=items)
     panel.setDirection('row')
     return panel
 
-def add_text_field_and_button(name, value = None, create_checkbox = False, actions = None, extraData = None):
+def add_text_field_and_button(name, value=None, create_checkbox=False, actions=None, extraData=None):
     items = []
-    items.append(add_button(name, actions = None, value = value, extraData = extraData))
+    # Add Button
+    items.append(add_button(name, actions=None, value=value, extraData=extraData))
+    # Create Text Field
     textField = add_text_field(name, value)
     if create_checkbox == True:
-        checkbox = add_checkbox("checkbox" + name)
+        # Create Checkbox
+        checkbox = add_checkbox("checkbox" + name, extraData={'targetComponent': textField})
         checkbox.on_change(resetValueToOriginal)
         items.append(checkbox)
+
+        # Link Checkbox and Textfield to allow Neuron reset behaviour
         textField.on_blur(clickedCheckboxValue)
         textField.extraData['targetComponent'] = checkbox
-    items.append(textField)  
-    panel = add_panel(name, items = items)
+    items.append(textField)
+
+    # Create Panel and set layout
+    panel = add_panel(name, items=items)
     panel.setDirection('row')
     return panel
 
@@ -107,26 +114,26 @@ def add_panel(name, items = [], widget_id=None, positionX=-1, positionY=-1):
         item.embedded = True
     return GeppettoJupyterGUISync.PanelSync(widget_id = widget_id, widget_name=name, items=items, positionX=positionX, positionY=positionY)
 
-def add_checkbox(name, sync_value = 'false'):
-    return GeppettoJupyterGUISync.ComponentSync(component_name='CHECKBOX', widget_id=G.newId(), widget_name=name, sync_value = sync_value)
+def add_checkbox(name, sync_value = 'false', extraData = None):
+    return GeppettoJupyterGUISync.ComponentSync(component_name='CHECKBOX', widget_id=G.newId(), widget_name=name, sync_value = sync_value, extraData = extraData)
 
-def resetValueToOriginal(targetComponent, triggeredComponent, args):
+def resetValueToOriginal(triggeredComponent, args):
+    logging.debug("Reseting value for textfield")
+    logging.debug(triggeredComponent.extraData['targetComponent'].value)
+    logging.debug(triggeredComponent.extraData['targetComponent'].extraData['originalValue'])
     triggeredComponent.sync_value = 'false'
-    exec("h." + targetComponent.value + "=" +
-            str(targetComponent.extraData['originalValue']))
+    exec("h." + triggeredComponent.extraData['targetComponent'].value + "=" +
+            str(triggeredComponent.extraData['targetComponent'].extraData['originalValue']))
     #targetComponent.sync_value = str(targetComponent.extraData['originalValue'])
 
 def sync_value(triggeredComponent, args):
-    logging.debug("Synching value for textfield")
-    if triggeredComponent.value != None and args[1]['data'] != None:
-        exec("h." + triggeredComponent.value + "=" + str(args[1]['data']))
+    logging.debug("Syncing value on blur for textfield")
+    if triggeredComponent.value != None and triggeredComponent.value != '' and args['data'] != None:
+        exec("h." + triggeredComponent.value + "=" + str(args['data']))
 
 def clickedCheckboxValue(triggeredComponent, args):
     logging.debug("Clicking checkbox due to change on textfield")
-    if args[1]['data'] != None and float(args[1]['data']) != float(triggeredComponent.extraData['originalValue']):
+    if args['data'] != None and float(args['data']) != float(triggeredComponent.extraData['originalValue']):
         triggeredComponent.extraData['targetComponent'].sync_value = 'true'
     else:
         triggeredComponent.extraData['targetComponent'].sync_value = 'false'
-
-    #FIXME: We should allow two callbacks, i.e. sync_value & clickedCheckboxValue
-    sync_value(triggeredComponent, args)
