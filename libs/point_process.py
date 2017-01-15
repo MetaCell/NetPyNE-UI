@@ -17,13 +17,16 @@ class PointProcess:
 
         self.pointProcesses = []
 
-        self.delay = neuron_utils.add_text_field_with_label('Delay', None)
-        self.duration = neuron_utils.add_text_field_with_label('Duration', None)
-        self.amplitude = neuron_utils.add_text_field_with_label ('Amplitude', None)
+        delay_panel = neuron_utils.add_text_field_with_label('Delay', None)
+        duration_panel = neuron_utils.add_text_field_with_label('Duration', None)
+        amplitude_panel = neuron_utils.add_text_field_with_label('Amplitude', None)
+        self.delay = delay_panel.items[1]
+        self.duration = duration_panel.items[1]
+        self.amplitude = amplitude_panel.items[1]
         self.save_button = neuron_utils.add_button('Save', self.create_current_clamp)
 
         self.pointProcessPanel = neuron_utils.add_panel('Point Process', items=[
-            self.delay, self.duration, self.amplitude, self.save_button], widget_id='pointProcessPanel', positionX=600, positionY=10)
+            delay_panel, duration_panel, amplitude_panel, self.save_button], widget_id='pointProcessPanel', positionX=600, positionY=10)
         self.pointProcessPanel.registerToEvent(
             [GeppettoJupyterModelSync.events_controller._events['Select']], self.updateValues)
         self.pointProcessPanel.display()
@@ -59,6 +62,9 @@ class PointProcess:
 
     def create_current_clamp(self, triggeredComponent, args):
         logging.debug("Creating Current Clamp")
+        logging.debug(self.delay.sync_value)
+        logging.debug(self.duration.sync_value)
+        logging.debug(self.amplitude.sync_value)
         i_clamp = h.IClamp(self.segment)
         i_clamp.delay = float(self.delay.sync_value)
         i_clamp.dur = float(self.duration.sync_value)
