@@ -36,14 +36,15 @@ class CellBuilder:
             for geometry in GeppettoJupyterModelSync.current_model.geometries_raw:
                 if geometry.id == groupNameIdentifier:
                     logging.debug('Loading values for geometry ' +
-                                str(groupNameIdentifier))
+                                  str(groupNameIdentifier))
 
-                    #Update values   
-                    self.radius.sync_value = str(geometry.python_variable["section"].diam)
-                    self.length.sync_value = str(geometry.python_variable["section"].L)
+                    # Update values
+                    self.radius.sync_value = str(
+                        geometry.python_variable["section"].diam)
+                    self.length.sync_value = str(
+                        geometry.python_variable["section"].L)
 
-                    #Update segment and geometry
-                    #self.segment = list(geometry.python_variable["section"].allseg())[geometry.python_variable["segment"]]
+                    # Update segment and geometry
                     self.segment = geometry.python_variable[
                         "section"](geometry.python_variable["segment"])
                     self.geometry = geometry
@@ -51,13 +52,16 @@ class CellBuilder:
                     return True
             return False
         except Exception as exception:
-            logging.exception("Unexpected error executing callback for component:")
+            logging.exception(
+                "Unexpected error executing callback for component:")
             raise
 
     def modify_segment(self, triggeredComponent, args):
         logging.debug('Modifying segment')
-        self.geometry.python_variable["section"].diam = float(self.radius.sync_value)
-        self.geometry.python_variable["section"].L = float(self.length.sync_value)
+        self.geometry.python_variable[
+            "section"].diam = float(self.radius.sync_value)
+        self.geometry.python_variable[
+            "section"].L = float(self.length.sync_value)
 
         # Recreating Scene
         neuron_utils.extractGeometries()

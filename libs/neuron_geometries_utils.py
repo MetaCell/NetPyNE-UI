@@ -9,8 +9,6 @@ import sys
 from neuron import h
 h.load_file("stdrun.hoc")
 
-# Exmaple Converting simple geoms to d3
-
 
 def convertTo3DGeoms(secs):
     # set 3d geoms for reduced cell models
@@ -36,6 +34,7 @@ def convertTo3DGeoms(secs):
                 sec['geom']['pt3d'].append(
                     [offset + (sec['geom']['L'] / nseg) * (i + 1), 0, 0, sec['geom']['diam']])
     return secs
+
 
 def _equal_dicts(d1, d2, ignore_keys):
     ignored = set(ignore_keys)
