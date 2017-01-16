@@ -38,15 +38,20 @@ def extractGeometries():
     for sec_name, sec in secs.items():
         if 'pt3d' in sec['geom']:
             points = sec['geom']['pt3d']
-            for i in range(len(points) - 1):
-                geometries.append(G.createGeometry(sec_name = sec_name, index = i, position = points[i], distal = points[i + 1], python_variable={'section': sec['neuronSec'], 'segment': (i/len(points))}))
+            num_points = len(points)
+            for i in range(num_points - 1):
+                if (num_points - 2) == 0:
+                    segment_index = 0.5
+                else:
+                    segment_index = i / (num_points - 2)
+                geometries.append(G.createGeometry(sec_name=sec_name, index=i, position=points[i], distal=points[i + 1], python_variable={'section': sec['neuronSec'], 'segment': segment_index}))
 
     logging.debug("Sections and segments converted to Geppetto")
     logging.debug("Geometries found: " + str(len(geometries)))
     GeppettoJupyterModelSync.current_model.addGeometries(geometries)
     return geometries
 
-#GUI API    
+#GUI API
 def add_button(name, actions = None, value = None, extraData = None):
     if value is not None:
         valueUnits = h.units(value)
@@ -56,7 +61,6 @@ def add_button(name, actions = None, value = None, extraData = None):
     button = GeppettoJupyterGUISync.ComponentSync(component_name='RAISEDBUTTON', widget_id=G.newId(), widget_name=name, extraData = extraData)
     if actions is not None:
         button.on_click(actions)
-    
     return button
 
 def add_text_field(name, value = None):
