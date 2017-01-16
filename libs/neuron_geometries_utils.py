@@ -31,15 +31,11 @@ def convertTo3DGeoms(secs):
                 [offset + 0, -sec['geom']['L'], 0, sec['geom']['diam']])
         else:  # set 3d geom of dend
             sec['geom']['pt3d'].append([offset + 0, 0, 0, sec['geom']['diam']])
-            # sec['geom']['pt3d'].append(
-            #     [offset + sec['geom']['L'], 0, 0, sec['geom']['diam']])
             nseg = sec['geom']['nseg']
             for i in range(nseg):
                 sec['geom']['pt3d'].append(
-                    [offset + (sec['geom']['L'] / nseg) * (i+1), 0, 0, sec['geom']['diam']])
-
+                    [offset + (sec['geom']['L'] / nseg) * (i + 1), 0, 0, sec['geom']['diam']])
     return secs
-
 
 def _equal_dicts(d1, d2, ignore_keys):
     ignored = set(ignore_keys)
