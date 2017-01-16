@@ -9,31 +9,34 @@ import sys
 from neuron import h
 h.load_file("stdrun.hoc")
 
-# Exmaple Converting simple geoms to d3
+
 def convertTo3DGeoms(secs):
     # set 3d geoms for reduced cell models
     offset = 0
     prevL = 0
     for secName, sec in secs.items():
         sec['geom']['pt3d'] = []
+        # sec['neuronSec'] = sec
         if secName in ['soma', 'Adend1', 'Adend2', 'Adend3']:  # set 3d geom of soma and Adends
             sec['geom']['pt3d'].append(
                 [offset + 0, prevL, 0, sec['geom']['diam']])
             prevL = float(prevL + sec['geom']['L'])
             sec['geom']['pt3d'].append(
                 [offset + 0, prevL, 0, sec['geom']['diam']])
-        if secName in ['Bdend', 'dend']:  # set 3d geom of Bdend
-            sec['geom']['pt3d'].append([offset + 0, 0, 0, sec['geom']['diam']])
-            sec['geom']['pt3d'].append(
-                [offset + sec['geom']['L'], 0, 0, sec['geom']['diam']])
-        if secName in ['axon']:  # set 3d geom of axon
+        elif secName in ['axon']:  # set 3d geom of axon
             sec['geom']['pt3d'].append([offset + 0, 0, 0, sec['geom']['diam']])
             sec['geom']['pt3d'].append(
                 [offset + 0, -sec['geom']['L'], 0, sec['geom']['diam']])
-
+        else:  # set 3d geom of dend
+            sec['geom']['pt3d'].append([offset + 0, 0, 0, sec['geom']['diam']])
+            nseg = sec['geom']['nseg']
+            for i in range(nseg):
+                sec['geom']['pt3d'].append(
+                    [offset + (sec['geom']['L'] / nseg) * (i + 1), 0, 0, sec['geom']['diam']])
     return secs
 
-def _equal_dicts (d1, d2, ignore_keys):
+
+def _equal_dicts(d1, d2, ignore_keys):
     ignored = set(ignore_keys)
     for k1, v1 in d1.items():
         if k1 not in ignored and (k1 not in d2 or d2[k1] != v1):
@@ -43,7 +46,9 @@ def _equal_dicts (d1, d2, ignore_keys):
             return False
     return True
 
-section_name_dict = {}    
+section_name_dict = {}
+
+
 def getSecName(sec, dirCellSecNames=None):
     if sec in section_name_dict:
         return section_name_dict[sec]
@@ -67,9 +72,9 @@ def getSecName(sec, dirCellSecNames=None):
     if secName in dirCellSecNames:  # get sec names from python
         secName = dirCellSecNames[secName]
 
-    #Add index for network
+    # Add index for network
     index = ""
-    while (secName+str(index)) in section_name_dict.values():
+    while (secName + str(index)) in section_name_dict.values():
         if index == "":
             index = 0
         else:
@@ -136,7 +141,8 @@ def getCellParams(cell):
         if len(secs) == 1:
             secName = 'soma'  # if just one section rename to 'soma'
         # create dictionary to store sec info
-        secDic[secName] = {'geom': {}, 'topol': {}, 'mechs': {}, 'neuronSec': sec}
+        secDic[secName] = {'geom': {}, 'topol': {},
+                           'mechs': {}, 'neuronSec': sec}
 
         # store geometry properties
         standardGeomParams = ['L', 'nseg', 'diam', 'Ra', 'cm']
