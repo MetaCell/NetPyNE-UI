@@ -58,16 +58,16 @@ def add_button(name, actions = None, value = None, extraData = None):
         if valueUnits != '':
             name += " (" + valueUnits + ")"
 
-    button = GeppettoJupyterGUISync.ButtonSync(component_name='RAISEDBUTTON', widget_id=G.newId(), widget_name=name, extraData = extraData)
+    button = GeppettoJupyterGUISync.ButtonSync(widget_id=G.newId(), widget_name=name, extraData = extraData)
     if actions is not None:
         button.on_click(actions)
     return button
 
 def add_label(id, name):
-    return GeppettoJupyterGUISync.LabelSync(component_name = 'LABEL', widget_id = G.newId(), widget_name = name, sync_value = id)
+    return GeppettoJupyterGUISync.LabelSync(widget_id = G.newId(), widget_name = name, sync_value = id)
 
 def add_text_field(name, value=None, read_only=False):
-    parameters = {'component_name':'TEXTFIELD', 'widget_id': G.newId(), 'widget_name' : name}
+    parameters = {'widget_id': G.newId(), 'widget_name' : name}
     parameters['read_only'] = read_only
 
     if value is not None:
@@ -121,7 +121,7 @@ def add_panel(name, items = [], widget_id=None, positionX=-1, positionY=-1):
     return GeppettoJupyterGUISync.PanelSync(widget_id = widget_id, widget_name=name, items=items, positionX=positionX, positionY=positionY)
 
 def add_checkbox(name, sync_value = 'false', extraData = None):
-    return GeppettoJupyterGUISync.CheckboxSync(component_name='CHECKBOX', widget_id=G.newId(), widget_name=name, sync_value = sync_value, extraData = extraData)
+    return GeppettoJupyterGUISync.CheckboxSync(widget_id=G.newId(), widget_name=name, sync_value = sync_value, extraData = extraData)
 
 def resetValueToOriginal(triggeredComponent, args):
     logging.debug("Reseting value for textfield")
