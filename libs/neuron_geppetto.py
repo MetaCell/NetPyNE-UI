@@ -9,7 +9,7 @@ import time
 from neuron import h
 from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 from geppettoJupyter.geppetto_comm import GeppettoJupyterGUISync
-from neuron_controller import show_sample_models, show_analysis, show_cell_builder, show_point_process, show_run_control
+from neuron_controller import show_sample_models, show_analysis, show_cell_builder, show_point_process, show_run_control, show_neuron_menu
 import neuron_utils
 
 class LoopTimer(threading.Thread):
@@ -94,11 +94,13 @@ def init():
 
         # Init Panels
         logging.debug('Initialising GUI')
-        show_run_control()
         show_sample_models()
-        show_analysis()
-        show_cell_builder()
-        show_point_process()
+        show_neuron_menu()
+        # show_run_control()
+        # show_analysis()
+        # show_cell_builder()
+        # show_point_process()
+
 
     except Exception as exception:
         logging.exception("Unexpected error in neuron_geppetto initialization:")

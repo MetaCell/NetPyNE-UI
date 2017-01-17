@@ -24,3 +24,7 @@ def show_point_process():
 def show_run_control():
     from run_control import RunControl
     return RunControl()
+
+def show_neuron_menu():
+    from neuron_menu import NeuronMenu
+    return NeuronMenu()

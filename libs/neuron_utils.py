@@ -118,7 +118,7 @@ def add_panel(name, items = [], widget_id=None, positionX=-1, positionY=-1):
     if widget_id is None: widget_id = G.newId()
     for item in items:
         item.embedded = True
-    return GeppettoJupyterGUISync.PanelSync(widget_id = widget_id, widget_name=name, items=items, positionX=positionX, positionY=positionY)
+    return GeppettoJupyterGUISync.PanelSync(widget_id = widget_id, widget_name=name, items=items, embedded = False, positionX=positionX, positionY=positionY)
 
 def add_checkbox(name, sync_value = 'false', extraData = None):
     return GeppettoJupyterGUISync.CheckboxSync(widget_id=G.newId(), widget_name=name, sync_value = sync_value, extraData = extraData)
