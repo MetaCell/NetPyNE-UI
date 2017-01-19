@@ -33,16 +33,19 @@ class PointProcess:
             [GeppettoJupyterModelSync.events_controller._events['Select']], self.updateValues)
         self.pointProcessPanel.display()
 
-    def updateValues(self, dataId, groupNameIdentifier):
+    def updateValues(self, dataId, geometry_identifier, point):
+
         logging.debug('Updating values for Point Process')
 
         for geometry in GeppettoJupyterModelSync.current_model.geometries_raw:
-            if geometry.id == groupNameIdentifier:
+            if geometry.id == geometry_identifier:
                 logging.debug('Loading values for geometry ' +
-                              str(groupNameIdentifier))
+                              str(geometry_identifier))
 
+                distance_to_selection_normalised = neuron_utils.calculate_normalised_distance_to_selection(
+                    geometry, point)
                 self.segment = geometry.python_variable[
-                    "section"](geometry.python_variable["segment"])
+                    "section"](distance_to_selection_normalised)
 
                 current_point_processes = self.segment.point_processes()
                 logging.debug(current_point_processes)

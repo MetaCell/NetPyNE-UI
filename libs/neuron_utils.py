@@ -1,5 +1,5 @@
 import logging
-#from netpyne import utils
+from math import sqrt, pow
 import neuron_geometries_utils
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 
@@ -19,6 +19,32 @@ def configure_logging():
     logger.setLevel(logging.DEBUG)
     logging.debug('Log configured')
 
+def calculate_normalised_distance_to_selection(geometry, point):
+    # Calculate segment
+    geometry_index = int(geometry.id.rsplit('_', 1)[1])
+    section_length = 0
+    distance_to_selection = 0
+    for point_index in range(len(geometry.python_variable["section_points"]) - 1):
+        # Calculate geometry length
+        proximal = geometry.python_variable["section_points"][point_index]
+        distal = geometry.python_variable["section_points"][point_index + 1]
+        geometry_length = sqrt(pow(distal[0]-proximal[0],2) + pow(distal[1]-proximal[1],2) + pow(distal[2]-proximal[2],2))
+        section_length += geometry_length
+        # Add geometry length or distance to selection
+        if point_index < geometry_index:
+            distance_to_selection += geometry_length
+        elif point_index == geometry_index:
+            # Calculate project point
+            geometry_vector = [distal[0]-proximal[0], distal[1]-proximal[1], distal[2]-proximal[2]]
+            point_vector = [point[0]-proximal[0], point[1]-proximal[1], point[2]-proximal[2]]
+            t_num = geometry_vector[0]*vector[0] + geometry_vector[1]*vector[1] + geometry_vector[2]*vector[2]
+            t_den = geometry_vector[0]*geometry_vector[0] + geometry_vector[1]*geometry_vector[1] + geometry_vector[2]*geometry_vector[2]
+            t = t_num/t_den
+            projected_point = [proximal[0] + t * geometry_vector[0], proximal[1] + t * geometry_vector[1], proximal[2] + t * geometry_vector[2]]
+
+            distance_to_selection += sqrt(pow(projected_point[0]-proximal[0],2) + pow(projected_point[1]-proximal[1],2) + pow(projected_point[2]-proximal[2],2))
+
+    return distance_to_selection/section_length
 
 def extractGeometries():
 
@@ -38,13 +64,8 @@ def extractGeometries():
     for sec_name, sec in secs.items():
         if 'pt3d' in sec['geom']:
             points = sec['geom']['pt3d']
-            num_points = len(points)
-            for i in range(num_points - 1):
-                if (num_points - 2) == 0:
-                    segment_index = 0.5
-                else:
-                    segment_index = i / (num_points - 2)
-                geometries.append(G.createGeometry(sec_name=sec_name, index=i, position=points[i], distal=points[i + 1], python_variable={'section': sec['neuronSec'], 'segment': segment_index}))
+            for i in range(len(points) - 1):
+                geometries.append(G.createGeometry(sec_name=sec_name, index=i, position=points[i], distal=points[i + 1], python_variable={'section': sec['neuronSec'], 'section_points': sec['geom']['pt3d']}))
 
     logging.debug("Sections and segments converted to Geppetto")
     logging.debug("Geometries found: " + str(len(geometries)))
