@@ -37,7 +37,7 @@ def calculate_normalised_distance_to_selection(geometry, point):
             # Calculate project point
             geometry_vector = [distal[0]-proximal[0], distal[1]-proximal[1], distal[2]-proximal[2]]
             point_vector = [point[0]-proximal[0], point[1]-proximal[1], point[2]-proximal[2]]
-            t_num = geometry_vector[0]*vector[0] + geometry_vector[1]*vector[1] + geometry_vector[2]*vector[2]
+            t_num = geometry_vector[0]*point_vector[0] + geometry_vector[1]*point_vector[1] + geometry_vector[2]*point_vector[2]
             t_den = geometry_vector[0]*geometry_vector[0] + geometry_vector[1]*geometry_vector[1] + geometry_vector[2]*geometry_vector[2]
             t = t_num/t_den
             projected_point = [proximal[0] + t * geometry_vector[0], proximal[1] + t * geometry_vector[1], proximal[2] + t * geometry_vector[2]]
