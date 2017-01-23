@@ -44,7 +44,7 @@ def calculate_normalised_distance_to_selection(geometry, point):
 
             distance_to_selection += sqrt(pow(projected_point[0]-proximal[0],2) + pow(projected_point[1]-proximal[1],2) + pow(projected_point[2]-proximal[2],2))
 
-    return distance_to_selection/section_length
+    return distance_to_selection, section_length
 
 def extractGeometries():
 
@@ -112,6 +112,18 @@ def add_text_field_with_label(name, value=None, read_only=False):
     panel.setDirection('row')
     return panel
 
+def add_drop_down(name, items):
+    return GeppettoJupyterGUISync.DropDownSync(widget_id = G.newId(), widget_name = name, items = items)
+
+def add_drop_down_with_label(name, drop_down_items = []):
+    items = []
+    dropdown = add_drop_down(name, drop_down_items)
+    items.append(add_label(dropdown.widget_id, name))
+    items.append(dropdown)
+
+    panel = add_panel(name, items=items)
+    panel.setDirection('row')
+    return panel
 
 def add_text_field_and_button(name, value=None, create_checkbox=False, actions=None, extraData=None):
     items = []
