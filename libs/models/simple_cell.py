@@ -40,11 +40,16 @@ class SimpleCell:
         self.dend.nseg = 10
 
         # add synapse (custom channel)
-        self.syn = h.AlphaSynapse(self.dend(1.0))
-        self.syn.e = 0  # equilibrium potential in mV
-        self.syn.onset = 20  # turn on after this time in ms
-        self.syn.gmax = 0.05  # set conductance in uS
-        self.syn.tau = 0.1  # set time constant
+        # self.syn = h.AlphaSynapse(self.dend(1.0))
+        # self.syn.e = 0  # equilibrium potential in mV
+        # self.syn.onset = 20  # turn on after this time in ms
+        # self.syn.gmax = 0.05  # set conductance in uS
+        # self.syn.tau = 0.1  # set time constant
+
+        # self.stim = h.IClamp(self.dend(1.0))
+        # self.stim.amp = 0.3  # input current in nA
+        # self.stim.delay = 1  # turn on after this time in ms
+        # self.stim.dur = 1  # duration of 1 ms
 
         # record soma voltage and time
         self.t_vec = h.Vector()
@@ -75,20 +80,6 @@ class SimpleCell:
         # plot voltage vs time
         self.plotWidget = G.plotVariable(
             'Plot', ['SimpleCell.v_vec_dend', 'SimpleCell.v_vec_soma'])
-        self.plotWidget.registerToEvent(
-            [GeppettoJupyterModelSync.events_controller._events['Select']], self.refresh_data)
-
-    def refresh_data(self, data, groupNameIdentifier):
-        logging.debug('Refreshing plot with selected geometry: ' +
-                      data + groupNameIdentifier)
-
-        logging.debug("Checking statevariable by selected geometry")
-        for stateVariable in GeppettoJupyterModelSync.current_model.stateVariables:
-            logging.debug(stateVariable.python_variable)
-            logging.debug(dir(stateVariable.python_variable))
-        logging.debug("Stated varible checked")
-
-        self.plotWidget.data = ['SimpleCell.v_vec_dend']
 
     def analysis_matplotlib(self):
         from matplotlib import pyplot
