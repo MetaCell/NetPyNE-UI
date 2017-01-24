@@ -40,11 +40,11 @@ class SimpleCell:
         self.dend.nseg = 10
 
         # add synapse (custom channel)
-        # self.syn = h.AlphaSynapse(self.dend(1.0))
-        # self.syn.e = 0  # equilibrium potential in mV
-        # self.syn.onset = 20  # turn on after this time in ms
-        # self.syn.gmax = 0.05  # set conductance in uS
-        # self.syn.tau = 0.1  # set time constant
+        self.syn = h.AlphaSynapse(self.dend(1.0))
+        self.syn.e = 0  # equilibrium potential in mV
+        self.syn.onset = 20  # turn on after this time in ms
+        self.syn.gmax = 0.05  # set conductance in uS
+        self.syn.tau = 0.1  # set time constant
 
         # self.stim = h.IClamp(self.dend(1.0))
         # self.stim.amp = 0.3  # input current in nA
@@ -62,7 +62,6 @@ class SimpleCell:
         # TODO How do we extract the units?
         G.createStateVariable(id='v_vec_soma', name='v_vec_soma',
                               units='mV', python_variable=self.v_vec_soma)
-                              
 
         self.v_vec_dend = h.Vector()
         self.v_vec_dend.record(self.dend(1.0)._ref_v)
