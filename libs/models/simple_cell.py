@@ -46,6 +46,11 @@ class SimpleCell:
         self.syn.gmax = 0.05  # set conductance in uS
         self.syn.tau = 0.1  # set time constant
 
+        # self.stim = h.IClamp(self.dend(1.0))
+        # self.stim.amp = 0.3  # input current in nA
+        # self.stim.delay = 1  # turn on after this time in ms
+        # self.stim.dur = 1  # duration of 1 ms
+
         # record soma voltage and time
         self.t_vec = h.Vector()
         self.t_vec.record(h._ref_t)
@@ -57,7 +62,6 @@ class SimpleCell:
         # TODO How do we extract the units?
         G.createStateVariable(id='v_vec_soma', name='v_vec_soma',
                               units='mV', python_variable=self.v_vec_soma)
-                              
 
         self.v_vec_dend = h.Vector()
         self.v_vec_dend.record(self.dend(1.0)._ref_v)
@@ -75,20 +79,6 @@ class SimpleCell:
         # plot voltage vs time
         self.plotWidget = G.plotVariable(
             'Plot', ['SimpleCell.v_vec_dend', 'SimpleCell.v_vec_soma'])
-        self.plotWidget.registerToEvent(
-            [GeppettoJupyterModelSync.events_controller._events['Select']], self.refresh_data)
-
-    def refresh_data(self, data, groupNameIdentifier):
-        logging.debug('Refreshing plot with selected geometry: ' +
-                      data + groupNameIdentifier)
-
-        logging.debug("Checking statevariable by selected geometry")
-        for stateVariable in GeppettoJupyterModelSync.current_model.stateVariables:
-            logging.debug(stateVariable.python_variable)
-            logging.debug(dir(stateVariable.python_variable))
-        logging.debug("Stated varible checked")
-
-        self.plotWidget.data = ['SimpleCell.v_vec_dend']
 
     def analysis_matplotlib(self):
         from matplotlib import pyplot
