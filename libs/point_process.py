@@ -34,7 +34,7 @@ class PointProcess:
 
         self.pointProcessPanel = neuron_utils.add_panel('Point Process', items=[
             drop_down_panel, delay_panel, duration_panel, amplitude_panel, self.save_button], widget_id='pointProcessPanel', positionX=600, positionY=10)
-        self.pointProcessPanel.registerToEvent(
+        self.pointProcessPanel.register_to_event(
             [GeppettoJupyterModelSync.events_controller._events['Select']], self.updateValues)
         self.pointProcessPanel.display()
 
@@ -83,7 +83,7 @@ class PointProcess:
                         if point_process.hname().startswith('IClamp'):
                             logging.debug("Point process found")
                             self.current_point_process = point_process
-                            self.drop_down.addChild({'id':point_process.hname(), 'value':point_process.hname()})
+                            self.drop_down.add_child({'id':point_process.hname(), 'value':point_process.hname()})
                             self.delay.sync_value = str(
                                 point_process.delay)
                             self.duration.sync_value = str(
@@ -100,7 +100,7 @@ class PointProcess:
                     self.drop_down.sync_value = 'new'
                     self.current_point_process = None
 
-                self.drop_down.addChild({'id':'new', 'value':'New Point Process'})
+                self.drop_down.add_child({'id':'new', 'value':'New Point Process'})
 
                 # Calculate actual segment position
                 nseg = len(geometry.python_variable["section_points"]) - 1
@@ -140,7 +140,7 @@ class PointProcess:
             pp.dur = float(self.duration.sync_value)
             pp.amp = float(self.amplitude.sync_value)
             GeppettoJupyterModelSync.current_python_model.point_processes.append(pp)
-            self.drop_down.addChild({'id':pp.hname(), 'value':pp.hname()})
+            self.drop_down.add_child({'id':pp.hname(), 'value':pp.hname()})
             self.drop_down.sync_value = pp.hname()
         else:
             self.current_point_process.delay = float(self.delay.sync_value)

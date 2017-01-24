@@ -29,7 +29,7 @@ class CellBuilder:
 
         self.cellBuilderPanel = neuron_utils.add_panel('Cell Builder', items=[
             segment_diam_panel, section_diam_panel, section_length_panel, self.save_button], widget_id='cellBuilderPanel', positionX=600, positionY=10)
-        self.cellBuilderPanel.registerToEvent(
+        self.cellBuilderPanel.register_to_event(
             [GeppettoJupyterModelSync.events_controller._events['Select']], self.updateValues)
         self.cellBuilderPanel.display()
 
