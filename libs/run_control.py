@@ -10,6 +10,7 @@ from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 from neuron import h
 h.load_file("stdrun.hoc")
 
+
 class RunControl:
 
     def __init__(self):
@@ -17,8 +18,8 @@ class RunControl:
         self.initPanel = neuron_utils.add_text_field_and_button(
             "Init", 'v_init', True, self.execute_neuron_command, extraData={'commands': ['h.stdinit()']})
 
-        self.initRunButton = neuron_utils.add_button('Init & Run', self.execute_neuron_command, extraData={'commands': ['GeppettoJupyterModelSync.current_experiment.state = "RUNNING"',
-                                                                                                                        'h.run()', 'GeppettoJupyterModelSync.current_experiment.state = "COMPLETED"']})
+        self.initRunButton = neuron_utils.add_button('Init & Run', self.execute_neuron_command, extraData={'commands': ['GeppettoJupyterModelSync.current_experiment.status = "RUNNING"',
+                                                                                                                        'h.run()', 'GeppettoJupyterModelSync.current_experiment.status = "COMPLETED"']})
 
         self.stopButton = neuron_utils.add_button('Stop')
         self.stopButton.on_click(['h.stoprun = 1'])
@@ -58,4 +59,3 @@ class RunControl:
     def execute_neuron_command(self, component, args):
         for callback in component.extraData['commands']:
             exec(callback)
-
