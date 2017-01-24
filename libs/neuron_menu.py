@@ -11,6 +11,7 @@ class NeuronMenu:
         self.items.append(neuron_utils.add_button('Point Process', self.loadModule, extraData = {'module': 'point_process', 'model':'PointProcess'}))
         self.items.append(neuron_utils.add_button('Analysis', self.run_analysis))
         self.items.append(neuron_utils.add_button('Cell Builder', self.loadModule, extraData = {'module': 'cell_builder', 'model':'CellBuilder'}))
+        self.items.append(neuron_utils.add_button('Space Plot', self.loadModule, extraData = {'module': 'space_plot', 'model':'SpacePlot'}))
 
         self.neuronMenuPanel = neuron_utils.add_panel('Neuron', items = self.items, widget_id = 'neuronMenuPanel', positionX =90, positionY=10)
         self.neuronMenuPanel.setDirection('row')
