@@ -15,7 +15,7 @@ class SampleModels:
         self.items.append(neuron_utils.add_button('Ring', self.loadModule, extraData = {'module': 'ring', 'model':'Ring'}))
         self.items.append(neuron_utils.add_button('CA3 Pyramidal', self.loadModule, extraData = {'module': 'CA3_pyramidal', 'model':'CA3_pyramidal'}))
 
-        self.loadModelPanel = neuron_utils.add_panel('Load Models', items = self.items, widget_id = 'loadModelPanel', positionX =90, positionY=100)
+        self.loadModelPanel = neuron_utils.add_panel('Load Models', items = self.items, widget_id = 'loadModelPanel', position_x =90, position_y=150, width = 250)
         self.loadModelPanel.display() 
 
     def loadModule(self, triggeredComponent, args):

@@ -10,7 +10,7 @@ class Analysis:
         self.analysis_button = neuron_utils.add_button(
             'Plot', self.run_analysis)
         self.analysis_panel = neuron_utils.add_panel('Analysis', items=[
-                                                     self.analysis_button], widget_id='analysisPanel', positionX=90, positionY=250)
+                                                     self.analysis_button], widget_id='analysisPanel', position_x=90, position_y=250)
         self.analysis_panel.display()
 
     def run_analysis(self, triggeredComponent, args):

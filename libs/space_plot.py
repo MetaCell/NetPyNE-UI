@@ -15,10 +15,10 @@ class SpacePlot:
 
         self.geometry = None
         self.section = None
-        # self.vectors = []
         self.state_variables = []
 
-        self.plot_widget = G.plotVariable('Plot')
+        self.plot_widget = G.plotVariable('Plot', position_x=90, position_y=405)
+        #, position_x=90, position_y=405
         self.plot_widget.register_to_event(
             [GeppettoJupyterModelSync.events_controller._events['Select']], self.refresh_data)
 
@@ -47,9 +47,8 @@ class SpacePlot:
                     # self.vectors.append(vector)
                     self.state_variables.append(state_variable)
 
-                    
                 GeppettoJupyterModelSync.current_model.sync()
                 for state_variable in self.state_variables:
-                    self.plot_widget.add_data(GeppettoJupyterModelSync.current_model.id + "." + state_variable.id)
+                    self.plot_widget.add_data(
+                        GeppettoJupyterModelSync.current_model.id + "." + state_variable.id)
                 break
-

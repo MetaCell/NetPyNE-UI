@@ -36,7 +36,7 @@ class PointProcess:
             'Save', self.create_current_clamp)
 
         self.pointProcessPanel = neuron_utils.add_panel('Point Process', items=[
-            drop_down_panel, delay_panel, duration_panel, amplitude_panel, i_panel, self.save_button], widget_id='pointProcessPanel', positionX=600, positionY=10)
+            drop_down_panel, delay_panel, duration_panel, amplitude_panel, i_panel, self.save_button], widget_id='pointProcessPanel', position_x=90, position_y=405)
         self.pointProcessPanel.register_to_event(
             [GeppettoJupyterModelSync.events_controller._events['Select']], self.updateValues)
         self.pointProcessPanel.display()
@@ -117,8 +117,9 @@ class PointProcess:
             point_process = self.create_neuron_current_clamp()
 
             # Refresh dropdown
-            self.drop_down.add_child({'id': point_process.hname(), 'value': point_process.hname()})
-            self.drop_down.sync_value =point_process.hname()
+            self.drop_down.add_child(
+                {'id': point_process.hname(), 'value': point_process.hname()})
+            self.drop_down.sync_value = point_process.hname()
         else:
             # Update current point process
             self.update_neuron_current_clamp()

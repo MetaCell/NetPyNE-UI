@@ -52,7 +52,7 @@ class RunControl:
             "Real Time", 'realtime', False, self.execute_neuron_command, extraData={'commands': []})
 
         self.runControlPanel = neuron_utils.add_panel('Run Control', items=[self.initPanel, self.initRunButton, self.stopButton, self.continueTilPanel, self.continueForPanel, self.singleStepButton,
-                                                                            self.timePanel, self.stopPanel, self.dtPanel, self.pointsPlottedPanel, self.scrnUpdateInvlPanel, self.realTimePanel], widget_id='runControlPanel', positionX=600, positionY=10)
+                                                                            self.timePanel, self.stopPanel, self.dtPanel, self.pointsPlottedPanel, self.scrnUpdateInvlPanel, self.realTimePanel], widget_id='runControlPanel', position_x=700, position_y=150)
 
         self.runControlPanel.display()
 
