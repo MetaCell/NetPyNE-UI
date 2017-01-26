@@ -43,8 +43,9 @@ class CellBuilder:
                                   str(geometry_identifier))
 
                     # Update segment and geometry
-                    distance_to_selection_normalised = neuron_utils.calculate_normalised_distance_to_selection(
+                    distance_to_selection, section_length = neuron_utils.calculate_distance_to_selection(
                         geometry, point)
+                    distance_to_selection_normalised = distance_to_selection/section_length
                     self.segment = geometry.python_variable[
                         "section"](distance_to_selection_normalised)
                     self.geometry = geometry
