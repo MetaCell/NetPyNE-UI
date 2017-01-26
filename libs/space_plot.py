@@ -18,7 +18,6 @@ class SpacePlot:
         self.state_variables = []
 
         self.plot_widget = G.plotVariable('Plot', position_x=90, position_y=405)
-        #, position_x=90, position_y=405
         self.plot_widget.register_to_event(
             [GeppettoJupyterModelSync.events_controller._events['Select']], self.refresh_data)
 

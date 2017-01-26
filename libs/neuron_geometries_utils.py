@@ -16,7 +16,6 @@ def convertTo3DGeoms(secs):
     prevL = 0
     for secName, sec in secs.items():
         sec['geom']['pt3d'] = []
-        # sec['neuronSec'] = sec
         if secName in ['soma', 'Adend1', 'Adend2', 'Adend3']:  # set 3d geom of soma and Adends
             sec['geom']['pt3d'].append(
                 [offset + 0, prevL, 0, sec['geom']['diam']])
