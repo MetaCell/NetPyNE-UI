@@ -24,8 +24,11 @@ class SpacePlot:
         #     [GeppettoJupyterModelSync.events_controller._events['Select']], self.refresh_data)
         self.plot_widget_2 = G.plotVariable(
             'Plot', position_x=490, position_y=405)
-        self.plot_widget_2.register_to_event(
-             [GeppettoJupyterModelSync.events_controller._events['Select']], self.refresh_data)
+        # self.plot_widget_2.register_to_event(
+        #      [GeppettoJupyterModelSync.events_controller._events['Select']], self.refresh_data)
+
+        GeppettoJupyterModelSync.events_controller.register_to_event(
+            [GeppettoJupyterModelSync.events_controller._events['Select']], self.refresh_data)
 
     def refresh_data(self, data, geometry_identifier, point):
         logging.debug('Refreshing space plot with selected geometry: ' +
@@ -58,21 +61,18 @@ class SpacePlot:
                 derived_state_variable_2 = G.createDerivedStateVariable(id="space_plot_2", name="Space Plot 2",
                                                                         units='nm', timeSeries=list(range(len(self.state_variables))), normalizationFunction='CONSTANT')
 
-                # FIXME: Quick and dirty hack to wait for variables to be
-                # property synced js side
-                time.sleep(1)
-                GeppettoJupyterModelSync.current_model.sync()
-
                 # FIXME: We can not be sured the new variables are created by
                 # this time probably is better if we register an event for
                 # model loaded and we listen to it
+
+                # Add regular plot with all state variables on section
                 for state_variable in self.state_variables:
                     self.plot_widget.add_data(
                         GeppettoJupyterModelSync.current_model.id + "." +
                         state_variable.id)
-
                 self.plot_widget.plot_data()
 
+                # Add proper space plot
                 self.plot_widget_2.add_data(
                     GeppettoJupyterModelSync.current_model.id + "." + derived_state_variable.id)
                 self.plot_widget_2.add_data(
