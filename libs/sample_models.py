@@ -10,7 +10,7 @@ class SampleModels:
         logging.debug('Initializing Samples panel')
         self.items = []
         self.items.append(neuron_utils.add_button('Single compartment Hodgkin-Huxley', self.loadModule, extraData = {'module': 'verysimple_cell', 'model':'VerySimpleCell'}))
-        self.items.append(neuron_utils.add_button('Two compartments Hodgkin-Huxley', self.loadModule, extraData = {'module': 'simple_cell', 'model':'SimpleCell'}))
+        self.items.append(neuron_utils.add_button('Multi compartments Hodgkin-Huxley', self.loadModule, extraData = {'module': 'simple_cell', 'model':'SimpleCell'}))
         #self.items.append(neuron_utils.add_button('Simple network', self.loadModule, extraData = {'module': 'simple_network', 'model':'SimpleNetwork'}))
         self.items.append(neuron_utils.add_button('Ring network', self.loadModule, extraData = {'module': 'ring', 'model':'Ring'}))
         self.items.append(neuron_utils.add_button('CA3 Pyramidal', self.loadModule, extraData = {'module': 'CA3_pyramidal', 'model':'CA3_pyramidal'}))
