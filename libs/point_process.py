@@ -36,7 +36,7 @@ class PointProcess:
             'Save', self.create_current_clamp)
 
         self.pointProcessPanel = neuron_utils.add_panel('Point Process', items=[
-            drop_down_panel, delay_panel, duration_panel, amplitude_panel, i_panel, self.save_button], widget_id='pointProcessPanel', position_x=90, position_y=405)
+            drop_down_panel, delay_panel, duration_panel, amplitude_panel, i_panel, self.save_button], widget_id='pointProcessPanel', position_x=955, position_y=69, width=340, height=277)
         self.pointProcessPanel.register_to_event(
             [GeppettoJupyterModelSync.events_controller._events['Select']], self.updateValues)
         self.pointProcessPanel.display()
