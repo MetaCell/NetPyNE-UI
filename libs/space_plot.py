@@ -20,12 +20,8 @@ class SpacePlot:
 
         self.plot_widget = G.plotVariable(
             'Plot', position_x=90, position_y=405)
-        # self.plot_widget.register_to_event(
-        #     [GeppettoJupyterModelSync.events_controller._events['Select']], self.refresh_data)
         self.plot_widget_2 = G.plotVariable(
             'Plot', position_x=490, position_y=405)
-        # self.plot_widget_2.register_to_event(
-        #      [GeppettoJupyterModelSync.events_controller._events['Select']], self.refresh_data)
 
         GeppettoJupyterModelSync.events_controller.register_to_event(
             [GeppettoJupyterModelSync.events_controller._events['Select']], self.refresh_data)
@@ -52,7 +48,6 @@ class SpacePlot:
 
                     state_variable = G.createStateVariable(id=self.section.name() + "_" + str(index), name=self.section.name() + "_" + str(index),
                                                            units='mV', python_variable=vector)
-                    # self.vectors.append(vector)
                     self.state_variables.append(state_variable)
 
                 derived_state_variable = G.createDerivedStateVariable(id="space_plot", name="Space Plot",
@@ -69,7 +64,7 @@ class SpacePlot:
                 plot_widget_data = []
                 for state_variable in self.state_variables:
                     plot_widget_data.append(GeppettoJupyterModelSync.current_model.id + "." +
-                        state_variable.id)
+                                            state_variable.id)
                 self.plot_widget.plot_data(plot_widget_data)
 
                 # Add proper space plot
