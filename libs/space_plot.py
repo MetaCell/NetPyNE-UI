@@ -66,17 +66,18 @@ class SpacePlot:
                 # model loaded and we listen to it
 
                 # Add regular plot with all state variables on section
+                plot_widget_data = []
                 for state_variable in self.state_variables:
-                    self.plot_widget.add_data(
-                        GeppettoJupyterModelSync.current_model.id + "." +
+                    plot_widget_data.append(GeppettoJupyterModelSync.current_model.id + "." +
                         state_variable.id)
-                self.plot_widget.plot_data()
+                self.plot_widget.plot_data(plot_widget_data)
 
                 # Add proper space plot
-                self.plot_widget_2.add_data(
+                plot_widget_data_2 = []
+                plot_widget_data_2.append(
                     GeppettoJupyterModelSync.current_model.id + "." + derived_state_variable.id)
-                self.plot_widget_2.add_data(
+                plot_widget_data_2.append(
                     GeppettoJupyterModelSync.current_model.id + "." + derived_state_variable_2.id)
-                self.plot_widget_2.plot_XY_data()
+                self.plot_widget_2.plot_XY_data(plot_widget_data_2)
 
                 break
