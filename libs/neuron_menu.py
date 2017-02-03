@@ -17,26 +17,36 @@ class NeuronMenu:
 
         self.neuronMenuPanel = neuron_utils.add_panel('NEURON', items = self.items, widget_id = 'neuronMenuPanel', position_x =108, position_y=9, width = 570, height = 80)
         self.neuronMenuPanel.setDirection('row')
+        self.neuronMenuPanel.on_close(self.close)
         self.neuronMenuPanel.display()
+
+    def close(self, component, args):
+        # Close Jupyter object
+        self.neuronMenuPanel.close()
+        del self.neuronMenuPanel
+
+        # Destroy this class
+        NeuronMenu.delete()
+        # del RunControl._instance
 
     def shake_panel(self):
         self.neuronMenuPanel.shake()
 
     def show_point_process(self, triggeredComponent, args):
         from point_process import PointProcess
-        return PointProcess.Instance()
+        PointProcess.Instance()
 
     def show_space_plot(self, triggeredComponent, args):
         from space_plot import SpacePlot
-        return SpacePlot.Instance()
+        SpacePlot.Instance()
 
     def show_cell_builder(self, triggeredComponent, args):
         from cell_builder import CellBuilder
-        return CellBuilder.Instance()
+        CellBuilder.Instance()
 
     def show_run_control(self, triggeredComponent, args):
         from run_control import RunControl
-        return RunControl.Instance()
+        RunControl.Instance()
 
 
 

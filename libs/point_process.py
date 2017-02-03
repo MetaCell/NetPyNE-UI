@@ -40,9 +40,19 @@ class PointProcess:
             drop_down_panel, delay_panel, duration_panel, amplitude_panel, i_panel, self.save_button], widget_id='pointProcessPanel', position_x=955, position_y=69, width=340, height=277)
         self.pointProcessPanel.register_to_event(
             [GeppettoJupyterModelSync.events_controller._events['Select']], self.updateValues)
+        self.pointProcessPanel.on_close(self.close)
         self.pointProcessPanel.display()
 
         #GeppettoJupyterModelSync.gui_controller[self.__class__] = self
+
+    def close(self, component, args):
+        # Close Jupyter object
+        self.pointProcessPanel.close()
+        del self.pointProcessPanel
+
+        # Destroy this class
+        PointProcess.delete()
+        # del RunControl._instance
 
     def shake_panel(self):
         self.pointProcessPanel.shake()

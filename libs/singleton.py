@@ -26,7 +26,7 @@ class Singleton:
         On all subsequent calls, the already created instance is returned.
 
         """
-        if hasattr(self, '_instance'):
+        if hasattr(self, '_instance') and self._instance is not None:
             shake_panel_op = getattr(self._instance, "shake_panel", None)
             if callable(shake_panel_op): 
                 self._instance.shake_panel()
@@ -34,6 +34,10 @@ class Singleton:
         else:
             self._instance = self._decorated()
             return self._instance
+
+    def delete(self):
+        logging.debug('deleting')
+        self._instance = None
 
     def __call__(self):
         raise TypeError('Singletons must be accessed through `Instance()`.')

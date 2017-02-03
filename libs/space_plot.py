@@ -23,6 +23,8 @@ class SpacePlot:
             'Plot', position_x=90, position_y=405)
         self.plot_widget_2 = G.plotVariable(
             'Plot', position_x=490, position_y=405)
+        self.plot_widget.on_close(self.close)
+        self.plot_widget_2.on_close(self.close)
 
         GeppettoJupyterModelSync.events_controller.register_to_event(
             [GeppettoJupyterModelSync.events_controller._events['Select']], self.refresh_data)
@@ -30,6 +32,18 @@ class SpacePlot:
     def shake_panel(self):
         self.plot_widget.shake()
         self.plot_widget_2.shake()
+
+    def close(self, component, args):
+        # Close Jupyter object
+        self.plot_widget.close()
+        del self.plot_widget
+
+        self.plot_widget_2.close()
+        del self.plot_widget_2
+
+        # Destroy this class
+        SpacePlot.delete()
+        # del RunControl._instance
 
     def refresh_data(self, data, geometry_identifier, point):
         logging.debug('Refreshing space plot with selected geometry: ' +

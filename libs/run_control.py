@@ -54,8 +54,17 @@ class RunControl:
 
         self.runControlPanel = neuron_utils.add_panel('Run Control', items=[self.initPanel, self.initRunButton, self.stopButton, self.continueTilPanel, self.continueForPanel, self.singleStepButton,
                                                                             self.timePanel, self.stopPanel, self.dtPanel, self.pointsPlottedPanel, self.scrnUpdateInvlPanel, self.realTimePanel], widget_id='runControlPanel', position_x=700, position_y=150)
-
+        self.runControlPanel.on_close(self.close)
         self.runControlPanel.display()
+
+    def close(self, component, args):
+        # Close Jupyter object
+        self.runControlPanel.close()
+        del self.runControlPanel
+
+        # Destroy this class
+        RunControl.delete()
+        # del RunControl._instance
 
     def shake_panel(self):
         self.runControlPanel.shake()

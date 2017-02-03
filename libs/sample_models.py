@@ -19,7 +19,17 @@ class SampleModels:
         self.items.append(neuron_utils.add_button('PT Cell', self.loadModule, extraData = {'module': 'PTcell', 'model':'PTcell'}))
 
         self.loadModelPanel = neuron_utils.add_panel('Sample NEURON Models', items = self.items, widget_id = 'loadModelPanel', position_x =108, position_y=125, width = 287)
+        self.loadModelPanel.on_close(self.close)
         self.loadModelPanel.display()
+
+    def close(self, component, args):
+        # Close Jupyter object
+        self.loadModelPanel.close()
+        del self.loadModelPanel
+
+        # Destroy this class
+        SampleModels.delete()
+        # del RunControl._instance
 
     def shake_panel(self):
         self.loadModelPanel.shake()
