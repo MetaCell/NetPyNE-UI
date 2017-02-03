@@ -4,11 +4,12 @@ Neuron Point Process
 """
 import logging
 import neuron_utils
+from singleton import Singleton
 from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 
 from neuron import h
 
-
+@Singleton
 class PointProcess:
 
     def __init__(self):
@@ -40,6 +41,11 @@ class PointProcess:
         self.pointProcessPanel.register_to_event(
             [GeppettoJupyterModelSync.events_controller._events['Select']], self.updateValues)
         self.pointProcessPanel.display()
+
+        #GeppettoJupyterModelSync.gui_controller[self.__class__] = self
+
+    def shake_panel(self):
+        self.pointProcessPanel.shake()
 
     def update_drop_down_selection(self, triggered_component, args):
         logging.debug("Update drop drown")

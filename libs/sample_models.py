@@ -2,9 +2,11 @@ import logging
 import importlib
 import neuron_utils
 from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
+from singleton import Singleton
 
 from neuron import h
 
+@Singleton
 class SampleModels:
     def __init__(self):
         logging.debug('Initializing Samples panel')
@@ -17,7 +19,10 @@ class SampleModels:
         self.items.append(neuron_utils.add_button('PT Cell', self.loadModule, extraData = {'module': 'PTcell', 'model':'PTcell'}))
 
         self.loadModelPanel = neuron_utils.add_panel('Sample NEURON Models', items = self.items, widget_id = 'loadModelPanel', position_x =108, position_y=125, width = 287)
-        self.loadModelPanel.display() 
+        self.loadModelPanel.display()
+
+    def shake_panel(self):
+        self.loadModelPanel.shake()
 
     def loadModule(self, triggeredComponent, args):
         try:

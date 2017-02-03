@@ -4,10 +4,11 @@ Neuron Cell Builder
 """
 import logging
 import neuron_utils
+from singleton import Singleton
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 
-
+@Singleton
 class CellBuilder:
 
     def __init__(self):
@@ -32,6 +33,9 @@ class CellBuilder:
         self.cellBuilderPanel.register_to_event(
             [GeppettoJupyterModelSync.events_controller._events['Select']], self.updateValues)
         self.cellBuilderPanel.display()
+    
+    def shake_panel(self):
+        self.cellBuilderPanel.shake()
 
     def updateValues(self, dataId, geometry_identifier, point):
         try:
