@@ -41,6 +41,9 @@ class SpacePlot:
         self.plot_widget_2.close()
         del self.plot_widget_2
 
+        GeppettoJupyterModelSync.events_controller.unregister_to_event(
+            [GeppettoJupyterModelSync.events_controller._events['Select']], self.refresh_data)
+
         # Destroy this class
         SpacePlot.delete()
         # del RunControl._instance

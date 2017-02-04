@@ -50,6 +50,9 @@ class PointProcess:
         self.pointProcessPanel.close()
         del self.pointProcessPanel
 
+        self.pointProcessPanel.unregister_to_event(
+            [GeppettoJupyterModelSync.events_controller._events['Select']], self.updateValues)
+
         # Destroy this class
         PointProcess.delete()
         # del RunControl._instance

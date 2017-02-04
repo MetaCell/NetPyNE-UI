@@ -40,6 +40,10 @@ class CellBuilder:
         self.cellBuilderPanel.close()
         del self.cellBuilderPanel
 
+        self.cellBuilderPanel.unregister_to_event(
+            [GeppettoJupyterModelSync.events_controller._events['Select']], self.updateValues)
+
+
         # Destroy this class
         CellBuilder.delete()
         # del RunControl._instance
