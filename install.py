@@ -19,7 +19,7 @@ def run_nbextension_install(develop):
 
     # Command: sudo jupyter nbextension install --py geppettoJupyter
     print("Installing geppettoJupyter extension ...")
-    install_nbextension_python('geppettoJupyter', symlink=develop)
+    install_nbextension_python('geppettoJupyter', symlink=develop, user=True)
 
     # Command: sudo jupyter nbextension enable --py geppettoJupyter
     print("Enabling geppettoJupyter extensions ...")
@@ -34,7 +34,7 @@ def run_nbextension_install(develop):
     # Command: sudo jupyter nbextension install s
     # Command: sudo jupyter nbextension enable overwrite_get_msg_cell
     print("Installing and enabling additional geppettoJupyter extension ...")
-    install_nbextension('org.geppetto.frontend.jupyter/src/geppettoJupyter/overwrite_get_msg_cell.js', symlink=develop)
+    install_nbextension('org.geppetto.frontend.jupyter/src/geppettoJupyter/overwrite_get_msg_cell.js', symlink=develop, user=True)
     ext_require_path = 'overwrite_get_msg_cell'
     if version_info[0] > 4:  # notebook 5.x
         from notebook.nbextensions import enable_nbextension
@@ -48,9 +48,9 @@ print("Cloning Geppetto Jupyter (Python package)...")
 subprocess.call(['git', 'clone', '--recursive', 'https://github.com/openworm/org.geppetto.frontend.jupyter.git'])
 
 print("Checking out development branch for Geppetto Jupyter ...")
-subprocess.call(['git', 'checkout', 'development'], cwd='org.geppetto.frontend.jupyter')
+subprocess.call(['git', 'checkout', 'tags/v0.3.3.stable'], cwd='org.geppetto.frontend.jupyter')
 # We are checking out development so it's straightforward to commit and push changes
-subprocess.call(['git', 'checkout', 'integratingPlot'], cwd='org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/')
+subprocess.call(['git', 'checkout', 'master'], cwd='org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/')
 
 print("Cloning Geppetto Neuron Configuration ...")
 subprocess.call(['git', 'clone', 'https://github.com/MetaCell/geppetto-neuron.git'],
@@ -67,10 +67,10 @@ jsonFile.close()
 print("Installing Geppetto Jupyter python package ...")
 
 if len(sys.argv) > 1 and sys.argv[1] == 'overwrite':
-    subprocess.call(['pip', 'install', '.', '--upgrade', '--no-deps', '--force-reinstall'],
+    subprocess.call(['pip', 'install', '--user', '.', '--upgrade', '--no-deps', '--force-reinstall'],
                     cwd='org.geppetto.frontend.jupyter')
 else:
-    subprocess.call(['pip', 'install', '.'], cwd='org.geppetto.frontend.jupyter')
+    subprocess.call(['pip', 'install', '--user', '.'], cwd='org.geppetto.frontend.jupyter')
 
 print("Installing Geppetto Jupyter Extension ...")
 run_nbextension_install(False)
