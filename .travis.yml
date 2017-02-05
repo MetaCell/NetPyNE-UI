@@ -6,4 +6,4 @@ python:
 notifications:
   slack: metacell:5ALSeoP88DqIhORUJvxE56sq
 script:
-  - sudo python install.py
+  - python install.py
