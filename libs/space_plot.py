@@ -7,8 +7,9 @@ from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 from neuron import h
 import time
+from singleton import Singleton
 
-
+@Singleton
 class SpacePlot:
 
     def __init__(self):
@@ -22,9 +23,30 @@ class SpacePlot:
             'Plot', position_x=90, position_y=405)
         self.plot_widget_2 = G.plotVariable(
             'Plot', position_x=490, position_y=405)
+        self.plot_widget.on_close(self.close)
+        self.plot_widget_2.on_close(self.close)
 
         GeppettoJupyterModelSync.events_controller.register_to_event(
             [GeppettoJupyterModelSync.events_controller._events['Select']], self.refresh_data)
+
+    def shake_panel(self):
+        self.plot_widget.shake()
+        self.plot_widget_2.shake()
+
+    def close(self, component, args):
+        # Close Jupyter object
+        self.plot_widget.close()
+        del self.plot_widget
+
+        self.plot_widget_2.close()
+        del self.plot_widget_2
+
+        GeppettoJupyterModelSync.events_controller.unregister_to_event(
+            [GeppettoJupyterModelSync.events_controller._events['Select']], self.refresh_data)
+
+        # Destroy this class
+        SpacePlot.delete()
+        # del RunControl._instance
 
     def refresh_data(self, data, geometry_identifier, point):
         logging.debug('Refreshing space plot with selected geometry: ' +

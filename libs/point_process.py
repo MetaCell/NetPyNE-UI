@@ -4,11 +4,12 @@ Neuron Point Process
 """
 import logging
 import neuron_utils
+from singleton import Singleton
 from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 
 from neuron import h
 
-
+@Singleton
 class PointProcess:
 
     def __init__(self):
@@ -39,7 +40,25 @@ class PointProcess:
             drop_down_panel, delay_panel, duration_panel, amplitude_panel, i_panel, self.save_button], widget_id='pointProcessPanel', position_x=955, position_y=69, width=340, height=277)
         self.pointProcessPanel.register_to_event(
             [GeppettoJupyterModelSync.events_controller._events['Select']], self.updateValues)
+        self.pointProcessPanel.on_close(self.close)
         self.pointProcessPanel.display()
+
+        #GeppettoJupyterModelSync.gui_controller[self.__class__] = self
+
+    def close(self, component, args):
+        # Close Jupyter object
+        self.pointProcessPanel.close()
+        del self.pointProcessPanel
+
+        self.pointProcessPanel.unregister_to_event(
+            [GeppettoJupyterModelSync.events_controller._events['Select']], self.updateValues)
+
+        # Destroy this class
+        PointProcess.delete()
+        # del RunControl._instance
+
+    def shake_panel(self):
+        self.pointProcessPanel.shake()
 
     def update_drop_down_selection(self, triggered_component, args):
         logging.debug("Update drop drown")
