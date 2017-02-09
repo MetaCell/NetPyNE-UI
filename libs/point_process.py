@@ -46,12 +46,13 @@ class PointProcess:
         #GeppettoJupyterModelSync.gui_controller[self.__class__] = self
 
     def close(self, component, args):
+        self.pointProcessPanel.unregister_to_event(
+            [GeppettoJupyterModelSync.events_controller._events['Select']], self.updateValues)
+        
         # Close Jupyter object
         self.pointProcessPanel.close()
         del self.pointProcessPanel
 
-        self.pointProcessPanel.unregister_to_event(
-            [GeppettoJupyterModelSync.events_controller._events['Select']], self.updateValues)
 
         # Destroy this class
         PointProcess.delete()
@@ -122,6 +123,7 @@ class PointProcess:
                     distal, proximal, seg_loc, distance_to_seg_loc)
 
                 # Draw Sphere on middle segment point
+                GeppettoJupyterModelSync.current_model.highlight_visual_group_element(geometry.python_variable["section"].hname())
                 GeppettoJupyterModelSync.current_model.draw(sphere_coordinates[0], sphere_coordinates[
                                                             1], sphere_coordinates[2], average_radius * 2)
 
