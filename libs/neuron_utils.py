@@ -20,6 +20,7 @@ def configure_logging():
     logging.debug('Log configured')
 
 def createStateVariable(id = None, name = 'Untitled State Variable', units = 'Unknown', timeSeries = [], python_variable = None):
+    geometries = []
     if python_variable["segment"] is not None:
         geometries = getGeometriesBySegment(python_variable["segment"])
     G.createStateVariable(id=id, name=name,
