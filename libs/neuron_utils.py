@@ -23,7 +23,7 @@ def createStateVariable(id = None, name = 'Untitled State Variable', units = 'Un
     geometries = []
     if python_variable["segment"] is not None:
         geometries = getGeometriesBySegment(python_variable["segment"])
-    G.createStateVariable(id=id, name=name,
+    return G.createStateVariable(id=id, name=name,
                               units=units, python_variable=python_variable, geometries = geometries)
 
 def getGeometriesBySegment(segment):
