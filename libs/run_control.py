@@ -21,7 +21,7 @@ class RunControl:
 
         self.initRunButton = neuron_utils.add_button('Init & Run', self.execute_neuron_command, extraData={'commands': ['GeppettoJupyterModelSync.current_experiment.status = "RUNNING"',
                                                                                                                         'h.run()', 'GeppettoJupyterModelSync.current_experiment.status = "COMPLETED"',
-                                                                                                                        'GeppettoJupyterModelSync.triggerEvent("experiment:play",{playAll:true}']})
+                                                                                                                        'GeppettoJupyterModelSync.events_controller.triggerEvent("experiment:play",{"playAll":True})']})
 
         self.stopButton = neuron_utils.add_button('Stop')
         self.stopButton.on_click(['h.stoprun = 1'])
@@ -72,4 +72,8 @@ class RunControl:
 
     def execute_neuron_command(self, component, args):
         for callback in component.extraData['commands']:
-            exec(callback)
+            try:
+                exec(callback)
+            except Exception as e:
+                logging.exception( "Unexpected error executing callback on event triggered:")
+                raise
