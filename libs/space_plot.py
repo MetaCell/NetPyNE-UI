@@ -7,6 +7,7 @@ from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 from neuron import h
 import time
+import neuron_utils
 from singleton import Singleton
 
 
@@ -69,7 +70,7 @@ class SpacePlot:
                     vector = h.Vector()
                     vector.record(segment._ref_v)
 
-                    state_variable = G.createStateVariable(id=self.section.name() + "_" + str(index), name=self.section.name() + "_" + str(index),
+                    state_variable = neuron_utils.createStateVariable(id=self.section.name() + "_" + str(index), name=self.section.name() + "_" + str(index),
                                                            units='mV', python_variable={"record_variable": vector,
                                                                                         "segment": segment})
                     self.state_variables.append(state_variable)

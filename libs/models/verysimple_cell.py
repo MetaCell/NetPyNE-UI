@@ -19,9 +19,15 @@ class VerySimpleCell:
         self.v_vec = h.Vector()             # Membrane potential vector
         self.t_vec = h.Vector()             # Time stamp vector
         self.v_vec.record(self.soma(0.5)._ref_v)
-        G.createStateVariable(id = 'v_vec', name = 'v_vec', units = 'mV', python_variable = self.v_vec)
+        neuron_utils.createStateVariable(id='v_vec', name='v_vec',
+                        units='ms', python_variable={"record_variable": self.v_vec,
+                                                    "segment": self.soma(0.5)})
+
         self.t_vec.record(h._ref_t)
-        G.createStateVariable(id = 'time', name = 'time', units = 'ms', python_variable = self.t_vec)
+        neuron_utils.createStateVariable(id='time', name='time',
+                              units='ms', python_variable={"record_variable": self.t_vec,
+                                                           "segment": None})
+
         
         h.tstop = 80.0
 

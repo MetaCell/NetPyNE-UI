@@ -36,8 +36,10 @@ class Ring:
 
         self.time_vec = h.Vector()        # Time stamp vector
         self.time_vec.record(h._ref_t)
-        G.createStateVariable(id='time', name='time',
-                          units='ms', python_variable=self.time_vec)
+        neuron_utils.createStateVariable(id='time', name='time',
+                              units='ms', python_variable={"record_variable": self.time_vec,
+                                                           "segment": None})
+
 
         for i in range(N):
             self.set_recording_vectors(i)
@@ -105,11 +107,14 @@ class Ring:
         setattr(self, 'dend_v_vec_' + str(i), h.Vector() )
         
         getattr(self, 'soma_v_vec_' + str(i)).record(self.cells[i].soma(0.5)._ref_v)
-        G.createStateVariable(id='v_vec_soma_'  + str(i) , name='v_vec_soma_'  + str(i) ,
-                          units='mV', python_variable=getattr(self, 'soma_v_vec_' + str(i)))
+        neuron_utils.createStateVariable(id='v_vec_soma_'  + str(i) , name='v_vec_soma_'  + str(i) ,
+                          units='mV', python_variable={"record_variable": getattr(self, 'soma_v_vec_' + str(i)),
+                                                           "segment": self.cells[i].soma(0.5)})
+
         getattr(self, 'dend_v_vec_' + str(i)).record(self.cells[i].dend(0.5)._ref_v)
-        G.createStateVariable(id='v_vec_dend_' + str(i) , name='v_vec_dend_' + str(i),
-                          units='mV', python_variable=getattr(self, 'dend_v_vec_' + str(i)))
+        neuron_utils.createStateVariable(id='v_vec_dend_'  + str(i) , name='v_vec_dend_'  + str(i) ,
+                          units='mV', python_variable={"record_variable": getattr(self, 'dend_v_vec_' + str(i)),
+                                                           "segment": self.cells[i].dend(0.5)})
 
 
     def analysis(self):
