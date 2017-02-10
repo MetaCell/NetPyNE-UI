@@ -21,7 +21,7 @@ class RunControl:
 
         self.initRunButton = neuron_utils.add_button('Init & Run', self.execute_neuron_command, extraData={'commands': ['GeppettoJupyterModelSync.current_experiment.status = "RUNNING"',
                                                                                                                         'h.run()', 'GeppettoJupyterModelSync.current_experiment.status = "COMPLETED"',
-                                                                                                                        'GeppettoJupyterModelSync.events_controller.triggerEvent("experiment:play",{"playAll":True})']})
+                                                                                                                        'GeppettoJupyterModelSync.events_controller.triggerEvent("experiment:doPlay",{"playAll":True})']})
 
         self.stopButton = neuron_utils.add_button('Stop')
         self.stopButton.on_click(['h.stoprun = 1'])
