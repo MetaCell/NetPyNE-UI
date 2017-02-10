@@ -9,6 +9,7 @@ from neuron import h
 import time
 from singleton import Singleton
 
+
 @Singleton
 class SpacePlot:
 
@@ -69,7 +70,8 @@ class SpacePlot:
                     vector.record(segment._ref_v)
 
                     state_variable = G.createStateVariable(id=self.section.name() + "_" + str(index), name=self.section.name() + "_" + str(index),
-                                                           units='mV', python_variable=vector)
+                                                           units='mV', python_variable={"record_variable": vector,
+                                                                                        "segment": segment})
                     self.state_variables.append(state_variable)
 
                 derived_state_variable = G.createDerivedStateVariable(id="space_plot", name="Space Plot",
