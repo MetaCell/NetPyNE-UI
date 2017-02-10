@@ -2,6 +2,7 @@ import logging
 from neuron import h
 from IPython.core.debugger import Tracer
 import neuron_utils
+from math import sqrt, pow
 
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
@@ -54,20 +55,23 @@ class SimpleCell:
         # record soma voltage and time
         self.t_vec = h.Vector()
         self.t_vec.record(h._ref_t)
-        G.createStateVariable(id='time', name='time',
-                              units='ms', python_variable=self.t_vec)
+        neuron_utils.createStateVariable(id='time', name='time',
+                              units='ms', python_variable={"record_variable": self.t_vec,
+                                                           "segment": None})
 
         self.v_vec_soma = h.Vector()
         self.v_vec_soma.record(self.soma(1.0)._ref_v)  # change recoding pos
+
         # TODO How do we extract the units?
-        G.createStateVariable(id='v_vec_soma', name='v_vec_soma',
-                              units='mV', python_variable=self.v_vec_soma)
+        neuron_utils.createStateVariable(id='v_vec_soma', name='v_vec_soma',
+                              units='mV', python_variable={"record_variable": self.v_vec_soma,"segment": self.soma(1.0)})
+
 
         self.v_vec_dend = h.Vector()
         self.v_vec_dend.record(self.dend(1.0)._ref_v)
         # TODO How do we extract the units?
-        G.createStateVariable(id='v_vec_dend', name='v_vec_dend',
-                              units='mV', python_variable=self.v_vec_dend)
+        neuron_utils.createStateVariable(id='v_vec_dend', name='v_vec_dend',
+                              units='mV', python_variable={"record_variable": self.v_vec_dend, "segment": self.dend(1.0)}  )
 
         # run simulation
         h.tstop = 60  # ms
