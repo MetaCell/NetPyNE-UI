@@ -36,13 +36,12 @@ class CellBuilder:
         self.cellBuilderPanel.display()
     
     def close(self, component, args):
-        # Close Jupyter object
-        self.cellBuilderPanel.close()
-        del self.cellBuilderPanel
-
         self.cellBuilderPanel.unregister_to_event(
             [GeppettoJupyterModelSync.events_controller._events['Select']], self.updateValues)
 
+        # Close Jupyter object
+        self.cellBuilderPanel.close()
+        del self.cellBuilderPanel
 
         # Destroy this class
         CellBuilder.delete()
