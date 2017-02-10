@@ -67,7 +67,7 @@ class PointProcess:
             self.init_panel_for_new_point_process()
         else:
             for point_process in self.segment.point_processes():
-                if args['data'] == point_process.hname():
+                if args['data'] == point_process.name():
                     self.init_panel_for_point_process(point_process)
 
     def updateValues(self, dataId, geometry_identifier, point):
@@ -123,7 +123,7 @@ class PointProcess:
                     distal, proximal, seg_loc, distance_to_seg_loc)
 
                 # Draw Sphere on middle segment point
-                GeppettoJupyterModelSync.current_model.highlight_visual_group_element(geometry.python_variable["section"].hname())
+                GeppettoJupyterModelSync.current_model.highlight_visual_group_element(geometry.python_variable["section"].name())
                 GeppettoJupyterModelSync.current_model.draw(sphere_coordinates[0], sphere_coordinates[
                                                             1], sphere_coordinates[2], average_radius * 2)
 
