@@ -4,6 +4,7 @@ Neuron Point Process
 """
 import logging
 import neuron_utils
+import neuron_geometries_utils
 from singleton import Singleton
 from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 
@@ -43,8 +44,6 @@ class PointProcess:
         self.pointProcessPanel.on_close(self.close)
         self.pointProcessPanel.display()
 
-        #GeppettoJupyterModelSync.gui_controller[self.__class__] = self
-
     def close(self, component, args):
         self.pointProcessPanel.unregister_to_event(
             [GeppettoJupyterModelSync.events_controller._events['Select']], self.updateValues)
@@ -52,6 +51,9 @@ class PointProcess:
         # Close Jupyter object
         self.pointProcessPanel.close()
         del self.pointProcessPanel
+
+
+        GeppettoJupyterModelSync.current_model.removeSphere()
 
 
         # Destroy this class
@@ -77,20 +79,28 @@ class PointProcess:
             if geometry.id == geometry_identifier:
                 logging.debug('Loading values for geometry ' +
                               str(geometry_identifier))
+                GeppettoJupyterModelSync.current_model.highlight_visual_group_element(geometry.python_variable["section"].name())
 
                 # Calculate distance to selection
-                distance_to_selection, section_length = neuron_utils.calculate_distance_to_selection(
+                distance_to_selection, section_length = neuron_geometries_utils.calculate_distance_to_selection(
                     geometry, point)
+                
+                logging.debug("taka")
+                logging.debug(distance_to_selection)
+                logging.debug(section_length)
 
                 # Normalise distance to selection
                 distance_to_selection_normalised = distance_to_selection / section_length
+                logging.debug(distance_to_selection_normalised)
                 # Get Segment
                 self.segment = geometry.python_variable[
                     "section"](distance_to_selection_normalised)
 
+                logging.debug(self.segment)
                 # Get Point Processes for segment and init panel
                 self.drop_down.items = []
                 point_processes = self.segment.point_processes()
+                logging.debug(point_processes)
                 if len(point_processes) > 0:
                     for point_process in point_processes:
                         if point_process.hname().startswith('IClamp'):
@@ -110,21 +120,20 @@ class PointProcess:
 
                 # Calculate actual segment position => segment.x
                 #nseg = len(geometry.python_variable["section_points"]) - 1
-                seg_loc = neuron_utils.calculate_segment_location(geometry.python_variable[
+                seg_loc = neuron_geometries_utils.calculate_segment_location(geometry.python_variable[
                                                                   "section"].nseg, distance_to_selection_normalised, section_length)
 
                 # Calculate distance to cylinder location origin and distal and
                 # proximal points
-                distal, proximal, distance_to_seg_loc = neuron_utils.calculate_distance_to_cylinder_location(
+                distal, proximal, distance_to_seg_loc = neuron_geometries_utils.calculate_distance_to_cylinder_location(
                     geometry, seg_loc)
 
                 # Calculate radius for sphere depending on segment radiues
-                sphere_coordinates, average_radius = neuron_utils.calculate_sphere_coordinates_and_radius(
+                sphere_coordinates, average_radius = neuron_geometries_utils.calculate_sphere_coordinates_and_radius(
                     distal, proximal, seg_loc, distance_to_seg_loc)
 
                 # Draw Sphere on middle segment point
-                GeppettoJupyterModelSync.current_model.highlight_visual_group_element(geometry.python_variable["section"].name())
-                GeppettoJupyterModelSync.current_model.draw(sphere_coordinates[0], sphere_coordinates[
+                GeppettoJupyterModelSync.current_model.drawSphere(sphere_coordinates[0], sphere_coordinates[
                                                             1], sphere_coordinates[2], average_radius * 2)
 
     def create_current_clamp(self, triggered_component, args):
