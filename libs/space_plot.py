@@ -62,6 +62,9 @@ class SpacePlot:
                 logging.debug('Loading values for geometry ' +
                               str(geometry_identifier))
 
+                GeppettoJupyterModelSync.current_model.highlight_visual_group_element(
+                    geometry.python_variable["section"].name())
+
                 self.geometry = geometry
                 self.state_variables = []
 
@@ -71,8 +74,8 @@ class SpacePlot:
                     vector.record(segment._ref_v)
 
                     state_variable = neuron_utils.createStateVariable(id=self.section.name() + "_" + str(index), name=self.section.name() + "_" + str(index),
-                                                           units='mV', python_variable={"record_variable": vector,
-                                                                                        "segment": segment})
+                                                                      units='mV', python_variable={"record_variable": vector,
+                                                                                                   "segment": segment})
                     self.state_variables.append(state_variable)
 
                 derived_state_variable = G.createDerivedStateVariable(id="space_plot", name="Space Plot",
