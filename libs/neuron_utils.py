@@ -29,7 +29,10 @@ def createStateVariable(id = None, name = 'Untitled State Variable', units = 'Un
 def getGeometriesBySegment(segment):
                                       
     secs = getNeuronGeometries()
-    secData = secs[segment.sec.name()]
+    secData = None
+    for sec_name, sec in secs.items():
+        if sec['neuronSec'] == segment.sec:
+            secData = sec
     section_points = secData['geom']['pt3d']
     section_length = calculate_section_length(section_points)
     interval = section_length / segment.sec.nseg
@@ -147,7 +150,8 @@ def getNeuronGeometries():
         logging.debug('Non pt3d geometries. Converting to pt3d')
         secs = neuron_geometries_utils.convertTo3DGeoms(secs)
         logging.debug('Geometries converted to pt3d')
-
+        # This is not working as expected. It is creating an extre segment for soma and dend
+        # h.define_shape()
     return secs
 
 def extractGeometries():

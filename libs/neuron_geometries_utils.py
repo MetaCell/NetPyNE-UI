@@ -16,7 +16,7 @@ def convertTo3DGeoms(secs):
     prevL = 0
     for secName, sec in secs.items():
         sec['geom']['pt3d'] = []
-        if secName in ['soma', 'Adend1', 'Adend2', 'Adend3']:  # set 3d geom of soma and Adends
+        if secName in ['Adend1', 'Adend2', 'Adend3']:  # set 3d geom of soma and Adends
             sec['geom']['pt3d'].append(
                 [offset + 0, prevL, 0, sec['geom']['diam']])
             prevL = float(prevL + sec['geom']['L'])
@@ -137,8 +137,8 @@ def getCellParams(cell):
         # create new section dict with name of section
         secName = getSecName(sec, dirCellSecNames)
 
-        if len(secs) == 1:
-            secName = 'soma'  # if just one section rename to 'soma'
+        # if len(secs) == 1:
+        #     secName = 'soma'  # if just one section rename to 'soma'
         # create dictionary to store sec info
         secDic[secName] = {'geom': {}, 'topol': {},
                            'mechs': {}, 'neuronSec': sec}
