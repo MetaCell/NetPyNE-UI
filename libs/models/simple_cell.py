@@ -3,6 +3,7 @@ from neuron import h
 from IPython.core.debugger import Tracer
 import neuron_utils
 from math import sqrt, pow
+import neuron_geometries_utils
 
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
@@ -11,7 +12,7 @@ from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 class SimpleCell:
 
     def __init__(self):
-        G.createProject(name='Simple Cell')
+        neuron_utils.createProject(name='Simple Cell')
 
         self.soma = h.Section(name='soma')
         self.dend = h.Section(name='dend')
@@ -77,7 +78,7 @@ class SimpleCell:
         h.tstop = 60  # ms
         # h.run()
 
-        neuron_utils.extractGeometries()
+        neuron_geometries_utils.extractGeometries()
 
     def analysis(self):
         # plot voltage vs time

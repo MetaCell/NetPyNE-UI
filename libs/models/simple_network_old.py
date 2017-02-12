@@ -102,7 +102,7 @@ class HHCell:
 
 class Net:
     def __init__(self, numcells):
-        G.createProject(name = 'Simple Network')
+        neuron_utils.createProject(name = 'Simple Network')
         self.spkt = h.Vector()   # Spike time of all cells
         self.spkid = h.Vector()  # cell ids of spike times
         self.create_cells(numcells)  # call method to create cells
@@ -173,7 +173,7 @@ class SimpleNetwork:
         #h.init()  # initialize sim
         #h.run()  # run simulation
 
-        neuron_utils.extractGeometries()
+        neuron_geometries_utils.extractGeometries()
 
     def analysis(self):
         #from matplotlib import pyplot

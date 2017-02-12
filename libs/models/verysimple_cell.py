@@ -1,6 +1,7 @@
 from __future__ import print_function
 from neuron import h
 import neuron_utils
+import neuron_geometries_utils
 
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 
@@ -8,7 +9,7 @@ class VerySimpleCell:
 
     def __init__(self):
         print("loading very simple cell")
-        G.createProject(name = 'Very Simple Cell')
+        neuron_utils.createProject(name = 'Very Simple Cell')
 
         print('Loading Model...')
         self.soma = h.Section(name='soma')
@@ -31,7 +32,7 @@ class VerySimpleCell:
         
         h.tstop = 80.0
 
-        neuron_utils.extractGeometries()
+        neuron_geometries_utils.extractGeometries()
 
     def analysis(self):
         self.plotWidget =G.plotVariable('Plot', ['VerySimpleCell.v_vec'])

@@ -1,5 +1,4 @@
 import logging
-from math import sqrt, pow
 import neuron_geometries_utils
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 
@@ -8,6 +7,7 @@ from geppettoJupyter.geppetto_comm import GeppettoJupyterGUISync
 
 from neuron import h
 h.load_file("stdrun.hoc")
+
 
 def configure_logging():
     logger = logging.getLogger()
@@ -18,159 +18,20 @@ def configure_logging():
     logger.addHandler(fhandler)
     logger.setLevel(logging.DEBUG)
     logging.debug('Log configured')
+    
 
 def createStateVariable(id = None, name = 'Untitled State Variable', units = 'Unknown', timeSeries = [], python_variable = None):
     geometries = []
     if python_variable["segment"] is not None:
-        geometries = getGeometriesBySegment(python_variable["segment"])
+        geometries = neuron_geometries_utils.getGeometriesBySegment(python_variable["segment"], neuron_geometries_utils.getNeuronGeometries())
     return G.createStateVariable(id=id, name=name,
                               units=units, python_variable=python_variable, geometries = geometries)
 
-def getGeometriesBySegment(segment):
-                                      
-    secs = getNeuronGeometries()
-    secData = None
-    for sec_name, sec in secs.items():
-        if sec['neuronSec'] == segment.sec:
-            secData = sec
-    section_points = secData['geom']['pt3d']
-    section_length = calculate_section_length(section_points)
-    interval = section_length / segment.sec.nseg
-    seg_index = int(segment.x * segment.sec.nseg)
-    seg_init = (seg_index-1)*interval
-    seg_end = seg_index*interval
-
-    geometries = []
-    length = 0
-    for point_index in range(len(section_points) - 1):
-        # Calculate geometry length
-        proximal = section_points[point_index]
-        distal = section_points[point_index + 1]
-        geometry_length = sqrt(pow(distal[0] - proximal[0], 2) + pow(
-            distal[1] - proximal[1], 2) + pow(distal[2] - proximal[2], 2))
-
-        # Add geometry length or distance to selection
-        if length >= seg_init and length < seg_end:
-            # distance_to_selection += geometry_length
-            geometries.append(GeppettoJupyterModelSync.current_model.id + "." + segment.sec.name() + "_" + str(point_index))
-        elif length > seg_end:
-            break
-
-        length += geometry_length
-
-    return geometries
-
-def calculate_segment_location(nseg, distance_to_selection_normalised, section_length):
-    interval = 1.0 / nseg
-    seg_index = int(distance_to_selection_normalised * nseg)
-    seg_loc_normalised = seg_index * interval + interval / 2
-    seg_loc = seg_loc_normalised * section_length
-    return seg_loc
+def createProject(name='PTcell Neuron'):
+    neuron_geometries_utils.secs = {}
+    G.createProject(name='PTcell Neuron')
 
 
-def calculate_distance_to_cylinder_location(geometry, seg_loc):
-    distance_to_seg_loc = 0
-    proximal = []
-    distal = []
-    for point_index in range(len(geometry.python_variable["section_points"]) - 1):
-        proximal = geometry.python_variable["section_points"][point_index]
-        distal = geometry.python_variable["section_points"][point_index + 1]
-        geometry_length = sqrt(pow(distal[0] - proximal[0], 2) + pow(
-            distal[1] - proximal[1], 2) + pow(distal[2] - proximal[2], 2))
-        if seg_loc < geometry_length + distance_to_seg_loc:
-            break
-        distance_to_seg_loc += geometry_length
-    return distal, proximal, distance_to_seg_loc
-
-
-def calculate_sphere_coordinates_and_radius(distal, proximal, seg_loc, distance_to_seg_loc):
-    average_radius = (proximal[3] + distal[3]) / 2
-    geometry_vector = [distal[0] - proximal[0],
-                       distal[1] - proximal[1], distal[2] - proximal[2]]
-    geometry_vector_length = sqrt(pow(
-        geometry_vector[0], 2) + pow(geometry_vector[1], 2) + pow(geometry_vector[2], 2))
-    distance_in_seg = (seg_loc - distance_to_seg_loc) / geometry_vector_length
-    sphere_coordinates = [proximal[0] + distance_in_seg * geometry_vector[0], proximal[1] +
-                          distance_in_seg * geometry_vector[1], proximal[2] + distance_in_seg * geometry_vector[2]]
-    return sphere_coordinates, average_radius
-
-def calculate_section_length(section_points):
-    section_length = 0
-    for point_index in range(len(section_points) - 1):
-        # Calculate geometry length
-        proximal = section_points[point_index]
-        distal = section_points[point_index + 1]
-        geometry_length = sqrt(pow(distal[0] - proximal[0], 2) + pow(
-            distal[1] - proximal[1], 2) + pow(distal[2] - proximal[2], 2))
-        section_length += geometry_length
-    return section_length
-
-def calculate_distance_to_selection(geometry, point):
-    # Calculate segment
-    geometry_index = int(geometry.id.rsplit('_', 1)[1])
-    section_length = 0
-    distance_to_selection = 0
-    for point_index in range(len(geometry.python_variable["section_points"]) - 1):
-        # Calculate geometry length
-        proximal = geometry.python_variable["section_points"][point_index]
-        distal = geometry.python_variable["section_points"][point_index + 1]
-        geometry_length = sqrt(pow(distal[0] - proximal[0], 2) + pow(
-            distal[1] - proximal[1], 2) + pow(distal[2] - proximal[2], 2))
-        section_length += geometry_length
-        # Add geometry length or distance to selection
-        if point_index < geometry_index:
-            distance_to_selection += geometry_length
-        elif point_index == geometry_index:
-            # Calculate project point
-            geometry_vector = [distal[0] - proximal[0],
-                               distal[1] - proximal[1], distal[2] - proximal[2]]
-            point_vector = [point[0] - proximal[0],
-                            point[1] - proximal[1], point[2] - proximal[2]]
-            t_num = geometry_vector[0] * point_vector[0] + geometry_vector[
-                1] * point_vector[1] + geometry_vector[2] * point_vector[2]
-            t_den = geometry_vector[0] * geometry_vector[0] + geometry_vector[
-                1] * geometry_vector[1] + geometry_vector[2] * geometry_vector[2]
-            t = t_num / t_den
-            projected_point = [proximal[0] + t * geometry_vector[0], proximal[
-                1] + t * geometry_vector[1], proximal[2] + t * geometry_vector[2]]
-
-            distance_to_selection += sqrt(pow(projected_point[0] - proximal[0], 2) + pow(
-                projected_point[1] - proximal[1], 2) + pow(projected_point[2] - proximal[2], 2))
-
-    return distance_to_selection, section_length
-
-def getNeuronGeometries():
-    logging.debug('Extracting Morphology')
-    logging.debug('Extracting secs and segs from neuron')
-    secs, secLists, synMechs = neuron_geometries_utils.getCellParams(None)
-    logging.debug('Secs and segs extracted from neuron')
-
-    # Hack to convert non pt3d geometries
-    if 'pt3d' not in list(secs.values())[0]['geom']:
-        logging.debug('Non pt3d geometries. Converting to pt3d')
-        secs = neuron_geometries_utils.convertTo3DGeoms(secs)
-        logging.debug('Geometries converted to pt3d')
-        # This is not working as expected. It is creating an extre segment for soma and dend
-        # h.define_shape()
-    return secs
-
-def extractGeometries():
-
-    secs = getNeuronGeometries()
-
-    geometries = []
-    logging.debug("Converting sections and segments to Geppetto")
-    for sec_name, sec in secs.items():
-        if 'pt3d' in sec['geom']:
-            points = sec['geom']['pt3d']
-            for i in range(len(points) - 1):
-                geometries.append(G.createGeometry(sec_name=sec_name, index=i, position=points[i], distal=points[
-                                  i + 1], python_variable={'section': sec['neuronSec'], 'section_points': sec['geom']['pt3d']}))
-
-    logging.debug("Sections and segments converted to Geppetto")
-    logging.debug("Geometries found: " + str(len(geometries)))
-    GeppettoJupyterModelSync.current_model.addGeometries(geometries)
-    return geometries
 
 # GUI API
 

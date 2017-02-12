@@ -3,6 +3,7 @@ from .ball_and_stick import BallAndStick
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 from math import pi, cos, sin
 import neuron_utils
+import neuron_geometries_utils
 import logging
 # from neuronpy.util import spiketrain
 
@@ -20,7 +21,7 @@ class Ring:
         :param syn_w: Synaptic weight
         :param syn_delay: Delay of the synapse
         """
-        G.createProject(name='Ring')
+        neuron_utils.createProject(name='Ring')
 
         self._N = N              # Total number of cells in the net
         self.cells = []          # Cells in the net
@@ -45,7 +46,7 @@ class Ring:
             self.set_recording_vectors(i)
 
         h.tstop = 50
-        neuron_utils.extractGeometries()
+        neuron_geometries_utils.extractGeometries()
     #
     def set_numcells(self, N, radius=50):
         """Create, layout, and connect N cells."""
