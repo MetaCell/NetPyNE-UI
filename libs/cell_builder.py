@@ -4,6 +4,7 @@ Neuron Cell Builder
 """
 import logging
 import neuron_utils
+import neuron_geometries_utils
 from singleton import Singleton
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
@@ -58,6 +59,7 @@ class CellBuilder:
                 if geometry.id == geometry_identifier:
                     logging.debug('Loading values for geometry ' +
                                   str(geometry_identifier))
+                    GeppettoJupyterModelSync.current_model.highlight_visual_group_element(geometry.python_variable["section"].name())
 
                     # Update segment and geometry
                     distance_to_selection, section_length = neuron_utils.calculate_distance_to_selection(
@@ -91,4 +93,4 @@ class CellBuilder:
         self.segment = float(self.segment_diam.sync_value)
 
         # Recreating Scene
-        neuron_utils.extractGeometries()
+        neuron_geometries_utils.extractGeometries()
