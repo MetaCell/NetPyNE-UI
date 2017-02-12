@@ -122,12 +122,12 @@ def add_text_field_and_button(name, value=None, create_checkbox=False, actions=N
     return panel
 
 
-def add_panel(name, items=[], widget_id=None, position_x=-1, position_y=-1, width=-1,height=-1):
+def add_panel(name, items=[], widget_id=None, position_x=-1, position_y=-1, width=-1,height=-1, properties={"closable":True}):
     if widget_id is None:
         widget_id = G.newId()
     for item in items:
         item.embedded = True
-    return GeppettoJupyterGUISync.PanelSync(widget_id=widget_id, widget_name=name, items=items, embedded=False, position_x=position_x, position_y=position_y, width=width, height=height)
+    return GeppettoJupyterGUISync.PanelSync(widget_id=widget_id, widget_name=name, items=items, embedded=False, position_x=position_x, position_y=position_y, width=width, height=height, properties=properties)
 
 
 def add_checkbox(name, sync_value='false', extraData=None):

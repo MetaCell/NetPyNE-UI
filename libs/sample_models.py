@@ -24,7 +24,7 @@ class SampleModels:
             'PT Cell', self.loadModule, extraData={'module': 'PTcell', 'model': 'PTcell'}))
 
         self.loadModelPanel = neuron_utils.add_panel(
-            'Sample NEURON Models', items=self.items, widget_id='loadModelPanel', position_x=108, position_y=125, width=287)
+            'Sample NEURON Models', items=self.items, widget_id='loadModelPanel', position_x=108, position_y=125, width=287, properties={"closable":False})
         self.loadModelPanel.on_close(self.close)
         self.loadModelPanel.display()
 
