@@ -27,9 +27,9 @@ def createStateVariable(id = None, name = 'Untitled State Variable', units = 'Un
     return G.createStateVariable(id=id, name=name,
                               units=units, python_variable=python_variable, geometries = geometries)
 
-def createProject(name='PTcell Neuron'):
+def createProject(name='Project'):
     neuron_geometries_utils.secs = {}
-    G.createProject(name='PTcell Neuron')
+    G.createProject(name=name)
 
 
 
