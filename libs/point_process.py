@@ -75,66 +75,63 @@ class PointProcess:
     def updateValues(self, dataId, geometry_identifier, point):
 
         logging.debug('Updating values for Point Process')
-        for geometry in GeppettoJupyterModelSync.current_model.geometries_raw:
-            if geometry.id == geometry_identifier:
-                logging.debug('Loading values for geometry ' +
-                              str(geometry_identifier))
-                GeppettoJupyterModelSync.current_model.highlight_visual_group_element(geometry.python_variable["section"].name())
+        if geometry_identifier == "":
+            GeppettoJupyterModelSync.current_model.removeSphere()
+        else:
+            for geometry in GeppettoJupyterModelSync.current_model.geometries_raw:
 
-                # Calculate distance to selection
-                distance_to_selection, section_length = neuron_geometries_utils.calculate_distance_to_selection(
-                    geometry, point)
-                
-                logging.debug("taka")
-                logging.debug(distance_to_selection)
-                logging.debug(section_length)
+                if geometry.id == geometry_identifier:
+                    logging.debug('Loading values for geometry ' +
+                                str(geometry_identifier))
+                    GeppettoJupyterModelSync.current_model.highlight_visual_group_element(geometry.python_variable["section"].name())
 
-                # Normalise distance to selection
-                distance_to_selection_normalised = distance_to_selection / section_length
-                logging.debug(distance_to_selection_normalised)
-                # Get Segment
-                self.segment = geometry.python_variable[
-                    "section"](distance_to_selection_normalised)
+                    # Calculate distance to selection
+                    distance_to_selection, section_length = neuron_geometries_utils.calculate_distance_to_selection(
+                        geometry, point)
+                    
+                    # Normalise distance to selection
+                    distance_to_selection_normalised = distance_to_selection / section_length
+                    # Get Segment
+                    self.segment = geometry.python_variable[
+                        "section"](distance_to_selection_normalised)
 
-                logging.debug(self.segment)
-                # Get Point Processes for segment and init panel
-                self.drop_down.items = []
-                point_processes = self.segment.point_processes()
-                logging.debug(point_processes)
-                if len(point_processes) > 0:
-                    for point_process in point_processes:
-                        if point_process.hname().startswith('IClamp'):
-                            logging.debug(
-                                "Point process found with name " + point_process.hname())
-                            self.init_panel_for_point_process(point_process)
-                            self.drop_down.add_child(
-                                {'id': point_process.hname(), 'value': point_process.hname()})
+                    # Get Point Processes for segment and init panel
+                    self.drop_down.items = []
+                    point_processes = self.segment.point_processes()
+                    if len(point_processes) > 0:
+                        for point_process in point_processes:
+                            if point_process.hname().startswith('IClamp'):
+                                logging.debug(
+                                    "Point process found with name " + point_process.hname())
+                                self.init_panel_for_point_process(point_process)
+                                self.drop_down.add_child(
+                                    {'id': point_process.hname(), 'value': point_process.hname()})
 
-                else:
-                    logging.debug("No point process found")
-                    self.init_panel_for_new_point_process()
+                    else:
+                        logging.debug("No point process found")
+                        self.init_panel_for_new_point_process()
 
-                # Add new point process option
-                self.drop_down.add_child(
-                    {'id': 'new', 'value': 'New Point Process'})
+                    # Add new point process option
+                    self.drop_down.add_child(
+                        {'id': 'new', 'value': 'New Point Process'})
 
-                # Calculate actual segment position => segment.x
-                #nseg = len(geometry.python_variable["section_points"]) - 1
-                seg_loc = neuron_geometries_utils.calculate_segment_location(geometry.python_variable[
-                                                                  "section"].nseg, distance_to_selection_normalised, section_length)
+                    # Calculate actual segment position => segment.x
+                    #nseg = len(geometry.python_variable["section_points"]) - 1
+                    seg_loc = neuron_geometries_utils.calculate_segment_location(geometry.python_variable[
+                                                                    "section"].nseg, distance_to_selection_normalised, section_length)
 
-                # Calculate distance to cylinder location origin and distal and
-                # proximal points
-                distal, proximal, distance_to_seg_loc = neuron_geometries_utils.calculate_distance_to_cylinder_location(
-                    geometry, seg_loc)
+                    # Calculate distance to cylinder location origin and distal and
+                    # proximal points
+                    distal, proximal, distance_to_seg_loc = neuron_geometries_utils.calculate_distance_to_cylinder_location(
+                        geometry, seg_loc)
 
-                # Calculate radius for sphere depending on segment radiues
-                sphere_coordinates, average_radius = neuron_geometries_utils.calculate_sphere_coordinates_and_radius(
-                    distal, proximal, seg_loc, distance_to_seg_loc)
+                    # Calculate radius for sphere depending on segment radiues
+                    sphere_coordinates, average_radius = neuron_geometries_utils.calculate_sphere_coordinates_and_radius(
+                        distal, proximal, seg_loc, distance_to_seg_loc)
 
-                # Draw Sphere on middle segment point
-                GeppettoJupyterModelSync.current_model.drawSphere(sphere_coordinates[0], sphere_coordinates[
-                                                            1], sphere_coordinates[2], average_radius * 2)
+                    # Draw Sphere on middle segment point
+                    GeppettoJupyterModelSync.current_model.drawSphere(sphere_coordinates[0], sphere_coordinates[
+                                                                1], sphere_coordinates[2], average_radius * 2)
 
     def create_current_clamp(self, triggered_component, args):
         logging.debug("Creating Current Clamp")
