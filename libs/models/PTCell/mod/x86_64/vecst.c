@@ -250,7 +250,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
 	int _vectorized = 0;
   _initlists();
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 vecst /home/adrian/code/geppetto-luna-code/M1NetworkModel/sim/mod/x86_64/vecst.mod\n");
+ 	ivoc_help("help ?1 vecst /Users/matteocantarelli/Documents/Development/NEURON-UI/libs/models/PTCell/mod/x86_64/vecst.mod\n");
  }
  static double *_t_RES;
 static int _reset;
@@ -2451,17 +2451,13 @@ static double pop (void* vv) {
  _f_Expo(_lx); return; 
 }
  _xi = _mfac_Expo * (_lx - _tmin_Expo);
- if (isnan(_xi)) {
-  RES = _xi;
-  return;
- }
+ _i = (int) _xi;
  if (_xi <= 0.) {
  RES = _t_RES[0];
  return; }
- if (_xi >= 5000.) {
+ if (_i >= 5000) {
  RES = _t_RES[5000];
  return; }
- _i = (int) _xi;
  _theta = _xi - (double)_i;
  RES = _t_RES[_i] + _theta*(_t_RES[_i+1] - _t_RES[_i]);
  }

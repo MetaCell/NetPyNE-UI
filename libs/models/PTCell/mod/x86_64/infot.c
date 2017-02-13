@@ -194,9 +194,9 @@ extern void _cvode_abstol( Symbol**, double*, int);
  	register_mech(_mechanism, nrn_alloc,(void*)0, (void*)0, (void*)0, nrn_init, hoc_nrnpointerindex, 0);
  _mechtype = nrn_get_mechtype(_mechanism[1]);
      _nrn_setdata_reg(_mechtype, _setdata);
-  hoc_register_prop_size(_mechtype, 0, 0);
+  hoc_register_dparam_size(_mechtype, 0);
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 infot /home/adrian/code/geppetto-luna-code/M1NetworkModel/sim/mod/x86_64/infot.mod\n");
+ 	ivoc_help("help ?1 infot /Users/matteocantarelli/Documents/Development/NEURON-UI/libs/models/PTCell/mod/x86_64/infot.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -1735,15 +1735,13 @@ static void _hoc_testoddometer(void) {
  return _f_EXP(_lx); 
 }
  _xi = _mfac_EXP * (_lx - _tmin_EXP);
- if (isnan(_xi)) {
-  return _xi; }
+ _i = (int) _xi;
  if (_xi <= 0.) {
  return _t_EXP[0];
  }
- if (_xi >= 50000.) {
+ if (_i >= 50000) {
  return _t_EXP[50000];
  }
- _i = (int) _xi;
  return _t_EXP[_i] + (_xi - (double)_i)*(_t_EXP[_i+1] - _t_EXP[_i]);
  }
 
@@ -1792,15 +1790,13 @@ static void _hoc_EXP(void) {
  return _f_LOG2(_lx); 
 }
  _xi = _mfac_LOG2 * (_lx - _tmin_LOG2);
- if (isnan(_xi)) {
-  return _xi; }
+ _i = (int) _xi;
  if (_xi <= 0.) {
  return _t_LOG2[0];
  }
- if (_xi >= 50000.) {
+ if (_i >= 50000) {
  return _t_LOG2[50000];
  }
- _i = (int) _xi;
  return _t_LOG2[_i] + (_xi - (double)_i)*(_t_LOG2[_i+1] - _t_LOG2[_i]);
  }
 

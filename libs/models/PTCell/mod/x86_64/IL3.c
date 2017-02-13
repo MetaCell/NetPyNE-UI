@@ -218,11 +218,11 @@ extern void _cvode_abstol( Symbol**, double*, int);
      _nrn_thread_reg(_mechtype, 1, _thread_mem_init);
      _nrn_thread_reg(_mechtype, 0, _thread_cleanup);
      _nrn_thread_reg(_mechtype, 2, _update_ion_pointer);
-  hoc_register_prop_size(_mechtype, 10, 5);
+  hoc_register_dparam_size(_mechtype, 5);
  	hoc_register_cvode(_mechtype, _ode_count, _ode_map, _ode_spec, _ode_matsol);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 ical3 /home/adrian/code/geppetto-luna-code/M1NetworkModel/sim/mod/x86_64/IL3.mod\n");
+ 	ivoc_help("help ?1 ical3 /Users/matteocantarelli/Documents/Development/NEURON-UI/libs/models/PTCell/mod/x86_64/IL3.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }

@@ -158,7 +158,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
 	int _vectorized = 0;
   _initlists();
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 misc /home/adrian/code/geppetto-luna-code/M1NetworkModel/sim/mod/x86_64/misc.mod\n");
+ 	ivoc_help("help ?1 misc /Users/matteocantarelli/Documents/Development/NEURON-UI/libs/models/PTCell/mod/x86_64/misc.mod\n");
  }
 static int _reset;
 static char *modelname = "";

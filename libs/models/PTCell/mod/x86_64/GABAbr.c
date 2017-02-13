@@ -237,13 +237,13 @@ extern void _cvode_abstol( Symbol**, double*, int);
  	register_destructor(_destructor);
  _mechtype = nrn_get_mechtype(_mechanism[1]);
      _nrn_setdata_reg(_mechtype, _setdata);
-  hoc_register_prop_size(_mechtype, 11, 5);
+  hoc_register_dparam_size(_mechtype, 5);
  	hoc_register_cvode(_mechtype, _ode_count, _ode_map, _ode_spec, _ode_matsol);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
  pnt_receive[_mechtype] = _net_receive;
  pnt_receive_size[_mechtype] = 5;
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 GABAbr /home/adrian/code/geppetto-luna-code/M1NetworkModel/sim/mod/x86_64/GABAbr.mod\n");
+ 	ivoc_help("help ?1 GABAbr /Users/matteocantarelli/Documents/Development/NEURON-UI/libs/models/PTCell/mod/x86_64/GABAbr.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }

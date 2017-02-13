@@ -229,12 +229,12 @@ extern void _cvode_abstol( Symbol**, double*, int);
 	 _hoc_create_pnt, _hoc_destroy_pnt, _member_func);
  _mechtype = nrn_get_mechtype(_mechanism[1]);
      _nrn_setdata_reg(_mechtype, _setdata);
-  hoc_register_prop_size(_mechtype, 21, 11);
+  hoc_register_dparam_size(_mechtype, 11);
  add_nrn_has_net_event(_mechtype);
  pnt_receive[_mechtype] = _net_receive;
  pnt_receive_size[_mechtype] = 1;
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 Izhi2007b /home/adrian/code/geppetto-luna-code/M1NetworkModel/sim/mod/x86_64/izhi2007b.mod\n");
+ 	ivoc_help("help ?1 Izhi2007b /Users/matteocantarelli/Documents/Development/NEURON-UI/libs/models/PTCell/mod/x86_64/izhi2007b.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }

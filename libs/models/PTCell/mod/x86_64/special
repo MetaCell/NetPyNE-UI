@@ -1,13 +1,13 @@
 #!/bin/sh
 if test "x${NRNHOME}" = "x" ; then
-	NRNHOME="/home/adrian/code/neuron-code/nrn-python3/nrn"
+	NRNHOME="/Users/matteocantarelli/Documents/Development/nrn-7.3"
 fi
 if test "x${NRNBIN}" = "x" ; then
-	NRNBIN="/home/adrian/code/neuron-code/nrn-python3/nrn/x86_64/bin/"
+	NRNBIN="/Users/matteocantarelli/Documents/Development/nrn-7.3/x86_64/bin/"
 fi
 if test "" = "yes" ; then
 	NRNIV="${NRNBIN}nrniv.app/Contents/MacOS/nrniv"
 else
 	NRNIV="${NRNBIN}nrniv"
 fi
-"${NRNIV}" -dll "/home/adrian/code/geppetto-luna-code/M1NetworkModel/sim/mod/x86_64/.libs/libnrnmech.so" "$@"
+"${NRNIV}" -dll "/Users/matteocantarelli/Documents/Development/NEURON-UI/libs/models/PTCell/mod/x86_64/.libs/libnrnmech.so" "$@"
