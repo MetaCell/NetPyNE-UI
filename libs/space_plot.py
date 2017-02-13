@@ -67,22 +67,25 @@ class SpacePlot:
 
                 self.geometry = geometry
                 self.state_variables = []
+                self.derived_state_variables = []
 
                 self.section = geometry.python_variable["section"]
                 for index, segment in enumerate(self.section):
                     vector = h.Vector()
                     vector.record(segment._ref_v)
-
                     state_variable = neuron_utils.createStateVariable(id=self.section.name() + "_" + str(index), name=self.section.name() + "_" + str(index),
                                                                       units='mV', python_variable={"record_variable": vector,
                                                                                                    "segment": segment})
                     self.state_variables.append(state_variable)
 
-                derived_state_variable = G.createDerivedStateVariable(id="space_plot", name="Space Plot",
-                                                                      units='mV', inputs=self.state_variables, normalizationFunction='SPACEPLOT')
+                self.derived_state_variables = []
 
-                derived_state_variable_2 = G.createDerivedStateVariable(id="space_plot_2", name="Space Plot 2",
-                                                                        units='nm', timeSeries=list(range(len(self.state_variables))), normalizationFunction='CONSTANT')
+                self.derived_state_variables.append(G.createDerivedStateVariable(id="space_plot", name="Space Plot",
+                                                                                 units='mV', inputs=self.state_variables, normalizationFunction='SPACEPLOT'))
+                self.derived_state_variables.append(G.createDerivedStateVariable(id="space_plot_2", name="Space Plot 2",
+                                                                                 units='nm', timeSeries=list(range(len(self.state_variables))), normalizationFunction='CONSTANT'))
+
+                GeppettoJupyterModelSync.current_model.addDerivedStateVariables(self.derived_state_variables)
 
                 # FIXME: We can not be sured the new variables are created by
                 # this time probably is better if we register an event for
@@ -98,9 +101,9 @@ class SpacePlot:
                 # Add proper space plot
                 plot_widget_data_2 = []
                 plot_widget_data_2.append(
-                    GeppettoJupyterModelSync.current_model.id + "." + derived_state_variable.id)
+                    GeppettoJupyterModelSync.current_model.id + "." + self.derived_state_variables[0].id)
                 plot_widget_data_2.append(
-                    GeppettoJupyterModelSync.current_model.id + "." + derived_state_variable_2.id)
+                    GeppettoJupyterModelSync.current_model.id + "." + self.derived_state_variables[1].id)
                 self.plot_widget_2.plot_XY_data(plot_widget_data_2)
 
                 break
