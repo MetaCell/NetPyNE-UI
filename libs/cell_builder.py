@@ -62,7 +62,7 @@ class CellBuilder:
                     GeppettoJupyterModelSync.current_model.highlight_visual_group_element(geometry.python_variable["section"].name())
 
                     # Update segment and geometry
-                    distance_to_selection, section_length = neuron_utils.calculate_distance_to_selection(
+                    distance_to_selection, section_length = neuron_geometries_utils.calculate_distance_to_selection(
                         geometry, point)
                     distance_to_selection_normalised = distance_to_selection/section_length
                     self.segment = geometry.python_variable[
@@ -93,4 +93,4 @@ class CellBuilder:
         self.segment = float(self.segment_diam.sync_value)
 
         # Recreating Scene
-        neuron_geometries_utils.extractGeometries()
+        neuron_geometries_utils.extractGeometries(reload=True)

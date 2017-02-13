@@ -99,9 +99,9 @@ def getGeometriesBySegment(segment, secs):
 
 secs = {}
 
-def extractGeometries():
+def extractGeometries(reload=False):
     global secs
-    secs = getNeuronGeometries()
+    secs = getNeuronGeometries(reload)
 
     geometries = []
     logging.debug("Converting sections and segments to Geppetto")
@@ -117,9 +117,9 @@ def extractGeometries():
     GeppettoJupyterModelSync.current_model.addGeometries(geometries)
     return geometries
 
-def getNeuronGeometries():
+def getNeuronGeometries(reload = False):
     global secs
-    if secs != {}:
+    if secs != {} and reload is False:
         return secs
     else:
         logging.debug('Extracting Morphology')
