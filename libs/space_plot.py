@@ -50,6 +50,26 @@ class SpacePlot:
         SpacePlot.delete()
         # del RunControl._instance
 
+    def updatePlots(self, data):
+        logging.debug('Updating plots')
+        # Add regular plot with all state variables on section
+        plot_widget_data = []
+        for state_variable in self.state_variables:
+            plot_widget_data.append(GeppettoJupyterModelSync.current_model.id + "." +
+                                    state_variable.id)
+        self.plot_widget.plot_data(plot_widget_data)
+
+        # Add proper space plot
+        plot_widget_data_2 = []
+        plot_widget_data_2.append(
+            GeppettoJupyterModelSync.current_model.id + "." + self.derived_state_variables[0].id)
+        plot_widget_data_2.append(
+            GeppettoJupyterModelSync.current_model.id + "." + self.derived_state_variables[1].id)
+        self.plot_widget_2.plot_XY_data(plot_widget_data_2)
+
+        GeppettoJupyterModelSync.events_controller.unregister_to_event(
+            [GeppettoJupyterModelSync.events_controller._events['Instances_created']], self.updatePlots)
+
     def refresh_data(self, data, geometry_identifier, point):
         logging.debug('Refreshing space plot with selected geometry: ' +
                       data + "." + geometry_identifier)
@@ -90,20 +110,10 @@ class SpacePlot:
                 # FIXME: We can not be sured the new variables are created by
                 # this time probably is better if we register an event for
                 # model loaded and we listen to it
-
-                # Add regular plot with all state variables on section
-                plot_widget_data = []
-                for state_variable in self.state_variables:
-                    plot_widget_data.append(GeppettoJupyterModelSync.current_model.id + "." +
-                                            state_variable.id)
-                self.plot_widget.plot_data(plot_widget_data)
-
-                # Add proper space plot
-                plot_widget_data_2 = []
-                plot_widget_data_2.append(
-                    GeppettoJupyterModelSync.current_model.id + "." + self.derived_state_variables[0].id)
-                plot_widget_data_2.append(
-                    GeppettoJupyterModelSync.current_model.id + "." + self.derived_state_variables[1].id)
-                self.plot_widget_2.plot_XY_data(plot_widget_data_2)
+                GeppettoJupyterModelSync.events_controller.register_to_event(
+                    [GeppettoJupyterModelSync.events_controller._events['Instances_created']], self.updatePlots)
 
                 break
+
+    
+        
