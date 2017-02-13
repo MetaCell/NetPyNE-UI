@@ -6,4 +6,5 @@ python:
 notifications:
   slack: metacell:5ALSeoP88DqIhORUJvxE56sq
 script:
+  - export PIP_USER=FALSE
   - python install.py
