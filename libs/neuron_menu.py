@@ -15,7 +15,7 @@ class NeuronMenu:
         self.items.append(neuron_utils.add_button('Cell Builder', self.show_cell_builder))
         self.items.append(neuron_utils.add_button('Space Plot', self.show_space_plot))
 
-        self.neuronMenuPanel = neuron_utils.add_panel('NEURON', items = self.items, widget_id = 'neuronMenuPanel', position_x =108, position_y=9, width = 570, height = 80, properties={"closable":False})
+        self.neuronMenuPanel = neuron_utils.add_panel('NEURON', items = self.items, widget_id = 'neuronMenuPanel', position_x =108, position_y=9, width = 485, height = 80, properties={"closable":False})
         self.neuronMenuPanel.setDirection('row')
         self.neuronMenuPanel.on_close(self.close)
         self.neuronMenuPanel.display()
