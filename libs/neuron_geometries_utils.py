@@ -65,9 +65,11 @@ def calculate_distance_to_selection(geometry, point):
 
 def getGeometriesBySegment(segment, secs):
     secData = None
+    secDataName = None
     for sec_name, sec in secs.items():
         if sec['neuronSec'] == segment.sec:
             secData = sec
+            secDataName = sec_name
             break
     section_points = secData['geom']['pt3d']
     section_length = calculate_section_length(section_points)
@@ -87,8 +89,7 @@ def getGeometriesBySegment(segment, secs):
 
         # Add geometry length or distance to selection
         if length >= seg_init and length < seg_end:
-            # distance_to_selection += geometry_length
-            geometries.append(GeppettoJupyterModelSync.current_model.id + "." + segment.sec.name() + "_" + str(point_index))
+            geometries.append(GeppettoJupyterModelSync.current_model.id + "." + G.removeSpecialCharacters(secDataName) + "_" + str(point_index))
         elif length > seg_end:
             break
 

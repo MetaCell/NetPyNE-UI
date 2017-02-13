@@ -24,9 +24,7 @@ def createStateVariable(id = None, name = 'Untitled State Variable', units = 'Un
     geometries = []
     if python_variable["segment"] is not None:
         geometries = neuron_geometries_utils.getGeometriesBySegment(python_variable["segment"], neuron_geometries_utils.getNeuronGeometries())
-    # scape javascript special characters 
-    state_variable_name = name.replace(".","").replace("[","").replace("]","") 
-    return G.createStateVariable(id=id, name=state_variable_name,
+    return G.createStateVariable(id=id, name=name,
                               units=units, python_variable=python_variable, geometries = geometries)
 
 def createProject(name='PTcell Neuron'):
