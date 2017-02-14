@@ -37,7 +37,9 @@ class RunControl:
             'h.continuerun(t + runStopIn)', 'h.stoprun=1']})
 
         self.singleStepButton = neuron_utils.add_button(
-            'Single Step', self.execute_neuron_command, extraData={'commands': ['h.steprun()','GeppettoJupyterModelSync.events_controller.triggerEvent("experiment:doPlay")']})
+            'Single Step', self.execute_neuron_command, extraData={'commands': ['h.steprun()',
+                                                                                'GeppettoJupyterModelSync.events_controller.triggerEvent("experiment:doPlay")',
+                                                                                'GeppettoJupyterModelSync.events_controller.triggerEvent("experiment:update")']})
 
         self.timePanel = neuron_utils.add_text_field_and_button(
             "t", 't', False, self.execute_neuron_command, extraData={'commands': []})
