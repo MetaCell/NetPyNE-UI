@@ -7,7 +7,7 @@ Contributors:
 import os
 import sys
 from neuron import h
-from math import sqrt, pow
+from math import sqrt, pow, ceil
 from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
 import logging
 h.load_file("stdrun.hoc")
@@ -74,9 +74,11 @@ def getGeometriesBySegment(segment, secs):
     section_points = secData['geom']['pt3d']
     section_length = calculate_section_length(section_points)
     interval = section_length / segment.sec.nseg
-    seg_index = int(segment.x * segment.sec.nseg)
-    seg_init = (seg_index-1)*interval
-    seg_end = seg_index*interval
+    seg_index = ceil(segment.x * segment.sec.nseg) -1
+    if seg_index < 0:
+        seg_index = 0
+    seg_init = seg_index*interval
+    seg_end = (seg_index+1)*interval
 
     geometries = []
     length = 0
@@ -127,14 +129,11 @@ def getNeuronGeometries(reload = False):
         secs, secLists, synMechs = getCellParams(None)
         logging.debug('Secs and segs extracted from neuron')
 
-        logging.debug(secs)
-
         # Hack to convert non pt3d geometries
         if 'pt3d' not in list(secs.values())[0]['geom']:
             logging.debug('Non pt3d geometries. Converting to pt3d')
             secs = convertTo3DGeoms(secs)
             logging.debug('Geometries converted to pt3d')
-            logging.debug(secs)
             # This is not working as expected. It is creating an extre segment for soma and dend
             # h.define_shape()
         return secs
