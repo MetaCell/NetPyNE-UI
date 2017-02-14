@@ -10,7 +10,7 @@
 Vrest       = -90.220509483
 v_init = -70.0432010302
 celsius = 34.0 // same as experiment
-tstop       = 3000
+tstop       = 45
 curr        = 0.300 // stimulus amplitude
 
 // passive properties (optimization proxies)
