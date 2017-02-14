@@ -3,19 +3,31 @@ import importlib
 import neuron_utils
 from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 from singleton import Singleton
+from point_process import PointProcess
+from space_plot import SpacePlot
+from cell_builder import CellBuilder
+from run_control import RunControl
+
 
 @Singleton
 class NeuronMenu:
+
     def __init__(self):
         logging.debug('Initializing Neuron Menu')
+        self.currentGUI = None
         self.items = []
-        self.items.append(neuron_utils.add_button('Run Control', self.show_run_control))
-        self.items.append(neuron_utils.add_button('Point Process', self.show_point_process))
+        self.items.append(neuron_utils.add_button(
+            'Run Control', self.show_run_control))
+        self.items.append(neuron_utils.add_button(
+            'Point Process', self.show_point_process))
         # self.items.append(neuron_utils.add_button('Analysis', self.run_analysis))
-        self.items.append(neuron_utils.add_button('Cell Builder', self.show_cell_builder))
-        self.items.append(neuron_utils.add_button('Space Plot', self.show_space_plot))
+        self.items.append(neuron_utils.add_button(
+            'Cell Builder', self.show_cell_builder))
+        self.items.append(neuron_utils.add_button(
+            'Space Plot', self.show_space_plot))
 
-        self.neuronMenuPanel = neuron_utils.add_panel('NEURON', items = self.items, widget_id = 'neuronMenuPanel', position_x =108, position_y=9, width = 485, height = 80, properties={"closable":False})
+        self.neuronMenuPanel = neuron_utils.add_panel(
+            'NEURON', items=self.items, widget_id='neuronMenuPanel', position_x=108, position_y=9, width=485, height=80, properties={"closable": False})
         self.neuronMenuPanel.setDirection('row')
         self.neuronMenuPanel.on_close(self.close)
         self.neuronMenuPanel.display()
@@ -33,34 +45,34 @@ class NeuronMenu:
         self.neuronMenuPanel.shake()
 
     def show_point_process(self, triggeredComponent, args):
-        from point_process import PointProcess
-        PointProcess.Instance()
+        if hasattr(CellBuilder, '_instance') and CellBuilder._instance is not None:
+            CellBuilder._instance.close(None, None)
+        if hasattr(SpacePlot, '_instance') and SpacePlot._instance is not None:
+            SpacePlot._instance.close(None, None)
+        self.currentGUI = PointProcess.Instance()
+        self.neuronMenuPanel.widget_name = "NEURON | Select a point to inject a current clump"
 
     def show_space_plot(self, triggeredComponent, args):
-        from space_plot import SpacePlot
-        SpacePlot.Instance()
+        # if self.currentGUI is not None and not self.is_instance(SpacePlot):
+        #     self.currentGUI.close(None,None)
+        if hasattr(PointProcess, '_instance') and PointProcess._instance is not None:
+            PointProcess._instance.close(None, None)
+        if hasattr(CellBuilder, '_instance') and CellBuilder._instance is not None:
+            CellBuilder._instance.close(None, None)
+        self.currentGUI = SpacePlot.Instance()
+        self.neuronMenuPanel.widget_name = "NEURON | Select a section to record the membrane potential"
 
     def show_cell_builder(self, triggeredComponent, args):
-        from cell_builder import CellBuilder
-        CellBuilder.Instance()
+
+        if hasattr(PointProcess, '_instance') and PointProcess._instance is not None:
+            PointProcess._instance.close(None, None)
+        if hasattr(SpacePlot, '_instance') and SpacePlot._instance is not None:
+            SpacePlot._instance.close(None, None)
+        # if self.currentGUI is not None and not isinstance(self.currentGUI, CellBuilder):
+        #     self.currentGUI.close(None,None)
+            # self.currentGUI.destroy()
+        self.currentGUI = CellBuilder.Instance()
+        self.neuronMenuPanel.widget_name = "NEURON | Select a section to change its dimensions"
 
     def show_run_control(self, triggeredComponent, args):
-        from run_control import RunControl
         RunControl.Instance()
-
-
-
-    # def loadModule(self, triggeredComponent, args):
-    #     try:
-    #         logging.debug('Loading panel ' + triggeredComponent.extraData['module'])
-    #         module = importlib.import_module(triggeredComponent.extraData['module'])
-    #         getattr(module, triggeredComponent.extraData['model'])()
-
-    #     except Exception as e:
-    #         logging.exception("Unexpected error initialising panel")
-    #         raise
-
-    # def run_analysis(self, triggeredComponent, args):
-    #     logging.debug('Running analysis for current model')
-    #     if GeppettoJupyterModelSync.current_python_model:
-    #         GeppettoJupyterModelSync.current_python_model.analysis()
