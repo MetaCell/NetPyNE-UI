@@ -3,8 +3,10 @@ sudo: false
 python:
   - "2.7"
   - "3.5"
+edge: true
 notifications:
   slack: metacell:5ALSeoP88DqIhORUJvxE56sq
+install:
+  - pip install --user -U pip
 script:
-  - export PIP_USER=FALSE
   - python install.py
