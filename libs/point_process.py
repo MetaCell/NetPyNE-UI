@@ -10,6 +10,7 @@ from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
 
 from neuron import h
 
+
 @Singleton
 class PointProcess:
 
@@ -47,14 +48,13 @@ class PointProcess:
     def close(self, component, args):
         self.pointProcessPanel.unregister_to_event(
             [GeppettoJupyterModelSync.events_controller._events['Select']], self.updateValues)
-        
+
         # Close Jupyter object
         self.pointProcessPanel.close()
         del self.pointProcessPanel
 
-
-        GeppettoJupyterModelSync.current_model.removeSphere()
-
+        if GeppettoJupyterModelSync.current_model is not None:
+            GeppettoJupyterModelSync.current_model.removeSphere()
 
         # Destroy this class
         PointProcess.delete()
@@ -82,13 +82,14 @@ class PointProcess:
 
                 if geometry.id == geometry_identifier:
                     logging.debug('Loading values for geometry ' +
-                                str(geometry_identifier))
-                    GeppettoJupyterModelSync.current_model.highlight_visual_group_element(geometry.python_variable["section"].name())
+                                  str(geometry_identifier))
+                    GeppettoJupyterModelSync.current_model.highlight_visual_group_element(
+                        geometry.python_variable["section"].name())
 
                     # Calculate distance to selection
                     distance_to_selection, section_length = neuron_geometries_utils.calculate_distance_to_selection(
                         geometry, point)
-                    
+
                     # Normalise distance to selection
                     distance_to_selection_normalised = distance_to_selection / section_length
                     # Get Segment
@@ -103,7 +104,8 @@ class PointProcess:
                             if point_process.hname().startswith('IClamp'):
                                 logging.debug(
                                     "Point process found with name " + point_process.hname())
-                                self.init_panel_for_point_process(point_process)
+                                self.init_panel_for_point_process(
+                                    point_process)
                                 self.drop_down.add_child(
                                     {'id': point_process.hname(), 'value': point_process.hname()})
 
@@ -118,7 +120,7 @@ class PointProcess:
                     # Calculate actual segment position => segment.x
                     #nseg = len(geometry.python_variable["section_points"]) - 1
                     seg_loc = neuron_geometries_utils.calculate_segment_location(geometry.python_variable[
-                                                                    "section"].nseg, distance_to_selection_normalised, section_length)
+                        "section"].nseg, distance_to_selection_normalised, section_length)
 
                     # Calculate distance to cylinder location origin and distal and
                     # proximal points
@@ -131,7 +133,7 @@ class PointProcess:
 
                     # Draw Sphere on middle segment point
                     GeppettoJupyterModelSync.current_model.drawSphere(sphere_coordinates[0], sphere_coordinates[
-                                                                1], sphere_coordinates[2], average_radius * 2)
+                        1], sphere_coordinates[2], average_radius * 2)
 
     def create_current_clamp(self, triggered_component, args):
         logging.debug("Creating Current Clamp")
