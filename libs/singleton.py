@@ -36,7 +36,6 @@ class Singleton:
             return self._instance
 
     def delete(self):
-        logging.debug('deleting')
         self._instance = None
 
     def __call__(self):
