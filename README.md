@@ -19,7 +19,7 @@ To update:
 python update.py
 ```
 
-![Screenshot](https://dl.dropboxusercontent.com/u/7538688/Don%27t%20delete%2C%20used%20in%20wikis%20etc/Screen%20Shot%202016-10-04%20at%2019.53.03.png)
+![Screenshot](https://dl.dropboxusercontent.com/u/7538688/Don%27t%20delete%2C%20used%20in%20wikis%20etc/release034.png)
 
 The available functionality is currently limited to the RunControl panel.
 
