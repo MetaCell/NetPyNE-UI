@@ -16,6 +16,10 @@ if reply[0] == 'y':
     subprocess.call(['git', 'checkout', 'development-jupyter'], cwd='org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/')
     subprocess.call(['git', 'pull'], cwd='org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/')
     subprocess.call(['git', 'stash', 'apply'], cwd='org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/')
+
+    subprocess.call(['npm', 'install'], cwd='org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/src/main/webapp/')
+    subprocess.call(['npm', 'run', 'build-dev'], cwd='org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/src/main/webapp/')
+
     subprocess.call(['git', 'checkout', 'development'], cwd='org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/src/main/webapp/extensions/geppetto-neuron/')
     subprocess.call(['git', 'pull'], cwd='org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/src/main/webapp/extensions/geppetto-neuron/')
     enable_geppetto_neuron_extension()
