@@ -2,5 +2,4 @@ libs/__pycache__/
 libs/.ipynb_checkpoints/
 libs/GeppettoNeuron.log
 libs/models/__pycache__/
-libs/models/PTCell/mod/x86_64/*
 log.file
