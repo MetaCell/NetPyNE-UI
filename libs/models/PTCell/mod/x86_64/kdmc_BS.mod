@@ -1,1 +1,0 @@
-../kdmc_BS.mod
