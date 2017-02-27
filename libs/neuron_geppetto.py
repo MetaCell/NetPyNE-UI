@@ -43,12 +43,20 @@ class LoopTimer(threading.Thread):
         # h.doEvents()
         # h.doNotify()
 
-        for key, value in GeppettoJupyterModelSync.record_variables.items():
-            value.timeSeries = key.to_python()
+        try:
+            # Using 'list' so that a copy is made and we don't get: dictionary changed size during iteration items
+            for key, value in list(GeppettoJupyterModelSync.record_variables.items()):
+                logging.debug(key)
+                logging.debug(value)
+                value.timeSeries = key.to_python()
 
-        for key, value in GeppettoJupyterGUISync.sync_values.items():
-            if key != '':
-                value.sync_value = str(eval("h." + key))
+            for key, value in list(GeppettoJupyterGUISync.sync_values.items()):
+                if key != '':
+                    value.sync_value = str(eval("h." + key))
+
+        except Exception as exception:
+            logging.exception("Error on Sync Mechanism for non-sim environment thread")
+            raise
 
 class Event(object):
 
@@ -56,11 +64,17 @@ class Event(object):
         self.fih = h.FInitializeHandler(1, self.callback)
 
     def callback(self):
-        for key, value in GeppettoJupyterGUISync.sync_values.items():
-            if key != '':
-                value.sync_value = str(eval("h._ref_t." + key))
+        try:
+            # Using 'list' so that a copy is made and we don't get: dictionary changed size during iteration items
+            for key, value in list(GeppettoJupyterGUISync.sync_values.items()):
+                if key != '':
+                    value.sync_value = str(eval("h._ref_t." + key))
 
-        h.cvode.event(h.t + 1, self.callback)
+            h.cvode.event(h.t + 1, self.callback)
+
+        except Exception as exception:
+            logging.exception("Error on Sync Mechanism for sim environment thread")
+            raise
 
 def init():
     try:
@@ -83,8 +97,8 @@ def init():
         GeppettoJupyterModelSync.events_controller = GeppettoJupyterModelSync.EventsSync()
 
         # Sync values when no sim is running
-        logging.debug('Initialising Sync Mechanism for no-sim environment')
-        timer = LoopTimer(0.1)
+        logging.debug('Initialising Sync Mechanism for non-sim environment')
+        timer = LoopTimer(0.3)
         timer.start()
         while not timer.started:
             time.sleep(0.001)
