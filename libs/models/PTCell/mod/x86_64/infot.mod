@@ -1,1 +1,0 @@
-../infot.mod

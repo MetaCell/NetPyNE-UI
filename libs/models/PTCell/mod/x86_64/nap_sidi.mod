@@ -1,1 +1,0 @@
-../nap_sidi.mod

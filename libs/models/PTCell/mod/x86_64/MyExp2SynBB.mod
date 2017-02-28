@@ -1,1 +1,0 @@
-../MyExp2SynBB.mod
