@@ -23,7 +23,7 @@ class RunControl:
                                                                                                                         'GeppettoJupyterModelSync.current_experiment.status = "RUNNING"',
                                                                                                                         'h.run()',
                                                                                                                         'GeppettoJupyterModelSync.current_experiment.status = "COMPLETED"',
-                                                                                                                        'import time;time.sleep(1);',
+                                                                                                                        'import time;time.sleep(1.5);',
                                                                                                                         'GeppettoJupyterModelSync.events_controller.triggerEvent("experiment:doPlay")',
                                                                                                                         'GeppettoJupyterModelSync.events_controller.triggerEvent("stop_spin_logo")']})
 

@@ -87,7 +87,6 @@ class SpacePlot:
 
                 self.geometry = geometry
                 self.state_variables = []
-                self.derived_state_variables = []
 
                 self.section = geometry.python_variable["section"]
                 for index, segment in enumerate(self.section):
@@ -98,13 +97,18 @@ class SpacePlot:
                                                                                                    "segment": segment})
                     self.state_variables.append(state_variable)
 
-                self.derived_state_variables = []
 
-                self.derived_state_variables.append(G.createDerivedStateVariable(id="space_plot", name="Space Plot",
-                                                                                 units='mV', inputs=self.state_variables, normalizationFunction='SPACEPLOT'))
-                self.derived_state_variables.append(G.createDerivedStateVariable(id="space_plot_2", name="Space Plot 2",
-                                                                                 units='nm', timeSeries=list(range(len(self.state_variables))), normalizationFunction='CONSTANT'))
-
+                if hasattr(self, 'derived_state_variables'):
+                    logging.debug(self.derived_state_variables[0])
+                    logging.debug(self.derived_state_variables[1])
+                    self.derived_state_variables[0].set_inputs(self.state_variables)
+                    self.derived_state_variables[1].timeSeries = list(range(len(self.state_variables)))
+                else:
+                    self.derived_state_variables = []
+                    self.derived_state_variables.append(G.createDerivedStateVariable(id="space_plot", name="Space Plot",
+                                                                                    units='mV', inputs=self.state_variables, normalizationFunction='SPACEPLOT'))
+                    self.derived_state_variables.append(G.createDerivedStateVariable(id="space_plot_2", name="Space Plot 2",
+                                                                                    units='nm', timeSeries=list(range(len(self.state_variables))), normalizationFunction='CONSTANT'))
                 GeppettoJupyterModelSync.current_model.addDerivedStateVariables(self.derived_state_variables)
 
                 # FIXME: We can not be sured the new variables are created by
@@ -112,6 +116,9 @@ class SpacePlot:
                 # model loaded and we listen to it
                 GeppettoJupyterModelSync.events_controller.register_to_event(
                     [GeppettoJupyterModelSync.events_controller._events['Instances_created']], self.updatePlots)
+
+                # GeppettoJupyterModelSync.current_model.sync()
+                
 
                 break
 
