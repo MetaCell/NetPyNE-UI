@@ -9,7 +9,7 @@ def install_geppetto_jupyter_python(overwrite):
         subprocess.call(['pip', 'install', '--user', '.', '--upgrade', '--no-deps', '--force-reinstall'],
                         cwd='org.geppetto.frontend.jupyter')
     else:
-        subprocess.call(['pip', 'install', '--user', '.'], cwd='org.geppetto.frontend.jupyter')
+        subprocess.call(['pip', 'install', '.'], cwd='org.geppetto.frontend.jupyter')
 
 
 # Install and enable the Geppetto Jupyter extension
