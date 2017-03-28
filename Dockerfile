@@ -8,4 +8,4 @@ RUN wget https://github.com/MetaCell/NEURON-UI/archive/installationImprovements.
 RUN unzip installationImprovements.zip
 WORKDIR NEURON-UI-installationImprovements
 RUN python install.py
-CMD ./NEURON-UI
+CMD exec jupyter notebook --debug --NotebookApp.default_url=/geppetto --NotebookApp.token=''
