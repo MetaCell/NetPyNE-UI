@@ -5,7 +5,7 @@ from utils import *
 
 
 print("Cloning Geppetto Jupyter (Python package)...")
-subprocess.call(['git', 'clone', '--recursive', '-b pipImprovement', 'https://github.com/openworm/org.geppetto.frontend.jupyter.git'])
+subprocess.call(['git', 'clone', '--recursive', '-b', 'pipImprovement', 'https://github.com/openworm/org.geppetto.frontend.jupyter.git'])
 
 subprocess.call(['git', 'checkout', 'tags/v0.3.4.jupyterStable3'], cwd='org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/')
 
