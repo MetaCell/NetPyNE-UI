@@ -1,7 +1,7 @@
 import logging
 import importlib
 import neuron_utils
-from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
+from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
 from singleton import Singleton
 from point_process import PointProcess
 from space_plot import SpacePlot

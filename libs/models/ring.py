@@ -1,6 +1,6 @@
 from neuron import h
 from .ball_and_stick import BallAndStick
-from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
+from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G
 from math import pi, cos, sin
 import neuron_utils
 import neuron_geometries_utils

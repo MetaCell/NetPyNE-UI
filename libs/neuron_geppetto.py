@@ -7,8 +7,8 @@ from collections import defaultdict
 import threading
 import time
 from neuron import h
-from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
-from geppettoJupyter.geppetto_comm import GeppettoJupyterGUISync
+from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
+from jupyter_geppetto.geppetto_comm import GeppettoJupyterGUISync
 from sample_models import SampleModels
 from neuron_menu import NeuronMenu
 import neuron_utils

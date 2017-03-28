@@ -20,29 +20,29 @@ def run_nbextension_install(develop):
     from notebook import version_info
 
     # Command: sudo jupyter nbextension enable --py widgetsnbextension
-    print("Enabling geppettoJupyter extensions ...")
+    print("Enabling jupyter_geppetto extensions ...")
     isEnabled = enable_nbextension_python('widgetsnbextension')
     if not isEnabled:
         raise Exception('Problem enabling widgetsnbextension extension')
 
-    # Command: sudo jupyter nbextension install --py geppettoJupyter
-    print("Installing geppettoJupyter extension ...")
-    install_nbextension_python('geppettoJupyter', symlink=develop, user=True)
+    # Command: sudo jupyter nbextension install --py jupyter_geppetto
+    print("Installing jupyter_geppetto extension ...")
+    install_nbextension_python('jupyter_geppetto', symlink=develop, user=True)
 
-    # Command: sudo jupyter nbextension enable --py geppettoJupyter
-    print("Enabling geppettoJupyter extensions ...")
-    isEnabled = enable_nbextension_python('geppettoJupyter')
+    # Command: sudo jupyter nbextension enable --py jupyter_geppetto
+    print("Enabling jupyter_geppetto extensions ...")
+    isEnabled = enable_nbextension_python('jupyter_geppetto')
     if not isEnabled:
-        raise Exception('Problem enabling geppettoJupyter extension')
+        raise Exception('Problem enabling jupyter_geppetto extension')
 
-    # Command: jupyter serverextension enable --py geppettoJupyter
+    # Command: jupyter serverextension enable --py jupyter_geppetto
     print("Enabling server extensions ...")
-    toggle_serverextension_python('geppettoJupyter', enabled=True)
+    toggle_serverextension_python('jupyter_geppetto', enabled=True)
     
     # Command: sudo jupyter nbextension install s
     # Command: sudo jupyter nbextension enable overwrite_get_msg_cell
-    print("Installing and enabling additional geppettoJupyter extension ...")
-    install_nbextension('org.geppetto.frontend.jupyter/src/geppettoJupyter/overwrite_get_msg_cell.js', symlink=develop, user=True)
+    print("Installing and enabling additional jupyter_geppetto extension ...")
+    install_nbextension('org.geppetto.frontend.jupyter/src/jupyter_geppetto/overwrite_get_msg_cell.js', symlink=develop, user=True)
     ext_require_path = 'overwrite_get_msg_cell'
     if version_info[0] > 4:  # notebook 5.x
         from notebook.nbextensions import enable_nbextension
@@ -55,7 +55,7 @@ def run_nbextension_install(develop):
 def enable_geppetto_neuron_extension():
     print("Enabling Geppetto Neuron Configuration ...")
     jsonFile = open(
-        'org.geppetto.frontend.jupyter/src/geppettoJupyter/geppetto/src/main/webapp/extensions/extensionsConfiguration.json',
+        'org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/extensionsConfiguration.json',
         "w+")
     jsonFile.write(json.dumps({"geppetto-neuron/ComponentsInitialization": True}))
     jsonFile.close()

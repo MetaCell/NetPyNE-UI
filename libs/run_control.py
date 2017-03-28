@@ -4,8 +4,8 @@ Neuron Run Control Panel
 """
 import logging
 import neuron_utils
-from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
-from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
+from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G
+from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
 from singleton import Singleton
 
 from neuron import h

@@ -1,6 +1,6 @@
 import logging
 import neuron_utils
-from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
+from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
 
 
 class Analysis:

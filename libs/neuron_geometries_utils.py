@@ -8,10 +8,10 @@ import os
 import sys
 from neuron import h
 from math import sqrt, pow, ceil
-from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
+from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G
 import logging
 h.load_file("stdrun.hoc")
-from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
+from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
 
 def calculate_distance_to_cylinder_location(geometry, seg_loc):
     distance_to_seg_loc = 0

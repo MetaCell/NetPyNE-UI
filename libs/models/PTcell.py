@@ -1,7 +1,7 @@
 import logging
 from neuron import h
 
-from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
+from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G
 import neuron_utils
 import neuron_geometries_utils
 

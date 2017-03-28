@@ -6,7 +6,7 @@ import logging
 import neuron_utils
 import neuron_geometries_utils
 from singleton import Singleton
-from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
+from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
 
 from neuron import h
 

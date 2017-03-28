@@ -3,8 +3,8 @@ cell_builder.py
 Neuron Cell Builder
 """
 import logging
-from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
-from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
+from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G
+from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
 from neuron import h
 import time
 import neuron_utils
