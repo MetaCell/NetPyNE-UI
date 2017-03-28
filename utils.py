@@ -6,7 +6,7 @@ def install_geppetto_jupyter_python(overwrite):
     print("Installing Geppetto Jupyter python package ...")
 
     if overwrite:
-        subprocess.call(['pip', 'install', '--user', '.', '--upgrade', '--no-deps', '--force-reinstall'],
+        subprocess.call(['pip', 'install', '.', '--upgrade', '--no-deps', '--force-reinstall'],
                         cwd='org.geppetto.frontend.jupyter')
     else:
         subprocess.call(['pip', 'install', '.'], cwd='org.geppetto.frontend.jupyter')
