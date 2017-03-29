@@ -1,8 +1,8 @@
 import logging
 import importlib
-import neuron_utils
+from . import neuron_utils
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
-from singleton import Singleton
+from neuron_ui.singleton import Singleton
 
 
 @Singleton

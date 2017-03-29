@@ -3,9 +3,9 @@ point_process.py
 Neuron Point Process
 """
 import logging
-import neuron_utils
-import neuron_geometries_utils
-from singleton import Singleton
+from . import neuron_utils
+from . import neuron_geometries_utils
+from neuron_ui.singleton import Singleton
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
 
 from neuron import h

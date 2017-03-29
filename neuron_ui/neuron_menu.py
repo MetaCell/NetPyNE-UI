@@ -1,12 +1,12 @@
 import logging
 import importlib
-import neuron_utils
+from . import neuron_utils
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
-from singleton import Singleton
-from point_process import PointProcess
-from space_plot import SpacePlot
-from cell_builder import CellBuilder
-from run_control import RunControl
+from neuron_ui.singleton import Singleton
+from neuron_ui.point_process import PointProcess
+from neuron_ui.space_plot import SpacePlot
+from neuron_ui.cell_builder import CellBuilder
+from neuron_ui.run_control import RunControl
 
 
 @Singleton

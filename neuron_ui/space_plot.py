@@ -6,9 +6,8 @@ import logging
 from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
 from neuron import h
-import time
-import neuron_utils
-from singleton import Singleton
+from . import neuron_utils
+from neuron_ui.singleton import Singleton
 
 
 @Singleton

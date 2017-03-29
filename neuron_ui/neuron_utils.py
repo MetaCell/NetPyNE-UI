@@ -1,5 +1,5 @@
 import logging
-import neuron_geometries_utils
+from . import neuron_geometries_utils
 from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G
 
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
