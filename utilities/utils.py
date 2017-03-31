@@ -2,19 +2,15 @@ import sys
 import json
 import subprocess
 
-def install_geppetto_jupyter_python(overwrite):
-    print("Installing Geppetto Jupyter python package ...")
-
+def install_package(overwrite, path):
     if overwrite:
         subprocess.call(['pip', 'install', '.', '--upgrade', '--no-deps', '--force-reinstall'],
-                        cwd='../org.geppetto.frontend.jupyter')
+                        cwd=path)
     else:
-        subprocess.call(['pip', 'install', '.'], cwd='../org.geppetto.frontend.jupyter')
-
+        subprocess.call(['pip', 'install', '.'], cwd=path)
 
 # Install and enable the Geppetto Jupyter extension
 def run_nbextension_install(develop):
-    print("Installing Geppetto Jupyter Extension ...")
     from notebook.nbextensions import install_nbextension_python, enable_nbextension_python, install_nbextension
     from notebook.serverextensions import toggle_serverextension_python
     from notebook import version_info
