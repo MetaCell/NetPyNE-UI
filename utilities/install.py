@@ -13,6 +13,8 @@ print("Cloning Geppetto Neuron Configuration ...")
 subprocess.call(['git', 'clone', 'https://github.com/MetaCell/geppetto-neuron.git'],
                 cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/')
 
+subprocess.call(['git', 'checkout', 'installationImprovements'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-neuron/')
+
 enable_geppetto_neuron_extension()
 
 print("Installing jupyter_geppetto python package ...")
