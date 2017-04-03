@@ -11,10 +11,7 @@ setup(
     long_description=open('README.rst').read(),
     packages=find_packages(),
     package_data={
-        # If any package contains *.txt or *.rst files, include them:
-        '': ['*.mod', '*.inc', '*.inc', '*.hoc', '*.multi', '*.multi_new', '*.c', '*.lo', 'x86_64']
-        # And include any *.msg files found in the 'hello' package, too:
-        # 'hello': ['*.msg'],
+        '': ['*.hoc']
     },
     scripts=['NEURON-UI'],
     install_requires=[
