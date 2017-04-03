@@ -17,6 +17,6 @@ WORKDIR src/nrnpython
 RUN python setup.py install
 RUN wget https://github.com/MetaCell/NEURON-UI/archive/installationImprovements.zip
 RUN unzip installationImprovements.zip
-WORKDIR NEURON-UI-installationImprovements
+WORKDIR NEURON-UI-installationImprovements/utilities
 RUN python install.py
 CMD exec jupyter notebook --debug --NotebookApp.default_url=/geppetto --NotebookApp.token=''
