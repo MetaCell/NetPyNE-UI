@@ -10,7 +10,7 @@ setuptools.setup(
     license="MIT",
     long_description=open('README.rst').read(),
     packages=['neuron_ui'],
-    scripts=['NEURON_UI'],
+    scripts=['NEURON-UI'],
     install_requires=[
         'jupyter_geppetto>=0.3.5'
     ],
