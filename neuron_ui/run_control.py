@@ -3,7 +3,7 @@ run_control.py
 Neuron Run Control Panel
 """
 import logging
-from . import neuron_utils
+from neuron_ui import neuron_utils
 from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
 from neuron_ui.singleton import Singleton

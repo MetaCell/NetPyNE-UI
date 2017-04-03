@@ -1,6 +1,6 @@
 import logging
 import importlib
-from . import neuron_utils
+from neuron_ui import neuron_utils
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
 from neuron_ui.singleton import Singleton
 
@@ -48,7 +48,7 @@ class SampleModels:
                 logging.debug('Loading model ' +
                               triggeredComponent.extraData['module'])
                 module = importlib.import_module(
-                    "models." + triggeredComponent.extraData['module'])
+                    "neuron_ui.models." + triggeredComponent.extraData['module'])
                 GeppettoJupyterModelSync.current_python_model = getattr(
                     module, triggeredComponent.extraData['model'])()
             else:

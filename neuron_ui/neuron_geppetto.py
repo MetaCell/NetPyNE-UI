@@ -46,8 +46,6 @@ class LoopTimer(threading.Thread):
         try:
             # Using 'list' so that a copy is made and we don't get: dictionary changed size during iteration items
             for key, value in list(GeppettoJupyterModelSync.record_variables.items()):
-                logging.debug(key)
-                logging.debug(value)
                 value.timeSeries = key.to_python()
 
             for key, value in list(GeppettoJupyterGUISync.sync_values.items()):
