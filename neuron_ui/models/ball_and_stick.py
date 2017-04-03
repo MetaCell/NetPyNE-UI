@@ -1,7 +1,7 @@
 from neuron import h
 from math import cos, sin
 
-from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
+from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G
 
 
 class BallAndStick:  # Inherits from Cell

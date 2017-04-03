@@ -3,12 +3,11 @@ cell_builder.py
 Neuron Cell Builder
 """
 import logging
-from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
-from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
+from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G
+from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
 from neuron import h
-import time
-import neuron_utils
-from singleton import Singleton
+from neuron_ui import neuron_utils
+from neuron_ui.singleton import Singleton
 
 
 @Singleton
@@ -99,8 +98,6 @@ class SpacePlot:
 
 
                 if hasattr(self, 'derived_state_variables'):
-                    logging.debug(self.derived_state_variables[0])
-                    logging.debug(self.derived_state_variables[1])
                     self.derived_state_variables[0].set_inputs(self.state_variables)
                     self.derived_state_variables[1].timeSeries = list(range(len(self.state_variables)))
                 else:

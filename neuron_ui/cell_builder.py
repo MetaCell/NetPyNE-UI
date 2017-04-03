@@ -3,11 +3,11 @@ cell_builder.py
 Neuron Cell Builder
 """
 import logging
-import neuron_utils
-import neuron_geometries_utils
-from singleton import Singleton
-from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
-from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
+from neuron_ui import neuron_utils
+from neuron_ui import neuron_geometries_utils
+from neuron_ui.singleton import Singleton
+from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G
+from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
 
 @Singleton
 class CellBuilder:

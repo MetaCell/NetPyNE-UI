@@ -7,11 +7,11 @@ from collections import defaultdict
 import threading
 import time
 from neuron import h
-from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
-from geppettoJupyter.geppetto_comm import GeppettoJupyterGUISync
-from sample_models import SampleModels
-from neuron_menu import NeuronMenu
-import neuron_utils
+from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
+from jupyter_geppetto.geppetto_comm import GeppettoJupyterGUISync
+from neuron_ui.sample_models import SampleModels
+from neuron_ui.neuron_menu import NeuronMenu
+from neuron_ui import neuron_utils
 
 class LoopTimer(threading.Thread):
     """
@@ -46,8 +46,6 @@ class LoopTimer(threading.Thread):
         try:
             # Using 'list' so that a copy is made and we don't get: dictionary changed size during iteration items
             for key, value in list(GeppettoJupyterModelSync.record_variables.items()):
-                logging.debug(key)
-                logging.debug(value)
                 value.timeSeries = key.to_python()
 
             for key, value in list(GeppettoJupyterGUISync.sync_values.items()):
