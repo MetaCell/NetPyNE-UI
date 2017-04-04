@@ -1,9 +1,9 @@
 import logging
-import neuron_geometries_utils
-from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
+from neuron_ui import neuron_geometries_utils
+from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G
 
-from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
-from geppettoJupyter.geppetto_comm import GeppettoJupyterGUISync
+from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
+from jupyter_geppetto.geppetto_comm import GeppettoJupyterGUISync
 
 from neuron import h
 h.load_file("stdrun.hoc")

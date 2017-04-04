@@ -1,12 +1,11 @@
 import logging
 from neuron import h
 from IPython.core.debugger import Tracer
-import neuron_utils
+from neuron_ui import neuron_utils, neuron_geometries_utils
 from math import sqrt, pow
-import neuron_geometries_utils
 
-from geppettoJupyter.geppetto_comm import GeppettoCoreAPI as G
-from geppettoJupyter.geppetto_comm import GeppettoJupyterModelSync
+from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G
+from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
 
 
 class SimpleCell:
