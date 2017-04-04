@@ -1,7 +1,7 @@
 NEURON-UI
 =========
 
-This repository hosts an experimental prototype for a new user interface
+Experimental prototype for a new user interface
 for `NEURON <http://www.neuron.yale.edu/neuron/>`__ based on web
 technologies.
 
@@ -14,5 +14,23 @@ The UI connects to
 through a `Geppetto <http://git.geppetto.org>`__ extension for `Jupyter
 Notebook <http://jupyter.org/>`__.
 
-See the `Wiki <https://github.com/MetaCell/NEURON-UI/wiki>`__ for more
+See the `Repo <https://github.com/MetaCell/NEURON-UI>`__ and `Wiki <https://github.com/MetaCell/NEURON-UI/wiki>`__ for more
 info!
+
+Installation
+============
+.. code-block:: bash
+    pip install neuron_ui
+    jupyter nbextension enable --py jupyter_geppetto
+
+Usage
+=====
+.. code-block:: bash
+    NEURON-UI
+
+or 
+
+.. code-block:: bash
+    jupyter notebook --NotebookApp.default_url=/geppetto --NotebookApp.token=''
+
+
