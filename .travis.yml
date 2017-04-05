@@ -6,7 +6,6 @@ python:
 edge: true
 notifications:
   slack: metacell:5ALSeoP88DqIhORUJvxE56sq
-install:
-  - pip install --user -U pip
 script:
+  - cd utilities
   - python install.py
