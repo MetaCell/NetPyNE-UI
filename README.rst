@@ -19,18 +19,23 @@ info!
 
 Installation
 ============
+
 .. code-block:: bash
+
     pip install neuron_ui
     jupyter nbextension enable --py jupyter_geppetto
 
 Usage
 =====
+
 .. code-block:: bash
+
     NEURON-UI
 
 or 
 
 .. code-block:: bash
+
     jupyter notebook --NotebookApp.default_url=/geppetto --NotebookApp.token=''
 
 
