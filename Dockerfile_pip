@@ -15,6 +15,6 @@ RUN make
 RUN make install
 WORKDIR src/nrnpython
 RUN python setup.py install
-RUN pip install -i https://testpypi.python.org/pypi neuron_ui
-CMD exec jupyter nbextension enable --py --sys-prefix jupyter_geppetto
+RUN pip install neuron_ui
+CMD exec jupyter nbextension enable --py jupyter_geppetto
 CMD exec jupyter notebook --debug --NotebookApp.default_url=/geppetto --NotebookApp.token=''
