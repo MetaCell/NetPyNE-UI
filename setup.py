@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="neuron_ui",
-    version="0.0.0.1",
+    version="0.0.1",
     url="https://github.com/MetaCell/NEURON-UI",
     author="MetaCell",
     author_email="info@metacell.us",
