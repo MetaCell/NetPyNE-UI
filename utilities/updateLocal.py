@@ -7,14 +7,6 @@ except NameError: pass
 reply = input("Any uncommited change to your jupyter notebook will be stashed. Are you sure you want to update NEURON-UI? (y/n)")
 
 if reply[0] == 'y':
-    subprocess.call(['git', 'pull'])
-    subprocess.call(['git', 'checkout', 'development'], cwd='../org.geppetto.frontend.jupyter')
-    subprocess.call(['git', 'pull'], cwd='../org.geppetto.frontend.jupyter')
-    subprocess.call(['git', 'checkout', 'tags/v0.3.4.jupyterStable3'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
-    subprocess.call(['git', 'pull'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
-    subprocess.call(['git', 'checkout', 'development'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-neuron/')
-    subprocess.call(['git', 'pull'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-neuron/')
-
     subprocess.call(['npm', 'install'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/')
     subprocess.call(['npm', 'run', 'build-dev', '--','--contextPath=org.geppetto.frontend', '--useSsl=false','--embedded=false','--embedderURL=/'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/')
     enable_geppetto_neuron_extension()
