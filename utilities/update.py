@@ -8,11 +8,11 @@ reply = input("Any uncommited change to your jupyter notebook will be stashed. A
 
 if reply[0] == 'y':
     subprocess.call(['git', 'pull'])
-    subprocess.call(['git', 'checkout', 'development'], cwd='../org.geppetto.frontend.jupyter')
+    subprocess.call(['git', 'checkout', 'geppetto036'], cwd='../org.geppetto.frontend.jupyter')
     subprocess.call(['git', 'pull'], cwd='../org.geppetto.frontend.jupyter')
-    subprocess.call(['git', 'checkout', 'tags/v0.3.4.jupyterStable3'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
+    subprocess.call(['git', 'checkout', 'development'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
     subprocess.call(['git', 'pull'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
-    subprocess.call(['git', 'checkout', 'development'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-neuron/')
+    subprocess.call(['git', 'checkout', 'geppetto036'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-neuron/')
     subprocess.call(['git', 'pull'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-neuron/')
 
     subprocess.call(['npm', 'install'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/')
