@@ -10,18 +10,18 @@ if reply[0] == 'y':
     subprocess.call(['git', 'pull'])
     subprocess.call(['git', 'checkout', 'geppetto036'], cwd='../org.geppetto.frontend.jupyter')
     subprocess.call(['git', 'pull'], cwd='../org.geppetto.frontend.jupyter')
-    subprocess.call(['git', 'checkout', 'development'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
+    subprocess.call(['git', 'checkout', 'development-jupyter'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
     subprocess.call(['git', 'pull'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
     subprocess.call(['git', 'checkout', 'geppetto036'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-neuron/')
     subprocess.call(['git', 'pull'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-neuron/')
 
     subprocess.call(['npm', 'install'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/')
-    subprocess.call(['npm', 'run', 'build-dev', '--','--contextPath=org.geppetto.frontend', '--useSsl=false','--embedded=false','--embedderURL=/'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/')
+    subprocess.call(['npm', 'run', 'build-dev-noTest'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/')
     enable_geppetto_neuron_extension()
-    install_package(True, '../org.geppetto.frontend.jupyter')
-    run_nbextension_install(False)
+    #install_package(True, '../org.geppetto.frontend.jupyter')
+    #run_nbextension_install(False)
 
-    install_package(True, '..')
+    #install_package(True, '..')
 else:
     print("Exit without updating")
 
