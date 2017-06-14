@@ -31,5 +31,5 @@ subprocess.call(['jupyter', 'nbextension', 'install', '--py', '--symlink', 'jupy
 subprocess.call(['jupyter', 'nbextension', 'enable', '--py', 'jupyter_geppetto'], cwd='../org.geppetto.frontend.jupyter')
 
 print("Installing neuron_ui python package ...")
-subprocess.call(['pip', 'install', '-e', '.'], cwd='../org.geppetto.frontend.jupyter')
+subprocess.call(['pip', 'install', '-e', '.'], cwd='..')
 
