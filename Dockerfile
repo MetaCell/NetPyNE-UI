@@ -15,7 +15,7 @@ RUN make
 RUN make install
 WORKDIR src/nrnpython
 RUN python setup.py install
-RUN wget https://github.com/MetaCell/NEURON-UI/archive/master.zip
+RUN wget https://github.com/MetaCell/NEURON-UI/archive/geppetto036.zip
 RUN unzip master.zip
 WORKDIR NEURON-UI-master/utilities
 RUN python install.py
