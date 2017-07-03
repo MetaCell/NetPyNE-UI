@@ -19,11 +19,7 @@ if reply[0] == 'y':
     # Installing and building the frontend
     subprocess.call(['npm', 'install'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/')
     subprocess.call(['npm', 'run', 'build-dev-noTest'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/')
-    #enable_geppetto_neuron_extension()
-    #install_package(True, '../org.geppetto.frontend.jupyter')
-    #run_nbextension_install(False)
 
-    #install_package(True, '..')
 else:
     print("Exit without updating")
 
