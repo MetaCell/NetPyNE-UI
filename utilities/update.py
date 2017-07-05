@@ -9,11 +9,11 @@ reply = input("Any uncommited change to your jupyter notebook will be stashed. A
 if reply[0] == 'y':
     # Checking out repos
     subprocess.call(['git', 'pull'])
-    subprocess.call(['git', 'checkout', 'geppetto036'], cwd='../org.geppetto.frontend.jupyter')
+    subprocess.call(['git', 'checkout', 'development'], cwd='../org.geppetto.frontend.jupyter')
     subprocess.call(['git', 'pull'], cwd='../org.geppetto.frontend.jupyter')
     subprocess.call(['git', 'checkout', 'development-jupyter'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
     subprocess.call(['git', 'pull'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
-    subprocess.call(['git', 'checkout', 'geppetto036'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-neuron/')
+    subprocess.call(['git', 'checkout', 'development'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-neuron/')
     subprocess.call(['git', 'pull'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-neuron/')
 
     # Installing and building the frontend
