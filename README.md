@@ -8,11 +8,23 @@ pip install neuron_ui
 jupyter nbextension enable --py jupyter_geppetto
 ```
 
-To install from source:
+For a development installation:
 ```
 git clone https://github.com/MetaCell/NEURON-UI.git
 python utilities/install.py
 ```
+
+This scripts clones all needed repos and install the extension and NEURON in development mode. Any change to python and js code will be automatically deploy. However, for js code we will have to execute (in this path NEURON-UI/org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp):
+```
+npm run build-dev-noTest
+```
+
+A better option is to run:
+```
+npm run build-dev-noTest:watch
+```
+so that any change in the js code will trigger a rebuild.
+
 
 To run:
 ```
