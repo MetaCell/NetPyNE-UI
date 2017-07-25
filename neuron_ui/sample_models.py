@@ -3,6 +3,7 @@ import importlib
 from neuron_ui import neuron_utils
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
 from neuron_ui.singleton import Singleton
+import jupyter_client
 
 
 @Singleton
@@ -54,8 +55,19 @@ class SampleModels:
             else:
                 # If there is a model loaded -> Restart kernel server (from js)
                 # and load a new model
-                GeppettoJupyterModelSync.current_model.reload(
-                    triggeredComponent.extraData['module'], triggeredComponent.extraData['model'])
+                # GeppettoJupyterModelSync.current_model.reload(
+                #     triggeredComponent.extraData['module'], triggeredComponent.extraData['model'])
+
+               
+                cf=jupyter_client.find_connection_file()
+                km=jupyter_client.BlockingKernelClient(connection_file=cf)
+                km.load_connection_file()
+                kk = km.shutdown(True)
+                km.execute('import importlib')
+                km.execute('python_module = importlib.import_module("neuron_ui.models.' + triggeredComponent.extraData['module'] +'")')
+                km.execute('GeppettoJupyterModelSync.current_python_model = getattr( python_module, "' + triggeredComponent.extraData['model'] + '")()')
+                km.execute('GeppettoJupyterModelSync.events_controller.triggerEvent("spinner:hide")')
+                    
 
             # Failed attempt to reload the model from python
             # import IPython
