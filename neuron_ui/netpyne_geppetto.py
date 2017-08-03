@@ -49,9 +49,9 @@ class LoopTimer(threading.Thread):
             for key, value in list(GeppettoJupyterModelSync.record_variables.items()):
                 value.timeSeries = key.to_python()
 
-            for key, value in list(GeppettoJupyterGUISync.sync_values.items()):
-                if key != '':
-                    value.sync_value = str(eval(key))
+            for model, synched_component in list(GeppettoJupyterGUISync.synched_models.items()):
+                if model != '':
+                    synched_component.value = str(eval(model))
                    
 
         except Exception as exception:
