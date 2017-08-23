@@ -12,7 +12,8 @@ from neuron_ui.sample_models import SampleModels
 from neuron_ui.neuron_menu import NeuronMenu
 from neuron_ui import neuron_utils
 
-from neuron_ui.netpyne_init import netParams,simConfig
+from neuron_ui.netpyne_init import netParams, simConfig
+
 
 class LoopTimer(threading.Thread):
     """
@@ -52,10 +53,10 @@ class LoopTimer(threading.Thread):
             for model, synched_component in list(GeppettoJupyterGUISync.synched_models.items()):
                 if model != '':
                     synched_component.value = str(eval(model))
-                   
 
         except Exception as exception:
-            logging.exception("Error on Sync Mechanism for non-sim environment thread")
+            logging.exception(
+                "Error on Sync Mechanism for non-sim environment thread")
             raise
 
 # class Event(object):
@@ -76,6 +77,14 @@ class LoopTimer(threading.Thread):
 #             logging.exception("Error on Sync Mechanism for sim environment thread")
 #             raise
 
+
+def globalMessageHandler(command, parameters):
+    logging.debug('Global Message Handler')
+    logging.debug(command)
+    logging.debug(parameters)
+    eval(command + '(*parameters)')
+
+
 # def init():
 try:
     # Configure log
@@ -95,6 +104,8 @@ try:
     GeppettoJupyterModelSync.current_model = None
     GeppettoJupyterModelSync.current_python_model = None
     GeppettoJupyterModelSync.events_controller = GeppettoJupyterModelSync.EventsSync()
+    GeppettoJupyterModelSync.events_controller.register_to_event(
+        [GeppettoJupyterModelSync.events_controller._events['Global_message']], globalMessageHandler)
 
     # Sync values when no sim is running
     logging.debug('Initialising Sync Mechanism for non-sim environment')
@@ -110,15 +121,13 @@ try:
     # Init Panels
     logging.debug('Initialising NetPyne')
 
-
     # for key, value in self.netParams.__dict__.iteritems():
-    
+
     #     panelTesting = neuron_utils.add_text_field_with_label(key, None)
     #     label = panelTesting.items[0]
     #     textfield = panelTesting.items[1]
     #     textfield.on_blur(self.recalculateLayout)
     #     self.items.append(panelTesting)
-
 
     # SampleModels.Instance()
     # NeuronMenu.Instance()
