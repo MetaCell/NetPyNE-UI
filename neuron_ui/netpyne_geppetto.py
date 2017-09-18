@@ -12,7 +12,7 @@ from neuron_ui.sample_models import SampleModels
 from neuron_ui.neuron_menu import NeuronMenu
 from neuron_ui import neuron_utils
 
-from neuron_ui.netpyne_init import netParams, simConfig
+from neuron_ui.netpyne_init import netParams, simConfig, tests
 
 
 class LoopTimer(threading.Thread):
@@ -78,11 +78,16 @@ class LoopTimer(threading.Thread):
 #             raise
 
 
-def globalMessageHandler(command, parameters):
+def globalMessageHandler(id, command, parameters):
     logging.debug('Global Message Handler')
     logging.debug(command)
     logging.debug(parameters)
-    eval(command + '(*parameters)')
+    if len(parameters) == 0:
+        response = eval(command)
+    else:
+        response = eval(command + '(*parameters)')
+    GeppettoJupyterModelSync.events_controller.triggerEvent("receive_python_message", {'id':id, 'response':response})
+
 
 
 # def init():

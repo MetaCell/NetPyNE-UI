@@ -1,5 +1,6 @@
 import logging
 from netpyne import specs
+from netpyne.tests import tests
 import json
 from neuron_ui import neuron_utils
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
