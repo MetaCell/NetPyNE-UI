@@ -40,18 +40,18 @@ This scripts clones all needed repos and install the extension and NEURON in dev
 
 A script with a set of tools can be found at /utilities/gitall.py. These are some examples of how to use it:
 ```
- 	python gitall.py branches: print current branch of each repo
+  python gitall.py branches: print current branch of each repo
 
-	python gitall.py checkout <branch> : checkout <branch> on each repo
+  python gitall.py checkout <branch> : checkout <branch> on each repo
 
-	python gitall.py pull: execute git pull on each repo
+  python gitall.py pull: execute git pull on each repo
 
-	python gitall.py fetch <remote> <branch> : execute git fetch on each repo
+  python gitall.py fetch <remote> <branch> : execute git fetch on each repo
 
   python gitall.py status: execute git status on each repo
 ```
 
-Any change to python code will be automatically deploy. However, for js code we will have to build the js sources. There are two options either you run:
+Any change to python code will be automatically deployed. However, for js code we will have to build the js sources. There are two options either you run:
 ```
 npm run build-dev-noTest
 ```
