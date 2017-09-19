@@ -1,8 +1,7 @@
 #!/usr/bin/python
 
 #
-#	Utility script for mass git operatiosn on geppetto repos listed in ./config.json
-#
+#	Utility script for mass git operatiosn on NEURON-UI
 #	Usage:
 # 	gitall branches: print current branch of each repo
 #
@@ -26,19 +25,23 @@ config = {
     "repos": [
         {
             "name": "NEURON_UI",
-            "url": "..",
+            "path": "..",
+            "url": "https://github.com/MetaCell/NEURON-UI"
         },
         {
             "name": "org.geppetto.frontend.jupyter",
-            "url": "../org.geppetto.frontend.jupyter",
+            "path": "../org.geppetto.frontend.jupyter",
+            "url": "https://github.com/openworm/org.geppetto.frontend.jupyter"
         },
         {
             "name": "org.geppetto.frontend",
-            "url": "../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/",
+            "path": "../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/",
+            "url": "https://github.com/openworm/org.geppetto.frontend"
         },
         {
             "name": "Geppetto Neuron",
-            "url": "../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-neuron/",
+            "path": "../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-neuron/",
+            "url": "https://github.com/MetaCell/geppetto-neuron"
         }
     ]
 }
@@ -72,9 +75,7 @@ def main(argv):
         command = ['git', argv[0]]
 
     elif(argv[0] == 'remote'):
-        for repo in config['repos']:
-            print repo['name'] + '  ' + subprocess.check_output(['git', 'remote', 'add', 'mlolson', 'https://github.com/mlolson/' + repo['name'] + '.git'], cwd=os.path.join(config['sourcesdir'], repo['name']))
-        return
+        command = ['git', 'remote', '-v']
 
     elif(argv[0] == 'checkout'):
         if(len(argv) == 2):
@@ -99,7 +100,7 @@ def main(argv):
 
     for repo in config['repos']:
         try:
-            print repo['name'] + '  ' + subprocess.check_output(command, cwd=repo['url'])
+            print repo['name'] + '  ' + subprocess.check_output(command, cwd=repo['path'])
         except:
             print "Error -- trying next repo"
 

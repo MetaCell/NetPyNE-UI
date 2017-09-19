@@ -14,19 +14,58 @@ git clone https://github.com/MetaCell/NEURON-UI.git
 python utilities/install.py
 ```
 
-This scripts clones all needed repos and install the extension and NEURON in development mode. Any change to python and js code will be automatically deploy. However, for js code we will have to execute (in this path NEURON-UI/org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp):
+This scripts clones all needed repos and install the extension and NEURON in development mode. This project consists on four different github repos:
+```
+{
+  "name": "NEURON_UI",
+  "path": ".",
+  "url": "https://github.com/MetaCell/NEURON-UI"
+},
+{
+  "name": "org.geppetto.frontend.jupyter",
+  "path": "./org.geppetto.frontend.jupyter",
+  "url": "https://github.com/openworm/org.geppetto.frontend.jupyter"
+},
+{
+  "name": "org.geppetto.frontend",
+  "path": "./org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/",
+  "url": "https://github.com/openworm/org.geppetto.frontend"
+},
+{
+  "name": "Geppetto Neuron",
+  "path": "./org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-neuron/",
+  "url": "https://github.com/MetaCell/geppetto-neuron"
+}
+```
+
+A script with a set of tools can be found at /utilities/gitall.py. These are some examples of how to use it:
+```
+ 	python gitall.py branches: print current branch of each repo
+
+	python gitall.py checkout <branch> : checkout <branch> on each repo
+
+	python gitall.py pull: execute git pull on each repo
+
+	python gitall.py fetch <remote> <branch> : execute git fetch on each repo
+
+  python gitall.py status: execute git status on each repo
+```
+
+Any change to python code will be automatically deploy. However, for js code we will have to build the js sources. There are two options either you run:
 ```
 npm run build-dev-noTest
 ```
 
-A better option is to run:
-```
-npm run build-dev-noTest:watch
-```
-so that any change in the js code will trigger a rebuild.
+at NEURON-UI/org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp on every change.
 
+or, a better option, is to run:
+```
+python run-dev-server.py
+```
 
-To run:
+at NEURON-UI/utilities so that any change in the js code will trigger a rebuild.
+
+To run the server:
 ```
 NEURON-UI
 ```
