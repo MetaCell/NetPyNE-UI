@@ -50,9 +50,15 @@ class LoopTimer(threading.Thread):
             for key, value in list(GeppettoJupyterModelSync.record_variables.items()):
                 value.timeSeries = key.to_python()
 
+
             for model, synched_component in list(GeppettoJupyterGUISync.synched_models.items()):
                 if model != '':
-                    synched_component.value = str(eval(model))
+                    try:
+                        modelObject = eval(model)
+                    except KeyError:
+                        exec(model + "= ''")
+                        modelObject = eval(model)
+                    synched_component.value = str(modelObject)
 
         except Exception as exception:
             logging.exception(
@@ -86,7 +92,8 @@ def globalMessageHandler(id, command, parameters):
         response = eval(command)
     else:
         response = eval(command + '(*parameters)')
-    GeppettoJupyterModelSync.events_controller.triggerEvent("receive_python_message", {'id':id, 'response':response})
+    GeppettoJupyterModelSync.events_controller.triggerEvent(
+        "receive_python_message", {'id': id, 'response': response})
 
 
 
