@@ -58,7 +58,7 @@ class SampleModels:
                 # GeppettoJupyterModelSync.current_model.reload(
                 #     triggeredComponent.extraData['module'], triggeredComponent.extraData['model'])
 
-               
+                # Better approach to reload the model. Keeping the old one until we are sure it works...               
                 cf=jupyter_client.find_connection_file()
                 km=jupyter_client.BlockingKernelClient(connection_file=cf)
                 km.load_connection_file()
@@ -68,11 +68,6 @@ class SampleModels:
                 km.execute('GeppettoJupyterModelSync.current_python_model = getattr( python_module, "' + triggeredComponent.extraData['model'] + '")()')
                 km.execute('GeppettoJupyterModelSync.events_controller.triggerEvent("spinner:hide")')
                     
-
-            # Failed attempt to reload the model from python
-            # import IPython
-            # ipython = IPython.get_ipython()
-            # ipython.magic()
 
         except Exception as e:
             logging.exception("Unexpected error loading model")
