@@ -8,6 +8,7 @@ import time
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterGUISync
 from neuron_ui import neuron_utils
+from neuron_ui.netpyne_init import netParams, simConfig, tests
 
 
 class LoopTimer(threading.Thread):
@@ -60,7 +61,7 @@ class LoopTimer(threading.Thread):
                 "Error on Sync Mechanism for non-sim environment thread")
             raise
 
-def globalMessageHandler(id, command, parameters):
+def globalMessageHandler(identifier, command, parameters):
     logging.debug('Global Message Handler')
     logging.debug(command)
     logging.debug(parameters)
@@ -69,7 +70,7 @@ def globalMessageHandler(id, command, parameters):
     else:
         response = eval(command + '(*parameters)')
     GeppettoJupyterModelSync.events_controller.triggerEvent(
-        "receive_python_message", {'id': id, 'response': response})
+        "receive_python_message", {'id': identifier, 'response': response})
 
 
 try:
