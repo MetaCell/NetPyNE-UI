@@ -3,16 +3,11 @@ GeppettoNeuron.py
 Initialise geppetto neuron, listeners and variables
 """
 import logging
-from collections import defaultdict
 import threading
 import time
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterGUISync
-from neuron_ui.sample_models import SampleModels
-from neuron_ui.neuron_menu import NeuronMenu
 from neuron_ui import neuron_utils
-
-from neuron_ui.netpyne_init import netParams, simConfig, tests
 
 
 class LoopTimer(threading.Thread):
@@ -50,39 +45,20 @@ class LoopTimer(threading.Thread):
             for key, value in list(GeppettoJupyterModelSync.record_variables.items()):
                 value.timeSeries = key.to_python()
 
-
             for model, synched_component in list(GeppettoJupyterGUISync.synched_models.items()):
                 if model != '':
                     try:
-                        modelObject = eval(model)
+                        modelValue = eval(model)
                     except KeyError:
                         exec(model + "= ''")
-                        modelObject = eval(model)
-                    synched_component.value = str(modelObject)
+                        modelValue = eval(model)
+
+                synched_component.value = modelValue
 
         except Exception as exception:
             logging.exception(
                 "Error on Sync Mechanism for non-sim environment thread")
             raise
-
-# class Event(object):
-
-#     def __init__(self):
-#         self.fih = h.FInitializeHandler(1, self.callback)
-
-#     def callback(self):
-#         try:
-#             # Using 'list' so that a copy is made and we don't get: dictionary changed size during iteration items
-#             for key, value in list(GeppettoJupyterGUISync.sync_values.items()):
-#                 if key != '':
-#                     value.sync_value = str(eval("h._ref_t." + key))
-
-#             h.cvode.event(h.t + 1, self.callback)
-
-#         except Exception as exception:
-#             logging.exception("Error on Sync Mechanism for sim environment thread")
-#             raise
-
 
 def globalMessageHandler(id, command, parameters):
     logging.debug('Global Message Handler')
@@ -96,8 +72,6 @@ def globalMessageHandler(id, command, parameters):
         "receive_python_message", {'id': id, 'response': response})
 
 
-
-# def init():
 try:
     # Configure log
     neuron_utils.configure_logging()
@@ -126,24 +100,8 @@ try:
     while not timer.started:
         time.sleep(0.001)
 
-    # Sync values when a sim is running
-    # logging.debug('Initialising Sync Mechanism for sim environment')
-    # e = Event()
-
     # Init Panels
     logging.debug('Initialising NetPyne')
-
-    # for key, value in self.netParams.__dict__.iteritems():
-
-    #     panelTesting = neuron_utils.add_text_field_with_label(key, None)
-    #     label = panelTesting.items[0]
-    #     textfield = panelTesting.items[1]
-    #     textfield.on_blur(self.recalculateLayout)
-    #     self.items.append(panelTesting)
-
-    # SampleModels.Instance()
-    # NeuronMenu.Instance()
-    # NetPynePrototype.Instance()
 
 except Exception as exception:
     logging.exception("Unexpected error in neuron_geppetto initialization:")
