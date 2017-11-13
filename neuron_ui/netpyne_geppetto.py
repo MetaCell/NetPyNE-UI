@@ -8,7 +8,7 @@ import time
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterGUISync
 from neuron_ui import neuron_utils
-from neuron_ui.netpyne_init import netParams, simConfig, tests
+from neuron_ui.netpyne_init import netParams, simConfig, tests, metadata, api
 
 
 class LoopTimer(threading.Thread):
