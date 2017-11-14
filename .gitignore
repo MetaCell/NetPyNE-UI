@@ -3,3 +3,4 @@ libs/.ipynb_checkpoints/
 libs/GeppettoNeuron.log
 libs/models/__pycache__/
 log.file
+*.pyc

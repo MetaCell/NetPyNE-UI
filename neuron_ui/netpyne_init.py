@@ -4,6 +4,7 @@ from netpyne import sim
 from netpyne import analysis
 from netpyne.tests import tests
 from netpyne.metadata import metadata
+from netpyne.metadata import api
 import json
 from neuron_ui import neuron_utils
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
