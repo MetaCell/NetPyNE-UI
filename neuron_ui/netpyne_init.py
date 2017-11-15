@@ -6,12 +6,15 @@ from netpyne.metadata import api
 import json
 from neuron_ui import neuron_utils
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
-    
+
 netParams = specs.NetParams()
-simConfig = specs.SimConfig() 
+simConfig = specs.SimConfig()
 
 neuron_utils.createProject(name='SampleProject')
 
-GeppettoJupyterModelSync.current_model.original_model = json.dumps({'netParams': netParams.__dict__, 'simConfig': simConfig.__dict__, 'metadata': metadata.metadata})
+GeppettoJupyterModelSync.current_model.original_model = json.dumps({'netParams': netParams.__dict__,
+                                                                    'simConfig': simConfig.__dict__,
+                                                                    'metadata': metadata.metadata,
+                                                                    'requirement': 'from neuron_ui.netpyne_init import *'})
 
 logging.debug(GeppettoJupyterModelSync.current_model.original_model)

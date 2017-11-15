@@ -79,9 +79,6 @@ try:
 
     logging.debug('Initialising NetpyneNeuron')
 
-    # from IPython.core.debugger import Tracer
-    # Tracer()()
-
     # Reset any previous value
     logging.debug('Initialising Sync and Status Variables')
     # GeppettoJupyterGUISync.sync_values = defaultdict(list)
