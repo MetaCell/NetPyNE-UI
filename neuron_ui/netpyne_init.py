@@ -1,5 +1,7 @@
 import logging
 from netpyne import specs
+from netpyne import sim
+from netpyne import analysis
 from netpyne.tests import tests
 from netpyne.metadata import metadata
 from netpyne.metadata import api

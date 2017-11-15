@@ -5,15 +5,30 @@ Initialise geppetto neuron, listeners and variables
 import logging
 import threading
 import time
+import StringIO
+
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterGUISync
 from neuron_ui import neuron_utils
-from neuron_ui.netpyne_init import netParams, simConfig, tests, metadata, api
+from neuron_ui.netpyne_init import netParams, simConfig, tests, metadata, api, sim, analysis
+from netpyne_model_interpreter import NetPyNEModelInterpreter
+from model.model_serializer import GeppettoModelSerializer
+import matplotlib.pyplot as plt
+from model import ui
+import numpy as np
+from matplotlib.backends.backend_agg import FigureCanvasAgg
+from matplotlib.figure import Figure
+# TODO we should probablye first import something generic for geppetto which brings in the timer, the global handler, etc
 
 
 class LoopTimer(threading.Thread):
     """
     a Timer that calls f every interval
+
+    A thread that checks all the variables that we are synching between Python and Javascript and if 
+    these variables have changed on the Python side will propagate the changes to Javascript
+
+    TODO This code should move to a generic geppetto class since it's not NetPyNE specific
     """
 
     def __init__(self, interval, fun=None):
@@ -62,22 +77,108 @@ class LoopTimer(threading.Thread):
             raise
 
 def globalMessageHandler(identifier, command, parameters):
+    """
+    TODO This code should move to a generic geppetto class since it's not NetPyNE specific
+    """
     logging.debug('Global Message Handler')
     logging.debug(command)
     logging.debug(parameters)
-    if len(parameters) == 0:
-        response = eval(command)
-    else:
-        response = eval(command + '(*parameters)')
+    response = eval(command + '(*parameters)')
+    logging.debug("concatenate")
+    #logging.debug(response)
     GeppettoJupyterModelSync.events_controller.triggerEvent(
         "receive_python_message", {'id': identifier, 'response': response})
+
+class NetPyNEGeppetto():
+
+    def __init__(self):
+        self.model_interpreter = NetPyNEModelInterpreter()
+
+    def instantiateNetPyNEModelInGeppetto(self):
+        netpyne_model = self.instantiateNetPyNEModel()
+        self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
+        return GeppettoModelSerializer().serialize(self.geppetto_model)
+
+    def simulateNetPyNEModelInGeppetto(self):
+        netpyne_model = self.simulateNetPyNEModel()
+        self.geppetto_model = self.model_interpreter.updateGeppettoModel(netpyne_model, self.geppetto_model)
+        return GeppettoModelSerializer().serialize(self.geppetto_model)
+
+    def instantiateNetPyNEModel(self):
+        netParams.popParams['PYR'] = {'cellModel': 'HH', 'cellType': 'PYR', 'numCells': 20} # add dict with params for this pop 
+        cellRule = {'conds': {'cellModel': 'HH', 'cellType': 'PYR'},  'secs': {}} 	# cell rule dict
+        cellRule['secs']['soma'] = {'geom': {}, 'mechs': {}}  														# soma params dict
+        cellRule['secs']['soma']['geom'] = {'diam': 18.8, 'L': 18.8, 'Ra': 123.0}  									# soma geometry
+        cellRule['secs']['soma']['mechs']['hh'] = {'gnabar': 0.12, 'gkbar': 0.036, 'gl': 0.003, 'el': -70}  		# soma hh mechanism
+        cellRule['secs']['soma']['vinit'] = -71
+        netParams.cellParams['PYR'] = cellRule  												# add dict to list of cell params
+        netParams.synMechParams['AMPA'] = {'mod': 'Exp2Syn', 'tau1': 0.1, 'tau2': 1.0, 'e': 0}
+        netParams.stimSourceParams['bkg'] = {'type': 'NetStim', 'rate': 10, 'noise': 0.5, 'start': 1}
+        netParams.stimTargetParams['bkg->PYR1'] = {'source': 'bkg', 'conds': {'pop': 'PYR'}, 'weight': 0.1, 'delay': 'uniform(1,5)'}
+        netParams.connParams['PYR->PYR'] = {
+            'preConds': {'pop': 'PYR'}, 'postConds': {'pop': 'PYR'},
+            'weight': 0.002,                    # weight of each connection
+            'delay': '0.2+normal(13.0,1.4)',     # delay min=0.2, mean=13.0, var = 1.4
+            'threshold': 10,                    # threshold
+            'convergence': 'uniform(1,15)'}    # convergence (num presyn targeting postsyn) is uniformly distributed between 1 and 15
+
+
+        simConfig.analysis['plot2Dnet'] = True  # Plot 2D net cells and connections
+
+        sim.create(netParams, simConfig, True)
+        sim.analyze()
+
+        return sim
+
+    def simulateNetPyNEModel(self):
+        # Simulation parameters
+        simConfig.duration = 1*1e3 # Duration of the simulation, in ms
+        simConfig.dt = 0.025 # Internal integration timestep to use
+        simConfig.seeds = {'conn': 1, 'stim': 1, 'loc': 1} # Seeds for randomizers (connectivity, input stimulation and cell locations)
+        simConfig.createNEURONObj = 1  # create HOC objects when instantiating network
+        simConfig.createPyStruct = 1  # create Python structure (simulator-independent) when instantiating network
+        simConfig.verbose = False  # show detailed messages 
+
+        # Recording 
+        simConfig.recordCells = []  # which cells to record from
+        simConfig.recordTraces = {'Vsoma':{'sec':'soma','loc':0.5,'var':'v'}}
+        simConfig.recordStim = True  # record spikes of cell stims
+        simConfig.recordStep = 0.1 # Step size in ms to save data (eg. V traces, LFP, etc)
+
+        # Saving
+        simConfig.filename = 'HHTut'  # Set file output name
+        simConfig.saveFileStep = 1000 # step size in ms to save data to disk
+        simConfig.savePickle = False # Whether or not to write spikes etc. to a .mat file
+
+        # Analysis and plotting 
+        simConfig.analysis['plotRaster'] = True  # Plot raster
+        simConfig.analysis['plotTraces'] = {'include': [2]}  # Plot raster
+
+        sim.simulate()
+        sim.analyze()
+
+        return sim
+
+
+    def getNetPyNERasterPlot(self):
+        fig = analysis.plotRaster(showFig=False)
+        return ui.getSVG(fig)
+
+    def getNetPyNETracesPlot(self):
+        fig = analysis.plotTraces(showFig=False)
+        return ui.getSVG(fig)
+
+    def getNetPyNE2DNetPlot(self):
+        fig = analysis.plot2Dnet(showFig=False)
+        return ui.getSVG(fig)
+        
 
 
 try:
     # Configure log
     neuron_utils.configure_logging()
 
-    logging.debug('Initialising NetpyneNeuron')
+    logging.debug('Initialising NetPyNE')
 
     # Reset any previous value
     logging.debug('Initialising Sync and Status Variables')
@@ -98,8 +199,8 @@ try:
     while not timer.started:
         time.sleep(0.001)
 
-    # Init Panels
-    logging.debug('Initialising NetPyne')
+
+    netpyne_geppetto = NetPyNEGeppetto()
 
 except Exception as exception:
     logging.exception("Unexpected error in neuron_geppetto initialization:")
