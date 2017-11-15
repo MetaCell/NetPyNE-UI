@@ -10,8 +10,7 @@ import StringIO
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterGUISync
 from neuron_ui import neuron_utils
-<<<<<<< HEAD
-from neuron_ui.netpyne_init import netParams, simConfig, tests, sim, analysis
+from neuron_ui.netpyne_init import netParams, simConfig, tests, metadata, api, sim, analysis
 from netpyne_model_interpreter import NetPyNEModelInterpreter
 from model.model_serializer import GeppettoModelSerializer
 import matplotlib.pyplot as plt
@@ -20,9 +19,6 @@ import numpy as np
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
 # TODO we should probablye first import something generic for geppetto which brings in the timer, the global handler, etc
-=======
-from neuron_ui.netpyne_init import netParams, simConfig, tests, metadata, api
->>>>>>> e8cd43faf18c2aa6c6e12e99e3e1279536a4c9d8
 
 
 class LoopTimer(threading.Thread):
