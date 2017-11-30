@@ -14,9 +14,8 @@ RUN apt-get install -y \
         python \
         libpython-dev \
         cython \
-        aclocal \
-        libtoolize \ 
-        autoheader
+        autotools-dev \
+        automake
 
 USER jovyan
 RUN wget https://github.com/nrnhines/nrn/archive/master.zip
