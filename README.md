@@ -3,19 +3,19 @@
 This repository hosts an experimental prototype for a new user interface for [NEURON](http://www.neuron.yale.edu/neuron/) based on web technologies. 
 
 To install:
-```
+```bash
 pip install neuron_ui
 jupyter nbextension enable --py jupyter_geppetto
 ```
 
 For a development installation:
-```
+```bash
 git clone https://github.com/MetaCell/NEURON-UI.git
 python utilities/install.py
 ```
 
 This scripts clones all needed repos and install the extension and NEURON in development mode. This project consists on four different github repos:
-```
+```json
 {
   "name": "NEURON_UI",
   "path": ".",
@@ -39,7 +39,7 @@ This scripts clones all needed repos and install the extension and NEURON in dev
 ```
 
 A script with a set of tools can be found at /utilities/gitall.py. These are some examples of how to use it:
-```
+```bash
   python gitall.py branches: print current branch of each repo
 
   python gitall.py checkout <branch> : checkout <branch> on each repo
@@ -52,26 +52,26 @@ A script with a set of tools can be found at /utilities/gitall.py. These are som
 ```
 
 Any change to python code will be automatically deployed. However, for js code we will have to build the js sources. There are two options either you run:
-```
+```bash
 npm run build-dev-noTest
 ```
 
 at NEURON-UI/org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp on every change.
 
 or, a better option, is to run:
-```
+```bash
 python run-dev-server.py
 ```
 
 at NEURON-UI/utilities so that any change in the js code will trigger a rebuild.
 
 To run the server:
-```
+```bash
 NEURON-UI
 ```
 
 To update from sources:
-```
+```bash
 python update.py
 ```
 
