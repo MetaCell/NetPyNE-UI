@@ -1,20 +1,28 @@
 import setuptools
 from setuptools.command.install import install
 import subprocess
-from utils import *
+import json
 
 # Cloning Repos
+print("Cloning PyGeppetto...")
+subprocess.call(['git', 'clone', '-b', 'development', 'https://github.com/openworm/pygeppetto.git'], cwd='../')
+subprocess.call(['pip', 'install', '-e', '.'], cwd='../pygeppetto/')
+
+print("Cloning NetPyNE...")
+subprocess.call(['git', 'clone', '-b', 'metadata', 'https://github.com/Neurosim-lab/netpyne.git'], cwd='../')
+subprocess.call(['pip', 'install', '-e', '.'], cwd='../netpyne/')
+
 print("Cloning Geppetto Jupyter (Python package)...")
 subprocess.call(['git', 'clone', '--recursive', '-b', 'development', 'https://github.com/openworm/org.geppetto.frontend.jupyter.git'], cwd='../')
 
 print("Cloning Geppetto Frontend")
-subprocess.call(['git', 'checkout', 'development-jupyter'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
+subprocess.call(['git', 'checkout', 'interface'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
 
 print("Cloning Geppetto Neuron Configuration ...")
 subprocess.call(['git', 'clone', 'https://github.com/MetaCell/geppetto-neuron.git'],
                 cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/')
 
-subprocess.call(['git', 'checkout', 'development'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-neuron/')
+subprocess.call(['git', 'checkout', 'interface'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-neuron/')
 
 print("Enabling Geppetto Neuron Extension ...")
 jsonFile = open(
