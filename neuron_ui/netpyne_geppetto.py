@@ -83,7 +83,10 @@ def globalMessageHandler(identifier, command, parameters):
     logging.debug('Global Message Handler')
     logging.debug(command)
     logging.debug(parameters)
-    response = eval(command + '(*parameters)')
+    if parameters == '':
+        response = eval(command)
+    else:
+        response = eval(command + '(*parameters)')
     logging.debug("concatenate")
     #logging.debug(response)
     GeppettoJupyterModelSync.events_controller.triggerEvent(
@@ -98,13 +101,17 @@ class NetPyNEGeppetto():
         netpyne_model = self.instantiateNetPyNEModel()
         self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
         return GeppettoModelSerializer().serialize(self.geppetto_model)
-
+        
     def simulateNetPyNEModelInGeppetto(self):
         netpyne_model = self.simulateNetPyNEModel()
         self.geppetto_model = self.model_interpreter.updateGeppettoModel(netpyne_model, self.geppetto_model)
         return GeppettoModelSerializer().serialize(self.geppetto_model)
 
     def instantiateNetPyNEModel(self):
+        logging.debug("taka")
+        logging.debug(netParams.__dict__)
+
+
         netParams.popParams['PYR'] = {'cellModel': 'HH', 'cellType': 'PYR', 'numCells': 20} # add dict with params for this pop 
         cellRule = {'conds': {'cellModel': 'HH', 'cellType': 'PYR'},  'secs': {}} 	# cell rule dict
         cellRule['secs']['soma'] = {'geom': {}, 'mechs': {}}  														# soma params dict
@@ -126,6 +133,10 @@ class NetPyNEGeppetto():
         simConfig.analysis['plot2Dnet'] = True  # Plot 2D net cells and connections
 
         sim.create(netParams, simConfig, True)
+        # sim.net.cells -> Instantiated
+        # sim.net.pops.keys
+        # sim.net.params.cellParams -> High level Specs
+
         sim.analyze()
 
         return sim
