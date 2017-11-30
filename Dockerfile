@@ -15,7 +15,8 @@ RUN apt-get install -y \
         libpython-dev \
         cython \
         autotools-dev \
-        automake
+        automake \
+        libtool
 
 USER jovyan
 RUN wget https://github.com/nrnhines/nrn/archive/master.zip
