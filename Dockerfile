@@ -2,6 +2,10 @@ FROM jupyter/base-notebook:latest
 USER root
 RUN apt-get -qq update
 RUN apt-get -y install unzip
+RUN apt-get -y install libx11-dev
+RUN apt-get -y install libxext-dev
+RUN apt-get -y install mpich
+RUN apt-get -y install libncurses-dev
 RUN apt-get -y install git-core
 RUN apt-get -y install g++
 RUN apt-get -y install libncurses5-dev libncursesw5-dev
