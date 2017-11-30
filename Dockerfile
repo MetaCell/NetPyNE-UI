@@ -17,7 +17,8 @@ RUN apt-get install -y \
         autotools-dev \
         automake \
         libtool \
-        byacc
+        bison \
+        flex
 
 USER jovyan
 RUN wget https://github.com/nrnhines/nrn/archive/master.zip
