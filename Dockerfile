@@ -9,7 +9,7 @@ RUN apt-get -y install make
 USER jovyan
 RUN wget https://github.com/nrnhines/nrn/archive/master.zip
 RUN unzip master.zip
-WORKDIR nrn
+WORKDIR nrn-master
 RUN ./build.sh
 RUN ./configure --prefix `pwd` --without-iv --with-nrnpython
 RUN make
