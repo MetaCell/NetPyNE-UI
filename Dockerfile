@@ -2,18 +2,15 @@ FROM jupyter/base-notebook:latest
 USER root
 RUN apt-get -qq update
 RUN apt-get -y install unzip
-RUN apt-get -y install libx11-dev
-RUN apt-get -y install libxext-dev
-RUN apt-get -y install mpich
-RUN apt-get -y install libncurses-dev
 RUN apt-get -y install git-core
 RUN apt-get -y install g++
 RUN apt-get -y install libncurses5-dev libncursesw5-dev
 RUN apt-get -y install make
 USER jovyan
-RUN wget http://www.neuron.yale.edu/ftp/neuron/versions/v7.4/nrn-7.4.tar.gz
-RUN tar xzvf nrn-7.4.tar.gz
-WORKDIR nrn-7.4
+RUN wget https://github.com/nrnhines/nrn/archive/master.zip
+RUN unzip master.zip
+WORKDIR nrn
+RUN ./build.sh
 RUN ./configure --prefix `pwd` --without-iv --with-nrnpython
 RUN make
 RUN make install
