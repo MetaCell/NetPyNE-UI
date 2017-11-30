@@ -16,7 +16,8 @@ RUN apt-get install -y \
         cython \
         autotools-dev \
         automake \
-        libtool
+        libtool \
+        byacc
 
 USER jovyan
 RUN wget https://github.com/nrnhines/nrn/archive/master.zip
