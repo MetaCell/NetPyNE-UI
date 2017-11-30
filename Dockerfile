@@ -13,7 +13,10 @@ RUN apt-get install -y \
         libncurses5-dev libncursesw5-dev \
         python \
         libpython-dev \
-        cython
+        cython \
+        aclocal \
+        libtoolize \ 
+        autoheader
 
 USER jovyan
 RUN wget https://github.com/nrnhines/nrn/archive/master.zip
