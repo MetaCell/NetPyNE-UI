@@ -1,35 +1,19 @@
 FROM jupyter/base-notebook:82b978b3ceeb
 USER root
 RUN apt-get -qq update
-
-
-ARG NRN_VERSION="7.4"
-ARG NRN_ARCH="x86_64"
-
-RUN apt-get install -y \
-        locales \
-        wget \
-        gcc \
-        g++ \
-        build-essential \
-        libncurses-dev \
-        python \
-        libpython-dev \
-        cython \
-        git-core \
-        unzip \
-    && cd work \
-    && wget http://www.neuron.yale.edu/ftp/neuron/versions/v${NRN_VERSION}/nrn-${NRN_VERSION}.tar.gz \
-    && tar xvzf nrn-${NRN_VERSION}.tar.gz \
-    && cd nrn-${NRN_VERSION} \
-    && ./configure --prefix=`pwd` --without-iv --with-nrnpython=/usr/bin/python \
-    && make \
-    && make install \
-    && rm -rf /var/lib/apt/lists/* \
-    && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 \
-    && apt-get clean
-
-WORKDIR /home/jovyan/work/nrn-7.4/src/nrnpython
+RUN apt-get -y install unzip
+RUN apt-get -y install git-core
+RUN apt-get -y install g++
+RUN apt-get -y install libncurses5-dev libncursesw5-dev
+RUN apt-get -y install make
+USER jovyan
+RUN wget http://www.neuron.yale.edu/ftp/neuron/versions/v7.4/nrn-7.4.tar.gz
+RUN tar xzvf nrn-7.4.tar.gz
+WORKDIR nrn-7.4
+RUN ./configure --prefix `pwd` --without-iv --with-nrnpython
+RUN make
+RUN make install
+WORKDIR src/nrnpython
 RUN python setup.py install
 RUN wget https://github.com/MetaCell/NEURON-UI/archive/development.zip
 RUN unzip development.zip
