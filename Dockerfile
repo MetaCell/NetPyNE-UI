@@ -1,4 +1,4 @@
-FROM jupyter/base-notebook:latest
+FROM jupyter/base-notebook:82b978b3ceeb
 USER root
 RUN apt-get -qq update
 
