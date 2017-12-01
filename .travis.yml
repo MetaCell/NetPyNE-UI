@@ -9,4 +9,5 @@ notifications:
 services:
   - docker
 script:
+  - docker build -t="neuron-ui" .
   - docker run  -t -dit --name=neuron-ui -h localhost -p 8888:8888
