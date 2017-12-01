@@ -9,3 +9,6 @@ notifications:
 script:
   - cd utilities
   - python install.py
+  - cd ..
+  - cd neuron_ui/tests
+  - python -m unittest netpyne_model_interpreter_test
