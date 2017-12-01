@@ -29,7 +29,7 @@ RUN apt-get install -y \
     && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 \
     && apt-get clean
 
-WORKDIR nrn-${NRN_VERSION}/src/nrnpython
+WORKDIR /home/jovyan/work/nrn-7.4/src/nrnpython
 RUN python setup.py install
 RUN wget https://github.com/MetaCell/NEURON-UI/archive/development.zip
 RUN unzip development.zip
