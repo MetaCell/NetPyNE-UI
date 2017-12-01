@@ -18,7 +18,6 @@ RUN apt-get install -y \
         cython \
         git-core \
         unzip \
-    && mkdir work \
     && cd work \
     && wget http://www.neuron.yale.edu/ftp/neuron/versions/v${NRN_VERSION}/nrn-${NRN_VERSION}.tar.gz \
     && tar xvzf nrn-${NRN_VERSION}.tar.gz \
@@ -30,7 +29,7 @@ RUN apt-get install -y \
     && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 \
     && apt-get clean
 
-WORKDIR src/nrnpython
+WORKDIR nrn-${NRN_VERSION}/src/nrnpython
 RUN python setup.py install
 RUN wget https://github.com/MetaCell/NEURON-UI/archive/development.zip
 RUN unzip development.zip
