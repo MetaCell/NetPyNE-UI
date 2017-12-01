@@ -6,9 +6,7 @@ python:
 edge: true
 notifications:
   slack: metacell:5ALSeoP88DqIhORUJvxE56sq
+services:
+  - docker
 script:
-  - cd utilities
-  - python install.py
-  - cd ..
-  - cd neuron_ui/tests
-  - python -m unittest netpyne_model_interpreter_test
+  - docker run  -t -dit --name=neuron-ui -h localhost -p 8888:8888
