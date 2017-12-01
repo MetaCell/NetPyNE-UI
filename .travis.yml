@@ -10,4 +10,4 @@ services:
   - docker
 script:
   - docker build -t="neuron-ui" .
-  - docker run  -t -dit --name=neuron-ui_container -h localhost -p 8888:8888 neuron_ui
+  - docker run  -t -dit --name=neuron-ui_container -h localhost -p 8888:8888 neuron-ui:latest

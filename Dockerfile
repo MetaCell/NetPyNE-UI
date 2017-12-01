@@ -32,4 +32,6 @@ RUN wget https://github.com/MetaCell/NEURON-UI/archive/development.zip
 RUN unzip development.zip
 WORKDIR NEURON-UI-development/utilities
 RUN python install.py
+WORKDIR NEURON-UI-development/neuron_ui/tests
+RUN python -m unittest
 CMD exec jupyter notebook --debug --NotebookApp.default_url=/geppetto --NotebookApp.token=''
