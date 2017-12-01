@@ -17,7 +17,6 @@ RUN apt-get install -y \
         cython \
         git-core \
         unzip \
-    && mkdir work \
     && cd work \
     && wget http://www.neuron.yale.edu/ftp/neuron/versions/v${NRN_VERSION}/nrn-${NRN_VERSION}.tar.gz \
     && tar xvzf nrn-${NRN_VERSION}.tar.gz \
