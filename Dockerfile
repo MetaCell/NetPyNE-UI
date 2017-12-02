@@ -1,4 +1,4 @@
-FROM jupyter/base-notebook:82b978b3ceeb
+FROM jupyter/base-notebook:eb70bcf1a292
 USER root
 RUN apt-get -qq update
 
@@ -16,22 +16,22 @@ RUN apt-get install -y \
         libpython-dev \
         cython \
         git-core \
-        unzip \
-    && cd work \
-    && wget http://www.neuron.yale.edu/ftp/neuron/versions/v${NRN_VERSION}/nrn-${NRN_VERSION}.tar.gz \
-    && tar xvzf nrn-${NRN_VERSION}.tar.gz \
-    && cd nrn-${NRN_VERSION} \
-    && ./configure --prefix=`pwd` --without-iv --with-nrnpython=/usr/bin/python \
-    && make \
-    && make install \
-    && rm -rf /var/lib/apt/lists/* \
-    && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 \
-    && apt-get clean
+        unzip 
+USER $NB_USER
 
+RUN conda create --name snakes python=2
+RUN wget http://www.neuron.yale.edu/ftp/neuron/versions/v7.4/nrn-7.4.tar.gz
+RUN tar xzvf nrn-7.4.tar.gz
+WORKDIR nrn-7.4
+RUN /bin/bash -c "source activate snakes && ./configure --prefix `pwd` --without-iv --with-nrnpython"
+RUN /bin/bash -c "source activate snakes && make"
+RUN /bin/bash -c "source activate snakes && make install"
+WORKDIR src/nrnpython
+RUN /bin/bash -c "source activate snakes && python setup.py install"
 RUN wget https://github.com/MetaCell/NEURON-UI/archive/development.zip
 RUN unzip development.zip
 WORKDIR NEURON-UI-development/utilities
-RUN python install.py
-WORKDIR NEURON-UI-development/neuron_ui/tests
-RUN python -m unittest
+RUN /bin/bash -c "source activate snakes && python --version"
+RUN /bin/bash -c "source activate snakes && exec python install.py"
+RUN cd ../neuron_ui/tests && /bin/bash -c "source activate snakes && python -m unittest netpyne_model_interpreter_test"
 CMD exec jupyter notebook --debug --NotebookApp.default_url=/geppetto --NotebookApp.token=''
