@@ -83,7 +83,10 @@ def globalMessageHandler(identifier, command, parameters):
     logging.debug('Global Message Handler')
     logging.debug(command)
     logging.debug(parameters)
-    response = eval(command + '(*parameters)')
+    if parameters == '':
+        response = eval(command)
+    else:
+        response = eval(command + '(*parameters)')
     logging.debug("concatenate")
     #logging.debug(response)
     GeppettoJupyterModelSync.events_controller.triggerEvent(
@@ -98,32 +101,25 @@ class NetPyNEGeppetto():
         netpyne_model = self.instantiateNetPyNEModel()
         self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
         return GeppettoModelSerializer().serialize(self.geppetto_model)
-
+        
     def simulateNetPyNEModelInGeppetto(self):
         netpyne_model = self.simulateNetPyNEModel()
         self.geppetto_model = self.model_interpreter.updateGeppettoModel(netpyne_model, self.geppetto_model)
         return GeppettoModelSerializer().serialize(self.geppetto_model)
 
     def instantiateNetPyNEModel(self):
-        netParams.popParams['PYR'] = {'cellModel': 'HH', 'cellType': 'PYR', 'numCells': 20} # add dict with params for this pop 
-        cellRule = {'conds': {'cellModel': 'HH', 'cellType': 'PYR'},  'secs': {}} 	# cell rule dict
-        cellRule['secs']['soma'] = {'geom': {}, 'mechs': {}}  														# soma params dict
-        cellRule['secs']['soma']['geom'] = {'diam': 18.8, 'L': 18.8, 'Ra': 123.0}  									# soma geometry
-        cellRule['secs']['soma']['mechs']['hh'] = {'gnabar': 0.12, 'gkbar': 0.036, 'gl': 0.003, 'el': -70}  		# soma hh mechanism
-        cellRule['secs']['soma']['vinit'] = -71
-        netParams.cellParams['PYR'] = cellRule  												# add dict to list of cell params
-        netParams.synMechParams['AMPA'] = {'mod': 'Exp2Syn', 'tau1': 0.1, 'tau2': 1.0, 'e': 0}
-        netParams.stimSourceParams['bkg'] = {'type': 'NetStim', 'rate': 10, 'noise': 0.5, 'start': 1}
-        netParams.stimTargetParams['bkg->PYR1'] = {'source': 'bkg', 'conds': {'pop': 'PYR'}, 'weight': 0.1, 'delay': 'uniform(1,5)'}
-        netParams.connParams['PYR->PYR'] = {
-            'preConds': {'pop': 'PYR'}, 'postConds': {'pop': 'PYR'},
-            'weight': 0.002,                    # weight of each connection
-            'delay': '0.2+normal(13.0,1.4)',     # delay min=0.2, mean=13.0, var = 1.4
-            'threshold': 10,                    # threshold
-            'convergence': 'uniform(1,15)'}    # convergence (num presyn targeting postsyn) is uniformly distributed between 1 and 15
+        # FIXME: We should do something generic about this
+        netParams.cellParams['CellRule']['secs']['soma']['geom'].pop('pt3d', None)
 
+        # Very simple example
+        # netParams.popParams['Population'] = {'cellModel': 'HH', 'cellType': 'PYR', 'numCells': 20} # add dict with params for this pop 
+        # cellRule = {'conds': {'cellModel': 'HH', 'cellType': 'PYR'},  'secs': {}} 	# cell rule dict
+        # cellRule['secs']['soma'] = {'geom': {}, 'mechs': {}, 'topol': {}}  														# soma params dict
+        # cellRule['secs']['soma']['geom'] = {'diam': 18.8, 'L': 18.8, 'Ra': 123.0}  									# soma geometry
+        # netParams.cellParams['CellRule'] = cellRule  												# add dict to list of cell params
 
-        simConfig.analysis['plot2Dnet'] = True  # Plot 2D net cells and connections
+        # More complex example with two populations
+        # from neuron_ui.tests.tut3 import *
 
         sim.create(netParams, simConfig, True)
         sim.analyze()
