@@ -33,9 +33,9 @@ RUN /bin/bash -c "source activate snakes && make"
 RUN /bin/bash -c "source activate snakes && make install"
 WORKDIR src/nrnpython
 RUN /bin/bash -c "source activate snakes && python setup.py install"
-RUN wget https://github.com/MetaCell/NEURON-UI/archive/${frontendBranch}.zip
-RUN unzip ${frontendBranch}.zip
-WORKDIR NEURON-UI-${frontendBranch}/utilities
+RUN wget https://github.com/MetaCell/NEURON-UI/archive/$frontendBranch.zip
+RUN unzip $frontendBranch.zip
+WORKDIR NEURON-UI-$frontendBranch/utilities
 RUN /bin/bash -c "source activate snakes && python --version"
 RUN /bin/bash -c "source activate snakes && exec python install.py"
 RUN cd ../neuron_ui/tests && /bin/bash -c "source activate snakes && python -m unittest netpyne_model_interpreter_test"
