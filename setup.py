@@ -28,6 +28,9 @@ setup(
     ],
     install_requires=[
         'jupyter_geppetto>=0.3.6',
-        'netpyne'
+        'netpyne',
+        'numpy',
+        'scipy',
+        'matplotlib'
     ],
 )

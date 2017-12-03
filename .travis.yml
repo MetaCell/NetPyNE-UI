@@ -6,6 +6,8 @@ python:
 edge: true
 notifications:
   slack: metacell:5ALSeoP88DqIhORUJvxE56sq
+services:
+  - docker
 script:
-  - cd utilities
-  - python install.py
+  - docker build -t="neuron-ui" .
+  - docker run  -t -dit --name=neuron-ui_container -h localhost -p 8888:8888 neuron-ui:latest
