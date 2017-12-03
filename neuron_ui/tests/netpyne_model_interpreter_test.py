@@ -6,17 +6,17 @@ from neuron_ui.netpyne_model_interpreter import NetPyNEModelInterpreter
 
 class TestNetPyNEModelInterpreter(unittest.TestCase):
 
-    # def test_getGeppettoModel(self):
-    #     print "------------------------------------"
-    #     print "Testing creation of a Geppetto Model"
-    #     print "------------------------------------"
-    #     modelInterpreter = NetPyNEModelInterpreter()
-    #     netPyNEModel=self.createNetPyNETestModel()
-    #     geppettoModel=modelInterpreter.getGeppettoModel(netPyNEModel)
-    #     print "------------------------------------"
-    #     print "A Geppetto model was created:"
-    #     print "------------------------------------"
-    #     print geppettoModel
+    def test_getGeppettoModel(self):
+        print "------------------------------------"
+        print "Testing creation of a Geppetto Model"
+        print "------------------------------------"
+        modelInterpreter = NetPyNEModelInterpreter()
+        netPyNEModel=self.createNetPyNETestModel()
+        geppettoModel=modelInterpreter.getGeppettoModel(netPyNEModel)
+        print "------------------------------------"
+        print "A Geppetto model was created:"
+        print "------------------------------------"
+        print geppettoModel
 
     def createNetPyNETestModel(self):
         netParams = specs.NetParams()   # object of class NetParams to store the network parameters
@@ -50,9 +50,7 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         sim.gatherData()
         return sim
 
-
-
-    def test_Geometries(self):
+    def test_getGeppettoModelSimpleNetwork(self):
         netParams = specs.NetParams()   # object of class NetParams to store the network parameters
         simConfig = specs.SimConfig()   # object of class SimConfig to store the simulation configuration
         netParams.popParams['PYR'] = {'cellModel': 'HH', 'cellType': 'PYR', 'numCells': 20} # add dict with params for this pop 
@@ -74,10 +72,22 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         sim.create(netParams, simConfig, True)
         sim.gatherData()
 
-        # self.extractPopulations(sim.net.pops)
+        modelInterpreter = NetPyNEModelInterpreter()
+        geppettoModel= modelInterpreter.getGeppettoModel(sim)
+        print "------------------------------------"
+        print "A Geppetto model was created:"
+        print "------------------------------------"
+        print geppettoModel
+
+        sim.analyze()
+
+    def test_getGeppettoModelComplexNetwork(self):
+        
+        from neuron_ui.tests.tut3 import *
+        sim.create(netParams, simConfig, True)
+        sim.gatherData()
 
         modelInterpreter = NetPyNEModelInterpreter()
-        # modelInterpreter.extractPopulations(sim.net.pops)
         geppettoModel= modelInterpreter.getGeppettoModel(sim)
         print "------------------------------------"
         print "A Geppetto model was created:"

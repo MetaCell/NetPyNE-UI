@@ -119,7 +119,7 @@ class NetPyNEGeppetto():
         # netParams.cellParams['CellRule'] = cellRule  												# add dict to list of cell params
 
         # More complex example with two populations
-        # from tut3 import *
+        # from neuron_ui.tests.tut3 import *
 
         sim.create(netParams, simConfig, True)
         sim.analyze()

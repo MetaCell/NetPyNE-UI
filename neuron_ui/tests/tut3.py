@@ -1,8 +1,11 @@
-# from netpyne import specs, sim
-from neuron_ui.netpyne_init import netParams, simConfig, tests, metadata, api, sim, analysis
+# If you want to run from netpyne_geppetto uncomment this line and 
+# comment the three lines below
+# from neuron_ui.netpyne_init import netParams, simConfig, tests, metadata, api, sim, analysis
 
 # Network parameters
-# netParams = specs.NetParams()  # object of class NetParams to store the network parameters
+from netpyne import specs, sim
+netParams = specs.NetParams()  # object of class NetParams to store the network parameters
+simConfig = specs.SimConfig()		# object of class SimConfig to store simulation configuration
 
 ## Population parameters
 netParams.popParams['S'] = {'cellType': 'PYR', 'numCells': 20, 'cellModel': 'HH'}
@@ -52,7 +55,6 @@ netParams.connParams['S->M'] = {'preConds': {'pop': 'S'}, 'postConds': {'pop': '
 
 
 # Simulation options
-# simConfig = specs.SimConfig()		# object of class SimConfig to store simulation configuration
 
 simConfig.duration = 1*1e3 			# Duration of the simulation, in ms
 simConfig.dt = 0.025 				# Internal integration timestep to use
