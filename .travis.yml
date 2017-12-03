@@ -9,5 +9,5 @@ notifications:
 services:
   - docker
 script:
-  - docker build -t="neuron-ui" .
+  - docker build -t="neuron-ui" --build-arg neuronuiBranch=$TRAVIS_BRANCH .
   - docker run  -t -dit --name=neuron-ui_container -h localhost -p 8888:8888 neuron-ui:latest
