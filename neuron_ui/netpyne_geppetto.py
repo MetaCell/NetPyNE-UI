@@ -109,7 +109,7 @@ class NetPyNEGeppetto():
 
     def instantiateNetPyNEModel(self):
         # FIXME: We should do something generic about this
-        netParams.cellParams['CellRule']['secs']['soma']['geom'].pop('pt3d', None)
+        # netParams.cellParams['CellRule']['secs']['soma']['geom'].pop('pt3d', None)
 
         # Very simple example
         # netParams.popParams['Population'] = {'cellModel': 'HH', 'cellType': 'PYR', 'numCells': 20} # add dict with params for this pop 
@@ -119,7 +119,7 @@ class NetPyNEGeppetto():
         # netParams.cellParams['CellRule'] = cellRule  												# add dict to list of cell params
 
         # More complex example with two populations
-        # from neuron_ui.tests.tut3 import *
+        from neuron_ui.tests.tut3 import *
 
         sim.create(netParams, simConfig, True)
         sim.analyze()
@@ -156,6 +156,18 @@ class NetPyNEGeppetto():
         return sim
 
 
+    def getNetPyNE2DNetPlot(self):
+        fig = analysis.plot2Dnet(showFig=False)
+        return ui.getSVG(fig)
+    
+    def getNetPyNEShapePlot(self):
+        fig = analysis.plotShape(showFig=False)
+        return ui.getSVG(fig)
+
+    def getNetPyNEConnectionsPlot(self):
+        fig = analysis.plotConn(showFig=False)
+        return ui.getSVG(fig)
+
     def getNetPyNERasterPlot(self):
         fig = analysis.plotRaster(showFig=False)
         return ui.getSVG(fig)
@@ -163,10 +175,19 @@ class NetPyNEGeppetto():
     def getNetPyNETracesPlot(self):
         fig = analysis.plotTraces(showFig=False)
         return ui.getSVG(fig)
-
-    def getNetPyNE2DNetPlot(self):
-        fig = analysis.plot2Dnet(showFig=False)
+    
+    def getNetPyNESpikeHistPlot(self):
+        fig = analysis.plotSpikeHist(showFig=False)
         return ui.getSVG(fig)
+
+    def getNetPyNESpikeStatsPlot(self):
+        fig = analysis.plotSpikeStats(showFig=False)
+        return ui.getSVG(fig)
+    
+    def getNetPyNERatePSDPlot(self):
+        fig = analysis.plotRatePSD(showFig=False)
+        return ui.getSVG(fig)
+
         
 
 
