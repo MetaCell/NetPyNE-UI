@@ -178,7 +178,7 @@ class NetPyNEGeppetto():
 
     def getNetPyNETracesPlot(self):
         #the hardcoded include 1 will need to go, ask Salvador about include "recorded"
-        figs = analysis.plotTraces(include= [1], showFig=False)
+        figs = analysis.plotTraces(include=None, showFig=False)
         if figs==-1:
             return fig
         svgs = []
