@@ -146,10 +146,6 @@ class NetPyNEGeppetto():
         simConfig.saveFileStep = 1000 # step size in ms to save data to disk
         simConfig.savePickle = False # Whether or not to write spikes etc. to a .mat file
 
-        # Analysis and plotting 
-        simConfig.analysis['plotRaster'] = True  # Plot raster
-        simConfig.analysis['plotTraces'] = {'include': [2]}  # Plot raster
-
         sim.simulate()
         sim.analyze()
 
@@ -158,35 +154,58 @@ class NetPyNEGeppetto():
 
     def getNetPyNE2DNetPlot(self):
         fig = analysis.plot2Dnet(showFig=False)
+        if fig==-1:
+            return fig
         return ui.getSVG(fig)
     
     def getNetPyNEShapePlot(self):
-        fig = analysis.plotShape(showFig=False)
+        fig = analysis.plotShape(includePost = ['all'],showFig=False)
+        if fig==-1:
+            return fig
         return ui.getSVG(fig)
 
     def getNetPyNEConnectionsPlot(self):
         fig = analysis.plotConn(showFig=False)
+        if fig==-1:
+            return fig
         return ui.getSVG(fig)
 
     def getNetPyNERasterPlot(self):
         fig = analysis.plotRaster(showFig=False)
+        if fig==-1:
+            return fig
         return ui.getSVG(fig)
 
     def getNetPyNETracesPlot(self):
-        fig = analysis.plotTraces(showFig=False)
-        return ui.getSVG(fig)
+        #the hardcoded include 1 will need to go, ask Salvador about include "recorded"
+        figs = analysis.plotTraces(include= [1], showFig=False)
+        if figs==-1:
+            return fig
+        svgs = []
+        for key, value in figs.iteritems():
+            logging.debug("Found plot for "+ key)
+            svgs.append(ui.getSVG(value))
+        return svgs
     
     def getNetPyNESpikeHistPlot(self):
         fig = analysis.plotSpikeHist(showFig=False)
+        if fig==-1:
+            return fig
         return ui.getSVG(fig)
 
     def getNetPyNESpikeStatsPlot(self):
-        fig = analysis.plotSpikeStats(showFig=False)
+        fig = analysis.plotSpikeStats(showFig=False)[0]
+        if fig==-1:
+            return fig
         return ui.getSVG(fig)
     
     def getNetPyNERatePSDPlot(self):
-        fig = analysis.plotRatePSD(showFig=False)
-        return ui.getSVG(fig)
+        fig = analysis.plotRatePSD(showFig=False)[0]
+        if fig==-1:
+            return fig
+        svgs = []
+        svgs.append(ui.getSVG(fig))
+        return svgs
 
         
 
