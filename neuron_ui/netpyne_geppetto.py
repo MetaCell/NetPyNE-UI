@@ -194,19 +194,38 @@ class NetPyNEGeppetto():
         return ui.getSVG(fig)
 
     def getNetPyNESpikeStatsPlot(self):
-        fig = analysis.plotSpikeStats(showFig=False)[0]
+        fig = analysis.plotSpikeStats(showFig=False)
         if fig==-1:
             return fig
+        else:
+            fig=fig[0]
+        return ui.getSVG(fig)
+
+    def getNetPyNEGrangerPlot(self):
+        fig = analysis.granger(showFig=False)
+        if fig==-1:
+            return fig
+        else:
+            fig=fig[-1]
         return ui.getSVG(fig)
     
     def getNetPyNERatePSDPlot(self):
-        fig = analysis.plotRatePSD(showFig=False)[0]
+        fig = analysis.plotRatePSD(showFig=False)
         if fig==-1:
             return fig
+        else:
+            fig=fig[0]
         svgs = []
         svgs.append(ui.getSVG(fig))
         return svgs
 
+    def getNetPyNESpikeStatsPlot(self):
+        fig = analysis.plotSpikeStats(showFig=False)
+        if fig==-1:
+            return fig
+        else:
+            fig=fig[0]
+        return ui.getSVG(fig)
         
 
 

@@ -39,7 +39,7 @@ subprocess.call(['npm', 'run', 'build-dev-noTest'], cwd='../org.geppetto.fronten
 print("Installing jupyter_geppetto python package ...")
 subprocess.call(['pip', 'install', '-e', '.'], cwd='../org.geppetto.frontend.jupyter')
 print("Installing jupyter_geppetto Jupyter Extension ...")
-subprocess.call(['jupyter', 'nbextension', 'install', '--py', '--symlink', 'jupyter_geppetto'], cwd='../org.geppetto.frontend.jupyter')
+subprocess.call(['jupyter', 'nbextension', 'install', '--py', '--symlink', '--user', 'jupyter_geppetto'], cwd='../org.geppetto.frontend.jupyter')
 subprocess.call(['jupyter', 'nbextension', 'enable', '--py', 'jupyter_geppetto'], cwd='../org.geppetto.frontend.jupyter')
 subprocess.call(['jupyter', 'nbextension', 'enable', '--py', 'widgetsnbextension'], cwd='../org.geppetto.frontend.jupyter')
 
