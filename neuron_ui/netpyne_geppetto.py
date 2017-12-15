@@ -6,6 +6,7 @@ import logging
 import threading
 import time
 import StringIO
+import json
 
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterGUISync
@@ -69,7 +70,7 @@ class LoopTimer(threading.Thread):
                         exec(model + "= ''")
                         modelValue = eval(model)
 
-                synched_component.value = modelValue
+                synched_component.value = json.dumps(modelValue)
 
         except Exception as exception:
             logging.exception(

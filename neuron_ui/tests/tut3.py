@@ -3,9 +3,11 @@
 # from neuron_ui.netpyne_init import netParams, simConfig, tests, metadata, api, sim, analysis
 
 # Network parameters
-from netpyne import specs, sim
-netParams = specs.NetParams()  # object of class NetParams to store the network parameters
-simConfig = specs.SimConfig()		# object of class SimConfig to store simulation configuration
+# from netpyne import specs, sim
+# netParams = specs.NetParams()  # object of class NetParams to store the network parameters
+# simConfig = specs.SimConfig()		# object of class SimConfig to store simulation configuration
+
+from neuron_ui.netpyne_init import netParams, simConfig, tests, metadata, api, sim, analysis
 
 ## Population parameters
 netParams.popParams['S'] = {'cellType': 'PYR', 'numCells': 20, 'cellModel': 'HH'}
