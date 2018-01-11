@@ -67,6 +67,7 @@ class LoopTimer(threading.Thread):
                     try:
                         modelValue = eval(model)
                     except KeyError:
+                        logging.debug("Error evaluating "+model)
                         exec(model + "= ''")
                         modelValue = eval(model)
 
@@ -152,6 +153,16 @@ class NetPyNEGeppetto():
 
         return sim
 
+    def rename(self, path, oldValue,newValue):
+        command = path + '.rename("'+oldValue+'","'+newValue+'")'
+        logging.debug('renaming '+command)
+        eval(command)
+
+        for model, synched_component in list(GeppettoJupyterGUISync.synched_models.items()):
+            if model != '' and oldValue in model:
+                GeppettoJupyterGUISync.synched_models.pop(model)
+                newModel = model.replace(oldValue,newValue)
+                GeppettoJupyterGUISync.synched_models[newModel]=synched_component
 
     def getNetPyNE2DNetPlot(self):
         fig = analysis.plot2Dnet(showFig=False)
