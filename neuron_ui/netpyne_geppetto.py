@@ -116,12 +116,28 @@ class NetPyNEGeppetto():
 
     def importModel(self, modelParameters):
         logging.debug(modelParameters)
+        
         # Get Current dir
         owd = os.getcwd()
+        modelPath = modelParameters["modelPath"]
+        
+        #Create Symbolic link
+        if modelParameters['compileMod']:
+            modPath = os.path.join(modelParameters['modFolder'],"x86_64")
+            modLinkPath = os.path.join(owd,"x86_64")
+            subprocess.call(["rm", "-r", modPath])
+            subprocess.call(["rm", "-r", modLinkPath])
+            subprocess.call(["rm", "-r", os.path.join(modelPath,"x86_64")])
+            
+            os.chdir(modelParameters["modFolder"])
+            subprocess.call(["nrnivmodl"])
+        
+            os.symlink(modPath, modLinkPath)
+            os.symlink(modPath, os.path.join(modelPath,"x86_64"))
         
         # Change to new path and add to system path
-        sys.path.append(modelParameters["modelPath"])
-        os.chdir(modelParameters["modelPath"])
+        sys.path.append(modelPath)
+        os.chdir(modelPath)
 
         # Import Module 
         module = importlib.import_module(modelParameters["moduleName"])
@@ -130,47 +146,6 @@ class NetPyNEGeppetto():
         import netpyne_geppetto
         netpyne_geppetto.netParams = getattr(module, modelParameters["netParamsVariable"])
         netpyne_geppetto.simConfig = getattr(module, modelParameters["simConfigVariable"])
-
-        #Create Symbolic link
-        if modelParameters['compileMod']:
-            modPath = os.path.join(modelParameters['modFolder'],"x86_64")
-            modLinkPath = os.path.join(owd,"x86_64")
-            subprocess.call(["rm", "-r", modPath])
-            subprocess.call(["rm", "-r", modLinkPath])
-            os.symlink(modPath, modLinkPath)
-            os.chdir(modelParameters["modFolder"])
-            subprocess.call(["nrnivmodl"])
-
-        # try:
-            #import subprocess
-            # subprocess.check_output(['mpiexec', '-n', '4', 'nrniv', '-python', '-mpi', 'taka.py'])
-        #     import subprocess
-        #     cmd = ['mpiexec', '-n', '4', 'nrniv', '-python', '-mpi', '/home/adrian/code/geppetto/NEURON-UI/neuron_ui/taka.py']
-        #     own = os.getcwd()
-        #     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        #     # for stdout_line in iter(popen.stdout.readline, ""):
-        #     #     yield stdout_line 
-        #     # popen.stdout.close()
-        #     # Poll process for new output until finished
-        #     while True:
-        #         nextline = process.stdout.readline()
-        #         if nextline == '' and process.poll() is not None:
-        #             break
-        #         sys.stdout.write(nextline)
-        #         sys.stdout.flush()
-
-        #     output = process.communicate()[0]
-        #     exitCode = process.returncode
-
-        #     if (exitCode == 0):
-        #         logging.debug("exit OK")
-        #         # return output
-        #     else:
-        #         logging.exception('taka') 
-        #     logging.debug("pak2")
-        # except:
-        #     logging.exception("Errrrror")
-        #     raise
 
         os.chdir(owd)    
 
