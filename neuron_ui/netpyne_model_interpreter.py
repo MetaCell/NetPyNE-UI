@@ -6,7 +6,6 @@ import logging
 import model as pygeppetto
 from model.model_factory import GeppettoModelFactory
 from model.values import Point, ArrayElement, ArrayValue
-from netpyne import sim, utils
 
 
 class NetPyNEModelInterpreter():
@@ -76,11 +75,16 @@ class NetPyNEModelInterpreter():
 
         # Create intermediate population structure for easy access (by key)
         populations = {}
-        for index, cell in enumerate(sim.net.cells):
+        for index, cell in enumerate(netpyne_model.net.allCells):
             # This will be only executed the first time for each population
             if cell.tags['pop'] not in populations:
                 # Create CellType, VisualType, ArrayType, ArrayVariable and append to netpyne library
-                cellType = pygeppetto.CompositeType(id=cell.tags['cellType'], name=cell.tags['cellType'], abstract= False)
+                if 'cellType' in cell.tags:
+                    composite_id = cell.tags['cellType']
+                else: 
+                    composite_id = cell.tags['pop'] + "_cell"
+
+                cellType = pygeppetto.CompositeType(id=composite_id, name=composite_id, abstract= False)
                 visualType = pygeppetto.CompositeVisualType(id='cellMorphology', name='cellMorphology')
                 cellType.visualType = visualType
                 defaultValue = ArrayValue(elements=[])
@@ -102,25 +106,27 @@ class NetPyNEModelInterpreter():
 
                 # Convert to pt3d if not there
                 secs = cell.secs
-                if 'pt3d' not in list(secs.values())[0]['geom']:
-                    secs = self.convertTo3DGeoms(secs)
+                if hasattr(secs, 'values') and len(secs.values()) > 0:
+                    if 'pt3d' not in list(secs.values())[0]['geom']:
+                        secs = self.convertTo3DGeoms(secs)
                 
                 # Iterate sections creating spheres and cylinders
-                for sec_name, sec in secs.items():
-                    if 'pt3d' in sec['geom']:
-                        points = sec['geom']['pt3d']
-                        for i in range(len(points) - 1):
-                            if sec_name == 'soma':
-                                visualType.variables.append(self.factory.createSphere(sec_name,
-                                                                                        radius=float(points[i][3] / 2),
-                                                                                        position=Point(x=float(points[i][0]),y=float(points[i][1]), z=float(points[i][2]))))
-                            else:
-                                visualType.variables.append(self.factory.createCylinder(sec_name,
-                                                                                        bottomRadius=float(points[i][3] / 2),
-                                                                                        topRadius=float(points[i + 1][3] / 2),
-                                                                                        position=Point(x=float(points[i][0]),y=float(points[i][1]), z=float(points[i][2])),
-                                                                                        distal=Point(x=float(points[i + 1][0]), y=float(points[i + 1][1]), z=float(points[i + 1][2]))))
-                
+                if hasattr(secs, 'items'):
+                    for sec_name, sec in secs.items():
+                        if 'pt3d' in sec['geom']:
+                            points = sec['geom']['pt3d']
+                            for i in range(len(points) - 1):
+                                if sec_name == 'soma':
+                                    visualType.variables.append(self.factory.createSphere(sec_name,
+                                                                                            radius=float(points[i][3] / 2),
+                                                                                            position=Point(x=float(points[i][0]),y=-float(points[i][1]), z=float(points[i][2]))))
+                                else:
+                                    visualType.variables.append(self.factory.createCylinder(sec_name,
+                                                                                            bottomRadius=float(points[i][3] / 2),
+                                                                                            topRadius=float(points[i + 1][3] / 2),
+                                                                                            position=Point(x=float(points[i][0]),y=-float(points[i][1]), z=float(points[i][2])),
+                                                                                            distal=Point(x=float(points[i + 1][0]), y=-float(points[i + 1][1]), z=float(points[i + 1][2]))))
+                    
 
             # Save the cell position and update elements in defaultValue and size
             populations[cell.tags['pop']].size = populations[cell.tags['pop']].size + 1
