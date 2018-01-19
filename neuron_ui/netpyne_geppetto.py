@@ -7,6 +7,10 @@ import threading
 import time
 import StringIO
 import json
+import os
+import importlib
+import sys
+import subprocess
 
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterGUISync
@@ -108,6 +112,42 @@ class NetPyNEGeppetto():
         netpyne_model = self.simulateNetPyNEModel()
         self.geppetto_model = self.model_interpreter.updateGeppettoModel(netpyne_model, self.geppetto_model)
         return GeppettoModelSerializer().serialize(self.geppetto_model)
+
+
+    def importModel(self, modelParameters):
+        logging.debug(modelParameters)
+        
+        # Get Current dir
+        owd = os.getcwd()
+        modelPath = modelParameters["modelPath"]
+        
+        #Create Symbolic link
+        if modelParameters['compileMod']:
+            modPath = os.path.join(modelParameters['modFolder'],"x86_64")
+            modLinkPath = os.path.join(owd,"x86_64")
+            subprocess.call(["rm", "-r", modPath])
+            subprocess.call(["rm", "-r", modLinkPath])
+            subprocess.call(["rm", "-r", os.path.join(modelPath,"x86_64")])
+            
+            os.chdir(modelParameters["modFolder"])
+            subprocess.call(["nrnivmodl"])
+        
+            os.symlink(modPath, modLinkPath)
+            os.symlink(modPath, os.path.join(modelPath,"x86_64"))
+        
+        # Change to new path and add to system path
+        sys.path.append(modelPath)
+        os.chdir(modelPath)
+
+        # Import Module 
+        module = importlib.import_module(modelParameters["moduleName"])
+        
+        # Import Model attributes
+        import netpyne_geppetto
+        netpyne_geppetto.netParams = getattr(module, modelParameters["netParamsVariable"])
+        netpyne_geppetto.simConfig = getattr(module, modelParameters["simConfigVariable"])
+
+        os.chdir(owd)    
 
     def instantiateNetPyNEModel(self):
         sim.create(netParams, simConfig, True)
