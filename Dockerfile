@@ -39,4 +39,4 @@ WORKDIR NEURON-UI-$neuronuiBranch/utilities
 RUN /bin/bash -c "source activate snakes && python --version"
 RUN /bin/bash -c "source activate snakes && exec python install.py"
 RUN cd ../neuron_ui/tests && /bin/bash -c "source activate snakes && python -m unittest netpyne_model_interpreter_test"
-CMD exec jupyter notebook --debug --NotebookApp.default_url=/geppetto --NotebookApp.token=''
+CMD /bin/bash -c "source activate snakes && exec jupyter notebook --debug --NotebookApp.default_url=/geppetto --NotebookApp.token=''"
