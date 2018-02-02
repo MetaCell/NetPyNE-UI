@@ -1,17 +1,11 @@
-# If you want to run from netpyne_geppetto uncomment this line and 
-# comment the three lines below
-# from neuron_ui.netpyne_init import netParams, simConfig, tests, metadata, api, sim, analysis
+from netpyne import specs, sim
 
 # Network parameters
-# from netpyne import specs, sim
-# netParams = specs.NetParams()  # object of class NetParams to store the network parameters
-# simConfig = specs.SimConfig()		# object of class SimConfig to store simulation configuration
-
-from neuron_ui.netpyne_init import netParams, simConfig, tests, metadata, api, sim, analysis
+netParams = specs.NetParams()  # object of class NetParams to store the network parameters
 
 ## Population parameters
 netParams.popParams['S'] = {'cellType': 'PYR', 'numCells': 20, 'cellModel': 'HH'}
-netParams.popParams['M'] = {'cellType': 'PYR2', 'numCells': 20, 'cellModel': 'HH'} 
+netParams.popParams['M'] = {'cellType': 'PYR', 'numCells': 20, 'cellModel': 'HH'} 
 
 ## Cell property rules
 cellRule = {'conds': {'cellType': 'PYR'},  'secs': {}} 	# cell rule dict
@@ -23,17 +17,6 @@ cellRule['secs']['dend']['geom'] = {'diam': 5.0, 'L': 150.0, 'Ra': 150.0, 'cm': 
 cellRule['secs']['dend']['topol'] = {'parentSec': 'soma', 'parentX': 1.0, 'childX': 0}						# dend topology 
 cellRule['secs']['dend']['mechs']['pas'] = {'g': 0.0000357, 'e': -70} 										# dend mechanisms
 netParams.cellParams['PYRrule'] = cellRule  												# add dict to list of cell parameters
-
-cellRule = {'conds': {'cellType': 'PYR2'},  'secs': {}} 	# cell rule dict
-cellRule['secs']['soma'] = {'geom': {}, 'mechs': {}}  											# soma params dict
-cellRule['secs']['soma']['geom'] = {'diam': 18.8, 'L': 18.8, 'Ra': 123.0}  									# soma geometry
-cellRule['secs']['soma']['mechs']['hh'] = {'gnabar': 0.12, 'gkbar': 0.036, 'gl': 0.003, 'el': -70}  		# soma hh mechanisms
-cellRule['secs']['dend'] = {'geom': {}, 'topol': {}, 'mechs': {}}  								# dend params dict
-cellRule['secs']['dend']['geom'] = {'diam': 10.0, 'L': 350.0, 'Ra': 150.0, 'cm': 1}							# dend geometry
-cellRule['secs']['dend']['topol'] = {'parentSec': 'soma', 'parentX': 1.0, 'childX': 0}						# dend topology 
-cellRule['secs']['dend']['mechs']['pas'] = {'g': 0.0000357, 'e': -70} 										# dend mechanisms
-netParams.cellParams['PYRrule2'] = cellRule  												# add dict to list of cell parameters
-
 
 
 ## Synaptic mechanism parameters
@@ -57,6 +40,7 @@ netParams.connParams['S->M'] = {'preConds': {'pop': 'S'}, 'postConds': {'pop': '
 
 
 # Simulation options
+simConfig = specs.SimConfig()		# object of class SimConfig to store simulation configuration
 
 simConfig.duration = 1*1e3 			# Duration of the simulation, in ms
 simConfig.dt = 0.025 				# Internal integration timestep to use
