@@ -23,6 +23,7 @@ from model import ui
 import numpy as np
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
+import neuron
 # TODO we should probablye first import something generic for geppetto which brings in the timer, the global handler, etc
 
 
@@ -124,16 +125,14 @@ class NetPyNEGeppetto():
         #Create Symbolic link
         if modelParameters['compileMod']:
             modPath = os.path.join(modelParameters['modFolder'],"x86_64")
-            modLinkPath = os.path.join(owd,"x86_64")
             subprocess.call(["rm", "-r", modPath])
-            subprocess.call(["rm", "-r", modLinkPath])
-            subprocess.call(["rm", "-r", os.path.join(modelPath,"x86_64")])
             
             os.chdir(modelParameters["modFolder"])
             subprocess.call(["nrnivmodl"])
-        
-            os.symlink(modPath, modLinkPath)
-            os.symlink(modPath, os.path.join(modelPath,"x86_64"))
+            
+        # Load mechanism if mod path is passed
+        if modelParameters['modFolder']:
+            neuron.load_mechanisms(str(modelParameters["modFolder"] ))
         
         # Change to new path and add to system path
         sys.path.append(modelPath)
