@@ -21,7 +21,8 @@ RUN apt-get install -y \
         libpython-dev \
         cython \
         git-core \
-        unzip 
+        unzip \
+        libpng-dev
 USER $NB_USER
 
 RUN conda create --name snakes python=2
