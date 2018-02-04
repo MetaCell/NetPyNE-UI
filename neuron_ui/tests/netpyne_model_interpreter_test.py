@@ -10,18 +10,24 @@ import subprocess
 class TestNetPyNEModelInterpreter(unittest.TestCase):
 
     def getGeppettoModel(self, netParams, simConfig):
-
         sim.create(netParams, simConfig, True)
         sim.gatherData()
 
         modelInterpreter = NetPyNEModelInterpreter()
         geppettoModel= modelInterpreter.getGeppettoModel(sim)
-        print "------------------------------------"
-        print "A Geppetto model was created:"
-        print "------------------------------------"
-        print geppettoModel
-
         sim.analyze()
+
+    def updateGeppettoModel(self, netParams, simConfig):
+        sim.create(netParams, simConfig, True)
+        sim.gatherData()
+
+        modelInterpreter = NetPyNEModelInterpreter()
+        geppettoModel= modelInterpreter.getGeppettoModel(sim)
+
+        sim.simulate()
+        sim.analyze()
+
+        modelInterpreter.updateGeppettoModel(sim, geppettoModel)
 
     def test_getGeppettoModelSimpleNetwork(self):
         netParams = specs.NetParams()   # object of class NetParams to store the network parameters
@@ -46,22 +52,51 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         self.getGeppettoModel(netParams, simConfig)
     
     def test_tut1(self):
-        print "Test tut1"
+        print "------------------------------------"
+        print "Tutorial 1 Instantiation:"
+        print "------------------------------------"
         from neuron_ui.tests.tut1 import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
 
+    def test_tut1_simulation(self):
+        print "------------------------------------"
+        print "Tutorial 1 Simulation:"
+        print "------------------------------------"
+        from neuron_ui.tests.tut1 import netParams, simConfig
+        self.updateGeppettoModel(netParams, simConfig)
+
     def test_tut2(self):
-        print "Test tut2"
+        print "------------------------------------"
+        print "Tutorial 2 Instantiation:"
+        print "------------------------------------"
         from neuron_ui.tests.tut2 import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
 
+    def test_tut2_simulation(self):
+        print "------------------------------------"
+        print "Tutorial 2 Simulation:"
+        print "------------------------------------"
+        from neuron_ui.tests.tut2 import netParams, simConfig
+        self.updateGeppettoModel(netParams, simConfig)
+
     def test_tut3(self):
-        print "Test tut3"
+        print "------------------------------------"
+        print "Tutorial 3 Instantiation:"
+        print "------------------------------------"
         from neuron_ui.tests.tut3 import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
+
+    def test_tut3_simulation(self):
+        print "------------------------------------"
+        print "Tutorial 3 Simulation:"
+        print "------------------------------------"
+        from neuron_ui.tests.tut3 import netParams, simConfig
+        self.updateGeppettoModel(netParams, simConfig)
         
     def test_tut4(self):
-        print "Test tut4"
+        print "------------------------------------"
+        print "Tutorial 4 Instantiation:"
+        print "------------------------------------"
         modelpath = os.path.join(os.path.dirname(__file__), 'tut4')
         subprocess.call(["rm", "-r", os.path.join(modelpath,"x86_64")])
         owd = os.getcwd()
@@ -73,16 +108,52 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         from neuron_ui.tests.tut4.tut4 import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
 
+    def test_tut4_simulation(self):
+        print "------------------------------------"
+        print "Tutorial 4 Simulation:"
+        print "------------------------------------"
+        modelpath = os.path.join(os.path.dirname(__file__), 'tut4')
+        subprocess.call(["rm", "-r", os.path.join(modelpath,"x86_64")])
+        owd = os.getcwd()
+        os.chdir(modelpath)
+        p = subprocess.check_output(["nrnivmodl"])
+        os.chdir(owd)   
+        neuron.load_mechanisms(modelpath)
+
+        from neuron_ui.tests.tut4.tut4 import netParams, simConfig
+        self.updateGeppettoModel(netParams, simConfig)
+
     def test_tut5(self):
-        print "Test tut5"
+        print "------------------------------------"
+        print "Tutorial 5 Instantiation:"
+        print "------------------------------------"
         from neuron_ui.tests.tut5 import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
 
+    def test_tut5_simulation(self):
+        print "------------------------------------"
+        print "Tutorial 5 Simulation:"
+        print "------------------------------------"
+        from neuron_ui.tests.tut5 import netParams, simConfig
+        self.updateGeppettoModel(netParams, simConfig)
+
     def test_tut6(self):
-        print "Test tut6"
+        print "------------------------------------"
+        print "Tutorial 6 Instantiation:"
+        print "------------------------------------"
         from neuron_ui.tests.tut6 import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
 
-if __name__ == '__main__':
+    def test_tut6_simulation(self):
+        print "------------------------------------"
+        print "Tutorial 6 Simulation:"
+        print "------------------------------------"
+        from neuron_ui.tests.tut6 import netParams, simConfig
+        self.updateGeppettoModel(netParams, simConfig)
 
-    unittest.main()
+if __name__ == '__main__':
+    try:
+        unittest.main()
+    except SystemExit as inst:
+        if inst.args[0]: # raised by sys.exit(True) when tests failed
+            raise
