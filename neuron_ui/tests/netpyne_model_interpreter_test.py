@@ -9,6 +9,15 @@ import subprocess
 
 class TestNetPyNEModelInterpreter(unittest.TestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        print __file__
+        print os.path.dirname(__file__)
+        print os.path.realpath(__file__)
+        print os.path.split(os.path.realpath(__file__))
+        path, filename = os.path.split(os.path.realpath(__file__))
+        cls.path = path
+
     def getGeppettoModel(self, netParams, simConfig):
         sim.create(netParams, simConfig, True)
         sim.gatherData()
@@ -97,7 +106,7 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         print "------------------------------------"
         print "Tutorial 4 Instantiation:"
         print "------------------------------------"
-        modelpath = os.path.join(os.path.dirname(__file__), 'tut4')
+        modelpath = os.path.join(self.path, 'tut4')
         subprocess.call(["rm", "-r", os.path.join(modelpath,"x86_64")])
         owd = os.getcwd()
         os.chdir(modelpath)
@@ -112,7 +121,7 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         print "------------------------------------"
         print "Tutorial 4 Simulation:"
         print "------------------------------------"
-        modelpath = os.path.join(os.path.dirname(__file__), 'tut4')
+        modelpath = os.path.join(self.path, 'tut4')
         subprocess.call(["rm", "-r", os.path.join(modelpath,"x86_64")])
         owd = os.getcwd()
         os.chdir(modelpath)
@@ -155,7 +164,7 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         print "------------------------------------"
         print "M1 detailed Instantiation:"
         print "------------------------------------"
-        modelpath = os.path.join(os.path.dirname(__file__), 'M1detailed')
+        modelpath = os.path.join(self.path, 'M1detailed')
         modpath = os.path.join(modelpath, 'mod')
         subprocess.call(["rm", "-r", os.path.join(modpath,"x86_64")])
         owd = os.getcwd()
