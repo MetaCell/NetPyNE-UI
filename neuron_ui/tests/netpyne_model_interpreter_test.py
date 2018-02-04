@@ -151,6 +151,24 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         from neuron_ui.tests.tut6 import netParams, simConfig
         self.updateGeppettoModel(netParams, simConfig)
 
+    def test_M1detailed(self):
+        print "------------------------------------"
+        print "M1 detailed Instantiation:"
+        print "------------------------------------"
+        modelpath = os.path.join(os.path.dirname(__file__), 'M1detailed')
+        modpath = os.path.join(modelpath, 'mod')
+        subprocess.call(["rm", "-r", os.path.join(modpath,"x86_64")])
+        owd = os.getcwd()
+        os.chdir(modpath)
+        p = subprocess.check_output(["nrnivmodl"])
+        neuron.load_mechanisms(modpath)
+        os.chdir(modelpath)   
+
+        from neuron_ui.tests.M1detailed.init import netParams, cfg
+        self.getGeppettoModel(netParams, cfg)
+
+        os.chdir(owd)  
+
 if __name__ == '__main__':
     try:
         unittest.main()
