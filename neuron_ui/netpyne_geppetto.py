@@ -198,7 +198,7 @@ class NetPyNEGeppetto():
         #the hardcoded include 1 will need to go, ask Salvador about include "recorded"
         figs = analysis.plotTraces(include=None, showFig=False)
         if figs==-1:
-            return fig
+            return figs
         svgs = []
         for key, value in figs.iteritems():
             logging.debug("Found plot for "+ key)
@@ -236,14 +236,6 @@ class NetPyNEGeppetto():
         svgs = []
         svgs.append(ui.getSVG(fig))
         return svgs
-
-    def getNetPyNESpikeStatsPlot(self):
-        fig = analysis.plotSpikeStats(showFig=False)
-        if fig==-1:
-            return fig
-        else:
-            fig=fig[0]
-        return ui.getSVG(fig)
         
 
 
