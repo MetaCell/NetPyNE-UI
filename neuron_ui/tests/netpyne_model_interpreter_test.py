@@ -11,10 +11,6 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        print __file__
-        print os.path.dirname(__file__)
-        print os.path.realpath(__file__)
-        print os.path.split(os.path.realpath(__file__))
         path, filename = os.path.split(os.path.realpath(__file__))
         cls.path = path
 
