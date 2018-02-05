@@ -75,7 +75,6 @@ class NetPyNEModelInterpreter():
 
         # Create intermediate population structure for easy access (by key)
         populations = {}
-        print netpyne_model.net.allCells
         for index, cell in enumerate(netpyne_model.net.allCells):
             # This will be only executed the first time for each population
             if cell['tags']['pop'] not in populations:
