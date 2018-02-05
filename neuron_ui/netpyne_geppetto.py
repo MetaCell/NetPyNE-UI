@@ -15,7 +15,7 @@ import subprocess
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterGUISync
 from neuron_ui import neuron_utils
-from neuron_ui.netpyne_init import netParams, simConfig, tests, metadata, api, sim, analysis
+from neuron_ui.netpyne_init import netParams, simConfig, tests, metadata, api, sim, analysis, specs
 from netpyne_model_interpreter import NetPyNEModelInterpreter
 from model.model_serializer import GeppettoModelSerializer
 import matplotlib.pyplot as plt
@@ -24,6 +24,7 @@ import numpy as np
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
 import neuron
+from shutil import copyfile
 # TODO we should probablye first import something generic for geppetto which brings in the timer, the global handler, etc
 
 
@@ -94,8 +95,6 @@ def globalMessageHandler(identifier, command, parameters):
         response = eval(command)
     else:
         response = eval(command + '(*parameters)')
-    logging.debug("concatenate")
-    #logging.debug(response)
     GeppettoJupyterModelSync.events_controller.triggerEvent(
         "receive_python_message", {'id': identifier, 'response': response})
 
@@ -109,8 +108,27 @@ class NetPyNEGeppetto():
         self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
         return GeppettoModelSerializer().serialize(self.geppetto_model)
         
-    def simulateNetPyNEModelInGeppetto(self):
-        netpyne_model = self.simulateNetPyNEModel()
+    def simulateNetPyNEModelInGeppetto(self, modelParameters):
+
+        if modelParameters['parallelSimulation']:
+            netParams.save("netParams.json")
+            simConfig.saveJson = True
+            simConfig.save("simParams.json")
+            template = os.path.join(os.path.dirname(__file__), 'template.py')
+            copyfile(template, 'init.py')
+
+            subprocess.call(["mpiexec", "-n", modelParameters['cores'], "nrniv", "-python", "-mpi", "init.py"])
+
+            sim.load('model_output.json', simConfig)
+            self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
+            netpyne_model = sim
+
+            # self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
+            # return GeppettoModelSerializer().serialize(self.geppetto_model)
+        
+        else:
+            netpyne_model = self.simulateNetPyNEModel()
+        
         self.geppetto_model = self.model_interpreter.updateGeppettoModel(netpyne_model, self.geppetto_model)
         return GeppettoModelSerializer().serialize(self.geppetto_model)
 
@@ -149,7 +167,7 @@ class NetPyNEGeppetto():
         os.chdir(owd)    
 
     def instantiateNetPyNEModel(self):
-        sim.create(netParams, simConfig, True)
+        sim.create(netParams, simConfig)
         sim.analyze()
         return sim
 
