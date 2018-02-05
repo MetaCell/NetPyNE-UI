@@ -134,8 +134,7 @@ class NetPyNEGeppetto():
 
 
     def importModel(self, modelParameters):
-        logging.debug(modelParameters)
-        
+       
         # Get Current dir
         owd = os.getcwd()
         modelPath = modelParameters["modelPath"]
