@@ -43,22 +43,29 @@ class NetPyNEGeppetto():
     def simulateNetPyNEModelInGeppetto(self, modelParameters):
 
         if modelParameters['parallelSimulation']:
+            logging.debug('Running parallel simulation')
+
             netParams.save("netParams.json")
             simConfig.saveJson = True
             simConfig.save("simParams.json")
+
             template = os.path.join(os.path.dirname(__file__), 'template.py')
             copyfile(template, 'init.py')
 
             subprocess.call(["mpiexec", "-n", modelParameters['cores'], "nrniv", "-python", "-mpi", "init.py"])
 
-            sim.load('model_output.json', simConfig)
+            sim.load('model_output.json')
+
             self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
             netpyne_model = sim
-
-            # self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
-            # return GeppettoModelSerializer().serialize(self.geppetto_model)
-        
+       
         else:
+            if modelParameters['previousTav'] == 'define':
+                logging.debug('Instantiating single thread simulation')
+                netpyne_model = self.instantiateNetPyNEModel()
+                self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
+            
+            logging.debug('Running single thread simulation')
             netpyne_model = self.simulateNetPyNEModel()
         
         self.geppetto_model = self.model_interpreter.updateGeppettoModel(netpyne_model, self.geppetto_model)
