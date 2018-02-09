@@ -1,13 +1,40 @@
-language: python
-sudo: false
-python:
-  - "2.7"
-  - "3.5"
-edge: true
-notifications:
-  slack: metacell:5ALSeoP88DqIhORUJvxE56sq
+language: node_js
+os: linux
+sudo: required
+dist: trusty
+node_js:
+  - "7"
+env:
+  global:
+    secure: dn0FPQ5IG4M/3kdwnyI78ElQ308Vc3QnKAvkWfwMFb8QxDqxQdnTo7AV1qTMtbLrDNkeEWIgi4nc7jmXNtvGTwOfhAULVh6606Qs5B+ezTdwzajbbFMI8SKQx/pnTojOMu8dx7V4lMoR/YWcojR0VC1IWVC62TGbSB1k5BDGgH0=
+install:
+- npm install --silent -g phantomjs 
+- npm install --silent -g casperjs 
+- npm install --silent -g slimerjs
+- npm install --silent -g gl
+
 services:
   - docker
+addons:
+  firefox: "51.0"
+  apt:
+    packages:
+    - mesa-utils
+    - xvfb
+    - libgl1-mesa-dri
+    - libglapi-mesa
+    - libosmesa6
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - export SLIMERJSLAUNCHER=/home/travis/firefox-51.0/firefox/firefox
+  - export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
+    
 script:
-  - docker build -t="neuron-ui" --build-arg neuronuiBranch=$TRAVIS_BRANCH .
-  - docker run  -t -dit --name=neuron-ui_container -h localhost -p 8888:8888 neuron-ui:latest
+  - echo "Current time :$(date +"%T")"
+  - cd $TRAVIS_BUILD_DIR/tests
+  - echo "$TRAVIS_BRANCH"
+  - docker build -t="geppetto-neuron_pip" https://github.com/MetaCell/NEURON-UI.git#interface:Dockerfile_pip/
+  - echo "Current time :$(date +"%T")"
+  - docker build -t="geppetto-neuron" https://github.com/MetaCell/NEURON-UI.git#interface:Dockerfile/
+  - echo "Current time :$(date +"%T")"
