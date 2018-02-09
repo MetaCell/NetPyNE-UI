@@ -1,6 +1,6 @@
-language: node_js
+language: python
 os: linux
-sudo: required
+sudo: false
 dist: trusty
 node_js:
   - "7"
@@ -12,7 +12,12 @@ install:
 - npm install --silent -g casperjs 
 - npm install --silent -g slimerjs
 - npm install --silent -g gl
-
+python:
+  - "2.7"
+  - "3.5"
+edge: true
+notifications:
+  slack: metacell:5ALSeoP88DqIhORUJvxE56sq
 services:
   - docker
 addons:
@@ -31,10 +36,5 @@ before_script:
   - export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
     
 script:
-  - echo "Current time :$(date +"%T")"
-  - cd $TRAVIS_BUILD_DIR/tests
-  - echo "$TRAVIS_BRANCH"
-  - docker build -t="geppetto-neuron_pip" https://github.com/MetaCell/NEURON-UI.git#interface:Dockerfile_pip/
-  - echo "Current time :$(date +"%T")"
-  - docker build -t="geppetto-neuron" https://github.com/MetaCell/NEURON-UI.git#interface:Dockerfile/
-  - echo "Current time :$(date +"%T")"
+  - docker build -t="neuron-ui" --build-arg neuronuiBranch=$TRAVIS_BRANCH .
+  - docker run  -t -dit --name=neuron-ui_container -h localhost -p 8888:8888 neuron-ui:latest
