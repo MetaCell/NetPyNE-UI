@@ -38,3 +38,4 @@ before_script:
 script:
   - docker build -t="neuron-ui" --build-arg neuronuiBranch=$TRAVIS_BRANCH .
   - docker run  -t -dit --name=neuron-ui_container -h localhost -p 8888:8888 neuron-ui:latest
+  - cd $TRAVIS_BUILD_DIR/ && ls
