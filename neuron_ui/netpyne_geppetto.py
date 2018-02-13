@@ -76,7 +76,6 @@ class NetPyNEGeppetto():
        
         # Get Current dir
         owd = os.getcwd()
-        modelPath = modelParameters["modelPath"]
         
         #Create Symbolic link
         if modelParameters['compileMod']:
@@ -90,19 +89,31 @@ class NetPyNEGeppetto():
         if modelParameters['modFolder']:
             neuron.load_mechanisms(str(modelParameters["modFolder"] ))
         
-        # Change to new path and add to system path
-        sys.path.append(modelPath)
-        os.chdir(modelPath)
-
-        # Import Module 
-        module = importlib.import_module(modelParameters["moduleName"])
-        
-        # Import Model attributes
         import netpyne_geppetto
-        netpyne_geppetto.netParams = getattr(module, modelParameters["netParamsVariable"])
-        netpyne_geppetto.simConfig = getattr(module, modelParameters["simConfigVariable"])
 
-        os.chdir(owd)    
+        # NetParams
+        netParamsPath = modelParameters["netParamsPath"]
+        sys.path.append(netParamsPath)
+        os.chdir(netParamsPath)
+        # Import Module 
+        netParamsModuleName = importlib.import_module(modelParameters["netParamsModuleName"])
+        # Import Model attributes
+        netpyne_geppetto.netParams = getattr(netParamsModuleName, modelParameters["netParamsVariable"])
+
+        # SimConfig
+        simConfigPath = modelParameters["simConfigPath"]
+        sys.path.append(simConfigPath)
+        os.chdir(simConfigPath)
+        # Import Module 
+        simConfigModuleName = importlib.import_module(modelParameters["simConfigModuleName"])
+        # Import Model attributes
+        netpyne_geppetto.simConfig = getattr(simConfigModuleName, modelParameters["simConfigVariable"])
+
+        os.chdir(owd)
+
+    def exportModel(self, modelParameters):
+        sim.initialize (netParams = netParams, simConfig = simConfig)
+        sim.saveData()
 
     def instantiateNetPyNEModel(self):
         sim.create(netParams, simConfig)
@@ -192,6 +203,7 @@ class NetPyNEGeppetto():
         svgs = []
         svgs.append(ui.getSVG(fig))
         return svgs
+
 class LoopTimer(threading.Thread):
     """
     a Timer that calls f every interval
@@ -254,8 +266,8 @@ def globalMessageHandler(identifier, command, parameters):
     TODO This code should move to a generic geppetto class since it's not NetPyNE specific
     """
     logging.debug('Global Message Handler')
-    logging.debug(command)
-    logging.debug(parameters)
+    logging.debug('Command: ' +  command)
+    logging.debug('Parameter: ' + str(parameters))
     if parameters == '':
         response = eval(command)
     else:
