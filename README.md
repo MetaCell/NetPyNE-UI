@@ -3,7 +3,7 @@
 
 # NetPyNE-UI
 
-This repository hosts an experimental prototype for a new user interface for [NEURON](http://www.neuron.yale.edu/neuron/) based on web technologies. 
+This repository hosts the user interface for [NetPyNE](http://www.neurosimlab.org/netpyne/).
 
 
 ![Screenshot](https://github.com/metacell/netpyne-ui/raw/master/netpyneui.png)
