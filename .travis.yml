@@ -1,0 +1,13 @@
+language: python
+sudo: false
+python:
+  - "2.7"
+  - "3.5"
+edge: true
+notifications:
+  slack: metacell:5ALSeoP88DqIhORUJvxE56sq
+services:
+  - docker
+script:
+  - docker build -t="netpyne-ui" --build-arg netpyneuiBranch=$TRAVIS_BRANCH .
+  - docker run  -t -dit --name=netpyne-ui_container -h localhost -p 8888:8888 netpyne-ui:latest

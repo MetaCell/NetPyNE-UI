@@ -6,7 +6,7 @@
 This repository hosts an experimental prototype for a new user interface for [NEURON](http://www.neuron.yale.edu/neuron/) based on web technologies. 
 
 
-![Screenshot](https://github.com/tarelli/bucket/raw/master//release034.png)
+![Screenshot](https://github.com/metacell/netpyne-ui/raw/master/netpyneui.png)
 
 #### Install using Docker (self-contained, the simplest)
 

@@ -1,0 +1,8 @@
+libs/__pycache__/
+libs/.ipynb_checkpoints/
+netpyneui.log
+libs/models/__pycache__/
+log.file
+*.pyc
+*.egg-info
+.DS_Store
