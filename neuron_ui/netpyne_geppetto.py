@@ -1,6 +1,6 @@
 """
-GeppettoNeuron.py
-Initialise geppetto neuron, listeners and variables
+netpyne_geppetto.py
+Initialise NetPyNE Geppetto, this class contains methods to connect NetPyNE with the Geppetto based UI
 """
 import StringIO
 import json
@@ -14,7 +14,6 @@ import time
 
 
 from neuron_ui import neuron_utils
-# from neuron_ui.netpyne_init import netParams, simConfig, tests, metadata, api, sim, analysis, specs
 from netpyne import specs, sim, analysis
 from netpyne.metadata import metadata, api
 from netpyne_model_interpreter import NetPyNEModelInterpreter
@@ -162,7 +161,6 @@ class NetPyNEGeppetto():
         return ui.getSVG(fig)
 
     def getNetPyNETracesPlot(self):
-        #the hardcoded include 1 will need to go, ask Salvador about include "recorded"
         figs = analysis.plotTraces(include=None, showFig=False)
         if figs==-1:
             return figs
@@ -203,6 +201,25 @@ class NetPyNEGeppetto():
         svgs = []
         svgs.append(ui.getSVG(fig))
         return svgs
+
+    def getAvailablePops(self):
+        return netParams.popParams.keys()
+
+    def getAvailableCellModels(self):
+        cellModels = set([])
+        for p in netParams.popParams:
+            cm = netParams.popParams[p]['cellModel']
+            if cm not in cellModels:
+                cellModels.add(cm)
+        return cellModels
+    
+    def getAvailableCellTypes(self):
+        cellTypes = set([])
+        for p in netParams.popParams:
+            ct = netParams.popParams[p]['cellType']
+            if ct not in cellTypes:
+                cellTypes.add(ct)
+        return cellTypes
 
 class LoopTimer(threading.Thread):
     """
@@ -245,14 +262,17 @@ class LoopTimer(threading.Thread):
                 value.timeSeries = key.to_python()
 
             for model, synched_component in list(GeppettoJupyterGUISync.synched_models.items()):
+                modelValue=None
                 if model != '':
                     try:
                         modelValue = eval(model)
                     except KeyError:
-                        logging.debug("Error evaluating "+model)
-                        exec(model + "= ''")
-                        modelValue = eval(model)
+                        pass
+                        #logging.debug("Error evaluating "+model+", don't worry, most likely the attribute is not set in the current model")
 
+                if modelValue==None:
+                    modelValue=""
+                
                 synched_component.value = json.dumps(modelValue)
 
         except Exception as exception:
