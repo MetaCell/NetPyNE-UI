@@ -12,7 +12,7 @@ The UI connects to
 through a `Geppetto <http://git.geppetto.org>`__ extension for `Jupyter
 Notebook <http://jupyter.org/>`__.
 
-See the `Repo <https://github.com/MetaCell/NEURON-UI>`__ and `Wiki <https://github.com/MetaCell/NEURON-UI/wiki>`__ for more
+See the `Repo <https://github.com/MetaCell/NetPyNE-UI>`__ and `Wiki <https://github.com/MetaCell/NetPyNE-UI/wiki>`__ for more
 =======
 NetPyNE-UI
 =========

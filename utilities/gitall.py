@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 #
-#	Utility script for mass git operatiosn on NEURON-UI
+#	Utility script for mass git operatiosn on NetPyNE-UI
 #	Usage:
 # 	gitall branches: print current branch of each repo
 #
@@ -24,9 +24,9 @@ config = {
 
     "repos": [
         {
-            "name": "NEURON_UI",
+            "name": "NetPyNE_UI",
             "path": "..",
-            "url": "https://github.com/MetaCell/NEURON-UI"
+            "url": "https://github.com/MetaCell/NetPyNE-UI"
         },
         {
             "name": "org.geppetto.frontend.jupyter",

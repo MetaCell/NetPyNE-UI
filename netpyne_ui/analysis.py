@@ -1,5 +1,5 @@
 import logging
-from neuron_ui import neuron_utils
+from netpyne_ui import neuron_utils
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
 
 

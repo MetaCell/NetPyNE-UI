@@ -2,8 +2,8 @@ from neuron import h
 from .ball_and_stick import BallAndStick
 from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G
 from math import pi, cos, sin
-from neuron_ui import neuron_utils
-from neuron_ui import neuron_geometries_utils
+from netpyne_ui import neuron_utils
+from netpyne_ui import neuron_geometries_utils
 import logging
 # from neuronpy.util import spiketrain
 

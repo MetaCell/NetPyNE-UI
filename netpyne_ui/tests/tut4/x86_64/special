@@ -10,4 +10,4 @@ if test "" = "yes" ; then
 else
 	NRNIV="${NRNBIN}nrniv"
 fi
-"${NRNIV}" -dll "/home/adrian/code/geppetto/NEURON-UI/neuron_ui/tests/tut4/x86_64/.libs/libnrnmech.so" "$@"
+"${NRNIV}" -dll "/home/adrian/code/geppetto/NetPyNE-UI/netpyne_ui/tests/tut4/x86_64/.libs/libnrnmech.so" "$@"

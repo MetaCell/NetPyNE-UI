@@ -13,7 +13,7 @@ import threading
 import time
 
 
-from neuron_ui import neuron_utils
+from netpyne_ui import neuron_utils
 from netpyne import specs, sim, analysis
 from netpyne.metadata import metadata, api
 from netpyne_model_interpreter import NetPyNEModelInterpreter
@@ -248,7 +248,7 @@ class LoopTimer(threading.Thread):
         # TODO With this line it hangs in some setups. Figure out if it's needed
         # h.nrniv_bind_thread(threading.current_thread().ident);
         self.started = True
-        while True:# from neuron_ui import neuron_utils
+        while True:# from netpyne_ui import neuron_utils
             self.fun()
             time.sleep(self.interval)
 
@@ -340,4 +340,4 @@ neuron_utils.createProject(name='SampleProject')
 GeppettoJupyterModelSync.current_model.original_model = json.dumps({'netParams': netParams.__dict__,
                                                                     'simConfig': simConfig.__dict__,
                                                                     'metadata': metadata.metadata,
-                                                                    'requirement': 'from neuron_ui.netpyne_geppetto import *'})
+                                                                    'requirement': 'from netpyne_ui.netpyne_geppetto import *'})

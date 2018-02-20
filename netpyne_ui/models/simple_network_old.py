@@ -1,7 +1,7 @@
 from neuron import h
 from pylab import sin,cos,pi
 #from matplotlib import pyplot
-from neuron_ui import neuron_utils
+from netpyne_ui import neuron_utils
 
 from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G
 

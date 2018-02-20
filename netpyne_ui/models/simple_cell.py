@@ -1,7 +1,7 @@
 import logging
 from neuron import h
 from IPython.core.debugger import Tracer
-from neuron_ui import neuron_utils, neuron_geometries_utils
+from netpyne_ui import neuron_utils, neuron_geometries_utils
 from math import sqrt, pow
 
 from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G

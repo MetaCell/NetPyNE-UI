@@ -2,11 +2,11 @@ import logging
 import importlib
 from . import neuron_utils
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
-from neuron_ui.singleton import Singleton
-from neuron_ui.point_process import PointProcess
-from neuron_ui.space_plot import SpacePlot
-from neuron_ui.cell_builder import CellBuilder
-from neuron_ui.run_control import RunControl
+from netpyne_ui.singleton import Singleton
+from netpyne_ui.point_process import PointProcess
+from netpyne_ui.space_plot import SpacePlot
+from netpyne_ui.cell_builder import CellBuilder
+from netpyne_ui.run_control import RunControl
 
 
 @Singleton

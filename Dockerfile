@@ -37,8 +37,8 @@ ENV PATH="/home/jovyan/work/nrn-7.4/x86_64/bin:${PATH}"
 RUN /bin/bash -c "source activate snakes && python setup.py install"
 RUN wget https://github.com/MetaCell/NetPyNE-UI/archive/$netpyneuiBranch.zip
 RUN unzip $netpyneuiBranch.zip
-WORKDIR NEURON-UI-$netpyneuiBranch/utilities
+WORKDIR NetPyNE-UI-$netpyneuiBranch/utilities
 RUN /bin/bash -c "source activate snakes && python --version"
 RUN /bin/bash -c "source activate snakes && exec python install.py"
-RUN cd ../neuron_ui/tests && /bin/bash -c "source activate snakes && python -m unittest netpyne_model_interpreter_test"
+RUN cd ../netpyne_ui/tests && /bin/bash -c "source activate snakes && python -m unittest netpyne_model_interpreter_test"
 CMD /bin/bash -c "source activate snakes && exec jupyter notebook --debug --NotebookApp.default_url=/geppetto --NotebookApp.token=''"

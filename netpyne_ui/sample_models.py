@@ -1,8 +1,8 @@
 import logging
 import importlib
-from neuron_ui import neuron_utils
+from netpyne_ui import neuron_utils
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync
-from neuron_ui.singleton import Singleton
+from netpyne_ui.singleton import Singleton
 import jupyter_client
 
 
@@ -49,7 +49,7 @@ class SampleModels:
                 logging.debug('Loading model ' +
                               triggeredComponent.extraData['module'])
                 module = importlib.import_module(
-                    "neuron_ui.models." + triggeredComponent.extraData['module'])
+                    "netpyne_ui.models." + triggeredComponent.extraData['module'])
                 GeppettoJupyterModelSync.current_python_model = getattr(
                     module, triggeredComponent.extraData['model'])()
             else:
@@ -64,7 +64,7 @@ class SampleModels:
                 km.load_connection_file()
                 kk = km.shutdown(True)
                 km.execute('import importlib')
-                km.execute('python_module = importlib.import_module("neuron_ui.models.' + triggeredComponent.extraData['module'] +'")')
+                km.execute('python_module = importlib.import_module("netpyne_ui.models.' + triggeredComponent.extraData['module'] +'")')
                 km.execute('GeppettoJupyterModelSync.current_python_model = getattr( python_module, "' + triggeredComponent.extraData['model'] + '")()')
                 km.execute('GeppettoJupyterModelSync.events_controller.triggerEvent("spinner:hide")')
                     
