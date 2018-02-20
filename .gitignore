@@ -1,6 +1,6 @@
 libs/__pycache__/
 libs/.ipynb_checkpoints/
-netpyneui.log
+netpyne-ui.log
 libs/models/__pycache__/
 log.file
 *.pyc

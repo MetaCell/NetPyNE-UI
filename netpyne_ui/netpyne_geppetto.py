@@ -13,7 +13,6 @@ import threading
 import time
 
 
-from netpyne_ui import neuron_utils
 from netpyne import specs, sim, analysis
 from netpyne.metadata import metadata, api
 from netpyne_model_interpreter import NetPyNEModelInterpreter
@@ -26,6 +25,7 @@ from matplotlib.figure import Figure
 import neuron
 from shutil import copyfile
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync, GeppettoJupyterGUISync
+from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G
 
 
 
@@ -295,17 +295,24 @@ def globalMessageHandler(identifier, command, parameters):
     GeppettoJupyterModelSync.events_controller.triggerEvent(
         "receive_python_message", {'id': identifier, 'response': response})
 
+def configure_logging():
+        logger = logging.getLogger()
+        fhandler = logging.FileHandler(filename='netpyne-ui.log', mode='a')
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        fhandler.setFormatter(formatter)
+        logger.addHandler(fhandler)
+        logger.setLevel(logging.DEBUG)
+        logging.debug('Log configured')
+
 def GeppettoInit():      
     try:
         # Configure log
-        neuron_utils.configure_logging()
+        configure_logging()
 
         logging.debug('Initialising NetPyNE')
 
         # Reset any previous value
         logging.debug('Initialising Sync and Status Variables')
-        # GeppettoJupyterGUISync.sync_values = defaultdict(list)
-        # GeppettoJupyterModelSync.record_variables = defaultdict(list)
         GeppettoJupyterModelSync.current_project = None
         GeppettoJupyterModelSync.current_experiment = None
         GeppettoJupyterModelSync.current_model = None
@@ -314,28 +321,23 @@ def GeppettoInit():
         GeppettoJupyterModelSync.events_controller.register_to_event(
             [GeppettoJupyterModelSync.events_controller._events['Global_message']], globalMessageHandler)
 
+        G.createProject(name='NetPyNE Project')
+
         # Sync values when no sim is running
         logging.debug('Initialising Sync Mechanism for non-sim environment')
         timer = LoopTimer(0.3)
         timer.start()
         while not timer.started:
             time.sleep(0.001)
-
-        
-
-
     except Exception as exception:
-        logging.exception("Unexpected error in neuron_geppetto initialization:")
+        logging.exception("Unexpected error while initializing Geppetto from Python:")
         logging.error(exception)
 
 
 GeppettoInit()
 netpyne_geppetto = NetPyNEGeppetto()
-
 netParams = specs.NetParams()
 simConfig = specs.SimConfig()
-
-neuron_utils.createProject(name='SampleProject')
 
 GeppettoJupyterModelSync.current_model.original_model = json.dumps({'netParams': netParams.__dict__,
                                                                     'simConfig': simConfig.__dict__,
