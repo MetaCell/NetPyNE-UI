@@ -1,9 +1,9 @@
 FROM jupyter/base-notebook:eb70bcf1a292
 USER root
 
-ARG neuronuiBranch=development
-ENV neuronuiBranch=${neuronuiBranch}
-RUN echo "$neuronuiBranch";
+ARG netpyneuiBranch=development
+ENV netpyneuiBranch=${netpyneuiBranch}
+RUN echo "$netpyneuiBranch";
 
 RUN apt-get -qq update
 
@@ -35,9 +35,9 @@ RUN /bin/bash -c "source activate snakes && make install"
 WORKDIR src/nrnpython
 ENV PATH="/home/jovyan/work/nrn-7.4/x86_64/bin:${PATH}"
 RUN /bin/bash -c "source activate snakes && python setup.py install"
-RUN wget https://github.com/MetaCell/NEURON-UI/archive/$neuronuiBranch.zip
-RUN unzip $neuronuiBranch.zip
-WORKDIR NEURON-UI-$neuronuiBranch/utilities
+RUN wget https://github.com/MetaCell/NetPyNE-UI/archive/$netpyneuiBranch.zip
+RUN unzip $netpyneuiBranch.zip
+WORKDIR NEURON-UI-$netpyneuiBranch/utilities
 RUN /bin/bash -c "source activate snakes && python --version"
 RUN /bin/bash -c "source activate snakes && exec python install.py"
 RUN cd ../neuron_ui/tests && /bin/bash -c "source activate snakes && python -m unittest netpyne_model_interpreter_test"

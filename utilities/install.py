@@ -18,18 +18,18 @@ subprocess.call(['git', 'clone', '--recursive', '-b', 'development', 'https://gi
 print("Cloning Geppetto Frontend")
 subprocess.call(['git', 'checkout', 'interface'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
 
-print("Cloning Geppetto Neuron Configuration ...")
-subprocess.call(['git', 'clone', 'https://github.com/MetaCell/geppetto-neuron.git'],
+print("Cloning Geppetto NetPyNE Configuration ...")
+subprocess.call(['git', 'clone', 'https://github.com/MetaCell/geppetto-netpyne.git'],
                 cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/')
 
-subprocess.call(['git', 'checkout', 'interface'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-neuron/')
+subprocess.call(['git', 'checkout', 'interface'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-netpyne/')
 
-print("Enabling Geppetto Neuron Extension ...")
-jsonFile = open(
-    '../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/extensionsConfiguration.json',
-    "w+")
-jsonFile.write(json.dumps({"geppetto-neuron/ComponentsInitialization": True}))
-jsonFile.close()
+# print("Enabling Geppetto NetPyNE Extension ...")
+# jsonFile = open(
+#     '../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/extensionsConfiguration.json',
+#     "w+")
+# jsonFile.write(json.dumps({"geppetto-netpyne/ComponentsInitialization": True}))
+# jsonFile.close()
 
 # Installing and building
 print("NPM Install and build for Geppetto Frontend  ...")
@@ -44,6 +44,6 @@ subprocess.call(['jupyter', 'nbextension', 'enable', '--py', '--user', 'jupyter_
 subprocess.call(['jupyter', 'nbextension', 'enable', '--py', 'widgetsnbextension'], cwd='../org.geppetto.frontend.jupyter')
 subprocess.call(['jupyter', 'serverextension', 'enable', '--py', 'jupyter_geppetto'], cwd='../org.geppetto.frontend.jupyter')
 
-print("Installing neuron_ui python package ...")
+print("Installing NetPyNE UI python package ...")
 subprocess.call(['pip', 'install', '-e', '.'], cwd='..')
 

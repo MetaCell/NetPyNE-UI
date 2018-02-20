@@ -9,5 +9,5 @@ notifications:
 services:
   - docker
 script:
-  - docker build -t="neuron-ui" --build-arg neuronuiBranch=$TRAVIS_BRANCH .
-  - docker run  -t -dit --name=neuron-ui_container -h localhost -p 8888:8888 neuron-ui:latest
+  - docker build -t="netpyne-ui" --build-arg netpyneuiBranch=$TRAVIS_BRANCH .
+  - docker run  -t -dit --name=netpyne-ui_container -h localhost -p 8888:8888 netpyne-ui:latest

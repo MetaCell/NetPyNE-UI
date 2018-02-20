@@ -1,5 +1,3 @@
-NEURON-UI
-=========
 
 Experimental prototype for a new user interface
 for `NEURON <http://www.neuron.yale.edu/neuron/>`__ based on web
@@ -15,6 +13,12 @@ through a `Geppetto <http://git.geppetto.org>`__ extension for `Jupyter
 Notebook <http://jupyter.org/>`__.
 
 See the `Repo <https://github.com/MetaCell/NEURON-UI>`__ and `Wiki <https://github.com/MetaCell/NEURON-UI/wiki>`__ for more
+=======
+NetPyNE-UI
+=========
+
+User Interface for NetPyNE.
+See the `Repo <https://github.com/MetaCell/NetPyNE-UI>`__ and `Wiki <https://github.com/MetaCell/NetPyNE-UI/wiki>`__ for more
 info!
 
 Installation
@@ -22,7 +26,7 @@ Installation
 
 .. code-block:: bash
 
-    pip install neuron_ui
+    pip install netpyne_ui
     jupyter nbextension enable --py jupyter_geppetto
 
 Usage
@@ -30,7 +34,7 @@ Usage
 
 .. code-block:: bash
 
-    NEURON-UI
+    NetPyNE-UI
 
 or 
 
