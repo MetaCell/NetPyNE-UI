@@ -1,0 +1,25 @@
+{
+    "_README" : "http://docs.geppetto.org/en/latest/build.html",
+    "contextPath": "org.geppetto.frontend",
+    "useSsl": false,
+    "embedded": false,
+    "embedderURL": ["/"],
+    "rootRedirect":"",
+    "noTest": false,
+    "extensions": {
+        "geppetto-default/ComponentsInitialization": false,
+        "geppetto-netpyne/ComponentsInitialization": true
+    },
+    "themes": {
+        "geppetto-default/colors": false,
+        "geppetto-netpyne/css/colors": true
+    },
+    "properties": {
+	    	"title" : "NetPyNE",
+	    	"description": "NetPyNE-UI is a user interface for building, visualizing and simulationg neuronal network models using NetPyNE.",
+	    	"type": "website",
+	    	"url": "https://github.com/MetaCell/NetPyNE-UI",
+	    	"icon" :"https://d30y9cdsu7xlg0.cloudfront.net/png/38902-200.png",
+	    	"image": "http://www.geppetto.org/images/logo.png"
+    }
+}
