@@ -10,7 +10,7 @@ RUN apt-get -qq update
 ARG NRN_VERSION="7.4"
 ARG NRN_ARCH="x86_64"
 
-RUN apt-get install -qq -y \
+RUN apt-get -qq install -y \
         locales \
         wget \
         gcc \
