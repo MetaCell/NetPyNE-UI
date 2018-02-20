@@ -41,3 +41,23 @@ script:
   - docker run  -t -dit --name=neuron-ui_container -h localhost -p 8888:8888 neuron-ui:latest
   - cd $TRAVIS_BUILD_DIR/ && ls
   - cd geppetto-neuron && ls
+  - ls
+  - cd tests
+  - bash utilities/netpyne-server-status.sh
+  - sleep 30
+  - http_status=$(curl -s -I $1 http://localhost:8888/geppetto| grep HTTP/1.1 | awk {'print $2'})
+  - echo "$http_status"
+  - while [ "$http_status" == "404" ]; do
+      echo "Restart run";
+      echo "Printing logs for debugging purposes";
+      docker stop $(docker ps -a -q);
+      docker rm $(docker ps -a -q);
+      docker run  -t -dit --name=neuron-ui_container -h localhost -p 8888:8888 neuron-ui:latest
+      bash utilities/netpyne-server-status.sh
+      sleep 30;
+      http_status=$(curl -s -I $1 http://localhost:8888/geppetto| grep HTTP/1.1 | awk {'print $2'})
+      echo "Done restarting";
+      echo "$http_status";
+    done;
+  - "curl -s -I $1 http://localhost:8888/geppetto | grep HTTP/1.1 | awk {'print $2'}"
+  - xvfb-run -a --server-args="-screen 0 1024x768x24"  casperjs test netpyne-tests.js --host=http://localhost:8888/ --engine=slimerjs  
