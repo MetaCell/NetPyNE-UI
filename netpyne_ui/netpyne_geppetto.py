@@ -67,7 +67,6 @@ class NetPyNEGeppetto():
             logging.debug('Running single thread simulation')
             netpyne_model = self.simulateNetPyNEModel()
         
-        self.geppetto_model = self.model_interpreter.updateGeppettoModel(netpyne_model, self.geppetto_model)
         return GeppettoModelSerializer().serialize(self.geppetto_model)
 
 
@@ -245,17 +244,12 @@ class LoopTimer(threading.Thread):
         self.setDaemon(True)
 
     def run(self):
-        # TODO With this line it hangs in some setups. Figure out if it's needed
-        # h.nrniv_bind_thread(threading.current_thread().ident);
         self.started = True
         while True:# from netpyne_ui import neuron_utils
             self.fun()
             time.sleep(self.interval)
 
     def process_events(self):
-        # h.doEvents()
-        # h.doNotify()
-
         try:
             # Using 'list' so that a copy is made and we don't get: dictionary changed size during iteration items
             for key, value in list(GeppettoJupyterModelSync.record_variables.items()):

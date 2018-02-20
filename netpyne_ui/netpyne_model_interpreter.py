@@ -27,17 +27,6 @@ class NetPyNEModelInterpreter():
 
         return geppetto_model
 
-    def updateGeppettoModel(self, netpyne_model, geppetto_model):
-        logging.debug('Updating the Geppetto Model')
-
-        netpyne_geppetto_library = geppetto_model.libraries[1]
-        cellType = netpyne_geppetto_library.types[0]
-        cellType.variables.append(self.factory.createStateVariable('time'))
-        cellType.variables.append(self.factory.createStateVariable('v1'))
-        cellType.synched = False
-
-        return geppetto_model
-
     def convertTo3DGeoms(self, secs):
         # set 3d geoms for reduced cell models
         offset = 0
