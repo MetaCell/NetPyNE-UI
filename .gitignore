@@ -1,8 +1,10 @@
-libs/__pycache__/
-libs/.ipynb_checkpoints/
+.ipynb_checkpoints/
 netpyne-ui.log
-libs/models/__pycache__/
 log.file
 *.pyc
 *.egg-info
 .DS_Store
+pygeppetto/
+netpyne/
+org.geppetto.frontend.jupyter/
+*.ipynb
