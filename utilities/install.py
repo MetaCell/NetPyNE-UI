@@ -16,13 +16,13 @@ print("Cloning Geppetto Jupyter (Python package)...")
 subprocess.call(['git', 'clone', '--recursive', '-b', 'development', 'https://github.com/openworm/org.geppetto.frontend.jupyter.git'], cwd='../')
 
 print("Cloning Geppetto Frontend")
-subprocess.call(['git', 'checkout', 'interface'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
+subprocess.call(['git', 'checkout', 'development'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
 
 print("Cloning Geppetto NetPyNE Configuration ...")
 subprocess.call(['git', 'clone', 'https://github.com/MetaCell/geppetto-netpyne.git'],
                 cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/')
 
-subprocess.call(['git', 'checkout', 'interface'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-netpyne/')
+subprocess.call(['git', 'checkout', 'development'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-netpyne/')
 
 # print("Enabling Geppetto NetPyNE Extension ...")
 # jsonFile = open(
