@@ -45,7 +45,7 @@ if checkDependencies():
     print("Cloning NetPyNE...")
     http = 'https://github.com/Neurosim-lab/netpyne.git'
     subprocess.call(['git', 'clone', '-b', 'metadata', http], cwd=here)
-    subprocess.call(['pip', 'install', '-e', '.'], cwd=os.path.join(here, "netpyne"))
+    subprocess.call(['pip', 'install', '-e', '.', "--user"], cwd=os.path.join(here, "netpyne"))
 
     # Clone dependency
     print("Cloning GeppettoJupyter (Python package)...")
