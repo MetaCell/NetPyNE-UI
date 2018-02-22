@@ -2,6 +2,8 @@ import setuptools
 from setuptools.command.install import install
 import subprocess
 import json
+import os
+from shutil import copyfile
 
 # Cloning Repos
 print("Cloning PyGeppetto...")
@@ -24,12 +26,9 @@ subprocess.call(['git', 'clone', 'https://github.com/MetaCell/geppetto-netpyne.g
 
 subprocess.call(['git', 'checkout', 'development'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-netpyne/')
 
-# print("Enabling Geppetto NetPyNE Extension ...")
-# jsonFile = open(
-#     '../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/extensionsConfiguration.json',
-#     "w+")
-# jsonFile.write(json.dumps({"geppetto-netpyne/ComponentsInitialization": True}))
-# jsonFile.close()
+print("Enabling Geppetto NetPyNE Extension ...")
+geppetto_configuration = os.path.join(os.path.dirname(__file__), 'GeppettoConfiguration.json')
+copyfile(geppetto_configuration, '../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/GeppettoConfiguration.json')
 
 # Installing and building
 print("NPM Install and build for Geppetto Frontend  ...")

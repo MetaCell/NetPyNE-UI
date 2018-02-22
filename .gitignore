@@ -9,3 +9,4 @@ netpyne/
 org.geppetto.frontend.jupyter/
 *.ipynb
 init.py
+netpyneNotebook.ipynb
