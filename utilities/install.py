@@ -4,7 +4,7 @@ import site
 import json
 import setuptools
 import subprocess
-
+from shutil import copyfile
 from setuptools.command.install import install
 
 def checkDependencies():
@@ -65,10 +65,9 @@ if checkDependencies():
     # checkOut branch
     subprocess.call(['git', 'checkout', 'development'], cwd=os.path.join(cwd, "geppetto-netpyne"))
 
-    ## Enable extension
-    print("Enabling Geppetto NetPyNe Extension...")
-    with open(os.path.join(cwd, 'extensionsConfiguration.json'), "w+") as jsonFile:
-       jsonFile.write(json.dumps({"geppetto-NetPyNe/ComponentsInitialization" : True}))
+    print("Enabling Geppetto NetPyNE Extension ...")
+    geppetto_configuration = os.path.join(os.path.dirname(__file__), 'GeppettoConfiguration.json')
+    copyfile(geppetto_configuration, '../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/GeppettoConfiguration.json')
 
     # install npm resources
     cwd = os.path.join(here, "org.geppetto.frontend.jupyter", "src", "jupyter_geppetto", "geppetto", "src", "main", "webapp")

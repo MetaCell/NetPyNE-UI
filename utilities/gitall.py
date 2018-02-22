@@ -39,9 +39,9 @@ config = {
             "url": "https://github.com/openworm/org.geppetto.frontend"
         },
         {
-            "name": "Geppetto Neuron",
-            "path": "../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-neuron/",
-            "url": "https://github.com/MetaCell/geppetto-neuron"
+            "name": "Geppetto Netpyne extension",
+            "path": "../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-netpyne/",
+            "url": "https://github.com/MetaCell/geppetto-netpyne"
         }
     ]
 }
