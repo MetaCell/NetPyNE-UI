@@ -37,15 +37,15 @@ if checkDependencies():
     here = os.path.join(os.path.dirname(os.path.abspath(__file__)))
     here = os.path.dirname(here)
 
-    # Install dependency - editable mode
     print("Cloning PyGeppetto...")
-    http = 'git+https://github.com/openworm/pygeppetto.git@development#egg=pygeppetto'
-    subprocess.call(['pip', 'install', '-e', http, '--src', os.path.join(here), "--user"])
+    http = 'https://github.com/openworm/pygeppetto.git'
+    subprocess.call(['git', 'clone', '-b', 'development', http], cwd=here)
+    subprocess.call(['pip', 'install', '-e', '.', "--user"], cwd=os.path.join(here, "pygeppetto"))
 
-    # Install dependency - editable mode
     print("Cloning NetPyNE...")
-    http = 'git+https://github.com/Neurosim-lab/netpyne.git@metadata#egg=netpyne'
-    subprocess.call(['pip', 'install', '-e', http, '--src', os.path.join(here), "--user"])
+    http = 'https://github.com/Neurosim-lab/netpyne.git'
+    subprocess.call(['git', 'clone', '-b', 'metadata', http], cwd=here)
+    subprocess.call(['pip', 'install', '-e', '.'], cwd=os.path.join(here, "netpyne"))
 
     # Clone dependency
     print("Cloning GeppettoJupyter (Python package)...")
@@ -66,9 +66,9 @@ if checkDependencies():
     subprocess.call(['git', 'checkout', 'development'], cwd=os.path.join(cwd, "geppetto-netpyne"))
 
     ## Enable extension
-    #print("Enabling Geppetto NetPyNe Extension...")
-    #with open(os.path.join(cwd, 'extensionsConfiguration.json'), "w+") as jsonFile:
-    #    jsonFile.write(json.dumps({"geppetto-NetPyNe/ComponentsInitialization" : True}))
+    print("Enabling Geppetto NetPyNe Extension...")
+    with open(os.path.join(cwd, 'extensionsConfiguration.json'), "w+") as jsonFile:
+       jsonFile.write(json.dumps({"geppetto-NetPyNe/ComponentsInitialization" : True}))
 
     # install npm resources
     cwd = os.path.join(here, "org.geppetto.frontend.jupyter", "src", "jupyter_geppetto", "geppetto", "src", "main", "webapp")
@@ -87,8 +87,7 @@ if checkDependencies():
     subprocess.call(['jupyter', 'nbextension', 'enable', '--py', '--user', 'jupyter_geppetto'], cwd=cwd)
     subprocess.call(['jupyter', 'nbextension', 'enable', '--py', 'widgetsnbextension'], cwd=cwd)
     subprocess.call(['jupyter', 'serverextension', 'enable', '--py', 'jupyter_geppetto'], cwd=cwd)
-	
+
     # Install main distribution - editable mode
     print("Installing netpyne_ui python package...")
     subprocess.call(['pip', 'install', '-e', '.', "--user"], cwd=here)
-
