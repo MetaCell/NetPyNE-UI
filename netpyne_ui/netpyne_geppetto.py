@@ -59,7 +59,7 @@ class NetPyNEGeppetto():
             netpyne_model = sim
        
         else:
-            if modelParameters['previousTav'] == 'define':
+            if modelParameters['previousTab'] == 'define':
                 logging.debug('Instantiating single thread simulation')
                 netpyne_model = self.instantiateNetPyNEModel()
                 self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
