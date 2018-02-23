@@ -336,4 +336,5 @@ simConfig = specs.SimConfig()
 GeppettoJupyterModelSync.current_model.original_model = json.dumps({'netParams': netParams.__dict__,
                                                                     'simConfig': simConfig.__dict__,
                                                                     'metadata': metadata.metadata,
-                                                                    'requirement': 'from netpyne_ui.netpyne_geppetto import *'})
+                                                                    'requirement': 'from netpyne_ui.netpyne_geppetto import *',
+                                                                    'isDocker': os.path.isfile('/.dockerenv')})
