@@ -34,7 +34,7 @@ jupyter nbextension enable --py jupyter_geppetto
 NetPyNE-UI
 ```
 
-#### Install from sources (for developers and for using your own NEURON models)
+#### Install from sources (for developers and for using your own NetPyNE models)
 ```
 git clone https://github.com/MetaCell/NetPyNE-UI.git
 cd utilities
