@@ -27,7 +27,7 @@ setup(
         'Programming Language :: Python :: 3.4'
     ],
     install_requires=[
-        'jupyter_geppetto=0.3.9',
+        'jupyter_geppetto==0.3.9',
         'netpyne'
     ],
 )
