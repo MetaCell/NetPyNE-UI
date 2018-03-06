@@ -13,34 +13,35 @@ This repository hosts the user interface for [NetPyNE](http://www.neurosimlab.or
 ##### Using Kitematic
 Open [Kitematic](https://kitematic.com/): search for netpyne-ui and create the container.
 
-![Image](https://github.com/tarelli/bucket/raw/master//neuronuiImage.png)
+![Image](https://github.com/metacell/netpyne-ui/raw/master/docs/netpyneuiImage.png)
 
 Start the container and click on Web preview to launch it. No need to ever use the command line, enjoy!
 
-![Kitematic](https://github.com/tarelli/bucket/raw/master//kitematic.png)
+![Kitematic](https://github.com/metacell/netpyne-ui/raw/master/docs/kitematic.png)
 
 ##### From command line 
+To pull the docker container:
 ```
 docker pull metacell/netpyne-ui
+```
+To run the docker container:
+```
 docker run -it -p 8888:8888 metacell/netpyne-ui
 ```
-
-Open your browser and connect to http://localhost:8888/geppetto.
-
-Alternatively you can execute the following command: 
+Or alternatively, if you want a local folder outside of the Docker container to host the NetPyNE-UI workspace (where you can import models from, export models to, inspect the log and the jupyter notebook) you can execute the following command: 
 ```
 docker run -it -v ~/folder_in_your_computer:/home/jovyan/netpyne_workspace -p 8888:8888 metacell/netpyne-ui
 ```
-Any file inside the folder_in_your_computer directory will be copied into the docker at netpyne_workspace folder and the other way around. Logs and Jupyter notebook will be located here and therefore accesible from the user machine. This mechanism can be used as well to import and export models.
+This will mount your local folder `folder_in_your_computer` as a volume inside the container and will be used to host the NetPyNE-UI workspace (`/home/jovyan/netpyne_workspace` inside the container). 
+
+Once you run your container you can open your browser and connect to http://localhost:8888/geppetto.
 
 #### Install using pip
 ```
-pip install netpyne_ui
-jupyter nbextension enable --py jupyter_geppetto
-NetPyNE-UI
+Coming soon
 ```
 
-#### Install from sources (for developers and for using your own NetPyNE models)
+#### Install from sources (for developers)
 ```
 git clone https://github.com/MetaCell/NetPyNE-UI.git
 cd utilities
