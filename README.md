@@ -24,8 +24,14 @@ Start the container and click on Web preview to launch it. No need to ever use t
 docker pull metacell/netpyne-ui
 docker run -it -p 8888:8888 metacell/netpyne-ui
 ```
+
 Open your browser and connect to http://localhost:8888/geppetto.
 
+Alternatively you can execute the following command: 
+```
+docker run -it -v ~/folder_in_your_computer:/home/jovyan/netpyne_workspace -p 8888:8888 metacell/netpyne-ui
+```
+Any file inside the folder_in_your_computer directory will be copied into the docker at netpyne_workspace folder and the other way around. Logs and Jupyter notebook will be located here and therefore accesible from the user machine. This mechanism can be used as well to import and export models.
 
 #### Install using pip
 ```
