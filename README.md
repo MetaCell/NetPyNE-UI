@@ -13,11 +13,11 @@ This repository hosts the user interface for [NetPyNE](http://www.neurosimlab.or
 ##### Using Kitematic
 Open [Kitematic](https://kitematic.com/): search for netpyne-ui and create the container.
 
-![Image](https://github.com/metacell/netpyne-ui/raw/master/docs/netpyneuiImage.png)
+![Image](https://github.com/metacell/netpyne-ui/raw/master/docs/kitematicImage.png)
 
 Start the container and click on Web preview to launch it. No need to ever use the command line, enjoy!
 
-![Kitematic](https://github.com/metacell/netpyne-ui/raw/master/docs/kitematic.png)
+![Kitematic](https://github.com/metacell/netpyne-ui/raw/master/docs/kitematicRun.png)
 
 ##### From command line 
 To pull the docker container:
