@@ -115,6 +115,7 @@ class NetPyNEGeppetto():
 
     def instantiateNetPyNEModel(self):
         sim.create(netParams, simConfig)
+        sim.net.defineCellShapes()  # creates 3d pt for cells with stylized geometries
         sim.analyze()
         return sim
 

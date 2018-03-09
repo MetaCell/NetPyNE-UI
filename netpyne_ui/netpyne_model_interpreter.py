@@ -28,7 +28,7 @@ class NetPyNEModelInterpreter():
         return geppetto_model
 
     def convertTo3DGeoms(self, secs):
-        # set 3d geoms for reduced cell models
+        # set 3d geoms for reduced cell models -- deprecated, replaced by sim.net.defineCellShapes()
         offset = 0
         prevL = 0
         for secName, sec in secs.items():
@@ -93,10 +93,10 @@ class NetPyNEModelInterpreter():
                 # Save in intermediate structure
                 populations[cell['tags']['pop']] = arrayType
 
-                # Convert to pt3d if not there
+                # Convert to pt3d if not there -- deprecated, replaced by sim.net.defineCellShapes()
                 secs = cell['secs']
                 if hasattr(secs, 'values') and len(secs.values()) > 0:
-                    if 'pt3d' not in list(secs.values())[0]['geom']:
+                    if 'pt3d' not in secs.values()[0]['geom']:
                         secs = self.convertTo3DGeoms(secs)
                 
                 # Iterate sections creating spheres and cylinders
@@ -105,16 +105,16 @@ class NetPyNEModelInterpreter():
                         if 'pt3d' in sec['geom']:
                             points = sec['geom']['pt3d']
                             for i in range(len(points) - 1):
-                                if sec_name == 'soma':
-                                    visualType.variables.append(self.factory.createSphere(str(sec_name),
-                                                                                            radius=float(points[i][3] / 2),
-                                                                                            position=Point(x=float(points[i][0]),y=-float(points[i][1]), z=float(points[i][2]))))
-                                else:
-                                    visualType.variables.append(self.factory.createCylinder(str(sec_name),
+                                # if sec_name == 'soma':  # draw soma as a cylinder instead of a sphere (more accurate representation of 3d pts)  
+                                #     visualType.variables.append(self.factory.createSphere(str(sec_name),
+                                #                                                             radius=float(points[i][3] / 2),
+                                #                                                             position=Point(x=float(points[i][0]),y=float(points[i][1]), z=float(points[i][2]))))
+                                # else:
+                                visualType.variables.append(self.factory.createCylinder(str(sec_name),
                                                                                             bottomRadius=float(points[i][3] / 2),
                                                                                             topRadius=float(points[i + 1][3] / 2),
-                                                                                            position=Point(x=float(points[i][0]),y=-float(points[i][1]), z=float(points[i][2])),
-                                                                                            distal=Point(x=float(points[i + 1][0]), y=-float(points[i + 1][1]), z=float(points[i + 1][2]))))
+                                                                                            position=Point(x=float(points[i][0]),y=float(points[i][1]), z=float(points[i][2])),
+                                                                                            distal=Point(x=float(points[i + 1][0]), y=float(points[i + 1][1]), z=float(points[i + 1][2]))))
                     
 
             # Save the cell position and update elements in defaultValue and size
