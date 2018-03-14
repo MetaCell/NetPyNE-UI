@@ -37,10 +37,10 @@ before_script:
   - export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
     
 script:
-  - docker build -t="neuron-ui" --build-arg neuronuiBranch=$TRAVIS_BRANCH .
-  - docker run  -t -dit --name=neuron-ui_container -h localhost -p 8888:8888 neuron-ui:latest
+  - docker build -t="netpyne-ui" --build-arg neuronuiBranch=$TRAVIS_BRANCH .
+  - docker run  -t -dit --name=netpyne-ui_container -h localhost -p 8888:8888 netpyne-ui:latest
   - cd $TRAVIS_BUILD_DIR/ && ls
-  - cd geppetto-neuron && ls
+  - cd geppetto-netpyne && ls
   - ls
   - cd tests
   - bash utilities/netpyne-server-status.sh
@@ -52,7 +52,7 @@ script:
       echo "Printing logs for debugging purposes";
       docker stop $(docker ps -a -q);
       docker rm $(docker ps -a -q);
-      docker run  -t -dit --name=neuron-ui_container -h localhost -p 8888:8888 neuron-ui:latest
+      docker run  -t -dit --name=netpyne-ui_container -h localhost -p 8888:8888 netpyne-ui:latest
       bash utilities/netpyne-server-status.sh
       sleep 30;
       http_status=$(curl -s -I $1 http://localhost:8888/geppetto| grep HTTP/1.1 | awk {'print $2'})
