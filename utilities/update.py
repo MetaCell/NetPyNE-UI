@@ -4,7 +4,7 @@ from utils import *
 # Hack so that it works in python 2 and 3
 try: input = raw_input
 except NameError: pass
-reply = input("Any uncommited change to your jupyter notebook will be stashed. Are you sure you want to update NEURON-UI? (y/n)")
+reply = input("Any uncommited change to your jupyter notebook will be stashed. Are you sure you want to update NetPyNE-UI? (y/n)")
 
 if reply[0] == 'y':
     # Checking out repos
@@ -13,8 +13,8 @@ if reply[0] == 'y':
     subprocess.call(['git', 'pull'], cwd='../org.geppetto.frontend.jupyter')
     subprocess.call(['git', 'checkout', 'development-jupyter'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
     subprocess.call(['git', 'pull'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
-    subprocess.call(['git', 'checkout', 'development'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-neuron/')
-    subprocess.call(['git', 'pull'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-neuron/')
+    subprocess.call(['git', 'checkout', 'development'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-netpyne/')
+    subprocess.call(['git', 'pull'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-netpyne/')
 
     # Installing and building the frontend
     subprocess.call(['npm', 'install'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/')

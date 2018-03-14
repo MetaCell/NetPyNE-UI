@@ -1,90 +1,58 @@
-# NEURON-UI
+[![Build Status](https://travis-ci.org/MetaCell/NetPyNE-UI.svg?branch=master)](https://travis-ci.org/MetaCell/NetPyNE-UI)
+[![Docker Automated buil](https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg)](https://hub.docker.com/r/metacell/netpyne-ui/)
 
-This repository hosts an experimental prototype for a new user interface for [NEURON](http://www.neuron.yale.edu/neuron/) based on web technologies. 
+# NetPyNE-UI
 
-To install:
-```bash
-pip install neuron_ui
-jupyter nbextension enable --py jupyter_geppetto
+This repository hosts the user interface for [NetPyNE](http://www.neurosimlab.org/netpyne/).
+
+
+![Screenshot](https://github.com/metacell/netpyne-ui/raw/master/netpyneui.png)
+
+#### Install using Docker (self-contained, the simplest)
+
+##### Using Kitematic
+Open [Kitematic](https://kitematic.com/): search for netpyne-ui and create the container.
+
+![Image](https://github.com/metacell/netpyne-ui/raw/master/docs/kitematicImage.png)
+
+Start the container and click on Web preview to launch it. No need to ever use the command line, enjoy!
+
+![Kitematic](https://github.com/metacell/netpyne-ui/raw/master/docs/kitematicRun.png)
+
+##### From command line 
+To pull the docker container:
+```
+docker pull metacell/netpyne-ui
+```
+To run the docker container:
+```
+docker run -it -p 8888:8888 metacell/netpyne-ui
+```
+Or alternatively, if you want a local folder outside of the Docker container to host the NetPyNE-UI workspace (where you can import models from, export models to, inspect the log and the jupyter notebook) you can execute the following command: 
+```
+docker run -it -v ~/folder_in_your_computer:/home/jovyan/netpyne_workspace -p 8888:8888 metacell/netpyne-ui
+```
+This will mount your local folder `folder_in_your_computer` as a volume inside the container and will be used to host the NetPyNE-UI workspace (`/home/jovyan/netpyne_workspace` inside the container). 
+
+Once you run your container you can open your browser and connect to http://localhost:8888/geppetto.
+
+#### Install using pip
+```
+Coming soon
 ```
 
-For a development installation:
-```bash
-git clone https://github.com/MetaCell/NEURON-UI.git
-python utilities/install.py
+#### Install from sources (for developers)
 ```
-
-This scripts clones all needed repos and install the extension and NEURON in development mode. This project consists on four different github repos:
-```json
-{
-  "name": "NEURON_UI",
-  "path": ".",
-  "url": "https://github.com/MetaCell/NEURON-UI"
-},
-{
-  "name": "org.geppetto.frontend.jupyter",
-  "path": "./org.geppetto.frontend.jupyter",
-  "url": "https://github.com/openworm/org.geppetto.frontend.jupyter"
-},
-{
-  "name": "org.geppetto.frontend",
-  "path": "./org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/",
-  "url": "https://github.com/openworm/org.geppetto.frontend"
-},
-{
-  "name": "Geppetto Neuron",
-  "path": "./org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-neuron/",
-  "url": "https://github.com/MetaCell/geppetto-neuron"
-}
+git clone https://github.com/MetaCell/NetPyNE-UI.git
+cd utilities
+python install.py
+cd ..
+./NetPyNE-UI
 ```
-
-A script with a set of tools can be found at /utilities/gitall.py. These are some examples of how to use it:
-```bash
-  python gitall.py branches: print current branch of each repo
-
-  python gitall.py checkout <branch> : checkout <branch> on each repo
-
-  python gitall.py pull: execute git pull on each repo
-
-  python gitall.py fetch <remote> <branch> : execute git fetch on each repo
-
-  python gitall.py status: execute git status on each repo
+##### To update sources:
 ```
-
-Any change to python code will be automatically deployed. However, for js code we will have to build the js sources. There are two options either you run:
-```bash
-npm run build-dev-noTest
-```
-
-at NEURON-UI/org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp on every change.
-
-or, a better option, is to run:
-```bash
-python run-dev-server.py
-```
-
-at NEURON-UI/utilities so that any change in the js code will trigger a rebuild.
-
-To run the server:
-```bash
-NEURON-UI
-```
-
-To update from sources:
-```bash
 python update.py
 ```
 
-![Screenshot](https://dl.dropboxusercontent.com/u/7538688/Don%27t%20delete%2C%20used%20in%20wikis%20etc/release034.png)
-
-The available functionality is currently limited to the RunControl panel, a basic cell builder, a simplified point process manager that lets you inject a current clamp and space plot functionality.
-
-<p align="center">
-  <img src="https://dl.dropboxusercontent.com/u/7538688/Don%27t%20delete%2C%20used%20in%20wikis%20etc/Screen_Shot_2016-06-15_at_18.06.16.png" alt="Old RunControl panel" height="300"/>
-</p>
-
-This prototype is being developed in collaboration with the [Neurosim Lab](http://neurosimlab.org/) and the [Sense Lab](https://senselab.med.yale.edu/).
-
-The UI connects to [nrnpython](http://www.neuron.yale.edu/neuron/static/docs/help/neuron/neuron/classes/python.html) through a [Geppetto](http://git.geppetto.org) extension for [Jupyter Notebook](http://jupyter.org/).
-
-See the [Wiki](https://github.com/MetaCell/NEURON-UI/wiki) for more info!
+NetPyNE-UI is being developed in collaboration with the [Neurosim Lab](http://neurosimlab.org/).
+See the [Wiki](https://github.com/MetaCell/NetPyNE-UI/wiki) for more info!

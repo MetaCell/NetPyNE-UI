@@ -2,6 +2,8 @@ import setuptools
 from setuptools.command.install import install
 import subprocess
 import json
+import os
+from shutil import copyfile
 
 # Cloning Repos
 print("Cloning PyGeppetto...")
@@ -16,20 +18,17 @@ print("Cloning Geppetto Jupyter (Python package)...")
 subprocess.call(['git', 'clone', '--recursive', '-b', 'development', 'https://github.com/openworm/org.geppetto.frontend.jupyter.git'], cwd='../')
 
 print("Cloning Geppetto Frontend")
-subprocess.call(['git', 'checkout', 'interface'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
+subprocess.call(['git', 'checkout', 'development'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
 
-print("Cloning Geppetto Neuron Configuration ...")
-subprocess.call(['git', 'clone', 'https://github.com/MetaCell/geppetto-neuron.git'],
+print("Cloning Geppetto NetPyNE Configuration ...")
+subprocess.call(['git', 'clone', 'https://github.com/MetaCell/geppetto-netpyne.git'],
                 cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/')
 
-subprocess.call(['git', 'checkout', 'interface'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-neuron/')
+subprocess.call(['git', 'checkout', 'development'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-netpyne/')
 
-print("Enabling Geppetto Neuron Extension ...")
-jsonFile = open(
-    '../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/extensionsConfiguration.json',
-    "w+")
-jsonFile.write(json.dumps({"geppetto-neuron/ComponentsInitialization": True}))
-jsonFile.close()
+print("Enabling Geppetto NetPyNE Extension ...")
+geppetto_configuration = os.path.join(os.path.dirname(__file__), 'GeppettoConfiguration.json')
+copyfile(geppetto_configuration, '../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/GeppettoConfiguration.json')
 
 # Installing and building
 print("NPM Install and build for Geppetto Frontend  ...")
@@ -44,6 +43,6 @@ subprocess.call(['jupyter', 'nbextension', 'enable', '--py', '--user', 'jupyter_
 subprocess.call(['jupyter', 'nbextension', 'enable', '--py', 'widgetsnbextension'], cwd='../org.geppetto.frontend.jupyter')
 subprocess.call(['jupyter', 'serverextension', 'enable', '--py', 'jupyter_geppetto'], cwd='../org.geppetto.frontend.jupyter')
 
-print("Installing neuron_ui python package ...")
+print("Installing NetPyNE UI python package ...")
 subprocess.call(['pip', 'install', '-e', '.'], cwd='..')
 
