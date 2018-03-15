@@ -38,6 +38,7 @@ RUN /bin/bash -c "source activate snakes && python setup.py install"
 RUN wget https://github.com/MetaCell/NetPyNE-UI/archive/$netpyneuiBranch.zip
 RUN unzip $netpyneuiBranch.zip
 WORKDIR NetPyNE-UI-$netpyneuiBranch/utilities
+RUN pwd
 RUN /bin/bash -c "source activate snakes && python --version"
 RUN /bin/bash -c "source activate snakes && exec python install.py"
 RUN cd ../netpyne_ui/tests && /bin/bash -c "source activate snakes && python -m unittest netpyne_model_interpreter_test"
