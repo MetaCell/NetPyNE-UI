@@ -21,7 +21,7 @@ print("Cloning Geppetto Frontend")
 subprocess.call(['git', 'checkout', 'development'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
 
 print("Cloning Geppetto NetPyNE Configuration ...")
-subprocess.call(['git', 'clone', 'https://github.com/MetaCell/geppetto-netpyne.git'],
+subprocess.call(['git', 'clone', '-b', 'casper-tests', 'https://github.com/MetaCell/geppetto-netpyne.git'],
                 cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/')
 
 subprocess.call(['git', 'checkout', 'casper-tests'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-netpyne/')
