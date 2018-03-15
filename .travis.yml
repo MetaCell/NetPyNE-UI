@@ -37,7 +37,7 @@ before_script:
   - export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
     
 script:
-  - docker build -t="netpyne-ui" --build-arg neuronuiBranch=$TRAVIS_BRANCH .
+  - docker build -t="netpyne-ui" --build-arg netpyneuiBranch=$TRAVIS_BRANCH .
   - docker run  -t -dit --name=netpyne-ui_container -h localhost -p 8888:8888 netpyne-ui:latest
   - cd $TRAVIS_BUILD_DIR/ && ls
   - cd geppetto-netpyne && ls
