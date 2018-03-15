@@ -1,2 +1,2 @@
 #!/bin/sh
-exec jupyter notebook --NotebookApp.default_url=/geppetto --NotebookApp.token=''
+exec python -m jupyter notebook --NotebookApp.default_url=/geppetto --NotebookApp.token=''

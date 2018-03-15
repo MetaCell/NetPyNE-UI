@@ -61,3 +61,6 @@ script:
     done;
   - "curl -s -I $1 http://localhost:8888/geppetto | grep HTTP/1.1 | awk {'print $2'}"
   - xvfb-run -a --server-args="-screen 0 1024x768x24"  casperjs test netpyne-tests.js --host=http://localhost:8888/ --engine=slimerjs
+  - sudo docker cp netpyne-ui_container:/$TRAVIS_BRANCH/utilities/netpyne-ui.log /etc;
+  - tail /etc/netpyne-ui.log -n 200
+  - cd $TRAVIS_BUILD_DIR/ && tail netpyne-ui.log -n 200
