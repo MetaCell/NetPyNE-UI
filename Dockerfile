@@ -37,7 +37,6 @@ ENV PATH="/home/jovyan/work/nrn-7.4/x86_64/bin:${PATH}"
 RUN /bin/bash -c "source activate snakes && python setup.py install"
 RUN wget https://github.com/MetaCell/NetPyNE-UI/archive/$netpyneuiBranch.zip
 RUN unzip $netpyneuiBranch.zip
-RUN pwd && ls
 WORKDIR NetPyNE-UI-$netpyneuiBranch
 RUN pwd && ls
 WORKDIR NetPyNE-UI-$netpyneuiBranch/utilities
