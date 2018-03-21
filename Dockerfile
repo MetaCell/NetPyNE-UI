@@ -1,4 +1,11 @@
-FROM jupyter/base-notebook:c411f52fcc93
+FROM jupyter/base-notebook:eb70bcf1a292
+
+# Create a Python 2.x environment using conda including at least the ipython kernel
+# and the kernda utility. Add any additional packages you want available for use
+# in a Python 2 notebook to the first line here (e.g., pandas, matplotlib, etc.)
+RUN conda create --quiet --yes -p $CONDA_DIR/envs/python2 python=2.7 ipython ipykernel kernda && \
+    conda clean -tipsy
+
 USER root
 
 ARG netpyneuiBranch=development
@@ -23,15 +30,23 @@ RUN apt-get -qq install -y \
         git-core \
         unzip \
         libpng-dev
+# Create a global kernelspec in the image and modify it so that it properly activates
+# the python2 conda environment.
+RUN $CONDA_DIR/envs/python2/bin/python -m ipykernel install && \
+$CONDA_DIR/envs/python2/bin/kernda -o -y /usr/local/share/jupyter/kernels/python2/kernel.json
+
 USER $NB_USER
 
+RUN python --version
 RUN conda create --name snakes python=2
+RUN python --version
 RUN wget http://www.neuron.yale.edu/ftp/neuron/versions/v7.4/nrn-7.4.tar.gz
 RUN tar xzf nrn-7.4.tar.gz
 WORKDIR nrn-7.4
 RUN /bin/bash -c "source activate snakes && ./configure --prefix `pwd` --without-iv --with-nrnpython"
 RUN /bin/bash -c "source activate snakes && make --silent"
 RUN /bin/bash -c "source activate snakes && make --silent install"
+RUN python --version
 WORKDIR src/nrnpython
 ENV PATH="/home/jovyan/work/nrn-7.4/x86_64/bin:${PATH}"
 RUN /bin/bash -c "source activate snakes && python setup.py install"
