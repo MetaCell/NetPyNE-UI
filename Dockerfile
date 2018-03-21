@@ -17,7 +17,7 @@ RUN apt-get -qq install -y \
         g++ \
         build-essential \
         libncurses-dev \
-        python \
+        python2.7 \
         libpython-dev \
         cython \
         git-core \
@@ -44,4 +44,5 @@ RUN cd ../netpyne_ui/tests && /bin/bash -c "source activate snakes && python -m 
 RUN mkdir /home/jovyan/netpyne_workspace
 WORKDIR /home/jovyan/netpyne_workspace
 CMD /bin/bash -c "source activate snakes && exec jupyter notebook --ip=0.0.0.0 --allow_root=true --debug --NotebookApp.default_url=/geppetto --NotebookApp.token=''"
-CMD /bin/bash -c "source activate snakes && exec jupyter kernelspec list"
+RUN jupyter kernelspec list
+RUN python --version
