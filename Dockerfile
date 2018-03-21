@@ -1,7 +1,7 @@
 FROM jupyter/base-notebook:eb70bcf1a292
 USER root
 
-ARG netpyneuiBranch=casper-tests
+ARG netpyneuiBranch=development
 ENV netpyneuiBranch=${netpyneuiBranch}
 RUN echo "$netpyneuiBranch";
 
@@ -35,15 +35,11 @@ RUN /bin/bash -c "source activate snakes && make --silent install"
 WORKDIR src/nrnpython
 ENV PATH="/home/jovyan/work/nrn-7.4/x86_64/bin:${PATH}"
 RUN /bin/bash -c "source activate snakes && python setup.py install"
-RUN wget https://github.com/MetaCell/NetPyNE-UI/archive/casper-tests.zip
-RUN unzip casper-tests.zip
-WORKDIR NetPyNE-UI-casper-tests/utilities
+RUN wget https://github.com/MetaCell/NetPyNE-UI/archive/$netpyneuiBranch.zip
+RUN unzip $netpyneuiBranch.zip
+WORKDIR NetPyNE-UI-$netpyneuiBranch/utilities
 RUN /bin/bash -c "source activate snakes && python --version"
 RUN /bin/bash -c "source activate snakes && exec python install.py"
-RUN pwd
-RUN cd $PWD/.. && ls
-RUN cd /home/jovyan/work/nrn-7.4/src/nrnpython/NetPyNE-UI-casper-tests/ && ls
-RUN cd /home/jovyan/work/nrn-7.4/src/nrnpython/NetPyNE-UI-casper-tests/org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-netpyne && ls
 RUN cd ../netpyne_ui/tests && /bin/bash -c "source activate snakes && python -m unittest netpyne_model_interpreter_test"
 RUN mkdir /home/jovyan/netpyne_workspace
 WORKDIR /home/jovyan/netpyne_workspace
