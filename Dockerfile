@@ -1,4 +1,4 @@
-FROM jupyter/base-notebook:eb70bcf1a292
+FROM jupyter/base-notebook:c19283de5a6f
 USER root
 
 ARG netpyneuiBranch=development
