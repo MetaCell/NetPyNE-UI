@@ -1,7 +1,7 @@
 FROM jupyter/base-notebook:eb70bcf1a292
 USER root
 
-ARG netpyneuiBranch=development
+ARG netpyneuiBranch=casper-tests
 ENV netpyneuiBranch=${netpyneuiBranch}
 RUN echo "$netpyneuiBranch";
 
