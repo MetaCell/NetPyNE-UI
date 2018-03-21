@@ -44,3 +44,4 @@ RUN cd ../netpyne_ui/tests && /bin/bash -c "source activate snakes && python -m 
 RUN mkdir /home/jovyan/netpyne_workspace
 WORKDIR /home/jovyan/netpyne_workspace
 CMD /bin/bash -c "source activate snakes && exec jupyter notebook --ip=0.0.0.0 --allow_root=true --debug --NotebookApp.default_url=/geppetto --NotebookApp.token=''"
+CMD /bin/bash -c "source activate snakes && exec jupyter kernelspec list"
