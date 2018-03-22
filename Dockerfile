@@ -25,10 +25,12 @@ RUN apt-get install -y \
         unzip \
         libpng-dev
 USER $NB_USER
-
+RUN conda install -c conda-canary conda=4.3.6
 RUN conda create --name snakes python=2
+RUN /bin/bash -c "source activate snakes && pip install ipykernel && python -m ipykernel install --user"
 RUN python --version && conda info
-RUN conda list -n dep_env
+RUN conda info --envs
+RUN /bin/bash -c "source activate snakes && python --version"
 RUN wget http://www.neuron.yale.edu/ftp/neuron/versions/v7.4/nrn-7.4.tar.gz
 RUN tar xzf nrn-7.4.tar.gz
 WORKDIR nrn-7.4
@@ -47,5 +49,5 @@ RUN cd ../netpyne_ui/tests && /bin/bash -c "source activate snakes && python -m 
 RUN mkdir /home/jovyan/netpyne_workspace
 WORKDIR /home/jovyan/netpyne_workspace
 CMD /bin/bash -c "source activate snakes && exec jupyter notebook --debug --NotebookApp.default_url=/geppetto --NotebookApp.token=''"
-RUN jupyter kernelspec list
+RUN jupyter kernelspec list --debug
 RUN python --version
