@@ -4,12 +4,12 @@ USER root
 ARG netpyneuiBranch=development
 ENV netpyneuiBranch=${netpyneuiBranch}
 RUN echo "$netpyneuiBranch";
+RUN python --version
 
 RUN apt-get -qq update
 
 ARG NRN_VERSION="7.4"
 ARG NRN_ARCH="x86_64"
-
 RUN apt-get -qq install -y \
         locales \
         wget \
@@ -23,12 +23,15 @@ RUN apt-get -qq install -y \
         git-core \
         unzip \
         libpng-dev
+RUN sudo pip install --upgrade ipykernel
 
 USER $NB_USER
 
 RUN python --version
+RUN /bin/bash -c "source activate snakes && python --version"
 RUN conda create --name snakes python=2
 RUN python --version
+RUN /bin/bash -c "source activate snakes && python --version"
 RUN wget http://www.neuron.yale.edu/ftp/neuron/versions/v7.4/nrn-7.4.tar.gz
 RUN tar xzf nrn-7.4.tar.gz
 RUN python --version
