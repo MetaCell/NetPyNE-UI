@@ -31,6 +31,7 @@ RUN conda create --name snakes python=2
 RUN python --version
 RUN wget http://www.neuron.yale.edu/ftp/neuron/versions/v7.4/nrn-7.4.tar.gz
 RUN tar xzf nrn-7.4.tar.gz
+RUN python --version
 WORKDIR nrn-7.4
 RUN /bin/bash -c "source activate snakes && ./configure --prefix `pwd` --without-iv --with-nrnpython"
 RUN /bin/bash -c "source activate snakes && make --silent"
@@ -39,6 +40,7 @@ RUN python --version
 WORKDIR src/nrnpython
 ENV PATH="/home/jovyan/work/nrn-7.4/x86_64/bin:${PATH}"
 RUN /bin/bash -c "source activate snakes && python setup.py install"
+RUN python --version
 RUN wget https://github.com/MetaCell/NetPyNE-UI/archive/$netpyneuiBranch.zip
 RUN unzip $netpyneuiBranch.zip
 WORKDIR NetPyNE-UI-$netpyneuiBranch/utilities
