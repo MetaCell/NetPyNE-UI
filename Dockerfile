@@ -25,9 +25,9 @@ RUN apt-get install -y \
         unzip \
         libpng-dev
 USER $NB_USER
-RUN conda install -c conda-canary conda=4.3.8	
+RUN conda install -c conda-canary conda=4.3.8
+RUN conda update --all
 RUN conda create --name snakes python=2
-RUN /bin/bash -c "source activate snakes && pip install ipykernel && python -m ipykernel install --user"
 RUN python --version && conda info
 RUN conda info --envs
 RUN /bin/bash -c "source activate snakes && python --version"
@@ -48,6 +48,7 @@ RUN /bin/bash -c "source activate snakes && exec python install.py"
 RUN cd ../netpyne_ui/tests && /bin/bash -c "source activate snakes && python -m unittest netpyne_model_interpreter_test"
 RUN mkdir /home/jovyan/netpyne_workspace
 WORKDIR /home/jovyan/netpyne_workspace
-CMD /bin/bash -c "source activate snakes && exec jupyter notebook --debug --NotebookApp.default_url=/geppetto --NotebookApp.token=''"
+CMD /bin/bash -c "source activate snakes && exec jupyter notebook --no-browser --ip=0.0.0.0 --debug --NotebookApp.default_url=/geppetto --NotebookApp.token=''"
+RUN python --version
 RUN jupyter kernelspec list --debug
 RUN python --version
