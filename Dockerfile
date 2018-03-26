@@ -25,6 +25,7 @@ RUN apt-get install -y \
         unzip \
         libpng-dev
 USER $NB_USER
+RUN conda install -c conda-forge notebook
 RUN conda install -c conda-forge tornado 
 RUN conda install -c conda-forge jupyter_client
 RUN conda install -c conda-forge jupyter_core 
