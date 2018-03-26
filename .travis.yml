@@ -22,7 +22,7 @@ notifications:
 services:
   - docker
 addons:
-  firefox: "51.0"
+  firefox: "49.0"
   apt:
     packages:
     - mesa-utils
@@ -37,6 +37,7 @@ before_script:
   - export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
     
 script:
+  - firefox -v
   - docker build -t="netpyne-ui" --build-arg netpyneuiBranch=$TRAVIS_BRANCH .
   - docker run  -t -dit --name=netpyne-ui_container -h localhost -p 8888:8888 netpyne-ui:latest
   - cd $TRAVIS_BUILD_DIR/ && ls
@@ -64,6 +65,7 @@ script:
   - curl http://localhost:8888
   - curl http://localhost:8888/geppetto
   - xvfb-run -a --server-args="-screen 0 1024x768x24"  casperjs test netpyne-tests.js --host=http://localhost:8888/ --engine=slimerjs
-  - sudo docker cp netpyne-ui_container:/home/jovyan/.local/share/jupyter/runtime/kernel-b1c01312-67e9-4936-8b1d-645abf3b6d7b.json /home/logs;
-  - tail /etc/npm-debug.log -n 200
-  - cd $TRAVIS_BUILD_DIR/ && tail netpyne-ui.log -n 200
+  - firefox -v
+  #- sudo docker cp netpyne-ui_container:/home/jovyan/.local/share/jupyter/runtime/kernel-b1c01312-67e9-4936-8b1d-645abf3b6d7b.json /home/logs;
+  #- tail /etc/npm-debug.log -n 200
+  #- cd $TRAVIS_BUILD_DIR/ && tail netpyne-ui.log -n 200
