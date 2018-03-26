@@ -25,9 +25,9 @@ RUN apt-get install -y \
         unzip \
         libpng-dev
 USER $NB_USER
+RUN conda upgrade notebook
 RUN conda install ipykernel
 RUN conda install -c conda-canary conda=4.3.8
-RUN conda install -c anaconda ipywidgets 
 RUN conda create --name snakes python=2
 RUN python --version && conda info
 RUN conda info --envs
@@ -53,5 +53,5 @@ WORKDIR /home/jovyan/netpyne_workspace
 CMD /bin/bash -c "source activate snakes && exec jupyter notebook --no-browser --debug --NotebookApp.default_url=/geppetto --NotebookApp.token=''"
 RUN python --version
 RUN pip list
-RUN python --version
 RUN conda list
+RUN python --version
