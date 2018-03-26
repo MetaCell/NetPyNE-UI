@@ -25,8 +25,6 @@ RUN apt-get install -y \
         unzip \
         libpng-dev
 USER $NB_USER
-RUN conda upgrade notebook
-RUN conda install ipykernel
 RUN conda install -c conda-canary conda=4.3.8
 RUN conda create --name snakes python=2
 RUN python --version && conda info
