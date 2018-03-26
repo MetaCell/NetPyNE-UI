@@ -27,7 +27,7 @@ RUN apt-get install -y \
 USER $NB_USER
 RUN conda install -c conda-forge notebook
 RUN conda install -c conda-forge tornado 
-RUN conda install ipywidgets
+RUN pip install ipywidgets
 RUN conda install -c conda-forge jupyter_client
 RUN conda install -c conda-forge jupyter_core 
 RUN conda install -c conda-canary conda=4.3.8
