@@ -39,7 +39,7 @@ before_script:
 script:
   - firefox -v
   - docker build -t="netpyne-ui" --build-arg netpyneuiBranch=$TRAVIS_BRANCH .
-  - docker run  -t -dit --name=netpyne-ui_container -h localhost -p 8888:8888 netpyne-ui:latest
+  - docker run  -t -it --name=netpyne-ui_container -h localhost -p 8888:8888 netpyne-ui:latest
   - cd $TRAVIS_BUILD_DIR/ && ls
   - cd geppetto-netpyne && ls
   - ls
