@@ -22,7 +22,7 @@ notifications:
 services:
   - docker
 addons:
-  firefox: "52.0"
+  firefox: "58.0"
   apt:
     packages:
     - mesa-utils
