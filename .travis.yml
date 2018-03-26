@@ -38,6 +38,9 @@ before_script:
     
 script:
   - firefox -v
+  - slimerjs -v
+  - phantomjs -v
+  - casperjs --version
   - docker build -t="netpyne-ui" --build-arg netpyneuiBranch=$TRAVIS_BRANCH .
   - docker run  -t -it --name=netpyne-ui_container -h localhost -p 8888:8888 netpyne-ui:latest
   - cd $TRAVIS_BUILD_DIR/ && ls
