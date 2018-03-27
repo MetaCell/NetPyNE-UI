@@ -25,7 +25,6 @@ RUN apt-get install -y \
         unzip \
         libpng-dev
 USER $NB_USER
-RUN conda install -c conda-forge notebook
 RUN conda create --name snakes python=2
 RUN python --version && conda info
 RUN conda info --envs
