@@ -25,10 +25,10 @@ RUN apt-get install -y \
         unzip \
         libpng-dev
 USER $NB_USER
-RUN pip install --upgrade pip
-RUN pip install --user jupyter_client
-RUN conda list
-RUN pip list
+RUN conda install -c conda-forge notebook=4.4.1
+RUN conda install -c conda-forge ipython=5.5.0
+RUN conda install -c conda-forge jupyter_core=4.4.0
+RUN conda install -c conda-forge jupyter_client=4.4.0
 RUN conda create --name snakes python=2
 RUN python --version && conda info
 RUN conda info --envs
