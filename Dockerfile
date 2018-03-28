@@ -25,6 +25,8 @@ RUN apt-get install -y \
         unzip \
         libpng-dev
 USER $NB_USER
+RUN pip install --upgrade pip
+RUN pip install --user jupyter_client
 RUN conda list
 RUN pip list
 RUN conda create --name snakes python=2
