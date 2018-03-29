@@ -1,5 +1,9 @@
 FROM jupyter/base-notebook:eb70bcf1a292
 USER root
+ENV TINI_VERSION v0.6.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
+RUN chmod +x /usr/bin/tini
+ENTRYPOINT ["/usr/bin/tini", "--"]
 
 ARG netpyneuiBranch=development
 ENV netpyneuiBranch=${netpyneuiBranch}
@@ -27,6 +31,8 @@ RUN apt-get install -y \
 USER $NB_USER
 RUN conda install -c conda-forge notebook=4.4.1
 RUN conda install -c conda-forge ipython=5.5.0
+RUN conda install -c conda-forge jsonschema=2.6.0
+RUN conda install -c conda-forge ipykernel=4.8.1
 RUN conda install -c conda-forge jupyter_core=4.4.0
 RUN conda install -c conda-forge jupyter_client=4.4.0
 RUN conda create --name snakes python=2
@@ -51,7 +57,8 @@ RUN /bin/bash -c "source activate snakes && exec python install.py"
 RUN cd ../netpyne_ui/tests && /bin/bash -c "source activate snakes && python -m unittest netpyne_model_interpreter_test"
 RUN mkdir /home/jovyan/netpyne_workspace
 WORKDIR /home/jovyan/netpyne_workspace
-CMD /bin/bash -c "source activate snakes && exec jupyter notebook --no-browser --ip=0.0.0.0 --debug --NotebookApp.default_url=/geppetto --NotebookApp.token=''"
+EXPOSE 8888
+CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0"]
 RUN python --version
 RUN pip list
 RUN conda list
