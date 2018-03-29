@@ -1,9 +1,5 @@
 FROM jupyter/base-notebook:eb70bcf1a292
 USER root
-ENV TINI_VERSION v0.6.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
-RUN chmod +x /usr/bin/tini
-ENTRYPOINT ["/usr/bin/tini", "--"]
 
 ARG netpyneuiBranch=development
 ENV netpyneuiBranch=${netpyneuiBranch}
@@ -57,9 +53,7 @@ RUN /bin/bash -c "source activate snakes && exec python install.py"
 RUN cd ../netpyne_ui/tests && /bin/bash -c "source activate snakes && python -m unittest netpyne_model_interpreter_test"
 RUN mkdir /home/jovyan/netpyne_workspace
 WORKDIR /home/jovyan/netpyne_workspace
-EXPOSE 8888
-CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0"]
 RUN python --version
 RUN pip list
 RUN conda list
-RUN python --version
+CMD /bin/bash -c "source activate snakes && exec jupyter notebook --no-browser --ip=0.0.0.0 --NotebookApp.default_url=/geppetto --NotebookApp.token=''"
