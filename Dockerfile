@@ -23,14 +23,18 @@ RUN apt-get install -y \
         cython \
         git-core \
         unzip \
-        libpng-dev
+        libpng-dev \
+        mlocate
 USER $NB_USER
-RUN conda install -c conda-forge notebook=4.4.1
-RUN conda install -c conda-forge ipython=5.6.0
-RUN conda install -c conda-forge jsonschema=2.6.0
-RUN conda install -c conda-forge ipykernel=4.8.1
-RUN conda install -c conda-forge jupyter_core=4.4.0
-RUN conda install -c conda-forge jupyter_client=4.4.0
+RUN conda install -c conda-forge jupyter
+RUN conda install -c conda-forge widgetsnbextension=1.2.6
+RUN conda list
+RUN conda install -c conda-forge nbformat=4.4.0
+RUN conda install -c conda-forge nbconvert=4.2.0
+RUN conda install notebook
+RUN pip uninstall -y  nbconvert
+RUN git clone -b 4.x https://github.com/jupyter/nbconvert.git
+RUN cd nbconvert && pip install -e . && pip list
 RUN conda create --name snakes python=2
 RUN python --version && conda info
 RUN conda info --envs
@@ -54,6 +58,8 @@ RUN cd ../netpyne_ui/tests && /bin/bash -c "source activate snakes && python -m 
 RUN mkdir /home/jovyan/netpyne_workspace
 WORKDIR /home/jovyan/netpyne_workspace
 RUN python --version
-RUN pip list
 RUN conda list
-CMD /bin/bash -c "source activate snakes && exec jupyter notebook --port=8889 --no-browser --ip 0.0.0.0  --debug --NotebookApp.default_url=/geppetto --NotebookApp.token='' && exec jupyter trust notebook.ipynb"
+RUN pip list
+RUN tail -n 100 /home/jovyan/.jupyter/jupyter_notebook_config.json
+RUN  /bin/bash -c "source activate snakes && exec jupyter kernelspec list "
+CMD /bin/bash -c "source activate snakes && exec jupyter notebook --port=8888 --ip 0.0.0.0 --no-browser  --debug --NotebookApp.default_url=/geppetto --NotebookApp.token='' && exec jupyter trust notebook.ipynb && exec jupyter kernelspec list "
