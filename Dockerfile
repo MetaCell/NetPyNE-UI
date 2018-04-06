@@ -26,7 +26,7 @@ RUN apt-get install -y \
         libpng-dev
 USER $NB_USER
 RUN conda install -c conda-forge notebook=4.4.1
-RUN conda install -c conda-forge ipython=5.5.0
+RUN conda install -c conda-forge ipython=5.6.0
 RUN conda install -c conda-forge jsonschema=2.6.0
 RUN conda install -c conda-forge ipykernel=4.8.1
 RUN conda install -c conda-forge jupyter_core=4.4.0
@@ -56,4 +56,4 @@ WORKDIR /home/jovyan/netpyne_workspace
 RUN python --version
 RUN pip list
 RUN conda list
-CMD /bin/bash -c "source activate snakes && exec jupyter notebook --no-browser --ip=0.0.0.0 --NotebookApp.default_url=/geppetto --NotebookApp.token=''"
+CMD /bin/bash -c "source activate snakes && bash run-jupyter.sh"
