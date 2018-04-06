@@ -56,4 +56,4 @@ WORKDIR /home/jovyan/netpyne_workspace
 RUN python --version
 RUN pip list
 RUN conda list
-CMD /bin/bash -c "source activate snakes && bash run-jupyter.sh"
+CMD /bin/bash -c "source activate snakes && exec jupyter notebook --port=8889 --no-browser --ip 0.0.0.0  --debug --NotebookApp.default_url=/geppetto --NotebookApp.token='' && exec jupyter trust notebook.ipynb"
