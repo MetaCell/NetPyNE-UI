@@ -42,32 +42,32 @@ script:
   - phantomjs -v
   - casperjs --version
   - docker build -t="netpyne-ui" --build-arg netpyneuiBranch=$TRAVIS_BRANCH .
-  - docker run  -t -dit --name=netpyne-ui_container -h localhost -p 8889:8889 netpyne-ui:latest
+  - docker run  -t -dit --name=netpyne-ui_container -h localhost -p 8888:8888 netpyne-ui:latest
   - cd $TRAVIS_BUILD_DIR/ && ls
   - cd geppetto-netpyne && ls
   - ls
   - cd tests
   - bash utilities/netpyne-server-status.sh
   - sleep 30
-  - http_status=$(curl -s -I $1 http://localhost:8889/geppetto | grep HTTP/1.1 | awk {'print $2'})
+  - http_status=$(curl -s -I $1 http://localhost:8888/geppetto | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status"
   - while [ "$http_status" == "404" ]; do
       echo "Restart run";
       echo "Printing logs for debugging purposes";
       docker stop $(docker ps -a -q);
       docker rm $(docker ps -a -q);
-      docker run  -t -dit --name=netpyne-ui_container -h localhost -p 8889:8889 netpyne-ui:latest
+      docker run  -t -dit --name=netpyne-ui_container -h localhost -p 8888:8888 netpyne-ui:latest
       bash utilities/netpyne-server-status.sh
       sleep 30;
-      http_status=$(curl -s -I $1 http://localhost:8889/geppetto | grep HTTP/1.1 | awk {'print $2'})
+      http_status=$(curl -s -I $1 http://localhost:8888/geppetto | grep HTTP/1.1 | awk {'print $2'})
       echo "Done restarting";
       echo "$http_status";
     done;
-  - "curl -s -I $1 http://localhost:8889/geppetto | grep HTTP/1.1 | awk {'print $2'}"
-  - curl http://127.0.0.1:8889/api/sessions
-  - curl http://127.0.0.1:8889
-  - curl http://127.0.0.1:8889/geppetto
-  - xvfb-run -a --server-args="-screen 0 1024x768x24"  casperjs test netpyne-tests.js --host=http://localhost:8889/ --engine=slimerjs
+  - "curl -s -I $1 http://localhost:8888/geppetto | grep HTTP/1.1 | awk {'print $2'}"
+  - curl http://127.0.0.1:8888/api/sessions
+  - curl http://127.0.0.1:8888
+  - curl http://127.0.0.1:8888/geppetto
+  - xvfb-run -a --server-args="-screen 0 1024x768x24"  casperjs test netpyne-tests.js --host=http://localhost:8888/ --engine=slimerjs
   - firefox -v
   #- sudo docker cp netpyne-ui_container:/home/jovyan/.local/share/jupyter/runtime/kernel-b1c01312-67e9-4936-8b1d-645abf3b6d7b.json /home/logs;
   #- tail /etc/npm-debug.log -n 200
