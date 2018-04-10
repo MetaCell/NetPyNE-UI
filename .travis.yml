@@ -37,10 +37,6 @@ before_script:
   - export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
     
 script:
-  - firefox -v
-  - slimerjs -v
-  - phantomjs -v
-  - casperjs --version
   - docker build -t="netpyne-ui" --build-arg netpyneuiBranch=$TRAVIS_BRANCH .
   - docker run  -t -dit --name=netpyne-ui_container -h localhost -p 8888:8888 netpyne-ui:latest
   - cd $TRAVIS_BUILD_DIR/ && ls
@@ -64,7 +60,4 @@ script:
       echo "$http_status";
     done;
   - "curl -s -I $1 http://localhost:8888/geppetto | grep HTTP/1.1 | awk {'print $2'}"
-  - curl http://127.0.0.1:8888/api/sessions
-  - curl http://127.0.0.1:8888
-  - curl http://127.0.0.1:8888/geppetto
   - xvfb-run -a --server-args="-screen 0 1024x768x24"  casperjs test netpyne-tests.js --host=http://localhost:8888/ --engine=slimerjs
