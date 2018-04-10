@@ -43,8 +43,4 @@ RUN /bin/bash -c "source activate snakes && exec python install.py"
 RUN cd ../netpyne_ui/tests && /bin/bash -c "source activate snakes && python -m unittest netpyne_model_interpreter_test"
 RUN mkdir /home/jovyan/netpyne_workspace
 WORKDIR /home/jovyan/netpyne_workspace
-RUN python --version
-RUN conda list
-RUN pip list
-RUN  /bin/bash -c "source activate snakes && exec jupyter nbextension list"
-CMD /bin/bash -c "source activate snakes && exec jupyter notebook --no-browser --port=8888 --ip 0.0.0.0 --debug --NotebookApp.default_url=/geppetto --NotebookApp.token='' && exec jupyter trust notebook.ipynb"
+CMD /bin/bash -c "source activate snakes && exec jupyter notebook --debug --NotebookApp.default_url=/geppetto --NotebookApp.token=''"
