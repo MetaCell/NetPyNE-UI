@@ -24,7 +24,7 @@ print("Cloning Geppetto NetPyNE Configuration ...")
 subprocess.call(['git', 'clone', 'https://github.com/MetaCell/geppetto-netpyne.git'],
                 cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/')
 
-subprocess.call(['git', 'checkout', 'casper-tests'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-netpyne/')
+subprocess.call(['git', 'checkout', 'development'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-netpyne/')
 
 print("Enabling Geppetto NetPyNE Extension ...")
 geppetto_configuration = os.path.join(os.path.dirname(__file__), 'GeppettoConfiguration.json')
