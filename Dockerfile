@@ -23,6 +23,7 @@ RUN apt-get install -y \
         git-core \
         unzip \
         libpng-dev
+RUN pip install --upgrade pip
 USER $NB_USER
 
 RUN conda create --name snakes python=2
