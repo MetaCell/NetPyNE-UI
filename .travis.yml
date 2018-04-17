@@ -2,6 +2,7 @@ language: python
 os: linux
 sudo: false
 dist: trusty
+bundler_args: --retry 5
 node_js:
   - "7"
 env:
