@@ -37,8 +37,8 @@ before_script:
   - export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
     
 script:
-  - docker build -t="netpyne-ui" --build-arg netpyneuiBranch=$TRAVIS_BRANCH .
-  - docker run  -t -dit --name=netpyne-ui_container -h localhost -p 8888:8888 netpyne-ui:latest
+  - travis_retry docker build -t="netpyne-ui" --build-arg netpyneuiBranch=$TRAVIS_BRANCH .
+  - travis_retry docker run  -t -dit --name=netpyne-ui_container -h localhost -p 8888:8888 netpyne-ui:latest
   - cd $TRAVIS_BUILD_DIR/ && ls
   - cd geppetto-netpyne && ls
   - ls
@@ -65,5 +65,5 @@ script:
   - http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status";
   - firefox --version
-  - xvfb-run -a --server-args="-screen 0 1024x768x24"  casperjs test netpyne-tests.js --host=http://localhost:8888/ --engine=slimerjs
+  - travis_retry xvfb-run -a --server-args="-screen 0 1024x768x24"  casperjs test netpyne-tests.js --host=http://localhost:8888/ --engine=slimerjs
   - sudo docker logs -t netpyne-ui_container
