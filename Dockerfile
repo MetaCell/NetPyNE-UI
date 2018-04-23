@@ -25,6 +25,7 @@ RUN apt-get install -y \
         libpng-dev
 USER $NB_USER
 
+RUN conda update conda
 RUN conda create --name snakes python=2
 RUN wget http://www.neuron.yale.edu/ftp/neuron/versions/v7.4/nrn-7.4.tar.gz
 RUN tar xzvf nrn-7.4.tar.gz
