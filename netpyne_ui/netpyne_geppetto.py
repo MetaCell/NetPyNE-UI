@@ -234,7 +234,7 @@ class NetPyNEGeppetto():
             if ct not in cellTypes:
                 cellTypes.add(ct)
         return cellTypes
-        
+
     def getAvailableStimSources(self):
         return netParams.stimSourceParams.keys()
     
