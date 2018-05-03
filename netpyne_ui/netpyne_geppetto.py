@@ -137,10 +137,9 @@ class NetPyNEGeppetto():
                 GeppettoJupyterGUISync.synched_models[newModel]=synched_component
 
     def getPlotSettings(self, plot):
-        try:
+        if simConfig.analysis and plot in simConfig.analysis:
             return simConfig.analysis[plot]
-        except:
-            return {}
+        return {}
             
     def getNetPyNE2DNetPlot(self):
         args = self.getPlotSettings('plot2Dnet')
@@ -243,10 +242,7 @@ class NetPyNEGeppetto():
         return netParams.synMechParams.keys()
         
     def getAvailablePlots(self):
-        plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats"]
-        plots += ["plotRatePSD", "plotTraces", "plotLFP", "plotShape"]
-        plots += ["plot2Dnet", "plotConn", "granger"]
-        
+        plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats","plotRatePSD", "plotTraces", "plotLFP", "plotShape", "plot2Dnet", "plotConn", "granger"]
         return [plot for plot in plots if plot not in simConfig.analysis.keys()]
 
 class LoopTimer(threading.Thread):
