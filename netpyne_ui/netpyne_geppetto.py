@@ -136,32 +136,43 @@ class NetPyNEGeppetto():
                 newModel = model.replace(oldValue,newValue)
                 GeppettoJupyterGUISync.synched_models[newModel]=synched_component
 
+    def getPlotSettings(self, plot):
+        try:
+            return simConfig.analysis[plot]
+        except:
+            return {}
+            
     def getNetPyNE2DNetPlot(self):
-        fig = analysis.plot2Dnet(showFig=False)
+        args = self.getPlotSettings('plot2Dnet')
+        fig = analysis.plot2Dnet(showFig=False, **args)
         if fig==-1:
             return fig
         return ui.getSVG(fig)
     
     def getNetPyNEShapePlot(self):
-        fig = analysis.plotShape(includePost = ['all'],showFig=False)
+        args = self.getPlotSettings('plotShape')
+        fig = analysis.plotShape(showFig=False, **args)
         if fig==-1:
             return fig
         return ui.getSVG(fig)
 
     def getNetPyNEConnectionsPlot(self):
-        fig = analysis.plotConn(showFig=False)
+        args = self.getPlotSettings('plotConn')
+        fig = analysis.plotConn(showFig=False, **args)
         if fig==-1:
             return fig
         return ui.getSVG(fig)
 
     def getNetPyNERasterPlot(self):
-        fig = analysis.plotRaster(showFig=False)
+        args = self.getPlotSettings('plotRaster')
+        fig = analysis.plotRaster(showFig=False, **args)
         if fig==-1:
             return fig
         return ui.getSVG(fig)
 
     def getNetPyNETracesPlot(self):
-        figs = analysis.plotTraces(include=None, showFig=False)
+        args = self.getPlotSettings('plotTraces')
+        figs = analysis.plotTraces(showFig=False, **args)
         if figs==-1:
             return figs
         svgs = []
@@ -171,13 +182,15 @@ class NetPyNEGeppetto():
         return svgs
     
     def getNetPyNESpikeHistPlot(self):
-        fig = analysis.plotSpikeHist(showFig=False)
+        args = self.getPlotSettings('plotSpikeHist')    
+        fig = analysis.plotSpikeHist(showFig=False, **args)
         if fig==-1:
             return fig
         return ui.getSVG(fig)
 
     def getNetPyNESpikeStatsPlot(self):
-        fig = analysis.plotSpikeStats(showFig=False)
+        args = self.getPlotSettings('plotSpikeStats')
+        fig = analysis.plotSpikeStats(showFig=False, **args)
         if fig==-1:
             return fig
         else:
@@ -185,7 +198,8 @@ class NetPyNEGeppetto():
         return ui.getSVG(fig)
 
     def getNetPyNEGrangerPlot(self):
-        fig = analysis.granger(showFig=False)
+        args = self.getPlotSettings('granger')
+        fig = analysis.granger(plotFig=True, showFig=False, **args)
         if fig==-1:
             return fig
         else:
@@ -193,7 +207,8 @@ class NetPyNEGeppetto():
         return ui.getSVG(fig)
     
     def getNetPyNERatePSDPlot(self):
-        fig = analysis.plotRatePSD(showFig=False)
+        args = self.getPlotSettings('plotRatePSD')
+        fig = analysis.plotRatePSD(showFig=False, **args)
         if fig==-1:
             return fig
         else:
@@ -220,13 +235,20 @@ class NetPyNEGeppetto():
             if ct not in cellTypes:
                 cellTypes.add(ct)
         return cellTypes
-    
+
     def getAvailableStimSources(self):
         return netParams.stimSourceParams.keys()
     
     def getAvailableSynMech(self):
         return netParams.synMechParams.keys()
         
+    def getAvailablePlots(self):
+        plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats"]
+        plots += ["plotRatePSD", "plotTraces", "plotLFP", "plotShape"]
+        plots += ["plot2Dnet", "plotConn", "granger"]
+        
+        return [plot for plot in plots if plot not in simConfig.analysis.keys()]
+
 class LoopTimer(threading.Thread):
     """
     a Timer that calls f every interval
