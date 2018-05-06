@@ -1,7 +1,7 @@
 FROM jupyter/base-notebook:eb70bcf1a292
 USER root
 
-ARG netpyneuiBranch=development
+ARG netpyneuiBranch=fixing-dependencies
 ENV netpyneuiBranch=${netpyneuiBranch}
 RUN echo "$netpyneuiBranch";
 
@@ -25,13 +25,14 @@ RUN apt-get install -y \
         libpng-dev
 USER $NB_USER
 
+RUN conda update conda
 RUN conda create --name snakes python=2
-RUN wget http://www.neuron.yale.edu/ftp/neuron/versions/v7.4/nrn-7.4.tar.gz
+RUN wget --no-check-certificate http://www.neuron.yale.edu/ftp/neuron/versions/v7.4/nrn-7.4.tar.gz
 RUN tar xzvf nrn-7.4.tar.gz
 WORKDIR nrn-7.4
 RUN /bin/bash -c "source activate snakes && ./configure --prefix `pwd` --without-iv --with-nrnpython"
-RUN /bin/bash -c "source activate snakes && make"
-RUN /bin/bash -c "source activate snakes && make install"
+RUN /bin/bash -c "source activate snakes && make --silent"
+RUN /bin/bash -c "source activate snakes && make --silent install"
 WORKDIR src/nrnpython
 ENV PATH="/home/jovyan/work/nrn-7.4/x86_64/bin:${PATH}"
 RUN /bin/bash -c "source activate snakes && python setup.py install"

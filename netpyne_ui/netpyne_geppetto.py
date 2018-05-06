@@ -140,6 +140,7 @@ class NetPyNEGeppetto():
 
     def instantiateNetPyNEModel(self):
         sim.create(netParams, simConfig)
+        sim.net.defineCellShapes()  # creates 3d pt for cells with stylized geometries
         sim.analyze()
         return sim
 
@@ -161,10 +162,9 @@ class NetPyNEGeppetto():
                 GeppettoJupyterGUISync.synched_models[newModel]=synched_component
 
     def getPlotSettings(self, plot):
-        try:
+        if simConfig.analysis and plot in simConfig.analysis:
             return simConfig.analysis[plot]
-        except:
-            return {}
+        return {}
             
     def getNetPyNE2DNetPlot(self):
         args = self.getPlotSettings('plot2Dnet')
@@ -259,7 +259,7 @@ class NetPyNEGeppetto():
             if ct not in cellTypes:
                 cellTypes.add(ct)
         return cellTypes
-        
+
     def getAvailableStimSources(self):
         return netParams.stimSourceParams.keys()
     
@@ -267,10 +267,7 @@ class NetPyNEGeppetto():
         return netParams.synMechParams.keys()
         
     def getAvailablePlots(self):
-        plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats"]
-        plots += ["plotRatePSD", "plotTraces", "plotLFP", "plotShape"]
-        plots += ["plot2Dnet", "plotConn", "granger"]
-        
+        plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats","plotRatePSD", "plotTraces", "plotLFP", "plotShape", "plot2Dnet", "plotConn", "granger"]
         return [plot for plot in plots if plot not in simConfig.analysis.keys()]
 
 class LoopTimer(threading.Thread):
