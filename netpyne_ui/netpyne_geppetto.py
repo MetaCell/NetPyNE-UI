@@ -108,7 +108,32 @@ class NetPyNEGeppetto():
         netpyne_geppetto.simConfig = getattr(simConfigModuleName, modelParameters["simConfigVariable"])
 
         os.chdir(owd)
-
+    
+    def importCellTemplate(self, params):
+        # Get Current dir
+        owd = os.getcwd()
+        
+        #Create Symbolic link
+        if params['compileMod']:
+            modPath = os.path.join(params['modFolder'],"x86_64")
+            subprocess.call(["rm", "-r", modPath])
+            os.chdir(params["modFolder"])
+            subprocess.call(["nrnivmodl"])
+        del params['compileMod']
+        
+        # Load mechanism if mod path is passed
+        if params['modFolder']:
+            neuron.load_mechanisms(str(params['modFolder'] ))
+        del params['modFolder']
+        
+        # import cell template
+        netParams.importCellParams(**params)
+        
+        # delete conditions for this cell Rule
+        netParams.cellParams[params['label']]['conds'] = {}
+        
+        os.chdir(owd)
+        
     def exportModel(self, modelParameters):
         sim.initialize (netParams = netParams, simConfig = simConfig)
         sim.saveData()
