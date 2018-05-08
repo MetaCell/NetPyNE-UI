@@ -13,7 +13,7 @@ import threading
 import time
 
 
-from netpyne import specs, sim, analysis
+from netpyne import specs, sim, analysis, utils
 from netpyne.metadata import metadata, api
 from netpyne_model_interpreter import NetPyNEModelInterpreter
 from model.model_serializer import GeppettoModelSerializer
@@ -265,6 +265,18 @@ class NetPyNEGeppetto():
     
     def getAvailableSynMech(self):
         return netParams.synMechParams.keys()
+    
+    def getAvailableMechs(self):
+        mechs = utils.mechVarList()['mechs']
+        for key in mechs.keys():
+            if 'ion' in key: del mechs[key]
+        for key in ["morphology", "capacitance", "extracellular"]: del mechs[key]
+        return mechs.keys()
+    
+    def getMechParams(self, mechanism):
+        lenght = len(mechanism) + 1
+        params = utils.mechVarList()['mechs'][mechanism]
+        return [value[:-lenght] for value in params]
         
     def getAvailablePlots(self):
         plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats","plotRatePSD", "plotTraces", "plotLFP", "plotShape", "plot2Dnet", "plotConn", "granger"]
