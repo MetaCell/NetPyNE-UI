@@ -274,9 +274,8 @@ class NetPyNEGeppetto():
         return mechs.keys()
     
     def getMechParams(self, mechanism):
-        lenght = len(mechanism) + 1
         params = utils.mechVarList()['mechs'][mechanism]
-        return [value[:-lenght] for value in params]
+        return [value[:-(len(mechanism) + 1)] for value in params]
         
     def getAvailablePlots(self):
         plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats","plotRatePSD", "plotTraces", "plotLFP", "plotShape", "plot2Dnet", "plotConn", "granger"]
