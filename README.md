@@ -11,7 +11,7 @@ This repository hosts the user interface for [NetPyNE](http://www.neurosimlab.or
 ## Install using Docker (self-contained, the simplest)
 
 ### Prerequisites
-In order to Install NetPyNE-UI with docker we need to install docker itself before to proceed.
+In order to Install NetPyNE-UI with docker we need to install docker itself before you can proceed. If you have docker already installed in your system you can skip this section.
 Below you can find the link with the procedure to follow depending on the OS you are using.
 
 #### For Windows users
