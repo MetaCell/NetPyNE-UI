@@ -73,7 +73,7 @@ Once you run your container you can open your browser and connect to http://loca
 
 One note for Windows users - once the docker image has been pulled and the NetPyNE-UI container created, you can reach your instance of NetPyNE-UI by default at the address 192.168.99.100:8888, if something has been changed in the settings this will be visible when the docker terminal will be open, as per image below.
 
-![windows_docker2](https://github.com/metacell/netpyne-ui/raw/master/docker_windows2.png)
+![windows_docker2](https://github.com/metacell/netpyne-ui/raw/development/docker_windows2.png)
 
 ## Install using pip
 ```
