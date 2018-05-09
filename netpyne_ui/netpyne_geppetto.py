@@ -13,7 +13,7 @@ import threading
 import time
 
 
-from netpyne import specs, sim, analysis
+from netpyne import specs, sim, analysis, utils
 from netpyne.metadata import metadata, api
 from netpyne_model_interpreter import NetPyNEModelInterpreter
 from model.model_serializer import GeppettoModelSerializer
@@ -108,7 +108,32 @@ class NetPyNEGeppetto():
         netpyne_geppetto.simConfig = getattr(simConfigModuleName, modelParameters["simConfigVariable"])
 
         os.chdir(owd)
-
+    
+    def importCellTemplate(self, params):
+        # Get Current dir
+        owd = os.getcwd()
+        
+        #Create Symbolic link
+        if params['compileMod']:
+            modPath = os.path.join(params['modFolder'],"x86_64")
+            subprocess.call(["rm", "-r", modPath])
+            os.chdir(params["modFolder"])
+            subprocess.call(["nrnivmodl"])
+        del params['compileMod']
+        
+        # Load mechanism if mod path is passed
+        if params['modFolder']:
+            neuron.load_mechanisms(str(params['modFolder'] ))
+        del params['modFolder']
+        
+        # import cell template
+        netParams.importCellParams(**params)
+        
+        # delete conditions for this cell Rule
+        netParams.cellParams[params['label']]['conds'] = {}
+        
+        os.chdir(owd)
+        
     def exportModel(self, modelParameters):
         sim.initialize (netParams = netParams, simConfig = simConfig)
         sim.saveData()
@@ -240,6 +265,18 @@ class NetPyNEGeppetto():
     
     def getAvailableSynMech(self):
         return netParams.synMechParams.keys()
+    
+    def getAvailableMechs(self):
+        mechs = utils.mechVarList()['mechs']
+        for key in mechs.keys():
+            if 'ion' in key: del mechs[key]
+        for key in ["morphology", "capacitance", "extracellular"]: del mechs[key]
+        return mechs.keys()
+    
+    def getMechParams(self, mechanism):
+        lenght = len(mechanism) + 1
+        params = utils.mechVarList()['mechs'][mechanism]
+        return [value[:-lenght] for value in params]
         
     def getAvailablePlots(self):
         plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats","plotRatePSD", "plotTraces", "plotLFP", "plotShape", "plot2Dnet", "plotConn", "granger"]
