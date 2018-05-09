@@ -41,7 +41,7 @@ To install docker on Mac OS follow the link below with the instructions.
 
 ### Docker is installed, what should I do now?
 Once you completede the docker installation you have 2 ways to proceed further.
-You can use the kitematic GUI and do everything from a nice interface, however if you are fine working with the console you can skip the kitematic section and jump directly to the section [Install NEURON-UI using Docker from command line](#install-nueron-ui-using-docker-from-command-line) .
+You can use the kitematic GUI and do everything from a nice interface, however if you are fine working with the console you can skip the kitematic section and jump directly to the section [Install NEURON-UI using Docker from command line](#install-neuron-ui-using-docker-from-command-line) .
 
 ### Install NEURON-UI using Docker graphical interface (Kitematic)
 Retrieve the right version of Kitematic for your OS from [here](https://github.com/docker/kitematic/releases).
