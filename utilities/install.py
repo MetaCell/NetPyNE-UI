@@ -1,48 +1,92 @@
-import setuptools
-from setuptools.command.install import install
-import subprocess
-import json
 import os
+import sys
+import site
+import json
+import setuptools
+import subprocess
 from shutil import copyfile
+from setuptools.command.install import install
 
-# Cloning Repos
-print("Cloning PyGeppetto...")
-subprocess.call(['git', 'clone', '-b', 'development', 'https://github.com/openworm/pygeppetto.git'], cwd='../')
-subprocess.call(['pip', 'install', '-e', '.'], cwd='../pygeppetto/')
+def checkDependencies():
+    '''checksifnpmisinstalled'''
+    shell = (sys.platform == 'win32')
+    try:
+        subprocess.check_call(['npm', '--version'], shell=shell)
+        subprocess.check_call(['node', '--version'], shell=shell)
+    except:
+        print('ATENTION: -> -nodejs- -npm- not found... Please visit:')
+        print('https://nodejs.org')
+        return False
 
-print("Cloning NetPyNE...")
-subprocess.call(['git', 'clone', '-b', 'metadata', 'https://github.com/Neurosim-lab/netpyne.git'], cwd='../')
-subprocess.call(['pip', 'install', '-e', '.'], cwd='../netpyne/')
+    try:
+        subprocess.check_call(['git', '--version'], shell=shell)
+        return True
+    except:
+        print('ATENTION: -> "git" not found... You ca get it by:')
+        print('sudo apt upgrade')
+        print('sudo apt install git')
+        return False
 
-print("Cloning Geppetto Jupyter (Python package)...")
-subprocess.call(['git', 'clone', '--recursive', '-b', 'development', 'https://github.com/openworm/org.geppetto.frontend.jupyter.git'], cwd='../')
 
-print("Cloning Geppetto Frontend")
-subprocess.call(['git', 'checkout', 'development'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
+if checkDependencies():
 
-print("Cloning Geppetto NetPyNE Configuration ...")
-subprocess.call(['git', 'clone', 'https://github.com/MetaCell/geppetto-netpyne.git'],
-                cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/')
+    # Update pip
+    subprocess.call(["pip", "install", "--upgrade", "pip", "--user"])
 
-subprocess.call(['git', 'checkout', 'development'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-netpyne/')
+    # Find current directory
+    here = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+    here = os.path.dirname(here)
 
-print("Enabling Geppetto NetPyNE Extension ...")
-geppetto_configuration = os.path.join(os.path.dirname(__file__), 'GeppettoConfiguration.json')
-copyfile(geppetto_configuration, '../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/GeppettoConfiguration.json')
+    print("Cloning PyGeppetto...")
+    http = 'https://github.com/openworm/pygeppetto.git'
+    subprocess.call(['git', 'clone', '-b', 'development', http], cwd=here)
+    subprocess.call(['pip', 'install', '-e', '.', "--user"], cwd=os.path.join(here, "pygeppetto"))
 
-# Installing and building
-print("NPM Install and build for Geppetto Frontend  ...")
-subprocess.call(['npm', 'install'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/')
-subprocess.call(['npm', 'run', 'build-dev-noTest'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/')
+    print("Cloning NetPyNE...")
+    http = 'https://github.com/Neurosim-lab/netpyne.git'
+    subprocess.call(['git', 'clone', '-b', 'metadata', http], cwd=here)
+    subprocess.call(['pip', 'install', '-e', '.', "--user"], cwd=os.path.join(here, "netpyne"))
 
-print("Installing jupyter_geppetto python package ...")
-subprocess.call(['pip', 'install', '-e', '.'], cwd='../org.geppetto.frontend.jupyter')
-print("Installing jupyter_geppetto Jupyter Extension ...")
-subprocess.call(['jupyter', 'nbextension', 'install', '--py', '--symlink', '--user', 'jupyter_geppetto'], cwd='../org.geppetto.frontend.jupyter')
-subprocess.call(['jupyter', 'nbextension', 'enable', '--py', '--user', 'jupyter_geppetto'], cwd='../org.geppetto.frontend.jupyter')
-subprocess.call(['jupyter', 'nbextension', 'enable', '--py', 'widgetsnbextension'], cwd='../org.geppetto.frontend.jupyter')
-subprocess.call(['jupyter', 'serverextension', 'enable', '--py', 'jupyter_geppetto'], cwd='../org.geppetto.frontend.jupyter')
+    # Clone dependency
+    print("Cloning GeppettoJupyter (Python package)...")
+    http = 'https://github.com/openworm/org.geppetto.frontend.jupyter.git'
+    subprocess.call(['git', 'clone', '--recursive', '-b', 'development', http], cwd=here)
 
-print("Installing NetPyNE UI python package ...")
-subprocess.call(['pip', 'install', '-e', '.'], cwd='..')
+    # CheckOut branch
+    cwd = os.path.join(here, "org.geppetto.frontend.jupyter", "src", "jupyter_geppetto", "geppetto")
+    subprocess.call(['git', 'checkout', 'development'], cwd=cwd)
 
+    # Clone dependency
+    print("Cloning Geppetto NetPyNe Configuration...")
+    http = 'https://github.com/MetaCell/geppetto-netpyne.git'
+    cwd = os.path.join(cwd, "src", "main", "webapp", "extensions")
+    subprocess.call(['git', 'clone', http], cwd=cwd)
+
+    # checkOut branch
+    subprocess.call(['git', 'checkout', 'development'], cwd=os.path.join(cwd, "geppetto-netpyne"))
+
+    print("Enabling Geppetto NetPyNE Extension ...")
+    geppetto_configuration = os.path.join(os.path.dirname(__file__), 'GeppettoConfiguration.json')
+    copyfile(geppetto_configuration, '../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/GeppettoConfiguration.json')
+
+    # install npm resources
+    cwd = os.path.join(here, "org.geppetto.frontend.jupyter", "src", "jupyter_geppetto", "geppetto", "src", "main", "webapp")
+    print("NPM Install and build for Geppetto Frontend...")
+    subprocess.call(['npm', 'install'], cwd=cwd)
+    subprocess.call(['npm', 'run', 'build-dev-noTest'], cwd=cwd)
+
+    # Install dependency - editable mode
+    print("Installing jupyter_geppetto python package...")
+    cwd = os.path.join(here, "org.geppetto.frontend.jupyter")
+    subprocess.call(["pip", "install", "-e", ".", "--user"], cwd=cwd)
+
+    # install extensions
+    print("Installing jupyter_geppetto Jupyter Extension...")
+    subprocess.call(['jupyter', 'nbextension', 'install', '--py', '--symlink', '--user', 'jupyter_geppetto'], cwd=cwd)
+    subprocess.call(['jupyter', 'nbextension', 'enable', '--py', '--user', 'jupyter_geppetto'], cwd=cwd)
+    subprocess.call(['jupyter', 'nbextension', 'enable', '--py', 'widgetsnbextension'], cwd=cwd)
+    subprocess.call(['jupyter', 'serverextension', 'enable', '--py', 'jupyter_geppetto'], cwd=cwd)
+
+    # Install main distribution - editable mode
+    print("Installing netpyne_ui python package...")
+    subprocess.call(['pip', 'install', '-e', '.', "--user"], cwd=here)
