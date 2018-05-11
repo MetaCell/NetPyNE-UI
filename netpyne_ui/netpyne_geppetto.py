@@ -130,7 +130,7 @@ class NetPyNEGeppetto():
         netParams.importCellParams(**params)
         
         # delete conditions for this cell Rule
-        # netParams.cellParams[params['label']]['conds'] = {}
+        netParams.cellParams[params['label']]['conds'] = {}
         
         os.chdir(owd)
         
