@@ -141,13 +141,13 @@ class NetPyNEGeppetto():
     def instantiateNetPyNEModel(self):
         sim.create(netParams, simConfig)
         sim.net.defineCellShapes()  # creates 3d pt for cells with stylized geometries
-        sim.analyze()
+        sim.gatherData(gatherLFP=False)
+        #sim.saveData()
         return sim
 
     def simulateNetPyNEModel(self):
         sim.simulate()
         sim.analyze()
-
         return sim
 
     def rename(self, path, oldValue,newValue):
@@ -241,6 +241,15 @@ class NetPyNEGeppetto():
         svgs.append(ui.getSVG(fig))
         return svgs
 
+    def getNetPyNELFPPlot(self):
+       args = self.getPlotSettings('plotLFP')
+       fig = analysis.plotLFP(showFig=False, **args)
+       if fig==-1:
+           return fig
+       else:
+            fig=fig[0]
+       return ui.getSVG(fig)
+
     def getAvailablePops(self):
         return netParams.popParams.keys()
 
@@ -281,6 +290,7 @@ class NetPyNEGeppetto():
     def getAvailablePlots(self):
         plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats","plotRatePSD", "plotTraces", "plotLFP", "plotShape", "plot2Dnet", "plotConn", "granger"]
         return [plot for plot in plots if plot not in simConfig.analysis.keys()]
+
 
 class LoopTimer(threading.Thread):
     """
