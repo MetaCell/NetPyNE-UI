@@ -240,9 +240,40 @@ class NetPyNEGeppetto():
         svgs = []
         svgs.append(ui.getSVG(fig))
         return svgs
-
-    def getNetPyNELFPPlot(self):
+        
+    def getNetPyNELFPTimeSeriesPlot(self):
        args = self.getPlotSettings('plotLFP')
+       args['plots'] = ['timeSeries']
+       fig = analysis.plotLFP(showFig=False, **args)
+       if fig==-1:
+           return fig
+       else:
+            fig=fig[0]
+       return ui.getSVG(fig)
+
+    def getNetPyNELFPPSDPlot(self):
+       args = self.getPlotSettings('plotLFP')
+       args['plots'] = ['PSD']
+       fig = analysis.plotLFP(showFig=False, **args)
+       if fig==-1:
+           return fig
+       else:
+            fig=fig[0]
+       return ui.getSVG(fig)
+
+    def getNetPyNELFPSpectrogramPlot(self):
+       args = self.getPlotSettings('plotLFP')
+       args['plots'] = ['spectrogram']
+       fig = analysis.plotLFP(showFig=False, **args)
+       if fig==-1:
+           return fig
+       else:
+            fig=fig[0]
+       return ui.getSVG(fig)
+
+    def getNetPyNELFPLocationsPlot(self):
+       args = self.getPlotSettings('plotLFP')
+       args['plots'] = ['locations']
        fig = analysis.plotLFP(showFig=False, **args)
        if fig==-1:
            return fig
