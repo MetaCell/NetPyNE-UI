@@ -27,36 +27,6 @@ class NetPyNEModelInterpreter():
 
         return geppetto_model
 
-    def convertTo3DGeoms(self, secs):
-        # set 3d geoms for reduced cell models
-        offset = 0
-        prevL = 0
-        for secName, sec in secs.items():
-            sec['geom']['pt3d'] = []
-            if secName in ['Adend1', 'Adend2', 'Adend3', 'soma']:  # set 3d geom of soma and Adends
-                sec['geom']['pt3d'].append(
-                    [offset + 0, prevL, 0, sec['geom']['diam']])
-                prevL = float(prevL + sec['geom']['L'])
-                sec['geom']['pt3d'].append(
-                    [offset + 0, prevL, 0, sec['geom']['diam']])
-            elif secName in ['axon', 'dend']:  # set 3d geom of axon
-                sec['geom']['pt3d'].append(
-                    [offset + 0, 0, 0, sec['geom']['diam']])
-                sec['geom']['pt3d'].append(
-                    [offset + 0, -sec['geom']['L'], 0, sec['geom']['diam']])
-            else:  # set 3d geom of dend
-                sec['geom']['pt3d'].append(
-                    [offset + 0, 0, 0, sec['geom']['diam']])
-                nseg = sec['geom']['nseg']
-                logging.debug('takasec')
-                logging.debug(sec)
-                if nseg != {}:
-                    for i in range(nseg):
-                        sec['geom']['pt3d'].append(
-                            [offset + (sec['geom']['L'] / nseg) * (i + 1), 0, 0, sec['geom']['diam']])
-        return secs
-
-
     def extractPopulations(self, netpyne_model, netpyne_geppetto_library, geppetto_model):
         # Initialise network
         network = pygeppetto.CompositeType(id='network_netpyne', name='network_netpyne')
@@ -93,11 +63,8 @@ class NetPyNEModelInterpreter():
                 # Save in intermediate structure
                 populations[cell['tags']['pop']] = arrayType
 
-                # Convert to pt3d if not there
+                # Note: no need to check if pt3d since already done via netpyne sim.net.defineCellShapes() in instantiateNetPyNEModel
                 secs = cell['secs']
-                if hasattr(secs, 'values') and len(secs.values()) > 0:
-                    if 'pt3d' not in list(secs.values())[0]['geom']:
-                        secs = self.convertTo3DGeoms(secs)
                 
                 # Iterate sections creating spheres and cylinders
                 if hasattr(secs, 'items'):
@@ -105,16 +72,12 @@ class NetPyNEModelInterpreter():
                         if 'pt3d' in sec['geom']:
                             points = sec['geom']['pt3d']
                             for i in range(len(points) - 1):
-                                if sec_name == 'soma':
-                                    visualType.variables.append(self.factory.createSphere(str(sec_name),
-                                                                                            radius=float(points[i][3] / 2),
-                                                                                            position=Point(x=float(points[i][0]),y=-float(points[i][1]), z=float(points[i][2]))))
-                                else:
-                                    visualType.variables.append(self.factory.createCylinder(str(sec_name),
+                                # draw soma as a cylinder, not as a sphere (more accurate representation of 3d pts)  
+                                visualType.variables.append(self.factory.createCylinder(str(sec_name),
                                                                                             bottomRadius=float(points[i][3] / 2),
                                                                                             topRadius=float(points[i + 1][3] / 2),
-                                                                                            position=Point(x=float(points[i][0]),y=-float(points[i][1]), z=float(points[i][2])),
-                                                                                            distal=Point(x=float(points[i + 1][0]), y=-float(points[i + 1][1]), z=float(points[i + 1][2]))))
+                                                                                            position=Point(x=float(points[i][0]),y=float(points[i][1]), z=float(points[i][2])),
+                                                                                            distal=Point(x=float(points[i + 1][0]), y=float(points[i + 1][1]), z=float(points[i + 1][2]))))
                     
 
             # Save the cell position and update elements in defaultValue and size

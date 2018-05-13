@@ -13,7 +13,7 @@ import threading
 import time
 
 
-from netpyne import specs, sim, analysis
+from netpyne import specs, sim, analysis, utils
 from netpyne.metadata import metadata, api
 from netpyne_model_interpreter import NetPyNEModelInterpreter
 from model.model_serializer import GeppettoModelSerializer
@@ -108,20 +108,46 @@ class NetPyNEGeppetto():
         netpyne_geppetto.simConfig = getattr(simConfigModuleName, modelParameters["simConfigVariable"])
 
         os.chdir(owd)
-
+    
+    def importCellTemplate(self, params):
+        # Get Current dir
+        owd = os.getcwd()
+        
+        #Create Symbolic link
+        if params['compileMod']:
+            modPath = os.path.join(params['modFolder'],"x86_64")
+            subprocess.call(["rm", "-r", modPath])
+            os.chdir(params["modFolder"])
+            subprocess.call(["nrnivmodl"])
+        del params['compileMod']
+        
+        # Load mechanism if mod path is passed
+        if params['modFolder']:
+            neuron.load_mechanisms(str(params['modFolder'] ))
+        del params['modFolder']
+        
+        # import cell template
+        netParams.importCellParams(**params)
+        
+        # delete conditions for this cell Rule
+        netParams.cellParams[params['label']]['conds'] = {}
+        
+        os.chdir(owd)
+        
     def exportModel(self, modelParameters):
         sim.initialize (netParams = netParams, simConfig = simConfig)
         sim.saveData()
 
     def instantiateNetPyNEModel(self):
         sim.create(netParams, simConfig)
-        sim.analyze()
+        sim.net.defineCellShapes()  # creates 3d pt for cells with stylized geometries
+        sim.gatherData(gatherLFP=False)
+        #sim.saveData()
         return sim
 
     def simulateNetPyNEModel(self):
         sim.simulate()
         sim.analyze()
-
         return sim
 
     def rename(self, path, oldValue,newValue):
@@ -135,32 +161,42 @@ class NetPyNEGeppetto():
                 newModel = model.replace(oldValue,newValue)
                 GeppettoJupyterGUISync.synched_models[newModel]=synched_component
 
+    def getPlotSettings(self, plot):
+        if simConfig.analysis and plot in simConfig.analysis:
+            return simConfig.analysis[plot]
+        return {}
+            
     def getNetPyNE2DNetPlot(self):
-        fig = analysis.plot2Dnet(showFig=False)
+        args = self.getPlotSettings('plot2Dnet')
+        fig = analysis.plot2Dnet(showFig=False, **args)
         if fig==-1:
             return fig
         return ui.getSVG(fig)
     
     def getNetPyNEShapePlot(self):
-        fig = analysis.plotShape(includePost = ['all'],showFig=False)
+        args = self.getPlotSettings('plotShape')
+        fig = analysis.plotShape(showFig=False, **args)
         if fig==-1:
             return fig
         return ui.getSVG(fig)
 
     def getNetPyNEConnectionsPlot(self):
-        fig = analysis.plotConn(showFig=False)
+        args = self.getPlotSettings('plotConn')
+        fig = analysis.plotConn(showFig=False, **args)
         if fig==-1:
             return fig
         return ui.getSVG(fig)
 
     def getNetPyNERasterPlot(self):
-        fig = analysis.plotRaster(showFig=False)
+        args = self.getPlotSettings('plotRaster')
+        fig = analysis.plotRaster(showFig=False, **args)
         if fig==-1:
             return fig
         return ui.getSVG(fig)
 
     def getNetPyNETracesPlot(self):
-        figs = analysis.plotTraces(include=None, showFig=False)
+        args = self.getPlotSettings('plotTraces')
+        figs = analysis.plotTraces(showFig=False, **args)
         if figs==-1:
             return figs
         svgs = []
@@ -170,13 +206,15 @@ class NetPyNEGeppetto():
         return svgs
     
     def getNetPyNESpikeHistPlot(self):
-        fig = analysis.plotSpikeHist(showFig=False)
+        args = self.getPlotSettings('plotSpikeHist')    
+        fig = analysis.plotSpikeHist(showFig=False, **args)
         if fig==-1:
             return fig
         return ui.getSVG(fig)
 
     def getNetPyNESpikeStatsPlot(self):
-        fig = analysis.plotSpikeStats(showFig=False)
+        args = self.getPlotSettings('plotSpikeStats')
+        fig = analysis.plotSpikeStats(showFig=False, **args)
         if fig==-1:
             return fig
         else:
@@ -184,7 +222,8 @@ class NetPyNEGeppetto():
         return ui.getSVG(fig)
 
     def getNetPyNEGrangerPlot(self):
-        fig = analysis.granger(showFig=False)
+        args = self.getPlotSettings('granger')
+        fig = analysis.granger(plotFig=True, showFig=False, **args)
         if fig==-1:
             return fig
         else:
@@ -192,7 +231,8 @@ class NetPyNEGeppetto():
         return ui.getSVG(fig)
     
     def getNetPyNERatePSDPlot(self):
-        fig = analysis.plotRatePSD(showFig=False)
+        args = self.getPlotSettings('plotRatePSD')
+        fig = analysis.plotRatePSD(showFig=False, **args)
         if fig==-1:
             return fig
         else:
@@ -200,6 +240,46 @@ class NetPyNEGeppetto():
         svgs = []
         svgs.append(ui.getSVG(fig))
         return svgs
+        
+    def getNetPyNELFPTimeSeriesPlot(self):
+       args = self.getPlotSettings('plotLFP')
+       args['plots'] = ['timeSeries']
+       fig = analysis.plotLFP(showFig=False, **args)
+       if fig==-1:
+           return fig
+       else:
+            fig=fig[0]
+       return ui.getSVG(fig)
+
+    def getNetPyNELFPPSDPlot(self):
+       args = self.getPlotSettings('plotLFP')
+       args['plots'] = ['PSD']
+       fig = analysis.plotLFP(showFig=False, **args)
+       if fig==-1:
+           return fig
+       else:
+            fig=fig[0]
+       return ui.getSVG(fig)
+
+    def getNetPyNELFPSpectrogramPlot(self):
+       args = self.getPlotSettings('plotLFP')
+       args['plots'] = ['spectrogram']
+       fig = analysis.plotLFP(showFig=False, **args)
+       if fig==-1:
+           return fig
+       else:
+            fig=fig[0]
+       return ui.getSVG(fig)
+
+    def getNetPyNELFPLocationsPlot(self):
+       args = self.getPlotSettings('plotLFP')
+       args['plots'] = ['locations']
+       fig = analysis.plotLFP(showFig=False, **args)
+       if fig==-1:
+           return fig
+       else:
+            fig=fig[0]
+       return ui.getSVG(fig)
 
     def getAvailablePops(self):
         return netParams.popParams.keys()
@@ -219,6 +299,29 @@ class NetPyNEGeppetto():
             if ct not in cellTypes:
                 cellTypes.add(ct)
         return cellTypes
+
+    def getAvailableStimSources(self):
+        return netParams.stimSourceParams.keys()
+    
+    def getAvailableSynMech(self):
+        return netParams.synMechParams.keys()
+    
+    def getAvailableMechs(self):
+        mechs = utils.mechVarList()['mechs']
+        for key in mechs.keys():
+            if 'ion' in key: del mechs[key]
+        for key in ["morphology", "capacitance", "extracellular"]: del mechs[key]
+        return mechs.keys()
+    
+    def getMechParams(self, mechanism):
+        lenght = len(mechanism) + 1
+        params = utils.mechVarList()['mechs'][mechanism]
+        return [value[:-lenght] for value in params]
+        
+    def getAvailablePlots(self):
+        plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats","plotRatePSD", "plotTraces", "plotLFP", "plotShape", "plot2Dnet", "plotConn", "granger"]
+        return [plot for plot in plots if plot not in simConfig.analysis.keys()]
+
 
 class LoopTimer(threading.Thread):
     """

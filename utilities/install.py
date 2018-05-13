@@ -7,24 +7,24 @@ from shutil import copyfile
 
 # Cloning Repos
 print("Cloning PyGeppetto...")
-subprocess.call(['git', 'clone', '-b', 'development', 'https://github.com/openworm/pygeppetto.git'], cwd='../')
+subprocess.call(['git', 'clone', '-b', 'v0.3.9-alpha', 'https://github.com/openworm/pygeppetto.git'], cwd='../')
 subprocess.call(['pip', 'install', '-e', '.'], cwd='../pygeppetto/')
 
 print("Cloning NetPyNE...")
-subprocess.call(['git', 'clone', '-b', 'metadata', 'https://github.com/Neurosim-lab/netpyne.git'], cwd='../')
+subprocess.call(['git', 'clone', '-b', 'v0.7.8_UI0.2Release', 'https://github.com/Neurosim-lab/netpyne.git'], cwd='../')
 subprocess.call(['pip', 'install', '-e', '.'], cwd='../netpyne/')
 
 print("Cloning Geppetto Jupyter (Python package)...")
-subprocess.call(['git', 'clone', '--recursive', '-b', 'development', 'https://github.com/openworm/org.geppetto.frontend.jupyter.git'], cwd='../')
+subprocess.call(['git', 'clone', '--recursive', '-b', 'v0.4.0-M1', 'https://github.com/openworm/org.geppetto.frontend.jupyter.git'], cwd='../')
 
 print("Cloning Geppetto Frontend")
-subprocess.call(['git', 'checkout', 'development'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
+subprocess.call(['git', 'checkout', 'v0.4.0-M1'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
 
 print("Cloning Geppetto NetPyNE Configuration ...")
 subprocess.call(['git', 'clone', 'https://github.com/MetaCell/geppetto-netpyne.git'],
                 cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/')
 
-subprocess.call(['git', 'checkout', 'development'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-netpyne/')
+subprocess.call(['git', 'checkout', '0.2M1'], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-netpyne/')
 
 print("Enabling Geppetto NetPyNE Extension ...")
 geppetto_configuration = os.path.join(os.path.dirname(__file__), 'GeppettoConfiguration.json')
