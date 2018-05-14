@@ -203,7 +203,7 @@ class NetPyNEGeppetto():
         for key, value in figs.iteritems():
             logging.debug("Found plot for "+ key)
             svgs.append(ui.getSVG(value))
-        return svgs
+        return svgs.__str__()
     
     def getNetPyNESpikeHistPlot(self):
         args = self.getPlotSettings('plotSpikeHist')    
@@ -239,7 +239,7 @@ class NetPyNEGeppetto():
             fig=fig[0]
         svgs = []
         svgs.append(ui.getSVG(fig))
-        return svgs
+        return svgs.__str__()
         
     def getNetPyNELFPTimeSeriesPlot(self):
        args = self.getPlotSettings('plotLFP')

@@ -22,6 +22,7 @@ RUN apt-get install -y \
         cython \
         git-core \
         unzip \
+        vim \
         libpng-dev
 USER $NB_USER
 
