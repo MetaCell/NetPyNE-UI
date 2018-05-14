@@ -1,7 +1,7 @@
 FROM jupyter/base-notebook:eb70bcf1a292
 USER root
 
-ARG netpyneuiBranch=0.2M1
+ARG netpyneuiBranch=0.2M2
 ENV netpyneuiBranch=${netpyneuiBranch}
 RUN echo "$netpyneuiBranch";
 
@@ -22,6 +22,7 @@ RUN apt-get install -y \
         cython \
         git-core \
         unzip \
+        vim \
         libpng-dev
 USER $NB_USER
 
