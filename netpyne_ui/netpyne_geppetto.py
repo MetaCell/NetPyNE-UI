@@ -133,6 +133,7 @@ class NetPyNEGeppetto():
         netParams.cellParams[params['label']]['conds'] = {}
         
         os.chdir(owd)
+
         
     def exportModel(self, modelParameters):
         sim.initialize (netParams = netParams, simConfig = simConfig)
