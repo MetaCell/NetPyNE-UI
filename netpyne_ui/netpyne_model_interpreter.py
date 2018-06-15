@@ -3,7 +3,7 @@ netpyne_model_interpreter.py
 Model interpreter for NetPyNE. This class creates a geppetto type
 """
 import logging
-import model as pygeppetto
+import pygeppetto.model as pygeppetto
 from model.model_factory import GeppettoModelFactory
 from model.values import Point, ArrayElement, ArrayValue
 
