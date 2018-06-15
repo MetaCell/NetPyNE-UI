@@ -16,7 +16,7 @@ import time
 from netpyne import specs, sim, analysis, utils
 from netpyne.metadata import metadata, api
 from netpyne_model_interpreter import NetPyNEModelInterpreter
-from model.model_serializer import GeppettoModelSerializer
+from pygeppetto.model.model_serializer import GeppettoModelSerializer
 import matplotlib.pyplot as plt
 from model import ui
 import numpy as np

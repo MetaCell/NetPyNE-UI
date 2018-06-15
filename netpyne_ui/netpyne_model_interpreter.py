@@ -5,7 +5,7 @@ Model interpreter for NetPyNE. This class creates a geppetto type
 import logging
 import pygeppetto.model as pygeppetto
 from pygeppetto.model.model_factory import GeppettoModelFactory
-from model.values import Point, ArrayElement, ArrayValue
+from pygeppetto.model.values import Point, ArrayElement, ArrayValue
 
 
 class NetPyNEModelInterpreter():
