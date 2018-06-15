@@ -37,8 +37,8 @@ RUN /bin/bash -c "source activate snakes && python setup.py install"
 RUN /bin/bash -c "source activate snakes && pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple netpyne_ui"
 RUN /bin/bash -c "source activate snakes && jupyter nbextension install --py --user jupyter_geppetto"
 RUN /bin/bash -c "source activate snakes && jupyter nbextension enable --py jupyter_geppetto"
-RUN /bin/bash -c "source activate snakes && jupyter nbextension enable --py widgetsnbextension"
 RUN /bin/bash -c "source activate snakes &&  jupyter serverextension enable --py jupyter_geppetto"
+RUN /bin/bash -c "source activate snakes && jupyter nbextension enable --py widgetsnbextension"
 
 RUN mkdir /home/jovyan/netpyne_workspace
 WORKDIR /home/jovyan/netpyne_workspace
