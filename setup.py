@@ -28,6 +28,6 @@ setup(
     ],
     install_requires=[
         'jupyter_geppetto==0.4.0',
-        'netpyne'
+        'netpyne==0.7.8'
     ],
 )
