@@ -16,9 +16,9 @@ import time
 from netpyne import specs, sim, analysis, utils
 from netpyne.metadata import metadata, api
 from netpyne_model_interpreter import NetPyNEModelInterpreter
-from model.model_serializer import GeppettoModelSerializer
+from pygeppetto.model.model_serializer import GeppettoModelSerializer
 import matplotlib.pyplot as plt
-from model import ui
+from pygeppetto import ui
 import numpy as np
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
@@ -123,6 +123,7 @@ class NetPyNEGeppetto():
         netpyne_geppetto.netParams.cellParams[modelParameters['label']]['conds'] = {}
         
         os.chdir(owd)
+
         
     def exportModel(self, modelParameters):
         sim.initialize (netParams = netParams, simConfig = simConfig)
@@ -131,13 +132,13 @@ class NetPyNEGeppetto():
     def instantiateNetPyNEModel(self):
         sim.create(netParams, simConfig)
         sim.net.defineCellShapes()  # creates 3d pt for cells with stylized geometries
-        sim.analyze()
+        sim.gatherData(gatherLFP=False)
+        #sim.saveData()
         return sim
 
     def simulateNetPyNEModel(self):
         sim.simulate()
         sim.analyze()
-
         return sim
 
     def rename(self, path, oldValue,newValue):
@@ -193,7 +194,7 @@ class NetPyNEGeppetto():
         for key, value in figs.iteritems():
             logging.debug("Found plot for "+ key)
             svgs.append(ui.getSVG(value))
-        return svgs
+        return svgs.__str__()
     
     def getNetPyNESpikeHistPlot(self):
         args = self.getPlotSettings('plotSpikeHist')    
@@ -229,7 +230,47 @@ class NetPyNEGeppetto():
             fig=fig[0]
         svgs = []
         svgs.append(ui.getSVG(fig))
-        return svgs
+        return svgs.__str__()
+        
+    def getNetPyNELFPTimeSeriesPlot(self):
+       args = self.getPlotSettings('plotLFP')
+       args['plots'] = ['timeSeries']
+       fig = analysis.plotLFP(showFig=False, **args)
+       if fig==-1:
+           return fig
+       else:
+            fig=fig[0]
+       return ui.getSVG(fig)
+
+    def getNetPyNELFPPSDPlot(self):
+       args = self.getPlotSettings('plotLFP')
+       args['plots'] = ['PSD']
+       fig = analysis.plotLFP(showFig=False, **args)
+       if fig==-1:
+           return fig
+       else:
+            fig=fig[0]
+       return ui.getSVG(fig)
+
+    def getNetPyNELFPSpectrogramPlot(self):
+       args = self.getPlotSettings('plotLFP')
+       args['plots'] = ['spectrogram']
+       fig = analysis.plotLFP(showFig=False, **args)
+       if fig==-1:
+           return fig
+       else:
+            fig=fig[0]
+       return ui.getSVG(fig)
+
+    def getNetPyNELFPLocationsPlot(self):
+       args = self.getPlotSettings('plotLFP')
+       args['plots'] = ['locations']
+       fig = analysis.plotLFP(showFig=False, **args)
+       if fig==-1:
+           return fig
+       else:
+            fig=fig[0]
+       return ui.getSVG(fig)
 
     def getAvailablePops(self):
         return netParams.popParams.keys()
@@ -270,6 +311,7 @@ class NetPyNEGeppetto():
     def getAvailablePlots(self):
         plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats","plotRatePSD", "plotTraces", "plotLFP", "plotShape", "plot2Dnet", "plotConn", "granger"]
         return [plot for plot in plots if plot not in simConfig.analysis.keys()]
+
 
 class LoopTimer(threading.Thread):
     """
