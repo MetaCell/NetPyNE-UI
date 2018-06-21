@@ -115,7 +115,12 @@ class NetPyNEGeppetto():
         
         self.compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
 
+        del modelParameters['compileMod']
+        del modelParameters['modFolder']
+
         import netpyne_geppetto
+        modelParameters['fileName'] = str(modelParameters['fileName'])
+
         # import cell template
         netpyne_geppetto.netParams.importCellParams(**modelParameters)
         
