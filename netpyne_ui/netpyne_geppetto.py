@@ -166,6 +166,19 @@ class NetPyNEGeppetto():
         if simConfig.analysis and plot in simConfig.analysis:
             return simConfig.analysis[plot]
         return {}
+
+    def getDirList(self, dir=None):
+        # Get Current dir
+        if dir == None:
+            dir = os.getcwd()
+        dir_list = []
+        for f in sorted(os.listdir(str(dir)), key=str.lower):
+           ff=os.path.join(dir,f)
+           if os.path.isdir(ff):
+               dir_list.insert(0, {'title': f, 'path': ff, 'load': False, 'children': [{'title': 'Loading...'}]})
+           else:
+               dir_list.append({'title': f, 'path': ff})
+        return dir_list
             
     def getNetPyNE2DNetPlot(self):
         args = self.getPlotSettings('plot2Dnet')
@@ -441,4 +454,5 @@ GeppettoJupyterModelSync.current_model.original_model = json.dumps({'netParams':
                                                                     'simConfig': simConfig.__dict__,
                                                                     'metadata': metadata.metadata,
                                                                     'requirement': 'from netpyne_ui.netpyne_geppetto import *',
-                                                                    'isDocker': os.path.isfile('/.dockerenv')})
+                                                                    'isDocker': os.path.isfile('/.dockerenv'),
+                                                                    'currentFolder': os.getcwd()})
