@@ -10,75 +10,15 @@ This repository hosts the user interface for [NetPyNE](http://www.neurosimlab.or
 
 ## Install using Docker (self-contained, the simplest)
 
-### Prerequisites
-In order to Install NetPyNE-UI with docker we need to install docker itself before you can proceed. If you have docker already installed in your system you can skip this section.
-Below you can find the link with the procedure to follow depending on the OS you are using. If you have a local virtual machine [this link](https://docs.docker.com/machine/get-started/) will help you getting started.
-
-#### For Windows users
-To install docker on Windows download docker-toolbox from the link below and follow the onscreen instructions.
-[Windows](https://docs.docker.com/toolbox/toolbox_install_windows/)
-
-Few notes regarding the windows installation:
-- During the step "Select Additional Tasks", select all the checkboxes as the image here.
-![windows_docker1](https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/development/docs/docker_windows1.png).
-
-
-#### For Linux users
-To install docker on Linux follow the link below with the instructions.
-[Linux](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
-
-Few notes about the linux installation:
-- Once the installation has been completed, to run docker from your user you need to add it to the docker group.
-To do this you can run the command below
-```
-sudo usermod -a -G docker $USERNAME
-```
-Once the command has been executed you need to open a new terminal or login in your environment again in order to make the change effective.
-
-#### For MacOS users
-To install docker on Mac OS follow the link below with the instructions.
-[MacOS](https://docs.docker.com/docker-for-mac/install/)
-
-### Docker is installed, what should I do now?
-Once you completed the docker installation you have 2 ways to proceed further.
-You can use the kitematic GUI and do everything from a nice interface, however if you are fine working with the console you can skip the kitematic section and jump directly to the section [Install NEURON-UI using Docker from command line](#install-neuron-ui-using-docker-from-command-line) .
-
-### Install NEURON-UI using Docker graphical interface (Kitematic)
-Retrieve the right version of Kitematic for your OS from [here](https://github.com/docker/kitematic/releases).
-
-Open [Kitematic](https://kitematic.com/): search for netpyne-ui and create the container.
-
-![Image](https://github.com/metacell/netpyne-ui/raw/master/docs/kitematicImage.png)
-
-Start the container and click on Web preview to launch it. No need to ever use the command line, enjoy!
-
-![Kitematic](https://github.com/metacell/netpyne-ui/raw/master/docs/kitematicRun.png)
-
-### Install NEURON-UI using Docker from command line 
-To pull the docker container:
-```
-docker pull metacell/netpyne-ui
-```
-To run the docker container:
-```
-docker run -it -p 8888:8888 metacell/netpyne-ui
-```
-Or alternatively, if you want a local folder outside of the Docker container to host the NetPyNE-UI workspace (where you can import models from, export models to, inspect the log and the jupyter notebook) you can execute the following command: 
-```
-docker run -it -v ~/folder_in_your_computer:/home/jovyan/netpyne_workspace -p 8888:8888 metacell/netpyne-ui
-```
-This will mount your local folder `folder_in_your_computer` as a volume inside the container and will be used to host the NetPyNE-UI workspace (`/home/jovyan/netpyne_workspace` inside the container). 
-
-Once you run your container you can open your browser and connect to http://localhost:8888/geppetto.
-
-One note for Windows users - once the docker image has been pulled and the NetPyNE-UI container created, you can reach your instance of NetPyNE-UI by default at the address 192.168.99.100:8888, if something has been changed in the settings this will be visible when the docker terminal will be open, as per image below.
-
-![windows_docker2](https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/development/docs/docker_windows2.png)
+[![Docker](https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/ddelpiano-patch-1/docs/docker_logo.png)](https://github.com/MetaCell/NetPyNE-UI/wiki/Docker-installation)
 
 ## Install using pip
-```
-Coming soon
-```
+
+[![Pip](https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/ddelpiano-patch-1/docs/pip_logo.png)](https://github.com/MetaCell/NetPyNE-UI/wiki/Pip-installation)
+
+## Install using Virtual Box
+
+[![Virtual Box](https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/ddelpiano-patch-1/docs/vbox_logo.png)](https://github.com/MetaCell/NetPyNE-UI/wiki/Virtual-Machine-Installation)
 
 ## Install from sources (for developers)
 ```
