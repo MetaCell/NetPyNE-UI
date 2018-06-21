@@ -77,7 +77,7 @@ class NetPyNEGeppetto():
         
         #Create Symbolic link
         if modelParameters['compileMod']:
-            modPath = os.path.join(modelParameters['modFolder'],"x86_64")
+            modPath = os.path.join(str(modelParameters['modFolder']),"x86_64")
             subprocess.call(["rm", "-r", modPath])
             
             os.chdir(modelParameters["modFolder"])
@@ -90,22 +90,22 @@ class NetPyNEGeppetto():
         import netpyne_geppetto
 
         # NetParams
-        netParamsPath = modelParameters["netParamsPath"]
+        netParamsPath = str(modelParameters["netParamsPath"])
         sys.path.append(netParamsPath)
         os.chdir(netParamsPath)
         # Import Module 
-        netParamsModuleName = importlib.import_module(modelParameters["netParamsModuleName"])
+        netParamsModuleName = importlib.import_module(str(modelParameters["netParamsModuleName"]))
         # Import Model attributes
-        netpyne_geppetto.netParams = getattr(netParamsModuleName, modelParameters["netParamsVariable"])
+        netpyne_geppetto.netParams = getattr(netParamsModuleName, str(modelParameters["netParamsVariable"]))
 
         # SimConfig
-        simConfigPath = modelParameters["simConfigPath"]
+        simConfigPath = str(modelParameters["simConfigPath"])
         sys.path.append(simConfigPath)
         os.chdir(simConfigPath)
         # Import Module 
-        simConfigModuleName = importlib.import_module(modelParameters["simConfigModuleName"])
+        simConfigModuleName = importlib.import_module(str(modelParameters["simConfigModuleName"]))
         # Import Model attributes
-        netpyne_geppetto.simConfig = getattr(simConfigModuleName, modelParameters["simConfigVariable"])
+        netpyne_geppetto.simConfig = getattr(simConfigModuleName, str(modelParameters["simConfigVariable"]))
 
         os.chdir(owd)
     
