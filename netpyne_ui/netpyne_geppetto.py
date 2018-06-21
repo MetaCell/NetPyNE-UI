@@ -69,26 +69,26 @@ class NetPyNEGeppetto():
         
         return GeppettoModelSerializer().serialize(self.geppetto_model)
 
-
-    def importModel(self, modelParameters):
-       
-        # Get Current dir
-        owd = os.getcwd()
-        
+    def compileModMechFiles(self, compileMod, modFolder):
         #Create Symbolic link
-        if modelParameters['compileMod']:
-            modPath = os.path.join(modelParameters['modFolder'],"x86_64")
+        if compileMod:
+            modPath = os.path.join(modFolder,"x86_64")
             subprocess.call(["rm", "-r", modPath])
             
-            os.chdir(modelParameters["modFolder"])
+            os.chdir(modFolder)
             subprocess.call(["nrnivmodl"])
             
         # Load mechanism if mod path is passed
-        if modelParameters['modFolder']:
-            neuron.load_mechanisms(str(modelParameters["modFolder"] ))
+        if modFolder:
+            neuron.load_mechanisms(str(modFolder ))
+
+    def importModel(self, modelParameters):
+        # Get Current dir
+        owd = os.getcwd()
+        
+        self.compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
         
         import netpyne_geppetto
-
         # NetParams
         netParamsPath = modelParameters["netParamsPath"]
         sys.path.append(netParamsPath)
@@ -109,28 +109,23 @@ class NetPyNEGeppetto():
 
         os.chdir(owd)
     
-    def importCellTemplate(self, params):
+    def importCellTemplate(self, modelParameters):
         # Get Current dir
         owd = os.getcwd()
         
-        #Create Symbolic link
-        if params['compileMod']:
-            modPath = os.path.join(params['modFolder'],"x86_64")
-            subprocess.call(["rm", "-r", modPath])
-            os.chdir(params["modFolder"])
-            subprocess.call(["nrnivmodl"])
-        del params['compileMod']
-        
-        # Load mechanism if mod path is passed
-        if params['modFolder']:
-            neuron.load_mechanisms(str(params['modFolder'] ))
-        del params['modFolder']
-        
+        self.compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
+
+        del modelParameters['compileMod']
+        del modelParameters['modFolder']
+
+        import netpyne_geppetto
+        modelParameters['fileName'] = str(modelParameters['fileName'])
+
         # import cell template
-        netParams.importCellParams(**params)
+        netpyne_geppetto.netParams.importCellParams(**modelParameters)
         
         # delete conditions for this cell Rule
-        netParams.cellParams[params['label']]['conds'] = {}
+        netpyne_geppetto.netParams.cellParams[modelParameters['label']]['conds'] = {}
         
         os.chdir(owd)
 
@@ -315,9 +310,8 @@ class NetPyNEGeppetto():
         return mechs.keys()
     
     def getMechParams(self, mechanism):
-        lenght = len(mechanism) + 1
         params = utils.mechVarList()['mechs'][mechanism]
-        return [value[:-lenght] for value in params]
+        return [value[:-(len(mechanism) + 1)] for value in params]
         
     def getAvailablePlots(self):
         plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats","plotRatePSD", "plotTraces", "plotLFP", "plotShape", "plot2Dnet", "plotConn", "granger"]
