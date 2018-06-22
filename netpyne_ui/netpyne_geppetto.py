@@ -317,6 +317,15 @@ class NetPyNEGeppetto():
         plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats","plotRatePSD", "plotTraces", "plotLFP", "plotShape", "plot2Dnet", "plotConn", "granger"]
         return [plot for plot in plots if plot not in simConfig.analysis.keys()]
 
+    def deleteParam(self, paramToDel):
+        logging.debug("checking if netParams."+paramToDel+" is not null")
+        if eval("netParams."+paramToDel) is not None:
+            exec("del netParams.%s" % (paramToDel))
+            logging.debug('Parameter netParams.'+paramToDel+' has been deleted')
+        else:
+            logging.debug('Parameter '+paramToDel+' not valid')
+        
+
 
 class LoopTimer(threading.Thread):
     """
