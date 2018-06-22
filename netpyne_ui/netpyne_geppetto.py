@@ -72,7 +72,8 @@ class NetPyNEGeppetto():
     def compileModMechFiles(self, compileMod, modFolder):
         #Create Symbolic link
         if compileMod:
-            modPath = os.path.join(modFolder,"x86_64")
+            modPath = os.path.join(str(modFolder),"x86_64")
+
             subprocess.call(["rm", "-r", modPath])
             
             os.chdir(modFolder)
@@ -80,7 +81,7 @@ class NetPyNEGeppetto():
             
         # Load mechanism if mod path is passed
         if modFolder:
-            neuron.load_mechanisms(str(modFolder ))
+            neuron.load_mechanisms(str(modFolder))
 
     def importModel(self, modelParameters):
         # Get Current dir
@@ -90,45 +91,33 @@ class NetPyNEGeppetto():
         
         import netpyne_geppetto
         # NetParams
-        netParamsPath = modelParameters["netParamsPath"]
+        netParamsPath = str(modelParameters["netParamsPath"])
         sys.path.append(netParamsPath)
         os.chdir(netParamsPath)
         # Import Module 
-        netParamsModuleName = importlib.import_module(modelParameters["netParamsModuleName"])
+        netParamsModuleName = importlib.import_module(str(modelParameters["netParamsModuleName"]))
         # Import Model attributes
-        netpyne_geppetto.netParams = getattr(netParamsModuleName, modelParameters["netParamsVariable"])
+        netpyne_geppetto.netParams = getattr(netParamsModuleName, str(modelParameters["netParamsVariable"]))
 
         # SimConfig
-        simConfigPath = modelParameters["simConfigPath"]
+        simConfigPath = str(modelParameters["simConfigPath"])
         sys.path.append(simConfigPath)
         os.chdir(simConfigPath)
         # Import Module 
-        simConfigModuleName = importlib.import_module(modelParameters["simConfigModuleName"])
+        simConfigModuleName = importlib.import_module(str(modelParameters["simConfigModuleName"]))
         # Import Model attributes
-        netpyne_geppetto.simConfig = getattr(simConfigModuleName, modelParameters["simConfigVariable"])
+        netpyne_geppetto.simConfig = getattr(simConfigModuleName, str(modelParameters["simConfigVariable"]))
 
         os.chdir(owd)
     
-    def importCellTemplate(self, modelParameters):
-        # Get Current dir
-        owd = os.getcwd()
-        
-        self.compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
-
-        del modelParameters['compileMod']
-        del modelParameters['modFolder']
-
+    def importCellTemplate(self, modelParameters, modFolder, compileMod):
         import netpyne_geppetto
-        modelParameters['fileName'] = str(modelParameters['fileName'])
+        self.compileModMechFiles(compileMod, modFolder)
 
         # import cell template
-        netpyne_geppetto.netParams.importCellParams(**modelParameters)
+        netParams.importCellParams(**modelParameters)
         
-        # delete conditions for this cell Rule
         netpyne_geppetto.netParams.cellParams[modelParameters['label']]['conds'] = {}
-        
-        os.chdir(owd)
-
         
     def exportModel(self, modelParameters):
         sim.initialize (netParams = netParams, simConfig = simConfig)
@@ -161,6 +150,19 @@ class NetPyNEGeppetto():
         if simConfig.analysis and plot in simConfig.analysis:
             return simConfig.analysis[plot]
         return {}
+
+    def getDirList(self, dir=None):
+        # Get Current dir
+        if dir == None:
+            dir = os.getcwd()
+        dir_list = []
+        for f in sorted(os.listdir(str(dir)), key=str.lower):
+           ff=os.path.join(dir,f)
+           if os.path.isdir(ff):
+               dir_list.insert(0, {'title': f, 'path': ff, 'load': False, 'children': [{'title': 'Loading...'}]})
+           else:
+               dir_list.append({'title': f, 'path': ff})
+        return dir_list
             
     def getNetPyNE2DNetPlot(self):
         args = self.getPlotSettings('plot2Dnet')
@@ -435,4 +437,5 @@ GeppettoJupyterModelSync.current_model.original_model = json.dumps({'netParams':
                                                                     'simConfig': simConfig.__dict__,
                                                                     'metadata': metadata.metadata,
                                                                     'requirement': 'from netpyne_ui.netpyne_geppetto import *',
-                                                                    'isDocker': os.path.isfile('/.dockerenv')})
+                                                                    'isDocker': os.path.isfile('/.dockerenv'),
+                                                                    'currentFolder': os.getcwd()})
