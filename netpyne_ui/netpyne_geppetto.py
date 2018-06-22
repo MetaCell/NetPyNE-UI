@@ -81,7 +81,7 @@ class NetPyNEGeppetto():
 
         # Load mechanism if mod path is passed
         if modFolder:
-            neuron.load_mechanisms(str(modFolder ))
+            neuron.load_mechanisms(str(modFolder))
 
     def importModel(self, modelParameters):
         # Get Current dir
@@ -110,35 +110,14 @@ class NetPyNEGeppetto():
 
         os.chdir(owd)
 
-    def importCellTemplate(self, modelParameters):
-        # Get Current dir
-        owd = os.getcwd()
+    def importCellTemplate(self, modelParameters, modFolder, compileMod):
+        import netpyne_geppetto
+        self.compileModMechFiles(compileMod, modFolder)
 
-        self.compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
-
-        del modelParameters['compileMod']
-        del modelParameters['modFolder']
-        del modelParameters['explorerParameter']
-        del modelParameters['explorerDialogOpen']
-
-        # import netpyne_geppetto
-        modelParameters["fileName"] = str(modelParameters["fileName"])
-        modelParameters["cellName"] = str(modelParameters["cellName"])
-        modelParameters["label"] = str(modelParameters["label"])
-
-        import sys
-        reload(sys)
-        print(modelParameters)
-        print(type(modelParameters))
-        sys.stdout.flush()
         # import cell template
         netParams.importCellParams(**modelParameters)
 
-        # delete conditions for this cell Rule
-        netParams.cellParams[modelParameters['label']]['conds'] = {}
-
-        os.chdir(owd)
-
+        netpyne_geppetto.netParams.cellParams[modelParameters['label']]['conds'] = {}
 
     def exportModel(self, modelParameters):
         sim.initialize (netParams = netParams, simConfig = simConfig)
