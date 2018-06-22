@@ -38,7 +38,7 @@ class NetPyNEGeppetto():
         netpyne_model = self.instantiateNetPyNEModel()
         self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
         return GeppettoModelSerializer().serialize(self.geppetto_model)
-        
+
     def simulateNetPyNEModelInGeppetto(self, modelParameters):
 
         if modelParameters['parallelSimulation']:
@@ -57,43 +57,44 @@ class NetPyNEGeppetto():
 
             self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
             netpyne_model = sim
-       
+
         else:
             if modelParameters['previousTab'] == 'define':
                 logging.debug('Instantiating single thread simulation')
                 netpyne_model = self.instantiateNetPyNEModel()
                 self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
-            
+
             logging.debug('Running single thread simulation')
             netpyne_model = self.simulateNetPyNEModel()
-        
+
         return GeppettoModelSerializer().serialize(self.geppetto_model)
 
-
-    def importModel(self, modelParameters):
-       
-        # Get Current dir
-        owd = os.getcwd()
-        
+    def compileModMechFiles(self, compileMod, modFolder):
         #Create Symbolic link
         if modelParameters['compileMod']:
             modPath = os.path.join(str(modelParameters['modFolder']),"x86_64")
-            subprocess.call(["rm", "-r", modPath])
-            
-            os.chdir(modelParameters["modFolder"])
-            subprocess.call(["nrnivmodl"])
-            
-        # Load mechanism if mod path is passed
-        if modelParameters['modFolder']:
-            neuron.load_mechanisms(str(modelParameters["modFolder"] ))
-        
-        import netpyne_geppetto
 
+            subprocess.call(["rm", "-r", modPath])
+
+            os.chdir(modFolder)
+            subprocess.call(["nrnivmodl"])
+
+        # Load mechanism if mod path is passed
+        if modFolder:
+            neuron.load_mechanisms(str(modFolder ))
+
+    def importModel(self, modelParameters):
+        # Get Current dir
+        owd = os.getcwd()
+
+        self.compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
+
+        import netpyne_geppetto
         # NetParams
         netParamsPath = str(modelParameters["netParamsPath"])
         sys.path.append(netParamsPath)
         os.chdir(netParamsPath)
-        # Import Module 
+        # Import Module
         netParamsModuleName = importlib.import_module(str(modelParameters["netParamsModuleName"]))
         # Import Model attributes
         netpyne_geppetto.netParams = getattr(netParamsModuleName, str(modelParameters["netParamsVariable"]))
@@ -102,39 +103,34 @@ class NetPyNEGeppetto():
         simConfigPath = str(modelParameters["simConfigPath"])
         sys.path.append(simConfigPath)
         os.chdir(simConfigPath)
-        # Import Module 
+        # Import Module
         simConfigModuleName = importlib.import_module(str(modelParameters["simConfigModuleName"]))
         # Import Model attributes
         netpyne_geppetto.simConfig = getattr(simConfigModuleName, str(modelParameters["simConfigVariable"]))
 
         os.chdir(owd)
-    
-    def importCellTemplate(self, params):
+
+    def importCellTemplate(self, modelParameters):
         # Get Current dir
         owd = os.getcwd()
-        
-        #Create Symbolic link
-        if params['compileMod']:
-            modPath = os.path.join(params['modFolder'],"x86_64")
-            subprocess.call(["rm", "-r", modPath])
-            os.chdir(params["modFolder"])
-            subprocess.call(["nrnivmodl"])
-        del params['compileMod']
-        
-        # Load mechanism if mod path is passed
-        if params['modFolder']:
-            neuron.load_mechanisms(str(params['modFolder'] ))
-        del params['modFolder']
-        
+
+        self.compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
+
+        del modelParameters['compileMod']
+        del modelParameters['modFolder']
+
+        import netpyne_geppetto
+        modelParameters['fileName'] = str(modelParameters['fileName'])
+
         # import cell template
-        netParams.importCellParams(**params)
-        
+        netpyne_geppetto.netParams.importCellParams(**modelParameters)
+
         # delete conditions for this cell Rule
-        netParams.cellParams[params['label']]['conds'] = {}
-        
+        netpyne_geppetto.netParams.cellParams[modelParameters['label']]['conds'] = {}
+
         os.chdir(owd)
 
-        
+
     def exportModel(self, modelParameters):
         sim.initialize (netParams = netParams, simConfig = simConfig)
         sim.saveData()
@@ -179,14 +175,14 @@ class NetPyNEGeppetto():
            else:
                dir_list.append({'title': f, 'path': ff})
         return dir_list
-            
+
     def getNetPyNE2DNetPlot(self):
         args = self.getPlotSettings('plot2Dnet')
         fig = analysis.plot2Dnet(showFig=False, **args)
         if fig==-1:
             return fig
         return ui.getSVG(fig)
-    
+
     def getNetPyNEShapePlot(self):
         args = self.getPlotSettings('plotShape')
         fig = analysis.plotShape(showFig=False, **args)
@@ -218,9 +214,9 @@ class NetPyNEGeppetto():
             logging.debug("Found plot for "+ key)
             svgs.append(ui.getSVG(value))
         return svgs.__str__()
-    
+
     def getNetPyNESpikeHistPlot(self):
-        args = self.getPlotSettings('plotSpikeHist')    
+        args = self.getPlotSettings('plotSpikeHist')
         fig = analysis.plotSpikeHist(showFig=False, **args)
         if fig==-1:
             return fig
@@ -243,7 +239,7 @@ class NetPyNEGeppetto():
         else:
             fig=fig[-1]
         return ui.getSVG(fig)
-    
+
     def getNetPyNERatePSDPlot(self):
         args = self.getPlotSettings('plotRatePSD')
         fig = analysis.plotRatePSD(showFig=False, **args)
@@ -254,7 +250,7 @@ class NetPyNEGeppetto():
         svgs = []
         svgs.append(ui.getSVG(fig))
         return svgs.__str__()
-        
+
     def getNetPyNELFPTimeSeriesPlot(self):
        args = self.getPlotSettings('plotLFP')
        args['plots'] = ['timeSeries']
@@ -305,7 +301,7 @@ class NetPyNEGeppetto():
             if cm not in cellModels:
                 cellModels.add(cm)
         return cellModels
-    
+
     def getAvailableCellTypes(self):
         cellTypes = set([])
         for p in netParams.popParams:
@@ -316,22 +312,21 @@ class NetPyNEGeppetto():
 
     def getAvailableStimSources(self):
         return netParams.stimSourceParams.keys()
-    
+
     def getAvailableSynMech(self):
         return netParams.synMechParams.keys()
-    
+
     def getAvailableMechs(self):
         mechs = utils.mechVarList()['mechs']
         for key in mechs.keys():
             if 'ion' in key: del mechs[key]
         for key in ["morphology", "capacitance", "extracellular"]: del mechs[key]
         return mechs.keys()
-    
+
     def getMechParams(self, mechanism):
-        lenght = len(mechanism) + 1
         params = utils.mechVarList()['mechs'][mechanism]
-        return [value[:-lenght] for value in params]
-        
+        return [value[:-(len(mechanism) + 1)] for value in params]
+
     def getAvailablePlots(self):
         plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats","plotRatePSD", "plotTraces", "plotLFP", "plotShape", "plot2Dnet", "plotConn", "granger"]
         return [plot for plot in plots if plot not in simConfig.analysis.keys()]
@@ -341,7 +336,7 @@ class LoopTimer(threading.Thread):
     """
     a Timer that calls f every interval
 
-    A thread that checks all the variables that we are synching between Python and Javascript and if 
+    A thread that checks all the variables that we are synching between Python and Javascript and if
     these variables have changed on the Python side will propagate the changes to Javascript
 
     TODO This code should move to a generic geppetto class since it's not NetPyNE specific
@@ -383,7 +378,7 @@ class LoopTimer(threading.Thread):
 
                 if modelValue==None:
                     modelValue=""
-                
+
                 synched_component.value = json.dumps(modelValue)
 
         except Exception as exception:
@@ -415,7 +410,7 @@ def configure_logging():
         logger.setLevel(logging.DEBUG)
         logging.debug('Log configured')
 
-def GeppettoInit():      
+def GeppettoInit():
     try:
         # Configure log
         configure_logging()
