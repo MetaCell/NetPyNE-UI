@@ -16,9 +16,9 @@ import time
 from netpyne import specs, sim, analysis, utils
 from netpyne.metadata import metadata, api
 from netpyne_model_interpreter import NetPyNEModelInterpreter
-from model.model_serializer import GeppettoModelSerializer
+from pygeppetto.model.model_serializer import GeppettoModelSerializer
 import matplotlib.pyplot as plt
-from model import ui
+from pygeppetto import ui
 import numpy as np
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
@@ -77,7 +77,7 @@ class NetPyNEGeppetto():
         
         #Create Symbolic link
         if modelParameters['compileMod']:
-            modPath = os.path.join(modelParameters['modFolder'],"x86_64")
+            modPath = os.path.join(str(modelParameters['modFolder']),"x86_64")
             subprocess.call(["rm", "-r", modPath])
             
             os.chdir(modelParameters["modFolder"])
@@ -90,22 +90,22 @@ class NetPyNEGeppetto():
         import netpyne_geppetto
 
         # NetParams
-        netParamsPath = modelParameters["netParamsPath"]
+        netParamsPath = str(modelParameters["netParamsPath"])
         sys.path.append(netParamsPath)
         os.chdir(netParamsPath)
         # Import Module 
-        netParamsModuleName = importlib.import_module(modelParameters["netParamsModuleName"])
+        netParamsModuleName = importlib.import_module(str(modelParameters["netParamsModuleName"]))
         # Import Model attributes
-        netpyne_geppetto.netParams = getattr(netParamsModuleName, modelParameters["netParamsVariable"])
+        netpyne_geppetto.netParams = getattr(netParamsModuleName, str(modelParameters["netParamsVariable"]))
 
         # SimConfig
-        simConfigPath = modelParameters["simConfigPath"]
+        simConfigPath = str(modelParameters["simConfigPath"])
         sys.path.append(simConfigPath)
         os.chdir(simConfigPath)
         # Import Module 
-        simConfigModuleName = importlib.import_module(modelParameters["simConfigModuleName"])
+        simConfigModuleName = importlib.import_module(str(modelParameters["simConfigModuleName"]))
         # Import Model attributes
-        netpyne_geppetto.simConfig = getattr(simConfigModuleName, modelParameters["simConfigVariable"])
+        netpyne_geppetto.simConfig = getattr(simConfigModuleName, str(modelParameters["simConfigVariable"]))
 
         os.chdir(owd)
     
@@ -166,6 +166,19 @@ class NetPyNEGeppetto():
         if simConfig.analysis and plot in simConfig.analysis:
             return simConfig.analysis[plot]
         return {}
+
+    def getDirList(self, dir=None):
+        # Get Current dir
+        if dir == None:
+            dir = os.getcwd()
+        dir_list = []
+        for f in sorted(os.listdir(str(dir)), key=str.lower):
+           ff=os.path.join(dir,f)
+           if os.path.isdir(ff):
+               dir_list.insert(0, {'title': f, 'path': ff, 'load': False, 'children': [{'title': 'Loading...'}]})
+           else:
+               dir_list.append({'title': f, 'path': ff})
+        return dir_list
             
     def getNetPyNE2DNetPlot(self):
         args = self.getPlotSettings('plot2Dnet')
@@ -441,4 +454,5 @@ GeppettoJupyterModelSync.current_model.original_model = json.dumps({'netParams':
                                                                     'simConfig': simConfig.__dict__,
                                                                     'metadata': metadata.metadata,
                                                                     'requirement': 'from netpyne_ui.netpyne_geppetto import *',
-                                                                    'isDocker': os.path.isfile('/.dockerenv')})
+                                                                    'isDocker': os.path.isfile('/.dockerenv'),
+                                                                    'currentFolder': os.getcwd()})
