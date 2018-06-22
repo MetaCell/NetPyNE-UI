@@ -71,8 +71,8 @@ class NetPyNEGeppetto():
 
     def compileModMechFiles(self, compileMod, modFolder):
         #Create Symbolic link
-        if modelParameters['compileMod']:
-            modPath = os.path.join(str(modelParameters['modFolder']),"x86_64")
+        if compileMod:
+            modPath = os.path.join(str(modFolder),"x86_64")
 
             subprocess.call(["rm", "-r", modPath])
 
@@ -118,15 +118,24 @@ class NetPyNEGeppetto():
 
         del modelParameters['compileMod']
         del modelParameters['modFolder']
+        del modelParameters['explorerParameter']
+        del modelParameters['explorerDialogOpen']
 
-        import netpyne_geppetto
-        modelParameters['fileName'] = str(modelParameters['fileName'])
+        # import netpyne_geppetto
+        modelParameters["fileName"] = str(modelParameters["fileName"])
+        modelParameters["cellName"] = str(modelParameters["cellName"])
+        modelParameters["label"] = str(modelParameters["label"])
 
+        import sys
+        reload(sys)
+        print(modelParameters)
+        print(type(modelParameters))
+        sys.stdout.flush()
         # import cell template
-        netpyne_geppetto.netParams.importCellParams(**modelParameters)
+        netParams.importCellParams(**modelParameters)
 
         # delete conditions for this cell Rule
-        netpyne_geppetto.netParams.cellParams[modelParameters['label']]['conds'] = {}
+        netParams.cellParams[modelParameters['label']]['conds'] = {}
 
         os.chdir(owd)
 
