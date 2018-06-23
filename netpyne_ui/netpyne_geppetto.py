@@ -111,13 +111,18 @@ class NetPyNEGeppetto():
         os.chdir(owd)
 
     def importCellTemplate(self, modelParameters, modFolder, compileMod):
-        import netpyne_geppetto
+        from netpyne_geppetto import netParams
+
+        rule = modelParameters["label"]
+
+        #import netpyne_geppetto
         self.compileModMechFiles(compileMod, modFolder)
 
         # import cell template
         netParams.importCellParams(**modelParameters)
 
-        netpyne_geppetto.netParams.cellParams[modelParameters['label']]['conds'] = {}
+        # convert fron netpyne.specs.dict to dict
+        netParams.cellParams[rule]["conds"] = netParams.cellParams[rule]["conds"].todict()
 
     def exportModel(self, modelParameters):
         sim.initialize (netParams = netParams, simConfig = simConfig)
