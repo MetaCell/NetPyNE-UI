@@ -8,17 +8,21 @@ This repository hosts the user interface for [NetPyNE](http://www.neurosimlab.or
 
 ![Screenshot](https://github.com/metacell/netpyne-ui/raw/master/netpyneui.png)
 
-## Install using Docker (self-contained, the simplest)
+## Install NetPyNE
 
-[![Docker](https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/ddelpiano-patch-1/docs/docker_logo.png)](https://github.com/MetaCell/NetPyNE-UI/wiki/Docker-installation)
+Select one option to install NetPyNE. If you are familiar with NEURON and have already NEURON installed in your machine you can proceed using Pip. If you want a container which comes with everything preinstalled including NEURON you can use the Docker image. Using docker you will still be able to mount a local folder which will be your NetPyNE workspace. If you don't have docker installed in your system and you have had troubles installing it you can opt for the Virtual Machine installation.
+
+[![Docker](https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/ddelpiano-patch-1/docs/docker_logo.png =250x)](https://github.com/MetaCell/NetPyNE-UI/wiki/Docker-installation)
+[![Pip](https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/ddelpiano-patch-1/docs/pip_logo.png =250x)](https://github.com/MetaCell/NetPyNE-UI/wiki/Pip-installation)
+[![Virtual Box](https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/ddelpiano-patch-1/docs/vbox_logo.png =250x)](https://github.com/MetaCell/NetPyNE-UI/wiki/Virtual-Machine-Installation)
 
 ## Install using pip
 
-[![Pip](https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/ddelpiano-patch-1/docs/pip_logo.png)](https://github.com/MetaCell/NetPyNE-UI/wiki/Pip-installation)
+
 
 ## Install using Virtual Box
 
-[![Virtual Box](https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/ddelpiano-patch-1/docs/vbox_logo.png)](https://github.com/MetaCell/NetPyNE-UI/wiki/Virtual-Machine-Installation)
+
 
 ## Install from sources (for developers)
 ```
