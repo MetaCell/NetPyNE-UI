@@ -1,16 +1,17 @@
 [![Build Status](https://travis-ci.org/MetaCell/NetPyNE-UI.svg?branch=master)](https://travis-ci.org/MetaCell/NetPyNE-UI)
 [![Docker Automated buil](https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg)](https://hub.docker.com/r/metacell/netpyne-ui/)
 
-# NetPyNE-UI
-
-This repository hosts the user interface for [NetPyNE](http://www.neurosimlab.org/netpyne/).
-
+<p align="center">
+    <img src="https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/development/docs/NetPyNe.png" width="350px"/>
+</p>
 
 ![Screenshot](https://github.com/metacell/netpyne-ui/raw/master/netpyneui.png)
 
-## Install NetPyNE-UI
+This repository hosts the User Interface for [NetPyNE](http://www.neurosimlab.org/netpyne/).
 
-Select one option to install NetPyNE. 
+## Install NetPyNE User Interface
+
+Select one option to install the NetPyNE User Interface. 
 
 If you are familiar with NEURON and have already NEURON installed in your machine you can proceed using Pip. If you want a container which comes with everything preinstalled including NEURON you can use the Docker image. Using docker you will still be able to mount a local folder which will be your NetPyNE workspace. If you don't have docker installed in your system and you have had troubles installing it you can opt for the Virtual Machine installation.
 
@@ -20,7 +21,7 @@ If you are familiar with NEURON and have already NEURON installed in your machin
   <a href="https://github.com/MetaCell/NetPyNE-UI/wiki/Virtual-Machine-Installation"><img src="https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/ddelpiano-patch-1/docs/vbox_logo.png" alt="Virtual Box" width="80px"/></a>
 </p>
 
-## Install NetPyNE-UI from sources (for developers)
+## Install NetPyNE User Interface from sources (for developers)
 ```
 git clone https://github.com/MetaCell/NetPyNE-UI.git
 cd utilities
