@@ -151,7 +151,7 @@ class NetPyNEGeppetto():
             return simConfig.analysis[plot]
         return {}
 
-    def getDirList(self, dir=None):
+    def getDirList(self, dir=None, onlyDirs = False):
         # Get Current dir
         if dir == None:
             dir = os.getcwd()
@@ -160,7 +160,7 @@ class NetPyNEGeppetto():
            ff=os.path.join(dir,f)
            if os.path.isdir(ff):
                dir_list.insert(0, {'title': f, 'path': ff, 'load': False, 'children': [{'title': 'Loading...'}]})
-           else:
+           elif not onlyDirs:
                dir_list.append({'title': f, 'path': ff})
         return dir_list
             
