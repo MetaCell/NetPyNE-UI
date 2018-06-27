@@ -418,15 +418,20 @@ def globalMessageHandler(identifier, command, parameters):
     """
     TODO This code should move to a generic geppetto class since it's not NetPyNE specific
     """
-    logging.debug('Global Message Handler')
-    logging.debug('Command: ' +  command)
-    logging.debug('Parameter: ' + str(parameters))
-    if parameters == '':
-        response = eval(command)
-    else:
-        response = eval(command + '(*parameters)')
-    GeppettoJupyterModelSync.events_controller.triggerEvent(
-        "receive_python_message", {'id': identifier, 'response': response})
+    try:
+        logging.debug('Global Message Handler')
+        logging.debug('Command: ' +  command)
+        logging.debug('Parameter: ' + str(parameters))
+        if parameters == '':
+            response = eval(command)
+        else:
+            response = eval(command + '(*parameters)')
+        GeppettoJupyterModelSync.events_controller.triggerEvent(
+            "receive_python_message", {'id': identifier, 'response': response})
+    except Exception as e:
+        logging.exception( "Unhandle exception in Global Message Handler")
+        raise
+    
 
 def configure_logging():
         logger = logging.getLogger()
