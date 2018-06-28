@@ -128,7 +128,7 @@ class NetPyNEGeppetto():
             netpyne_geppetto.simConfig = getattr(simConfigModuleName, str(modelParameters["simConfigVariable"]))
 
             os.chdir(owd)
-            return self.getJSONReply();
+            return self.getJSONReply()
         except:
             return self.getJSONError("Error while importing the NetPyNE model",traceback.format_exc())
     
@@ -141,7 +141,7 @@ class NetPyNEGeppetto():
             netParams.importCellParams(**modelParameters)
             
             netpyne_geppetto.netParams.cellParams[modelParameters['label']]['conds'] = {}
-            return self.getJSONReply();
+            return self.getJSONReply()
         except:
             return self.getJSONError("Error while importing the NetPyNE cell template",traceback.format_exc())
         
@@ -149,7 +149,7 @@ class NetPyNEGeppetto():
         try:
             sim.initialize (netParams = netParams, simConfig = simConfig)
             sim.saveData()
-            return self.getJSONReply();
+            return self.getJSONReply()
         except:
             return self.getJSONError("Error while exporting the NetPyNE model",traceback.format_exc())
 
@@ -429,8 +429,7 @@ def globalMessageHandler(identifier, command, parameters):
         GeppettoJupyterModelSync.events_controller.triggerEvent(
             "receive_python_message", {'id': identifier, 'response': response})
     except Exception as e:
-        logging.exception( "Unhandle exception in Global Message Handler")
-        raise
+        return self.getJSONError("Unhandle exception in Global Message Handler",traceback.format_exc())
     
 
 def configure_logging():
