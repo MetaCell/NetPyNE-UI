@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="netpyne_ui",
-    version="0.1",
+    version="0.3",
     url="https://github.com/MetaCell/NetPyNE-UI",
     author="MetaCell",
     author_email="info@metacell.us",
@@ -27,7 +27,7 @@ setup(
         'Programming Language :: Python :: 3.4'
     ],
     install_requires=[
-        'jupyter_geppetto',
-        'netpyne'
+        'jupyter_geppetto==0.4.1',
+        'netpyne==0.7.8.1'
     ],
 )

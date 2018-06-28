@@ -1,86 +1,27 @@
 [![Build Status](https://travis-ci.org/MetaCell/NetPyNE-UI.svg?branch=master)](https://travis-ci.org/MetaCell/NetPyNE-UI)
 [![Docker Automated buil](https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg)](https://hub.docker.com/r/metacell/netpyne-ui/)
 
-# NetPyNE-UI
-
-This repository hosts the user interface for [NetPyNE](http://www.neurosimlab.org/netpyne/).
-
+<p align="center">
+    <img src="https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/development/docs/NetPyNe.png" width="350px"/>
+</p>
 
 ![Screenshot](https://github.com/metacell/netpyne-ui/raw/master/netpyneui.png)
 
-## Install using Docker (self-contained, the simplest)
+This repository hosts the User Interface for [NetPyNE](http://www.neurosimlab.org/netpyne/). NetPyNE is a python package to facilitate the development, parallel simulation and analysis of biological neuronal networks using the NEURON simulator.
 
-### Prerequisites
-In order to Install NetPyNE-UI with docker we need to install docker itself before you can proceed. If you have docker already installed in your system you can skip this section.
-Below you can find the link with the procedure to follow depending on the OS you are using. If you have a local virtual machine [this link](https://docs.docker.com/machine/get-started/) will help you getting started.
+## Install NetPyNE User Interface
 
-#### For Windows users
-To install docker on Windows download docker-toolbox from the link below and follow the onscreen instructions.
-[Windows](https://docs.docker.com/toolbox/toolbox_install_windows/)
+Select one option to install the NetPyNE User Interface. 
 
-Few notes regarding the windows installation:
-- During the step "Select Additional Tasks", select all the checkboxes as the image here.
-![windows_docker1](https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/development/docs/docker_windows1.png).
+If you are familiar with NEURON and have already NEURON installed in your machine you can proceed using Pip. If you want a container which comes with everything preinstalled including NEURON you can use the Docker image. Using docker you will still be able to mount a local folder which will be your NetPyNE workspace. If you don't have docker installed in your system and you have had troubles installing it you can opt for the Virtual Machine installation.
 
+<p align="center">
+    <a href="https://github.com/MetaCell/NetPyNE-UI/wiki/Pip-installation"><img src="https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/ddelpiano-patch-1/docs/pip_logo.png" alt="Pip" width="70px"/></a>
+  <a href="https://github.com/MetaCell/NetPyNE-UI/wiki/Docker-installation"><img src="https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/ddelpiano-patch-1/docs/docker_logo.png" alt="Docker" width="100px"/></a>
+  <a href="https://github.com/MetaCell/NetPyNE-UI/wiki/Virtual-Machine-Installation"><img src="https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/ddelpiano-patch-1/docs/vbox_logo.png" alt="Virtual Box" width="80px"/></a>
+</p>
 
-#### For Linux users
-To install docker on Linux follow the link below with the instructions.
-[Linux](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
-
-Few notes about the linux installation:
-- Once the installation has been completed, to run docker from your user you need to add it to the docker group.
-To do this you can run the command below
-```
-sudo usermod -a -G docker $USERNAME
-```
-Once the command has been executed you need to open a new terminal or login in your environment again in order to make the change effective.
-
-#### For MacOS users
-To install docker on Mac OS follow the link below with the instructions.
-[MacOS](https://docs.docker.com/docker-for-mac/install/)
-
-### Docker is installed, what should I do now?
-Once you completed the docker installation you have 2 ways to proceed further.
-You can use the kitematic GUI and do everything from a nice interface, however if you are fine working with the console you can skip the kitematic section and jump directly to the section [Install NEURON-UI using Docker from command line](#install-neuron-ui-using-docker-from-command-line) .
-
-### Install NEURON-UI using Docker graphical interface (Kitematic)
-Retrieve the right version of Kitematic for your OS from [here](https://github.com/docker/kitematic/releases).
-
-Open [Kitematic](https://kitematic.com/): search for netpyne-ui and create the container.
-
-![Image](https://github.com/metacell/netpyne-ui/raw/master/docs/kitematicImage.png)
-
-Start the container and click on Web preview to launch it. No need to ever use the command line, enjoy!
-
-![Kitematic](https://github.com/metacell/netpyne-ui/raw/master/docs/kitematicRun.png)
-
-### Install NEURON-UI using Docker from command line 
-To pull the docker container:
-```
-docker pull metacell/netpyne-ui
-```
-To run the docker container:
-```
-docker run -it -p 8888:8888 metacell/netpyne-ui
-```
-Or alternatively, if you want a local folder outside of the Docker container to host the NetPyNE-UI workspace (where you can import models from, export models to, inspect the log and the jupyter notebook) you can execute the following command: 
-```
-docker run -it -v ~/folder_in_your_computer:/home/jovyan/netpyne_workspace -p 8888:8888 metacell/netpyne-ui
-```
-This will mount your local folder `folder_in_your_computer` as a volume inside the container and will be used to host the NetPyNE-UI workspace (`/home/jovyan/netpyne_workspace` inside the container). 
-
-Once you run your container you can open your browser and connect to http://localhost:8888/geppetto.
-
-One note for Windows users - once the docker image has been pulled and the NetPyNE-UI container created, you can reach your instance of NetPyNE-UI by default at the address 192.168.99.100:8888, if something has been changed in the settings this will be visible when the docker terminal will be open, as per image below.
-
-![windows_docker2](https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/development/docs/docker_windows2.png)
-
-## Install using pip
-```
-Coming soon
-```
-
-## Install from sources (for developers)
+## Install NetPyNE User Interface from sources (for developers)
 ```
 git clone https://github.com/MetaCell/NetPyNE-UI.git
 cd utilities

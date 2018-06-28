@@ -11,14 +11,15 @@ import subprocess
 import logging
 import threading
 import time
+import traceback
 
 
 from netpyne import specs, sim, analysis, utils
 from netpyne.metadata import metadata, api
 from netpyne_model_interpreter import NetPyNEModelInterpreter
-from model.model_serializer import GeppettoModelSerializer
+from pygeppetto.model.model_serializer import GeppettoModelSerializer
 import matplotlib.pyplot as plt
-from model import ui
+from pygeppetto import ui
 import numpy as np
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
@@ -35,109 +36,122 @@ class NetPyNEGeppetto():
         self.model_interpreter = NetPyNEModelInterpreter()
 
     def instantiateNetPyNEModelInGeppetto(self):
-        netpyne_model = self.instantiateNetPyNEModel()
-        self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
-        return GeppettoModelSerializer().serialize(self.geppetto_model)
+        try:
+            netpyne_model = self.instantiateNetPyNEModel()
+            self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
+            return GeppettoModelSerializer().serialize(self.geppetto_model)
+        except:
+            return self.getJSONError("Error while instantiating the NetPyNE model",traceback.format_exc())
         
     def simulateNetPyNEModelInGeppetto(self, modelParameters):
+        try:
+            if modelParameters['parallelSimulation']:
+                logging.debug('Running parallel simulation')
 
-        if modelParameters['parallelSimulation']:
-            logging.debug('Running parallel simulation')
+                netParams.save("netParams.json")
+                simConfig.saveJson = True
+                simConfig.save("simParams.json")
 
-            netParams.save("netParams.json")
-            simConfig.saveJson = True
-            simConfig.save("simParams.json")
+                template = os.path.join(os.path.dirname(__file__), 'template.py')
+                copyfile(template, 'init.py')
 
-            template = os.path.join(os.path.dirname(__file__), 'template.py')
-            copyfile(template, 'init.py')
+                subprocess.call(["mpiexec", "-n", modelParameters['cores'], "nrniv", "-python", "-mpi", "init.py"])
 
-            subprocess.call(["mpiexec", "-n", modelParameters['cores'], "nrniv", "-python", "-mpi", "init.py"])
+                sim.load('model_output.json')
 
-            sim.load('model_output.json')
-
-            self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
-            netpyne_model = sim
-       
-        else:
-            if modelParameters['previousTab'] == 'define':
-                logging.debug('Instantiating single thread simulation')
-                netpyne_model = self.instantiateNetPyNEModel()
-                self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
-            
-            logging.debug('Running single thread simulation')
-            netpyne_model = self.simulateNetPyNEModel()
+                self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
+                netpyne_model = sim
         
-        return GeppettoModelSerializer().serialize(self.geppetto_model)
+            else:
+                if modelParameters['previousTab'] == 'define':
+                    logging.debug('Instantiating single thread simulation')
+                    netpyne_model = self.instantiateNetPyNEModel()
+                    self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
+                
+                logging.debug('Running single thread simulation')
+                netpyne_model = self.simulateNetPyNEModel()
+            
+            return GeppettoModelSerializer().serialize(self.geppetto_model)
+        except:
+            return self.getJSONError("Error while simulating the NetPyNE model",traceback.format_exc())
 
+    def getJSONReply(self):
+        data = {}
+        data['type'] = 'OK'
+        return json.dumps(data)
+
+    def getJSONError(self, message, details):
+        data = {}
+        data['type'] = 'ERROR'
+        data['message'] = message
+        data['details'] = details
+        return json.dumps(data)
+
+    def compileModMechFiles(self, compileMod, modFolder):
+        #Create Symbolic link
+        if compileMod:
+            modPath = os.path.join(str(modFolder),"x86_64")
+
+            subprocess.call(["rm", "-r", modPath])
+            
+            os.chdir(modFolder)
+            subprocess.call(["nrnivmodl"])
+            
+        # Load mechanism if mod path is passed
+        if modFolder:
+            neuron.load_mechanisms(str(modFolder))
 
     def importModel(self, modelParameters):
-       
-        # Get Current dir
-        owd = os.getcwd()
-        
-        #Create Symbolic link
-        if modelParameters['compileMod']:
-            modPath = os.path.join(modelParameters['modFolder'],"x86_64")
-            subprocess.call(["rm", "-r", modPath])
+        try:
+            # Get Current dir
+            owd = os.getcwd()
             
-            os.chdir(modelParameters["modFolder"])
-            subprocess.call(["nrnivmodl"])
+            self.compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
             
-        # Load mechanism if mod path is passed
-        if modelParameters['modFolder']:
-            neuron.load_mechanisms(str(modelParameters["modFolder"] ))
-        
-        import netpyne_geppetto
+            import netpyne_geppetto
+            # NetParams
+            netParamsPath = str(modelParameters["netParamsPath"])
+            sys.path.append(netParamsPath)
+            os.chdir(netParamsPath)
+            # Import Module 
+            netParamsModuleName = importlib.import_module(str(modelParameters["netParamsModuleName"]))
+            # Import Model attributes
+            netpyne_geppetto.netParams = getattr(netParamsModuleName, str(modelParameters["netParamsVariable"]))
 
-        # NetParams
-        netParamsPath = modelParameters["netParamsPath"]
-        sys.path.append(netParamsPath)
-        os.chdir(netParamsPath)
-        # Import Module 
-        netParamsModuleName = importlib.import_module(modelParameters["netParamsModuleName"])
-        # Import Model attributes
-        netpyne_geppetto.netParams = getattr(netParamsModuleName, modelParameters["netParamsVariable"])
+            # SimConfig
+            simConfigPath = str(modelParameters["simConfigPath"])
+            sys.path.append(simConfigPath)
+            os.chdir(simConfigPath)
+            # Import Module 
+            simConfigModuleName = importlib.import_module(str(modelParameters["simConfigModuleName"]))
+            # Import Model attributes
+            netpyne_geppetto.simConfig = getattr(simConfigModuleName, str(modelParameters["simConfigVariable"]))
 
-        # SimConfig
-        simConfigPath = modelParameters["simConfigPath"]
-        sys.path.append(simConfigPath)
-        os.chdir(simConfigPath)
-        # Import Module 
-        simConfigModuleName = importlib.import_module(modelParameters["simConfigModuleName"])
-        # Import Model attributes
-        netpyne_geppetto.simConfig = getattr(simConfigModuleName, modelParameters["simConfigVariable"])
-
-        os.chdir(owd)
+            os.chdir(owd)
+            return self.getJSONReply()
+        except:
+            return self.getJSONError("Error while importing the NetPyNE model",traceback.format_exc())
     
-    def importCellTemplate(self, params):
-        # Get Current dir
-        owd = os.getcwd()
-        
-        #Create Symbolic link
-        if params['compileMod']:
-            modPath = os.path.join(params['modFolder'],"x86_64")
-            subprocess.call(["rm", "-r", modPath])
-            os.chdir(params["modFolder"])
-            subprocess.call(["nrnivmodl"])
-        del params['compileMod']
-        
-        # Load mechanism if mod path is passed
-        if params['modFolder']:
-            neuron.load_mechanisms(str(params['modFolder'] ))
-        del params['modFolder']
-        
-        # import cell template
-        netParams.importCellParams(**params)
-        
-        # delete conditions for this cell Rule
-        netParams.cellParams[params['label']]['conds'] = {}
-        
-        os.chdir(owd)
+    def importCellTemplate(self, modelParameters, modFolder, compileMod):
+        try:
+            import netpyne_geppetto
+            self.compileModMechFiles(compileMod, modFolder)
 
+            # import cell template
+            netParams.importCellParams(**modelParameters)
+            
+            netpyne_geppetto.netParams.cellParams[modelParameters['label']]['conds'] = {}
+            return self.getJSONReply()
+        except:
+            return self.getJSONError("Error while importing the NetPyNE cell template",traceback.format_exc())
         
     def exportModel(self, modelParameters):
-        sim.initialize (netParams = netParams, simConfig = simConfig)
-        sim.saveData()
+        try:
+            sim.initialize (netParams = netParams, simConfig = simConfig)
+            sim.saveData()
+            return self.getJSONReply()
+        except:
+            return self.getJSONError("Error while exporting the NetPyNE model",traceback.format_exc())
 
     def instantiateNetPyNEModel(self):
         sim.create(netParams, simConfig)
@@ -166,6 +180,19 @@ class NetPyNEGeppetto():
         if simConfig.analysis and plot in simConfig.analysis:
             return simConfig.analysis[plot]
         return {}
+
+    def getDirList(self, dir=None, onlyDirs = False):
+        # Get Current dir
+        if dir == None:
+            dir = os.getcwd()
+        dir_list = []
+        for f in sorted(os.listdir(str(dir)), key=str.lower):
+           ff=os.path.join(dir,f)
+           if os.path.isdir(ff):
+               dir_list.insert(0, {'title': f, 'path': ff, 'load': False, 'children': [{'title': 'Loading...'}]})
+           elif not onlyDirs:
+               dir_list.append({'title': f, 'path': ff})
+        return dir_list
             
     def getNetPyNE2DNetPlot(self):
         args = self.getPlotSettings('plot2Dnet')
@@ -315,13 +342,21 @@ class NetPyNEGeppetto():
         return mechs.keys()
     
     def getMechParams(self, mechanism):
-        lenght = len(mechanism) + 1
         params = utils.mechVarList()['mechs'][mechanism]
-        return [value[:-lenght] for value in params]
+        return [value[:-(len(mechanism) + 1)] for value in params]
         
     def getAvailablePlots(self):
         plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats","plotRatePSD", "plotTraces", "plotLFP", "plotShape", "plot2Dnet", "plotConn", "granger"]
         return [plot for plot in plots if plot not in simConfig.analysis.keys()]
+
+    def deleteParam(self, paramToDel):
+        logging.debug("Checking if netParams."+paramToDel+" is not null")
+        if eval("netParams."+paramToDel) is not None:
+            exec("del netParams.%s" % (paramToDel))
+            logging.debug('Parameter netParams.'+paramToDel+' has been deleted')
+        else:
+            logging.debug('Parameter '+paramToDel+' is null, not deleted')
+        
 
 
 class LoopTimer(threading.Thread):
@@ -383,15 +418,19 @@ def globalMessageHandler(identifier, command, parameters):
     """
     TODO This code should move to a generic geppetto class since it's not NetPyNE specific
     """
-    logging.debug('Global Message Handler')
-    logging.debug('Command: ' +  command)
-    logging.debug('Parameter: ' + str(parameters))
-    if parameters == '':
-        response = eval(command)
-    else:
-        response = eval(command + '(*parameters)')
-    GeppettoJupyterModelSync.events_controller.triggerEvent(
-        "receive_python_message", {'id': identifier, 'response': response})
+    try:
+        logging.debug('Global Message Handler')
+        logging.debug('Command: ' +  command)
+        logging.debug('Parameter: ' + str(parameters))
+        if parameters == '':
+            response = eval(command)
+        else:
+            response = eval(command + '(*parameters)')
+        GeppettoJupyterModelSync.events_controller.triggerEvent(
+            "receive_python_message", {'id': identifier, 'response': response})
+    except Exception as e:
+        return self.getJSONError("Unhandle exception in Global Message Handler",traceback.format_exc())
+    
 
 def configure_logging():
         logger = logging.getLogger()
@@ -441,4 +480,5 @@ GeppettoJupyterModelSync.current_model.original_model = json.dumps({'netParams':
                                                                     'simConfig': simConfig.__dict__,
                                                                     'metadata': metadata.metadata,
                                                                     'requirement': 'from netpyne_ui.netpyne_geppetto import *',
-                                                                    'isDocker': os.path.isfile('/.dockerenv')})
+                                                                    'isDocker': os.path.isfile('/.dockerenv'),
+                                                                    'currentFolder': os.getcwd()})
