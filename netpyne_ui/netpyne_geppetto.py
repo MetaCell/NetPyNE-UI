@@ -208,7 +208,8 @@ class NetPyNEGeppetto():
         fig = analysis.plotSpikeHist(showFig=False, **args)
         if fig==-1:
             return fig
-        return ui.getSVG(fig)
+        else:
+            return ui.getSVG(fig[0])
 
     def getNetPyNESpikeStatsPlot(self):
         args = self.getPlotSettings('plotSpikeStats')
@@ -216,8 +217,7 @@ class NetPyNEGeppetto():
         if fig==-1:
             return fig
         else:
-            fig=fig[0]
-        return ui.getSVG(fig)
+            return ui.getSVG(fig[0])
 
     def getNetPyNEGrangerPlot(self):
         args = self.getPlotSettings('granger')
@@ -246,39 +246,44 @@ class NetPyNEGeppetto():
        if fig==-1:
            return fig
        else:
-            fig=fig[0]
-       return ui.getSVG(fig)
+           return ui.getSVG(fig[0][0])
 
     def getNetPyNELFPPSDPlot(self):
-       args = self.getPlotSettings('plotLFP')
-       args['plots'] = ['PSD']
-       fig = analysis.plotLFP(showFig=False, **args)
-       if fig==-1:
-           return fig
-       else:
-            fig=fig[0]
-       return ui.getSVG(fig)
+        args = self.getPlotSettings('plotLFP')
+        args['plots'] = ['PSD']
+        fig = analysis.plotLFP(showFig=False, **args)
+        if fig==-1:
+            return fig
+        else:
+            svgs = []
+            svgs.append(ui.getSVG(fig[0][0]))
+        
+        return svgs.__str__()
 
     def getNetPyNELFPSpectrogramPlot(self):
-       args = self.getPlotSettings('plotLFP')
-       args['plots'] = ['spectrogram']
-       fig = analysis.plotLFP(showFig=False, **args)
-       if fig==-1:
-           return fig
-       else:
-            fig=fig[0]
-       return ui.getSVG(fig)
+        args = self.getPlotSettings('plotLFP')
+        args['plots'] = ['spectrogram']
+        fig = analysis.plotLFP(showFig=False, **args)
+        if fig==-1:
+            return fig
+        else:
+            svgs = []
+            svgs.append(ui.getSVG(fig[0][0]))
+        
+        return svgs.__str__()
 
     def getNetPyNELFPLocationsPlot(self):
-       args = self.getPlotSettings('plotLFP')
-       args['plots'] = ['locations']
-       fig = analysis.plotLFP(showFig=False, **args)
-       if fig==-1:
-           return fig
-       else:
-            fig=fig[0]
-       return ui.getSVG(fig)
-
+        args = self.getPlotSettings('plotLFP')
+        args['plots'] = ['locations']
+        fig = analysis.plotLFP(showFig=False, **args)
+        if fig==-1:
+            return fig
+        else:
+            svgs = []
+            svgs.append(ui.getSVG(fig[0][0]))
+        
+        return svgs.__str__()
+        
     def getAvailablePops(self):
         return netParams.popParams.keys()
 
