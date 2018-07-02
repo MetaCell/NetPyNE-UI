@@ -1,10 +1,6 @@
 FROM jupyter/base-notebook:eb70bcf1a292
 USER root
 
-ARG netpyneuiBranch=0.2M3
-ENV netpyneuiBranch=${netpyneuiBranch}
-RUN echo "$netpyneuiBranch";
-
 RUN apt-get -qq update
 RUN apt-get install -y \
         locales \
