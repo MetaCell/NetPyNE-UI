@@ -357,8 +357,9 @@ class NetPyNEGeppetto():
         else:
             logging.debug('Parameter '+paramToDel+' is null, not deleted')
         
-
-
+    def validateFunction(self, functionString):
+        return utils.ValidateFunction(functionString, netParams.__dict__)
+    
 class LoopTimer(threading.Thread):
     """
     a Timer that calls f every interval
