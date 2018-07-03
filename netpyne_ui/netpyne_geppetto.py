@@ -126,24 +126,34 @@ class NetPyNEGeppetto():
             simConfigModuleName = importlib.import_module(str(modelParameters["simConfigModuleName"]))
             # Import Model attributes
             netpyne_geppetto.simConfig = getattr(simConfigModuleName, str(modelParameters["simConfigVariable"]))
-
-            os.chdir(owd)
+            
             return self.getJSONReply()
         except:
             return self.getJSONError("Error while importing the NetPyNE model",traceback.format_exc())
-    
+        finally:
+            os.chdir(owd)
+
     def importCellTemplate(self, modelParameters, modFolder, compileMod):
         try:
-            import netpyne_geppetto
+            # Get Current dir
+            owd = os.getcwd()
+
+            from netpyne_geppetto import netParams
+
             self.compileModMechFiles(compileMod, modFolder)
 
             # import cell template
             netParams.importCellParams(**modelParameters)
             
-            netpyne_geppetto.netParams.cellParams[modelParameters['label']]['conds'] = {}
+            # convert fron netpyne.specs.dict to dict
+            rule = modelParameters["label"]
+            netParams.cellParams[rule]["conds"] = netParams.cellParams[rule]["conds"].todict()
+
             return self.getJSONReply()
         except:
             return self.getJSONError("Error while importing the NetPyNE cell template",traceback.format_exc())
+        finally:
+            os.chdir(owd)
         
     def exportModel(self, modelParameters):
         try:
