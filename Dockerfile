@@ -63,6 +63,7 @@ RUN /bin/bash -c "source activate snakes && jupyter nbextension enable --py jupy
 RUN /bin/bash -c "source activate snakes &&  jupyter serverextension enable --py jupyter_geppetto"
 RUN /bin/bash -c "source activate snakes && jupyter nbextension enable --py widgetsnbextension"
 
-RUN mkdir /home/jovyan/netpyne_workspace
+WORKDIR /home/jovyan
+RUN git clone https://github.com/Neurosim-lab/netpyne_workspace
 WORKDIR /home/jovyan/netpyne_workspace
 CMD /bin/bash -c "source activate snakes && exec jupyter notebook --debug --NotebookApp.default_url=/geppetto --NotebookApp.token=''"
