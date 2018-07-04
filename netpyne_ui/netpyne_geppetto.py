@@ -164,6 +164,7 @@ class NetPyNEGeppetto():
             return self.getJSONError("Error while exporting the NetPyNE model",traceback.format_exc())
 
     def instantiateNetPyNEModel(self):
+        import sys; reload(sys)
         sim.initialize(netParams, simConfig)  # create network object and set cfg and net params
         sim.net.createPops()                  # instantiate network populations
         sim.net.createCells()                 # instantiate network cells based on defined populations
@@ -176,7 +177,9 @@ class NetPyNEGeppetto():
         return sim
 
     def simulateNetPyNEModel(self):
+        import sys; reload(sys)
         sim.setupRecording() 
+        sim.simulate()
         sim.saveData()
         return sim
 
