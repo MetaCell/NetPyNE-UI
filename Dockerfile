@@ -33,15 +33,15 @@ RUN apt-get install -y \
 
 # Install latest iv and NEURON
 RUN git clone http://github.com/neuronsimulator/iv
-RUN git clone http://github.com/neuronsimulator/nrn
+RUN git clone --branch 7.6.1crxd https://github.com/adamjhn/nrn.git 
 WORKDIR iv
 RUN ./build.sh
-RUN ./configure
+RUN ./configure --prefix="/home/jovyan/work/iv/"
 RUN make --silent -j4
 RUN make --silent install -j4
 WORKDIR ../nrn
 RUN ./build.sh
-RUN ./configure --with-nrnpython=python2 --with-paranrn
+RUN ./configure --with-nrnpython=python2 --with-paranrn --prefix="/home/jovyan/work/nrn/" --with-iv="/home/jovyan/work/iv/"
 RUN make --silent -j4
 RUN make --silent install -j4
 
@@ -54,6 +54,8 @@ RUN conda create --name snakes python=2
 WORKDIR src/nrnpython
 ENV PATH="/home/jovyan/work/nrn/x86_64/bin:${PATH}"
 RUN /bin/bash -c "source activate snakes && python setup.py install"
+# Install Bokeh
+RUN /bin/bash -c "source activate snakes && conda install bokeh"
 
 ARG INCUBATOR_VER=unknown
 RUN /bin/bash -c "INCUBATOR_VER=${INCUBATOR_VER} source activate snakes && pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple netpyne_ui"
