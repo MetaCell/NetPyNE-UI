@@ -177,8 +177,7 @@ class NetPyNEGeppetto():
 
     def simulateNetPyNEModel(self):
         sim.setupRecording() 
-        sim.simulate()
-        sim.analyze()
+        sim.saveData()
         return sim
 
     def rename(self, path, oldValue,newValue):
