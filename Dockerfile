@@ -55,7 +55,7 @@ WORKDIR src/nrnpython
 ENV PATH="/home/jovyan/work/nrn/x86_64/bin:${PATH}"
 RUN /bin/bash -c "source activate snakes && python setup.py install"
 # Install Bokeh
-RUN /bin/bash -c "source activate snakes && conda install bokeh"
+RUN /bin/bash -c "source activate snakes && conda install bokeh=10.12.8"
 
 ARG INCUBATOR_VER=unknown
 RUN /bin/bash -c "INCUBATOR_VER=${INCUBATOR_VER} source activate snakes && pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple netpyne_ui"
