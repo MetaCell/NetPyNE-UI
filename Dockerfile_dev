@@ -59,7 +59,7 @@ WORKDIR src/nrnpython
 ENV PATH="/home/jovyan/work/nrn/x86_64/bin:${PATH}"
 RUN /bin/bash -c "source activate snakes && python setup.py install"
 # Install Bokeh
-RUN /bin/bash -c "source activate snakes && conda install bokeh=10.12.8"
+RUN /bin/bash -c "source activate snakes && conda install bokeh=0.12.7"
 
 # Clone NetPyNE-UI and install the development version
 WORKDIR ../../../
