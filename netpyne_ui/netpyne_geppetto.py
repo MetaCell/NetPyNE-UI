@@ -430,7 +430,7 @@ def globalMessageHandler(identifier, command, parameters):
         GeppettoJupyterModelSync.events_controller.triggerEvent(
             "receive_python_message", {'id': identifier, 'response': response})
     except Exception as e:
-        return self.getJSONError("Unhandle exception in Global Message Handler",traceback.format_exc())
+        return netpyne_geppetto.getJSONError("Unhandle exception in Global Message Handler",traceback.format_exc())
     
 
 def configure_logging():
