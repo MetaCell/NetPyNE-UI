@@ -77,6 +77,9 @@ def main(argv):
     elif(argv[0] == 'remote'):
         command = ['git', 'remote', '-v']
 
+    elif(argv[0] == 'diff'):
+        command = ['git', 'diff']
+
     elif(argv[0] == 'checkout'):
         if(len(argv) == 2):
             command = ['git', 'checkout', argv[1]]
