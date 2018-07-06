@@ -331,6 +331,16 @@ class NetPyNEGeppetto():
             svgs.append(ui.getSVG(fig[0][0]))
         
         return svgs.__str__()
+
+    def getNetPyNERxDConcentration(self):
+        try:
+            fig = rxd.plotExtracellularConcentration(species=rxd.ca)
+            if fig==-1:
+                return fig
+            else:
+                return ui.getSVG(fig)
+        except:
+            return -1                   
         
     def getAvailablePops(self):
         return netParams.popParams.keys()
