@@ -7,6 +7,25 @@ from shutil import copyfile
 
 branch = "development"
 
+#by default clones branch (which can be passed as a parameter python install.py branch test_branch)
+#if branch doesnt exist clones the default_branch
+def clone(repository, default_branch, cwdp, recursive = False):
+    global branch
+    print("Cloning "+repository)
+    if recursive:
+        subprocess.call(['git', 'clone', '--recursive', '-b', branch, repository], cwd=cwdp)
+    else:
+        subprocess.call(['git', 'clone', '-b', branch, repository], cwd=cwdp)
+    currentPath = os.getcwd()
+    newPath = currentPath+"/"+repository.split('/')[-1].replace(".git", "")
+    os.chdir(newPath)
+    python_git=subprocess.Popen("git branch -a",shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    outstd,errstd=python_git.communicate()
+    if branch in outstd:
+        subprocess.call(['git', 'checkout', branch], cwd=cwdp)
+    else:
+        subprocess.call(['git', 'checkout', default_branch], cwd=cwdp)
+        
 def main(argv):
     global branch
     if(len(argv) > 0):
@@ -18,25 +37,15 @@ if __name__ == "__main__":
 
 
 # Cloning Repos
-print("Cloning PyGeppetto...")
-subprocess.call(['git', 'clone', '-b', branch, 'https://github.com/openworm/pygeppetto.git'], cwd='../')
+clone('https://github.com/openworm/pygeppetto.git','v0.4.1-M1','./' )
 subprocess.call(['pip', 'install', '-e', '.'], cwd='../pygeppetto/')
 
-print("Cloning NetPyNE...")
-subprocess.call(['git', 'clone', '-b', branch, 'https://github.com/Neurosim-lab/netpyne.git'], cwd='../')
+clone('https://github.com/Neurosim-lab/netpyne.git','metadata' ,'./')
 subprocess.call(['pip', 'install', '-e', '.'], cwd='../netpyne/')
 
-print("Cloning Geppetto Jupyter (Python package)...")
-subprocess.call(['git', 'clone', '--recursive', '-b', branch, 'https://github.com/openworm/org.geppetto.frontend.jupyter.git'], cwd='../')
-
-print("Cloning Geppetto Frontend")
-subprocess.call(['git', 'checkout', branch], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
-
-print("Cloning Geppetto NetPyNE Configuration ...")
-subprocess.call(['git', 'clone', 'https://github.com/MetaCell/geppetto-netpyne.git'],
-                cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/')
-
-subprocess.call(['git', 'checkout', branch], cwd='../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-netpyne/')
+clone('https://github.com/openworm/org.geppetto.frontend.jupyter.git','v0.4.1-M1','../', true )
+clone('https://github.com/openworm/org.geppetto.frontend.git','v0.4.1-M1','../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
+clone('https://github.com/MetaCell/geppetto-netpyne.git','0.3','../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/')
 
 print("Enabling Geppetto NetPyNE Extension ...")
 geppetto_configuration = os.path.join(os.path.dirname(__file__), 'GeppettoConfiguration.json')
