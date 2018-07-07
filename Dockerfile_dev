@@ -51,7 +51,8 @@ RUN make --silent install -j4
 
 # Switch to non sudo, create a Python 2 virtual environment 
 USER $NB_USER
-RUN conda update conda
+# Commenting out the conda update things broke!
+# RUN conda update conda
 RUN conda create --name snakes python=2
 
 # Install NEURON python
