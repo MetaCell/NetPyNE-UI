@@ -43,7 +43,7 @@ subprocess.call(['pip', 'install', '-e', '.'], cwd='../pygeppetto/')
 clone('https://github.com/Neurosim-lab/netpyne.git','metadata' ,'./')
 subprocess.call(['pip', 'install', '-e', '.'], cwd='../netpyne/')
 
-clone('https://github.com/openworm/org.geppetto.frontend.jupyter.git','v0.4.1-M1','../', true )
+clone('https://github.com/openworm/org.geppetto.frontend.jupyter.git','v0.4.1-M1','../', True )
 clone('https://github.com/openworm/org.geppetto.frontend.git','v0.4.1-M1','../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/')
 clone('https://github.com/MetaCell/geppetto-netpyne.git','0.3','../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/')
 
