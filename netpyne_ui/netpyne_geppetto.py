@@ -147,7 +147,7 @@ class NetPyNEGeppetto():
             
             # convert fron netpyne.specs.dict to dict
             rule = modelParameters["label"]
-            netParams.cellParams[rule]["conds"] = netParams.cellParams[rule]["conds"].todict()
+            netParams.cellParams[rule] = netParams.cellParams[rule].todict()
 
             return self.getJSONReply()
         except:
