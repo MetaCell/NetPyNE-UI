@@ -13,9 +13,9 @@ def clone(repository, default_branch, cwdp, recursive = False):
     global branch
     print("Cloning "+repository)
     if recursive:
-        subprocess.call(['git', 'clone', '--recursive', '-b', branch, repository], cwd=cwdp)
+        subprocess.call(['git', 'clone', '--recursive', repository], cwd=cwdp)
     else:
-        subprocess.call(['git', 'clone', '-b', branch, repository], cwd=cwdp)
+        subprocess.call(['git', 'clone', repository], cwd=cwdp)
     currentPath = os.getcwd()
     newPath = currentPath+"/"+repository.split('/')[-1].replace(".git", "")
     os.chdir(newPath)
