@@ -36,7 +36,7 @@ def main(argv):
 if __name__ == "__main__":
     main(sys.argv[1:])
 
-
+os.chdir(os.getcwd()+"/../")
 # Cloning Repos
 clone('https://github.com/openworm/pygeppetto.git','v0.4.1-M1','./' )
 subprocess.call(['pip', 'install', '-e', '.'], cwd='./pygeppetto/')
