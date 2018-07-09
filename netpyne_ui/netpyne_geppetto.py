@@ -452,8 +452,10 @@ def globalMessageHandler(identifier, command, parameters):
             response = eval(command + '(*parameters)')
         GeppettoJupyterModelSync.events_controller.triggerEvent(
             "receive_python_message", {'id': identifier, 'response': response})
-    except Exception as e:
-        return netpyne_geppetto.getJSONError("Unhandle exception in Global Message Handler",traceback.format_exc())
+    except:
+        response = netpyne_geppetto.getJSONError("Error while executing command "+command,traceback.format_exc())
+        GeppettoJupyterModelSync.events_controller.triggerEvent(
+            "receive_python_message", {'id': identifier, 'response': response})
     
 
 def configure_logging():

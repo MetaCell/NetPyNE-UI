@@ -51,7 +51,8 @@ RUN make --silent install -j4
 
 # Switch to non sudo, create a Python 2 virtual environment 
 USER $NB_USER
-RUN conda update conda
+# Commenting out the conda update things broke!
+# RUN conda update conda
 RUN conda create --name snakes python=2
 
 # Install NEURON python
@@ -67,7 +68,7 @@ RUN wget https://github.com/MetaCell/NetPyNE-UI/archive/$netpyneuiBranch.zip
 RUN unzip $netpyneuiBranch.zip
 WORKDIR NetPyNE-UI-$netpyneuiBranch/utilities
 RUN /bin/bash -c "source activate snakes && python --version"
-RUN /bin/bash -c "source activate snakes && exec python install.py"
+RUN /bin/bash -c "source activate snakes && exec python install.py branch $netpyneuiBranch"
 WORKDIR /home/jovyan
 RUN git clone https://github.com/Neurosim-lab/netpyne_workspace
 WORKDIR /home/jovyan/netpyne_workspace
