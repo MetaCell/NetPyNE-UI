@@ -331,6 +331,14 @@ class NetPyNEGeppetto():
             svgs.append(ui.getSVG(fig[0][0]))
         
         return svgs.__str__()
+
+    def getNetPyNERxDConcentrationPlot(self):
+        args = self.getPlotSettings('plotRxDConcentration')
+        fig = analysis.plotRxDConcentration(showFig=False, **args)
+        if fig==-1:
+            return fig
+        else:
+            return ui.getSVG(fig)
         
     def getAvailablePops(self):
         return netParams.popParams.keys()
