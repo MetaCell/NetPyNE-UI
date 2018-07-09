@@ -357,7 +357,7 @@ class NetPyNEGeppetto():
     def getAvailableCellTypes(self):
         cellTypes = set([])
         for p in netParams.popParams:
-            if 'celltype' in netParams.popParams[p]:
+            if 'cellType' in netParams.popParams[p]:
                 ct = netParams.popParams[p]['cellType']
                 if ct not in cellTypes:
                     cellTypes.add(ct)
