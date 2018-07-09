@@ -27,6 +27,7 @@ setup(
         'Programming Language :: Python :: 3.4'
     ],
     install_requires=[
+        'matplotlib-scalebar==0.5.0',
         'jupyter_geppetto==0.4.1',
         'netpyne==0.7.8'
     ],
