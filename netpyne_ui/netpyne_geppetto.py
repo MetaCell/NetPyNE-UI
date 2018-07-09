@@ -344,10 +344,10 @@ class NetPyNEGeppetto():
         return cellTypes
     
     def getAvailableSections(self):
-        sections = []
+        sections = {}
         for cellRule in netParams.cellParams:
-            sections += netParams.cellParams[cellRule]['secs'].keys()
-        return list(set(sections))
+            sections[cellRule] = netParams.cellParams[cellRule]['secs'].keys()
+        return sections
         
     def getAvailableStimSources(self):
         return netParams.stimSourceParams.keys()
