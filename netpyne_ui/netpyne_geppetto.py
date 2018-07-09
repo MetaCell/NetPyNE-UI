@@ -224,7 +224,9 @@ class NetPyNEGeppetto():
         fig = analysis.plotShape(showFig=False, **args)
         if fig==-1:
             return fig
-        return ui.getSVG(fig)
+        svgs = []
+        svgs.append(ui.getSVG(fig))
+        return svgs.__str__()
 
     def getNetPyNEConnectionsPlot(self):
         args = self.getPlotSettings('plotConn')
