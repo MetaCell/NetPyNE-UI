@@ -350,7 +350,13 @@ class NetPyNEGeppetto():
             if ct not in cellTypes:
                 cellTypes.add(ct)
         return cellTypes
-
+    
+    def getAvailableSections(self):
+        sections = {}
+        for cellRule in netParams.cellParams:
+            sections[cellRule] = netParams.cellParams[cellRule]['secs'].keys()
+        return sections
+        
     def getAvailableStimSources(self):
         return netParams.stimSourceParams.keys()
     
