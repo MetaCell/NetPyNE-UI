@@ -333,14 +333,12 @@ class NetPyNEGeppetto():
         return svgs.__str__()
 
     def getNetPyNERxDConcentration(self):
-        try:
-            fig = rxd.plotExtracellularConcentration(species=rxd.ca)
-            if fig==-1:
-                return fig
-            else:
-                return ui.getSVG(fig)
-        except:
-            return -1                   
+        args = self.getPlotSettings('plotRxDConcentration')
+        fig = analysis.plotRxDConcentration(showFig=False, **args)
+        if fig==-1:
+            return fig
+        else:
+            return ui.getSVG(fig)
         
     def getAvailablePops(self):
         return netParams.popParams.keys()
