@@ -259,7 +259,7 @@ class NetPyNEGeppetto():
         if fig==-1:
             return fig
         else:
-            return ui.getSVG(fig[0])
+            return ui.getSVG(fig[0]).__str__()
 
     def getNetPyNESpikeStatsPlot(self):
         args = self.getPlotSettings('plotSpikeStats')
@@ -267,7 +267,7 @@ class NetPyNEGeppetto():
         if fig==-1:
             return fig
         else:
-            return ui.getSVG(fig[0])
+            return ui.getSVG(fig[0]).__str__()
 
     def getNetPyNEGrangerPlot(self):
         args = self.getPlotSettings('granger')
