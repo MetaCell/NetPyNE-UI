@@ -224,7 +224,9 @@ class NetPyNEGeppetto():
         fig = analysis.plotShape(showFig=False, **args)
         if fig==-1:
             return fig
-        return ui.getSVG(fig)
+        svgs = []
+        svgs.append(ui.getSVG(fig))
+        return svgs.__str__()
 
     def getNetPyNEConnectionsPlot(self):
         args = self.getPlotSettings('plotConn')
@@ -346,17 +348,19 @@ class NetPyNEGeppetto():
     def getAvailableCellModels(self):
         cellModels = set([])
         for p in netParams.popParams:
-            cm = netParams.popParams[p]['cellModel']
-            if cm not in cellModels:
-                cellModels.add(cm)
+            if 'cellModel' in netParams.popParams[p]:
+                cm = netParams.popParams[p]['cellModel']
+                if cm not in cellModels:
+                    cellModels.add(cm)
         return cellModels
     
     def getAvailableCellTypes(self):
         cellTypes = set([])
         for p in netParams.popParams:
-            ct = netParams.popParams[p]['cellType']
-            if ct not in cellTypes:
-                cellTypes.add(ct)
+            if 'cellType' in netParams.popParams[p]:
+                ct = netParams.popParams[p]['cellType']
+                if ct not in cellTypes:
+                    cellTypes.add(ct)
         return cellTypes
     
     def getAvailableSections(self):
