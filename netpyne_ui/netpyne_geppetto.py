@@ -217,7 +217,9 @@ class NetPyNEGeppetto():
         fig = analysis.plot2Dnet(showFig=False, **args)
         if fig==-1:
             return fig
-        return ui.getSVG(fig).__str__()
+        svgs=[]
+        svgs.append(ui.getSVG(fig))
+        return svgs.__str__()
     
     def getNetPyNEShapePlot(self):
         args = self.getPlotSettings('plotShape')
@@ -233,14 +235,18 @@ class NetPyNEGeppetto():
         fig = analysis.plotConn(showFig=False, **args)
         if fig==-1:
             return fig
-        return ui.getSVG(fig).__str__()
+        svgs=[]
+        svgs.append(ui.getSVG(fig))
+        return svgs.__str__()
 
     def getNetPyNERasterPlot(self):
         args = self.getPlotSettings('plotRaster')
         fig = analysis.plotRaster(showFig=False, **args)
         if fig==-1:
             return fig
-        return ui.getSVG(fig).__str__()
+        svgs=[]
+        svgs.append(ui.getSVG(fig))
+        return svgs.__str__()
 
     def getNetPyNETracesPlot(self):
         args = self.getPlotSettings('plotTraces')
@@ -259,7 +265,9 @@ class NetPyNEGeppetto():
         if fig==-1:
             return fig
         else:
-            return ui.getSVG(fig[0]).__str__()
+            svgs=[]
+            svgs.append(ui.getSVG(fig[0]))
+        return svgs.__str__()
 
     def getNetPyNESpikeStatsPlot(self):
         args = self.getPlotSettings('plotSpikeStats')
@@ -267,7 +275,9 @@ class NetPyNEGeppetto():
         if fig==-1:
             return fig
         else:
-            return ui.getSVG(fig[0]).__str__()
+            svgs=[]
+            svgs.append(ui.getSVG(fig[0]))
+        return svgs.__str__()
 
     def getNetPyNEGrangerPlot(self):
         args = self.getPlotSettings('granger')
@@ -276,8 +286,10 @@ class NetPyNEGeppetto():
             return fig
         else:
             fig=fig[-1]
-        return ui.getSVG(fig).__str__()
-    
+        svgs=[]
+        svgs.append(ui.getSVG(fig))
+        return svgs.__str__()
+
     def getNetPyNERatePSDPlot(self):
         args = self.getPlotSettings('plotRatePSD')
         fig = analysis.plotRatePSD(showFig=False, **args)
@@ -296,7 +308,9 @@ class NetPyNEGeppetto():
        if fig==-1:
            return fig
        else:
-           return ui.getSVG(fig[0][0]).__str__()
+            svgs = []
+            svgs.append(ui.getSVG(fig[0][0]))
+       return svgs.__str__()
 
     def getNetPyNELFPPSDPlot(self):
         args = self.getPlotSettings('plotLFP')
@@ -339,8 +353,9 @@ class NetPyNEGeppetto():
         fig = analysis.plotRxDConcentration(showFig=False, **args)
         if fig==-1:
             return fig
-        else:
-            return ui.getSVG(fig).__str__()
+        svgs=[]
+        svgs.append(ui.getSVG(fig))
+        return svgs.__str__()
         
     def getAvailablePops(self):
         return netParams.popParams.keys()
