@@ -35,7 +35,7 @@ RUN apt-get install -y \
         libpng-dev
 
 # Install latest iv and NEURON
-RUN git clone https://github.com/adamjhn/nrn.git  #--branch 7.6.1crxd
+RUN git clone --branch 7.6.1crxd https://github.com/adamjhn/nrn.git
 WORKDIR nrn
 RUN ./build.sh
 RUN ./configure --without-x --with-nrnpython=python2 --without-paranrn --prefix="/home/jovyan/work/nrn/" --without-iv
