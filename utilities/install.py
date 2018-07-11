@@ -46,7 +46,7 @@ os.chdir(os.getcwd()+"/../")
 clone('https://github.com/openworm/pygeppetto.git','pygeppetto','v0.4.1-M1')
 subprocess.call(['pip', 'install', '-e', '.'], cwd='./pygeppetto/')
 
-clone('https://github.com/Neurosim-lab/netpyne.git','netpyne','metadata')
+clone('https://github.com/Neurosim-lab/netpyne.git','netpyne','0.7.9')
 subprocess.call(['pip', 'install', '-e', '.'], cwd='./netpyne/')
 
 clone('https://github.com/openworm/org.geppetto.frontend.jupyter.git','org.geppetto.frontend.jupyter','v0.4.1-M1','', True )
