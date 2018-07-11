@@ -126,24 +126,34 @@ class NetPyNEGeppetto():
             simConfigModuleName = importlib.import_module(str(modelParameters["simConfigModuleName"]))
             # Import Model attributes
             netpyne_geppetto.simConfig = getattr(simConfigModuleName, str(modelParameters["simConfigVariable"]))
-
-            os.chdir(owd)
+            
             return self.getJSONReply()
         except:
             return self.getJSONError("Error while importing the NetPyNE model",traceback.format_exc())
-    
+        finally:
+            os.chdir(owd)
+
     def importCellTemplate(self, modelParameters, modFolder, compileMod):
         try:
-            import netpyne_geppetto
+            # Get Current dir
+            owd = os.getcwd()
+
+            from netpyne_geppetto import netParams
+
             self.compileModMechFiles(compileMod, modFolder)
 
             # import cell template
             netParams.importCellParams(**modelParameters)
             
-            netpyne_geppetto.netParams.cellParams[modelParameters['label']]['conds'] = {}
+            # convert fron netpyne.specs.dict to dict
+            rule = modelParameters["label"]
+            netParams.cellParams[rule] = netParams.cellParams[rule].todict()
+
             return self.getJSONReply()
         except:
             return self.getJSONError("Error while importing the NetPyNE cell template",traceback.format_exc())
+        finally:
+            os.chdir(owd)
         
     def exportModel(self, modelParameters):
         try:
@@ -154,15 +164,23 @@ class NetPyNEGeppetto():
             return self.getJSONError("Error while exporting the NetPyNE model",traceback.format_exc())
 
     def instantiateNetPyNEModel(self):
-        sim.create(netParams, simConfig)
+        import sys; reload(sys)
+        sim.initialize(netParams, simConfig)  # create network object and set cfg and net params
+        sim.net.createPops()                  # instantiate network populations
+        sim.net.createCells()                 # instantiate network cells based on defined populations
+        sim.net.connectCells()                # create connections between cells based on params
+        sim.net.addStims()                    # add external stimulation to cells (IClamps etc)
+    
         sim.net.defineCellShapes()  # creates 3d pt for cells with stylized geometries
         sim.gatherData(gatherLFP=False)
         #sim.saveData()
         return sim
 
     def simulateNetPyNEModel(self):
+        import sys; reload(sys)
+        sim.setupRecording() 
         sim.simulate()
-        sim.analyze()
+        sim.saveData()
         return sim
 
     def rename(self, path, oldValue,newValue):
@@ -199,28 +217,36 @@ class NetPyNEGeppetto():
         fig = analysis.plot2Dnet(showFig=False, **args)
         if fig==-1:
             return fig
-        return ui.getSVG(fig)
+        svgs=[]
+        svgs.append(ui.getSVG(fig))
+        return svgs.__str__()
     
     def getNetPyNEShapePlot(self):
         args = self.getPlotSettings('plotShape')
         fig = analysis.plotShape(showFig=False, **args)
         if fig==-1:
             return fig
-        return ui.getSVG(fig)
+        svgs = []
+        svgs.append(ui.getSVG(fig))
+        return svgs.__str__()
 
     def getNetPyNEConnectionsPlot(self):
         args = self.getPlotSettings('plotConn')
         fig = analysis.plotConn(showFig=False, **args)
         if fig==-1:
             return fig
-        return ui.getSVG(fig)
+        svgs=[]
+        svgs.append(ui.getSVG(fig))
+        return svgs.__str__()
 
     def getNetPyNERasterPlot(self):
         args = self.getPlotSettings('plotRaster')
         fig = analysis.plotRaster(showFig=False, **args)
         if fig==-1:
             return fig
-        return ui.getSVG(fig)
+        svgs=[]
+        svgs.append(ui.getSVG(fig))
+        return svgs.__str__()
 
     def getNetPyNETracesPlot(self):
         args = self.getPlotSettings('plotTraces')
@@ -238,7 +264,10 @@ class NetPyNEGeppetto():
         fig = analysis.plotSpikeHist(showFig=False, **args)
         if fig==-1:
             return fig
-        return ui.getSVG(fig)
+        else:
+            svgs=[]
+            svgs.append(ui.getSVG(fig[0]))
+        return svgs.__str__()
 
     def getNetPyNESpikeStatsPlot(self):
         args = self.getPlotSettings('plotSpikeStats')
@@ -246,8 +275,9 @@ class NetPyNEGeppetto():
         if fig==-1:
             return fig
         else:
-            fig=fig[0]
-        return ui.getSVG(fig)
+            svgs=[]
+            svgs.append(ui.getSVG(fig[0]))
+        return svgs.__str__()
 
     def getNetPyNEGrangerPlot(self):
         args = self.getPlotSettings('granger')
@@ -256,8 +286,10 @@ class NetPyNEGeppetto():
             return fig
         else:
             fig=fig[-1]
-        return ui.getSVG(fig)
-    
+        svgs=[]
+        svgs.append(ui.getSVG(fig))
+        return svgs.__str__()
+
     def getNetPyNERatePSDPlot(self):
         args = self.getPlotSettings('plotRatePSD')
         fig = analysis.plotRatePSD(showFig=False, **args)
@@ -276,58 +308,82 @@ class NetPyNEGeppetto():
        if fig==-1:
            return fig
        else:
-            fig=fig[0]
-       return ui.getSVG(fig)
+            svgs = []
+            svgs.append(ui.getSVG(fig[0][0]))
+       return svgs.__str__()
 
     def getNetPyNELFPPSDPlot(self):
-       args = self.getPlotSettings('plotLFP')
-       args['plots'] = ['PSD']
-       fig = analysis.plotLFP(showFig=False, **args)
-       if fig==-1:
-           return fig
-       else:
-            fig=fig[0]
-       return ui.getSVG(fig)
+        args = self.getPlotSettings('plotLFP')
+        args['plots'] = ['PSD']
+        fig = analysis.plotLFP(showFig=False, **args)
+        if fig==-1:
+            return fig
+        else:
+            svgs = []
+            svgs.append(ui.getSVG(fig[0][0]))
+        
+        return svgs.__str__()
 
     def getNetPyNELFPSpectrogramPlot(self):
-       args = self.getPlotSettings('plotLFP')
-       args['plots'] = ['spectrogram']
-       fig = analysis.plotLFP(showFig=False, **args)
-       if fig==-1:
-           return fig
-       else:
-            fig=fig[0]
-       return ui.getSVG(fig)
+        args = self.getPlotSettings('plotLFP')
+        args['plots'] = ['spectrogram']
+        fig = analysis.plotLFP(showFig=False, **args)
+        if fig==-1:
+            return fig
+        else:
+            svgs = []
+            svgs.append(ui.getSVG(fig[0][0]))
+        
+        return svgs.__str__()
 
     def getNetPyNELFPLocationsPlot(self):
-       args = self.getPlotSettings('plotLFP')
-       args['plots'] = ['locations']
-       fig = analysis.plotLFP(showFig=False, **args)
-       if fig==-1:
-           return fig
-       else:
-            fig=fig[0]
-       return ui.getSVG(fig)
+        args = self.getPlotSettings('plotLFP')
+        args['plots'] = ['locations']
+        fig = analysis.plotLFP(showFig=False, **args)
+        if fig==-1:
+            return fig
+        else:
+            svgs = []
+            svgs.append(ui.getSVG(fig[0][0]))
+        
+        return svgs.__str__()
 
+    def getNetPyNERxDConcentrationPlot(self):
+        args = self.getPlotSettings('plotRxDConcentration')
+        fig = analysis.plotRxDConcentration(showFig=False, **args)
+        if fig==-1:
+            return fig
+        svgs=[]
+        svgs.append(ui.getSVG(fig))
+        return svgs.__str__()
+        
     def getAvailablePops(self):
         return netParams.popParams.keys()
 
     def getAvailableCellModels(self):
         cellModels = set([])
         for p in netParams.popParams:
-            cm = netParams.popParams[p]['cellModel']
-            if cm not in cellModels:
-                cellModels.add(cm)
+            if 'cellModel' in netParams.popParams[p]:
+                cm = netParams.popParams[p]['cellModel']
+                if cm not in cellModels:
+                    cellModels.add(cm)
         return cellModels
     
     def getAvailableCellTypes(self):
         cellTypes = set([])
         for p in netParams.popParams:
-            ct = netParams.popParams[p]['cellType']
-            if ct not in cellTypes:
-                cellTypes.add(ct)
+            if 'cellType' in netParams.popParams[p]:
+                ct = netParams.popParams[p]['cellType']
+                if ct not in cellTypes:
+                    cellTypes.add(ct)
         return cellTypes
-
+    
+    def getAvailableSections(self):
+        sections = {}
+        for cellRule in netParams.cellParams:
+            sections[cellRule] = netParams.cellParams[cellRule]['secs'].keys()
+        return sections
+        
     def getAvailableStimSources(self):
         return netParams.stimSourceParams.keys()
     
@@ -357,8 +413,9 @@ class NetPyNEGeppetto():
         else:
             logging.debug('Parameter '+paramToDel+' is null, not deleted')
         
-
-
+    def validateFunction(self, functionString):
+        return utils.ValidateFunction(functionString, netParams.__dict__)
+    
 class LoopTimer(threading.Thread):
     """
     a Timer that calls f every interval
@@ -428,8 +485,10 @@ def globalMessageHandler(identifier, command, parameters):
             response = eval(command + '(*parameters)')
         GeppettoJupyterModelSync.events_controller.triggerEvent(
             "receive_python_message", {'id': identifier, 'response': response})
-    except Exception as e:
-        return self.getJSONError("Unhandle exception in Global Message Handler",traceback.format_exc())
+    except:
+        response = netpyne_geppetto.getJSONError("Error while executing command "+command,traceback.format_exc())
+        GeppettoJupyterModelSync.events_controller.triggerEvent(
+            "receive_python_message", {'id': identifier, 'response': response})
     
 
 def configure_logging():
