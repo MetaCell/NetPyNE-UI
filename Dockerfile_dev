@@ -1,8 +1,8 @@
 FROM jupyter/base-notebook:eb70bcf1a292
 USER root
 
-ARG netpyneuiBranch=development	
-ENV netpyneuiBranch=${netpyneuiBranch}	
+ARG netpyneuiBranch=development 
+ENV netpyneuiBranch=${netpyneuiBranch}  
 RUN echo "$netpyneuiBranch";
 
 RUN apt-get -qq update
@@ -13,7 +13,7 @@ RUN apt-get install -y \
         g++ \
         build-essential \
         libncurses-dev \
-        python \
+        python2.7 \
         libpython-dev \
         cython \
         libx11-dev \
@@ -24,11 +24,10 @@ RUN apt-get install -y \
         libtool \ 
         libxext-dev \
         libncurses-dev \
-        python3-dev \
+        python2.7-dev \
         xfonts-100dpi \ 
-        cython3 \ 
         libopenmpi-dev \
-        python3-scipy \
+        python2.7-scipy \
         make \
         zlib1g-dev \
         unzip \
@@ -36,16 +35,10 @@ RUN apt-get install -y \
         libpng-dev
 
 # Install latest iv and NEURON
-RUN git clone http://github.com/neuronsimulator/iv
-RUN git clone --branch 7.6.1crxd https://github.com/adamjhn/nrn.git 
-WORKDIR iv
+RUN git clone --branch 7.6.1crxd https://github.com/adamjhn/nrn.git
+WORKDIR nrn
 RUN ./build.sh
-RUN ./configure --prefix="/home/jovyan/work/iv/"
-RUN make --silent -j4
-RUN make --silent install -j4
-WORKDIR ../nrn
-RUN ./build.sh
-RUN ./configure --with-nrnpython=python2 --with-paranrn --prefix="/home/jovyan/work/nrn/" --with-iv="/home/jovyan/work/iv/"
+RUN ./configure --without-x --with-nrnpython=python2 --without-paranrn --prefix="/home/jovyan/work/nrn/" --without-iv
 RUN make --silent -j4
 RUN make --silent install -j4
 
