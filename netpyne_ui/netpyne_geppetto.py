@@ -14,7 +14,7 @@ import time
 import traceback
 
 
-from netpyne import specs, sim, analysis, utils
+from netpyne  import specs, sim, analysis, utils
 from netpyne.metadata import metadata, api
 from netpyne_model_interpreter import NetPyNEModelInterpreter
 from pygeppetto.model.model_serializer import GeppettoModelSerializer
