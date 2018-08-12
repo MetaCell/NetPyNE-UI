@@ -2,7 +2,7 @@
 netpyne_geppetto.py
 Initialise NetPyNE Geppetto, this class contains methods to connect NetPyNE with the Geppetto based UI
 """
-import StringIO
+import io
 import json
 import os
 import importlib
@@ -16,7 +16,7 @@ import traceback
 
 from netpyne import specs, sim, analysis, utils
 from netpyne.metadata import metadata, api
-from netpyne_model_interpreter import NetPyNEModelInterpreter
+from netpyne_ui.netpyne_model_interpreter import NetPyNEModelInterpreter
 from pygeppetto.model.model_serializer import GeppettoModelSerializer
 import matplotlib.pyplot as plt
 from pygeppetto import ui
@@ -27,6 +27,7 @@ import neuron
 from shutil import copyfile
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync, GeppettoJupyterGUISync
 from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G
+import imp
 
 
 
@@ -108,7 +109,7 @@ class NetPyNEGeppetto():
             
             self.compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
             
-            import netpyne_geppetto
+            from . import netpyne_geppetto
             # NetParams
             netParamsPath = str(modelParameters["netParamsPath"])
             sys.path.append(netParamsPath)
@@ -138,7 +139,7 @@ class NetPyNEGeppetto():
             # Get Current dir
             owd = os.getcwd()
 
-            from netpyne_geppetto import netParams
+            from .netpyne_geppetto import netParams
 
             self.compileModMechFiles(compileMod, modFolder)
 
@@ -164,7 +165,7 @@ class NetPyNEGeppetto():
             return self.getJSONError("Error while exporting the NetPyNE model",traceback.format_exc())
 
     def instantiateNetPyNEModel(self):
-        import sys; reload(sys)
+        import sys; imp.reload(sys)
         sim.initialize(netParams, simConfig)  # create network object and set cfg and net params
         sim.net.createPops()                  # instantiate network populations
         sim.net.createCells()                 # instantiate network cells based on defined populations
@@ -177,7 +178,7 @@ class NetPyNEGeppetto():
         return sim
 
     def simulateNetPyNEModel(self):
-        import sys; reload(sys)
+        import sys; imp.reload(sys)
         sim.setupRecording() 
         sim.simulate()
         sim.saveData()
@@ -254,7 +255,7 @@ class NetPyNEGeppetto():
         if figs==-1:
             return figs
         svgs = []
-        for key, value in figs.iteritems():
+        for key, value in figs.items():
             logging.debug("Found plot for "+ key)
             svgs.append(ui.getSVG(value))
         return svgs.__str__()
@@ -358,7 +359,7 @@ class NetPyNEGeppetto():
         return svgs.__str__()
         
     def getAvailablePops(self):
-        return netParams.popParams.keys()
+        return list(netParams.popParams.keys())
 
     def getAvailableCellModels(self):
         cellModels = set([])
@@ -381,21 +382,21 @@ class NetPyNEGeppetto():
     def getAvailableSections(self):
         sections = {}
         for cellRule in netParams.cellParams:
-            sections[cellRule] = netParams.cellParams[cellRule]['secs'].keys()
+            sections[cellRule] = list(netParams.cellParams[cellRule]['secs'].keys())
         return sections
         
     def getAvailableStimSources(self):
-        return netParams.stimSourceParams.keys()
+        return list(netParams.stimSourceParams.keys())
     
     def getAvailableSynMech(self):
-        return netParams.synMechParams.keys()
+        return list(netParams.synMechParams.keys())
     
     def getAvailableMechs(self):
         mechs = utils.mechVarList()['mechs']
-        for key in mechs.keys():
+        for key in list(mechs.keys()):
             if 'ion' in key: del mechs[key]
         for key in ["morphology", "capacitance", "extracellular"]: del mechs[key]
-        return mechs.keys()
+        return list(mechs.keys())
     
     def getMechParams(self, mechanism):
         params = utils.mechVarList()['mechs'][mechanism]
@@ -403,7 +404,7 @@ class NetPyNEGeppetto():
         
     def getAvailablePlots(self):
         plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats","plotRatePSD", "plotTraces", "plotLFP", "plotShape", "plot2Dnet", "plotConn", "granger"]
-        return [plot for plot in plots if plot not in simConfig.analysis.keys()]
+        return [plot for plot in plots if plot not in list(simConfig.analysis.keys())]
 
     def deleteParam(self, paramToDel):
         logging.debug("Checking if netParams."+paramToDel+" is not null")
