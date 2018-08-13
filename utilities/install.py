@@ -43,14 +43,14 @@ if __name__ == "__main__":
 
 os.chdir(os.getcwd()+"/../")
 # Cloning Repos
-clone('https://github.com/openworm/pygeppetto.git','pygeppetto','v0.4.1-M1')
+clone('https://github.com/openworm/pygeppetto.git','pygeppetto','development')
 subprocess.call(['pip', 'install', '-e', '.'], cwd='./pygeppetto/')
 
-clone('https://github.com/Neurosim-lab/netpyne.git','netpyne','0.7.9')
+clone('https://github.com/Neurosim-lab/netpyne.git','netpyne','py3')
 subprocess.call(['pip', 'install', '-e', '.'], cwd='./netpyne/')
 
-clone('https://github.com/openworm/org.geppetto.frontend.jupyter.git','org.geppetto.frontend.jupyter','v0.4.1-M2','', True )
-checkout('geppetto', 'v0.4.1-M2','org.geppetto.frontend.jupyter/src/jupyter_geppetto/')
+clone('https://github.com/openworm/org.geppetto.frontend.jupyter.git','org.geppetto.frontend.jupyter','py3','', True )
+checkout('geppetto', 'jupyter_py3','org.geppetto.frontend.jupyter/src/jupyter_geppetto/')
 clone('https://github.com/MetaCell/geppetto-netpyne.git','geppetto-netpyne','0.4','org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/')
 
 print("Enabling Geppetto NetPyNE Extension ...")
