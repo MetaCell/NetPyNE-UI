@@ -45,7 +45,7 @@ USER $NB_USER
 # Commenting out the conda update things broke!
 # RUN conda update conda
 # python 3 implies python 3.7 at this moment in time. Probably we want to specify exactly the version
-RUN conda create --name snakes python=3
+RUN conda create --name snakes python=3.5
 
 # Install NEURON python
 WORKDIR src/nrnpython
