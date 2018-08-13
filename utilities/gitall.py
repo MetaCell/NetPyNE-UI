@@ -48,7 +48,7 @@ config = {
 
 
 def incorrectInput(argv, msg):
-    print msg
+    print(msg)
     sys.exit()
 
 def main(argv):
@@ -103,9 +103,9 @@ def main(argv):
 
     for repo in config['repos']:
         try:
-            print repo['name'] + '  ' + subprocess.check_output(command, cwd=repo['path'])
+            print(repo['name'] + '  ' + subprocess.check_output(command, cwd=repo['path']))
         except:
-            print "Error -- trying next repo"
+            print("Error -- trying next repo")
 
 
 if __name__ == "__main__":

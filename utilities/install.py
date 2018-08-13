@@ -20,9 +20,9 @@ def clone(repository, folder, default_branch, cwdp='', recursive = False):
 
 def checkout(folder, default_branch, cwdp):
     currentPath = os.getcwd()
-    print currentPath
+    print(currentPath)
     newPath = currentPath+"/"+cwdp+folder
-    print newPath
+    print(newPath)
     os.chdir(newPath)
     python_git=subprocess.Popen("git branch -a",shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     outstd,errstd=python_git.communicate()
