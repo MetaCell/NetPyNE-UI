@@ -53,7 +53,7 @@ WORKDIR src/nrnpython
 ENV PATH="/home/jovyan/work/nrn/x86_64/bin:${PATH}"
 RUN /bin/bash -c "source activate snakes && python setup.py install"
 # Install Bokeh
-# I think this line breaks the previous conda installation
+# I think this line breaks the previous conda installation as bokeh currently is not used I am commenting it out
 # RUN /bin/bash -c "source activate snakes && conda install bokeh=0.12.7"
 
 
