@@ -14,7 +14,7 @@ import time
 import traceback
 
 
-from netpyne  import specs, sim, analysis, utils
+from netpyne import specs, sim, analysis, utils
 from netpyne.metadata import metadata, api
 from netpyne_model_interpreter import NetPyNEModelInterpreter
 from pygeppetto.model.model_serializer import GeppettoModelSerializer
@@ -289,57 +289,7 @@ class NetPyNEGeppetto():
         
     def validateFunction(self, functionString):
         return utils.ValidateFunction(functionString, netParams.__dict__)
-        
-    def generateScript(self, metadata):
-         def convert2bool(string):
-             return string.replace('true', 'True').replace('false', 'False')
-             
-         def header(title, spacer='-'):
-             return '\n# ' + title.upper() + ' ' + spacer*(77-len(title)) + '\n'
-         
-         try :
-             params =  ['popParams' , 'cellParams', 'synMechParams']
-             params += ['connParams', 'stimSourceParams', 'stimTargetParams']
-             
-             fname = metadata['scriptName'] if metadata['scriptName'][-3:]=='.py' else metadata['scriptName']+'.py'
-             
-             with open(fname, 'w') as script:
-                 script.write('from netpyne import specs, sim\n')
-                 script.write(header('documentation'))
-                 script.write("''' Script generated with NetPyNE-UI. Please visit:\n")
-                 script.write("    - https://www.netpyne.org\n    - https://github.com/MetaCell/NetPyNE-UI\n'''\n")
-                 script.write(header('script', spacer='='))
-                 script.write('netParams = specs.NetParams()\n')
-                 script.write('simConfig = specs.SimConfig()\n')
-                 script.write(header('single value attributes'))
-                 for attr, value in netParams.__dict__.items():
-                     if attr not in params:
-                         if value!=getattr(specs.NetParams(), attr):
-                             script.write('netParams.' + attr + ' = ')
-                             script.write(convert2bool(json.dumps(value, indent=4))+'\n')
-                         
-                 script.write(header('network attributes'))
-                 for param in params:
-                     for key, value in getattr(netParams, param).items():
-                         script.write("netParams." + param + "['" + key + "'] = ")
-                         script.write(convert2bool(json.dumps(value, indent=4))+'\n')
-                 
-                 script.write(header('network configuration'))
-                 for attr, value in simConfig.__dict__.items():
-                     if value!=getattr(specs.SimConfig(), attr):
-                         script.write('netParams.' + attr + ' = ')
-                         script.write(convert2bool(json.dumps(value, indent=4))+'\n')
-                 
-                 script.write(header('create simulate analyze  network'))
-                 script.write('sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)\n')
-                 
-                 script.write(header('end script', spacer='='))
-             
-             return self.getJSONReply()
-         
-         except:
-             return self.getJSONError("Error while importing the NetPyNE model", traceback.format_exc())
-    
+
 class LoopTimer(threading.Thread):
     """
     a Timer that calls f every interval
