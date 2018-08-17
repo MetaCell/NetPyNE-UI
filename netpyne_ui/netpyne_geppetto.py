@@ -211,151 +211,25 @@ class NetPyNEGeppetto():
            elif not onlyDirs:
                dir_list.append({'title': f, 'path': ff})
         return dir_list
-            
-    def getNetPyNE2DNetPlot(self):
-        args = self.getPlotSettings('plot2Dnet')
-        fig = analysis.plot2Dnet(showFig=False, **args)
-        if fig==-1:
-            return fig
-        svgs=[]
-        svgs.append(ui.getSVG(fig))
-        return svgs.__str__()
     
-    def getNetPyNEShapePlot(self):
-        args = self.getPlotSettings('plotShape')
-        fig = analysis.plotShape(showFig=False, **args)
+    def getPlot(self, plotName, LFPflavour):
+        args = self.getPlotSettings(plotName)
+        if LFPflavour:
+            args['plots'] = [LFPflavour]
+        fig = getattr(analysis, plotName)(showFig=False, **args)[0]
+        print(fig)
         if fig==-1:
             return fig
-        svgs = []
-        svgs.append(ui.getSVG(fig))
-        return svgs.__str__()
-
-    def getNetPyNEConnectionsPlot(self):
-        args = self.getPlotSettings('plotConn')
-        fig = analysis.plotConn(showFig=False, **args)
-        if fig==-1:
-            return fig
-        svgs=[]
-        svgs.append(ui.getSVG(fig))
-        return svgs.__str__()
-
-    def getNetPyNERasterPlot(self):
-        args = self.getPlotSettings('plotRaster')
-        fig = analysis.plotRaster(showFig=False, **args)
-        if fig==-1:
-            return fig
-        svgs=[]
-        svgs.append(ui.getSVG(fig))
-        return svgs.__str__()
-
-    def getNetPyNETracesPlot(self):
-        args = self.getPlotSettings('plotTraces')
-        figs = analysis.plotTraces(showFig=False, **args)
-        if figs==-1:
-            return figs
-        svgs = []
-        for key, value in figs.iteritems():
-            logging.debug("Found plot for "+ key)
-            svgs.append(ui.getSVG(value))
-        return svgs.__str__()
-    
-    def getNetPyNESpikeHistPlot(self):
-        args = self.getPlotSettings('plotSpikeHist')    
-        fig = analysis.plotSpikeHist(showFig=False, **args)
-        if fig==-1:
-            return fig
-        else:
-            svgs=[]
-            svgs.append(ui.getSVG(fig[0]))
-        return svgs.__str__()
-
-    def getNetPyNESpikeStatsPlot(self):
-        args = self.getPlotSettings('plotSpikeStats')
-        fig = analysis.plotSpikeStats(showFig=False, **args)
-        if fig==-1:
-            return fig
-        else:
-            svgs=[]
-            svgs.append(ui.getSVG(fig[0]))
-        return svgs.__str__()
-
-    def getNetPyNEGrangerPlot(self):
-        args = self.getPlotSettings('granger')
-        fig = analysis.granger(plotFig=True, showFig=False, **args)
-        if fig==-1:
-            return fig
-        else:
-            fig=fig[-1]
-        svgs=[]
-        svgs.append(ui.getSVG(fig))
-        return svgs.__str__()
-
-    def getNetPyNERatePSDPlot(self):
-        args = self.getPlotSettings('plotRatePSD')
-        fig = analysis.plotRatePSD(showFig=False, **args)
-        if fig==-1:
-            return fig
-        else:
-            fig=fig[0]
-        svgs = []
-        svgs.append(ui.getSVG(fig))
-        return svgs.__str__()
-        
-    def getNetPyNELFPTimeSeriesPlot(self):
-       args = self.getPlotSettings('plotLFP')
-       args['plots'] = ['timeSeries']
-       fig = analysis.plotLFP(showFig=False, **args)
-       if fig==-1:
-           return fig
-       else:
+        elif isinstance(fig, list):
+            return [ui.getSVG(fig[0])].__str__()
+        elif isinstance(fig, dict):
             svgs = []
-            svgs.append(ui.getSVG(fig[0][0]))
-       return svgs.__str__()
-
-    def getNetPyNELFPPSDPlot(self):
-        args = self.getPlotSettings('plotLFP')
-        args['plots'] = ['PSD']
-        fig = analysis.plotLFP(showFig=False, **args)
-        if fig==-1:
-            return fig
+            for key, value in fig.iteritems():
+                logging.debug("Found plot for "+ key)
+                svgs.append(ui.getSVG(value))
+            return svgs.__str__()
         else:
-            svgs = []
-            svgs.append(ui.getSVG(fig[0][0]))
-        
-        return svgs.__str__()
-
-    def getNetPyNELFPSpectrogramPlot(self):
-        args = self.getPlotSettings('plotLFP')
-        args['plots'] = ['spectrogram']
-        fig = analysis.plotLFP(showFig=False, **args)
-        if fig==-1:
-            return fig
-        else:
-            svgs = []
-            svgs.append(ui.getSVG(fig[0][0]))
-        
-        return svgs.__str__()
-
-    def getNetPyNELFPLocationsPlot(self):
-        args = self.getPlotSettings('plotLFP')
-        args['plots'] = ['locations']
-        fig = analysis.plotLFP(showFig=False, **args)
-        if fig==-1:
-            return fig
-        else:
-            svgs = []
-            svgs.append(ui.getSVG(fig[0][0]))
-        
-        return svgs.__str__()
-
-    def getNetPyNERxDConcentrationPlot(self):
-        args = self.getPlotSettings('plotRxDConcentration')
-        fig = analysis.plotRxDConcentration(showFig=False, **args)
-        if fig==-1:
-            return fig
-        svgs=[]
-        svgs.append(ui.getSVG(fig))
-        return svgs.__str__()
+            return [ui.getSVG(fig)].__str__()
         
     def getAvailablePops(self):
         return netParams.popParams.keys()
@@ -415,6 +289,56 @@ class NetPyNEGeppetto():
         
     def validateFunction(self, functionString):
         return utils.ValidateFunction(functionString, netParams.__dict__)
+        
+    def generateScript(self, metadata):
+         def convert2bool(string):
+             return string.replace('true', 'True').replace('false', 'False')
+             
+         def header(title, spacer='-'):
+             return '\n# ' + title.upper() + ' ' + spacer*(77-len(title)) + '\n'
+         
+         try :
+             params =  ['popParams' , 'cellParams', 'synMechParams']
+             params += ['connParams', 'stimSourceParams', 'stimTargetParams']
+             
+             fname = metadata['scriptName'] if metadata['scriptName'][-3:]=='.py' else metadata['scriptName']+'.py'
+             
+             with open(fname, 'w') as script:
+                 script.write('from netpyne import specs, sim\n')
+                 script.write(header('documentation'))
+                 script.write("''' Script generated with NetPyNE-UI. Please visit:\n")
+                 script.write("    - https://www.netpyne.org\n    - https://github.com/MetaCell/NetPyNE-UI\n'''\n")
+                 script.write(header('script', spacer='='))
+                 script.write('netParams = specs.NetParams()\n')
+                 script.write('simConfig = specs.SimConfig()\n')
+                 script.write(header('single value attributes'))
+                 for attr, value in netParams.__dict__.items():
+                     if attr not in params:
+                         if value!=getattr(specs.NetParams(), attr):
+                             script.write('netParams.' + attr + ' = ')
+                             script.write(convert2bool(json.dumps(value, indent=4))+'\n')
+                         
+                 script.write(header('network attributes'))
+                 for param in params:
+                     for key, value in getattr(netParams, param).items():
+                         script.write("netParams." + param + "['" + key + "'] = ")
+                         script.write(convert2bool(json.dumps(value, indent=4))+'\n')
+                 
+                 script.write(header('network configuration'))
+                 for attr, value in simConfig.__dict__.items():
+                     if value!=getattr(specs.SimConfig(), attr):
+                         script.write('netParams.' + attr + ' = ')
+                         script.write(convert2bool(json.dumps(value, indent=4))+'\n')
+                 
+                 script.write(header('create simulate analyze  network'))
+                 script.write('sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)\n')
+                 
+                 script.write(header('end script', spacer='='))
+             
+             return self.getJSONReply()
+         
+         except:
+             return self.getJSONError("Error while importing the NetPyNE model", traceback.format_exc())
     
 class LoopTimer(threading.Thread):
     """
