@@ -339,7 +339,6 @@ class NetPyNEGeppetto():
         except:
             return self.getJSONError("Error while importing the NetPyNE model", traceback.format_exc())
             
-
 class LoopTimer(threading.Thread):
     """
     a Timer that calls f every interval
