@@ -98,35 +98,54 @@ class NetPyNEGeppetto():
             subprocess.call(["nrnivmodl"])
             
         # Load mechanism if mod path is passed
-        if modFolder:
-            neuron.load_mechanisms(str(modFolder))
+        return neuron.load_mechanisms(str(modFolder))
+            
+         
 
     def importModel(self, modelParameters):
         try:
             # Get Current dir
             owd = os.getcwd()
             
-            self.compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
+            if not self.compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder']):
+                return self.getJSONError("Error loading mechanisms", "We coundn't find libnrnmech.so.\n(*)  Is '%s' the right path?\n(*)  Are the mod files compiled?\n(*)  Try importing with compile-mod option selected." %(modelParameters['modFolder']))
             
             import netpyne_geppetto
-            # NetParams
-            netParamsPath = str(modelParameters["netParamsPath"])
-            sys.path.append(netParamsPath)
-            os.chdir(netParamsPath)
-            # Import Module 
-            netParamsModuleName = importlib.import_module(str(modelParameters["netParamsModuleName"]))
-            # Import Model attributes
-            netpyne_geppetto.netParams = getattr(netParamsModuleName, str(modelParameters["netParamsVariable"]))
-
-            # SimConfig
-            simConfigPath = str(modelParameters["simConfigPath"])
-            sys.path.append(simConfigPath)
-            os.chdir(simConfigPath)
-            # Import Module 
-            simConfigModuleName = importlib.import_module(str(modelParameters["simConfigModuleName"]))
-            # Import Model attributes
-            netpyne_geppetto.simConfig = getattr(simConfigModuleName, str(modelParameters["simConfigVariable"]))
             
+            if modelParameters['jsonModelFolder']=='':
+                # NetParams
+                netParamsPath = str(modelParameters["netParamsPath"])
+                sys.path.append(netParamsPath)
+                os.chdir(netParamsPath)
+                # Import Module 
+                netParamsModuleName = importlib.import_module(str(modelParameters["netParamsModuleName"]))
+                # Import Model attributes
+                netpyne_geppetto.netParams = getattr(netParamsModuleName, str(modelParameters["netParamsVariable"]))
+
+                # SimConfig
+                simConfigPath = str(modelParameters["simConfigPath"])
+                sys.path.append(simConfigPath)
+                os.chdir(simConfigPath)
+                # Import Module 
+                simConfigModuleName = importlib.import_module(str(modelParameters["simConfigModuleName"]))
+                # Import Model attributes
+                netpyne_geppetto.simConfig = getattr(simConfigModuleName, str(modelParameters["simConfigVariable"]))
+            else:
+                with open(modelParameters['jsonModelFolder'], 'r') as file:
+                    jsonData = json.load(file)
+                
+                if 'net' in jsonData:
+                    if 'params' in jsonData['net'] and 'simConfig' in jsonData:
+                        netpyne_geppetto.netParams = specs.NetParams(jsonData['net']['params'])
+                        netpyne_geppetto.simConfig = specs.SimConfig(jsonData['simConfig'])
+                        # in cellParams.conds --> cellModel, cellType and pop   get value {} if this is type specs.Dict
+                        # so, by converting from specs.Dict to python regular dict solves the problem. I tried to solve it from the GUI but I coudn't
+                        netpyne_geppetto.netParams.cellParams = jsonData['net']['params']['cellParams']
+                    else:
+                        return self.getJSONError("Assertion error while importing the NetPyNE model", "The json file does not contain the following keys: [params, simConfig]")
+                else:
+                    return self.getJSONError("Assertion error while importing the NetPyNE model", "The json file does not contain the following keys: [net]")
+                    
             return self.getJSONReply()
         except:
             return self.getJSONError("Error while importing the NetPyNE model",traceback.format_exc())
@@ -137,10 +156,11 @@ class NetPyNEGeppetto():
         try:
             # Get Current dir
             owd = os.getcwd()
-
+            
+            if not self.compileModMechFiles(compileMod, modFolder):
+                return self.getJSONError("Error loading mechanisms", "We coundn't find libnrnmech.so.\n(*)  Is '%s' the right path?\n(*)  Are the mod files compiled?\n(*)  Try importing with compile-mod option selected." %(modFolder))
+            
             from netpyne_geppetto import netParams
-
-            self.compileModMechFiles(compileMod, modFolder)
 
             # import cell template
             netParams.importCellParams(**modelParameters)
@@ -416,6 +436,7 @@ class NetPyNEGeppetto():
     def validateFunction(self, functionString):
         return utils.ValidateFunction(functionString, netParams.__dict__)
     
+         
 class LoopTimer(threading.Thread):
     """
     a Timer that calls f every interval
