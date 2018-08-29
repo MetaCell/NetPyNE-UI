@@ -31,7 +31,7 @@ RUN apt-get install -y \
         libpng-dev
 
 # Install latest NEURON
-RUN git clone --branch 7.6.1crxd https://github.com/adamjhn/nrn.git
+RUN git clone --branch 7.6.2 https://github.com/neuronsimulator/nrn
 WORKDIR nrn
 RUN ./build.sh
 RUN ./configure --without-x --with-nrnpython=python2 --without-paranrn --prefix="/home/jovyan/work/nrn/" --without-iv
@@ -49,7 +49,7 @@ WORKDIR src/nrnpython
 ENV PATH="/home/jovyan/work/nrn/x86_64/bin:${PATH}"
 RUN /bin/bash -c "source activate snakes && python setup.py install"
 # Install Bokeh
-RUN /bin/bash -c "source activate snakes && conda install bokeh=0.12.7"
+#RUN /bin/bash -c "source activate snakes && conda install bokeh=0.12.7"
 
 ARG INCUBATOR_VER=unknown
 RUN /bin/bash -c "INCUBATOR_VER=${INCUBATOR_VER} source activate snakes && pip install netpyne_ui"

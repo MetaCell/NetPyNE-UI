@@ -39,7 +39,7 @@ USER $NB_USER
 RUN conda create --name snakes python=3.7
 
 # Install latest iv and NEURON
-RUN git clone --branch 7.6.1crxd https://github.com/adamjhn/nrn.git
+RUN git clone --branch 7.6.2 https://github.com/neuronsimulator/nrn
 WORKDIR nrn
 RUN ./build.sh
 # We need to activate so we get the right python version
