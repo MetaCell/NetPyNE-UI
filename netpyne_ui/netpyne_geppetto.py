@@ -110,7 +110,7 @@ class NetPyNEGeppetto():
             
             import netpyne_geppetto
             
-            if modelParameters['jsonModelFolder']=='':
+            if modelParameters['importFormat']=='py':
                 # NetParams
                 netParamsPath = str(modelParameters["netParamsPath"])
                 sys.path.append(netParamsPath)
@@ -120,13 +120,11 @@ class NetPyNEGeppetto():
                 # Import Model attributes
                 netpyne_geppetto.netParams = getattr(netParamsModuleName, str(modelParameters["netParamsVariable"]))
                 
-                # netpyne.specs.Dict class MUST NOT be allowed for cellParams in the GUI
-                # if anybody know how to convert in a better way, go ahead...
-                # take a look at 145-149 and 175 to see different opcions
-                with open('_.txt', 'w') as file:
-                    file.write(json.dumps(netpyne_geppetto.netParams.cellParams))
-                with open('_.txt', 'r') as file:
-                    netpyne_geppetto.netParams.cellParams = json.load(file)
+                for key, value in netpyne_geppetto.netParams.cellParams.iteritems():
+                    if hasattr(value, 'todict'):
+                        print('it has')
+                        sys.stdout.flush()
+                        netpyne_geppetto.netParams.cellParams[key] = value.todict()
                 
                 # SimConfig
                 simConfigPath = str(modelParameters["simConfigPath"])
@@ -136,7 +134,8 @@ class NetPyNEGeppetto():
                 simConfigModuleName = importlib.import_module(str(modelParameters["simConfigModuleName"]))
                 # Import Model attributes
                 netpyne_geppetto.simConfig = getattr(simConfigModuleName, str(modelParameters["simConfigVariable"]))
-            else:
+            
+            elif modelParameters['importFormat']=='json':
                 with open(modelParameters['jsonModelFolder'], 'r') as file:
                     jsonData = json.load(file)
                 
@@ -144,14 +143,13 @@ class NetPyNEGeppetto():
                     if 'params' in jsonData['net'] and 'simConfig' in jsonData:
                         netpyne_geppetto.netParams = specs.NetParams(jsonData['net']['params'])
                         netpyne_geppetto.simConfig = specs.SimConfig(jsonData['simConfig'])
-                        # in cellParams.conds --> cellModel, cellType and pop   get value {} if this is type specs.Dict
-                        # so, by converting from specs.Dict to python regular dict solves the problem. I tried to solve it In the GUI but I couldn't
                         netpyne_geppetto.netParams.cellParams = jsonData['net']['params']['cellParams']
                     else:
                         return self.getJSONError("Assertion error while importing the NetPyNE model", "The json file does not contain the following keys: [params, simConfig]")
                 else:
                     return self.getJSONError("Assertion error while importing the NetPyNE model", "The json file does not contain the following keys: [net]")
-                    
+            else: 
+                return self.getJSONError("Assertion error while importing the NetPyNE model", "frontend sent a wrong option for 'importFormat'. allowed values are py and json")
             return self.getJSONReply()
         except:
             return self.getJSONError("Error while importing the NetPyNE model",traceback.format_exc())
@@ -441,7 +439,6 @@ class NetPyNEGeppetto():
     def validateFunction(self, functionString):
         return utils.ValidateFunction(functionString, netParams.__dict__)
     
-         
 class LoopTimer(threading.Thread):
     """
     a Timer that calls f every interval
