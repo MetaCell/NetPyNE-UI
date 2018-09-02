@@ -109,24 +109,45 @@ class NetPyNEGeppetto():
             self.compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
             
             import netpyne_geppetto
-            # NetParams
-            netParamsPath = str(modelParameters["netParamsPath"])
-            sys.path.append(netParamsPath)
-            os.chdir(netParamsPath)
-            # Import Module 
-            netParamsModuleName = importlib.import_module(str(modelParameters["netParamsModuleName"]))
-            # Import Model attributes
-            netpyne_geppetto.netParams = getattr(netParamsModuleName, str(modelParameters["netParamsVariable"]))
-
-            # SimConfig
-            simConfigPath = str(modelParameters["simConfigPath"])
-            sys.path.append(simConfigPath)
-            os.chdir(simConfigPath)
-            # Import Module 
-            simConfigModuleName = importlib.import_module(str(modelParameters["simConfigModuleName"]))
-            # Import Model attributes
-            netpyne_geppetto.simConfig = getattr(simConfigModuleName, str(modelParameters["simConfigVariable"]))
             
+            if modelParameters['importFormat']=='py':
+                # NetParams
+                netParamsPath = str(modelParameters["netParamsPath"])
+                sys.path.append(netParamsPath)
+                os.chdir(netParamsPath)
+                # Import Module 
+                netParamsModuleName = importlib.import_module(str(modelParameters["netParamsModuleName"]))
+                # Import Model attributes
+                netpyne_geppetto.netParams = getattr(netParamsModuleName, str(modelParameters["netParamsVariable"]))
+                
+                for key, value in netpyne_geppetto.netParams.cellParams.iteritems():
+                    if hasattr(value, 'todict'):
+                        netpyne_geppetto.netParams.cellParams[key] = value.todict()
+                
+                # SimConfig
+                simConfigPath = str(modelParameters["simConfigPath"])
+                sys.path.append(simConfigPath)
+                os.chdir(simConfigPath)
+                # Import Module 
+                simConfigModuleName = importlib.import_module(str(modelParameters["simConfigModuleName"]))
+                # Import Model attributes
+                netpyne_geppetto.simConfig = getattr(simConfigModuleName, str(modelParameters["simConfigVariable"]))
+            
+            elif modelParameters['importFormat']=='json':
+                with open(modelParameters['jsonModelFolder'], 'r') as file:
+                    jsonData = json.load(file)
+                
+                if 'net' in jsonData:
+                    if 'params' in jsonData['net'] and 'simConfig' in jsonData:
+                        netpyne_geppetto.netParams = specs.NetParams(jsonData['net']['params'])
+                        netpyne_geppetto.simConfig = specs.SimConfig(jsonData['simConfig'])
+                        netpyne_geppetto.netParams.cellParams = jsonData['net']['params']['cellParams']
+                    else:
+                        return self.getJSONError("Assertion error while importing the NetPyNE model", "The json file does not contain the following keys: [params, simConfig]")
+                else:
+                    return self.getJSONError("Assertion error while importing the NetPyNE model", "The json file does not contain the following keys: [net]")
+            else: 
+                return self.getJSONError("Assertion error while importing the NetPyNE model", "frontend sent a wrong option for 'importFormat'. allowed values are py and json")
             return self.getJSONReply()
         except:
             return self.getJSONError("Error while importing the NetPyNE model",traceback.format_exc())
@@ -288,7 +309,7 @@ class NetPyNEGeppetto():
         
     def validateFunction(self, functionString):
         return utils.ValidateFunction(functionString, netParams.__dict__)
-    
+         
     def generateScript(self, metadata):
         def convert2bool(string):
             return string.replace('true', 'True').replace('false', 'False')
