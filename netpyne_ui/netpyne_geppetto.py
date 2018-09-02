@@ -122,8 +122,6 @@ class NetPyNEGeppetto():
                 
                 for key, value in netpyne_geppetto.netParams.cellParams.iteritems():
                     if hasattr(value, 'todict'):
-                        print('it has')
-                        sys.stdout.flush()
                         netpyne_geppetto.netParams.cellParams[key] = value.todict()
                 
                 # SimConfig
