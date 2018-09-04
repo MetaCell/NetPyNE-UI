@@ -101,6 +101,82 @@ class NetPyNEGeppetto():
         if modFolder:
             neuron.load_mechanisms(str(modFolder))
 
+    def loadModel(self, modelParams): # handles all data coming from a .json file (default file system for Netpyne)
+        import sys; reload(sys)
+        def remove(dictionary):
+            # remove reserved keys such as __dict__, __Method__, etc 
+            # they come with sim.loadAll(json_file).  'I wonder why'
+            if isinstance(dictionary, dict):
+                for key, value in dictionary.items():
+                    if key.startswith('__'):
+                        dictionary.pop(key)
+                    else:
+                        remove(value)
+
+        if not any([modelParams[option] for option in ['loadNetParams', 'loadSimCfg', 'loadSimData', 'loadNet', 'loadAll']]):
+            return self.getJSONError("Error while loading data", 'You have to select at least one option') 
+
+        try:
+            owd = os.getcwd()
+            self.compileModMechFiles(modelParams['compileMod'], modelParams['modFolder'])
+        except:
+            return self.getJSONError("Error while importing/compiling mods",traceback.format_exc())
+        finally:
+            os.chdir(owd)   
+        
+        try:    
+            import netpyne_geppetto
+            sim.initialize()
+
+            with open(modelParams['jsonModelFolder'], 'r') as file:
+                jsonData = json.load(file)
+                
+            if modelParams['loadAll']:
+                sim.loadAll('', jsonData)
+                netpyne_geppetto.netParams = sim.net.params
+                netpyne_geppetto.simConfig = sim.cfg
+                remove(netpyne_geppetto.netParams.todict())
+                remove(netpyne_geppetto.simConfig.todict())
+
+                self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
+                
+                return GeppettoModelSerializer().serialize(self.geppetto_model)
+
+            else:
+                wake_up_geppetto = False
+                if modelParams['loadNet']:
+                    wake_up_geppetto = True
+                    sim.loadNet('', jsonData)
+
+                if modelParams['loadSimData']: # Fix me (https://github.com/Neurosim-lab/netpyne/issues/360)
+                    wake_up_geppetto = True
+                    sim.initialize(specs.NetParams(), specs.SimConfig())
+                    sim.net.createPops()
+                    sim.net.createCells()
+                    sim.net.connectCells()
+                    sim.net.addStims()
+                    sim.net.defineCellShapes()
+                    sim.gatherData(gatherLFP=False)
+                    sim.loadSimData('', jsonData)
+                    
+                if modelParams['loadSimCfg']:
+                    sim.loadSimCfg('', jsonData)
+                    netpyne_geppetto.simConfig = sim.cfg
+                    
+                if modelParams['loadNetParams']:
+                    sim.loadNetParams('', jsonData)
+                    netpyne_geppetto.netParams = sim.net.params
+                    remove(netpyne_geppetto.netParams.todict())
+                
+                if wake_up_geppetto:
+                    self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
+                    return GeppettoModelSerializer().serialize(self.geppetto_model)
+                else:
+                    return self.getJSONReply()
+
+        except:
+            return self.getJSONError("Error while loading data", traceback.format_exc()) 
+
     def importModel(self, modelParameters):
         try:
             # Get Current dir
@@ -110,44 +186,28 @@ class NetPyNEGeppetto():
             
             import netpyne_geppetto
             
-            if modelParameters['importFormat']=='py':
-                # NetParams
-                netParamsPath = str(modelParameters["netParamsPath"])
-                sys.path.append(netParamsPath)
-                os.chdir(netParamsPath)
-                # Import Module 
-                netParamsModuleName = importlib.import_module(str(modelParameters["netParamsModuleName"]))
-                # Import Model attributes
-                netpyne_geppetto.netParams = getattr(netParamsModuleName, str(modelParameters["netParamsVariable"]))
-                
-                for key, value in netpyne_geppetto.netParams.cellParams.iteritems():
-                    if hasattr(value, 'todict'):
-                        netpyne_geppetto.netParams.cellParams[key] = value.todict()
-                
-                # SimConfig
-                simConfigPath = str(modelParameters["simConfigPath"])
-                sys.path.append(simConfigPath)
-                os.chdir(simConfigPath)
-                # Import Module 
-                simConfigModuleName = importlib.import_module(str(modelParameters["simConfigModuleName"]))
-                # Import Model attributes
-                netpyne_geppetto.simConfig = getattr(simConfigModuleName, str(modelParameters["simConfigVariable"]))
+            # NetParams
+            netParamsPath = str(modelParameters["netParamsPath"])
+            sys.path.append(netParamsPath)
+            os.chdir(netParamsPath)
+            # Import Module 
+            netParamsModuleName = importlib.import_module(str(modelParameters["netParamsModuleName"]))
+            # Import Model attributes
+            netpyne_geppetto.netParams = getattr(netParamsModuleName, str(modelParameters["netParamsVariable"]))
             
-            elif modelParameters['importFormat']=='json':
-                with open(modelParameters['jsonModelFolder'], 'r') as file:
-                    jsonData = json.load(file)
-                
-                if 'net' in jsonData:
-                    if 'params' in jsonData['net'] and 'simConfig' in jsonData:
-                        netpyne_geppetto.netParams = specs.NetParams(jsonData['net']['params'])
-                        netpyne_geppetto.simConfig = specs.SimConfig(jsonData['simConfig'])
-                        netpyne_geppetto.netParams.cellParams = jsonData['net']['params']['cellParams']
-                    else:
-                        return self.getJSONError("Assertion error while importing the NetPyNE model", "The json file does not contain the following keys: [params, simConfig]")
-                else:
-                    return self.getJSONError("Assertion error while importing the NetPyNE model", "The json file does not contain the following keys: [net]")
-            else: 
-                return self.getJSONError("Assertion error while importing the NetPyNE model", "frontend sent a wrong option for 'importFormat'. allowed values are py and json")
+            for key, value in netpyne_geppetto.netParams.cellParams.iteritems():
+                if hasattr(value, 'todict'):
+                    netpyne_geppetto.netParams.cellParams[key] = value.todict()
+            
+            # SimConfig
+            simConfigPath = str(modelParameters["simConfigPath"])
+            sys.path.append(simConfigPath)
+            os.chdir(simConfigPath)
+            # Import Module 
+            simConfigModuleName = importlib.import_module(str(modelParameters["simConfigModuleName"]))
+            # Import Model attributes
+            netpyne_geppetto.simConfig = getattr(simConfigModuleName, str(modelParameters["simConfigVariable"]))
+
             return self.getJSONReply()
         except:
             return self.getJSONError("Error while importing the NetPyNE model",traceback.format_exc())
