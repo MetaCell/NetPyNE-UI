@@ -50,7 +50,7 @@ clone('https://github.com/Neurosim-lab/netpyne.git','netpyne','py3')
 subprocess.call(['pip', 'install', '-e', '.'], cwd='./netpyne/')
 
 clone('https://github.com/openworm/org.geppetto.frontend.jupyter.git','org.geppetto.frontend.jupyter','py3','', True )
-checkout('geppetto', 'jupyter_py3','org.geppetto.frontend.jupyter/src/jupyter_geppetto/')
+checkout('geppetto', 'py3','org.geppetto.frontend.jupyter/src/jupyter_geppetto/')
 clone('https://github.com/MetaCell/geppetto-netpyne.git','geppetto-netpyne','0.4','org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/')
 
 print("Enabling Geppetto NetPyNE Extension ...")
