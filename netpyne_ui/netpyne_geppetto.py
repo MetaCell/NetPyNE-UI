@@ -132,7 +132,7 @@ class NetPyNEGeppetto():
                 jsonData = json.load(file)
             
             wake_up_geppetto = False  
-            if modelParams['loadAll']:
+            if all([modelParams[option] for option in ['loadNetParams', 'loadSimCfg', 'loadSimData', 'loadNet']]):
                 wake_up_geppetto = True
                 sim.loadAll('', jsonData)
                 netpyne_geppetto.netParams = sim.net.params
@@ -159,6 +159,7 @@ class NetPyNEGeppetto():
                 if modelParams['loadSimCfg']:
                     sim.loadSimCfg('', jsonData)
                     netpyne_geppetto.simConfig = sim.cfg
+                    remove(netpyne_geppetto.simConfig.todict())
                     
                 if modelParams['loadNetParams']:
                     sim.loadNetParams('', jsonData)
@@ -234,13 +235,11 @@ class NetPyNEGeppetto():
             os.chdir(owd)
         
     def exportModel(self, modelParams):
-        import sys
-        reload(sys)
-        print(modelParams)
         try:
             sim.initialize (netParams = netParams, simConfig = simConfig)
             sim.cfg.filename = modelParams['fileName']
             sim.cfg.saveDataInclude = [el for el in specs.SimConfig().saveDataInclude if modelParams[el]]
+            if modelParams['netCells']: sim.cfg.saveDataInclude.append('netPops') 
             sim.saveData()
             return self.getJSONReply()
         except:
