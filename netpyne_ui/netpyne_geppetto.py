@@ -61,7 +61,7 @@ class NetPyNEGeppetto():
 
                 self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
                 netpyne_model = sim
-        
+
             else:
                 if modelParameters['previousTab'] == 'define':
                     logging.debug('Instantiating single thread simulation')
@@ -130,20 +130,17 @@ class NetPyNEGeppetto():
 
             with open(modelParams['jsonModelFolder'], 'r') as file:
                 jsonData = json.load(file)
-                
+            
+            wake_up_geppetto = False  
             if modelParams['loadAll']:
+                wake_up_geppetto = True
                 sim.loadAll('', jsonData)
                 netpyne_geppetto.netParams = sim.net.params
                 netpyne_geppetto.simConfig = sim.cfg
                 remove(netpyne_geppetto.netParams.todict())
                 remove(netpyne_geppetto.simConfig.todict())
-
-                self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
-                
-                return GeppettoModelSerializer().serialize(self.geppetto_model)
-
+            
             else:
-                wake_up_geppetto = False
                 if modelParams['loadNet']:
                     wake_up_geppetto = True
                     sim.loadNet('', jsonData)
@@ -168,11 +165,11 @@ class NetPyNEGeppetto():
                     netpyne_geppetto.netParams = sim.net.params
                     remove(netpyne_geppetto.netParams.todict())
                 
-                if wake_up_geppetto:
-                    self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
-                    return GeppettoModelSerializer().serialize(self.geppetto_model)
-                else:
-                    return self.getJSONReply()
+            if wake_up_geppetto:
+                self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
+                return GeppettoModelSerializer().serialize(self.geppetto_model)
+            else:
+                return self.getJSONReply()
 
         except:
             return self.getJSONError("Error while loading data", traceback.format_exc()) 
@@ -236,11 +233,76 @@ class NetPyNEGeppetto():
         finally:
             os.chdir(owd)
         
-    def exportModel(self, modelParameters):
+    def exportModel(self, modelParams):
+        import sys
+        reload(sys)
+        print(modelParams)
         try:
             sim.initialize (netParams = netParams, simConfig = simConfig)
+            sim.cfg.filename = modelParams['fileName']
+            sim.cfg.saveDataInclude = [el for el in specs.SimConfig().saveDataInclude if modelParams[el]]
             sim.saveData()
             return self.getJSONReply()
+        except:
+            return self.getJSONError("Error while exporting the NetPyNE model",traceback.format_exc())
+    
+    def exportNeuroML(self, modelParams):
+        from subprocess import Popen
+        # probably not the best aprouch but unicode strings are a nightmare!!!
+        try:
+            sim.cfg.saveJson = True
+            sim.cfg.filename = '__exportNML2__'
+            sim.saveData()
+            script = '''
+from netpyne import sim, specs
+sim.initialize()
+sim.loadAll('__exportNML2__.json')
+sim.exportNeuroML2('%s', specs.SimConfig())
+            ''' %(modelParams['fileName'])
+        
+            with open('__exportNML2__.py', 'w') as file:
+                file.write(script)
+            with open('out.out', 'w') as out, open('err.err', 'w') as err:
+                Popen(['python', '__exportNML2__.py'], stdout=out, stderr=err)
+            
+            with open('err.err', 'r') as file:
+                error = file.read()
+                if len(error)==0:
+                   return self.getJSONReply()
+                else:
+                    return self.getJSONError("Error while exporting NeuroML file", error)
+        except:
+            return self.getJSONError("Error while exporting the NetPyNE model", traceback.format_exc())
+    
+    def importNeuroML(self, modelParams):
+        try:
+            sim.importNeuroML2(modelParams['neuroMLFolder'], simConfig=specs.SimConfig(), simulate=False, analyze=False)
+            self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
+            return GeppettoModelSerializer().serialize(self.geppetto_model)
+
+        except:
+            return self.getJSONError("Error while exporting the NetPyNE model",traceback.format_exc())
+
+    def deleteModel(self, modelParams):
+        try:
+            import netpyne_geppetto
+            
+            netpyne_geppetto.netParams = specs.NetParams()
+            netpyne_geppetto.simConfig = specs.SimConfig()
+            netpyne_geppetto.netParams.todict()
+            netpyne_geppetto.netParams.todict()
+            
+            sim.initialize()
+            sim.net.createPops()
+            sim.net.createCells()
+            sim.net.connectCells()
+            sim.net.addStims()
+            sim.net.defineCellShapes()
+            sim.gatherData(gatherLFP=False)
+            
+            self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
+            return self.getJSONReply()
+
         except:
             return self.getJSONError("Error while exporting the NetPyNE model",traceback.format_exc())
 
@@ -370,7 +432,7 @@ class NetPyNEGeppetto():
     def validateFunction(self, functionString):
         return utils.ValidateFunction(functionString, netParams.__dict__)
          
-    def generateScript(self, metadata):
+    def exportHLS(self, args):
         def convert2bool(string):
             return string.replace('true', 'True').replace('false', 'False')
             
@@ -381,7 +443,7 @@ class NetPyNEGeppetto():
             params =  ['popParams' , 'cellParams', 'synMechParams']
             params += ['connParams', 'stimSourceParams', 'stimTargetParams']
             
-            fname = metadata['scriptName'] if metadata['scriptName'][-3:]=='.py' else metadata['scriptName']+'.py'
+            fname = args['fileName'] if args['fileName'][-3:]=='.py' else args['fileName']+'.py'
             
             with open(fname, 'w') as script:
                 script.write('from netpyne import specs, sim\n')
@@ -480,6 +542,7 @@ def globalMessageHandler(identifier, command, parameters):
     TODO This code should move to a generic geppetto class since it's not NetPyNE specific
     """
     try:
+
         logging.debug('Global Message Handler')
         logging.debug('Command: ' +  command)
         logging.debug('Parameter: ' + str(parameters))
