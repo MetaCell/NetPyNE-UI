@@ -48,8 +48,6 @@ RUN conda create --name snakes python=2
 WORKDIR src/nrnpython
 ENV PATH="/home/jovyan/work/nrn/x86_64/bin:${PATH}"
 RUN /bin/bash -c "source activate snakes && python setup.py install"
-# Install Bokeh
-#RUN /bin/bash -c "source activate snakes && conda install bokeh=0.12.7"
 
 ARG INCUBATOR_VER=unknown
 RUN /bin/bash -c "INCUBATOR_VER=${INCUBATOR_VER} source activate snakes && pip install netpyne_ui"

@@ -42,7 +42,7 @@ RUN conda create --name snakes python=3.7
 RUN git clone --branch 7.6.2 https://github.com/neuronsimulator/nrn
 WORKDIR nrn
 RUN ./build.sh
-# We need to activate so we get the right python version
+# Activate conda to configure nrn with the right python version
 RUN /bin/bash -c "source activate snakes && ./configure --without-x --with-nrnpython=python3 --without-paranrn --prefix='/home/jovyan/work/nrn/' --without-iv"
 RUN make --silent -j4
 RUN make --silent install -j4
@@ -52,10 +52,6 @@ RUN make --silent install -j4
 WORKDIR src/nrnpython
 ENV PATH="/home/jovyan/work/nrn/x86_64/bin:${PATH}"
 RUN /bin/bash -c "source activate snakes && python setup.py install"
-# Install Bokeh
-# I think this line breaks the previous conda installation as bokeh currently is not used I am commenting it out
-# RUN /bin/bash -c "source activate snakes && conda install bokeh=0.12.7"
-
 
 # Clone NetPyNE-UI and install the development version
 WORKDIR ../../../
