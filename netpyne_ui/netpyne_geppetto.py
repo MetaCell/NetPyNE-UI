@@ -121,7 +121,7 @@ class NetPyNEGeppetto():
                 # Import Model attributes
                 netpyne_geppetto.netParams = getattr(netParamsModuleName, str(modelParameters["netParamsVariable"]))
                 
-                for key, value in netpyne_geppetto.netParams.cellParams.iteritems():
+                for key, value in netpyne_geppetto.netParams.cellParams.items():
                     if hasattr(value, 'todict'):
                         netpyne_geppetto.netParams.cellParams[key] = value.todict()
                 
@@ -245,7 +245,7 @@ class NetPyNEGeppetto():
             return [ui.getSVG(fig[0])].__str__()
         elif isinstance(fig, dict):
             svgs = []
-            for key, value in fig.iteritems():
+            for key, value in fig.items():
                 logging.debug("Found plot for "+ key)
                 svgs.append(ui.getSVG(value))
             return svgs.__str__()
@@ -253,7 +253,7 @@ class NetPyNEGeppetto():
             return [ui.getSVG(fig)].__str__()
         
     def getAvailablePops(self):
-        return netParams.popParams.keys()
+        return list(netParams.popParams.keys())
 
     def getAvailableCellModels(self):
         cellModels = set([])
@@ -333,7 +333,7 @@ class NetPyNEGeppetto():
                 script.write('netParams = specs.NetParams()\n')
                 script.write('simConfig = specs.SimConfig()\n')
                 script.write(header('single value attributes'))
-                for attr, value in netParams.__dict__.items():
+                for attr, value in list(netParams.__dict__.items()):
                     if attr not in params:
                         if value!=getattr(specs.NetParams(), attr):
                             script.write('netParams.' + attr + ' = ')
@@ -341,12 +341,12 @@ class NetPyNEGeppetto():
                         
                 script.write(header('network attributes'))
                 for param in params:
-                    for key, value in getattr(netParams, param).items():
+                    for key, value in list(getattr(netParams, param).items()):
                         script.write("netParams." + param + "['" + key + "'] = ")
                         script.write(convert2bool(json.dumps(value, indent=4))+'\n')
                 
                 script.write(header('network configuration'))
-                for attr, value in simConfig.__dict__.items():
+                for attr, value in list(simConfig.__dict__.items()):
                     if value!=getattr(specs.SimConfig(), attr):
                         script.write('netParams.' + attr + ' = ')
                         script.write(convert2bool(json.dumps(value, indent=4))+'\n')
