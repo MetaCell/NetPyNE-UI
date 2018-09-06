@@ -113,7 +113,7 @@ class NetPyNEGeppetto():
                     else:
                         remove(value)
 
-        if not any([modelParams[option] for option in ['loadNetParams', 'loadSimCfg', 'loadSimData', 'loadNet', 'loadAll']]):
+        if not any([modelParams[option] for option in ['loadNetParams', 'loadSimCfg', 'loadSimData', 'loadNet']]):
             return self.getJSONError("Error while loading data", 'You have to select at least one option') 
 
         try:
@@ -124,26 +124,25 @@ class NetPyNEGeppetto():
         finally:
             os.chdir(owd)   
         
-        try:    
+        try:
             import netpyne_geppetto
-            sim.initialize()
+            netpyne_model = self.instantiateNetPyNEModel()
 
-            with open(modelParams['jsonModelFolder'], 'r') as file:
-                jsonData = json.load(file)
-            
             wake_up_geppetto = False  
             if all([modelParams[option] for option in ['loadNetParams', 'loadSimCfg', 'loadSimData', 'loadNet']]):
                 wake_up_geppetto = True
-                sim.loadAll('', jsonData)
-                netpyne_geppetto.netParams = sim.net.params
-                netpyne_geppetto.simConfig = sim.cfg
+                netpyne_model.loadAll(modelParams['jsonModelFolder'])
+                netpyne_model.net.defineCellShapes()
+                
+                netpyne_geppetto.netParams = netpyne_model.net.params
+                netpyne_geppetto.simConfig = netpyne_model.cfg
                 remove(netpyne_geppetto.netParams.todict())
                 remove(netpyne_geppetto.simConfig.todict())
             
             else:
                 if modelParams['loadNet']:
                     wake_up_geppetto = True
-                    sim.loadNet('', jsonData)
+                    sim.loadNet(modelParams['jsonModelFolder'])
 
                 if modelParams['loadSimData']: # Fix me (https://github.com/Neurosim-lab/netpyne/issues/360)
                     wake_up_geppetto = True
@@ -154,20 +153,20 @@ class NetPyNEGeppetto():
                     sim.net.addStims()
                     sim.net.defineCellShapes()
                     sim.gatherData(gatherLFP=False)
-                    sim.loadSimData('', jsonData)
+                    sim.loadSimData(modelParams['jsonModelFolder'])
                     
                 if modelParams['loadSimCfg']:
-                    sim.loadSimCfg('', jsonData)
+                    sim.loadSimCfg(modelParams['jsonModelFolder'])
                     netpyne_geppetto.simConfig = sim.cfg
                     remove(netpyne_geppetto.simConfig.todict())
                     
                 if modelParams['loadNetParams']:
-                    sim.loadNetParams('', jsonData)
+                    sim.loadNetParams(modelParams['jsonModelFolder'])
                     netpyne_geppetto.netParams = sim.net.params
                     remove(netpyne_geppetto.netParams.todict())
                 
             if wake_up_geppetto:
-                self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
+                self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
                 return GeppettoModelSerializer().serialize(self.geppetto_model)
             else:
                 return self.getJSONReply()
