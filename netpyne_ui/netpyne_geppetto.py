@@ -428,9 +428,11 @@ def globalMessageHandler(identifier, command, parameters):
             response = eval(command)
         else:
             response = eval(command + '(*parameters)')
-        
+        import sys
+        imp.reload(sys)
+        print(type(response))
         GeppettoJupyterModelSync.events_controller.triggerEvent(
-            "receive_python_message", {'id': identifier, 'response': response.decode("utf-8") })
+            "receive_python_message", {'id': identifier, 'response': response.decode("utf-8") if isinstance(response, bytes) else response})
     except:
         response = netpyne_geppetto.getJSONError("Error while executing command "+command,traceback.format_exc())
         GeppettoJupyterModelSync.events_controller.triggerEvent(
