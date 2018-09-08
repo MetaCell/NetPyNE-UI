@@ -27,10 +27,10 @@ class NetPyNEUIInit():
     def init(self):   
         try:
             logging.info("NetPyNEUIInit init method was called")
+            global netpyne_geppetto
             from netpyne_ui import netpyne_geppetto
             
-
-            global netpyne_geppetto
+            
             netpyne_geppetto = netpyne_geppetto.NetPyNEGeppetto()
 
             GeppettoJupyterModelSync.events_controller.triggerEvent("spinner:hide")
@@ -41,4 +41,5 @@ class NetPyNEUIInit():
             return getJSONError("Error while initializing NetPyNE-UI:",traceback.format_exc())
 
 netpyneui_init = NetPyNEUIInit()
+netpyne_geppetto = None
 logging.info("NetPyNEUIInit object was instantiated")

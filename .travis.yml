@@ -9,7 +9,10 @@ env:
   global:
     secure: dn0FPQ5IG4M/3kdwnyI78ElQ308Vc3QnKAvkWfwMFb8QxDqxQdnTo7AV1qTMtbLrDNkeEWIgi4nc7jmXNtvGTwOfhAULVh6606Qs5B+ezTdwzajbbFMI8SKQx/pnTojOMu8dx7V4lMoR/YWcojR0VC1IWVC62TGbSB1k5BDGgH0=
 install:
-- git clone --quiet -b $TRAVIS_BRANCH https://github.com/MetaCell/geppetto-netpyne.git
+- git clone --quiet  https://github.com/MetaCell/geppetto-netpyne.git
+- cd geppetto-netpyne
+- if [ `git branch -a | egrep "remotes/origin/${TRAVIS_BRANCH}"` ]; then git checkout $TRAVIS_BRANCH ; else echo "Branch $TRAVIS_BRANCH does not exist for the dependent bundle, checking out development ..." && git checkout development; fi
+- cd ..
 - npm install --silent -g phantomjs 
 - npm install --silent -g casperjs 
 - npm install --silent -g slimerjs
@@ -38,7 +41,7 @@ before_script:
   - export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
     
 script:
-  - travis_retry docker build -t="netpyne-ui" --build-arg netpyneuiBranch=$TRAVIS_BRANCH .
+  - travis_retry docker build -t="netpyne-ui" --build-arg netpyneuiBranch=$TRAVIS_BRANCH -f="./Dockerfile_dev" .
   - travis_retry docker run  -t -dit --name=netpyne-ui_container -h localhost -p 8888:8888 netpyne-ui:latest
   - cd $TRAVIS_BUILD_DIR/ && ls
   - cd geppetto-netpyne && ls

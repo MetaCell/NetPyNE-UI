@@ -68,7 +68,7 @@ class NetPyNEModelInterpreter():
                 
                 # Iterate sections creating spheres and cylinders
                 if hasattr(secs, 'items'):
-                    for sec_name, sec in secs.items():
+                    for sec_name, sec in list(secs.items()):
                         if 'pt3d' in sec['geom']:
                             points = sec['geom']['pt3d']
                             for i in range(len(points) - 1):

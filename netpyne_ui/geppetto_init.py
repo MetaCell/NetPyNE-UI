@@ -6,6 +6,7 @@ import traceback
 import json
 import logging
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync, GeppettoJupyterGUISync
+from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G
 import time
 import threading
 
@@ -44,20 +45,25 @@ def initGeppetto():
         GeppettoJupyterModelSync.current_model = None
         GeppettoJupyterModelSync.current_python_model = None
         GeppettoJupyterModelSync.events_controller = GeppettoJupyterModelSync.EventsSync()
+        logging.debug('EventSync was created: ')
+        logging.debug(GeppettoJupyterModelSync.events_controller)
         GeppettoJupyterModelSync.events_controller.register_to_event(
             [GeppettoJupyterModelSync.events_controller._events['Global_message']], globalMessageHandler)
 
         # Sync values when no sim is running
         logging.debug('Initialising Sync Mechanism for non-sim environment')
-        timer = LoopTimer(0.3)
-        timer.start()
-        while not timer.started:
-            time.sleep(0.001)
 
-
+        G.createProject(name='Geppetto Project')
+        
     except Exception as exception:
         logging.exception("Unexpected error while initializing Geppetto from Python:")
         logging.error(exception)
+
+def startSynchronization():
+    timer = LoopTimer(0.3)
+    timer.start()
+    while not timer.started:
+        time.sleep(0.001)
 
 class LoopTimer(threading.Thread):
     """
@@ -65,6 +71,8 @@ class LoopTimer(threading.Thread):
 
     A thread that checks all the variables that we are synching between Python and Javascript and if 
     these variables have changed on the Python side will propagate the changes to Javascript
+
+    TODO This code should move to a generic geppetto class since it's not NetPyNE specific
     """
 
     def __init__(self, interval, fun=None):
@@ -113,9 +121,6 @@ class LoopTimer(threading.Thread):
 
 
 def globalMessageHandler(identifier, command, parameters):
-    """
-    TODO This code should move to a generic geppetto class since it's not NetPyNE specific
-    """
     try:
         logging.debug('Global Message Handler')
         logging.debug('Command: ' +  command)
@@ -124,11 +129,13 @@ def globalMessageHandler(identifier, command, parameters):
             response = eval(command)
         else:
             response = eval(command + '(*parameters)')
+        
+        GeppettoJupyterModelSync.events_controller.triggerEvent(
+            "receive_python_message", {'id': identifier, 'response': response.decode("utf-8") })
+    except:
+        response = getJSONError("Error while executing command "+command,traceback.format_exc())
         GeppettoJupyterModelSync.events_controller.triggerEvent(
             "receive_python_message", {'id': identifier, 'response': response})
-        return getJSONReply()
-    except:
-        return getJSONError("Unhandle exception in Global Message Handler",traceback.format_exc())
     
 
 initGeppetto()
