@@ -9,6 +9,7 @@ from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync, GeppettoJup
 from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G
 import time
 import threading
+import importlib
 
 def getJSONError(message, details):
     data = {}
@@ -120,18 +121,23 @@ class LoopTimer(threading.Thread):
             raise
 
 
-def globalMessageHandler(identifier, command, parameters):
+def globalMessageHandler(identifier, command, parameters, import_statement):
     try:
         logging.debug('Global Message Handler')
         logging.debug('Command: ' +  command)
         logging.debug('Parameter: ' + str(parameters))
+        logging.debug('Import Statements: ' + str(import_statement))
+        if import_statement:
+            module = importlib.import_module(import_statement["moduleName"])
+            attribute = getattr(module, import_statement["attribute"]) # tuple with labels
+
         if parameters == '':
             response = eval(command)
         else:
             response = eval(command + '(*parameters)')
         
         GeppettoJupyterModelSync.events_controller.triggerEvent(
-            "receive_python_message", {'id': identifier, 'response': response.decode("utf-8") })
+            "receive_python_message", {'id': identifier, 'response': response.decode("utf-8") if isinstance(response, bytes) else response})
     except:
         response = getJSONError("Error while executing command "+command,traceback.format_exc())
         GeppettoJupyterModelSync.events_controller.triggerEvent(
