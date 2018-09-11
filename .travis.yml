@@ -68,5 +68,6 @@ script:
   - firefox --version
   - travis_retry xvfb-run -a --server-args="-screen 0 1024x768x24"  casperjs test netpyne-tests.js --host=http://localhost:8888/ --engine=slimerjs
   - docker logs -t netpyne-ui_container
+  - sleep 10
   - docker stop $(docker ps -a -q)
   - docker rm $(docker ps -a -q)
