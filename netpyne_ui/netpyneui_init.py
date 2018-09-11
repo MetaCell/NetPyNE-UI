@@ -22,9 +22,6 @@ def getJSONReply():
 class NetPyNEUIInit():
     
     def __init__(self):
-        pass
-
-    def init(self):   
         try:
             logging.info("NetPyNEUIInit init method was called")
             global netpyne_geppetto

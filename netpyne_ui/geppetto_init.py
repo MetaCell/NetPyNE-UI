@@ -124,17 +124,18 @@ class LoopTimer(threading.Thread):
 def globalMessageHandler(identifier, command, parameters, import_statement):
     try:
         logging.debug('Global Message Handler')
-        logging.debug('Command: ' +  command)
+        logging.debug('Command: ' +  str(command))
         logging.debug('Parameter: ' + str(parameters))
         logging.debug('Import Statements: ' + str(import_statement))
         if import_statement:
             module = importlib.import_module(import_statement["moduleName"])
             attribute = getattr(module, import_statement["attribute"]) # tuple with labels
 
-        if parameters == '':
-            response = eval(command)
-        else:
-            response = eval(command + '(*parameters)')
+        if command:
+            if parameters == '':
+                response = eval(command)
+            else:
+                response = eval(command + '(*parameters)')
         
         GeppettoJupyterModelSync.events_controller.triggerEvent(
             "receive_python_message", {'id': identifier, 'response': response.decode("utf-8") if isinstance(response, bytes) else response})
