@@ -19,24 +19,8 @@ def getJSONReply():
     data['type'] = 'OK'
     return json.dumps(data)
 
-class NetPyNEUIInit():
-    
-    def __init__(self):
-        try:
-            logging.info("NetPyNEUIInit init method was called")
-            global netpyne_geppetto
-            from netpyne_ui import netpyne_geppetto
-            
-            
-            netpyne_geppetto = netpyne_geppetto.NetPyNEGeppetto()
-
-            GeppettoJupyterModelSync.events_controller.triggerEvent("spinner:hide")
-            return getJSONReply()
-        except Exception as exception:
-            logging.exception("Error while initializing NetPyNE-UI")
-            logging.error(exception)
-            return getJSONError("Error while initializing NetPyNE-UI:",traceback.format_exc())
-
-netpyneui_init = NetPyNEUIInit()
-netpyne_geppetto = None
+logging.info("NetPyNEUIInit init method was called")
+from netpyne_ui import netpyne_geppetto
+netpyne_geppetto = netpyne_geppetto.NetPyNEGeppetto()
+GeppettoJupyterModelSync.events_controller.triggerEvent("spinner:hide")
 logging.info("NetPyNEUIInit object was instantiated")
