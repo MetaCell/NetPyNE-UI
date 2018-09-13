@@ -20,13 +20,13 @@ def clone(repository, folder, default_branch, cwdp='', recursive = False):
 
 def checkout(folder, default_branch, cwdp):
     currentPath = os.getcwd()
-    print currentPath
+    print(currentPath)
     newPath = currentPath+"/"+cwdp+folder
-    print newPath
+    print(newPath)
     os.chdir(newPath)
     python_git=subprocess.Popen("git branch -a",shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     outstd,errstd=python_git.communicate()
-    if branch in outstd:
+    if branch in str(outstd):
         subprocess.call(['git', 'checkout', branch], cwd='./')
     else:
         subprocess.call(['git', 'checkout', default_branch], cwd='./')
@@ -43,14 +43,14 @@ if __name__ == "__main__":
 
 os.chdir(os.getcwd()+"/../")
 # Cloning Repos
-clone('https://github.com/openworm/pygeppetto.git','pygeppetto','v0.4.1-M1')
+clone('https://github.com/openworm/pygeppetto.git','pygeppetto','development')
 subprocess.call(['pip', 'install', '-e', '.'], cwd='./pygeppetto/')
 
-clone('https://github.com/Neurosim-lab/netpyne.git','netpyne','v0.7.9')
+clone('https://github.com/Neurosim-lab/netpyne.git','netpyne','py3')
 subprocess.call(['pip', 'install', '-e', '.'], cwd='./netpyne/')
 
-clone('https://github.com/openworm/org.geppetto.frontend.jupyter.git','org.geppetto.frontend.jupyter','v0.4.1-M2','', True )
-checkout('geppetto', 'v0.4.1-M2','org.geppetto.frontend.jupyter/src/jupyter_geppetto/')
+clone('https://github.com/openworm/org.geppetto.frontend.jupyter.git','org.geppetto.frontend.jupyter','py3','', True )
+checkout('geppetto', 'py3','org.geppetto.frontend.jupyter/src/jupyter_geppetto/')
 clone('https://github.com/MetaCell/geppetto-netpyne.git','geppetto-netpyne','0.4','org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/')
 
 print("Enabling Geppetto NetPyNE Extension ...")

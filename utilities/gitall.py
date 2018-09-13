@@ -48,7 +48,7 @@ config = {
 
 
 def incorrectInput(argv, msg):
-    print msg
+    print(msg)
     sys.exit()
 
 def main(argv):
@@ -101,11 +101,13 @@ def main(argv):
     else:
         incorrectInput(argv, 'Unrecognized command')
 
+
     for repo in config['repos']:
         try:
-            print repo['name'] + '  ' + subprocess.check_output(command, cwd=repo['path'])
+            print(repo['name'])
+            print(subprocess.check_output(command, cwd=repo['path']).decode('utf-8'))
         except:
-            print "Error -- trying next repo"
+            print("Error -- trying next repo")
 
 
 if __name__ == "__main__":

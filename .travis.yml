@@ -67,6 +67,7 @@ script:
   - "curl -s -I $1 http://localhost:8888/geppetto | grep HTTP/1.1 | awk {'print $2'}"
   - firefox --version
   - travis_retry xvfb-run -a --server-args="-screen 0 1024x768x24"  casperjs test netpyne-tests.js --host=http://localhost:8888/ --engine=slimerjs
-  - sudo docker logs -t netpyne-ui_container
+  - python -c "import fcntl; fcntl.fcntl(1, fcntl.F_SETFL, 0)"
+  - docker logs -t netpyne-ui_container
   - docker stop $(docker ps -a -q)
   - docker rm $(docker ps -a -q)

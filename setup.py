@@ -19,15 +19,13 @@ setup(
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering :: Visualization',
         'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.6',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4'
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.7'
     ],
     install_requires=[
         'jupyter_geppetto==0.4.1.2',
-        'netpyne==0.7.9'
+        'netpyne-py3==0.7.9'
     ],
 )
