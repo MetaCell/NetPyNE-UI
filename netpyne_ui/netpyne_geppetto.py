@@ -38,43 +38,44 @@ class NetPyNEGeppetto():
     def instantiateNetPyNEModelInGeppetto(self, args):
         try:
             with redirect_stdout(sys.__stdout__):
-                netpyne_model = self.instantiateNetPyNEModel() if not 'usePrevInst' in args or not args['usePrevInst'] else sim # instanciate or use the previews instance
-                self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
+                if not 'usePrevInst' in args or not args['usePrevInst']:
+                    netpyne_model = self.instantiateNetPyNEModel()
+                    self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
+                
+                # netpyne_model = self.instantiateNetPyNEModel() if not 'usePrevInst' in args or not args['usePrevInst'] else sim # instanciate or use the previews instance
+                # self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
                 return GeppettoModelSerializer().serialize(self.geppetto_model)
         except:
             return self.getJSONError("Error while instantiating the NetPyNE model",traceback.format_exc())
         
-    def simulateNetPyNEModelInGeppetto(self, modelParameters):
+    def simulateNetPyNEModelInGeppetto(self, args):
         try:
             with redirect_stdout(sys.__stdout__):
-                if modelParameters['parallelSimulation']: # use parallel simulation
+                if args['parallelSimulation']: # TODO mpi not finding  libmpi.dylib.. set LD_LIBRARY_PATH to openmpi bin folder, but nothing
                     logging.debug('Running parallel simulation')
-
-                    if modelParameters['previousTab']=='define': # start from high level specification
+                    if not 'usePrevInst' in args or not args['usePrevInst']:
                         netParams.save("netParams.json")
                         simConfig.saveJson = True
                         simConfig.save("simParams.json")
                         template = os.path.join(os.path.dirname(__file__), 'template.py')
-
-                    elif modelParameters['previousTab']=='simulate': # start from instanciated network
+                    else:
                         sim.cfg.saveJson = True
                         oldName = sim.cfg.filename
                         sim.cfg.filename = 'model_output'
                         sim.saveData()
                         sim.cfg.filename = oldName
                         template = os.path.join(os.path.dirname(__file__), 'template2.py')
-                    else:
-                        return self.getJSONError("Error while simulating the NetPyNE model", "-%s- is not one of the main tabs in the GUI" %(modelParameters['previousTab']))
-
-                    copyfile(template, 'init.py')
-                    subprocess.call(["mpiexec", "-n", modelParameters['cores'], "nrniv", "-python", "-mpi", "init.py"])
+                    copyfile(template, './init.py')
+                    
+                    cp = subprocess.run(["mpiexec", "-n", args['cores'], "nrniv", "-mpi", "-python", "init.py"], capture_output=True)
+                    print(cp.stdout.decode()+cp.stderr.decode())
+                    if cp.returncode!=0: return self.getJSONError("Error while simulating the NetPyNE model", cp.stderr.decode())
                     sim.load('model_output.json')
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
                     netpyne_model = sim
-
+                    
                 else: # single cpu computation
-                    if not 'usePrevInst' in modelParameters or not modelParameters['usePrevInst']:
-                        print("CREATING NEW INSTANCE")
+                    if not 'usePrevInst' in args or not args['usePrevInst']:
                         logging.debug('Instantiating single thread simulation')
                         netpyne_model = self.instantiateNetPyNEModel()
                         self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
@@ -112,7 +113,7 @@ class NetPyNEGeppetto():
         if modFolder:
             neuron.load_mechanisms(str(modFolder))
     
-    def loadModel(self, modelParams): # handles all data coming from a .json file (default file system for Netpyne)
+    def loadModel(self, args): # handles all data coming from a .json file (default file system for Netpyne)
         def remove(dictionary):
             # remove reserved keys such as __dict__, __Method__, etc 
             # they come with sim.loadAll(json_file).  'I wonder why'
@@ -123,12 +124,12 @@ class NetPyNEGeppetto():
                     else:
                         remove(value)
 
-        if not any([modelParams[option] for option in ['loadNetParams', 'loadSimCfg', 'loadSimData', 'loadNet']]):
+        if not any([args[option] for option in ['loadNetParams', 'loadSimCfg', 'loadSimData', 'loadNet']]):
             return self.getJSONError("Error while loading data", 'You have to select at least one option') 
 
         try:
             owd = os.getcwd()
-            self.compileModMechFiles(modelParams['compileMod'], modelParams['modFolder'])
+            self.compileModMechFiles(args['compileMod'], args['modFolder'])
         except:
             return self.getJSONError("Error while importing/compiling mods",traceback.format_exc())
         finally:
@@ -139,32 +140,38 @@ class NetPyNEGeppetto():
                 from . import netpyne_geppetto
                 sim.initialize()
                 wake_up_geppetto = False  
-                if all([modelParams[option] for option in ['loadNetParams', 'loadSimCfg', 'loadSimData', 'loadNet']]):
+                if all([args[option] for option in ['loadNetParams', 'loadSimCfg', 'loadSimData', 'loadNet']]):
                     wake_up_geppetto = True
-                    sim.loadAll(modelParams['jsonModelFolder'])
+                    if self.doIhaveInstOrSimData()[0]: sim.clearAll()
+                    sim.initialize()
+                    sim.loadAll(args['jsonModelFolder'])
                     netpyne_geppetto.netParams = sim.net.params
                     netpyne_geppetto.simConfig = sim.cfg
                     remove(netpyne_geppetto.netParams.todict())
                     remove(netpyne_geppetto.simConfig.todict())
                 else:
-                    if modelParams['loadNet']:
+                    if args['loadNet']:
                         wake_up_geppetto = True
-                        sim.loadNet(modelParams['jsonModelFolder'])
+                        if self.doIhaveInstOrSimData()[0]: sim.clearAll()
+                        sim.initialize()
+                        sim.loadNet(args['jsonModelFolder'])
 
-                    if modelParams['loadSimData']: # TODO (https://github.com/Neurosim-lab/netpyne/issues/360)
+                    if args['loadSimData']: # TODO (https://github.com/Neurosim-lab/netpyne/issues/360)
                         wake_up_geppetto = True
-                        sim.create(specs.NetParams(), specs.SimConfig())
-                        sim.net.defineCellShapes()
-                        sim.gatherData(gatherLFP=False)
-                        sim.loadSimData(modelParams['jsonModelFolder'])
+                        if not self.doIhaveInstOrSimData()[0]: 
+                            sim.create(specs.NetParams(), specs.SimConfig())
+                            sim.net.defineCellShapes()
+                            sim.gatherData(gatherLFP=False)
+                        sim.loadSimData(args['jsonModelFolder'])
                         
-                    if modelParams['loadSimCfg']:
-                        sim.loadSimCfg(modelParams['jsonModelFolder'])
+                    if args['loadSimCfg']:
+                        sim.loadSimCfg(args['jsonModelFolder'])
                         netpyne_geppetto.simConfig = sim.cfg
                         remove(netpyne_geppetto.simConfig.todict())
                         
-                    if modelParams['loadNetParams']:
-                        sim.loadNetParams(modelParams['jsonModelFolder'])
+                    if args['loadNetParams']:
+                        if self.doIhaveInstOrSimData()[0]: sim.clearAll()
+                        sim.loadNetParams(args['jsonModelFolder'])
                         netpyne_geppetto.netParams = sim.net.params
                         remove(netpyne_geppetto.netParams.todict())
                     
@@ -173,7 +180,7 @@ class NetPyNEGeppetto():
                     if not 'pt3d' in list(sim.net.cells[0].secs[section].geom.keys()):
                         sim.net.defineCellShapes()
                         sim.gatherData()
-                        sim.loadSimData(modelParams['jsonModelFolder'])
+                        sim.loadSimData(args['jsonModelFolder'])
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
 
                     return GeppettoModelSerializer().serialize(self.geppetto_model)
@@ -190,27 +197,28 @@ class NetPyNEGeppetto():
             self.compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
             
             from . import netpyne_geppetto
-            # NetParams
-            netParamsPath = str(modelParameters["netParamsPath"])
-            sys.path.append(netParamsPath)
-            os.chdir(netParamsPath)
-            # Import Module 
-            netParamsModuleName = importlib.import_module(str(modelParameters["netParamsModuleName"]))
-            # Import Model attributes
-            netpyne_geppetto.netParams = getattr(netParamsModuleName, str(modelParameters["netParamsVariable"]))
-            
-            for key, value in netpyne_geppetto.netParams.cellParams.iteritems():
-                if hasattr(value, 'todict'):
-                    netpyne_geppetto.netParams.cellParams[key] = value.todict()
-            
-            # SimConfig
-            simConfigPath = str(modelParameters["simConfigPath"])
-            sys.path.append(simConfigPath)
-            os.chdir(simConfigPath)
-            # Import Module 
-            simConfigModuleName = importlib.import_module(str(modelParameters["simConfigModuleName"]))
-            # Import Model attributes
-            netpyne_geppetto.simConfig = getattr(simConfigModuleName, str(modelParameters["simConfigVariable"]))
+
+            with redirect_stdout(sys.__stdout__):
+                # NetParams
+                netParamsPath = str(modelParameters["netParamsPath"])
+                sys.path.append(netParamsPath)
+                os.chdir(netParamsPath)
+                # Import Module 
+                netParamsModuleName = importlib.import_module(str(modelParameters["netParamsModuleName"]))
+                # Import Model attributes
+                netpyne_geppetto.netParams = getattr(netParamsModuleName, str(modelParameters["netParamsVariable"]))
+                for key, value in netpyne_geppetto.netParams.cellParams.items():
+                    if hasattr(value, 'todict'):
+                        netpyne_geppetto.netParams.cellParams[key] = value.todict()
+                
+                # SimConfig
+                simConfigPath = str(modelParameters["simConfigPath"])
+                sys.path.append(simConfigPath)
+                os.chdir(simConfigPath)
+                # Import Module 
+                simConfigModuleName = importlib.import_module(str(modelParameters["simConfigModuleName"]))
+                # Import Model attributes
+                netpyne_geppetto.simConfig = getattr(simConfigModuleName, str(modelParameters["simConfigVariable"]))
 
             return self.getJSONReply()
         except:
@@ -275,22 +283,14 @@ class NetPyNEGeppetto():
 
     def deleteModel(self, modelParams):
         try:
-            import netpyne_geppetto
+            from . import netpyne_geppetto
             with redirect_stdout(sys.__stdout__):       
                 netpyne_geppetto.netParams = specs.NetParams()
                 netpyne_geppetto.simConfig = specs.SimConfig()
                 netpyne_geppetto.netParams.todict()
                 netpyne_geppetto.netParams.todict()
-                
-                sim.initialize()
-                sim.net.createPops()
-                sim.net.createCells()
-                sim.net.connectCells()
-                sim.net.addStims()
-                sim.net.defineCellShapes()
-                sim.gatherData(gatherLFP=False)
-                
-                self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
+                if self.doIhaveInstOrSimData()[0]: sim.clearAll()
+                self.geppetto_model = None
             return self.getJSONReply()
 
         except:
