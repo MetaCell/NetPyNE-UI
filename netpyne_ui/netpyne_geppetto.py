@@ -14,8 +14,10 @@ import time
 import traceback
 
 
-from netpyne import specs, sim, analysis, utils
-from netpyne.metadata import metadata, api
+from netpyne import specs, sim, analysis
+from netpyne.specs.utils import validateFunction
+from netpyne.conversion.neuronPyHoc import mechVarList
+from netpyne.metadata import metadata
 from netpyne_ui.netpyne_model_interpreter import NetPyNEModelInterpreter
 from pygeppetto.model.model_serializer import GeppettoModelSerializer
 import matplotlib.pyplot as plt
@@ -286,14 +288,14 @@ class NetPyNEGeppetto():
         return list(netParams.synMechParams.keys())
     
     def getAvailableMechs(self):
-        mechs = utils.mechVarList()['mechs']
+        mechs = mechVarList()['mechs']
         for key in list(mechs.keys()):
             if 'ion' in key: del mechs[key]
         for key in ["morphology", "capacitance", "extracellular"]: del mechs[key]
         return list(mechs.keys())
     
     def getMechParams(self, mechanism):
-        params = utils.mechVarList()['mechs'][mechanism]
+        params = mechVarList()['mechs'][mechanism]
         return [value[:-(len(mechanism) + 1)] for value in params]
         
     def getAvailablePlots(self):
@@ -309,7 +311,7 @@ class NetPyNEGeppetto():
             logging.debug('Parameter '+paramToDel+' is null, not deleted')
         
     def validateFunction(self, functionString):
-        return utils.ValidateFunction(functionString, netParams.__dict__)
+        return ValidateFunction(functionString, netParams.__dict__)
          
     def generateScript(self, metadata):
         def convert2bool(string):
@@ -485,7 +487,7 @@ simConfig = specs.SimConfig()
 
 GeppettoJupyterModelSync.current_model.original_model = json.dumps({'netParams': netParams.__dict__,
                                                                     'simConfig': simConfig.__dict__,
-                                                                    'metadata': metadata.metadata,
+                                                                    'metadata': metadata,
                                                                     'requirement': 'from netpyne_ui.netpyne_geppetto import *',
                                                                     'isDocker': os.path.isfile('/.dockerenv'),
                                                                     'currentFolder': os.getcwd()})
