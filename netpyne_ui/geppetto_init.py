@@ -54,14 +54,13 @@ def initGeppetto():
         # Sync values when no sim is running
         logging.debug('Initialising Sync Mechanism for non-sim environment')
 
-        G.createProject(name='Geppetto Project')
         
     except Exception as exception:
         logging.exception("Unexpected error while initializing Geppetto from Python:")
         logging.error(exception)
 
-def startSynchronization():
-    timer = LoopTimer(0.3)
+def startSynchronization(scope):
+    timer = LoopTimer(0.3,scope)
     timer.start()
     while not timer.started:
         time.sleep(0.001)
@@ -76,13 +75,14 @@ class LoopTimer(threading.Thread):
     TODO This code should move to a generic geppetto class since it's not NetPyNE specific
     """
 
-    def __init__(self, interval, fun=None):
+    def __init__(self, interval, scope, fun=None):
         """
         @param interval: time in seconds between call to fun()
         @param fun: the function to call on timer update
         """
         self.started = False
         self.interval = interval
+        self.scope = scope
         if fun == None:
             fun = self.process_events
         self.fun = fun
@@ -105,7 +105,10 @@ class LoopTimer(threading.Thread):
                 modelValue=None
                 if model != '':
                     try:
-                        modelValue = eval(model)
+                        modelValue = eval(model, globals(), self.scope)
+                        #logging.debug("Evaluating "+model+" = ")
+                        #logging.debug(modelValue)
+                        
                     except KeyError:
                         pass
                         #logging.debug("Error evaluating "+model+", don't worry, most likely the attribute is not set in the current model")
@@ -139,5 +142,6 @@ def globalMessageHandler(identifier, command, parameters):
         GeppettoJupyterModelSync.events_controller.triggerEvent(
             "receive_python_message", {'id': identifier, 'response': response})
     
-
+logging.debug('Initialising Geppetto')
 initGeppetto()
+logging.debug('Geppetto initialised')
