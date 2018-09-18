@@ -9,7 +9,6 @@ RUN apt-get install -y \
         g++ \
         build-essential \
         libncurses-dev \
-        python2.7 \
         libpython-dev \
         cython \
         libx11-dev \
@@ -20,29 +19,26 @@ RUN apt-get install -y \
         libtool \ 
         libxext-dev \
         libncurses-dev \
-        python2.7-dev \
         xfonts-100dpi \ 
         libopenmpi-dev \
-        python2.7-scipy \
         make \
         zlib1g-dev \
         unzip \
         vim \
         libpng-dev
 
-# Install latest NEURON
+# Switch to non sudo, create a Python 3 virtual environment 
+USER $NB_USER
+RUN conda create --name snakes python=3.7
+
+# Install latest iv and NEURON
 RUN git clone --branch 7.6.2 https://github.com/neuronsimulator/nrn
 WORKDIR nrn
 RUN ./build.sh
-RUN ./configure --without-x --with-nrnpython=python2 --without-paranrn --prefix="/home/jovyan/work/nrn/" --without-iv
+# Activate conda to configure nrn with the right python version
+RUN /bin/bash -c "source activate snakes && ./configure --without-x --with-nrnpython=python3 --without-paranrn --prefix='/home/jovyan/work/nrn/' --without-iv"
 RUN make --silent -j4
 RUN make --silent install -j4
-
-# Switch to non sudo, create a Python 2 virtual environment 
-USER $NB_USER
-# Commenting out the conda update things broke!
-# RUN conda update conda
-RUN conda create --name snakes python=2
 
 # Install NEURON python
 WORKDIR src/nrnpython

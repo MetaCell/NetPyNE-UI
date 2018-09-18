@@ -33,9 +33,6 @@ RUN apt-get install -y \
 
 # Switch to non sudo, create a Python 3 virtual environment 
 USER $NB_USER
-# Commenting out the conda update things broke!
-# RUN conda update conda
-# python 3 implies python 3.7 at this moment in time. Probably we want to specify exactly the version
 RUN conda create --name snakes python=3.7
 
 # Install latest iv and NEURON
