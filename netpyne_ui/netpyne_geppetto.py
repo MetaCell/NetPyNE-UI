@@ -2,7 +2,7 @@
 netpyne_geppetto.py
 Initialise NetPyNE Geppetto, this class contains methods to connect NetPyNE with the Geppetto based UI
 """
-import StringIO
+import io
 import json
 import os
 import importlib
@@ -14,9 +14,11 @@ import time
 import traceback
 import re
 
-from netpyne import specs, sim, analysis, utils
-from netpyne.metadata import metadata, api
-from netpyne_model_interpreter import NetPyNEModelInterpreter
+from netpyne import specs, sim, analysis
+from netpyne.specs.utils import validateFunction
+from netpyne.conversion.neuronPyHoc import mechVarList
+from netpyne.metadata import metadata
+from netpyne_ui.netpyne_model_interpreter import NetPyNEModelInterpreter
 from pygeppetto.model.model_serializer import GeppettoModelSerializer
 import matplotlib.pyplot as plt
 from pygeppetto import ui
@@ -27,6 +29,7 @@ import neuron
 from shutil import copyfile
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync, GeppettoJupyterGUISync
 from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G
+import imp
 
 
 
@@ -108,7 +111,7 @@ class NetPyNEGeppetto():
             
             self.compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
             
-            import netpyne_geppetto
+            from . import netpyne_geppetto
             
             if modelParameters['importFormat']=='py':
                 # NetParams
@@ -120,7 +123,7 @@ class NetPyNEGeppetto():
                 # Import Model attributes
                 netpyne_geppetto.netParams = getattr(netParamsModuleName, str(modelParameters["netParamsVariable"]))
                 
-                for key, value in netpyne_geppetto.netParams.cellParams.iteritems():
+                for key, value in netpyne_geppetto.netParams.cellParams.items():
                     if hasattr(value, 'todict'):
                         netpyne_geppetto.netParams.cellParams[key] = value.todict()
                 
@@ -159,7 +162,7 @@ class NetPyNEGeppetto():
             # Get Current dir
             owd = os.getcwd()
 
-            from netpyne_geppetto import netParams
+            from .netpyne_geppetto import netParams
 
             self.compileModMechFiles(compileMod, modFolder)
 
@@ -185,7 +188,7 @@ class NetPyNEGeppetto():
             return self.getJSONError("Error while exporting the NetPyNE model",traceback.format_exc())
 
     def instantiateNetPyNEModel(self):
-        import sys; reload(sys)
+        import sys; imp.reload(sys)
         sim.initialize(netParams, simConfig)  # create network object and set cfg and net params
         sim.net.createPops()                  # instantiate network populations
         sim.net.createCells()                 # instantiate network cells based on defined populations
@@ -198,7 +201,7 @@ class NetPyNEGeppetto():
         return sim
 
     def simulateNetPyNEModel(self):
-        import sys; reload(sys)
+        import sys; imp.reload(sys)
         sim.setupRecording() 
         sim.simulate()
         sim.saveData()
@@ -245,7 +248,7 @@ class NetPyNEGeppetto():
             return [ui.getSVG(fig[0])].__str__()
         elif isinstance(fig, dict):
             svgs = []
-            for key, value in fig.iteritems():
+            for key, value in fig.items():
                 logging.debug("Found plot for "+ key)
                 svgs.append(ui.getSVG(value))
             return svgs.__str__()
@@ -253,7 +256,7 @@ class NetPyNEGeppetto():
             return [ui.getSVG(fig)].__str__()
         
     def getAvailablePops(self):
-        return netParams.popParams.keys()
+        return list(netParams.popParams.keys())
 
     def getAvailableCellModels(self):
         cellModels = set([])
@@ -276,29 +279,29 @@ class NetPyNEGeppetto():
     def getAvailableSections(self):
         sections = {}
         for cellRule in netParams.cellParams:
-            sections[cellRule] = netParams.cellParams[cellRule]['secs'].keys()
+            sections[cellRule] = list(netParams.cellParams[cellRule]['secs'].keys())
         return sections
         
     def getAvailableStimSources(self):
-        return netParams.stimSourceParams.keys()
+        return list(netParams.stimSourceParams.keys())
     
     def getAvailableSynMech(self):
-        return netParams.synMechParams.keys()
+        return list(netParams.synMechParams.keys())
     
     def getAvailableMechs(self):
-        mechs = utils.mechVarList()['mechs']
-        for key in mechs.keys():
+        mechs = mechVarList()['mechs']
+        for key in list(mechs.keys()):
             if 'ion' in key: del mechs[key]
         for key in ["morphology", "capacitance", "extracellular"]: del mechs[key]
-        return mechs.keys()
+        return list(mechs.keys())
     
     def getMechParams(self, mechanism):
-        params = utils.mechVarList()['mechs'][mechanism]
+        params = mechVarList()['mechs'][mechanism]
         return [value[:-(len(mechanism) + 1)] for value in params]
         
     def getAvailablePlots(self):
         plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats","plotRatePSD", "plotTraces", "plotLFP", "plotShape", "plot2Dnet", "plotConn", "granger"]
-        return [plot for plot in plots if plot not in simConfig.analysis.keys()]
+        return [plot for plot in plots if plot not in list(simConfig.analysis.keys())]
 
     def deleteParam(self, paramToDel):
         logging.debug("Checking if netParams."+paramToDel+" is not null")
@@ -309,7 +312,7 @@ class NetPyNEGeppetto():
             logging.debug('Parameter '+paramToDel+' is null, not deleted')
         
     def validateFunction(self, functionString):
-        return utils.ValidateFunction(functionString, netParams.__dict__)
+        return ValidateFunction(functionString, netParams.__dict__)
          
     def generateScript(self, metadata):
         def convert2bool(string):
@@ -333,7 +336,7 @@ class NetPyNEGeppetto():
                 script.write('netParams = specs.NetParams()\n')
                 script.write('simConfig = specs.SimConfig()\n')
                 script.write(header('single value attributes'))
-                for attr, value in netParams.__dict__.items():
+                for attr, value in list(netParams.__dict__.items()):
                     if attr not in params:
                         if value!=getattr(specs.NetParams(), attr):
                             script.write('netParams.' + attr + ' = ')
@@ -341,12 +344,12 @@ class NetPyNEGeppetto():
                         
                 script.write(header('network attributes'))
                 for param in params:
-                    for key, value in getattr(netParams, param).items():
+                    for key, value in list(getattr(netParams, param).items()):
                         script.write("netParams." + param + "['" + key + "'] = ")
                         script.write(convert2bool(json.dumps(value, indent=4))+'\n')
                 
                 script.write(header('network configuration'))
-                for attr, value in simConfig.__dict__.items():
+                for attr, value in list(simConfig.__dict__.items()):
                     if value!=getattr(specs.SimConfig(), attr):
                         script.write('netParams.' + attr + ' = ')
                         script.write(convert2bool(json.dumps(value, indent=4))+'\n')
@@ -428,8 +431,11 @@ def globalMessageHandler(identifier, command, parameters):
             response = eval(command)
         else:
             response = eval(command + '(*parameters)')
+        import sys
+        imp.reload(sys)
+        print(type(response))
         GeppettoJupyterModelSync.events_controller.triggerEvent(
-            "receive_python_message", {'id': identifier, 'response': response})
+            "receive_python_message", {'id': identifier, 'response': response.decode("utf-8") if isinstance(response, bytes) else response})
     except:
         response = netpyne_geppetto.getJSONError("Error while executing command "+command,traceback.format_exc())
         GeppettoJupyterModelSync.events_controller.triggerEvent(
@@ -482,7 +488,7 @@ simConfig = specs.SimConfig()
 
 GeppettoJupyterModelSync.current_model.original_model = json.dumps({'netParams': netParams.__dict__,
                                                                     'simConfig': simConfig.__dict__,
-                                                                    'metadata': metadata.metadata,
+                                                                    'metadata': metadata,
                                                                     'requirement': 'from netpyne_ui.netpyne_geppetto import *',
                                                                     'isDocker': os.path.isfile('/.dockerenv'),
                                                                     'currentFolder': os.getcwd()})
