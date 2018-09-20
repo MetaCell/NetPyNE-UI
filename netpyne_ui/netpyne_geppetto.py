@@ -44,8 +44,6 @@ class NetPyNEGeppetto():
                     netpyne_model = self.instantiateNetPyNEModel()
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
                 
-                # netpyne_model = self.instantiateNetPyNEModel() if not 'usePrevInst' in args or not args['usePrevInst'] else sim # instanciate or use the previews instance
-                # self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
                 return GeppettoModelSerializer().serialize(self.geppetto_model)
         except:
             return self.getJSONError("Error while instantiating the NetPyNE model",traceback.format_exc())
@@ -53,7 +51,7 @@ class NetPyNEGeppetto():
     def simulateNetPyNEModelInGeppetto(self, args):
         try:
             with redirect_stdout(sys.__stdout__):
-                if args['parallelSimulation']: # TODO mpi not finding  libmpi.dylib.. set LD_LIBRARY_PATH to openmpi bin folder, but nothing
+                if args['parallelSimulation']: # TODO mpi is not finding  libmpi.dylib.. set LD_LIBRARY_PATH to openmpi bin folder, but nothing
                     logging.debug('Running parallel simulation')
                     if not 'usePrevInst' in args or not args['usePrevInst']:
                         netParams.save("netParams.json")
@@ -118,7 +116,7 @@ class NetPyNEGeppetto():
     def loadModel(self, args): # handles all data coming from a .json file (default file system for Netpyne)
         def remove(dictionary):
             # remove reserved keys such as __dict__, __Method__, etc 
-            # they come with sim.loadAll(json_file).  'I wonder why'
+            # they appear when we do sim.loadAll(json_file)
             if isinstance(dictionary, dict):
                 for key, value in list(dictionary.items()):
                     if key.startswith('__'):
@@ -297,7 +295,39 @@ class NetPyNEGeppetto():
 
         except:
             return self.getJSONError("Error while exporting the NetPyNE model",traceback.format_exc())
+    
+    def create_docker_container(self, args):
+        from subprocess import Popen
+        
+        with redirect_stdout(sys.__stdout__):
+            try:
+                # delete previous data
+                subprocess.call(['rm', '-r', './docker'])
+                subprocess.call(['mkdir', './docker'])
+                subprocess.call(['mkdir', './docker/mod'])
+                
+                # copy dockerfile to build docker
+                copyfile('./dockerfile_template', './docker/dockerfile')
 
+                # generate netpyne script
+                self.exportHLS({'fileName': './docker/init.py'})
+                
+                # create bash script
+                script = 'docker build -t %s -f ./dockerfile .'%(args['label'])
+                with open('./cmd.sh', 'w') as f: f.write(script)
+
+                # copy mod folder
+                if args['modFolder']!='':
+                    subprocess.call(['cp', '-r', args['modFolder'], './docker'])
+
+                # build docker
+                with open('out.log', 'w') as stdout, open('err.log', 'w') as stderr:
+                    Popen(['/bin/bash', '../cmd.sh'], stdout=stdout, stderr=stderr, cwd='./docker')
+
+                return self.getJSONReply()
+            except:
+                return self.getJSONError("Error while exporting the NetPyNE model", traceback.format_exc())
+        
     def instantiateNetPyNEModel(self):
         with redirect_stdout(sys.__stdout__):
             from . import netpyne_geppetto
