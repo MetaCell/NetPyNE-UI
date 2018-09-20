@@ -1,0 +1,87 @@
+# debian+miniconda3
+FROM continuumio/miniconda3:latest
+
+# netpyne model from github
+COPY init.py /opt/model/init.py
+COPY ./mod/  /opt/model/mod/
+
+# extract model name 
+ENV LANG C.UTF-8
+
+# install dependencies
+RUN apt-get -qq update
+RUN apt-get install -y \
+        locales \
+        wget \
+        gcc \
+        g++ \
+        libpq-dev \
+        pkg-config\
+        build-essential \
+        libncurses-dev \
+        libpython-dev \
+        cython \
+        libx11-dev \
+        git \
+        bison \
+        flex \
+        automake \ 
+        libtool \ 
+        libxext-dev \
+        libncurses-dev \
+        xfonts-100dpi \ 
+        libopenmpi-dev \
+        make \
+        zlib1g-dev \
+        unzip \
+        vim \
+        libpng-dev \
+        curl \
+        python3-matplotlib \
+        bzip2 
+
+# create a Python 3 virtual environment 
+RUN /bin/bash -c "conda update -n base conda"
+RUN /bin/bash -c "conda create -y -n snakes python=3.7"
+RUN /bin/bash -c "source activate snakes && pip install --upgrade pip"
+
+# Install latest NEURON
+WORKDIR /opt
+RUN git clone -b 7.6.2 https://github.com/neuronsimulator/nrn
+WORKDIR /opt/nrn
+RUN ./build.sh
+RUN /bin/bash -c "source activate snakes && ./configure --without-x --with-nrnpython=python3 --without-paranrn --prefix='/opt/conda/envs/snakes/nrn' --without-iv"
+RUN /bin/bash -c "make --silent -j4"
+RUN /bin/bash -c "make --silent install -j4"
+
+# Install NEURON-python
+WORKDIR /opt/nrn/src/nrnpython
+RUN /bin/bash -c "source activate snakes && python setup.py install"
+ENV PATH="/opt/conda/envs/snakes/nrn/x86_64/bin:${PATH}"
+
+# install netpyne
+WORKDIR /opt
+RUN git clone https://github.com/Neurosim-lab/netpyne.git
+WORKDIR /opt/netpyne
+RUN /bin/bash -c "source activate snakes && conda install -n snakes freetype"
+RUN /bin/bash -c "source activate snakes && pip install --no-cache-dir -e ."
+
+# install neuroML
+WORKDIR /opt
+RUN git clone https://github.com/NeuroML/pyNeuroML.git
+WORKDIR /opt/pyNeuroML
+RUN /bin/bash -c "source activate snakes && pip install --no-cache-dir -e ."
+
+# compile mod files
+WORKDIR /opt/model/mod
+RUN /bin/bash -c "source activate snakes && nrnivmodl"
+
+# final folder
+WORKDIR /opt/model
+
+# cleaning
+RUN /bin/bash -c "cp -R mod/x86_64 ./x86_64 && rm -R mod"
+RUN /bin/bash -c "rm -rf /tmp/*"
+
+# source env
+CMD ["/bin/bash", "source", "activate",  "snakes"]
