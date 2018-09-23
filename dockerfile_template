@@ -1,5 +1,5 @@
 # debian+miniconda3
-FROM continuumio/miniconda3:latest
+FROM python:3.7-slim
 
 # netpyne model from github
 COPY init.py /opt/model/init.py
@@ -9,79 +9,61 @@ COPY ./mod/  /opt/model/mod/
 ENV LANG C.UTF-8
 
 # install dependencies
-RUN apt-get -qq update
-RUN apt-get install -y \
-        locales \
-        wget \
-        gcc \
+RUN apt-get -qq update 
+RUN apt-get install -y --no-install-recommends \
         g++ \
-        libpq-dev \
-        pkg-config\
-        build-essential \
         libncurses-dev \
-        libpython-dev \
-        cython \
-        libx11-dev \
-        git \
-        bison \
-        flex \
-        automake \ 
-        libtool \ 
-        libxext-dev \
-        libncurses-dev \
-        xfonts-100dpi \ 
-        libopenmpi-dev \
+        autoconf \
+        automake \
         make \
-        zlib1g-dev \
+        flex \
+        bison \
         unzip \
-        vim \
-        libpng-dev \
-        curl \
-        python3-matplotlib \
-        bzip2 
-
-# create a Python 3 virtual environment 
-RUN /bin/bash -c "conda update -n base conda"
-RUN /bin/bash -c "conda create -y -n snakes python=3.7"
-RUN /bin/bash -c "source activate snakes && pip install --upgrade pip"
+        wget
 
 # Install latest NEURON
 WORKDIR /opt
-RUN git clone -b 7.6.2 https://github.com/neuronsimulator/nrn
-WORKDIR /opt/nrn
-RUN ./build.sh
-RUN /bin/bash -c "source activate snakes && ./configure --without-x --with-nrnpython=python3 --without-paranrn --prefix='/opt/conda/envs/snakes/nrn' --without-iv"
-RUN /bin/bash -c "make --silent -j4"
-RUN /bin/bash -c "make --silent install -j4"
+RUN wget https://neuron.yale.edu/ftp/neuron/versions/v7.6/7.6.2/nrn-7.6.2.tar.gz -P /opt/ -q \
+        && tar -C /opt/ -xvzf nrn-7.6.2.tar.gz \
+        && rm nrn-7.6.2.tar.gz
+
+WORKDIR /opt/nrn-7.6
+# RUN ./build.sh
+RUN /bin/bash -c "./configure --prefix='/opt/neuron' --with-nrnpython=python3 --without-paranrn  --without-iv --without-nrnjava --without-x --without-nrnoc-x11"
+RUN /bin/bash -c "make -s -j4"
+RUN /bin/bash -c "make -s install -j4"
 
 # Install NEURON-python
-WORKDIR /opt/nrn/src/nrnpython
-RUN /bin/bash -c "source activate snakes && python setup.py install"
-ENV PATH="/opt/conda/envs/snakes/nrn/x86_64/bin:${PATH}"
+WORKDIR /opt/nrn-7.6/src/nrnpython
+RUN /bin/bash -c "python setup.py install"
+ENV PATH="/opt/neuron/x86_64/bin:${PATH}"
 
 # install netpyne
 WORKDIR /opt
-RUN git clone https://github.com/Neurosim-lab/netpyne.git
-WORKDIR /opt/netpyne
-RUN /bin/bash -c "source activate snakes && conda install -n snakes freetype"
-RUN /bin/bash -c "source activate snakes && pip install --no-cache-dir -e ."
-
-# install neuroML
-WORKDIR /opt
-RUN git clone https://github.com/NeuroML/pyNeuroML.git
-WORKDIR /opt/pyNeuroML
-RUN /bin/bash -c "source activate snakes && pip install --no-cache-dir -e ."
+RUN wget https://github.com/Neurosim-lab/netpyne/archive/development_py3.zip -P /opt/ -q\
+        && unzip development_py3.zip -d /opt \
+        && rm development_py3.zip
+WORKDIR /opt/netpyne-development_py3
+RUN /bin/bash -c "pip install --no-cache-dir -e ."
 
 # compile mod files
 WORKDIR /opt/model/mod
-RUN /bin/bash -c "source activate snakes && nrnivmodl"
+RUN /bin/bash -c "nrnivmodl"
 
-# final folder
+# copy files
 WORKDIR /opt/model
+RUN /bin/bash -c "cp -R mod/x86_64 ./x86_64 && rm -R mod"
 
 # cleaning
-RUN /bin/bash -c "cp -R mod/x86_64 ./x86_64 && rm -R mod"
-RUN /bin/bash -c "rm -rf /tmp/*"
+WORKDIR /opt
+RUN apt-get purge -y --auto-remove autoconf automake autotools-dev binutils bison flex  m4 make perl perl-modules-5.24 unzip wget
+RUN apt-get clean 
+RUN rm -rf /var/lib/apt/lists/* \
+        /tmp/*  \
+        /var/tmp/* \
+        /opt/nrn-7.6 \
+        /opt/netpyne-development_py3/examples/ \
+        /opt/netpyne-development_py3/doc/
 
 # source env
-CMD ["/bin/bash", "source", "activate",  "snakes"]
+CMD ["/bin/bash"]

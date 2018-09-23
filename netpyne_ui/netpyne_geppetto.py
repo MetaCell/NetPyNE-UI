@@ -375,17 +375,18 @@ class NetPyNEGeppetto():
             return simConfig.analysis[plot]
         return {}
 
-    def getDirList(self, dir=None, onlyDirs = False):
+    def getDirList(self, dir=None, onlyDirs = False, filterFiles=False):
         # Get Current dir
         if dir == None:
             dir = os.getcwd()
         dir_list = []
         for f in sorted(os.listdir(str(dir)), key=str.lower):
-           ff=os.path.join(dir,f)
-           if os.path.isdir(ff):
-               dir_list.insert(0, {'title': f, 'path': ff, 'load': False, 'children': [{'title': 'Loading...'}]})
-           elif not onlyDirs:
-               dir_list.append({'title': f, 'path': ff})
+            ff=os.path.join(dir,f)
+            if os.path.isdir(ff):
+                dir_list.insert(0, {'title': f, 'path': ff, 'load': False, 'children': [{'title': 'Loading...'}]})
+            elif not onlyDirs:
+                if not filterFiles or os.path.isfile(ff) and ff.endswith(filterFiles):
+                    dir_list.append({'title': f, 'path': ff})
         return dir_list
     
     def getPlot(self, plotName, LFPflavour):
