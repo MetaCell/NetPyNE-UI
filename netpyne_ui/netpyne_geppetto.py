@@ -217,7 +217,7 @@ class NetPyNEGeppetto():
         return sim
 
     def rename(self, path, oldValue,newValue):
-        command =  'sim.rename('+path+',"'+oldValue+'","'+newValue+'")'
+        command =  'sim.rename(self.'+path+',"'+oldValue+'","'+newValue+'")'
         logging.debug('renaming '+command)
         eval(command)
 
@@ -228,8 +228,8 @@ class NetPyNEGeppetto():
                 GeppettoJupyterGUISync.synched_models[newModel]=synched_component
 
     def getPlotSettings(self, plot):
-        if simConfig.analysis and plot in simConfig.analysis:
-            return simConfig.analysis[plot]
+        if self.simConfig.analysis and plot in self.simConfig.analysis:
+            return self.simConfig.analysis[plot]
         return {}
 
     def getDirList(self, dir=None, onlyDirs = False):
