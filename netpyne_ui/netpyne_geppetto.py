@@ -213,10 +213,9 @@ class NetPyNEGeppetto():
         eval(command)
         for model, synched_component in list(GeppettoJupyterGUISync.synched_models.items()):
             if model != '' and oldValue in model and path in model: # 
-                logging.debug("Rename funct model is " + model)
                 GeppettoJupyterGUISync.synched_models.pop(model)
                 newModel = re.sub("(['])(?:(?=(\\?))\2.)*?\1", lambda x:x.group(0).replace(oldValue,newValue, 1), model)
-                logging.debug("Rename funct newModel is " + newModel)
+                logging.debug("Rename funct - Model is "+model+" newModel is "+newModel)
                 GeppettoJupyterGUISync.synched_models[newModel]=synched_component
 
     def getPlotSettings(self, plot):
