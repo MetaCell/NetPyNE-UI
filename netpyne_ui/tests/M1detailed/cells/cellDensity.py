@@ -81,7 +81,7 @@ if plotPies:
 	layers['5B'] = {'IT': 1155, 'PT': 1155, 'SOM': 202, 'PV':411}
 	layers['6'] = {'IT': 1465, 'CT': 1465, 'SOM': 107, 'PV':218}
 	
-	for layer,pops in layers.items():
+	for layer,pops in list(layers.items()):
 		# make a square figure and axes
 		figure(1, figsize=(6,6))
 		ax = axes([0.1, 0.1, 0.8, 0.8])
@@ -117,7 +117,7 @@ popColors.update({'PV2': [133, 193, 233], 'PV5A': [93, 173, 226], 'PV5B': [52, 1
 popColors.update({'SOM2': [187, 143, 206], 'SOM5A': [165, 105, 189], 'SOM5B': [142, 68, 173], 'SOM6': [142, 68, 173]}) # SOM purple tones
 popColors.update({'PV2': [247, 220, 111], 'PV5A': [244, 208, 63], 'PV5B': [241, 196, 15], 'PV6': [212, 172, 13]}) # PV yellow tones
 popColors.update({'SOM2': [248, 196, 113], 'SOM5A': [245, 176, 65], 'SOM5B': [243, 156, 18], 'SOM6': [214, 137, 16]}) # SOM orange tones
-for pop,col in popColors.items(): popColors[pop]=[c/256.0 for c in col] #normalize
+for pop,col in list(popColors.items()): popColors[pop]=[c/256.0 for c in col] #normalize
 with open('popColors.pkl', 'wb') as fileObj:        
         pickle.dump({'popColors': popColors}, fileObj)
 

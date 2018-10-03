@@ -10,11 +10,14 @@ import sys
 import subprocess
 import logging
 import threading
+import time
 import traceback
 
 
-from netpyne import specs, sim, analysis, utils
-from netpyne.metadata import metadata, api
+from netpyne import specs, sim, analysis
+from netpyne.specs.utils import validateFunction
+from netpyne.conversion.neuronPyHoc import mechVarList
+from netpyne.metadata import metadata
 from netpyne_ui.netpyne_model_interpreter import NetPyNEModelInterpreter
 from pygeppetto.model.model_serializer import GeppettoModelSerializer
 import matplotlib.pyplot as plt
@@ -304,7 +307,7 @@ class NetPyNEGeppetto():
         return list(mechs.keys())
     
     def getMechParams(self, mechanism):
-        params = utils.mechVarList()['mechs'][mechanism]
+        params = mechVarList()['mechs'][mechanism]
         return [value[:-(len(mechanism) + 1)] for value in params]
         
     def getAvailablePlots(self):
@@ -320,7 +323,7 @@ class NetPyNEGeppetto():
             logging.debug('Parameter '+paramToDel+' is null, not deleted')
         
     def validateFunction(self, functionString):
-        return utils.ValidateFunction(functionString, self.netParams.__dict__)
+        return ValidateFunction(functionString, self.netParams.__dict__)
          
     def generateScript(self, metadata):
         def convert2bool(string):
