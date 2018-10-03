@@ -300,7 +300,7 @@ class NetPyNEGeppetto():
         return list(self.netParams.synMechParams.keys())
     
     def getAvailableMechs(self):
-        mechs = utils.mechVarList()['mechs']
+        mechs = mechVarList()['mechs']
         for key in list(mechs.keys()):
             if 'ion' in key: del mechs[key]
         for key in ["morphology", "capacitance", "extracellular"]: del mechs[key]
