@@ -45,7 +45,7 @@ class NetPyNEGeppetto():
         logging.debug("Changing original model")
         GeppettoJupyterModelSync.current_model.original_model = json.dumps({'netParams': self.netParams.__dict__,
                                                                             'simConfig': self.simConfig.__dict__,
-                                                                            'metadata': metadata.metadata,
+                                                                            'metadata': metadata,
                                                                             'requirement': 'from netpyne_ui.netpyneui_init import netpyne_geppetto',
                                                                             'context':'netpyne_geppetto',
                                                                             'isDocker': os.path.isfile('/.dockerenv'),
