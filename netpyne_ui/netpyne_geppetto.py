@@ -142,7 +142,7 @@ class NetPyNEGeppetto():
                 wake_up_geppetto = False  
                 if all([args[option] for option in ['loadNetParams', 'loadSimCfg', 'loadSimData', 'loadNet']]):
                     wake_up_geppetto = True
-                    if self.doIhaveInstOrSimData()[0]: sim.clearAll()
+                    if self.doIhaveInstOrSimData()['haveInstance']: sim.clearAll()
                     sim.initialize()
                     sim.loadAll(args['jsonModelFolder'])
                     netpyne_geppetto.netParams = sim.net.params
@@ -152,13 +152,13 @@ class NetPyNEGeppetto():
                 else:
                     if args['loadNet']:
                         wake_up_geppetto = True
-                        if self.doIhaveInstOrSimData()[0]: sim.clearAll()
+                        if self.doIhaveInstOrSimData()['haveInstance']: sim.clearAll()
                         sim.initialize()
                         sim.loadNet(args['jsonModelFolder'])
 
                     if args['loadSimData']: # TODO (https://github.com/Neurosim-lab/netpyne/issues/360)
                         wake_up_geppetto = True
-                        if not self.doIhaveInstOrSimData()[0]: 
+                        if not self.doIhaveInstOrSimData()['haveInstance']: 
                             sim.create(specs.NetParams(), specs.SimConfig())
                             sim.net.defineCellShapes()
                             sim.gatherData(gatherLFP=False)
@@ -170,7 +170,7 @@ class NetPyNEGeppetto():
                         remove(netpyne_geppetto.simConfig.todict())
                         
                     if args['loadNetParams']:
-                        if self.doIhaveInstOrSimData()[0]: sim.clearAll()
+                        if self.doIhaveInstOrSimData()['haveInstance']: sim.clearAll()
                         sim.loadNetParams(args['jsonModelFolder'])
                         netpyne_geppetto.netParams = sim.net.params
                         remove(netpyne_geppetto.netParams.todict())
@@ -256,8 +256,9 @@ class NetPyNEGeppetto():
                 sim.cfg.filename = args['fileName']
                 include = [el for el in specs.SimConfig().saveDataInclude if el in args.keys() and args[el]]
                 if args['netCells']: include += ['netPops']
-                
+                sim.cfg.saveJson = True
                 sim.saveData(include)
+                sim.cfg.saveJson = False
             return self.getJSONReply()
         except:
             return self.getJSONError("Error while exporting the NetPyNE model",traceback.format_exc())
@@ -289,7 +290,7 @@ class NetPyNEGeppetto():
                 netpyne_geppetto.simConfig = specs.SimConfig()
                 netpyne_geppetto.netParams.todict()
                 netpyne_geppetto.netParams.todict()
-                if self.doIhaveInstOrSimData()[0]: sim.clearAll()
+                if self.doIhaveInstOrSimData()['haveInstance']: sim.clearAll()
                 self.geppetto_model = None
             return self.getJSONReply()
 
@@ -357,7 +358,8 @@ class NetPyNEGeppetto():
                 if 'spkt' in sim.allSimData.keys() and 'spkid' in sim.allSimData.keys():
                     if len(sim.allSimData['spkt'])>0 and len(sim.allSimData['spkid'])>0:
                         out[1] = True
-        return out
+            
+        return {'haveInstance': out[0], 'haveSimData': out[1]}
 
     def rename(self, path, oldValue,newValue):
         command =  'sim.rename('+path+',"'+oldValue+'","'+newValue+'")'
