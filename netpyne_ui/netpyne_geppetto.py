@@ -56,7 +56,7 @@ class NetPyNEGeppetto():
         try:
             netpyne_model = self.instantiateNetPyNEModel()
             self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
-            return GeppettoModelSerializer().serialize(self.geppetto_model)
+            return json.loads(GeppettoModelSerializer().serialize(self.geppetto_model).decode("utf-8"))
         except:
             return self.getJSONError("Error while instantiating the NetPyNE model",traceback.format_exc())
         
@@ -88,7 +88,8 @@ class NetPyNEGeppetto():
                 logging.debug('Running single thread simulation')
                 netpyne_model = self.simulateNetPyNEModel()
             
-            return GeppettoModelSerializer().serialize(self.geppetto_model)
+            # return GeppettoModelSerializer().serialize(self.geppetto_model)
+            return json.loads(GeppettoModelSerializer().serialize(self.geppetto_model).decode("utf-8"))
         except:
             return self.getJSONError("Error while simulating the NetPyNE model",traceback.format_exc())
 
