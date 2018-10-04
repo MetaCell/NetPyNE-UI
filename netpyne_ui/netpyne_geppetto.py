@@ -30,7 +30,7 @@ from shutil import copyfile
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync, GeppettoJupyterGUISync
 from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G
 import imp
-from netpyne_ui import geppetto_init
+from jupyter_geppetto.geppetto_comm import geppetto_init
 
 
 class NetPyNEGeppetto():
@@ -263,8 +263,14 @@ class NetPyNEGeppetto():
             for key, value in fig.items():
                 logging.debug("Found plot for "+ key)
                 svgs.append(ui.getSVG(value))
+            logging.debug("aki")
+            logging.debug(svgs)
+            logging.debug(svgs.__str__())
             return svgs.__str__()
         else:
+            logging.debug("aki2")
+            logging.debug(ui.getSVG(fig))
+            logging.debug([ui.getSVG(fig)].__str__())
             return [ui.getSVG(fig)].__str__()
         
     def getAvailablePops(self):
