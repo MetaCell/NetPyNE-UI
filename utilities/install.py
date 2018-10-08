@@ -49,18 +49,20 @@ subprocess.call(['pip', 'install', '-e', '.'], cwd='./pygeppetto/')
 clone('https://github.com/Neurosim-lab/netpyne.git','netpyne','ui')
 subprocess.call(['pip', 'install', '-e', '.'], cwd='./netpyne/')
 
-clone('https://github.com/openworm/org.geppetto.frontend.jupyter.git','org.geppetto.frontend.jupyter','development','', True )
-checkout('geppetto', 'development','org.geppetto.frontend.jupyter/src/jupyter_geppetto/')
-clone('https://github.com/MetaCell/geppetto-netpyne.git','geppetto-netpyne','0.4','org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/')
+clone('https://github.com/openworm/org.geppetto.frontend.jupyter.git','org.geppetto.frontend.jupyter','development')
+
+clone('https://github.com/openworm/org.geppetto.frontend.git','geppetto','development','netpyne_ui/geppetto')
+# checkout('geppetto', 'development','org.geppetto.frontend.jupyter/src/jupyter_geppetto/')
+clone('https://github.com/MetaCell/geppetto-netpyne.git','geppetto-netpyne','development','netpyne_ui/geppetto/src/main/webapp/extensions/')
 
 print("Enabling Geppetto NetPyNE Extension ...")
 geppetto_configuration = os.path.join(os.path.dirname(__file__), './utilities/GeppettoConfiguration.json')
-copyfile(geppetto_configuration, './org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/GeppettoConfiguration.json')
+copyfile(geppetto_configuration, './netpyne_ui/geppetto/src/main/webapp/GeppettoConfiguration.json')
 
 # Installing and building
 print("NPM Install and build for Geppetto Frontend  ...")
-subprocess.call(['npm', 'install'], cwd='./org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/')
-subprocess.call(['npm', 'run', 'build-dev-noTest'], cwd='./org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/')
+subprocess.call(['npm', 'install'], cwd='./netpyne_ui/geppetto/src/main/webapp/')
+subprocess.call(['npm', 'run', 'build-dev-noTest'], cwd='./netpyne_ui/geppetto/src/main/webapp/')
 
 print("Installing jupyter_geppetto python package ...")
 subprocess.call(['pip', 'install', '-e', '.'], cwd='./org.geppetto.frontend.jupyter')
