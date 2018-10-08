@@ -27,7 +27,7 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
 import neuron
 from shutil import copyfile
-from jupyter_geppetto.geppetto_comm import GeppettoJupyterModelSync, GeppettoJupyterGUISync
+from jupyter_geppetto.geppetto_comm import GeppettoJupyterSync
 from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G
 import imp
 from jupyter_geppetto.geppetto_comm import geppetto_init
@@ -43,14 +43,14 @@ class NetPyNEGeppetto():
         self.simConfig = specs.SimConfig()
         geppetto_init.startSynchronization(self.__dict__)
         logging.debug("Changing original model")
-        GeppettoJupyterModelSync.current_model.original_model = json.dumps({'netParams': self.netParams.__dict__,
+        GeppettoJupyterSync.current_model.original_model = json.dumps({'netParams': self.netParams.__dict__,
                                                                             'simConfig': self.simConfig.__dict__,
                                                                             'metadata': metadata,
                                                                             'requirement': 'from netpyne_ui.netpyneui_init import netpyne_geppetto',
                                                                             'context':'netpyne_geppetto',
                                                                             'isDocker': os.path.isfile('/.dockerenv'),
                                                                             'currentFolder': os.getcwd()})
-        GeppettoJupyterModelSync.events_controller.triggerEvent("spinner:hide")
+        GeppettoJupyterSync.events_controller.triggerEvent("spinner:hide")
 
     def instantiateNetPyNEModelInGeppetto(self):
         try:
@@ -225,11 +225,11 @@ class NetPyNEGeppetto():
         logging.debug('renaming '+command)
         eval(command)
 
-        for model, synched_component in list(GeppettoJupyterGUISync.synched_models.items()):
+        for model, synched_component in list(GeppettoJupyterSync.synched_models.items()):
             if model != '' and oldValue in model:
-                GeppettoJupyterGUISync.synched_models.pop(model)
+                GeppettoJupyterSync.synched_models.pop(model)
                 newModel = model.replace(oldValue,newValue)
-                GeppettoJupyterGUISync.synched_models[newModel]=synched_component
+                GeppettoJupyterSync.synched_models[newModel]=synched_component
 
     def getPlotSettings(self, plot):
         if self.simConfig.analysis and plot in self.simConfig.analysis:
@@ -248,7 +248,7 @@ class NetPyNEGeppetto():
            elif not onlyDirs:
                dir_list.append({'title': f, 'path': ff})
         return dir_list
-    
+
     def getPlot(self, plotName, LFPflavour):
         args = self.getPlotSettings(plotName)
         if LFPflavour:
@@ -263,15 +263,10 @@ class NetPyNEGeppetto():
             for key, value in fig.items():
                 logging.debug("Found plot for "+ key)
                 svgs.append(ui.getSVG(value))
-            logging.debug("aki")
-            logging.debug(svgs)
-            logging.debug(svgs.__str__())
             return svgs.__str__()
         else:
-            logging.debug("aki2")
-            logging.debug(ui.getSVG(fig))
-            logging.debug([ui.getSVG(fig)].__str__())
-            return [ui.getSVG(fig)].__str__()
+            #return [ui.getSVG(fig)].__str__()
+            return ui.getSVG(fig)
         
     def getAvailablePops(self):
         return list(self.netParams.popParams.keys())
