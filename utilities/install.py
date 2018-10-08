@@ -15,10 +15,10 @@ def clone(repository, folder, default_branch, cwdp='', recursive = False, destin
     if recursive:
         subprocess.call(['git', 'clone', '--recursive', repository], cwd='./'+cwdp)
     else:
-	if destination_folder:
-            subprocess.call(['git', 'clone', repository, destination_folder], cwd='./'+cwdp)
-	else:
-            subprocess.call(['git', 'clone', repository], cwd='./'+cwdp)
+        if destination_folder:
+                subprocess.call(['git', 'clone', repository, destination_folder], cwd='./'+cwdp)
+        else:
+                subprocess.call(['git', 'clone', repository], cwd='./'+cwdp)
     checkout(folder, default_branch, cwdp)
 
 def checkout(folder, default_branch, cwdp):
