@@ -12,7 +12,7 @@ import logging
 import threading
 import time
 import traceback
-
+import re
 
 from netpyne import specs, sim, analysis
 from netpyne.specs.utils import validateFunction
@@ -226,9 +226,10 @@ class NetPyNEGeppetto():
         eval(command)
 
         for model, synched_component in list(GeppettoJupyterSync.synched_models.items()):
-            if model != '' and oldValue in model:
+            if model != '' and oldValue in model and path in model: # 
                 GeppettoJupyterSync.synched_models.pop(model)
-                newModel = model.replace(oldValue,newValue)
+                newModel = re.sub("(['])(?:(?=(\\?))\2.)*?\1", lambda x:x.group(0).replace(oldValue,newValue, 1), model)
+                logging.debug("Rename funct - Model is "+model+" newModel is "+newModel)
                 GeppettoJupyterSync.synched_models[newModel]=synched_component
 
     def getPlotSettings(self, plot):
