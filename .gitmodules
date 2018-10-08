@@ -1,3 +1,3 @@
 [submodule "netpyne_ui/geppetto"]
 	path = netpyne_ui/geppetto
-	url = git@github.com:openworm/org.geppetto.frontend.git
+	url = https://github.com/openworm/org.geppetto.frontend.git
