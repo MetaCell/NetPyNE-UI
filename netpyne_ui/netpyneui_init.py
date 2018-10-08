@@ -4,7 +4,7 @@ Initialise NetPyNE Geppetto, this class contains methods to connect NetPyNE with
 """
 import logging
 
-logging.info("NetPyNE UI is being initialised")
+logging.info("Initialising NetPyNE UI")
 from netpyne_ui import netpyne_geppetto
 netpyne_geppetto = netpyne_geppetto.NetPyNEGeppetto()
-logging.info("NetPyNE Geppetto object was created")
+logging.info("NetPyNE UI initialised")
