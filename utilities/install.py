@@ -51,7 +51,8 @@ subprocess.call(['pip', 'install', '-e', '.'], cwd='./netpyne/')
 
 clone('https://github.com/openworm/org.geppetto.frontend.jupyter.git','org.geppetto.frontend.jupyter','development')
 
-clone('https://github.com/openworm/org.geppetto.frontend.git','geppetto','development','netpyne_ui/geppetto')
+subprocess.call(['git', 'submodule', 'update', '--init'], cwd='./')
+#clone('https://github.com/openworm/org.geppetto.frontend.git','geppetto','development','netpyne_ui/geppetto')
 # checkout('geppetto', 'development','org.geppetto.frontend.jupyter/src/jupyter_geppetto/')
 clone('https://github.com/MetaCell/geppetto-netpyne.git','geppetto-netpyne','development','netpyne_ui/geppetto/src/main/webapp/extensions/')
 
