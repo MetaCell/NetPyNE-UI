@@ -27,9 +27,8 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
 import neuron
 from shutil import copyfile
-from jupyter_geppetto.geppetto_comm import GeppettoJupyterSync
+from jupyter_geppetto import GeppettoJupyterSync, geppetto_init
 import imp
-from jupyter_geppetto.geppetto_comm import geppetto_init
 
 
 class NetPyNEGeppetto():
