@@ -28,7 +28,6 @@ from matplotlib.figure import Figure
 import neuron
 from shutil import copyfile
 from jupyter_geppetto.geppetto_comm import GeppettoJupyterSync
-from jupyter_geppetto.geppetto_comm import GeppettoCoreAPI as G
 import imp
 from jupyter_geppetto.geppetto_comm import geppetto_init
 
@@ -38,11 +37,12 @@ class NetPyNEGeppetto():
     def __init__(self):
         self.model_interpreter = NetPyNEModelInterpreter()
         logging.debug("Creating Geppetto project")
-        G.createProject(name='NetPyNE Project')
+        GeppettoJupyterSync.current_model = GeppettoJupyterSync.createModel(name='NetPyNE Project')
+        GeppettoJupyterSync.current_project = GeppettoJupyterSync.createProject(name='NetPyNE Project')
         self.netParams = specs.NetParams()
         self.simConfig = specs.SimConfig()
         geppetto_init.startSynchronization(self.__dict__)
-        logging.debug("Changing original model")
+        logging.debug("Initializing the original model")
         GeppettoJupyterSync.current_model.original_model = json.dumps({'netParams': self.netParams.__dict__,
                                                                             'simConfig': self.simConfig.__dict__,
                                                                             'metadata': metadata,
