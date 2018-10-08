@@ -319,14 +319,14 @@ class NetPyNEGeppetto():
 
     def deleteParam(self, paramToDel):
         logging.debug("Checking if netParams."+paramToDel+" is not null")
-        if eval("netParams."+paramToDel) is not None:
-            exec("del netParams.%s" % (paramToDel))
+        if eval("self.netParams."+paramToDel) is not None:
+            exec("del self.netParams.%s" % (paramToDel))
             logging.debug('Parameter netParams.'+paramToDel+' has been deleted')
         else:
             logging.debug('Parameter '+paramToDel+' is null, not deleted')
         
     def validateFunction(self, functionString):
-        return ValidateFunction(functionString, self.netParams.__dict__)
+        return validateFunction(functionString, self.netParams.__dict__)
          
     def generateScript(self, metadata):
         def convert2bool(string):
