@@ -9,13 +9,16 @@ branch = None
 
 #by default clones branch (which can be passed as a parameter python install.py branch test_branch)
 #if branch doesnt exist clones the default_branch
-def clone(repository, folder, default_branch, cwdp='', recursive = False):
+def clone(repository, folder, default_branch, cwdp='', recursive = False, destination_folder = None):
     global branch
     print("Cloning "+repository)
     if recursive:
         subprocess.call(['git', 'clone', '--recursive', repository], cwd='./'+cwdp)
     else:
-        subprocess.call(['git', 'clone', repository], cwd='./'+cwdp)
+	if destination_folder:
+            subprocess.call(['git', 'clone', repository, destination_folder], cwd='./'+cwdp)
+	else:
+            subprocess.call(['git', 'clone', repository], cwd='./'+cwdp)
     checkout(folder, default_branch, cwdp)
 
 def checkout(folder, default_branch, cwdp):
@@ -51,8 +54,8 @@ subprocess.call(['pip', 'install', '-e', '.'], cwd='./netpyne/')
 
 clone('https://github.com/openworm/org.geppetto.frontend.jupyter.git','org.geppetto.frontend.jupyter','development')
 
-subprocess.call(['git', 'submodule', 'update', '--init'], cwd='./')
-#clone('https://github.com/openworm/org.geppetto.frontend.git','geppetto','development','netpyne_ui/geppetto')
+#subprocess.call(['git', 'submodule', 'update', '--init'], cwd='./')
+clone('https://github.com/openworm/org.geppetto.frontend.git','geppetto','development','netpyne_ui/', False, 'geppetto')
 # checkout('geppetto', 'development','org.geppetto.frontend.jupyter/src/jupyter_geppetto/')
 clone('https://github.com/MetaCell/geppetto-netpyne.git','geppetto-netpyne','development','netpyne_ui/geppetto/src/main/webapp/extensions/')
 
