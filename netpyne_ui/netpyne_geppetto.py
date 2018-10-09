@@ -42,14 +42,25 @@ class NetPyNEGeppetto():
         self.simConfig = specs.SimConfig()
         geppetto_init.startSynchronization(self.__dict__)
         logging.debug("Initializing the original model")
-        GeppettoJupyterSync.current_model.original_model = json.dumps({'netParams': self.netParams.__dict__,
-                                                                            'simConfig': self.simConfig.__dict__,
-                                                                            'metadata': metadata,
-                                                                            'context':'netpyne_geppetto',
-                                                                            'isDocker': os.path.isfile('/.dockerenv'),
-                                                                            'currentFolder': os.getcwd()})
+        # GeppettoJupyterSync.current_model.original_model = json.dumps({'netParams': self.netParams.__dict__,
+        #                                                                     'simConfig': self.simConfig.__dict__,
+        #                                                                     'metadata': metadata,
+        #                                                                     'context':'netpyne_geppetto',
+        #                                                                     'isDocker': os.path.isfile('/.dockerenv'),
+        #                                                                     'currentFolder': os.getcwd()})
         GeppettoJupyterSync.context_object = self
         GeppettoJupyterSync.events_controller.triggerEvent("spinner:hide")
+
+    def getData(self):
+        r = json.dumps(metadata)
+        loaded_r = json.loads(r)
+        return {"metadata": loaded_r,
+                "netParams": self.netParams.__dict__,
+                "simConfig": self.simConfig.__dict__,
+                "context":"netpyne_geppetto",
+                "isDocker": os.path.isfile('/.dockerenv'),
+                "currentFolder": os.getcwd()
+        }
 
     def instantiateNetPyNEModelInGeppetto(self):
         try:
@@ -326,7 +337,7 @@ class NetPyNEGeppetto():
         
     def validateFunction(self, functionString):
         return validateFunction(functionString, self.netParams.__dict__)
-         
+
     def generateScript(self, metadata):
         def convert2bool(string):
             return string.replace('true', 'True').replace('false', 'False')
