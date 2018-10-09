@@ -48,6 +48,7 @@ class NetPyNEGeppetto():
                                                                             'context':'netpyne_geppetto',
                                                                             'isDocker': os.path.isfile('/.dockerenv'),
                                                                             'currentFolder': os.getcwd()})
+        GeppettoJupyterSync.context_object = self
         GeppettoJupyterSync.events_controller.triggerEvent("spinner:hide")
 
     def instantiateNetPyNEModelInGeppetto(self):
