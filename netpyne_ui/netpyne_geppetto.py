@@ -35,9 +35,7 @@ class NetPyNEGeppetto():
 
     def __init__(self):
         self.model_interpreter = NetPyNEModelInterpreter()
-        logging.debug("Creating Geppetto project")
-        GeppettoJupyterSync.current_model = GeppettoJupyterSync.createModel(name='NetPyNE Project')
-        GeppettoJupyterSync.current_project = GeppettoJupyterSync.createProject(name='NetPyNE Project')
+
         self.netParams = specs.NetParams()
         self.simConfig = specs.SimConfig()
         geppetto_init.startSynchronization(self.__dict__)
