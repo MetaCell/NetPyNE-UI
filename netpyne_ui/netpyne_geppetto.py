@@ -42,7 +42,6 @@ class NetPyNEGeppetto():
         logging.debug("Initializing the original model")
 
         GeppettoJupyterSync.context = {'netpyne_geppetto': self}
-        GeppettoJupyterSync.events_controller.triggerEvent("spinner:hide")
 
     def getData(self):
         return {"metadata": metadata,
