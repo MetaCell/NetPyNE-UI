@@ -43,14 +43,13 @@ class NetPyNEGeppetto():
         geppetto_init.startSynchronization(self.__dict__)
         logging.debug("Initializing the original model")
 
-        GeppettoJupyterSync.context_object = self
+        GeppettoJupyterSync.context = {'netpyne_geppetto': self}
         GeppettoJupyterSync.events_controller.triggerEvent("spinner:hide")
 
     def getData(self):
         return {"metadata": metadata,
                 "netParams": self.netParams.todict(),
                 "simConfig": self.simConfig.todict(),
-                "context":"netpyne_geppetto",
                 "isDocker": os.path.isfile('/.dockerenv'),
                 "currentFolder": os.getcwd()
         }
