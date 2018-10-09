@@ -42,21 +42,14 @@ class NetPyNEGeppetto():
         self.simConfig = specs.SimConfig()
         geppetto_init.startSynchronization(self.__dict__)
         logging.debug("Initializing the original model")
-        # GeppettoJupyterSync.current_model.original_model = json.dumps({'netParams': self.netParams.__dict__,
-        #                                                                     'simConfig': self.simConfig.__dict__,
-        #                                                                     'metadata': metadata,
-        #                                                                     'context':'netpyne_geppetto',
-        #                                                                     'isDocker': os.path.isfile('/.dockerenv'),
-        #                                                                     'currentFolder': os.getcwd()})
+
         GeppettoJupyterSync.context_object = self
         GeppettoJupyterSync.events_controller.triggerEvent("spinner:hide")
 
     def getData(self):
-        r = json.dumps(metadata)
-        loaded_r = json.loads(r)
-        return {"metadata": loaded_r,
-                "netParams": self.netParams.__dict__,
-                "simConfig": self.simConfig.__dict__,
+        return {"metadata": metadata,
+                "netParams": self.netParams.todict(),
+                "simConfig": self.simConfig.todict(),
                 "context":"netpyne_geppetto",
                 "isDocker": os.path.isfile('/.dockerenv'),
                 "currentFolder": os.getcwd()
