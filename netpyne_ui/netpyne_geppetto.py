@@ -257,16 +257,18 @@ class NetPyNEGeppetto():
         if fig==-1:
             return fig
         elif isinstance(fig, list):
-            return [ui.getSVG(fig[0])].__str__()
+            # return [ui.getSVG(fig[0])].__str__()
+            return [ui.getSVG(fig[0])]
         elif isinstance(fig, dict):
             svgs = []
             for key, value in fig.items():
                 logging.debug("Found plot for "+ key)
                 svgs.append(ui.getSVG(value))
-            return svgs.__str__()
+            #return svgs.__str__()
+            return svgs
         else:
             #return [ui.getSVG(fig)].__str__()
-            return ui.getSVG(fig)
+            return [ui.getSVG(fig)]
         
     def getAvailablePops(self):
         return list(self.netParams.popParams.keys())
