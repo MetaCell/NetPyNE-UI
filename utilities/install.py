@@ -5,7 +5,7 @@ import json
 import os, sys
 from shutil import copyfile
 
-branch = "development"
+branch = None
 
 #by default clones branch (which can be passed as a parameter python install.py branch test_branch)
 #if branch doesnt exist clones the default_branch
@@ -26,7 +26,7 @@ def checkout(folder, default_branch, cwdp):
     os.chdir(newPath)
     python_git=subprocess.Popen("git branch -a",shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     outstd,errstd=python_git.communicate()
-    if branch in str(outstd):
+    if branch and branch in str(outstd):
         subprocess.call(['git', 'checkout', branch], cwd='./')
     else:
         subprocess.call(['git', 'checkout', default_branch], cwd='./')
