@@ -27,7 +27,7 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
 import neuron
 from shutil import copyfile
-from jupyter_geppetto import GeppettoJupyterSync, geppetto_init
+from jupyter_geppetto import jupyter_geppetto, synchronization
 import imp
 
 
@@ -38,10 +38,10 @@ class NetPyNEGeppetto():
 
         self.netParams = specs.NetParams()
         self.simConfig = specs.SimConfig()
-        geppetto_init.startSynchronization(self.__dict__)
+        synchronization.startSynchronization(self.__dict__)
         logging.debug("Initializing the original model")
 
-        GeppettoJupyterSync.context = {'netpyne_geppetto': self}
+        jupyter_geppetto.context = {'netpyne_geppetto': self}
 
     def getData(self):
         return {"metadata": metadata,
@@ -224,12 +224,12 @@ class NetPyNEGeppetto():
         logging.debug('renaming '+command)
         eval(command)
 
-        for model, synched_component in list(GeppettoJupyterSync.synched_models.items()):
+        for model, synched_component in list(jupyter_geppetto.synched_models.items()):
             if model != '' and oldValue in model and path in model: # 
-                GeppettoJupyterSync.synched_models.pop(model)
+                jupyter_geppetto.synched_models.pop(model)
                 newModel = re.sub("(['])(?:(?=(\\?))\2.)*?\1", lambda x:x.group(0).replace(oldValue,newValue, 1), model)
                 logging.debug("Rename funct - Model is "+model+" newModel is "+newModel)
-                GeppettoJupyterSync.synched_models[newModel]=synched_component
+                jupyter_geppetto.synched_models[newModel]=synched_component
 
     def getPlotSettings(self, plot):
         if self.simConfig.analysis and plot in self.simConfig.analysis:
