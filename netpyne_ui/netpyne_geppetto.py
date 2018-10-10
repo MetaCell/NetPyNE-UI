@@ -379,3 +379,6 @@ class NetPyNEGeppetto():
         except:
             return self.getJSONError("Error while importing the NetPyNE model", traceback.format_exc())
             
+logging.info("Initialising NetPyNE UI")
+netpyne_geppetto = NetPyNEGeppetto()
+logging.info("NetPyNE UI initialised")
