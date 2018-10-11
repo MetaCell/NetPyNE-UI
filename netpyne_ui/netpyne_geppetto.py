@@ -303,15 +303,15 @@ class NetPyNEGeppetto():
         with redirect_stdout(sys.__stdout__):
             try:
                 # delete previous data
-                subprocess.call(['rm', '-r', './docker'])
-                subprocess.call(['mkdir', './docker'])
-                subprocess.call(['mkdir', './docker/mod'])
+                subprocess.call(['rm', '-r', './GUIdocker'])
+                subprocess.call(['mkdir', './GUIdocker'])
+                subprocess.call(['mkdir', './GUIdocker/mod'])
                 
                 # copy dockerfile to build docker
-                copyfile('./dockerfile_template', './docker/dockerfile')
+                copyfile('./dockerfile_template', './GUIdocker/dockerfile')
 
                 # generate netpyne script
-                self.exportHLS({'fileName': './docker/init.py'})
+                self.exportHLS({'fileName': './GUIdocker/init.py'})
                 
                 # create bash script
                 script = 'docker build -t %s -f ./dockerfile .'%(args['label'])
@@ -319,11 +319,11 @@ class NetPyNEGeppetto():
 
                 # copy mod folder
                 if args['modFolder']!='':
-                    subprocess.call(['cp', '-r', args['modFolder'], './docker'])
+                    subprocess.call(['cp', '-r', args['modFolder'], './GUIdocker'])
 
                 # build docker
                 with open('out.log', 'w') as stdout, open('err.log', 'w') as stderr:
-                    Popen(['/bin/bash', '../cmd.sh'], stdout=stdout, stderr=stderr, cwd='./docker')
+                    Popen(['/bin/bash', '../cmd.sh'], stdout=stdout, stderr=stderr, cwd='./GUIdocker')
 
                 return self.getJSONReply()
             except:
