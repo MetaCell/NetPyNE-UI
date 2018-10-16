@@ -296,38 +296,6 @@ class NetPyNEGeppetto():
 
         except:
             return self.getJSONError("Error while exporting the NetPyNE model",traceback.format_exc())
-    
-    def create_docker_container(self, args):
-        from subprocess import Popen
-        
-        with redirect_stdout(sys.__stdout__):
-            try:
-                # delete previous data
-                subprocess.call(['rm', '-r', './docker'])
-                subprocess.call(['mkdir', './docker'])
-                subprocess.call(['mkdir', './docker/mod'])
-                
-                # copy dockerfile to build docker
-                copyfile('./dockerfile_template', './docker/dockerfile')
-
-                # generate netpyne script
-                self.exportHLS({'fileName': './docker/init.py'})
-                
-                # create bash script
-                script = 'docker build -t %s -f ./dockerfile .'%(args['label'])
-                with open('./cmd.sh', 'w') as f: f.write(script)
-
-                # copy mod folder
-                if args['modFolder']!='':
-                    subprocess.call(['cp', '-r', args['modFolder'], './docker'])
-
-                # build docker
-                with open('out.log', 'w') as stdout, open('err.log', 'w') as stderr:
-                    Popen(['/bin/bash', '../cmd.sh'], stdout=stdout, stderr=stderr, cwd='./docker')
-
-                return self.getJSONReply()
-            except:
-                return self.getJSONError("Error while exporting the NetPyNE model", traceback.format_exc())
         
     def instantiateNetPyNEModel(self):
         with redirect_stdout(sys.__stdout__):
