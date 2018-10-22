@@ -52,7 +52,7 @@ class NetPyNEGeppetto():
                 "currentFolder": os.getcwd()
         }
 
-    def instantiateNetPyNEModelInGeppetto(self):
+    def instantiateNetPyNEModelInGeppetto(self, args):
         try:
             with redirect_stdout(sys.__stdout__):
                 if not 'usePrevInst' in args or not args['usePrevInst']:
@@ -152,7 +152,6 @@ class NetPyNEGeppetto():
         
         try: 
             with redirect_stdout(sys.__stdout__):
-                from . import netpyne_geppetto
                 sim.initialize()
                 wake_up_geppetto = False  
                 if all([args[option] for option in ['loadNetParams', 'loadSimCfg', 'loadSimData', 'loadNet']]):
@@ -160,10 +159,10 @@ class NetPyNEGeppetto():
                     if self.doIhaveInstOrSimData()['haveInstance']: sim.clearAll()
                     sim.initialize()
                     sim.loadAll(args['jsonModelFolder'])
-                    netpyne_geppetto.netParams = sim.net.params
-                    netpyne_geppetto.simConfig = sim.cfg
-                    remove(netpyne_geppetto.netParams.todict())
-                    remove(netpyne_geppetto.simConfig.todict())
+                    self.netParams = sim.net.params
+                    self.simConfig = sim.cfg
+                    remove(self.netParams.todict())
+                    remove(self.simConfig.todict())
                 else:
                     if args['loadNet']:
                         wake_up_geppetto = True
@@ -181,14 +180,14 @@ class NetPyNEGeppetto():
                         
                     if args['loadSimCfg']:
                         sim.loadSimCfg(args['jsonModelFolder'])
-                        netpyne_geppetto.simConfig = sim.cfg
-                        remove(netpyne_geppetto.simConfig.todict())
+                        self.simConfig = sim.cfg
+                        remove(self.simConfig.todict())
                         
                     if args['loadNetParams']:
                         if self.doIhaveInstOrSimData()['haveInstance']: sim.clearAll()
                         sim.loadNetParams(args['jsonModelFolder'])
-                        netpyne_geppetto.netParams = sim.net.params
-                        remove(netpyne_geppetto.netParams.todict())
+                        self.netParams = sim.net.params
+                        remove(self.netParams.todict())
                     
                 if wake_up_geppetto:
                     section = list(sim.net.cells[0].secs.keys())[0]
@@ -211,8 +210,6 @@ class NetPyNEGeppetto():
             
             self.compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
             
-            from . import netpyne_geppetto
-
             with redirect_stdout(sys.__stdout__):
                 # NetParams
                 netParamsPath = str(modelParameters["netParamsPath"])
@@ -246,8 +243,6 @@ class NetPyNEGeppetto():
         try:
             # Get Current dir
             owd = os.getcwd()
-
-            from .netpyne_geppetto import netParams
 
             self.compileModMechFiles(compileMod, modFolder)
 
@@ -300,12 +295,11 @@ class NetPyNEGeppetto():
 
     def deleteModel(self, modelParams):
         try:
-            from . import netpyne_geppetto
             with redirect_stdout(sys.__stdout__):       
-                netpyne_geppetto.netParams = specs.NetParams()
-                netpyne_geppetto.simConfig = specs.SimConfig()
-                netpyne_geppetto.netParams.todict()
-                netpyne_geppetto.netParams.todict()
+                self.netParams = specs.NetParams()
+                self.simConfig = specs.SimConfig()
+                self.netParams.todict()
+                self.netParams.todict()
                 if self.doIhaveInstOrSimData()['haveInstance']: sim.clearAll()
                 self.geppetto_model = None
             return self.getJSONReply()
@@ -317,7 +311,7 @@ class NetPyNEGeppetto():
         with redirect_stdout(sys.__stdout__):
             from . import netpyne_geppetto
             saveData = sim.allSimData if hasattr(sim, 'allSimData') and 'spkt' in sim.allSimData.keys() and len(sim.allSimData['spkt'])>0 else False
-            sim.create(netpyne_geppetto.netParams, netpyne_geppetto.simConfig)
+            sim.create(netpyne_geppetto.netParams, self.simConfig)
             sim.net.defineCellShapes()  # creates 3d pt for cells with stylized geometries
             sim.gatherData(gatherLFP=False)
             if saveData: sim.allSimData = saveData  # preserve data from previous simulation
