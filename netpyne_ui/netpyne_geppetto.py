@@ -309,9 +309,8 @@ class NetPyNEGeppetto():
         
     def instantiateNetPyNEModel(self):
         with redirect_stdout(sys.__stdout__):
-            from . import netpyne_geppetto
             saveData = sim.allSimData if hasattr(sim, 'allSimData') and 'spkt' in sim.allSimData.keys() and len(sim.allSimData['spkt'])>0 else False
-            sim.create(netpyne_geppetto.netParams, self.simConfig)
+            sim.create(self.netParams, self.simConfig)
             sim.net.defineCellShapes()  # creates 3d pt for cells with stylized geometries
             sim.gatherData(gatherLFP=False)
             if saveData: sim.allSimData = saveData  # preserve data from previous simulation
