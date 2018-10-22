@@ -51,7 +51,7 @@ subprocess.call(['pip', 'install', '-e', '.'], cwd='./netpyne/')
 
 clone('https://github.com/openworm/org.geppetto.frontend.jupyter.git','org.geppetto.frontend.jupyter','development','', True )
 checkout('geppetto', 'development','org.geppetto.frontend.jupyter/src/jupyter_geppetto/')
-clone('https://github.com/MetaCell/geppetto-netpyne.git','geppetto-netpyne','0.4','org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/')
+clone('https://github.com/MetaCell/geppetto-netpyne.git','geppetto-netpyne','development','org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/')
 
 print("Enabling Geppetto NetPyNE Extension ...")
 geppetto_configuration = os.path.join(os.path.dirname(__file__), './utilities/GeppettoConfiguration.json')
