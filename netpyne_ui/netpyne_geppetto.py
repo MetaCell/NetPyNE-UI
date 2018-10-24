@@ -357,7 +357,7 @@ class NetPyNEGeppetto():
 
     def getDirList(self, dir=None, onlyDirs = False, filterFiles=False):
         # Get Current dir
-        if dir == None:
+        if dir == None or dir == '':
             dir = os.getcwd()
         dir_list = []
         for f in sorted(os.listdir(str(dir)), key=str.lower):
