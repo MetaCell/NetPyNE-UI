@@ -56,9 +56,9 @@ clone('https://github.com/openworm/org.geppetto.frontend.jupyter.git','org.geppe
 subprocess.call(['npm', 'install'], cwd='./org.geppetto.frontend.jupyter/js')
 subprocess.call(['npm', 'run', 'build-dev'], cwd='./org.geppetto.frontend.jupyter/js')
 
-#subprocess.call(['git', 'submodule', 'update', '--init'], cwd='./')
+# We can't clone org.geppetto.frontend as a regular submodule because Travis doesn't have .gitmodules in the zip
+# subprocess.call(['git', 'submodule', 'update', '--init'], cwd='./')
 clone('https://github.com/openworm/org.geppetto.frontend.git','geppetto','development','netpyne_ui/', False, 'geppetto')
-# checkout('geppetto', 'development','org.geppetto.frontend.jupyter/src/jupyter_geppetto/')
 clone('https://github.com/MetaCell/geppetto-netpyne.git','geppetto-netpyne','development','netpyne_ui/geppetto/src/main/webapp/extensions/')
 
 print("Enabling Geppetto NetPyNE Extension ...")
