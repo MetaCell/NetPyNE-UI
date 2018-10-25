@@ -27,10 +27,9 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
 import neuron
 from shutil import copyfile
-from jupyter_geppetto import jupyter_geppetto, synchronization
+from jupyter_geppetto import jupyter_geppetto, synchronization, utils
 import imp
 from contextlib import redirect_stdout, redirect_stderr
-from jupyter_geppetto import utils
 
 
 class NetPyNEGeppetto():
@@ -61,8 +60,8 @@ class NetPyNEGeppetto():
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
                 
                 return json.loads(GeppettoModelSerializer().serialize(self.geppetto_model))
-        except:
-            return utils.getJSONError("Error while instantiating the NetPyNE model",traceback.format_exc())
+        except Exception as e:
+            return utils.getJSONError("Error while instantiating the NetPyNE model", e)
         
     def simulateNetPyNEModelInGeppetto(self, args):
         try:
