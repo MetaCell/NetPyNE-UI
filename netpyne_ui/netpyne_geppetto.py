@@ -439,7 +439,7 @@ class NetPyNEGeppetto():
 
     def exportHLS(self, args):
         def convert2bool(string):
-            return string.replace('true', 'True').replace('false', 'False')
+            return string.replace('true', 'True').replace('false', 'False').replace('null', 'False')
             
         def header(title, spacer='-'):
             return '\n# ' + title.upper() + ' ' + spacer*(77-len(title)) + '\n'
@@ -474,11 +474,11 @@ class NetPyNEGeppetto():
                 script.write(header('network configuration'))
                 for attr, value in list(self.simConfig.__dict__.items()):
                     if value!=getattr(specs.SimConfig(), attr):
-                        script.write('netParams.' + attr + ' = ')
+                        script.write('simConfig.' + attr + ' = ')
                         script.write(convert2bool(json.dumps(value, indent=4))+'\n')
                 
                 script.write(header('create simulate analyze  network'))
-                script.write('sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)\n')
+                script.write('# sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)\n')
                 
                 script.write(header('end script', spacer='='))
             
