@@ -60,8 +60,8 @@ class NetPyNEGeppetto():
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
                 
                 return json.loads(GeppettoModelSerializer().serialize(self.geppetto_model))
-        except Exception as e:
-            return utils.getJSONError("Error while instantiating the NetPyNE model", e)
+        except:
+            return utils.getJSONError("Error while instantiating the NetPyNE model", sys.exc_info())
         
     def simulateNetPyNEModelInGeppetto(self, args):
         try:
@@ -100,7 +100,7 @@ class NetPyNEGeppetto():
                     
                 return json.loads(GeppettoModelSerializer().serialize(self.geppetto_model))
         except:
-            return utils.getJSONError("Error while simulating the NetPyNE model",traceback.format_exc())
+            return utils.getJSONError("Error while simulating the NetPyNE model", sys.exc_info())
 
     def compileModMechFiles(self, compileMod, modFolder):
         #Create Symbolic link
@@ -134,7 +134,7 @@ class NetPyNEGeppetto():
             owd = os.getcwd()
             self.compileModMechFiles(args['compileMod'], args['modFolder'])
         except:
-            return utils.getJSONError("Error while importing/compiling mods",traceback.format_exc())
+            return utils.getJSONError("Error while importing/compiling mods", sys.exc_info())
         finally:
             os.chdir(owd)
         
@@ -189,7 +189,7 @@ class NetPyNEGeppetto():
                 else:
                     return utils.getJSONReply()
         except:
-            return utils.getJSONError("Error while loading the NetPyNE model",traceback.format_exc())
+            return utils.getJSONError("Error while loading the NetPyNE model", sys.exc_info())
         
     def importModel(self, modelParameters):
         try:
@@ -223,7 +223,7 @@ class NetPyNEGeppetto():
 
             return utils.getJSONReply()
         except:
-            return utils.getJSONError("Error while importing the NetPyNE model",traceback.format_exc())
+            return utils.getJSONError("Error while importing the NetPyNE model", sys.exc_info())
         finally:
             os.chdir(owd)
 
@@ -243,7 +243,7 @@ class NetPyNEGeppetto():
 
             return utils.getJSONReply()
         except:
-            return utils.getJSONError("Error while importing the NetPyNE cell template",traceback.format_exc())
+            return utils.getJSONError("Error while importing the NetPyNE cell template", sys.exc_info())
         finally:
             os.chdir(owd)
         
@@ -260,7 +260,7 @@ class NetPyNEGeppetto():
                 sim.cfg.saveJson = False
             return utils.getJSONReply()
         except:
-            return utils.getJSONError("Error while exporting the NetPyNE model",traceback.format_exc())
+            return utils.getJSONError("Error while exporting the NetPyNE model", sys.exc_info())
     
     def exportNeuroML(self, modelParams):
         try:
@@ -268,7 +268,7 @@ class NetPyNEGeppetto():
                 sim.exportNeuroML2(modelParams['fileName'], specs.SimConfig())
             return utils.getJSONReply()
         except:
-            return utils.getJSONError("Error while exporting the NetPyNE model", traceback.format_exc())
+            return utils.getJSONError("Error while exporting the NetPyNE model", sys.exc_info())
     
     def importNeuroML(self, modelParams):
         try:
@@ -279,7 +279,7 @@ class NetPyNEGeppetto():
             return json.loads(GeppettoModelSerializer().serialize(self.geppetto_model))
 
         except:
-            return utils.getJSONError("Error while exporting the NetPyNE model",traceback.format_exc())
+            return utils.getJSONError("Error while exporting the NetPyNE model", sys.exc_info())
 
     def deleteModel(self, modelParams):
         try:
@@ -293,7 +293,7 @@ class NetPyNEGeppetto():
             return utils.getJSONReply()
 
         except:
-            return utils.getJSONError("Error while exporting the NetPyNE model",traceback.format_exc())
+            return utils.getJSONError("Error while exporting the NetPyNE model", sys.exc_info())
         
     def instantiateNetPyNEModel(self):
         with redirect_stdout(sys.__stdout__):
@@ -485,7 +485,7 @@ class NetPyNEGeppetto():
             return utils.getJSONReply()
         
         except:
-            return utils.getJSONError("Error while importing the NetPyNE model", traceback.format_exc())
+            return utils.getJSONError("Error while importing the NetPyNE model", sys.exc_info())
             
 logging.info("Initialising NetPyNE UI")
 netpyne_geppetto = NetPyNEGeppetto()
