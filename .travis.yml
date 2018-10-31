@@ -36,25 +36,6 @@ addons:
     - libgl1-mesa-dri
     - libglapi-mesa
     - libosmesa6
-    - python-tk
-    - python-sympy
-    - python-tables 
-    - locales 
-    - wget 
-    - gcc 
-    - g++ 
-    - build-essential 
-    - libncurses-dev 
-    - libpython-dev 
-    - cython 
-    - libx11-dev 
-    - git 
-    - flex 
-    - automake  
-    - libtool  
-    - libxext-dev 
-    - libncurses-dev 
-    - make 
 
 before_script:
   - "export DISPLAY=:99.0"
