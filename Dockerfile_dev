@@ -1,4 +1,4 @@
-FROM metacell/jupyter-neuron
+FROM metacell/jupyter-neuron:latest
 USER $NB_USER
 
 ARG netpyneuiBranch=development 

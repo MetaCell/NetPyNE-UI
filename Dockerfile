@@ -1,5 +1,4 @@
-FROM metacell/jupyter-neuron
-
+FROM metacell/jupyter-neuron:latest
 # Switch to non sudo, create a Python 3 virtual environment 
 USER $NB_USER
 
