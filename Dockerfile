@@ -46,7 +46,7 @@ ENV PATH="/home/jovyan/work/nrn/x86_64/bin:${PATH}"
 RUN /bin/bash -c "source activate snakes && python setup.py install"
 
 ARG INCUBATOR_VER=unknown
-RUN /bin/bash -c "INCUBATOR_VER=${INCUBATOR_VER} source activate snakes && pip install netpyne_ui"
+RUN /bin/bash -c "INCUBATOR_VER=${INCUBATOR_VER} source activate snakes && pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple netpyne_ui"
 RUN /bin/bash -c "source activate snakes && jupyter nbextension enable --py jupyter_geppetto"
 RUN /bin/bash -c "source activate snakes &&  jupyter serverextension enable --py jupyter_geppetto"
 RUN /bin/bash -c "source activate snakes && jupyter nbextension enable --py widgetsnbextension"
