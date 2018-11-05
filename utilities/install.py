@@ -16,9 +16,9 @@ def clone(repository, folder, default_branch, cwdp='', recursive = False, destin
         subprocess.call(['git', 'clone', '--recursive', repository], cwd='./'+cwdp)
     else:
         if destination_folder:
-                subprocess.call(['git', 'clone', repository, destination_folder], cwd='./'+cwdp)
+            subprocess.call(['git', 'clone', repository, destination_folder], cwd='./'+cwdp)
         else:
-                subprocess.call(['git', 'clone', repository], cwd='./'+cwdp)
+            subprocess.call(['git', 'clone', repository], cwd='./'+cwdp)
     checkout(folder, default_branch, cwdp)
 
 def checkout(folder, default_branch, cwdp):
@@ -29,7 +29,7 @@ def checkout(folder, default_branch, cwdp):
     os.chdir(newPath)
     python_git=subprocess.Popen("git branch -a",shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     outstd,errstd=python_git.communicate()
-    if branch and branch in str(outstd):
+    if branch and branch in str(outstd) and branch != 'development': # don't ckeckout development for netpyne
         subprocess.call(['git', 'checkout', branch], cwd='./')
     else:
         subprocess.call(['git', 'checkout', default_branch], cwd='./')
@@ -39,7 +39,7 @@ def main(argv):
     global branch
     if(len(argv) > 0):
         if(argv[0] == 'branch'):
-           branch = argv[1]
+            branch = argv[1]
 
 if __name__ == "__main__":
     main(sys.argv[1:])
@@ -53,7 +53,8 @@ clone('https://github.com/Neurosim-lab/netpyne.git','netpyne','ui')
 subprocess.call(['pip', 'install', '-e', '.'], cwd='./netpyne/')
 
 clone('https://github.com/openworm/org.geppetto.frontend.jupyter.git','org.geppetto.frontend.jupyter','development')
-subprocess.call(['npm', 'install'], cwd='./org.geppetto.frontend.jupyter/js')
+with open('npm_frontend_jupyter_log', 'a') as stdout:
+    subprocess.call(['npm', 'install'], cwd='./org.geppetto.frontend.jupyter/js', stdout=stdout)
 subprocess.call(['npm', 'run', 'build-dev'], cwd='./org.geppetto.frontend.jupyter/js')
 
 # We can't clone org.geppetto.frontend as a regular submodule because Travis doesn't have .gitmodules in the zip
@@ -67,7 +68,8 @@ copyfile(geppetto_configuration, './netpyne_ui/geppetto/src/main/webapp/Geppetto
 
 # Installing and building
 print("NPM Install and build for Geppetto Frontend  ...")
-subprocess.call(['npm', 'install'], cwd='./netpyne_ui/geppetto/src/main/webapp/')
+with open('npm_frontend_log', 'a') as stdout:
+    subprocess.call(['npm', 'install'], cwd='./netpyne_ui/geppetto/src/main/webapp/', stdout=stdout)
 subprocess.call(['npm', 'run', 'build-dev-noTest'], cwd='./netpyne_ui/geppetto/src/main/webapp/')
 
 print("Installing jupyter_geppetto python package ...")
