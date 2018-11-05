@@ -81,4 +81,4 @@ subprocess.call(['jupyter', 'nbextension', 'enable', '--py', 'widgetsnbextension
 subprocess.call(['jupyter', 'serverextension', 'enable', '--py', 'jupyter_geppetto'], cwd='./org.geppetto.frontend.jupyter')
 
 print("Installing NetPyNE UI python package ...")
-subprocess.call(['pip', 'install', '-e', '.', '--no-deps'], cwd='.')
+subprocess.call(['pip', 'install', '-e', '.'], cwd='.')
