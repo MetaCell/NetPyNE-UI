@@ -424,8 +424,10 @@ class NetPyNEGeppetto():
         
     def getAvailablePlots(self):
         plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats","plotRatePSD", "plotTraces", "plotLFP", "plotShape", "plot2Dnet", "plotConn", "granger"]
+
         return [plot for plot in plots if plot not in list(self.simConfig.analysis.keys())]
- 
+
+    
     def getGIDs(self):
         # pop sizes and gids returned in a dict
         out = {}
