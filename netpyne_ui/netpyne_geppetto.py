@@ -4,15 +4,15 @@ Initialise NetPyNE Geppetto, this class contains methods to connect NetPyNE with
 """
 import io
 import os
-import sys
-import json
-import importlib
-import subprocess
-import logging
-import threading
-import time
-import traceback
 import re
+import sys
+import time
+import json
+import logging
+import importlib
+import threading
+import traceback
+import subprocess
 
 from netpyne import specs, sim, analysis
 from netpyne.specs.utils import validateFunction
