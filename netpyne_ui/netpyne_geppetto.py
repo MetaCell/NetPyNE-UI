@@ -425,18 +425,19 @@ class NetPyNEGeppetto():
     def getAvailablePlots(self):
         plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats","plotRatePSD", "plotTraces", "plotLFP", "plotShape", "plot2Dnet", "plotConn", "granger"]
         return [plot for plot in plots if plot not in list(self.simConfig.analysis.keys())]
-
-        return [plot for plot in plots if plot not in simConfig.analysis.keys()]
-    
+ 
     def getGIDs(self):
         # pop sizes and gids returned in a dict
         out = {}
-        for key in netParams.popParams.keys():
-            if 'numCells' in netParams.popParams[key]:
-                out[key] = netParams.popParams[key]['numCells']
-            else:
-                out[key] = 0
-        out['gids'] = int(np.sum([v for k, v in out.items()]))
+        with redirect_stdout(sys.__stdout__):
+          for key in self.netParams.popParams.keys():
+              if 'numCells' in self.netParams.popParams[key]:
+                  out[key] = self.netParams.popParams[key]['numCells']
+              else:
+                  out[key] = 0
+          
+          out['gids'] = int(np.sum([v for k, v in list(out.items())]))
+          
         return out
         
     def deleteParam(self, paramToDel):
