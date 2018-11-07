@@ -3,10 +3,10 @@ netpyne_geppetto.py
 Initialise NetPyNE Geppetto, this class contains methods to connect NetPyNE with the Geppetto based UI
 """
 import io
-import json
 import os
-import importlib
 import sys
+import json
+import importlib
 import subprocess
 import logging
 import threading
