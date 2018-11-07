@@ -35,12 +35,12 @@ config = {
         },
         {
             "name": "org.geppetto.frontend",
-            "path": "../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/",
+            "path": "../netpyne_ui/geppetto/",
             "url": "https://github.com/openworm/org.geppetto.frontend"
         },
         {
             "name": "Geppetto Netpyne extension",
-            "path": "../org.geppetto.frontend.jupyter/src/jupyter_geppetto/geppetto/src/main/webapp/extensions/geppetto-netpyne/",
+            "path": "../netpyne_ui/geppetto/src/main/webapp/extensions/geppetto-netpyne/",
             "url": "https://github.com/MetaCell/geppetto-netpyne"
         }
     ]
