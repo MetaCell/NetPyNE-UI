@@ -14,5 +14,5 @@ RUN /bin/bash -c "source activate snakes && exec python install.py branch $netpy
 WORKDIR /home/jovyan
 RUN git clone https://github.com/Neurosim-lab/netpyne_workspace
 WORKDIR /home/jovyan/netpyne_workspace
-RUN ln -sfn /home/jovyan/work/NetPyNE-UI-$netpyneuiBranch/netpyne_ui netpyne_ui
+RUN ln -sfn /home/jovyan/work/NetPyNE-UI-$netpyneuiBranch/netpyne_ui/tests tests
 CMD /bin/bash -c "source activate snakes && exec jupyter notebook --debug --NotebookApp.default_url=/geppetto --NotebookApp.token='' --library=netpyne_ui"
