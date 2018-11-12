@@ -24,9 +24,7 @@ setuptools.setup(
     long_description=open('README.rst').read(),
     data_files=data_files,
     packages=setuptools.find_packages(),
-    package_data={
-        '': ['*.hoc']
-    },
+    include_package_data=True,
     scripts=['NetPyNE-UI'],
     classifiers=[
         'Development Status :: 3 - Alpha',
