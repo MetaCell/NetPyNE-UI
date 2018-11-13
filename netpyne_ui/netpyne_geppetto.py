@@ -337,6 +337,11 @@ class NetPyNEGeppetto():
                 newModel = re.sub("(['])(?:(?=(\\?))\2.)*?\1", lambda x:x.group(0).replace(oldValue,newValue, 1), model)
                 logging.debug("Rename funct - Model is "+model+" newModel is "+newModel)
                 jupyter_geppetto.synched_models[newModel]=synched_component
+        with redirect_stdout(sys.__stdout__):
+            if "popParams" in path:
+                pass
+        
+        return 1
 
     def getPlotSettings(self, plot):
         if self.simConfig.analysis and plot in self.simConfig.analysis:
