@@ -431,14 +431,17 @@ class NetPyNEGeppetto():
         plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats","plotRatePSD", "plotTraces", "plotLFP", "plotShape", "plot2Dnet", "plotConn", "granger"]
         return [plot for plot in plots if plot not in list(self.simConfig.analysis.keys())]
 
-    def deleteParam(self, paramToDel):
-        logging.debug("Checking if netParams."+paramToDel+" is not null")
-        if eval("self.netParams."+paramToDel) is not None:
-            exec("del self.netParams.%s" % (paramToDel))
-            logging.debug('Parameter netParams.'+paramToDel+' has been deleted')
+    def deleteParam(self, model, label):
+        if isinstance(model, list): # just for cellParams
+            if len(model)==1:
+                self.netParams.cellParams[model[0]]["secs"].pop(label)
+            elif len(model)==2:
+                self.netParams.cellParams[model[0]]["secs"][model[1]]["mechs"].pop(label)
+            else:
+                pass
         else:
-            logging.debug('Parameter '+paramToDel+' is null, not deleted')
-        
+            getattr(self.netParams, model).pop(label)              
+
     def validateFunction(self, functionString):
         return validateFunction(functionString, self.netParams.__dict__)
 
@@ -492,6 +495,86 @@ class NetPyNEGeppetto():
         except:
             return utils.getJSONError("Error while importing the NetPyNE model", sys.exc_info())
             
+
+    def propagate(self, obj, label, cond, new, old):
+        for key in obj.keys():
+            if label in list(obj[key][cond].keys()):
+                if isinstance(obj[key][cond][label], str):
+                    if old==obj[key][cond][label]:
+                        if new=='' or new==None: 
+                            obj[key].pop(label) 
+                        else: 
+                            obj[key][cond][label] = new
+
+                elif isinstance(obj[key][cond][label], list):
+                    if old in obj[key][cond][label]:
+                        if new=='' or new==None:
+                            obj[key][cond][label] = [ value for value in obj[key][cond][label] if value!=old]
+                        else:
+                            obj[key][cond][label] = [ value if value!=old else new for value in obj[key][cond][label] ]
+                    if len(obj[key][cond][label])==0:
+                        obj[key][cond].pop(label)
+                else:
+                    pass
+
+    def propagate_field_rename(self, label, new, old):
+        def unique(label=label, old=old):
+            classes = []
+            for p in self.netParams.popParams:
+                if label in self.netParams.popParams[p]:
+                    classes.append(self.netParams.popParams[p][label])
+            if classes.count(old)>1:
+                return False
+            else:
+                return True
+
+        if label=='source':
+            self.propagate_stim_source_rename(new, old)
+            return True
+        elif label=='synMech':
+            self.propagate_syn_mech_rename(new, old)
+            return True
+        else:
+            if unique():    
+                for (model, cond) in [['cellParams','conds'], ['connParams', 'preConds'], ['connParams', 'postConds'], ['stimTargetParams', 'conds']]: 
+                    self.propagate(getattr(self.netParams, model), label, cond, new, old)
+                return True
+            else:
+                return False
+
+    def propagate_section_rename(self, new, old):
+        for label in self.netParams.cellParams:
+            if 'secs' in self.netParams.cellParams[label]:
+                for sec in self.netParams.cellParams[label]['secs']:
+                    if 'topol' in self.netParams.cellParams[label]['secs'][sec]:
+                        if 'parentSec' in self.netParams.cellParams[label]['secs'][sec]['topol']:
+                            if self.netParams.cellParams[label]['secs'][sec]['topol']['parentSec'] == old:
+                                if new == None:
+                                    self.netParams.cellParams[label]['secs'][sec]['topol'].pop('parentSec')
+                                else:
+                                    self.netParams.cellParams[label]['secs'][sec]['topol']['parentSec'] = new
+
+    def propagate_stim_source_rename(self, new, old):
+        for label in self.netParams.stimTargetParams:
+            if old==self.netParams.stimTargetParams[label]['source']:
+                if new==None:
+                    self.netParams.stimTargetParams[label].pop('source')
+                else:
+                    self.netParams.stimTargetParams[label]['source'] = new
+    
+    def propagate_syn_mech_rename(self, new, old):
+        for label in self.netParams.stimTargetParams:
+            if 'source' in self.netParams.stimTargetParams[label]:
+                if self.netParams.stimTargetParams[label]['source'] in self.netParams.stimSourceParams:
+                    if 'type' in self.netParams.stimSourceParams[self.netParams.stimTargetParams[label]['source']]:
+                        if self.netParams.stimSourceParams[self.netParams.stimTargetParams[label]['source']]['type']=='NetStim':        
+                            if old==self.netParams.stimTargetParams[label]['synMech']:
+                                if new==None:
+                                    self.netParams.stimTargetParams[label].pop('synMech')
+                                else:
+                                    self.netParams.stimTargetParams[label]['synMech'] = new
+
+
 logging.info("Initialising NetPyNE UI")
 netpyne_geppetto = NetPyNEGeppetto()
 logging.info("NetPyNE UI initialised")
