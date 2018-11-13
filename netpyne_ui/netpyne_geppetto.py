@@ -339,7 +339,7 @@ class NetPyNEGeppetto():
                 jupyter_geppetto.synched_models[newModel]=synched_component
         with redirect_stdout(sys.__stdout__):
             if "popParams" in path:
-                pass
+                self.propagate_field_rename("pop", newValue, oldValue)
         
         return 1
 
@@ -393,7 +393,7 @@ class NetPyNEGeppetto():
                 cm = self.netParams.popParams[p]['cellModel']
                 if cm not in cellModels:
                     cellModels.add(cm)
-        return cellModels
+        return list(cellModels)
     
     def getAvailableCellTypes(self):
         cellTypes = set([])
@@ -402,7 +402,7 @@ class NetPyNEGeppetto():
                 ct = self.netParams.popParams[p]['cellType']
                 if ct not in cellTypes:
                     cellTypes.add(ct)
-        return cellTypes
+        return list(cellTypes)
     
     def getAvailableSections(self):
         sections = {}
@@ -432,15 +432,21 @@ class NetPyNEGeppetto():
         return [plot for plot in plots if plot not in list(self.simConfig.analysis.keys())]
 
     def deleteParam(self, model, label):
-        if isinstance(model, list): # just for cellParams
-            if len(model)==1:
-                self.netParams.cellParams[model[0]]["secs"].pop(label)
-            elif len(model)==2:
-                self.netParams.cellParams[model[0]]["secs"][model[1]]["mechs"].pop(label)
+        try:
+            if isinstance(model, list): # just for cellParams
+                if len(model)==1:
+                    self.netParams.cellParams[model[0]]["secs"].pop(label)
+                elif len(model)==2:
+                    self.netParams.cellParams[model[0]]["secs"][model[1]]["mechs"].pop(label)
+                else:
+                    pass
             else:
-                pass
-        else:
-            getattr(self.netParams, model).pop(label)              
+                getattr(self.netParams, model).pop(label)
+                if "popParams" in model:
+                    self.propagate_field_rename("pop", None, label)
+            return True
+        except:
+            return False
 
     def validateFunction(self, functionString):
         return validateFunction(functionString, self.netParams.__dict__)
