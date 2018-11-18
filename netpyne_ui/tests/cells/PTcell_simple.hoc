@@ -1,0 +1,1633 @@
+// This template started from version BS0284 (BS0284-corticospinal-v29.zip), then added new ion channels (calcium, kca, etc.)
+// $Id: PTcell.hoc,v 1.5 2011/12/02 17:28:02 samn Exp $ 
+// 2015-06-30: Added apical subsets:
+//   Six new subsets of apical dendrites, to be used for distribution
+//   of dendritic conductances, such as Ih/HCN.
+//   apical_maintrunk, apical_oblique, apical_uppertrunk, apical_tuft, apical_beforebranchpoint, apical_afterbranchpoint
+
+// load_file("morph.hoc")
+
+/* *********************************************************** */
+
+Vrest       = -90.220509483
+v_init = -70.0432010302
+celsius = 34.0 // same as experiment
+tstop       = 3000
+curr        = 0.300 // stimulus amplitude
+
+// passive properties (optimization proxies)
+cap         = 0.700445928608
+rall        = 137.494564931
+rm          = 38457.4393085
+spinecapfactor = 1.48057846279
+
+//Na, K reversal potentials calculated from BenS internal and external solutions via Nernst equation
+p_ek          = -104
+p_ena         = 42
+
+// h-current 
+h_erev      = -37.0 
+h_gbar      = 6.6129403774e-05 //* 0.1 // mho/cm^2
+h_gbar_tuft = 0.00565 // mho/cm^2 (based on Harnett 2015 J Neurosci)
+
+// params for migliore h-current distribution
+ghd = 6.0e-5  // similar to h_gbar used above = 6e-5
+slope = 14*2.5
+half = 265 // leads to max sigmoid value of ~0.006 from nexus (~297um) to tuft; similar to h_gbar_tuft
+
+// d-current 
+kdmc_gbar   =  0.00110907315064 //0.000916263431341 
+kdmc_gbar_axonm = 20
+
+// spiking currents
+nax_gbar    =  0.0153130368342 // 0.0 S/cm2 (Hay11 = 20,000 pS/um2 = 20,000*1e-12*1e8 = 2 S/cm2)
+nax_gbar_axonm = 5
+nax_gbar_somam = 1
+nax_gbar_dendm = 1
+mnax = 0.0 // slope of linear decrease of nax in dends (with distance from soma)
+
+kdr_gbar    = 0.0084715576279
+kdr_gbar_axonm = 5
+// A few kinetic params changed vis-a-vis kdr.mod defaults:
+// These param values match the default values in kdr.mod (except where indicated).
+kdr_vhalfn  = 13
+kdr_a0n     = 0.0075 // def 0.02
+kdr_nmax    = 20 // def 2
+
+kap_gbar    = 0.0614003391814
+kap_gbar_axonm = 5
+// These param values match the default values in kap.mod (except where indicated).
+kap_vhalfn  = 35 // def 11
+kap_vhalfl  = -56
+kap_nmin    = 0.4 // def 0.1
+kap_lmin    = 5 // def 2
+kap_tq      = -45 // def -40
+
+// new ion channel parameters
+cal_gcalbar = 5.73945708921e-06  
+can_gcanbar = 4.74427101753e-06
+//cat_gcatbar = 0.0 * 1e-5
+calginc = 10
+canginc = 100 
+kBK_gpeak = 7.25128017201e-05 // original value of 268e-4 too high for this model
+kBK_caVhminShift = 46.9679440782 // shift upwards to get lower effect on subthreshold
+cadad_depth = 0.102468419281 // original 1; reduced for tighter coupling of ica and cai
+cadad_taur = 16.0181691392 
+
+/* *********************************************************** */
+
+// 2010-11-01 Ben Suter
+// BS0284 reconstructed in NL with soma as contours,
+// then soma contours all selected at once and collectively
+// "set as cell body". Saved as .asc file, loaded via Import3D,
+// with errors about not connected root branches. I ignored
+// these errors, exported to Cell Builder, then exported from
+// Cell Builder to HOC. Soma is now a single section.
+// All processes attach at soma(0.5).
+// //////////////////////////////////////////////////////////////////////////////////////////
+//
+// //////////////////////////////////////////////////////////////////////////////////////////
+// Copyright 2011, Benjamin Suter
+// Used in model of corticospinal neuron BS0284 and published as:
+//  "Intrinsic electrophysiology of mouse corticospinal neurons: a characteristic set of features embodied in a realistic computational model"
+//  by Benjamin Suter, Michele Migliore, and Gordon Shepherd
+//  Submitted September 2011
+// //////////////////////////////////////////////////////////////////////////////////////////
+useharnett = 0 // whether to use the harnett 15 HCN (h_harnett.mod, instead of h_bs.mod)
+usekole = 0 // whether to use the kole 2006 HCN (ih_kole.mod, instead of h_bs.mod)
+usemigliore = 0  // whether to use the migliore 2012 HCN (ih_migliore.mod, instead of h_bs.mod)
+
+usecahotzone = 1 // whether to include ca 'hot zone' - if so, uses canginc,calginc to scale
+// the apical dend cal,can conductances that are between nexus (~300 micron from soma)
+// and before tuft (around 600 micron from soma)
+
+begintemplate PTcell 
+objref all, somatic, axonal, basal, apical, alldend, spiny, apical_maintrunk, apical_oblique, apical_uppertrunk, apical_tuft, apical_beforebranchpoint, apical_afterbranchpoint, perisom
+objref stim, esyn, isyn,nil
+public all,somatic,basal,apical,spiny,alldend
+public apical_maintrunk, apical_oblique, apical_uppertrunk, apical_tuft, apical_beforebranchpoint, apical_afterbranchpoint, perisom
+public lambda_f,geom_nseg,recalculate_x_dist, sethgbar, stim, nc, reconfig
+external cap,rall,rm,spinecapfactor,Vrest,h_erev,h_gbar,h_gbar_tuft
+external nax_gbar,nax_gbar_axonm,kdr_gbar,kdr_gbar_axonm, nax_gbar_somam, nax_gbar_dendm, mnax
+external cal_gcalbar, can_gcanbar, kBK_gpeak, kBK_caVhminShift, cadad_depth, cadad_taur // cat_gcatbar
+external kap_gbar,kap_gbar_axonm,p_ek,p_ena
+external kdmc_gbar,kdmc_gbar_axonm, calginc, canginc, useharnett, usekole, usemigliore, usecahotzone
+double h_lambda[1],nexusdist[1],h_gbar_tuftm[1]
+public h_lambda,nexusdist,h_gbar_tuftm
+external kdr_vhalfn, kdr_a0n, kdr_nmax
+external kap_vhalfn, kap_vhalfl, kap_nmin, kap_lmin, kap_tq
+external ghd, slope, half // migliore ih params
+
+public mkstim,soma,axon
+//stuff for having an interface like intf6 - not all values might actually be relevant and used for mc
+public zloc, type, inhib, record, wrec, jttr, input, vinflg, invl0, jcn, dead, vbr, dbx, flag, out,xloc,col,gid,yloc,id
+public wrc,recclr, id, recflag, initrec, fflag, fini, esyn, isyn
+public getdvi
+objref vidx,vdel,ign1,vwt2,vwt1,vdist
+objref esyn,esynd[103],isyn,isynd[103] // leave old syns
+objref asynl,nsynl,gsynl,g2synl // ampa,nmda,gabaa,gabab
+public asynl,nsynl,gsynl,g2synl // ampa,nmda,gabaa,gabab
+create soma, axon, dend[69], apic[103]
+public soma,dend,apic,axon
+access soma
+distance()
+
+proc getdvi(){
+  $&1 = vidx
+  $&2 = vdel
+  $&3 = ign1
+  $&4 = vwt1
+  $&5 = vwt2
+  $&6 = vdist
+}
+
+func yloc(){ return 1.0 } // empty funcs
+func gid(){ return 1.0 }
+func xloc(){ return 1.0 }
+func col(){ return 1.0 }
+func fini(){ return 1.0 }
+func fflag(){ return 0.0 } //return 0 to record APs from soma
+func initrec(){ return 1.0 }
+func flag(){ return 1.0 }
+func recflag(){ return 1.0 }
+func wrc(){ return 1.0 }
+func recclr(){ return 1.0 }
+func clrvspks(){ return 1.0 }
+
+proc topol() { local i
+  connect axon(0), soma(0) // 2011-12-08 axon starts at base now, was: connect axon(0), soma(0.5)
+  connect dend(0), soma(0.5)
+  for i = 1, 2 connect dend[i](0), dend[i-1](1)
+  connect dend[3](0), dend[1](1)
+  connect dend[4](0), dend(1)
+  for i = 5, 6 connect dend[i](0), soma(0.5)
+  for i = 7, 9 connect dend[i](0), dend[i-1](1)
+  connect dend[10](0), dend[8](1)
+  for i = 11, 12 connect dend[i](0), dend[10](1)
+  connect dend[13](0), dend[7](1)
+  for i = 14, 15 connect dend[i](0), dend[i-1](1)
+  connect dend[16](0), dend[14](1)
+  connect dend[17](0), dend[13](1)
+  connect dend[18](0), dend[6](1)
+  for i = 19, 20 connect dend[i](0), dend[18](1)
+  connect dend[21](0), soma(0.5)
+  for i = 22, 23 connect dend[i](0), dend[21](1)
+  connect dend[24](0), soma(0.5)
+  connect dend[25](0), dend[24](1)
+  for i = 26, 27 connect dend[i](0), soma(0.5)
+  for i = 28, 29 connect dend[i](0), dend[i-1](1)
+  connect dend[30](0), dend[28](1)
+  for i = 31, 32 connect dend[i](0), dend[30](1)
+  connect dend[33](0), dend[27](1)
+  for i = 34, 35 connect dend[i](0), dend[i-1](1)
+  connect dend[36](0), dend[34](1)
+  connect dend[37](0), dend[33](1)
+  connect dend[38](0), soma(0.5)
+  for i = 39, 40 connect dend[i](0), dend[38](1)
+  for i = 41, 42 connect dend[i](0), dend[40](1)
+  for i = 43, 44 connect dend[i](0), dend[42](1)
+  for i = 45, 46 connect dend[i](0), dend[44](1)
+  connect dend[47](0), soma(0.5)
+  for i = 48, 49 connect dend[i](0), dend[i-1](1)
+  connect dend[50](0), dend[48](1)
+  connect dend[51](0), dend[47](1)
+  for i = 52, 53 connect dend[i](0), dend[51](1)
+  for i = 54, 55 connect dend[i](0), dend[53](1)
+  for i = 56, 57 connect dend[i](0), soma(0.5)
+  for i = 58, 59 connect dend[i](0), dend[57](1)
+  connect dend[60](0), soma(0.5)
+  for i = 61, 62 connect dend[i](0), dend[60](1)
+  connect dend[63](0), soma(0.5)
+  for i = 64, 65 connect dend[i](0), dend[63](1)
+  connect dend[66](0), soma(0.5)
+  for i = 67, 68 connect dend[i](0), dend[66](1)
+  connect apic(0), soma(1)  // 2011-12-08 apical starts at apex now, was: connect apic(0), soma(0.5)
+  for i = 1, 26 connect apic[i](0), apic[i-1](1)
+  connect apic[27](0), apic[25](1)
+  for i = 28, 29 connect apic[i](0), apic[27](1)
+  for i = 30, 31 connect apic[i](0), apic[29](1)
+  connect apic[32](0), apic[24](1)
+  for i = 33, 35 connect apic[i](0), apic[i-1](1)
+  connect apic[36](0), apic[34](1)
+  connect apic[37](0), apic[33](1)
+  for i = 38, 39 connect apic[i](0), apic[i-1](1)
+  connect apic[40](0), apic[38](1)
+  connect apic[41](0), apic[37](1)
+  for i = 42, 43 connect apic[i](0), apic[41](1)
+  for i = 44, 45 connect apic[i](0), apic[43](1)
+  connect apic[46](0), apic[32](1)
+  for i = 47, 48 connect apic[i](0), apic[i-1](1)
+  connect apic[49](0), apic[47](1)
+  connect apic[50](0), apic[46](1)
+  connect apic[51](0), apic[23](1)
+  connect apic[52](0), apic[22](1)
+  for i = 53, 56 connect apic[i](0), apic[i-1](1)
+  connect apic[57](0), apic[55](1)
+  connect apic[58](0), apic[54](1)
+  for i = 59, 60 connect apic[i](0), apic[58](1)
+  connect apic[61](0), apic[53](1)
+  for i = 62, 64 connect apic[i](0), apic[i-1](1)
+  connect apic[65](0), apic[63](1)
+  for i = 66, 67 connect apic[i](0), apic[65](1)
+  connect apic[68](0), apic[62](1)
+  connect apic[69](0), apic[61](1)
+  for i = 70, 71 connect apic[i](0), apic[i-1](1)
+  connect apic[72](0), apic[70](1)
+  connect apic[73](0), apic[69](1)
+  for i = 74, 75 connect apic[i](0), apic[73](1)
+  for i = 76, 77 connect apic[i](0), apic[75](1)
+  connect apic[78](0), apic[52](1)
+  connect apic[79](0), apic[21](1)
+  connect apic[80](0), apic[20](1)
+  connect apic[81](0), apic[19](1)
+  connect apic[82](0), apic[18](1)
+  connect apic[83](0), apic[17](1)
+  connect apic[84](0), apic[16](1)
+  connect apic[85](0), apic[15](1)
+  connect apic[86](0), apic[14](1)
+  connect apic[87](0), apic[13](1)
+  connect apic[88](0), apic[12](1)
+  connect apic[89](0), apic[11](1)
+  connect apic[90](0), apic[10](1)
+  connect apic[91](0), apic[9](1)
+  connect apic[92](0), apic[8](1)
+  connect apic[93](0), apic[7](1)
+  connect apic[94](0), apic[6](1)
+  connect apic[95](0), apic[5](1)
+  connect apic[96](0), apic[4](1)
+  connect apic[97](0), apic[3](1)
+  connect apic[98](0), apic[2](1)
+  connect apic[99](0), apic[1](1)
+  for i = 100, 101 connect apic[i](0), apic[99](1)
+  connect apic[102](0), apic(1)
+  basic_shape()
+}
+proc shape3d_1() {
+  soma {pt3dclear()
+    pt3dadd(216.294, -825.836, -85, 2.32638)
+    pt3dadd(214.402, -816.386, -119.38, 6.15201)
+  }
+  axon {pt3dclear()
+    pt3dstyle(1, 215.897, -818.461, -101.683)
+    pt3dadd(170.56, -1248.75, -95.51, 0.83)
+  }
+}
+proc shape3d_2() {
+  axon {    pt3dadd(170.11, -1252.98, -88.82, 0.83)
+    
+    pt3dadd(192.98, -1270.71, -20.06, 2.29)
+  }
+  dend {pt3dclear()
+    pt3dstyle(1, 215.897, -818.461, -101.683)
+    pt3dadd(231.07, -813.2, -72.59, 0.93)
+  }
+  dend[1] {pt3dclear()
+    pt3dadd(231.07, -813.2, -72.59, 0.83)
+    pt3dadd(234.06, -806.54, -56.35, 0.75)
+  }
+  dend[2] {pt3dclear()
+    pt3dadd(234.06, -806.54, -56.35, 0.75)
+    pt3dadd(269.57, -769.08, -37.25, 0.59)
+  }
+  dend[3] {pt3dclear()
+    pt3dadd(234.06, -806.54, -56.35, 0.64)
+    pt3dadd(247.08, -806.94, -34.38, 0.64)
+  }
+  dend[4] {pt3dclear()
+    pt3dadd(231.07, -813.2, -72.59, 0.69)
+    pt3dadd(304.32, -845.71, -39.16, 0.56)
+  }
+  dend[5] {pt3dclear()
+    pt3dstyle(1, 215.897, -818.461, -101.683)
+    pt3dadd(215.87, -835.83, -39.16, 0.96)
+  }
+  dend[6] {pt3dclear()
+    pt3dstyle(1, 215.897, -818.461, -101.683)
+    pt3dadd(207.48, -820.65, -81.18, 1.46)
+  }
+  dend[7] {pt3dclear()
+    pt3dadd(207.48, -820.65, -81.18, 1.46)
+    pt3dadd(206.86, -821.44, -81.18, 1.46)
+  }
+  dend[8] {pt3dclear()
+    pt3dadd(206.86, -821.44, -81.18, 1.2)
+    pt3dadd(206.7, -819.76, -72.59, 1.2)
+    pt3dadd(207.82, -818.72, -68.77, 1.07)
+  }
+  dend[9] {pt3dclear()
+    pt3dadd(207.82, -818.72, -68.77, 0.83)
+    pt3dadd(208.91, -817.9, -66.86, 0.83)
+    pt3dadd(230.29, -821.41, -35.34, 0.56)
+  }
+  dend[10] {pt3dclear()
+    pt3dadd(207.82, -818.72, -68.77, 0.8)
+    pt3dadd(198.16, -808.63, -57.3, 0.77)
+  }
+  dend[11] {pt3dclear()
+    pt3dadd(198.16, -808.63, -57.3, 0.69)
+    pt3dadd(199.17, -792.58, -38.2, 0.61)
+  }
+  dend[12] {pt3dclear()
+    pt3dadd(198.16, -808.63, -57.3, 0.67)
+    pt3dadd(180.59, -815.24, -39.16, 0.61)
+  }
+  dend[13] {pt3dclear()
+    pt3dadd(206.86, -821.44, -81.18, 1.2)
+    pt3dadd(204.37, -832.21, -70.68, 0.88)
+  }
+  dend[14] {pt3dclear()
+    pt3dadd(204.37, -832.21, -70.68, 0.77)
+    pt3dadd(200.53, -870.26, -63.99, 0.85)
+  }
+  dend[15] {pt3dclear()
+    pt3dadd(200.53, -870.26, -63.99, 0.77)
+    pt3dadd(209.83, -888.68, -41.07, 0.69)
+  }
+  dend[16] {pt3dclear()
+    pt3dadd(200.53, -870.26, -63.99, 0.69)
+    pt3dadd(196.04, -877.87, -58.26, 0.69)
+  }
+}
+proc shape3d_3() {
+  dend[16] {    pt3dadd(195.58, -880.16, -58.26, 0.69)
+    pt3dadd(154.02, -930.96, -43.93, 0.75)
+  }
+  dend[17] {pt3dclear()
+    pt3dadd(204.37, -832.21, -70.68, 0.75)
+    pt3dadd(134.5, -868.07, -63.04, 0.59)
+  }
+  dend[18] {pt3dclear()
+    pt3dadd(207.48, -820.65, -81.18, 0.72)
+    pt3dadd(196.19, -815.94, -79.27, 0.64)
+  }
+  dend[19] {pt3dclear()
+    pt3dadd(196.19, -815.94, -79.27, 0.61)
+    pt3dadd(113.98, -826.83, -99.33, 0.56)
+  }
+  dend[20] {pt3dclear()
+    pt3dadd(196.19, -815.94, -79.27, 0.64)
+    pt3dadd(118.45, -759.04, -65.9, 0.56)
+  }
+  dend[21] {pt3dclear()
+    pt3dstyle(1, 215.897, -818.461, -101.683)
+    pt3dadd(221.99, -832.6, -74.5, 1.07)
+  }
+  dend[22] {pt3dclear()
+    pt3dadd(221.99, -832.6, -74.5, 0.72)
+    pt3dadd(304.5, -852.7, -54.44, 0.67)
+  }
+  dend[23] {pt3dclear()
+    pt3dadd(221.99, -832.6, -74.5, 0.83)
+    pt3dadd(249.25, -896.31, -33.43, 0.72)
+  }
+  dend[24] {pt3dclear()
+    pt3dstyle(1, 215.897, -818.461, -101.683)
+    pt3dadd(260.43, -836.43, -82.14, 0.64)
+  }
+  dend[25] {pt3dclear()
+    pt3dadd(260.43, -836.43, -82.14, 0.64)
+    pt3dadd(341.51, -859.57, -54.44, 0.56)
+  }
+  dend[26] {pt3dclear()
+    pt3dstyle(1, 215.897, -818.461, -101.683)
+    pt3dadd(211.82, -823.36, -96.46, 0.64)
+  }
+}
+proc shape3d_4() {
+  dend[26] {    pt3dadd(209.85, -823.3, -96.46, 0.64)
+    pt3dadd(105.42, -841.7, -127.98, 0.64)
+  }
+  dend[27] {pt3dclear()
+    pt3dstyle(1, 215.897, -818.461, -101.683)
+    pt3dadd(235.01, -821.41, -108.88, 1.25)
+  }
+  dend[28] {pt3dclear()
+    pt3dadd(235.01, -821.41, -108.88, 0.9)
+    pt3dadd(235.97, -820.67, -108.88, 0.9)
+  }
+  dend[29] {pt3dclear()
+    pt3dadd(235.97, -820.67, -108.88, 0.64)
+    pt3dadd(303.57, -830.97, -183.37, 0.64)
+  }
+  dend[30] {pt3dclear()
+    pt3dadd(235.97, -820.67, -108.88, 0.75)
+    pt3dadd(238.89, -815.56, -109.83, 0.75)
+  }
+  dend[31] {pt3dclear()
+    pt3dadd(238.89, -815.56, -109.83, 0.69)
+    pt3dadd(287.46, -793.4, -161.41, 0.64)
+  }
+  dend[32] {pt3dclear()
+    pt3dadd(238.89, -815.56, -109.83, 0.69)
+    pt3dadd(311.08, -773.09, -68.77, 0.61)
+  }
+  dend[33] {pt3dclear()
+    pt3dadd(235.01, -821.41, -108.88, 0.96)
+    pt3dadd(239.88, -823.14, -106.97, 0.91)
+  }
+  dend[34] {pt3dclear()
+    pt3dadd(239.88, -823.14, -106.97, 0.85)
+    pt3dadd(253.54, -829.77, -117.47, 0.8)
+  }
+  dend[35] {pt3dclear()
+    pt3dadd(253.54, -829.77, -117.47, 0.69)
+    pt3dadd(293.53, -909.89, -158.54, 0.8)
+  }
+  dend[36] {pt3dclear()
+    pt3dadd(253.54, -829.77, -117.47, 0.75)
+    pt3dadd(276.01, -816.09, -106.01, 0.59)
+  }
+  dend[37] {pt3dclear()
+    pt3dadd(239.88, -823.14, -106.97, 0.83)
+    pt3dadd(296.14, -869.18, -35.34, 0.61)
+  }
+  dend[38] {pt3dclear()
+    pt3dstyle(1, 215.897, -818.461, -101.683)
+    pt3dadd(224.54, -831.96, -106.97, 1.52)
+  }
+  dend[39] {pt3dclear()
+    pt3dadd(224.54, -831.96, -106.97, 0.56)
+    pt3dadd(307.67, -844.52, -112.7, 0.53)
+  }
+  dend[40] {pt3dclear()
+    pt3dadd(224.54, -831.96, -106.97, 1.25)
+    pt3dadd(228.35, -835.95, -106.97, 1.25)
+  }
+}
+proc shape3d_5() {
+  dend[40] {    pt3dadd(229.58, -837.57, -107.92, 1.25)
+  }
+  dend[41] {pt3dclear()
+    pt3dadd(229.58, -837.57, -107.92, 0.75)
+    pt3dadd(277.95, -844.1, -85, 0.64)
+  }
+  dend[42] {pt3dclear()
+    pt3dadd(229.58, -837.57, -107.92, 1.17)
+    pt3dadd(230.4, -843.25, -108.88, 1.17)
+  }
+  dend[43] {pt3dclear()
+    pt3dadd(230.4, -843.25, -108.88, 0.75)
+    pt3dadd(165.46, -926.64, -122.25, 0.56)
+  }
+  dend[44] {pt3dclear()
+    pt3dadd(230.4, -843.25, -108.88, 1.01)
+    pt3dadd(229.26, -857.86, -117.47, 0.91)
+  }
+  dend[45] {pt3dclear()
+    pt3dadd(229.26, -857.86, -117.47, 0.77)
+    pt3dadd(264.08, -878.47, -147.08, 0.69)
+  }
+  dend[46] {pt3dclear()
+    pt3dadd(229.26, -857.86, -117.47, 0.8)
+    pt3dadd(279.98, -984.54, -121.29, 0.61)
+  }
+  dend[47] {pt3dclear()
+    pt3dstyle(1, 215.897, -818.461, -101.683)
+    pt3dadd(212.67, -836.96, -111.74, 0.99)
+  }
+  dend[48] {pt3dclear()
+    pt3dadd(212.67, -836.96, -111.74, 0.83)
+    pt3dadd(221.69, -859.35, -118.43, 0.83)
+  }
+  dend[49] {pt3dclear()
+    pt3dadd(221.69, -859.35, -118.43, 0.91)
+    pt3dadd(258.25, -910.87, -179.55, 0.91)
+  }
+  dend[50] {pt3dclear()
+    pt3dadd(221.69, -859.35, -118.43, 0.83)
+    pt3dadd(264.14, -935.1, -113.65, 0.61)
+  }
+  dend[51] {pt3dclear()
+    pt3dadd(212.67, -836.96, -111.74, 0.99)
+    pt3dadd(201.7, -851.77, -115.56, 0.93)
+  }
+  dend[52] {pt3dclear()
+    pt3dadd(201.7, -851.77, -115.56, 0.83)
+    pt3dadd(171.45, -909.92, -170.96, 0.61)
+  }
+  dend[53] {pt3dclear()
+    pt3dadd(201.7, -851.77, -115.56, 0.88)
+    pt3dadd(193.71, -859.86, -113.65, 0.8)
+  }
+  dend[54] {pt3dclear()
+    pt3dadd(193.71, -859.86, -113.65, 0.72)
+    pt3dadd(73.71, -878.2, -117.47, 0.59)
+  }
+  dend[55] {pt3dclear()
+    pt3dadd(193.71, -859.86, -113.65, 0.8)
+    pt3dadd(184.85, -957.09, -95.51, 0.61)
+  }
+  dend[56] {pt3dclear()
+    pt3dstyle(1, 215.897, -818.461, -101.683)
+    pt3dadd(187.61, -821.89, -108.88, 0.69)
+  }
+}
+proc shape3d_6() {
+  dend[56] {    pt3dadd(169.56, -833.79, -106.97, 0.69)
+    pt3dadd(75.2, -855.2, -110.79, 0.69)
+  }
+  dend[57] {pt3dclear()
+    pt3dstyle(1, 215.897, -818.461, -101.683)
+    pt3dadd(198.05, -815.77, -123.21, 0.85)
+  }
+  dend[58] {pt3dclear()
+    pt3dadd(198.05, -815.77, -123.21, 0.67)
+    pt3dadd(84.92, -807.99, -153.77, 0.72)
+  }
+  dend[59] {pt3dclear()
+    pt3dadd(198.05, -815.77, -123.21, 0.88)
+    pt3dadd(170.31, -857.84, -240.68, 0.75)
+  }
+  dend[60] {pt3dclear()
+    pt3dstyle(1, 215.897, -818.461, -101.683)
+    pt3dadd(224.3, -806.16, -120.34, 0.83)
+  }
+  dend[61] {pt3dclear()
+    pt3dadd(224.3, -806.16, -120.34, 0.88)
+    pt3dadd(313.98, -804.61, -175.73, 0.75)
+  }
+  dend[62] {pt3dclear()
+    pt3dadd(224.3, -806.16, -120.34, 0.77)
+    pt3dadd(294.09, -748.75, -130.85, 0.77)
+  }
+  dend[63] {pt3dclear()
+    pt3dstyle(1, 215.897, -818.461, -101.683)
+    pt3dadd(209.13, -810.1, -123.21, 0.88)
+  }
+  dend[64] {pt3dclear()
+    pt3dadd(209.13, -810.1, -123.21, 0.67)
+    pt3dadd(126, -834.38, -195.79, 0.64)
+  }
+  dend[65] {pt3dclear()
+    pt3dadd(209.13, -810.1, -123.21, 0.8)
+    pt3dadd(202.84, -737.15, -182.42, 0.75)
+  }
+  dend[66] {pt3dclear()
+    pt3dstyle(1, 215.897, -818.461, -101.683)
+    pt3dadd(211.5, -819.07, -127.98, 0.93)
+  }
+  dend[67] {pt3dclear()
+    pt3dadd(211.5, -819.07, -127.98, 0.91)
+    pt3dadd(176.27, -812.41, -225.4, 0.75)
+  }
+  dend[68] {pt3dclear()
+    pt3dadd(211.5, -819.07, -127.98, 0.85)
+    pt3dadd(272.07, -833.82, -246.41, 0.77)
+  }
+  apic {pt3dclear()
+    pt3dstyle(1, 215.897, -818.461, -101.683)
+    pt3dadd(208.29, -795.59, -102.19, 2.4)
+  }
+  apic[1] {pt3dclear()
+    pt3dadd(208.29, -795.59, -102.19, 2.26)
+    pt3dadd(206.19, -781.43, -99.33, 2.26)
+  }
+  apic[2] {pt3dclear()
+    pt3dadd(206.19, -781.43, -99.33, 2.02)
+    pt3dadd(205.62, -777.27, -99.33, 2.02)
+  }
+  apic[3] {pt3dclear()
+    pt3dadd(205.62, -777.27, -99.33, 2.02)
+    pt3dadd(203.39, -762.28, -95.51, 2.02)
+  }
+}
+proc shape3d_7() {
+  apic[3] {  }
+  apic[4] {pt3dclear()
+    pt3dadd(203.39, -762.28, -95.51, 2.02)
+    pt3dadd(203.44, -761.14, -94.55, 2.02)
+  }
+  apic[5] {pt3dclear()
+    pt3dadd(203.44, -761.14, -94.55, 1.7)
+    pt3dadd(202.8, -755.65, -93.6, 1.65)
+  }
+  apic[6] {pt3dclear()
+    pt3dadd(202.8, -755.65, -93.6, 1.65)
+    pt3dadd(204.13, -743.38, -100.28, 2.05)
+  }
+  apic[7] {pt3dclear()
+    pt3dadd(204.13, -743.38, -100.28, 2)
+    pt3dadd(204.03, -741.22, -101.24, 2)
+  }
+  apic[8] {pt3dclear()
+    pt3dadd(204.03, -741.22, -101.24, 2)
+    pt3dadd(203.77, -738.14, -101.24, 2)
+  }
+  apic[9] {pt3dclear()
+    pt3dadd(203.77, -738.14, -101.24, 1.7)
+    pt3dadd(202.8, -725.59, -104.1, 1.7)
+  }
+  apic[10] {pt3dclear()
+    pt3dadd(202.8, -725.59, -104.1, 1.7)
+    pt3dadd(200.99, -721.76, -101.24, 1.7)
+  }
+  apic[11] {pt3dclear()
+    pt3dadd(200.99, -721.76, -101.24, 1.38)
+    pt3dadd(200.03, -715.34, -105.06, 1.38)
+  }
+  apic[12] {pt3dclear()
+    pt3dadd(200.03, -715.34, -105.06, 1.54)
+    pt3dadd(199.37, -713.43, -103.15, 1.54)
+  }
+  apic[13] {pt3dclear()
+    pt3dadd(199.37, -713.43, -103.15, 1.52)
+    pt3dadd(196.54, -696.01, -102.19, 1.76)
+  }
+  apic[14] {pt3dclear()
+    pt3dadd(196.54, -696.01, -102.19, 1.76)
+    pt3dadd(197.05, -688.98, -103.15, 1.84)
+  }
+  apic[15] {pt3dclear()
+    pt3dadd(197.05, -688.98, -103.15, 1.78)
+    pt3dadd(195.9, -678.79, -105.06, 1.86)
+  }
+  apic[16] {pt3dclear()
+    pt3dadd(195.9, -678.79, -105.06, 1.81)
+    pt3dadd(195.51, -672.98, -103.15, 1.81)
+  }
+  apic[17] {pt3dclear()
+    pt3dadd(195.51, -672.98, -103.15, 1.84)
+    pt3dadd(194.39, -657.51, -101.24, 1.46)
+  }
+  apic[18] {pt3dclear()
+    pt3dadd(194.39, -657.51, -101.24, 1.46)
+    pt3dadd(192.31, -621.28, -98.37, 1.52)
+  }
+  apic[19] {pt3dclear()
+    pt3dadd(192.31, -621.28, -98.37, 1.6)
+    pt3dadd(192.2, -613.21, -99.33, 1.73)
+  }
+  apic[20] {pt3dclear()
+    pt3dadd(192.2, -613.21, -99.33, 1.73)
+    pt3dadd(192.19, -611.91, -99.33, 1.73)
+  }
+  apic[21] {pt3dclear()
+    pt3dadd(192.19, -611.91, -99.33, 1.57)
+    pt3dadd(191.17, -598.09, -96.46, 1.78)
+  }
+  apic[22] {pt3dclear()
+    pt3dadd(191.17, -598.09, -96.46, 1.54)
+    pt3dadd(191.25, -548.7, -92.64, 1.54)
+  }
+  apic[23] {pt3dclear()
+    pt3dadd(191.25, -548.7, -92.64, 1.54)
+    pt3dadd(185.48, -514.39, -82.14, 1.22)
+  }
+  apic[24] {pt3dclear()
+    pt3dadd(185.48, -514.39, -82.14, 1.22)
+    pt3dadd(182.78, -476.65, -75.45, 1.07)
+  }
+  apic[25] {pt3dclear()
+    pt3dadd(182.78, -476.65, -75.45, 1.07)
+    pt3dadd(219.52, -251.4, -19.1, 0.77)
+  }
+  apic[26] {pt3dclear()
+    pt3dadd(219.52, -251.4, -19.1, 0.77)
+    pt3dadd(219.31, -241.04, -6.69, 0.53)
+  }
+  apic[27] {pt3dclear()
+    pt3dadd(219.52, -251.4, -19.1, 0.64)
+    pt3dadd(237.89, -217.91, -29.61, 0.61)
+  }
+  apic[28] {pt3dclear()
+    pt3dadd(237.89, -217.91, -29.61, 0.61)
+    pt3dadd(242.82, -118.25, -105.06, 0.69)
+  }
+  apic[29] {pt3dclear()
+    pt3dadd(237.89, -217.91, -29.61, 0.69)
+    pt3dadd(248.7, -211.28, -39.16, 0.67)
+  }
+  apic[30] {pt3dclear()
+    pt3dadd(248.7, -211.28, -39.16, 0.59)
+    pt3dadd(280.33, -168.09, -61.13, 0.59)
+  }
+}
+proc shape3d_8() {
+  apic[30] {    pt3dadd(280.25, -166.68, -62.08, 0.61)
+    pt3dadd(295.27, -126.85, -86.91, 0.51)
+  }
+  apic[31] {pt3dclear()
+    pt3dadd(248.7, -211.28, -39.16, 0.56)
+    pt3dadd(332.78, -135.42, -101.24, 0.53)
+  }
+  apic[32] {pt3dclear()
+    pt3dadd(182.78, -476.65, -75.45, 0.93)
+    pt3dadd(192.36, -317.43, -64.95, 0.88)
+  }
+  apic[33] {pt3dclear()
+    pt3dadd(192.36, -317.43, -64.95, 0.88)
+    pt3dadd(181.63, -228.69, -92.64, 0.83)
+  }
+  apic[34] {pt3dclear()
+    pt3dadd(181.63, -228.69, -92.64, 0.8)
+    pt3dadd(195.05, -129.46, -83.09, 0.64)
+  }
+  apic[35] {pt3dclear()
+    pt3dadd(195.05, -129.46, -83.09, 0.64)
+    pt3dadd(150.99, -87.36, -64.95, 0.59)
+  }
+  apic[36] {pt3dclear()
+    pt3dadd(195.05, -129.46, -83.09, 0.59)
+    pt3dadd(201.79, -117.26, -87.87, 0.56)
+  }
+  apic[37] {pt3dclear()
+    pt3dadd(181.63, -228.69, -92.64, 0.77)
+    pt3dadd(176.64, -214.56, -100.28, 0.77)
+  }
+  apic[38] {pt3dclear()
+    pt3dadd(176.64, -214.56, -100.28, 0.77)
+    pt3dadd(164.82, -119.4, -88.82, 0.75)
+  }
+  apic[39] {pt3dclear()
+    pt3dadd(164.82, -119.4, -88.82, 0.72)
+    pt3dadd(150.14, -90.29, -71.63, 0.61)
+  }
+  apic[40] {pt3dclear()
+    pt3dadd(164.82, -119.4, -88.82, 0.72)
+    pt3dadd(127.54, -100.1, -131.8, 0.64)
+  }
+  apic[41] {pt3dclear()
+    pt3dadd(176.64, -214.56, -100.28, 0.69)
+    pt3dadd(174.06, -202.69, -113.65, 0.75)
+  }
+}
+proc shape3d_9() {
+  apic[41] {    pt3dadd(173.47, -201.14, -115.56, 0.75)
+    pt3dadd(154.3, -174.06, -140.4, 0.69)
+  }
+  apic[42] {pt3dclear()
+    pt3dadd(154.3, -174.06, -140.4, 0.69)
+    pt3dadd(71.42, -81.62, -145.17, 0.53)
+  }
+  apic[43] {pt3dclear()
+    pt3dadd(154.3, -174.06, -140.4, 0.67)
+    pt3dadd(158.11, -135.57, -207.25, 0.67)
+  }
+  apic[44] {pt3dclear()
+    pt3dadd(158.11, -135.57, -207.25, 0.56)
+    pt3dadd(188.89, -110.35, -214.89, 0.51)
+  }
+  apic[45] {pt3dclear()
+    pt3dadd(158.11, -135.57, -207.25, 0.53)
+    pt3dadd(146.85, -118.58, -243.54, 0.51)
+  }
+  apic[46] {pt3dclear()
+    pt3dadd(192.36, -317.43, -64.95, 0.69)
+    pt3dadd(228.36, -174.56, -123.21, 0.61)
+  }
+  apic[47] {pt3dclear()
+    pt3dadd(228.36, -174.56, -123.21, 0.61)
+    pt3dadd(238.12, -131.46, -118.43, 0.61)
+  }
+  apic[48] {pt3dclear()
+    pt3dadd(238.12, -131.46, -118.43, 0.59)
+    pt3dadd(266.43, -115.69, -94.55, 0.61)
+  }
+  apic[49] {pt3dclear()
+    pt3dadd(238.12, -131.46, -118.43, 0.61)
+    pt3dadd(233.35, -118.21, -128.94, 0.56)
+  }
+  apic[50] {pt3dclear()
+    pt3dadd(228.36, -174.56, -123.21, 0.61)
+    pt3dadd(254.05, -129.33, -148.04, 0.69)
+  }
+  apic[51] {pt3dclear()
+    pt3dadd(185.48, -514.39, -82.14, 0.96)
+    pt3dadd(179.43, -494.74, -49.66, 0.77)
+  }
+  apic[52] {pt3dclear()
+    pt3dadd(191.25, -548.7, -92.64, 1.12)
+    pt3dadd(192, -539.17, -104.1, 1.01)
+  }
+}
+proc shape3d_10() {
+  apic[52] {  }
+  apic[53] {pt3dclear()
+    pt3dadd(192, -539.17, -104.1, 1.01)
+    pt3dadd(225.36, -264.48, -104.1, 0.99)
+  }
+  apic[54] {pt3dclear()
+    pt3dadd(225.36, -264.48, -104.1, 0.83)
+    pt3dadd(186.17, -159.47, -127.03, 0.85)
+  }
+  apic[55] {pt3dclear()
+    pt3dadd(186.17, -159.47, -127.03, 0.91)
+    pt3dadd(191.28, -117.91, -133.71, 0.72)
+  }
+  apic[56] {pt3dclear()
+    pt3dadd(191.28, -117.91, -133.71, 0.72)
+    pt3dadd(163.72, -109.52, -106.01, 0.59)
+  }
+  apic[57] {pt3dclear()
+    pt3dadd(191.28, -117.91, -133.71, 0.72)
+    pt3dadd(218.68, -110.59, -142.31, 0.64)
+  }
+  apic[58] {pt3dclear()
+    pt3dadd(186.17, -159.47, -127.03, 0.75)
+    pt3dadd(169.71, -141.31, -134.67, 0.75)
+  }
+  apic[59] {pt3dclear()
+    pt3dadd(169.71, -141.31, -134.67, 0.72)
+    pt3dadd(144.5, -115.43, -110.79, 0.59)
+  }
+  apic[60] {pt3dclear()
+    pt3dadd(169.71, -141.31, -134.67, 0.59)
+    pt3dadd(176.53, -114.74, -137.53, 0.59)
+  }
+  apic[61] {pt3dclear()
+    pt3dadd(225.36, -264.48, -104.1, 0.72)
+    pt3dadd(233.08, -228.38, -96.46, 0.72)
+  }
+  apic[62] {pt3dclear()
+    pt3dadd(233.08, -228.38, -96.46, 0.72)
+    pt3dadd(235.27, -209.42, -91.69, 0.72)
+  }
+  apic[63] {pt3dclear()
+    pt3dadd(235.27, -209.42, -91.69, 0.67)
+    pt3dadd(223.02, -147.76, -85, 0.67)
+  }
+  apic[64] {pt3dclear()
+    pt3dadd(223.02, -147.76, -85, 0.67)
+    pt3dadd(171.23, -91.42, -56.35, 0.53)
+  }
+  apic[65] {pt3dclear()
+    pt3dadd(223.02, -147.76, -85, 0.61)
+    pt3dadd(237.8, -113.46, -79.27, 0.56)
+  }
+  apic[66] {pt3dclear()
+    pt3dadd(237.8, -113.46, -79.27, 0.56)
+    pt3dadd(241.39, -112.75, -72.59, 0.56)
+  }
+  apic[67] {pt3dclear()
+    pt3dadd(237.8, -113.46, -79.27, 0.53)
+    pt3dadd(239.66, -98.31, -59.21, 0.53)
+  }
+}
+proc shape3d_11() {
+  apic[67] {    pt3dadd(240.54, -96.96, -59.21, 0.51)
+    pt3dadd(245.65, -92.22, -40.11, 0.51)
+  }
+  apic[68] {pt3dclear()
+    pt3dadd(235.27, -209.42, -91.69, 0.59)
+    pt3dadd(260.88, -144.43, -105.06, 0.53)
+  }
+  apic[69] {pt3dclear()
+    pt3dadd(233.08, -228.38, -96.46, 0.67)
+    pt3dadd(234.71, -224.86, -101.24, 0.67)
+  }
+  apic[70] {pt3dclear()
+    pt3dadd(234.71, -224.86, -101.24, 0.61)
+    pt3dadd(261.7, -175.37, -179.55, 0.59)
+  }
+  apic[71] {pt3dclear()
+    pt3dadd(261.7, -175.37, -179.55, 0.59)
+    pt3dadd(273.18, -129.57, -178.6, 0.59)
+  }
+  apic[72] {pt3dclear()
+    pt3dadd(261.7, -175.37, -179.55, 0.59)
+    pt3dadd(269.24, -173.29, -197.7, 0.59)
+  }
+  apic[73] {pt3dclear()
+    pt3dadd(234.71, -224.86, -101.24, 0.69)
+    pt3dadd(242.56, -211.95, -102.19, 0.75)
+  }
+  apic[74] {pt3dclear()
+    pt3dadd(242.56, -211.95, -102.19, 0.75)
+    pt3dadd(332.53, -142.33, -112.7, 0.59)
+  }
+  apic[75] {pt3dclear()
+    pt3dadd(242.56, -211.95, -102.19, 0.72)
+    pt3dadd(250.84, -204.31, -109.83, 0.75)
+  }
+  apic[76] {pt3dclear()
+    pt3dadd(250.84, -204.31, -109.83, 0.69)
+    pt3dadd(240.57, -124.89, -129.89, 0.59)
+  }
+  apic[77] {pt3dclear()
+    pt3dadd(250.84, -204.31, -109.83, 0.61)
+    pt3dadd(313.12, -154.26, -157.59, 0.59)
+  }
+  apic[78] {pt3dclear()
+    pt3dadd(192, -539.17, -104.1, 0.91)
+    pt3dadd(170.51, -502.27, -169.05, 0.69)
+  }
+  apic[79] {pt3dclear()
+    pt3dadd(191.17, -598.09, -96.46, 0.91)
+    pt3dadd(87.35, -610.28, -71.63, 0.56)
+  }
+  apic[80] {pt3dclear()
+    pt3dadd(192.19, -611.91, -99.33, 0.96)
+    pt3dadd(221.74, -623.31, -58.26, 0.8)
+  }
+}
+proc shape3d_12() {
+  apic[80] {    pt3dadd(223.34, -624.88, -56.35, 0.8)
+    pt3dadd(244.61, -627.57, -41.07, 0.59)
+  }
+  apic[81] {pt3dclear()
+    pt3dadd(192.2, -613.21, -99.33, 0.61)
+    pt3dadd(70, -598.17, -106.97, 0.56)
+  }
+  apic[82] {pt3dclear()
+    pt3dadd(192.31, -621.28, -98.37, 0.61)
+    pt3dadd(147.29, -604.58, -51.57, 0.48)
+  }
+  apic[83] {pt3dclear()
+    pt3dadd(194.39, -657.51, -101.24, 0.88)
+    pt3dadd(210.92, -672.96, -47.75, 0.69)
+  }
+  apic[84] {pt3dclear()
+    pt3dadd(195.51, -672.98, -103.15, 0.77)
+    pt3dadd(150.06, -662.76, -205.34, 0.64)
+  }
+  apic[85] {pt3dclear()
+    pt3dadd(195.9, -678.79, -105.06, 0.69)
+    pt3dadd(89.32, -684.14, -186.24, 0.67)
+  }
+  apic[86] {pt3dclear()
+    pt3dadd(197.05, -688.98, -103.15, 0.77)
+    pt3dadd(231.77, -619.28, -90.73, 0.53)
+  }
+  apic[87] {pt3dclear()
+    pt3dadd(196.54, -696.01, -102.19, 0.88)
+    pt3dadd(162.17, -678.81, -182.42, 0.67)
+  }
+  apic[88] {pt3dclear()
+    pt3dadd(199.37, -713.43, -103.15, 0.67)
+    pt3dadd(246.63, -686.61, -208.21, 0.61)
+  }
+  apic[89] {pt3dclear()
+    pt3dadd(200.03, -715.34, -105.06, 0.69)
+    pt3dadd(168.03, -646.04, -197.7, 0.69)
+  }
+  apic[90] {pt3dclear()
+    pt3dadd(200.99, -721.76, -101.24, 0.77)
+    pt3dadd(131.23, -700.51, -91.69, 0.64)
+  }
+}
+proc shape3d_13() {
+  apic[90] {    pt3dadd(127.53, -703.6, -89.78, 0.64)
+  }
+  apic[91] {pt3dclear()
+    pt3dadd(202.8, -725.59, -104.1, 0.75)
+    pt3dadd(295.46, -674.85, -120.34, 0.59)
+  }
+  apic[92] {pt3dclear()
+    pt3dadd(203.77, -738.14, -101.24, 0.8)
+    pt3dadd(244.96, -707.55, -194.84, 0.61)
+  }
+  apic[93] {pt3dclear()
+    pt3dadd(204.03, -741.22, -101.24, 0.61)
+    pt3dadd(259.64, -674.61, -53.48, 0.53)
+  }
+  apic[94] {pt3dclear()
+    pt3dadd(204.13, -743.38, -100.28, 0.61)
+    pt3dadd(285.79, -711.91, -40.11, 0.51)
+  }
+  apic[95] {pt3dclear()
+    pt3dadd(202.8, -755.65, -93.6, 0.67)
+    pt3dadd(176.02, -718.43, -47.75, 0.51)
+  }
+  apic[96] {pt3dclear()
+    pt3dadd(203.44, -761.14, -94.55, 0.59)
+    pt3dadd(193.69, -745.77, -47.75, 0.53)
+  }
+  apic[97] {pt3dclear()
+    pt3dadd(203.39, -762.28, -95.51, 0.61)
+    pt3dadd(112.54, -810.69, -87.87, 0.51)
+  }
+  apic[98] {pt3dclear()
+    pt3dadd(205.62, -777.27, -99.33, 0.61)
+    pt3dadd(154.77, -703.33, -132.76, 0.61)
+  }
+  apic[99] {pt3dclear()
+    pt3dadd(206.19, -781.43, -99.33, 0.83)
+    pt3dadd(186.18, -774.77, -77.36, 0.75)
+  }
+  apic[100] {pt3dclear()
+    pt3dadd(186.18, -774.77, -77.36, 0.64)
+    pt3dadd(176.01, -775.25, -43.93, 0.67)
+  }
+  apic[101] {pt3dclear()
+    pt3dadd(186.18, -774.77, -77.36, 0.75)
+    pt3dadd(142.53, -762.53, -50.62, 0.56)
+  }
+}
+proc shape3d_14() {
+  apic[101] {   pt3dadd(140.91, -763.36, -46.8, 0.56)
+    pt3dadd(140.48, -763.89, -47.75, 0.53)
+  }
+  apic[102] {pt3dclear()
+    pt3dadd(208.29, -795.59, -102.19, 0.61)
+    pt3dadd(95.85, -865.51, -69.72, 0.53)
+  }
+}
+proc basic_shape() {
+  shape3d_1()
+  shape3d_2()
+  shape3d_3()
+  shape3d_4()
+  shape3d_5()
+  shape3d_6()
+  shape3d_7()
+  shape3d_8()
+  shape3d_9()
+  shape3d_10()
+  shape3d_11()
+  shape3d_12()
+  shape3d_13()
+  shape3d_14()
+}
+
+proc subsets () { local i 
+  all = new SectionList()
+    soma all.append()
+    axon all.append()
+    for i=0, 68 dend[i] all.append()
+    for i=0, 102 apic[i] all.append()
+
+  somatic = new SectionList()
+    soma somatic.append()
+
+  axonal = new SectionList()
+    axon axonal.append()
+
+  basal = new SectionList()
+    for i=0, 68 dend[i] basal.append()
+
+  apical = new SectionList()
+    for i=0, 102 apic[i] apical.append()
+
+  alldend = new SectionList()
+    for i=0, 68 dend[i] alldend.append()
+    for i=0, 102 apic[i] alldend.append()
+
+  // spiny sections include all basal dendrites
+  // and all but the proximal trunk of the apical dendrites
+  // 2010-11-03 Ben Suter
+  spiny = new SectionList()
+    for i=2, 102 apic[i] spiny.append()
+    for i=0, 68 dend[i] spiny.append()
+
+  apical_maintrunk = new SectionList()
+    for i=0, 22 apic[i] apical_maintrunk.append()
+
+  apical_oblique = new SectionList()
+    for i=79, 102 apic[i] apical_oblique.append()
+
+  // Definition of "upper trunk" and "tuft" are subjective, and
+  // are more or less clear depending on the specific neuron.
+  // If we decide to treat these two subgroups differentially,
+  // we'll need to revisit the choice I've made below.
+  apical_uppertrunk = new SectionList()
+    apic[23] apical_uppertrunk.append()
+    apic[24] apical_uppertrunk.append()
+    apic[25] apical_uppertrunk.append()
+    apic[32] apical_uppertrunk.append()
+    apic[33] apical_uppertrunk.append()
+    apic[46] apical_uppertrunk.append()
+    apic[51] apical_uppertrunk.append()
+    apic[52] apical_uppertrunk.append()
+    apic[53] apical_uppertrunk.append()
+    apic[78] apical_uppertrunk.append()
+
+  apical_tuft = new SectionList()
+    for i=26, 31 apic[i] apical_tuft.append()
+    for i=34, 45 apic[i] apical_tuft.append()
+    for i=47, 50 apic[i] apical_tuft.append()
+    for i=54, 77 apic[i] apical_tuft.append()
+
+  // In this neuron, all the obliques occur below the main branch point,
+  // but this is not necessarily the case in general.
+  apical_beforebranchpoint = new SectionList()
+    forsec apical_maintrunk apical_beforebranchpoint.append()
+    forsec apical_oblique apical_beforebranchpoint.append()
+
+  apical_afterbranchpoint = new SectionList()
+    forsec apical_uppertrunk apical_afterbranchpoint.append()
+    forsec apical_tuft apical_afterbranchpoint.append()
+
+  // within ~100 um of soma -- based on "Perisomatic inhibition" - TF Freund 2007
+  perisom = new SectionList()
+    soma perisom.append()
+    for i = 0,8 apic[i] perisom.append()
+    apic[96] perisom.append()
+    apic[99] perisom.append()
+    for i = 0,15 dend[i] perisom.append()
+    for i = 17,45 dend[i] perisom.append()
+    for i = 47,53 dend[i] perisom.append()
+    for i = 56,68 dend[i] perisom.append()    
+}
+
+func lambda_f () { local i, x1, x2, d1, d2, lam, freq, d_lambda
+  // these are reasonable values for most models
+  freq = 100      // Hz, frequency at which AC length constant will be computed
+  d_lambda = 0.1
+
+  if (n3d() < 2) { return 1e5*sqrt(diam/(4*PI*$1*Ra*cm)) }
+  // above was too inaccurate with large variation in 3d diameter
+  // so now we use all 3-d points to get a better approximate lambda
+  x1 = arc3d(0)
+  d1 = diam3d(0)
+  lam = 0
+  for i=1, n3d()-1 {
+    x2 = arc3d(i)
+    d2 = diam3d(i)
+    lam += (x2 - x1)/sqrt(d1 + d2)
+    x1 = x2   d1 = d2
+  }
+  //  length of the section in units of lambda
+  lam *= sqrt(2) * 1e-5*sqrt(4*PI*$1*Ra*cm) 
+  return L/lam
+}
+
+proc geom_nseg() { local freq, d_lambda, before, after, tmp
+  // these are reasonable values for most models
+  freq = 100      // Hz, frequency at which AC length constant will be computed
+  d_lambda = 0.1
+  before = 0
+  forall { before = before + nseg }
+  soma area(0.5) // make sure diam reflects 3d points
+  forall { nseg = int((L/(d_lambda*lambda_f(freq))+0.9)/2)*2 + 1  }
+  after = 0
+  forall { after = after + nseg }
+  // print "geom_nseg: changed from ", before, " to ", after, " total segments"
+}
+
+proc optimize_nseg () { // Ra, cm, spinecapfactor
+    // use worst case Ra, cm values
+    forall {
+        Ra = $1
+        cm = $2
+    }
+    forsec spiny {
+        cm = $3 * cm  // spinecapfactor * cm
+        g_pas = $3 / rm // spinecapfactor * (1.0/rm)
+    }
+    // optimize # of segments per section (do this afer setting Ra, cm)
+    geom_nseg()
+    // need to reassign distances after changing nseg
+    recalculate_x_dist()
+}
+
+// Note: It is important to call this function BEFORE multisplit,
+// which means making sure to load any parallel GUI .ses
+// only AFTER this function has been called.
+proc recalculate_x_dist () { local nd
+    soma distance(0, 0.5) // set the center of the soma as origin
+    forall {
+        for (s) x_savedist(s) = distance(s)
+    }
+    nexusdist = 1e9 // calculate distance to tuft here 
+    forsec apical_uppertrunk { // apical_tuft 
+      for (s) {
+        nd = distance(s)
+        if(nd < nexusdist) nexusdist = nd        
+      }
+    }
+}
+
+proc addapicchan () {
+  forsec apical {
+    insert ca_ion
+    insert cadad // cadad.mod
+    insert cal // cal_mig.mod
+    insert can // can_mig.mod
+    // insert cat // cat_mig.mod
+    insert kBK // kBK.mod
+  }
+}
+
+proc apicchanprop () {
+  setgcalbarcald()
+  setgcanbarcand()
+  // gcatbar_cat = cat_gcatbar
+  forsec apical {
+    gpeak_kBK = kBK_gpeak
+    caVhmin_kBK = -46.08 + kBK_caVhminShift
+    depth_cadad = cadad_depth
+    taur_cadad = cadad_taur
+  }
+}
+
+proc addbasalchan () {
+  forsec basal {
+    insert ca_ion
+    insert cadad
+    insert cal
+    //insert cat
+    insert can
+    insert kBK
+  }
+}
+
+proc basalchanprop () {
+  forsec basal {
+    gcalbar_cal = cal_gcalbar
+    gcanbar_can = can_gcanbar
+    // gcatbar_cat = cat_gcatbar
+    gpeak_kBK = kBK_gpeak
+    caVhmin_kBK = -46.08 + kBK_caVhminShift
+    depth_cadad = cadad_depth
+    taur_cadad = cadad_taur
+  }
+}
+
+proc init_once() {  
+  forall { // forall within an object just accesses the sections belonging to the object
+    insert pas        // passive
+    insert savedist        // mechanism to keep track of distance from soma even after multisplit
+    if (useharnett) {
+      insert h15        // h-current in h_harnett.mod
+    } else if (usekole) { 
+      insert ih // h-current in Ih_kole.mod
+    } else if (usemigliore) { 
+      insert hd // h-current in Ih_migliore.mod
+      ehd_hd=-30 // params taken from Migliore 2012 modeldb (fig-5a.hoc)
+      elk_hd=-65.61
+      clk_hd=0.7
+    } else {
+      insert h           // h-current in h_bs.mod
+    }
+    insert nax       // Na current
+    insert kdr        // K delayed rectifier current
+    insert kap        // K-A current
+    insert k_ion
+    insert na_ion   
+  }
+  setallprop()
+  addapicchan()
+  addbasalchan()
+  forsec spiny {
+    cm = spinecapfactor * cm
+    // Adjust g_pas to compensate, to keep same time constant
+    // This is new as of 2011-02-14, because last week Michele Migliore said that
+    // the idea of a spine factor is to "add more membrane".
+    // I'm not sure about this, though, I thought I saw models that just
+    // increase the capacitance.
+    g_pas = spinecapfactor / rm
+  }
+  optimize_nseg(rall, cap, spinecapfactor)
+  apicchanprop()
+  basalchanprop()
+  setgbarnaxd() // nax in apic,basal dends
+  setgbarkapd() // kap in apic,basal dends
+  setgbarkdrd() // kdr in apic,basal dends
+  sethgbar() // distributes HCN conductance
+  soma { // K-D current in soma and axon only
+    insert kdmc
+    insert ca_ion
+    insert cadad
+    insert cal
+    // insert cat
+    insert can
+    insert kBK
+  }
+  setsomag() 
+  forsec "axon" {     // axon has I_KD, and more I_Na, I_KA, I_KDR, and no I_h
+    // K-D current in soma and axon only
+    insert kdmc
+  }
+  setaxong() // set conductance values for axon
+}
+
+proc reconfig () {
+  setallprop() // set initial properties, including g_pas,e_pas,cm,Ra,etc.
+  optimize_nseg(rall, cap, spinecapfactor) // set nseg based on passive properties
+  apicchanprop() //  initial apic dend properties
+  basalchanprop() // initial basal dend properties
+  setgbarnaxd() // nax in apic,basal dends
+  setgbarkapd() // kap in apic,basal dends
+  setgbarkdrd() // kdr in apic,basal dends
+  sethgbar() // h in all locations
+  setsomag() // soma-specific conductance values
+  setaxong() // axon-specific conductance values
+}
+
+proc setallprop () {
+  forall {
+    // passive
+    g_pas       = 1/rm
+    Ra          = rall
+    cm          = cap
+    e_pas       = Vrest
+    // h-current
+    if (useharnett) {
+      erev_h15 = h_erev
+    } else if(usekole) {
+      erev_ih      = h_erev
+    } else if(usemigliore) {
+      erev_hd      = h_erev
+    } else {
+      erev_h      = h_erev
+    }
+    // Na current
+    gbar_nax    = nax_gbar
+
+    // K delayed rectifier current
+    gbar_kdr    = kdr_gbar
+    vhalfn_kdr  = kdr_vhalfn
+    a0n_kdr     = kdr_a0n
+    nmax_kdr    = kdr_nmax
+
+    // K-A current
+    gbar_kap    = kap_gbar
+    vhalfn_kap  = kap_vhalfn
+    vhalfl_kap  = kap_vhalfl
+    nmin_kap    = kap_nmin
+    lmin_kap    = kap_lmin
+    tq_kap      = kap_tq
+
+    // reversal potentials
+    ena         = p_ena
+    ek          = p_ek
+  }
+}
+
+proc setsomag () {
+  soma {
+    gbar_kdmc = kdmc_gbar
+    gcalbar_cal = cal_gcalbar
+    gcanbar_can = can_gcanbar
+    // gcatbar_cat = cat_gcatbar
+    gpeak_kBK = kBK_gpeak
+    caVhmin_kBK = -46.08 + kBK_caVhminShift
+    depth_cadad = cadad_depth
+    taur_cadad = cadad_taur
+    gbar_nax = nax_gbar * nax_gbar_somam
+  }
+}
+
+proc setaxong () {     // axon has I_KD, and more I_Na, I_KA, I_KDR, and no I_h
+  forsec "axon" {
+    // axon has no Ih
+    if (useharnett) {
+      gbar_h15   = 0
+    } else if(usekole) {
+      gbar_ih = 0
+    } else if(usemigliore) {
+      gbar_hd = 0
+    } else {
+      gbar_h      = 0
+    }
+    // increase the I_Na, I_Ka, I_KD and I_KDR
+    gbar_nax    = nax_gbar_axonm * nax_gbar
+    gbar_kap    = kap_gbar_axonm * kap_gbar
+    gbar_kdmc   = kdmc_gbar_axonm * kdmc_gbar
+    gbar_kdr    = kdr_gbar_axonm * kdr_gbar
+  }
+}
+
+proc setgbarnaxd () { local gnaxlin
+  if (mnax != 0) {
+    forsec alldend {
+      for(x,0) {
+        gnaxlin = nax_gbar*nax_gbar_dendm - mnax*x_savedist(x)
+        if (gnaxlin < 0) {
+          gnaxlin = 0
+          print "setting gnaxlin to 0 at distance of ", x_savedist(x)
+        }
+        gbar_nax = gnaxlin
+      }
+    }
+  } else {
+    forsec alldend {
+      gbar_nax = nax_gbar * nax_gbar_dendm
+    }
+  }
+}
+
+proc setgbarkapd () {
+  forsec alldend {
+    gbar_kap = kap_gbar
+  }
+}
+
+proc setgbarkdrd () {
+  forsec alldend {
+    gbar_kdr = kdr_gbar
+  }
+}
+
+proc setgcalbarcald () { 
+  if (usecahotzone) {
+    forsec apical {
+      for(x,0) {
+        if (x_savedist(x) >= nexusdist+10 && x_savedist(x) <= 610) {
+          gcalbar_cal(x) = cal_gcalbar * calginc
+        } else {
+          gcalbar_cal(x) = cal_gcalbar
+        }
+      }
+    }
+  } else {
+    forsec apical {
+      gcalbar_cal = cal_gcalbar
+    }
+  }
+}
+
+proc setgcanbarcand () { 
+  if (usecahotzone) {
+    forsec apical {
+      for(x,0) {
+        if (x_savedist(x) >= nexusdist+10 && x_savedist(x) <= 610) {
+          gcanbar_can(x) = can_gcanbar * canginc
+        } else {
+          gcanbar_can(x) = can_gcanbar
+        }
+      }
+    }
+  } else {
+    forsec apical {
+      gcanbar_can = can_gcanbar
+    }
+  }
+}
+
+// proc setgcatbarcatd () {
+// forsec apical {
+//   for(x,0) {
+//     if (x_dist(x) > 750) {
+//       gcatbar_cat(x) = cat_gcatbar * calginc
+//     } else {
+//       gcatbar_cat(x) = cat_gcatbar
+//     }
+//   }
+// }
+// }
+
+// h-current distribution
+proc sethgbar () { local xd
+  h_gbar_tuftm = h_gbar_tuft / h_gbar
+  h_lambda = nexusdist / log(h_gbar_tuftm)
+  // Harnnet h-current
+  if (useharnett) {
+    soma gbar_h15 = h_gbar
+    forsec basal gbar_h15 = h_gbar
+    forsec apical_oblique gbar_h15 = h_gbar
+    forsec apical_maintrunk { // locations where increases exp
+      for(x,0) {
+        xd = x_savedist(x)
+        if(xd <= nexusdist) {
+          gbar_h15(x) = h_gbar*exp(x_savedist(x)/h_lambda)
+        } else { // this else should not happen...
+          print xd , " > " , nexusdist
+          gbar_h15(x) = h_gbar_tuft // but if main trunk extends slightly beyond branchpoint, should be OK...
+        }
+        if ( gbar_h15(x) < 0 ) { gbar_h(x) = 0 } // conductance must not be negative
+      }
+    }
+    forsec apical_uppertrunk gbar_h15 = h_gbar * h_gbar_tuftm // uniform here but larger 
+    forsec apical_tuft gbar_h15 = h_gbar * h_gbar_tuftm // uniform here but larger 
+  // Kole h-current
+  } else if(usekole) {
+    soma gbar_ih = h_gbar
+    forsec basal gbar_ih = h_gbar
+    forsec apical_oblique gbar_ih = h_gbar
+    forsec apical_maintrunk { // locations where increases exp
+      for(x,0) {
+        xd = x_savedist(x)
+        if(xd <= nexusdist) {
+          gbar_ih(x) = h_gbar*exp(x_savedist(x)/h_lambda)
+        } else { // this else should not happen...
+          print xd , " > " , nexusdist
+          gbar_ih(x) = h_gbar_tuft // but if main trunk extends slightly beyond branchpoint, should be OK...
+        }
+        if ( gbar_ih(x) < 0 ) { gbar_ih(x) = 0 } // conductance must not be negative
+      }
+    }
+    forsec apical_uppertrunk gbar_ih = h_gbar * h_gbar_tuftm // uniform here but larger 
+    forsec apical_tuft gbar_ih = h_gbar * h_gbar_tuftm // uniform here but larger 
+
+  // Migliore h-current
+  } else if(usemigliore) {
+    // // MIGLIORE DISTRIBUTION
+    soma gbar_hd=ghd*(1+100/(1+exp(half/slope)))
+    soma vhalfl_hd = -82 // from Migliore 2012, fig-5a.hoc
+    distance()
+    forsec basal {
+      vhalfl_hd = -82  // from Migliore 2012, fig-5a.hoc
+      for (x,0) { // from Migliore 2012, fig-5a.hoc
+        xdist = distance(x)
+        gbar_hd=ghd*(1+100/(1+exp(half/slope)))
+        if (xdist > 100){
+          vhalfl_hd=-90
+        } else {
+          vhalfl_hd=-82
+        }
+      }
+
+    }
+    // from Migliore 2012, fig-5a.hoc
+    forsec apical {
+      for (x,0) { 
+        xdist = distance(x)
+        gbar_hd(x) = ghd*(1+100/(1+exp((half-xdist)/slope)))
+        if (xdist > 100){
+          vhalfl_hd=-90
+        } else {
+          vhalfl_hd=-82
+        }
+      }
+    }
+
+    // BEN/SAM DISTRIBUTION
+    // soma gbar_hd = h_gbar
+    // forsec basal gbar_hd = h_gbar
+    // forsec apical_oblique gbar_hd = h_gbar
+    // forsec apical_maintrunk { // locations where increases exp
+    //   for(x,0) {
+    //     xd = x_savedist(x)
+    //     if(xd <= nexusdist) {
+    //       gbar_hd(x) = h_gbar*exp(x_savedist(x)/h_lambda)
+    //     } else { // this else should not happen...
+    //       print xd , " > " , nexusdist
+    //       gbar_hd(x) = h_gbar_tuft // but if main trunk extends slightly beyond branchpoint, should be OK...
+    //     }
+    //     if ( gbar_hd(x) < 0 ) { gbar_hd(x) = 0 } // conductance must not be negative
+    //   }
+    // }
+    // forsec apical_uppertrunk gbar_hd = h_gbar * h_gbar_tuftm // uniform here but larger 
+    // forsec apical_tuft gbar_hd = h_gbar * h_gbar_tuftm // uniform here but larger 
+
+  // BS h-current
+  } else {  
+    soma gbar_h = h_gbar
+    forsec basal gbar_h = h_gbar
+    forsec apical_oblique gbar_h = h_gbar
+    forsec apical_maintrunk { // locations where increases exp
+      for(x,0) {
+        xd = x_savedist(x)
+        if(xd <= nexusdist) {
+          gbar_h(x) = h_gbar*exp(x_savedist(x)/h_lambda)
+        } else { // this else should not happen...
+          print xd , " > " , nexusdist
+          gbar_h(x) = h_gbar_tuft // but if main trunk extends slightly beyond branchpoint, should be OK...
+        }
+        if ( gbar_h(x) < 0 ) { gbar_h(x) = 0 } // conductance must not be negative
+      }
+    }
+    forsec apical_uppertrunk gbar_h = h_gbar * h_gbar_tuftm // uniform here but larger 
+    forsec apical_tuft gbar_h = h_gbar * h_gbar_tuftm // uniform here but larger 
+  }
+
+}
+
+proc init_extra() {
+    // hook for on-the-fly changes
+    // override this function def at command-line as needed
+    // e.g. if you wish to tune/optimize, call init_once() here
+}
+
+proc mkstim () {
+  soma {
+//    stim = new IClamp(0.5)
+    // stim.amp    = curr
+    // stim.dur    = 1000
+    // stim.del    = 1500 // with 1 sec fake padding at start for Ih equilibration
+  }
+}
+
+proc celldef () {
+  topol()
+  subsets()
+  // geom_nseg()
+}
+
+proc setsyns () { localobj syn
+  asynl=new List() nsynl=new List() gsynl=new List() g2synl=new List()
+  if (0) {
+    soma esyn = new Exp2Syn(0.5)
+    soma isyn = new Exp2Syn(0.5)
+    {esyn.e=0 esyn.tau1=0.05 esyn.tau2=5.3}
+    {isyn.e=-80 isyn.tau1=0.07 isyn.tau2=9.1}
+    for i = 0,102 {
+      apic[i] esynd[i] = new Exp2Syn(0.5)
+      apic[i] isynd[i] = new Exp2Syn(0.5)
+      {esynd[i].e=0 esynd[i].tau1=0.05 esynd[i].tau2=5.3}
+      {isynd[i].e=-80 isynd[i].tau1=0.07 isynd[i].tau2=9.1}
+    }
+  }
+}
+
+proc init () {local b,i,ihMod
+  // zloc = $1
+  // type = $2
+  // id = $3
+  //ihMod = $1
+  //slope = $2
+  ihMod = 3
+  if (ihMod == 1) {useharnett=1 // whether to use the harnett 15 HCN (h_harnett.mod, instead of h_bs.mod)
+  } else if (ihMod == 2) {usekole=1  // whether to use the kole 2006 HCN (ih_kole.mod, instead of h_bs.mod)
+  } else if (ihMod == 3) {usemigliore=1} // whether to use the migliore 2012 HCN (ih_migliore.mod, instead of h_bs.mod)
+  access soma
+  celldef()
+  access soma
+  distance()
+  init_once()
+  // setsyns()
+}
+
+endtemplate PTcell
+
