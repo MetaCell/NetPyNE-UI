@@ -227,21 +227,26 @@ class NetPyNEGeppetto():
         finally:
             os.chdir(owd)
 
-    def importCellTemplate(self, modelParameters, modFolder, compileMod):
+    def importCellTemplate(self, modelParameters):
         try:
-            # Get Current dir
-            owd = os.getcwd()
+            with redirect_stdout(sys.__stdout__):
+                rule = modelParameters["label"]
+                # Get Current dir
+                owd = os.getcwd()
 
-            self.compileModMechFiles(compileMod, modFolder)
+                conds = {} if rule not in self.netParams.cellParams else self.netParams.cellParams[rule]['conds']
 
-            # import cell template
-            self.netParams.importCellParams(**modelParameters)
-            
-            # convert fron netpyne.specs.dict to dict
-            rule = modelParameters["label"]
-            self.netParams.cellParams[rule] = self.netParams.cellParams[rule].todict()
+                self.compileModMechFiles(modelParameters["compileMod"], modelParameters["modFolder"])
 
-            return utils.getJSONReply()
+                del modelParameters["modFolder"]
+                del modelParameters["compileMod"]
+                # import cell template
+                self.netParams.importCellParams(**modelParameters, conds=conds)
+                
+                # convert fron netpyne.specs.dict to dict
+                self.netParams.cellParams[rule] = self.netParams.cellParams[rule].todict()
+
+                return utils.getJSONReply()
         except:
             return utils.getJSONError("Error while importing the NetPyNE cell template", sys.exc_info())
         finally:
