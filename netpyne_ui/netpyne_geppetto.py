@@ -345,6 +345,8 @@ class NetPyNEGeppetto():
         with redirect_stdout(sys.__stdout__):
             if "popParams" in path:
                 self.propagate_field_rename("pop", newValue, oldValue)
+            elif "stimSourceParams" in path:
+                self.propagate_field_rename("source", newValue, oldValue)
         
         return 1
 
@@ -449,6 +451,8 @@ class NetPyNEGeppetto():
                 getattr(self.netParams, model).pop(label)
                 if "popParams" in model:
                     self.propagate_field_rename("pop", None, label)
+                elif "stimSourceParams" in model:
+                    self.propagate_field_rename("source", None, label)
             return True
         except:
             return False
