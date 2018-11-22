@@ -347,6 +347,8 @@ class NetPyNEGeppetto():
                 self.propagate_field_rename("pop", newValue, oldValue)
             elif "stimSourceParams" in path:
                 self.propagate_field_rename("source", newValue, oldValue)
+            elif "synMechParams" in path:
+                self.propagate_field_rename("synMech", newValue, oldValue)
         
         return 1
 
@@ -453,6 +455,8 @@ class NetPyNEGeppetto():
                     self.propagate_field_rename("pop", None, label)
                 elif "stimSourceParams" in model:
                     self.propagate_field_rename("source", None, label)
+                elif "synMechParams" in model:
+                    self.propagate_field_rename("synMech", None, label)
             return True
         except:
             return False
