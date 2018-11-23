@@ -334,9 +334,9 @@ class CSTR6 ():
 #
 def prmstr (p,s,fctr=2.0,shift=5.0):
   if p == 0.0:
-    print s,'=',str(p-shift),str(p+shift),str(p),'True'
+    print(s,'=',str(p-shift),str(p+shift),str(p),'True')
   elif p < 0.0:
-    print s, '=',str(p*fctr),str(p/fctr),str(p),'True'
+    print(s, '=',str(p*fctr),str(p/fctr),str(p),'True')
   else:
-    print s, ' = ' , str(p/fctr), str(p*fctr), str(p), 'True'
+    print(s, ' = ' , str(p/fctr), str(p*fctr), str(p), 'True')
 

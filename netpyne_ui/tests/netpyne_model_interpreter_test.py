@@ -59,30 +59,30 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         self.getGeppettoModel(netParams, simConfig)
 
     def test_tut1(self):
-        print "------------------------------------"
-        print "Tutorial 1 Instantiation:"
-        print "------------------------------------"
+        print("------------------------------------")
+        print("Tutorial 1 Instantiation:")
+        print("------------------------------------")
         from netpyne_ui.tests.tut1 import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
 
     def test_tut2(self):
-        print "------------------------------------"
-        print "Tutorial 2 Instantiation:"
-        print "------------------------------------"
+        print("------------------------------------")
+        print("Tutorial 2 Instantiation:")
+        print("------------------------------------")
         from netpyne_ui.tests.tut2 import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
 
     def test_tut3(self):
-        print "------------------------------------"
-        print "Tutorial 3 Instantiation:"
-        print "------------------------------------"
+        print("------------------------------------")
+        print("Tutorial 3 Instantiation:")
+        print("------------------------------------")
         from netpyne_ui.tests.tut3 import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
 
     def test_tut4(self):
-        print "------------------------------------"
-        print "Tutorial 4 Instantiation:"
-        print "------------------------------------"
+        print("------------------------------------")
+        print("Tutorial 4 Instantiation:")
+        print("------------------------------------")
         modelpath = os.path.join(self.path, 'tut4')
         subprocess.call(["rm", "-r", os.path.join(modelpath, "x86_64")])
         owd = os.getcwd()
@@ -95,23 +95,23 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         self.getGeppettoModel(netParams, simConfig)
 
     def test_tut5(self):
-        print "------------------------------------"
-        print "Tutorial 5 Instantiation:"
-        print "------------------------------------"
+        print("------------------------------------")
+        print("Tutorial 5 Instantiation:")
+        print("------------------------------------")
         from netpyne_ui.tests.tut5 import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
 
     def test_tut6(self):
-        print "------------------------------------"
-        print "Tutorial 6 Instantiation:"
-        print "------------------------------------"
+        print("------------------------------------")
+        print("Tutorial 6 Instantiation:")
+        print("------------------------------------")
         from netpyne_ui.tests.tut6 import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
 
     def test_M1detailed(self):
-        print "------------------------------------"
-        print "M1 detailed Instantiation:"
-        print "------------------------------------"
+        print("------------------------------------")
+        print("M1 detailed Instantiation:")
+        print("------------------------------------")
         modelpath = os.path.join(self.path, 'M1detailed')
         modpath = os.path.join(modelpath, 'mod')
         subprocess.call(["rm", "-r", os.path.join(modpath, "x86_64")])

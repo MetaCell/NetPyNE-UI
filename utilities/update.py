@@ -4,7 +4,7 @@ from utils import *
 # Hack so that it works in python 2 and 3
 try: input = raw_input
 except NameError: pass
-reply = input("Any uncommited change to your jupyter notebook will be stashed. Are you sure you want to update NetPyNE-UI? (y/n)")
+reply = eval(input("Any uncommited change to your jupyter notebook will be stashed. Are you sure you want to update NetPyNE-UI? (y/n)"))
 
 if reply[0] == 'y':
     # Checking out repos
