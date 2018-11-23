@@ -29,7 +29,7 @@ def checkout(folder, default_branch, cwdp):
     os.chdir(newPath)
     python_git=subprocess.Popen("git branch -a",shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     outstd,errstd=python_git.communicate()
-    if branch and branch in str(outstd) and branch != 'development': # don't ckeckout development for netpyne
+    if branch and branch in str(outstd) and branch != 'master' and branch != 'development': # don't ckeckout development for netpyne
         subprocess.call(['git', 'checkout', branch], cwd='./')
     else:
         subprocess.call(['git', 'checkout', default_branch], cwd='./')
@@ -46,21 +46,21 @@ if __name__ == "__main__":
 
 os.chdir(os.getcwd()+"/../")
 # Cloning Repos
-clone('https://github.com/openworm/pygeppetto.git','pygeppetto','development')
+clone('https://github.com/openworm/pygeppetto.git','pygeppetto','v0.4.2-alpha')
 subprocess.call(['pip', 'install', '-e', '.'], cwd='./pygeppetto/')
 
-clone('https://github.com/Neurosim-lab/netpyne.git','netpyne','ui')
+clone('https://github.com/Neurosim-lab/netpyne.git','netpyne','v0.9.0')
 subprocess.call(['pip', 'install', '-e', '.'], cwd='./netpyne/')
 
-clone('https://github.com/openworm/org.geppetto.frontend.jupyter.git','org.geppetto.frontend.jupyter','development')
+clone('https://github.com/openworm/org.geppetto.frontend.jupyter.git','org.geppetto.frontend.jupyter','v0.4.2-alpha')
 with open('npm_frontend_jupyter_log', 'a') as stdout:
     subprocess.call(['npm', 'install'], cwd='./org.geppetto.frontend.jupyter/js', stdout=stdout)
 subprocess.call(['npm', 'run', 'build-dev'], cwd='./org.geppetto.frontend.jupyter/js')
 
 # We can't clone org.geppetto.frontend as a regular submodule because Travis doesn't have .gitmodules in the zip
 # subprocess.call(['git', 'submodule', 'update', '--init'], cwd='./')
-clone('https://github.com/openworm/org.geppetto.frontend.git','geppetto','development','netpyne_ui/', False, 'geppetto')
-clone('https://github.com/MetaCell/geppetto-netpyne.git','geppetto-netpyne','development','netpyne_ui/geppetto/src/main/webapp/extensions/')
+clone('https://github.com/openworm/org.geppetto.frontend.git','geppetto','v0.4.1-syncRefactor','netpyne_ui/', False, 'geppetto')
+clone('https://github.com/MetaCell/geppetto-netpyne.git','geppetto-netpyne','master','netpyne_ui/geppetto/src/main/webapp/extensions/')
 
 print("Enabling Geppetto NetPyNE Extension ...")
 geppetto_configuration = os.path.join(os.path.dirname(__file__), './utilities/GeppettoConfiguration.json')
