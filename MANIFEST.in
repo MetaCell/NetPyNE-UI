@@ -1,0 +1,11 @@
+# Include everything inside this folder
+graft netpyne_ui/geppetto/src/main/webapp/build
+
+# Include any of these resources at any level
+recursive-include netpyne_ui/geppetto *.png *.css *.woff *.woff2
+
+# Include any of these resources at any level
+recursive-include netpyne_ui/tests *.hoc
+
+# Include also root files (basically the extension)
+include netpyne_ui/*
