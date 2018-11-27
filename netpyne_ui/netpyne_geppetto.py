@@ -372,32 +372,33 @@ class NetPyNEGeppetto():
         return dir_list
 
     def getPlot(self, plotName, LFPflavour):
-        with redirect_stdout(sys.__stdout__):
-            args = self.getPlotSettings(plotName)
-            if LFPflavour:
-                args['plots'] = [LFPflavour]
-            figData = getattr(analysis, plotName)(showFig=False, **args)
-            
-            if isinstance(figData, tuple):
-                fig = figData[0]
-                if fig==-1:
-                    return fig
-                elif isinstance(fig, list):
-                    # return [ui.getSVG(fig[0])].__str__()
-                    return [ui.getSVG(fig[0])]
-                elif isinstance(fig, dict):
-                    svgs = []
-                    for key, value in fig.items():
-                        logging.debug("Found plot for "+ key)
-                        svgs.append(ui.getSVG(value))
-                    #return svgs.__str__()
-                    return svgs
+        try:
+            with redirect_stdout(sys.__stdout__):  
+                args = self.getPlotSettings(plotName)
+                if LFPflavour:
+                    args['plots'] = [LFPflavour]
+                figData = getattr(analysis, plotName)(showFig=False, **args)
+                
+                if isinstance(figData, tuple):
+                    fig = figData[0]
+                    if fig==-1:
+                        return fig
+                    elif isinstance(fig, list):
+                        return [ui.getSVG(fig[0])]
+                    elif isinstance(fig, dict):
+                        svgs = []
+                        for key, value in fig.items():
+                            svgs.append(ui.getSVG(value))
+                        return svgs
+                    else:
+                        return [ui.getSVG(fig)]
                 else:
-                    #return [ui.getSVG(fig)].__str__()
-                    return [ui.getSVG(fig)]
-            else:
-                return figData
-        
+                    return figData
+        except Exception as e:
+            # TODO: Extract these two lines as a function and call it in every catch clause
+            err = "There was an exception in %s():"%(function.__name__)
+            logging.exception(("%s \n %s \n%s"%(err,e,sys.exc_info())))
+
     def getAvailablePops(self):
         return list(self.netParams.popParams.keys())
 
