@@ -1,10 +1,10 @@
 [![Docker Automated buil](https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg)](https://hub.docker.com/r/metacell/netpyne-ui/)
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/development/docs/NetPyNe.png" width="350px"/>
+    <img src="https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/updated_documentation/docs/netpyne.png" width="350px"/>
 </p>
 
-![Screenshot](https://github.com/metacell/netpyne-ui/raw/master/netpyneui.png)
+![Screenshot](https://github.com/metacell/netpyne-ui/raw/updated_documentation/docs/wiki6.png)
 
 This repository hosts the User Interface for [NetPyNE](http://www.neurosimlab.org/netpyne/). NetPyNE is a python package to facilitate the development, parallel simulation and analysis of biological neuronal networks using the NEURON simulator.
 
