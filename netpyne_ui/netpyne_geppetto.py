@@ -540,26 +540,46 @@ class NetPyNEGeppetto():
             return utils.getJSONError("Error while importing the NetPyNE model", sys.exc_info())
             
 
-    def propagate(self, obj, label, cond, new, old):
-        for key in obj.keys():
-            if label in list(obj[key][cond].keys()):
-                if isinstance(obj[key][cond][label], str):
-                    if old==obj[key][cond][label]:
-                        if new=='' or new==None: 
-                            obj[key].pop(label) 
-                        else: 
-                            obj[key][cond][label] = new
-
-                elif isinstance(obj[key][cond][label], list):
-                    if old in obj[key][cond][label]:
-                        if new=='' or new==None:
-                            obj[key][cond][label] = [ value for value in obj[key][cond][label] if value!=old]
+    def propagate(self, model, label, cond, new, old):
+        with redirect_stdout(sys.__stdout__):
+            if model == 'analysis':
+                analysis = getattr(self.simConfig, model)
+                for plot in analysis.keys():
+                    if cond in analysis[plot].keys():
+                        for index, item in enumerate(analysis[plot][cond]):
+                            if isinstance(item, str):
+                                if new == None:
+                                    analysis[plot][cond].pop(index)
+                                    break
+                                elif item == old:
+                                    analysis[plot][cond][index] = new
+                            else:
+                                if isinstance(item[0], str):
+                                    if new == None:
+                                        analysis[plot][cond].pop(index)
+                                        break
+                                    elif item[0] == old:
+                                        analysis[plot][cond][index] = [new, item[1]]
+            else:
+                obj = getattr(self.netParams, model)
+                for key in obj.keys():
+                    if label in list(obj[key][cond].keys()):
+                        if isinstance(obj[key][cond][label], str):
+                            if old==obj[key][cond][label]:
+                                if new=='' or new==None: 
+                                    obj[key].pop(label) 
+                                else: 
+                                    obj[key][cond][label] = new
+                        elif isinstance(obj[key][cond][label], list):
+                            if old in obj[key][cond][label]:
+                                if new=='' or new==None:
+                                    obj[key][cond][label] = [ value for value in obj[key][cond][label] if value!=old]
+                                else:
+                                    obj[key][cond][label] = [ value if value!=old else new for value in obj[key][cond][label] ]
+                            if len(obj[key][cond][label])==0:
+                                obj[key][cond].pop(label)
                         else:
-                            obj[key][cond][label] = [ value if value!=old else new for value in obj[key][cond][label] ]
-                    if len(obj[key][cond][label])==0:
-                        obj[key][cond].pop(label)
-                else:
-                    pass
+                            pass
 
     def propagate_field_rename(self, label, new, old):
         def unique(label=label, old=old):
@@ -580,8 +600,8 @@ class NetPyNEGeppetto():
             return True
         else:
             if unique():    
-                for (model, cond) in [['cellParams','conds'], ['connParams', 'preConds'], ['connParams', 'postConds'], ['stimTargetParams', 'conds']]: 
-                    self.propagate(getattr(self.netParams, model), label, cond, new, old)
+                for (model, cond) in [['cellParams','conds'], ['connParams', 'preConds'], ['connParams', 'postConds'], ['stimTargetParams', 'conds'], ['analysis', 'include'] ]: 
+                    self.propagate(model, label, cond, new, old)
                 return True
             else:
                 return False
