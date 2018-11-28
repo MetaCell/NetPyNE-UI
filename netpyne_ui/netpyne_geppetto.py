@@ -555,18 +555,20 @@ class NetPyNEGeppetto():
                     if cond in analysis[plot].keys():
                         for index, item in enumerate(analysis[plot][cond]):
                             if isinstance(item, str):
-                                if new == None:
-                                    analysis[plot][cond].pop(index)
-                                    break
-                                elif item == old:
-                                    analysis[plot][cond][index] = new
+                                if item == old:
+                                    if new == None:
+                                        analysis[plot][cond].remove(item)
+                                        break
+                                    else:
+                                        analysis[plot][cond][index] = new
                             else:
                                 if isinstance(item[0], str):
-                                    if new == None:
-                                        analysis[plot][cond].pop(index)
-                                        break
-                                    elif item[0] == old:
-                                        analysis[plot][cond][index] = [new, item[1]]
+                                    if item[0] == old:
+                                        if new == None:
+                                            analysis[plot][cond].pop(index)
+                                            break
+                                        else:
+                                            analysis[plot][cond][index] = [new, item[1]]
             else:
                 obj = getattr(self.netParams, model)
                 for key in obj.keys():
