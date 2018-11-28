@@ -12,7 +12,7 @@ RUN /bin/bash -c "source activate snakes &&  jupyter serverextension enable --py
 RUN /bin/bash -c "source activate snakes && jupyter nbextension enable --py widgetsnbextension"
 
 WORKDIR /home/jovyan
-RUN git clone --branch CNS18 https://github.com/Neurosim-lab/netpyne_workspace
+RUN git clone --branch v0.5 https://github.com/Neurosim-lab/netpyne_workspace
 WORKDIR /home/jovyan/netpyne_workspace
 
 # Uncomment to run travis using this Dockerfile
