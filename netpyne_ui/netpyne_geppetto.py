@@ -372,26 +372,33 @@ class NetPyNEGeppetto():
         return dir_list
 
     def getPlot(self, plotName, LFPflavour):
-        args = self.getPlotSettings(plotName)
-        if LFPflavour:
-            args['plots'] = [LFPflavour]
-        fig = getattr(analysis, plotName)(showFig=False, **args)[0]
-        if fig==-1:
-            return fig
-        elif isinstance(fig, list):
-            # return [ui.getSVG(fig[0])].__str__()
-            return [ui.getSVG(fig[0])]
-        elif isinstance(fig, dict):
-            svgs = []
-            for key, value in fig.items():
-                logging.debug("Found plot for "+ key)
-                svgs.append(ui.getSVG(value))
-            #return svgs.__str__()
-            return svgs
-        else:
-            #return [ui.getSVG(fig)].__str__()
-            return [ui.getSVG(fig)]
-        
+        try:
+            with redirect_stdout(sys.__stdout__):  
+                args = self.getPlotSettings(plotName)
+                if LFPflavour:
+                    args['plots'] = [LFPflavour]
+                figData = getattr(analysis, plotName)(showFig=False, **args)
+                
+                if isinstance(figData, tuple):
+                    fig = figData[0]
+                    if fig==-1:
+                        return fig
+                    elif isinstance(fig, list):
+                        return [ui.getSVG(fig[0])]
+                    elif isinstance(fig, dict):
+                        svgs = []
+                        for key, value in fig.items():
+                            svgs.append(ui.getSVG(value))
+                        return svgs
+                    else:
+                        return [ui.getSVG(fig)]
+                else:
+                    return figData
+        except Exception as e:
+            # TODO: Extract these two lines as a function and call it in every catch clause
+            err = "There was an exception in %s():"%(function.__name__)
+            logging.exception(("%s \n %s \n%s"%(err,e,sys.exc_info())))
+
     def getAvailablePops(self):
         return list(self.netParams.popParams.keys())
 
@@ -438,8 +445,33 @@ class NetPyNEGeppetto():
         
     def getAvailablePlots(self):
         plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats","plotRatePSD", "plotTraces", "plotLFP", "plotShape", "plot2Dnet", "plotConn", "granger"]
+
         return [plot for plot in plots if plot not in list(self.simConfig.analysis.keys())]
 
+    def getInclude(self, model):
+        with redirect_stdout(sys.__stdout__):
+            if model in list(netpyne_geppetto.simConfig.analysis.keys()):
+                if 'include' in list(netpyne_geppetto.simConfig.analysis[model].keys()):
+                    return netpyne_geppetto.simConfig.analysis[model]['include']
+                else:
+                    return False
+            else:
+                return False
+
+    def getGIDs(self):
+        # pop sizes and gids returned in a dict
+        out = {}
+        with redirect_stdout(sys.__stdout__):
+            for key in self.netParams.popParams.keys():
+                if 'numCells' in self.netParams.popParams[key]:
+                    out[key] = self.netParams.popParams[key]['numCells']
+                else:
+                    out[key] = 0
+
+            out['gids'] = int(np.sum([v for k, v in list(out.items())]))
+
+        return out
+        
     def deleteParam(self, model, label):
         try:
             if isinstance(model, list): # just for cellParams
@@ -515,26 +547,48 @@ class NetPyNEGeppetto():
             return utils.getJSONError("Error while importing the NetPyNE model", sys.exc_info())
             
 
-    def propagate(self, obj, label, cond, new, old):
-        for key in obj.keys():
-            if label in list(obj[key][cond].keys()):
-                if isinstance(obj[key][cond][label], str):
-                    if old==obj[key][cond][label]:
-                        if new=='' or new==None: 
-                            obj[key].pop(label) 
-                        else: 
-                            obj[key][cond][label] = new
-
-                elif isinstance(obj[key][cond][label], list):
-                    if old in obj[key][cond][label]:
-                        if new=='' or new==None:
-                            obj[key][cond][label] = [ value for value in obj[key][cond][label] if value!=old]
+    def propagate(self, model, label, cond, new, old):
+        with redirect_stdout(sys.__stdout__):
+            if model == 'analysis':
+                analysis = getattr(self.simConfig, model)
+                for plot in analysis.keys():
+                    if cond in analysis[plot].keys():
+                        for index, item in enumerate(analysis[plot][cond]):
+                            if isinstance(item, str):
+                                if item == old:
+                                    if new == None:
+                                        analysis[plot][cond].remove(item)
+                                        break
+                                    else:
+                                        analysis[plot][cond][index] = new
+                            else:
+                                if isinstance(item[0], str):
+                                    if item[0] == old:
+                                        if new == None:
+                                            analysis[plot][cond].pop(index)
+                                            break
+                                        else:
+                                            analysis[plot][cond][index] = [new, item[1]]
+            else:
+                obj = getattr(self.netParams, model)
+                for key in obj.keys():
+                    if label in list(obj[key][cond].keys()):
+                        if isinstance(obj[key][cond][label], str):
+                            if old==obj[key][cond][label]:
+                                if new=='' or new==None: 
+                                    obj[key].pop(label) 
+                                else: 
+                                    obj[key][cond][label] = new
+                        elif isinstance(obj[key][cond][label], list):
+                            if old in obj[key][cond][label]:
+                                if new=='' or new==None:
+                                    obj[key][cond][label] = [ value for value in obj[key][cond][label] if value!=old]
+                                else:
+                                    obj[key][cond][label] = [ value if value!=old else new for value in obj[key][cond][label] ]
+                            if len(obj[key][cond][label])==0:
+                                obj[key][cond].pop(label)
                         else:
-                            obj[key][cond][label] = [ value if value!=old else new for value in obj[key][cond][label] ]
-                    if len(obj[key][cond][label])==0:
-                        obj[key][cond].pop(label)
-                else:
-                    pass
+                            pass
 
     def propagate_field_rename(self, label, new, old):
         def unique(label=label, old=old):
@@ -555,8 +609,8 @@ class NetPyNEGeppetto():
             return True
         else:
             if unique():    
-                for (model, cond) in [['cellParams','conds'], ['connParams', 'preConds'], ['connParams', 'postConds'], ['stimTargetParams', 'conds']]: 
-                    self.propagate(getattr(self.netParams, model), label, cond, new, old)
+                for (model, cond) in [['cellParams','conds'], ['connParams', 'preConds'], ['connParams', 'postConds'], ['stimTargetParams', 'conds'], ['analysis', 'include'] ]: 
+                    self.propagate(model, label, cond, new, old)
                 return True
             else:
                 return False
