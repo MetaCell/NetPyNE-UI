@@ -82,7 +82,7 @@ class NetPyNEModelInterpreter():
 
             # Save the cell position and update elements in defaultValue and size
             populations[cell['tags']['pop']].size = populations[cell['tags']['pop']].size + 1
-            populations[cell['tags']['pop']].defaultValue.elements.append(ArrayElement(index=len(populations[cell['tags']['pop']].defaultValue.elements) , position=Point(x=float(cell['tags']['x']), y=float(cell['tags']['y']), z=float(cell['tags']['z']))))
+            populations[cell['tags']['pop']].defaultValue.elements.append(ArrayElement(index=len(populations[cell['tags']['pop']].defaultValue.elements) , position=Point(x=float(cell['tags']['x']), y=-float(cell['tags']['y']), z=float(cell['tags']['z']))))
             
     def extractInstances(self, netpyne_model, netpyne_geppetto_library, geppetto_model):
         instance = pygeppetto.Variable(id='network')
