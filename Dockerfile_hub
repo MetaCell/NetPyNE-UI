@@ -1,5 +1,6 @@
 FROM metacell/jupyter-neuron:latest
 
+USER root
 RUN apt-get install -y \
         nodejs \
         npm
