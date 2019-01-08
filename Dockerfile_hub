@@ -1,5 +1,8 @@
 FROM metacell/jupyter-neuron:latest
 
+RUN apt-get install -y \
+        nodejs \
+        npm
 RUN npm install -g configurable-http-proxy
 
 
