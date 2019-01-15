@@ -26,7 +26,7 @@ c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 from jupyter_client.localinterfaces import public_ips
 ip = public_ips()[0]
 c.JupyterHub.hub_ip = ip
-c.DockerSpawner.image = 'netpyne-ui_spawner'
+c.DockerSpawner.image = 'netpyne_ui_jupyterspawner'
 c.DockerSpawner.remove_containers = True
 c.DockerSpawner.remove = True
 c.DockerSpawner.debug = True
