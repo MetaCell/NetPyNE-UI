@@ -31,6 +31,9 @@ c.DockerSpawner.remove_containers = True
 c.DockerSpawner.remove = True
 c.DockerSpawner.debug = True
 
+c.Spawner.http_timeout = 99
+c.Spawner.start_timeout = 99
+
 ## Extra arguments to be passed to the single-user server. Only works for the LocalProcessSpawner
 #  
 #  Some spawners allow shell-style expansion here, allowing you to use
