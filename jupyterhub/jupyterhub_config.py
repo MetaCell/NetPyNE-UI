@@ -30,6 +30,7 @@ c.DockerSpawner.image = 'netpyne_ui_jupyterspawner'
 c.DockerSpawner.remove_containers = True
 c.DockerSpawner.remove = True
 c.DockerSpawner.debug = True
+c.DockerSpawner.network_name='test'
 
 c.Spawner.http_timeout = 99
 c.Spawner.start_timeout = 99
