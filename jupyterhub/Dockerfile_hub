@@ -8,4 +8,3 @@ RUN echo "$netpyneuiBranch";
 RUN pip install jupyterhub-tmpauthenticator dockerspawner
 
 RUN wget https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/$netpyneuiBranch/jupyterhub/jupyterhub_config.py -q
-RUN cp jupyterhub_config.py /srv/jupyterhub/
