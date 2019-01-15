@@ -12,11 +12,9 @@
 #    where `handler` is the calling web.RequestHandler,
 #    and `data` is the POST form data from the login page.
 #c.JupyterHub.authenticator_class = 'jupyterhub.auth.PAMAuthenticator'
-c.JupyterHub.authenticator_class = 'tmpauthenticator.TmpAuthenticator'
 # c.JupyterHub.authenticator_class = 'dummyauthenticator.DummyAuthenticator'
 # c.DummyAuthenticator.password = "dummypassword"
-
-
+c.JupyterHub.authenticator_class = 'tmpauthenticator.TmpAuthenticator'
 
 ## The class to use for spawning single-user servers.
 #  
@@ -30,7 +28,7 @@ c.DockerSpawner.image = 'netpyne_ui_jupyterspawner'
 c.DockerSpawner.remove_containers = True
 c.DockerSpawner.remove = True
 c.DockerSpawner.debug = True
-c.DockerSpawner.network_name='test'
+c.DockerSpawner.network_name='jupyterhub_network'
 
 ## Extra arguments to be passed to the single-user server. Only works for the LocalProcessSpawner
 #  
