@@ -98,7 +98,7 @@ class NetPyNEGeppetto():
                     logging.debug('Running single thread simulation')
                     netpyne_model = self.simulateNetPyNEModel()
                     
-                return json.loads(GeppettoModelSerializer().serialize(self.geppetto_model))
+                return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
         except:
             return utils.getJSONError("Error while simulating the NetPyNE model", sys.exc_info())
 
