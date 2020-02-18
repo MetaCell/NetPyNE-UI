@@ -68,7 +68,7 @@ with open('npm_frontend_jupyter_log', 'a') as stdout:
 subprocess.call(['npm', 'run', 'build-dev'], cwd='./org.geppetto.frontend.jupyter/js')
 
 print("Enabling Geppetto NetPyNE Extension ...")
-geppetto_configuration = os.path.join(os.path.dirname(__file__), './utilities/GeppettoConfiguration.json.copyme')
+geppetto_configuration = os.path.join(os.path.dirname(__file__), './utilities/GeppettoConfiguration.copyme.json')
 copyfile(geppetto_configuration, './netpyne_ui/geppetto/src/main/webapp/GeppettoConfiguration.json')
 
 # Installing and building
