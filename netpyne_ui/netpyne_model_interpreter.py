@@ -18,6 +18,7 @@ class NetPyNEModelInterpreter():
 
         # We create a GeppettoModel instance and we set a name a assign a lib
         geppetto_model = self.factory.createGeppettoModel('NetPyNEModel')
+        self.factory.geppetto_common_library = geppetto_model.libraries[0]
         netpyne_geppetto_library = pygeppetto.GeppettoLibrary(
             name='netpynelib')
         geppetto_model.libraries.append(netpyne_geppetto_library)
@@ -44,6 +45,7 @@ class NetPyNEModelInterpreter():
                     composite_id = cell['tags']['pop'] + "_cell"
 
                 cellType = pygeppetto.CompositeType(id=str(composite_id), name=str(composite_id), abstract= False)
+
                 visualType = pygeppetto.CompositeVisualType(id='cellMorphology', name='cellMorphology')
                 cellType.visualType = visualType
                 defaultValue = ArrayValue(elements=[])
