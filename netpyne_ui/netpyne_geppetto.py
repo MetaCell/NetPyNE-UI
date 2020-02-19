@@ -362,14 +362,15 @@ class NetPyNEGeppetto():
         if dir == None or dir == '':
             dir = os.getcwd()
         dir_list = []
+        file_list = []
         for f in sorted(os.listdir(str(dir)), key=str.lower):
             ff=os.path.join(dir,f)
             if os.path.isdir(ff):
-                dir_list.insert(0, {'title': f, 'path': ff, 'load': False, 'children': [{'title': 'Loading...'}]})
+                dir_list.append({'title': f, 'path': ff, 'load': False, 'children': [{'title': 'Loading...'}]})
             elif not onlyDirs:
                 if not filterFiles or os.path.isfile(ff) and ff.endswith(filterFiles):
-                    dir_list.append({'title': f, 'path': ff})
-        return dir_list
+                    file_list.append({'title': f, 'path': ff})
+        return dir_list + file_list
 
     def getPlot(self, plotName, LFPflavour):
         try:
