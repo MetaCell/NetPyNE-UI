@@ -1,13 +1,15 @@
 import os
 import logging
 import uuid
+import gzip
 import tarfile
-from tempfile import TemporaryDirectory
+import shutil
 from zipfile import ZipFile
+from tempfile import TemporaryDirectory
 from jupyter_geppetto.webapi import get, post
 from notebook.base.handlers import IPythonHandler
 
-ALLOWED_EXTENSIONS = ["py", "zip", "pdf", "txt", "xls", "png", "jpeg"]
+ALLOWED_EXTENSIONS = ["py", "zip", "gz", ".tar.gz", "pdf", "txt", "xls", "png", "jpeg"]
 
 UPLOAD_FOLDER_NAME = "uploads"
 UPLOAD_FOLDER_PATH = os.path.join(os.getcwd(), UPLOAD_FOLDER_NAME)
@@ -75,6 +77,14 @@ class NetPyNEController:  # pytest: no cover
                 if filename.endswith('.zip'):
                     with ZipFile(file_path) as zipObj:
                         zipObj.extractall(UPLOAD_FOLDER_PATH)
+
+                elif filename.endswith('.tar.gz'):
+                    with tarfile.open(file_path, mode='r:gz') as tar:
+                        tar.extractall(UPLOAD_FOLDER_PATH)
+
+                elif filename.endswith('.gz'):
+                    with gzip.open(file_path, "rb") as gz, open(file_path.replace('.gz', ''), 'wb') as ff:
+                        shutil.copyfileobj(gz, ff)
             
             handler.set_status(200, f"Number of files saved: {files_saved}. Number of files sent: {len(files['file'])}")
 
@@ -106,3 +116,19 @@ class NetPyNEController:  # pytest: no cover
                     send_files(handler, tar_gz_file_path, tar_gz_file_name)
         
         handler.finish()
+
+    @get('/export')
+    def exportModel(self, args):
+        try:
+            with redirect_stdout(sys.__stdout__):
+                if not args['netCells']:
+                    sim.initialize(netParams = self.netParams, simConfig = self.simConfig)    
+                sim.cfg.filename = args['fileName']
+                include = [el for el in specs.SimConfig().saveDataInclude if el in args.keys() and args[el]]
+                if args['netCells']: include += ['netPops']
+                sim.cfg.saveJson = True
+                sim.saveData(include)
+                sim.cfg.saveJson = False
+            return utils.getJSONReply()
+        except:
+            return utils.getJSONError("Error while exporting the NetPyNE model", sys.exc_info())
