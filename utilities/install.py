@@ -55,7 +55,7 @@ subprocess.call(['pip', 'install', '-e', '.'], cwd='./netpyne/')
 
 # We can't clone org.geppetto.frontend as a regular submodule because Travis doesn't have .gitmodules in the zip
 # subprocess.call(['git', 'submodule', 'update', '--init'], cwd='./')
-clone('https://github.com/openworm/org.geppetto.frontend.git','geppetto','development','netpyne_ui/', False, 'geppetto')
+clone('https://github.com/openworm/org.geppetto.frontend.git','geppetto','v0.4.2-alpha','netpyne_ui/', False, 'geppetto')
 clone('https://github.com/MetaCell/geppetto-netpyne.git','geppetto-netpyne','development','netpyne_ui/geppetto/src/main/webapp/extensions/')
 
 branch = None
