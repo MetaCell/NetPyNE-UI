@@ -116,19 +116,3 @@ class NetPyNEController:  # pytest: no cover
                     send_files(handler, tar_gz_file_path, tar_gz_file_name)
         
         handler.finish()
-
-    @get('/export')
-    def exportModel(self, args):
-        try:
-            with redirect_stdout(sys.__stdout__):
-                if not args['netCells']:
-                    sim.initialize(netParams = self.netParams, simConfig = self.simConfig)    
-                sim.cfg.filename = args['fileName']
-                include = [el for el in specs.SimConfig().saveDataInclude if el in args.keys() and args[el]]
-                if args['netCells']: include += ['netPops']
-                sim.cfg.saveJson = True
-                sim.saveData(include)
-                sim.cfg.saveJson = False
-            return utils.getJSONReply()
-        except:
-            return utils.getJSONError("Error while exporting the NetPyNE model", sys.exc_info())
