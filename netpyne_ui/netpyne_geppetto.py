@@ -30,8 +30,9 @@ from shutil import copyfile
 from jupyter_geppetto import jupyter_geppetto, synchronization, utils
 import imp
 from contextlib import redirect_stdout, redirect_stderr
+from netpyne_ui.constants import NETPYNE_WORKDIR_PATH
 
-
+os.chdir(NETPYNE_WORKDIR_PATH)
 class NetPyNEGeppetto():
 
     def __init__(self):
@@ -372,7 +373,7 @@ class NetPyNEGeppetto():
     def getDirList(self, dir=None, onlyDirs = False, filterFiles=False):
         # Get Current dir
         if dir == None or dir == '':
-            dir = os.getcwd()
+            dir = os.path.join(os.getcwd(), NETPYNE_WORKDIR_PATH)
         dir_list = []
         file_list = []
         for f in sorted(os.listdir(str(dir)), key=str.lower):

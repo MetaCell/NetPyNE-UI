@@ -7,3 +7,7 @@ netpyne_ui/geppetto
 notebook.ipynb
 .git
 netpyne
+Dockerfile
+Dockerfile_base
+Dockerfile_dev
+netpyne_workspace

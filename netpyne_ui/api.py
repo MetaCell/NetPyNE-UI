@@ -8,14 +8,7 @@ from zipfile import ZipFile
 from tempfile import TemporaryDirectory
 from jupyter_geppetto.webapi import get, post
 from notebook.base.handlers import IPythonHandler
-
-ALLOWED_EXTENSIONS = ["py", "zip", "gz", ".tar.gz", "pdf", "txt", "xls", "png", "jpeg"]
-
-UPLOAD_FOLDER_NAME = "uploads"
-UPLOAD_FOLDER_PATH = os.path.join(os.getcwd(), UPLOAD_FOLDER_NAME)
-
-if not os.path.exists(UPLOAD_FOLDER_PATH):
-    os.makedirs(UPLOAD_FOLDER_PATH)
+from netpyne_ui.constants import NETPYNE_WORKDIR, UPLOAD_FOLDER_NAME, ALLOWED_EXTENSIONS, UPLOAD_FOLDER_PATH
 
 def allowed_file(filename, allowed_extensions=ALLOWED_EXTENSIONS):
     return '.' in filename and \
