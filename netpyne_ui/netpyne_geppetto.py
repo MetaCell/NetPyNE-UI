@@ -59,7 +59,7 @@ class NetPyNEGeppetto():
                     netpyne_model = self.instantiateNetPyNEModel()
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
                 
-                return json.loads(GeppettoModelSerializer().serialize(self.geppetto_model))
+                return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
         except:
             return utils.getJSONError("Error while instantiating the NetPyNE model", sys.exc_info())
         
@@ -185,7 +185,7 @@ class NetPyNEGeppetto():
                         sim.loadSimData(args['jsonModelFolder'])
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
 
-                    return json.loads(GeppettoModelSerializer().serialize(self.geppetto_model))
+                    return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
                 else:
                     return utils.getJSONReply()
         except:
@@ -281,7 +281,7 @@ class NetPyNEGeppetto():
                 sim.initialize()
                 sim.importNeuroML2(modelParams['neuroMLFolder'], simConfig=specs.SimConfig(), simulate=False, analyze=False)
                 self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
-            return json.loads(GeppettoModelSerializer().serialize(self.geppetto_model))
+            return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
 
         except:
             return utils.getJSONError("Error while exporting the NetPyNE model", sys.exc_info())
@@ -482,10 +482,14 @@ class NetPyNEGeppetto():
                 else:
                     pass
             else:
-                getattr(self.netParams, model).pop(label)
+                population = getattr(self.netParams, model).pop(label)
                 if "popParams" in model:
                     self.propagate_field_rename("pop", None, label)
+                    self.propagate_field_rename("cellModel", None, population['cellModel'])
+                    self.propagate_field_rename("cellType", None, population['cellType'])
+
                 elif "stimSourceParams" in model:
+
                     self.propagate_field_rename("source", None, label)
                 elif "synMechParams" in model:
                     self.propagate_field_rename("synMech", None, label)
@@ -596,7 +600,7 @@ class NetPyNEGeppetto():
             for p in self.netParams.popParams:
                 if label in self.netParams.popParams[p]:
                     classes.append(self.netParams.popParams[p][label])
-            if classes.count(old)>1:
+            if classes.count(old) > 0:
                 return False
             else:
                 return True
@@ -608,7 +612,7 @@ class NetPyNEGeppetto():
             self.propagate_syn_mech_rename(new, old)
             return True
         else:
-            if unique():    
+            if unique():
                 for (model, cond) in [['cellParams','conds'], ['connParams', 'preConds'], ['connParams', 'postConds'], ['stimTargetParams', 'conds'], ['analysis', 'include'] ]: 
                     self.propagate(model, label, cond, new, old)
                 return True
