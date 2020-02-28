@@ -13,6 +13,7 @@ if __name__ == '__main__':
     sys.argv.append('--NotebookApp.default_url=/geppetto')
     sys.argv.append("--NotebookApp.token=''")
     sys.argv.append('--library=netpyne_ui')
+    sys.argv.append('--NotebookApp.disable_check_xsrf=True')
 
     app = NotebookApp.instance()
     app.initialize(sys.argv)

@@ -1,0 +1,13 @@
+org.geppetto.frontend.jupyter
+pygeppetto
+.vscode
+.ipynb_checkpoints
+netpyne_ui/geppetto
+*.egg-info
+notebook.ipynb
+.git
+netpyne
+Dockerfile
+Dockerfile_base
+Dockerfile_dev
+netpyne_workspace

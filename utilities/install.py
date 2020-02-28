@@ -36,6 +36,13 @@ def checkout(folder, default_branch, cwdp):
         subprocess.call(['git', 'checkout', default_branch], cwd='./')
     os.chdir(currentPath)
 
+def clone_repo(project, repo_name, **kwargs):
+    normal = "\033[0;37;40m"
+    stroke = "\033[1;32;40m\n"
+    subprocess.run(["echo", f'{stroke}Cloning {repo_name} from {project}{stroke}'])
+    url = f'https://github.com/{project}/{repo_name}.git'
+    clone(url, **kwargs)
+
 def main(argv):
     global branch
     if(len(argv) > 0):
@@ -47,22 +54,54 @@ if __name__ == "__main__":
 
 os.chdir(os.getcwd()+"/../")
 
+# Fix terminado installation error
+terminado_path = '/opt/conda/lib/python3.7/site-packages/'
+subprocess.call(['rm', '-rf', terminado_path+'terminado', terminado_path+'terminado-0.8.3.dist-info', terminado_path+'terminado-0.8.3-py3.7.egg-info'])
 
-clone('https://github.com/Neurosim-lab/netpyne.git','netpyne','ui')
-subprocess.call(['pip', 'install', '-e', '.'], cwd='./netpyne/')
 
-
+clone_repo(project='Neurosim-lab',
+           repo_name='netpyne',
+           folder='netpyne',
+           default_branch='ui'
+)
+subprocess.call(['python3', '-m', 'pip', 'install', '-e', '.'], cwd='./netpyne/')
 
 # We can't clone org.geppetto.frontend as a regular submodule because Travis doesn't have .gitmodules in the zip
 # subprocess.call(['git', 'submodule', 'update', '--init'], cwd='./')
-clone('https://github.com/openworm/org.geppetto.frontend.git','geppetto','development','netpyne_ui/', False, 'geppetto')
-clone('https://github.com/MetaCell/geppetto-netpyne.git','geppetto-netpyne','development','netpyne_ui/geppetto/src/main/webapp/extensions/')
+clone_repo(project='openworm',
+           repo_name='org.geppetto.frontend',
+           folder='geppetto',
+           default_branch='v0.4.2-alpha',
+           cwdp='netpyne_ui/',
+           recursive=False,
+           destination_folder='geppetto'
+)
+
+clone_repo(project='MetaCell',
+           repo_name='geppetto-netpyne',
+           folder='geppetto-netpyne',
+           default_branch='development',
+           cwdp='netpyne_ui/geppetto/src/main/webapp/extensions/'
+)
 
 branch = None
 # Cloning Repos
-clone('https://github.com/openworm/pygeppetto.git','pygeppetto','development')
-subprocess.call(['pip', 'install', '-e', '.'], cwd='./pygeppetto/')
-clone('https://github.com/openworm/org.geppetto.frontend.jupyter.git','org.geppetto.frontend.jupyter','development')
+
+clone_repo(project='openworm',
+           repo_name='pygeppetto',
+           folder='pygeppetto',
+           default_branch='development'
+)
+subprocess.call(['python3', '-m', 'pip', 'install', '-e', '.'], cwd='./pygeppetto/')
+
+
+clone_repo(project='openworm',
+           repo_name='org.geppetto.frontend.jupyter',
+           folder='org.geppetto.frontend.jupyter',
+           default_branch='development'
+)
+
+
 with open('npm_frontend_jupyter_log', 'a') as stdout:
     subprocess.call(['npm', 'install'], cwd='./org.geppetto.frontend.jupyter/js', stdout=stdout)
 subprocess.call(['npm', 'run', 'build-dev'], cwd='./org.geppetto.frontend.jupyter/js')
@@ -78,7 +117,7 @@ with open('npm_frontend_log', 'a') as stdout:
 subprocess.call(['npm', 'run', 'build-dev-noTest'], cwd='./netpyne_ui/geppetto/src/main/webapp/')
 
 print("Installing jupyter_geppetto python package ...")
-subprocess.call(['pip', 'install', '-e', '.'], cwd='./org.geppetto.frontend.jupyter')
+subprocess.call(['python3', '-m', 'pip', 'install', '-e', '.'], cwd='./org.geppetto.frontend.jupyter')
 print("Installing jupyter_geppetto Jupyter Extension ...")
 subprocess.call(['jupyter', 'nbextension', 'install', '--py', '--symlink', '--sys-prefix', 'jupyter_geppetto'], cwd='./org.geppetto.frontend.jupyter')
 subprocess.call(['jupyter', 'nbextension', 'enable', '--py', '--sys-prefix', 'jupyter_geppetto'], cwd='./org.geppetto.frontend.jupyter')
@@ -86,4 +125,4 @@ subprocess.call(['jupyter', 'nbextension', 'enable', '--py', '--sys-prefix', 'wi
 subprocess.call(['jupyter', 'serverextension', 'enable', '--sys-prefix', '--py', 'jupyter_geppetto'], cwd='./org.geppetto.frontend.jupyter')
 
 print("Installing NetPyNE UI python package ...")
-subprocess.call(['pip', 'install', '-e', '.'], cwd='.')
+subprocess.call(['python3', '-m', 'pip', 'install', '-e', '.'], cwd='.')
