@@ -23,4 +23,4 @@ RUN unzip $netpyneuiBranch.zip
 WORKDIR /home/jovyan/netpyne_workspace
 RUN ln -sfn /home/jovyan/work/NetPyNE-UI-$netpyneuiBranch/netpyne_ui/tests tests
 
-CMD /bin/bash -c "source activate snakes && exec jupyter notebook --debug --NotebookApp.default_url=/geppetto --NotebookApp.token='' --library=netpyne_ui"
+CMD /bin/bash -c "source activate snakes && exec jupyter notebook --debug --NotebookApp.default_url=/geppetto --NotebookApp.token='' --library=netpyne_ui --NotebookApp.disable_check_xsrf=True"

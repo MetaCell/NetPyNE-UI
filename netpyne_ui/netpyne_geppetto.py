@@ -30,8 +30,9 @@ from shutil import copyfile
 from jupyter_geppetto import jupyter_geppetto, synchronization, utils
 import imp
 from contextlib import redirect_stdout, redirect_stderr
+from netpyne_ui.constants import NETPYNE_WORKDIR_PATH
 
-
+os.chdir(NETPYNE_WORKDIR_PATH)
 class NetPyNEGeppetto():
 
     def __init__(self):
@@ -263,6 +264,11 @@ class NetPyNEGeppetto():
                 sim.cfg.saveJson = True
                 sim.saveData(include)
                 sim.cfg.saveJson = False
+
+                with open(f"{sim.cfg.filename}.json") as json_file:
+                    data = json.load(json_file)
+                    return data
+
             return utils.getJSONReply()
         except:
             return utils.getJSONError("Error while exporting the NetPyNE model", sys.exc_info())
@@ -287,18 +293,25 @@ class NetPyNEGeppetto():
             return utils.getJSONError("Error while exporting the NetPyNE model", sys.exc_info())
 
     def deleteModel(self, modelParams):
+        
         try:
             with redirect_stdout(sys.__stdout__):       
                 self.netParams = specs.NetParams()
                 self.simConfig = specs.SimConfig()
-                self.netParams.todict()
-                self.netParams.todict()
-                if self.doIhaveInstOrSimData()['haveInstance']: sim.clearAll()
+                sim.initialize(specs.NetParams(), specs.SimConfig())
                 self.geppetto_model = None
-            return utils.getJSONReply()
-
         except:
             return utils.getJSONError("Error while exporting the NetPyNE model", sys.exc_info())
+
+        try:
+            # This function fails is some keys don't exists
+            # sim.clearAll()
+            self.clearSim()
+            
+        except:
+            pass
+
+        return utils.getJSONReply()
         
     def instantiateNetPyNEModel(self):
         with redirect_stdout(sys.__stdout__):
@@ -360,16 +373,17 @@ class NetPyNEGeppetto():
     def getDirList(self, dir=None, onlyDirs = False, filterFiles=False):
         # Get Current dir
         if dir == None or dir == '':
-            dir = os.getcwd()
+            dir = os.path.join(os.getcwd(), NETPYNE_WORKDIR_PATH)
         dir_list = []
+        file_list = []
         for f in sorted(os.listdir(str(dir)), key=str.lower):
             ff=os.path.join(dir,f)
             if os.path.isdir(ff):
-                dir_list.insert(0, {'title': f, 'path': ff, 'load': False, 'children': [{'title': 'Loading...'}]})
+                dir_list.append({'title': f, 'path': ff, 'load': False, 'children': [{'title': 'Loading...'}]})
             elif not onlyDirs:
                 if not filterFiles or os.path.isfile(ff) and ff.endswith(filterFiles):
-                    dir_list.append({'title': f, 'path': ff})
-        return dir_list
+                    file_list.append({'title': f, 'path': ff})
+        return dir_list + file_list
 
     def getPlot(self, plotName, LFPflavour):
         try:
@@ -545,7 +559,8 @@ class NetPyNEGeppetto():
                 
                 script.write(header('end script', spacer='='))
             
-            return utils.getJSONReply()
+            with open(fname) as f: 
+                return f.read()
         
         except:
             return utils.getJSONError("Error while importing the NetPyNE model", sys.exc_info())
@@ -650,6 +665,52 @@ class NetPyNEGeppetto():
                                     self.netParams.stimTargetParams[label].pop('synMech')
                                 else:
                                     self.netParams.stimTargetParams[label]['synMech'] = new
+
+
+    def clearSim(self):
+        # clean up
+        sim.pc.barrier()
+        sim.pc.gid_clear()                    # clear previous gid settings
+
+        # clean cells and simData in all nodes
+        sim.clearObj([cell.__dict__ if hasattr(cell, '__dict__') else cell for cell in sim.net.cells])
+        if 'stims' in list(sim.simData.keys()):
+            sim.clearObj([stim for stim in sim.simData['stims']])
+
+        for key in list(sim.simData.keys()): del sim.simData[key]
+
+        if hasattr(sim, 'net'):
+            for c in sim.net.cells: del c
+            for p in sim.net.pops: del p
+            if hasattr(sim.net, 'params'):
+                del sim.net.params
+
+
+        # clean cells and simData gathered in master node
+        if sim.rank == 0:
+            if hasattr(sim.net, 'allCells'):
+                sim.clearObj([cell.__dict__ if hasattr(cell, '__dict__') else cell for cell in sim.net.allCells])
+            if hasattr(sim, 'allSimData'):
+                if 'stims' in list(sim.allSimData.keys()):
+                    sim.clearObj([stim for stim in sim.allSimData['stims']])
+                for key in list(sim.allSimData.keys()): del sim.allSimData[key]
+                del sim.allSimData
+            
+            
+            import matplotlib
+            matplotlib.pyplot.clf()
+            matplotlib.pyplot.close('all')
+
+        if hasattr(sim, 'net'):
+            if hasattr(sim.net, 'allCells'):
+                for c in sim.net.allCells: del c
+                del sim.net.allCells
+            if hasattr(sim.net, 'allPops'):
+                for p in sim.net.allPops: del p
+
+            del sim.net
+
+        import gc; gc.collect()
 
 
 logging.info("Initialising NetPyNE UI")
