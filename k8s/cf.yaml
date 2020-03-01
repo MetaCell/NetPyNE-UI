@@ -84,7 +84,7 @@ steps:
             replicas: 1
     
         proxy:
-          secretToken: {{ SECRET_TOKEN }}
+          secretToken: ${{SECRET_TOKEN}}
     
         auth:
           type: tmp
@@ -122,7 +122,7 @@ steps:
     stage: deploy
     environment:
       - CHART_NAME=jupyterhub
-      - RELEASE_NAME=jupyterhub
+      - RELEASE_NAME={{RELEASE_NAME}}
       - KUBE_CONTEXT=geppetto-cluster@metacellllc
       - NAMESPACE=netpyne
       - TILLER_NAMESPACE=kube-system
