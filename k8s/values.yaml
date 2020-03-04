@@ -1,0 +1,59 @@
+# Use with minikubes
+hub:
+  image: 
+    name: netpyne-hub
+    tag: latest
+    pullPolicy: Never
+
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+
+  allowNamedServers: true
+  namedServerLimitPerUser: 2
+  shutdownOnLogout: true
+
+  extraConfig:
+    timing: |
+      c.JupyterHub.allow_named_servers = True
+      c.Spawner.port = 8000
+      c.Spawner.http_timeout = 300
+      c.Spawner.start_timeout = 300
+      c.Spawner.notebook_dir = '/home/jovyan/work/NetPyNE-UI'
+      c.Spawner.default_url = '/geppetto'
+      c.Spawner.debug = True
+    spawner: >-
+      c.Spawner.args = ["--library=netpyne_ui"]
+
+scheduling:
+  userScheduler:
+    replicas: 1
+
+proxy:
+  secretToken: 'b3fed077c7538cfc5e2a6469ddac7d43a18fc645789407b53e580b7342b968d8'
+
+auth:
+  type: tmp
+
+singleuser:
+  storage:
+    type: none
+  memory:
+    guarantee: 0.2G
+  image:
+    name:  netpyne-ui
+    tag: 'latest'
+    pullPolicy: Never
+
+cull:
+  enabled: true
+  users: false
+  removeNamedServers: true
+  timeout: 360
+  every: 60
+  concurrency: 10
+  maxAge: 0
+
+debug:
+  enabled: false

@@ -2,22 +2,20 @@
 FROM frodriguez4600/jupyter-neuron:latest
 USER $NB_USER
 
-ARG netpyneuiBranch=development 
-ENV netpyneuiBranch=${netpyneuiBranch}  
-RUN echo "$netpyneuiBranch";
+ARG branch=development 
+RUN echo "$branch";
 
-ENV FOLDER=NetPyNE-UI
+ENV INSTALATION_FOLDER=/home/jovyan/work/NetPyNE-UI
 WORKDIR /home/jovyan/work
 
 COPY --chown=1000:1000 . NetPyNE-UI
-WORKDIR ${FOLDER}/utilities
+WORKDIR ${INSTALATION_FOLDER}/utilities
 
-RUN python install.py branch $netpyneuiBranch
+RUN python install.py branch $branch
 
-WORKDIR /home/jovyan/work/NetPyNE-UI
+WORKDIR ${INSTALATION_FOLDER}
 
 RUN git clone https://github.com/Neurosim-lab/netpyne_workspace && rm -rf netpyne_workspace/.git
-WORKDIR /home/jovyan/work/NetPyNE-UI/netpyne_workspace
 
-RUN ln -sfn /home/jovyan/work/NetPyNE-UI/netpyne_ui/tests ../tests
-CMD /bin/bash -c "cd .. && NetPyNE-UI"
+RUN ln -sfn ${INSTALATION_FOLDER}/netpyne_ui/tests ${INSTALATION_FOLDER}/tests
+CMD /bin/bash -c "jupyter notebook --NotebookApp.default_url=/geppetto --NotebookApp.token='' --library=netpyne_ui --NotebookApp.disable_check_xsrf=True"

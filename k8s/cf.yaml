@@ -1,0 +1,135 @@
+version: "1.0"
+stages:
+  - "clone"
+  - "build"
+  - "deploy"
+steps:
+  main_clone:
+    type: "git-clone"
+    description: "Cloning main repository..."
+    repo: "MetaCell/NetPyNE-UI"
+    revision: "${{CF_BRANCH}}"
+    stage: "clone"
+    when:
+      branch:
+        only:
+          - "${{CF_BRANCH}}"
+  BuildingNetPyNE-UI:
+    title: Building NetPyNE-UI
+    type: build
+    stage: build
+    image_name: netpyne-ui
+    working_directory: ./
+    tag: '${{CF_SHORT_REVISION}}-${{CF_BUILD_TIMESTAMP}}'
+    build_arguments:
+      - branch=${{CF_BRANCH}}
+    dockerfile: Dockerfile_dev
+    when:
+      branch:
+        only:
+          - "${{CF_BRANCH}}"
+  BuildingHub:
+    title: Building Hub
+    type: build
+    stage: "build"
+    image_name: netpyne-hub
+    working_directory: ./k8s/
+    tag: '${{CF_SHORT_REVISION}}-${{CF_BUILD_TIMESTAMP}}'
+    dockerfile: Dockerfile
+    when:
+      branch:
+        only:
+          - "${{CF_BRANCH}}"
+  installing_chart:
+    create_file:
+      path: /codefresh/volume/cf-generated
+      name: values.yaml
+      content: |
+        hub:
+          image: 
+            name: r.cfcr.io/${{ACCOUNT}}/netpyne-hub
+            tag: '${{CF_SHORT_REVISION}}-${{CF_BUILD_TIMESTAMP}}'
+            pullPolicy: IfNotPresent
+          
+          imagePullSecret:
+            enabled: true
+            registry: r.cfcr.io
+            username: ${{ACCOUNT}}
+            email: null
+            password: ${{PASSWORD}}
+    
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+    
+          allowNamedServers: true
+          namedServerLimitPerUser: 2
+          shutdownOnLogout: true
+    
+          extraConfig:
+            timing: |
+              c.JupyterHub.allow_named_servers = True
+              c.Spawner.port = 8000
+              c.Spawner.http_timeout = 300
+              c.Spawner.start_timeout = 300
+              c.Spawner.notebook_dir = '/home/jovyan/work/NetPyNE-UI'
+              c.Spawner.default_url = '/geppetto'
+              c.Spawner.debug = True
+            spawner: >-
+              c.Spawner.args = ["--library=netpyne_ui"]
+    
+        scheduling:
+          userScheduler:
+            replicas: 1
+    
+        proxy:
+          secretToken: ${{SECRET_TOKEN}}
+    
+        auth:
+          type: tmp
+    
+        singleuser:
+          storage:
+            type: none
+          memory:
+            guarantee: 0.2G
+          image:
+            name:  r.cfcr.io/${{ACCOUNT}}/netpyne-ui
+            tag: '${{CF_SHORT_REVISION}}-${{CF_BUILD_TIMESTAMP}}'
+            pullPolicy: IfNotPresent
+    
+          imagePullSecret:
+            enabled: true
+            registry: r.cfcr.io
+            username: ${{ACCOUNT}}
+            email: null
+            password: ${{PASSWORD}}
+    
+        cull:
+          enabled: true
+          users: false
+          removeNamedServers: true
+          timeout: 360
+          every: 60
+          concurrency: 10
+          maxAge: 0
+    
+        debug:
+          enabled: false
+    image: 'codefresh/cfstep-helm:2.12.1'
+    title: Installing chart
+    stage: deploy
+    environment:
+      - CHART_NAME=jupyterhub
+      - RELEASE_NAME={{RELEASE_NAME}}
+      - KUBE_CONTEXT=geppetto-cluster@metacellllc
+      - NAMESPACE=netpyne
+      - TILLER_NAMESPACE=kube-system
+      - CHART_VERSION=0.9.0-beta.4
+      - 'CHART_REPO_URL=https://jupyterhub.github.io/helm-chart/'
+      - VALUESFILE_values=/codefresh/volume/cf-generated/values.yaml
+      - 'CF_CTX_jupyterhub_helm_URL=https://jupyterhub.github.io/helm-chart/'
+      - HELM_REPO_USE_HTTP=false
+      - HELM_REPO_CONTEXT_PATH=
+      - TIMEOUT=600
