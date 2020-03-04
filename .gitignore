@@ -9,4 +9,6 @@ netpyne/
 org.geppetto.frontend.jupyter/
 *.ipynb
 init.py
+npm*
 .vscode
+app.log
