@@ -1,0 +1,462 @@
+@import "colors";
+
+html,
+body {
+  height: 100%;
+  background: white !important;
+}
+
+#footer {
+  z-index: 2 !important;
+}
+
+#mainContainer {
+  background-size: 100% 100%;
+  overflow: auto;
+  height: 100%;
+}
+#mainContainer>div {
+  height: 100% !important;
+}
+
+.actionButton {
+  font-size: 15px;
+  margin: 10px;
+  width: 120px;
+  height: 120px;
+  float: left;
+  cursor: pointer;
+}
+
+.actionButton button {
+  overflow: visible!important;
+  width: 120px !important;
+  height: 120px !important;
+  color: white;
+  :hover {
+    border-radius: 120px;
+  }
+}
+
+
+.actionButton div {
+  width: 120px !important;
+  height: 120px !important;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.smallActionButton {
+  float: left;
+  text-align: center;
+  border-radius: 40px;
+  width: 70px !important;
+  height: 70px !important;
+  overflow: visible !important;
+  margin-top: 10px !important;
+}
+
+.smallActionButton button {
+  border-radius: 40px;
+  width: 70px !important;
+  height: 70px !important;
+}
+
+.smallActionButton div {
+  border-radius: 40px;
+  width: 69px !important;
+  height: 70px !important;
+}
+.selectedActionButton button {
+  background-color: @primary_color!important;
+}
+
+.rectangularActionButton {
+  font-size: 15px;
+  margin: 10px;
+  width: 120px;
+  height: 36px;
+  border-radius: 25px;
+  float: left;
+  cursor: pointer;
+}
+
+.rectangularActionButton button {
+  overflow: visible!important;
+  width: 120px !important;
+  height: 36px !important;
+  border-radius: 25px;
+  color: white;
+}
+
+.rectangularActionButton div {
+  width: 120px !important;
+  height: 36px !important;
+  border-radius: 25px;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+.selectedRectangularActionButton button {
+  background-color: @primary_color!important;
+}
+
+.addRectangularButton {
+  margin: 10px;
+  width: 120px;
+  height: 36px;
+}
+
+.addRectangularButton svg {
+  color: white !important;
+  margin-top: 5px;
+}
+.gearAddButton {
+  padding: 0 !important;
+  margin-top: 4px !important;
+  margin-left: 5px !important;
+}
+.gearAddButton button {
+  overflow: visible!important;
+}
+.gearAddButton .gpt-fullgear {
+  // color: @complementary_color!important;
+  font-size: 40px !important;
+  height: 40px !important;
+  width: 40px !important;
+  text-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px;
+}
+.gearAddButton svg {
+  color: rgb(255, 255, 255) !important;
+  height: 24px !important;
+  width: 24px !important;
+  position: absolute !important;
+  top: 11px !important;
+  left: 12px !important;
+  pointer-events: none;
+}
+.gearAddLabel {
+  font-size: 12px;
+  text-align: center;
+  position: absolute;
+  width: 24px !important;
+  height: 24px !important;
+  top: 0px;
+  color: white !important;
+  left: 4px;
+  pointer-events: none;
+  z-index: 10;
+}
+.gearThumbButton {
+  width: 120px !important;
+  height: 120px !important;
+}
+.gearThumbButton button {
+  overflow: visible;
+}
+.gearThumbButton .gpt-fullgear {
+  color: @complementary_color!important;
+  font-size: 100px !important;
+  height: 100px !important;
+  width: 100px !important;
+  text-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px;
+}
+.selectedGearButton .gpt-fullgear {
+  color: @primary_color!important;
+}
+.gearThumbLabel {
+  font-size: 15px;
+  text-align: center;
+  position: absolute;
+  width: 80px !important;
+  height: 50px !important;
+  top: 50px;
+  color: white;
+  left: 22px;
+  pointer-events: none;
+  z-index: 10;
+}
+.breadcrumbButton button {
+  background-color: #444444 !important;
+}
+
+.helpIcon {
+  margin-top: 40px;
+  margin-left: 10px;
+  float: left;
+  font-size: 15px;
+  color: #aaaaaa;
+  cursor: pointer;
+}
+.customHome {
+  font-size: 50px !important;
+  margin-top: -14px !important;
+} 
+.helpIcon:hover {
+  color: @primary_color;
+}
+
+.breadcrumb {
+  background-color: #eeeeee;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  overflow: visible;
+  margin-top: 5px;
+}
+
+.hiddenModal {
+  position: absolute !important;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: none;
+  z-index: 999;
+  height: 100%;
+  width: 100%;
+}
+
+#CanvasContainer_component {
+  background: #eaeaea;
+  background: -moz-linear-gradient(top, #eaeaea 0%, #ececec 53%, #d6d6d6 100%);
+  background: -webkit-linear-gradient(
+    top,
+    #eaeaea 0%,
+    #ececec 53%,
+    #d6d6d6 100%
+  );
+  background: linear-gradient(to bottom, #eaeaea 0%, #ececec 53%, #d6d6d6 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#d6d6d6',GradientType=0 );
+}
+
+.netpyneField {
+  width: 100% !important;
+  > div:first-of-type {
+    width: 95%;
+    > div {
+      width: 100% !important;
+      > div {
+        width: 100% !important;
+      }
+    }
+  }
+}
+.netpyneField,
+.netpyneFieldNoWidth {
+  float: left;
+  clear: left;
+  margin-right: 20px;
+  white-space: nowrap;
+}
+
+.listStyle {
+  width: 100% !important;
+  > div:first-of-type {
+    width: 95%;
+    > div {
+      width: 100% !important;
+      > div:first-of-type {
+        width: 95% !important;
+      }
+    }
+  }
+}
+
+.tabContainer {
+  padding: 10;
+  height: 500;
+  overflow: auto;
+  overflow-x: hidden;
+}
+
+.netpyneRightField {
+  float: left !important;
+  clear: none !important;
+}
+
+.netpyneCheckbox {
+  margin: 5px 0px;
+  label {
+    font-weight: normal;
+  }
+  .helpIcon {
+    margin-top: 5px;
+  }
+}
+
+.thumbnails {
+  width: 40%;
+  height: 420;
+  overflow: visible;
+  float: left;
+}
+
+.details {
+  width: 55%;
+  float: right;
+  margin-left: 50px;
+  > div > div {
+    box-shadow: none !important;
+  }
+}
+
+.ui-dialog {
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+#settingsIcon span {
+  color: white !important;
+}
+
+#logoBackground{
+  background-color: #eaeaea;
+}
+
+.netpyneversion {
+  float: right;
+  margin-top: 43px;
+  margin-right: 5px;
+  font-size: 11px;
+  color: @complementary_color;
+}
+
+.spinner-container {
+  color: @complementary_color!important;
+  p {
+    color: @complementary_color !important;
+  }
+}
+.listIcon {
+  color: @complementary_color!important;
+}
+
+.listButtonLarge {
+  padding: 0px !important;
+  font-size: 10px !important;
+  height: 25px !important;
+  width: 25px !important;
+}
+
+.listButtonSmall {
+  padding: 0px !important;
+  font-size: 7px !important;
+  height: 7px !important;
+  width: 7px !important;
+}
+
+.consoleElement {
+  margin-top: -35px;
+  margin-left: -10px;
+}
+#console div.input {
+  margin-top: 60px;
+}
+//File dialog styling
+.rst__rowWrapper {
+  cursor: pointer;
+}
+
+.rst__rowTitle {
+  font-weight: 200;
+}
+
+.rst__rowContents {
+  background: transparent;
+  color: @complementary_color;
+
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.activeNode .rst__rowContents {
+  background: transparent;
+  color: @primary_color;
+}
+
+.rst__rowLabel {
+  padding-right: 5px;
+}
+
+.rst__collapseButton {
+  box-shadow: none;
+  outline: none;
+}
+
+#newCellRuleButton {
+  overflow: visible !important;
+}
+#newCellRuleButton div > div {
+  border-radius: 50px !important;  
+}
+#newSectionButton {
+  overflow: visible !important;
+}
+#newSectionButton > div > div {
+  border-radius: 25px !important;
+}
+/**
+ * Tooltip Styles   The tooltip will OVERFLOW, so make sure to allow overflow in the parent!!!
+ */
+
+/* Add this attribute to the element that needs a tooltip */
+[data-tooltip] {
+  overflow: visible;
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+}
+
+/* Hide the tooltip content by default */
+[data-tooltip]:before,
+[data-tooltip]:after {
+  visibility: hidden;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: "progid: DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Position tooltip above the element */
+[data-tooltip]:before {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-bottom: 5px;
+  margin-left: -80px;
+  padding: 7px;
+  width: 160px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  background-color: #000;
+  background-color: hsla(0, 0%, 20%, 0.9);
+  color: #fff;
+  content: attr(data-tooltip);
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+/* Triangle hack to make tooltip look like a speech bubble */
+[data-tooltip]:after {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  width: 0;
+  border-top: 5px solid #000;
+  border-top: 5px solid hsla(0, 0%, 20%, 0.9);
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  content: " ";
+  font-size: 0;
+  line-height: 0;
+}
+
+/* Show tooltip content on hover */
+[data-tooltip]:hover:before,
+[data-tooltip]:hover:after {
+  visibility: visible;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  filter: "progid: DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  opacity: 1;
+}

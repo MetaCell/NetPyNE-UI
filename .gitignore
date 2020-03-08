@@ -10,3 +10,7 @@ org.geppetto.frontend.jupyter/
 *.ipynb
 init.py
 .vscode
+.DS_Store
+webapp/node_modules
+webapp/geppetto-client
+webapp/build
