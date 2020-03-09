@@ -14,3 +14,7 @@ init.py
 webapp/node_modules
 webapp/geppetto-client
 webapp/build
+app.log
+tests
+netpyne_workspace
+Dockerfile_mini

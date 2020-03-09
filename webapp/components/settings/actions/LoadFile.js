@@ -1,7 +1,6 @@
 import React from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListSubheader from '@material-ui/core/ListSubheader';
 import { orange, grey } from '@material-ui/core/colors';
 import Checkbox from '../../general/Checkbox';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -9,10 +8,11 @@ import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import FileBrowser from '../../general/FileBrowser';
 import ActionDialog from './ActionDialog';
-
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
-
+import FormHelperText from '@material-ui/core/FormHelperText'
 const orange500 = orange[500], grey400 = grey[400];
 
 const loadOptions = [
@@ -106,22 +106,26 @@ export default class LoadFile extends React.Component {
             label="Json file:" 
             value={this.state.jsonModelFolder} 
             onClick={() => this.showExplorerDialog('jsonModelFolder', false)}
-            underlineStyle={{ borderWidth:'1px' }}
-            errorText={this.state.jsonPath != '' ? 'path: ' + this.state.jsonPath : ''} 
-            errorStyle={{ color: grey400 }}
+            helperText={this.state.jsonPath != '' ? 'path: ' + this.state.jsonPath : ''} 
           />
           <List> 
-            {loadOptions.map((loadOption, index) => <ListItem style={{ height: 50, width:'49%', float:index % 2 == 0 ? 'left' : 'right', marginTop: index > 1 ? "20px" : "-10px" }}
-              key={index}
-              leftCheckbox= {<Checkbox onChange={() => this.setState(({ [loadOption.state]: oldState, ...others }) => ({ [loadOption.state]: !oldState }))} checked={this.state[loadOption.state]} />}
-              subheader={
-                <ListSubheader component="div">
-                  {loadOption.label}
-                  {loadOption.label2}
-                </ListSubheader>
-              }
-            />)
-            }
+            {loadOptions.map((loadOption, index) => (
+              <ListItem 
+                style={{ height: 50, width:'49%', float:index % 2 == 0 ? 'left' : 'right', marginTop: index > 1 ? "20px" : "-10px" }}
+                key={index}
+              >
+                <ListItemIcon>
+                  <Checkbox 
+                    onChange={() => this.setState(({ [loadOption.state]: oldState, ...others }) => ({ [loadOption.state]: !oldState }))} 
+                    checked={this.state[loadOption.state]} 
+                  />
+                </ListItemIcon>
+                <ListItemText
+                  primary={loadOption.label}
+                  secondary={loadOption.label2}
+                />
+              </ListItem>
+            ))}
           </List>
           <div>
             <FormControl>
@@ -129,10 +133,8 @@ export default class LoadFile extends React.Component {
               <Select
                 className="netpyneField"
                 id="appBarLoadRequiresMod"
-                errorText={this.state.areModFieldsRequired === undefined ? "This field is required." : false}
-                errorStyle={{ color: orange500, marginBottom:-40 }}
                 value={this.state.areModFieldsRequired}
-                onChange={(event, index, value) => this.setState({ areModFieldsRequired: value })}
+                onChange={event => this.setState({ areModFieldsRequired: event.target.value })}
               >
                 <MenuItem 
                   value={true} 
@@ -146,6 +148,7 @@ export default class LoadFile extends React.Component {
                   No, this model only requires NEURON built-in mod files
                 </MenuItem>
               </Select>
+              <FormHelperText>{this.state.areModFieldsRequired === undefined ? "This field is required." : ''}</FormHelperText>
             </FormControl>
             
             <TextField 
@@ -156,9 +159,7 @@ export default class LoadFile extends React.Component {
               disabled={this.state.areModFieldsRequired === '' ? true : !this.state.areModFieldsRequired} 
               value={this.state.modFolder} 
               onClick={() => this.showExplorerDialog('modFolder', true)} 
-              underlineStyle={{ borderWidth:'1px' }}
-              errorText={this.state.modPath != '' ? 'path: ' + this.state.modPath : ''} 
-              errorStyle={{ color: grey400 }}
+              helperText={this.state.modPath != '' ? 'path: ' + this.state.modPath : ''} 
             />
             <div style={{ float: 'right', width: '47%', marginTop:25 }}>
               <Checkbox

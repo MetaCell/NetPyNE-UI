@@ -5,6 +5,9 @@ import Button from '@material-ui/core/Button';
 import { changeNodeAtPath } from 'react-sortable-tree';
 import Dialog from '@material-ui/core/Dialog';
 
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+
 export default class FileBrowser extends React.Component {
 
   constructor (props) {
@@ -59,44 +62,46 @@ export default class FileBrowser extends React.Component {
   render () {
     const actions = [
       <Button
-        label={'CANCEL'}
+        key='cancel'
         onClick={event => this.props.onRequestClose()}
         style={{ marginRight: 16 }}
-      />,
+      >cancel</Button>,
       <Button
         id="browserAccept"
+        key="select"
         variant="contained"
         color="primary"
-        label={'SELECT'}
         onClick={event => this.props.onRequestClose(this.state.selection)}
         disabled={!this.state.selection}
-      />
+      >select</Button>
     ];
         
     var selectMessage = this.props.exploreOnlyDirs ? "Select a folder. " : "Select a file. ";
     return (
-            
       <Dialog
         open={this.props.open}
-        onClose={this.props.onRequestClose}
-        bodyStyle={{ overflow: 'auto' }}
-        actions={actions}
+        onClose={() => this.props.onRequestClose()}
       >
-        <div style={{ marginBottom: '15px' }}>
-          <b>{selectMessage}</b>
-                    These paths are relative to:<br/>
-          {window.isDocker ? " the folder you shared with docker (your mounted volume)"
-            : <span style={{ border: "1px solid rgba(0, 0, 0, 0.1)", borderRadius: "3px", backgroundColor: "rgba(0, 0, 0, 0.05)", padding: "2px", margin: "4px" }}>{window.currentFolder}</span>}
-        </div>
-        < Tree
-          id="TreeContainerCutting"
-          style={{ width: "100%", height: "400px", float: 'left' }}
-          treeData={[]}
-          handleClick={this.handleClickVisualize}
-          rowHeight={30}
-          activateParentsNodeOnClick={this.props.exploreOnlyDirs}
-          ref="tree"
-        />
+        <DialogContent>
+          <div style={{ marginBottom: '15px' }}>
+            <b>{selectMessage}</b>
+                      These paths are relative to:<br/>
+            {window.isDocker ? " the folder you shared with docker (your mounted volume)"
+              : <span style={{ border: "1px solid rgba(0, 0, 0, 0.1)", borderRadius: "3px", backgroundColor: "rgba(0, 0, 0, 0.05)", padding: "2px", margin: "4px" }}>{window.currentFolder}</span>}
+          </div>
+          < Tree
+            id="TreeContainerCutting"
+            style={{ width: "100%", height: "400px", float: 'left' }}
+            treeData={[]}
+            handleClick={this.handleClickVisualize}
+            rowHeight={30}
+            activateParentsNodeOnClick={this.props.exploreOnlyDirs}
+            ref="tree"
+          />
+        </DialogContent>
+        <DialogActions>
+          {actions}
+        </DialogActions>
       </Dialog>
     )
   }

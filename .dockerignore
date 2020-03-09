@@ -11,3 +11,6 @@ Dockerfile
 Dockerfile_base
 Dockerfile_dev
 netpyne_workspace
+webapp/node_modules
+webapp/build
+webapp/geppetto-client

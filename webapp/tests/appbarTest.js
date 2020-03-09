@@ -559,7 +559,7 @@ function clearModel (casper, test, toolbox) {
 
 function populatePopDimension (casper, test, toolbox) {
   casper.then(function () {
-    toolbox.click(this, "popParamsDimensionsSelect", "div");
+    toolbox.click(this, "popParamsDimensionsSelect", "input");
   })
   casper.then(function () { // check all menuItems exist
     toolbox.assertExist(this, test, "popParamSnumCells", "span");

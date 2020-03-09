@@ -6,7 +6,7 @@ import MuiSelect from '@material-ui/core/Select';
 export default class Select extends Component {
   render () {
     return (
-      <FormControl>
+      <FormControl >
         <InputLabel>{this.props.label}</InputLabel>
         <MuiSelect
           id={this.props.id}

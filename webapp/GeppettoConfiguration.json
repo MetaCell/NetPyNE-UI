@@ -1,18 +1,22 @@
 {
-  "_README" : "http://docs.geppetto.org/en/latest/build.html",
-  "contextPath": "org.geppetto.frontend",
-  "useSsl": false,
-  "embedded": false,
-  "embedderURL": ["/"],
-  "rootRedirect":"",
-  "noTest": false,
-  "themes": "css/colors",
-  "properties": {
-    "title" : "geppetto",
-    "description": "Geppetto is an open-source platform to build web-based tools to visualize and simulate neuroscience data and models. This is a live deployment to showcase its functionalities.",
-    "type": "website",
-    "url": "http://live.geppetto.org",
-    "icon" :"geppetto/style/favicon.png",
-    "image": "http://www.geppetto.org/images/logo.png"
-  }
+    "_README" : "http://docs.geppetto.org/en/latest/build.html",
+    "contextPath": "org.geppetto.frontend",
+    "useSsl": false,
+    "embedded": false,
+    "embedderURL": ["/"],
+    "rootRedirect":"",
+    "noTest": false,
+    "extensions": {
+        "geppetto-default/ComponentsInitialization": false,
+        "geppetto-netpyne/ComponentsInitialization": true
+    },
+    "themes": "css/colors",
+    "properties": {
+        "title" : "NetPyNE",
+        "description": "NetPyNE-UI is a user interface for building, visualizing and simulationg neuronal network models using NetPyNE.",
+        "type": "website",
+        "url": "https://github.com/MetaCell/NetPyNE-UI",
+        "icon" :"https://d30y9cdsu7xlg0.cloudfront.net/png/38902-200.png",
+        "image": "http://www.geppetto.org/images/logo.png"
+    }
 }

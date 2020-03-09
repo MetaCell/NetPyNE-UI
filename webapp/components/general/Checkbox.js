@@ -8,7 +8,8 @@ export default class Checkbox extends Component {
     return (
       <FormGroup>
         <FormControlLabel
-          label={this.props.label}
+          disabled={!!this.props.disabled}
+          label={this.props.label ? this.props.label : ''}
           control={
             <MuiCheckbox
               id={this.props.id}

@@ -69,19 +69,11 @@ subprocess.call(['python3', '-m', 'pip', 'install', '-e', '.'], cwd='./netpyne/'
 # We can't clone org.geppetto.frontend as a regular submodule because Travis doesn't have .gitmodules in the zip
 # subprocess.call(['git', 'submodule', 'update', '--init'], cwd='./')
 clone_repo(project='openworm',
-           repo_name='org.geppetto.frontend',
-           folder='geppetto',
-           default_branch='v0.4.2-alpha',
-           cwdp='netpyne_ui/',
+           repo_name='geppetto-client',
+           folder='geppetto-client',
+           default_branch='feature/178',
+           cwdp='webapp/',
            recursive=False,
-           destination_folder='geppetto'
-)
-
-clone_repo(project='MetaCell',
-           repo_name='geppetto-netpyne',
-           folder='geppetto-netpyne',
-           default_branch='development',
-           cwdp='netpyne_ui/geppetto/src/main/webapp/extensions/'
 )
 
 branch = None
@@ -106,15 +98,12 @@ with open('npm_frontend_jupyter_log', 'a') as stdout:
     subprocess.call(['npm', 'install'], cwd='./org.geppetto.frontend.jupyter/js', stdout=stdout)
 subprocess.call(['npm', 'run', 'build-dev'], cwd='./org.geppetto.frontend.jupyter/js')
 
-print("Enabling Geppetto NetPyNE Extension ...")
-geppetto_configuration = os.path.join(os.path.dirname(__file__), './utilities/GeppettoConfiguration.copyme.json')
-copyfile(geppetto_configuration, './netpyne_ui/geppetto/src/main/webapp/GeppettoConfiguration.json')
 
 # Installing and building
 print("NPM Install and build for Geppetto Frontend  ...")
 with open('npm_frontend_log', 'a') as stdout:
-    subprocess.call(['npm', 'install'], cwd='./netpyne_ui/geppetto/src/main/webapp/', stdout=stdout)
-subprocess.call(['npm', 'run', 'build-dev-noTest'], cwd='./netpyne_ui/geppetto/src/main/webapp/')
+    subprocess.call(['npm', 'install'], cwd='webapp/', stdout=stdout)
+subprocess.call(['npm', 'run', 'build-dev-noTest'], cwd='webapp/')
 
 print("Installing jupyter_geppetto python package ...")
 subprocess.call(['python3', '-m', 'pip', 'install', '-e', '.'], cwd='./org.geppetto.frontend.jupyter')

@@ -66,7 +66,7 @@ function checkPopParamsValues (casper, test, toolbox, ruleName, empty = false) {
 // ----------------------------------------------------------------------------//
 function populatePopDimension (casper, test, toolbox) {
   casper.then(function () {
-    toolbox.click(this, "popParamsDimensionsSelect", "div"); // click dimension SelectList
+    toolbox.click(this, "popParamsDimensionsSelect", "input"); // click dimension SelectList
   })
   casper.then(function () { // check all menuItems exist
     toolbox.assertExist(this, test, "popParamSnumCells", "span");

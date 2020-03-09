@@ -8,7 +8,7 @@ import FileBrowser from '../../general/FileBrowser';
 import ActionDialog from './ActionDialog';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
-
+import FormHelperText from '@material-ui/core/FormHelperText'
 const orange500 = orange[500];
 const grey400 = grey[400];
 
@@ -92,9 +92,7 @@ export default class ImportExportHLS extends React.Component {
             value={this.state.netParamsModuleName}
             onClick={() => this.showExplorerDialog('netParamsPath', false, '.py')} 
             label="NetParams file: (click to select)"
-            underlineStyle={{ borderWidth:'1px' }}
-            errorText={this.state.netParamsPath ? 'path: ' + this.state.netParamsPath : ''} 
-            errorStyle={{ color: grey400 }}
+            helperText={this.state.netParamsPath ? 'path: ' + this.state.netParamsPath : ''} 
           />
           <TextField 
             className="netpyneRightField" 
@@ -110,9 +108,7 @@ export default class ImportExportHLS extends React.Component {
             value={this.state.simConfigModuleName} 
             onClick={() => this.showExplorerDialog('simConfigPath', false, '.py')} 
             label="SimConfig file: (click to select)"
-            underlineStyle={{ borderWidth:'1px' }}
-            errorText={this.state.simConfigPath ? 'path: ' + this.state.simConfigPath : ''} 
-            errorStyle={{ color: grey400 }}
+            helperText={this.state.simConfigPath ? 'path: ' + this.state.simConfigPath : ''} 
           />
           <TextField className="netpyneRightField" style={{ width: '48%', marginTop: 15 }} label="SimConfig variable" value={this.state.simConfigVariable} onChange={event => this.setState({ simConfigVariable: event.target.value })} />
           <div >
@@ -122,10 +118,8 @@ export default class ImportExportHLS extends React.Component {
                 id="appBarImportRequiresMod"
                 className="netpyneField"
                 style={{ marginTop:0 }}
-                errorText={this.state.loadMod === undefined ? "This field is required." : false}
-                errorStyle={{ color: orange500 }}
                 value={this.state.loadMod}
-                onChange={(event, index, value) => this.setState({ loadMod: value })}
+                onChange={event => this.setState({ loadMod: event.target.value })}
               >
                 <MenuItem 
                   value={true}
@@ -139,6 +133,7 @@ export default class ImportExportHLS extends React.Component {
                   No, this model only requires NEURON built-in mod files
                 </MenuItem>
               </Select>
+              <FormHelperText>{this.state.loadMod === undefined ? "This field is required." : ''}</FormHelperText>
             </FormControl>
             <TextField 
               className="netpyneFieldNoWidth" 
@@ -173,8 +168,8 @@ export default class ImportExportHLS extends React.Component {
           className="netpyneField"
           label="File name"
           value={this.state.fileName}
-          onChange={(e, v) => {
-            this.setState({ fileName: v })
+          onChange={event => {
+            this.setState({ fileName: event.target.value })
           }}
         />
       )

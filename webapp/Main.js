@@ -6,7 +6,7 @@ jQuery(function () {
   var ReactDOM = require('react-dom');
   var React = require('react');
   var getMuiTheme = require('@material-ui/core/styles/createMuiTheme').default;
-  var MuiThemeProvider = require('@material-ui/core/styles/MuiThemeProvider').default;
+  var MuiThemeProvider = require('@material-ui/core/styles').MuiThemeProvider;
   var NetPyNE = require('./NetPyNE').default;
 
 

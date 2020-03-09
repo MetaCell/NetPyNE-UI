@@ -150,27 +150,25 @@ export default class Transition extends React.Component {
           <IconButton 
             color='secondary' 
             id={"refreshInstanciatedNetworkButton"} 
-            key={"refreshInstanceButton"} 
+            key={"refreshInstanceButton"}
+            className="fa fa-refresh"
             onClick={() => this.instantiate({ usePrevInst: false })} 
-            style={{ position: 'absolute', right: 30, top: 60, width:'24px', height:'24px' }} 
+            style={{ position: 'absolute', right: 30, top: 80, zIndex: 1 }} 
             tooltip-data={this.props.freezeInstance ? "Your network is in sync" : "Synchronise network"} 
             disabled={this.props.freezeInstance} 
-          >
-            <FontIcon className="fa fa-refresh"/>
-          </IconButton>
+          />
         )
         var refreshSimulationButton = (
           <IconButton 
             color='secondary' 
             id={"launchSimulationButton"} 
             key={"refreshSimulationButton"} 
+            className="fa fa-rocket"
             onClick={() => this.setState({ openDialog: true })} 
-            style={{ position: 'absolute', right: 30, top: 110, width:'24px', height:'24px' }} 
+            style={{ position: 'absolute', right: 30, top: 120, zIndex: 1 }} 
             tooltip-data={this.props.freezeSimulation ? "You have already simulated your network" : "Simulate your network"} 
             disabled={this.props.freezeSimulation} 
-          >
-            <RocketIcon />
-          </IconButton>    
+          />
         )
       }
         

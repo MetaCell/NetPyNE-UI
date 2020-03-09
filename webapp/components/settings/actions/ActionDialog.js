@@ -3,6 +3,11 @@ import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
 import Utils from '../../../Utils';
 
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 const styles = { cancel: { marginRight: 10 } }
 export default class ActionDialog extends React.Component {
   constructor (props) {
@@ -73,11 +78,11 @@ export default class ActionDialog extends React.Component {
     if (this.state.open) {
       var cancelAction = (
         <Button 
-          label="CANCEL" 
           color="primary" 
           onClick={this.cancelDialog} 
           style={styles.cancel}
-        />
+          key="CANCEL" 
+        >CANCEL</Button>
       );
       if (this.state.errorMessage == undefined) {
         var title = this.props.title
@@ -85,10 +90,11 @@ export default class ActionDialog extends React.Component {
           cancelAction, 
           <Button 
             id="appBarPerformActionButton"
+            key="appBarPerformActionButton"
             variant="contained"
             color="primary"
-            label={this.props.buttonLabel} onClick={this.performAction}
-          />
+            onClick={this.performAction}
+          >{this.props.buttonLabel}</Button>
         ];
         var content = this.props.children;
       } else {
@@ -97,24 +103,26 @@ export default class ActionDialog extends React.Component {
           <Button
             variant="contained"
             color="primary"
-            label={"BACK"}
+            key="BACK"
             onClick={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
-          />
+          >BACK</Button>
         ];
         var title = this.state.errorMessage;
         var content = Utils.parsePythonException(this.state.errorDetails);
       }
       return (
+
         <Dialog
-          title={title}
-          modal={true}
-          actions={actions}
           open={this.state.open}
-          bodyStyle={{ overflow: 'auto' }}
-          style={{ whiteSpace: "pre-wrap" }}
           onClose={() => this.closeDialog()}
         >
-          {content}   
+          <DialogTitle>{title}</DialogTitle>
+          <DialogContent>
+            {content}   
+          </DialogContent>
+          <DialogActions>
+            {actions}
+          </DialogActions>
         </Dialog>
       );
     }

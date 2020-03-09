@@ -42,7 +42,7 @@ const styles = {
   controlpanelBtn: {
     position: 'absolute', 
     left: 34, 
-    top: 16 
+    top: 280 
   },
   plotBtn: {
     position: 'absolute', 
@@ -197,27 +197,6 @@ export default class NetPyNEInstantiated extends React.Component {
     }
 
     render () {
-      var controls;
-      if (this.props.page == 'simulate') {
-        controls = (
-          <Menu>
-            {plots.map((plot, index) => (
-              <MenuItem 
-                id={plot.id} 
-                key={index}
-                style={styles.menuItem}
-                innerDivStyle={styles.menuItemDiv}
-                onClick={() => { 
-                  this.plotFigure(plot.plotName, plot.plotMethod, plot.plotType)
-                }}
-              >
-                {plot.primaryText}
-              </MenuItem>
-            ))}
-          </Menu>
-        );
-      }
-
       return (
         <div id="instantiatedContainer" style={{ ...styles.instantiatedContainer, zIndex: this.state.bringItToFront }}>
           <Canvas
@@ -229,7 +208,7 @@ export default class NetPyNEInstantiated extends React.Component {
           />
           <div id="controlpanel" style={{ top: 0 }}>
             <ControlPanel
-              icon={"styles.Modal"}
+              icon={styles.Modal}
               useBuiltInFilters={false}
             >
             </ControlPanel>
@@ -248,15 +227,22 @@ export default class NetPyNEInstantiated extends React.Component {
               icon={"fa-bar-chart"}
               id="PlotButton"
             />
-            <Popover
+            <Menu
               open={this.state.plotButtonOpen}
-              anchorEl={this.state.anchorEl}
-              anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-              transformOrigin={{ horizontal: 'left', vertical: 'top' }}
               onClose={this.handleRequestClose}
+              anchorEl={this.state.anchorEl}
             >
-              {controls}
-            </Popover>
+              {plots.map((plot, index) => (
+                <MenuItem 
+                  id={plot.id} 
+                  key={index}
+                  style={styles.menuItem}
+                  onClick={() => this.plotFigure(plot.plotName, plot.plotMethod, plot.plotType)}
+                >
+                  {plot.primaryText}
+                </MenuItem>
+              ))}
+            </Menu>
           </div>
 
           <Dialog
