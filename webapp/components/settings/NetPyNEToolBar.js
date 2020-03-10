@@ -93,14 +93,18 @@ export default class NetPyNEToolBar extends React.Component {
         var content = <UploadDownloadFiles
           open={this.state.openDialogBox}
           onRequestClose={() => this.setState({ openDialogBox: false })}
-          openSnackBar={message => { this.handleOpenSnackBar(message)} }
+          openSnackBar={message => {
+            this.handleOpenSnackBar(message)
+          } }
           mode ={"UPLOAD"}/>
         break;
       case 'DownloadFiles':
         var content = <UploadDownloadFiles 
           open={this.state.openDialogBox}
           onRequestClose={() => this.setState({ openDialogBox: false })}
-          openSnackBar={message => { this.handleOpenSnackBar(message)} }
+          openSnackBar={message => {
+            this.handleOpenSnackBar(message)
+          } }
           mode ={"DOWNLOAD"}
         />
         break;

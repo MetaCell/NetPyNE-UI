@@ -114,11 +114,11 @@ export default class LoadFile extends React.Component {
             </IconButton>
 
             <TextField 
-                className="netpyneFieldNoWidth fx-11 no-z-index"
-                label="Json file:" 
-                value={this.state.jsonModelFolder} 
-                onChange={event => this.setState({jsonModelFolder: event.target.value})}
-                helperText={this.state.jsonPath != '' ? 'path: ' + this.state.jsonPath : ''} 
+              className="netpyneFieldNoWidth fx-11 no-z-index"
+              label="Json file:" 
+              value={this.state.jsonModelFolder} 
+              onChange={event => this.setState({ jsonModelFolder: event.target.value })}
+              helperText={this.state.jsonPath != '' ? 'path: ' + this.state.jsonPath : ''} 
             />
 
           </div>
@@ -172,21 +172,23 @@ export default class LoadFile extends React.Component {
 
             <div className="flex-row">
               <IconButton
-                  className='flex-row-icon'
-                  onClick={() => this.showExplorerDialog('modFolder', true)} 
-                  tooltip-data='File explorer'
-                  disabled={disableLoadMod} 
+                className='flex-row-icon'
+                onClick={() => this.showExplorerDialog('modFolder', true)} 
+                tooltip-data='File explorer'
+                disabled={disableLoadMod} 
               >
-                  <Icon className={`fa fa-folder-o ${!disableLoadMod && "listIcon"}`} />
+                <Icon className={`fa fa-folder-o ${!disableLoadMod && "listIcon"}`} />
               </IconButton>
 
               <TextField 
-                  className="netpyneFieldNoWidth fx-8 no-z-index"
-                  label="Mod folder:"
-                  disabled={disableLoadMod} 
-                  value={this.state.modFolder} 
-                  onChange={event => {this.setState({ modFolder: event.target.value})}} 
-                  helperText={this.state.modPath != '' ? 'path: ' + this.state.modPath : ''} 
+                className="netpyneFieldNoWidth fx-8 no-z-index"
+                label="Mod folder:"
+                disabled={disableLoadMod} 
+                value={this.state.modFolder} 
+                onChange={event => {
+                  this.setState({ modFolder: event.target.value })
+                }} 
+                helperText={this.state.modPath != '' ? 'path: ' + this.state.modPath : ''} 
               />
 
               <Checkbox
@@ -194,7 +196,7 @@ export default class LoadFile extends React.Component {
                 checked={this.state.compileMod}
                 className={"netpyneCheckbox fx-3"}
                 disabled={this.state.areModFieldsRequired === '' ? true : !this.state.areModFieldsRequired}
-                onChange={() => this.setState(oldState => ({compileMod: this.state.areModFieldsRequired?!oldState.compileMod:false}))}
+                onChange={() => this.setState(oldState => ({ compileMod: this.state.areModFieldsRequired ? !oldState.compileMod : false }))}
               />
             </div>
 

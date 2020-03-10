@@ -39,7 +39,7 @@ jQuery(function () {
 
         <div id="footer">
           <div id="footerHeader">
-            <TabbedDrawer labels={["Console", "Python"]} iconClass={["fa fa-terminal", "fa fa-flask"]} >
+            <TabbedDrawer anchor="appBar" labels={["Console", "Python"]} iconClass={["fa fa-terminal", "fa fa-flask"]} >
               <Console />
               <PythonConsole pythonNotebookPath={"../notebooks/notebook.ipynb"} />
             </TabbedDrawer>
