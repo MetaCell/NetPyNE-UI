@@ -496,10 +496,14 @@ class NetPyNEGeppetto():
                 else:
                     pass
             else:
-                getattr(self.netParams, model).pop(label)
+                population = getattr(self.netParams, model).pop(label)
                 if "popParams" in model:
                     self.propagate_field_rename("pop", None, label)
+                    self.propagate_field_rename("cellModel", None, population['cellModel'])
+                    self.propagate_field_rename("cellType", None, population['cellType'])
+
                 elif "stimSourceParams" in model:
+
                     self.propagate_field_rename("source", None, label)
                 elif "synMechParams" in model:
                     self.propagate_field_rename("synMech", None, label)
@@ -611,7 +615,7 @@ class NetPyNEGeppetto():
             for p in self.netParams.popParams:
                 if label in self.netParams.popParams[p]:
                     classes.append(self.netParams.popParams[p][label])
-            if classes.count(old)>1:
+            if classes.count(old) > 0:
                 return False
             else:
                 return True
@@ -623,7 +627,7 @@ class NetPyNEGeppetto():
             self.propagate_syn_mech_rename(new, old)
             return True
         else:
-            if unique():    
+            if unique():
                 for (model, cond) in [['cellParams','conds'], ['connParams', 'preConds'], ['connParams', 'postConds'], ['stimTargetParams', 'conds'], ['analysis', 'include'] ]: 
                     self.propagate(model, label, cond, new, old)
                 return True
