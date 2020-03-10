@@ -6,6 +6,9 @@ import ListComponent from '../../general/List';
 import FileBrowser from '../../general/FileBrowser';
 import NetPyNEField from '../../general/NetPyNEField';
 
+import IconButton from '@material-ui/core/IconButton';
+import Icon from '@material-ui/core/Icon';
+
 const styles = {
   card: {
     main: { padding: 10, float: 'left', width: '100%' },
@@ -80,16 +83,8 @@ export default class ImportCellParams extends React.Component {
           label="Cell rule label"
           onChange={event => this.setState({ label: event.target.value })}
         />
-        <NetPyNEField id="netParams.importCellParams.fileName" className="netpyneFieldNoWidth">
-          <TextField
-            readOnly
-            value={fileName}
-            id="importCellTemplateFile"
-            onClick={() => this.showExplorerDialog('fileName', false)}
-          />
-        </NetPyNEField>
 
-        <NetPyNEField id="netParams.importCellParams.cellName" className="netpyneRightField">
+        <NetPyNEField id="netParams.importCellParams.cellName" className="netpyneFieldNoWidth">
           <TextField
             value={cellName}
             id="importCellTemplateCellName"
@@ -97,17 +92,48 @@ export default class ImportCellParams extends React.Component {
           />
         </NetPyNEField>
 
-        <NetPyNEField id="netParams.importCellParams.modFolder" className="netpyneRightField" >
-          <TextField
-            readOnly
-            value={modFolder}
+        <div className="flex-row">
+          <IconButton
+            id="importCellTemplateFile"
+            className='flex-row-icon b-4'
+            onClick={() => this.showExplorerDialog('fileName', false)} 
+            tooltip-data='File explorer'
+          >
+            <Icon className='fa fa-folder-o listIcon' />
+          </IconButton>
+
+          <NetPyNEField id="netParams.importCellParams.fileName" className="netpyneFieldNoWidth">
+            <TextField 
+              className="netpyneFieldNoWidth fx-11 no-z-index"
+              value={fileName}
+              onChange={event => this.setState({ fileName: event.target.value })}
+            />
+          </NetPyNEField>
+          
+        </div>
+
+
+        <div className="flex-row">
+          <IconButton
             id="importCellTemplateModFile"
+            className='flex-row-icon b-4'
             onClick={() => this.showExplorerDialog('modFolder', true)} 
-          />
-        </NetPyNEField>
+            tooltip-data='File explorer'
+          >
+            <Icon className="fa fa-folder-o listIcon" />
+          </IconButton>
+
+          <NetPyNEField id="netParams.importCellParams.modFolder" className="netpyneRightField" >
+            <TextField 
+              value={modFolder}
+              className="netpyneFieldNoWidth fx-11 no-z-index"
+              onChange={event => this.setState({ modFolder: event.target.value })} 
+            />
+          </NetPyNEField>
+        </div>
 
         <div className="listStyle netpyneField">
-          <ListComponent realType="dict" floatingLabelText="Cell Template Parameters (key:value pair)" ref="cellArgs" />
+          <ListComponent id="cellArgs" realType="dict" floatingLabelText="Cell Template Parameters (key:value pair)" ref="cellArgs" />
         </div>
 
         <div style={styles.mods.container}>

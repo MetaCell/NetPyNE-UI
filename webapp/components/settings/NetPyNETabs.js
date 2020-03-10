@@ -74,7 +74,9 @@ export default class NetPyNETabs extends React.Component {
       >
         {this.state.simulateTabLabel}
       </Button>
-      <IconButton onClick={this.handleClick} 
+      <IconButton 
+        onClick={this.handleClick} 
+        id="transit"
         onMouseEnter={() => this.setState({ transitionOptionsHovered: true })} 
         onMouseLeave={() => this.setState({ transitionOptionsHovered: false })}
         style={{ color: '#ffffff' }}

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
-import FontIcon from '@material-ui/core/Icon';
+import Icon from '@material-ui/core/Icon';
 
 /**
  * Generic List/Dict Component
@@ -221,9 +221,9 @@ export default class ListComponent extends Component {
             id={this.props.id + index + "RemoveButton"}
             className={'listButtonSmall'}
             onClick={() => this.removeChild(key)}
-            tooltip='Remove item from the list'
+            tooltip-data='Remove item from the list'
           >
-            <FontIcon className={'fa fa-minus-circle listIcon'} />
+            <Icon className={'fa fa-minus-circle listIcon'} />
           </IconButton>
         </div>
       )
@@ -248,7 +248,7 @@ export default class ListComponent extends Component {
               onClick={this.addChild}
               data-tooltip='Add item to the list'
             >
-              <FontIcon className={'fa fa-plus-circle listIcon'} />
+              <Icon className={'fa fa-plus-circle listIcon'} />
             </IconButton>
           )
         }

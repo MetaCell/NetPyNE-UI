@@ -3,7 +3,7 @@ define(function (require) {
     var ReactDOM = require('react-dom');
     var React = require('react');
     var getMuiTheme = require('material-ui/styles/getMuiTheme').default;
-    var MuiThemeProvider = require('material-ui/styles/MuiThemeProvider').default;
+    var MuiThemeProvider = require('material-ui/styles').MuiThemeProvider;
     var NetPyNE = require('./NetPyNE').default;
 
     var Utils = require('./Utils').default;
@@ -36,7 +36,7 @@ define(function (require) {
             <div id="footerHeader">
               <TabbedDrawer labels={["Console", "Python"]} iconClass={["fa fa-terminal", "fa fa-flask"]} >
                 <Console />
-                <PythonConsole pythonNotebookPath={"../notebooks/notebook.ipynb"} />
+                <PythonConsole pythonNotebookPath={"notebooks/notebook.ipynb"} />
               </TabbedDrawer>
             </div>
           </div>
@@ -51,6 +51,9 @@ define(function (require) {
     GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NetPyNE");
 
     GEPPETTO.on('jupyter_geppetto_extension_ready', data => {
+      let project = { id: 1, name: 'Project', experiments: [{ "id": 1, "name": 'Experiment', "status": 'DESIGN' }] }
+      GEPPETTO.Manager.loadProject(project, false);
+      GEPPETTO.Manager.loadExperiment(1, [], []);
       Utils.execPythonMessage('from netpyne_ui.netpyne_geppetto import netpyne_geppetto');
       Utils.evalPythonMessage('netpyne_geppetto.getData',[]).then(response => {
         var data = Utils.convertToJSON(response)

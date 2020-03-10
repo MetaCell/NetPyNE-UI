@@ -11,11 +11,12 @@ function loadModelUsingPython (casper, test, toolbox, demo) {
       kernel.execute(demo);
     }, demo);
   });
+
   casper.then(function () {
-    this.waitUntilVisible('#Populations')
+    this.waitUntilVisible('div[id="Populations"]')
   })
 
-  casper.thenClick('#Populations', function () {
+  casper.thenClick('div[id="Populations"]', function () {
     this.waitUntilVisible('button[id="newPopulationButton"]', function () {
       this.echo("Population view loaded");
     });

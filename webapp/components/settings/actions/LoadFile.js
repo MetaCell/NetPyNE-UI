@@ -15,6 +15,9 @@ import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText'
 const orange500 = orange[500], grey400 = grey[400];
 
+import IconButton from '@material-ui/core/IconButton';
+import Icon from '@material-ui/core/Icon';
+
 const loadOptions = [
   { label: 'High-level Network Parameters (netParams)', label2: 'Cell rules, connectivity rules, etc', state: 'loadNetParams' },
   { label: 'Simulation Configuration (simConfig)', label2: 'duration, recorded variables, etc', state: 'loadSimCfg' },
@@ -86,7 +89,8 @@ export default class LoadFile extends React.Component {
     let freezeInstance = !!this.state.loadNet
     let freezeSimulation = !!(freezeInstance && this.state.loadSimData)
     let tab = this.state.loadSimData || this.state.loadNet ? 'simulate' : 'define'
-        
+    const disableLoadMod = this.state.areModFieldsRequired === '' ? true : !this.state.areModFieldsRequired
+
     return (
       <ActionDialog
         title={'Open JSON file'}
@@ -97,17 +101,29 @@ export default class LoadFile extends React.Component {
         args={{ ...this.state, tab:tab, freezeInstance: freezeInstance, freezeSimulation: freezeSimulation }}
         {...this.props}
       >
-        <div style={{ width: '100%', marginTop: -22 }}>   
-          <TextField 
-            readOnly
-            id="loadJsonFile"
-            className="netpyneField" 
-            style={{ cursor: 'pointer', marginBottom:15 }} 
-            label="Json file:" 
-            value={this.state.jsonModelFolder} 
-            onClick={() => this.showExplorerDialog('jsonModelFolder', false)}
-            helperText={this.state.jsonPath != '' ? 'path: ' + this.state.jsonPath : ''} 
-          />
+        <div style={{ width: '100%', marginTop: -8 }}>
+
+          <div className="flex-row">
+            <IconButton
+              id="loadJsonFile"
+              className='flex-row-icon'
+              onClick={() => this.showExplorerDialog('jsonModelFolder', false)} 
+              tooltip-data='File explorer'
+            >
+              <Icon className={"fa fa-folder-o listIcon"} />
+            </IconButton>
+
+            <TextField 
+                className="netpyneFieldNoWidth fx-11 no-z-index"
+                label="Json file:" 
+                value={this.state.jsonModelFolder} 
+                onChange={event => this.setState({jsonModelFolder: event.target.value})}
+                helperText={this.state.jsonPath != '' ? 'path: ' + this.state.jsonPath : ''} 
+            />
+
+          </div>
+          
+
           <List> 
             {loadOptions.map((loadOption, index) => (
               <ListItem 
@@ -127,6 +143,8 @@ export default class LoadFile extends React.Component {
               </ListItem>
             ))}
           </List>
+
+
           <div>
             <FormControl>
               <InputLabel >Are custom mod files required for this model?</InputLabel>
@@ -151,25 +169,35 @@ export default class LoadFile extends React.Component {
               <FormHelperText>{this.state.areModFieldsRequired === undefined ? "This field is required." : ''}</FormHelperText>
             </FormControl>
             
-            <TextField 
-              readOnly
-              className="netpyneFieldNoWidth" 
-              style={{ float: 'left', width: '48%', cursor: 'pointer' , marginBottom: 15, marginTop:-10 }} 
-              label="Mod folder:"
-              disabled={this.state.areModFieldsRequired === '' ? true : !this.state.areModFieldsRequired} 
-              value={this.state.modFolder} 
-              onClick={() => this.showExplorerDialog('modFolder', true)} 
-              helperText={this.state.modPath != '' ? 'path: ' + this.state.modPath : ''} 
-            />
-            <div style={{ float: 'right', width: '47%', marginTop:25 }}>
+
+            <div className="flex-row">
+              <IconButton
+                  className='flex-row-icon'
+                  onClick={() => this.showExplorerDialog('modFolder', true)} 
+                  tooltip-data='File explorer'
+                  disabled={disableLoadMod} 
+              >
+                  <Icon className={`fa fa-folder-o ${!disableLoadMod && "listIcon"}`} />
+              </IconButton>
+
+              <TextField 
+                  className="netpyneFieldNoWidth fx-8 no-z-index"
+                  label="Mod folder:"
+                  disabled={disableLoadMod} 
+                  value={this.state.modFolder} 
+                  onChange={event => {this.setState({ modFolder: event.target.value})}} 
+                  helperText={this.state.modPath != '' ? 'path: ' + this.state.modPath : ''} 
+              />
+
               <Checkbox
-                className={"netpyneCheckbox"}
-                disabled={this.state.areModFieldsRequired === '' ? true : !this.state.areModFieldsRequired}
                 label="Compile mod files"
                 checked={this.state.compileMod}
-                onChange={() => this.setState(oldState => ({ compileMod: this.state.areModFieldsRequired ? !oldState.compileMod : false }))}
+                className={"netpyneCheckbox fx-3"}
+                disabled={this.state.areModFieldsRequired === '' ? true : !this.state.areModFieldsRequired}
+                onChange={() => this.setState(oldState => ({compileMod: this.state.areModFieldsRequired?!oldState.compileMod:false}))}
               />
             </div>
+
             <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} filterFiles={'.json'} onRequestClose={selection => this.closeExplorerDialog(selection)} />
           </div>
         </div>
