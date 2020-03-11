@@ -77,7 +77,7 @@ steps:
               c.Spawner.default_url = '/geppetto'
               c.Spawner.debug = True
             spawner: >-
-              c.Spawner.args = ["--library=netpyne_ui"]
+              c.Spawner.args = ["--library=netpyne_ui", "--NotebookApp.disable_check_xsrf=True"]
     
         scheduling:
           userScheduler:
@@ -117,12 +117,12 @@ steps:
     
         debug:
           enabled: false
-    image: 'codefresh/cfstep-helm:2.12.1'
+    image: 'codefresh/cfstep-helm:2.12.2'
     title: Installing chart
     stage: deploy
     environment:
       - CHART_NAME=jupyterhub
-      - RELEASE_NAME={{RELEASE_NAME}}
+      - RELEASE_NAME=${{RELEASE_NAME}}
       - KUBE_CONTEXT=geppetto-cluster@metacellllc
       - NAMESPACE=netpyne
       - TILLER_NAMESPACE=kube-system
