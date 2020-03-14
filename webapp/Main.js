@@ -14,21 +14,11 @@ jQuery(function () {
   var Console = require('geppetto-client/js/components/interface/console/Console');
   var TabbedDrawer = require('geppetto-client/js/components/interface/drawer/TabbedDrawer');
   var PythonConsole = require('geppetto-client/js/components/interface/pythonConsole/PythonConsole');
-        
+  var theme = require('./Theme').default
+
   require('./css/netpyne.less');
   require('./css/material.less');
   require('./css/traceback.less');
-
-
-  const customTheme = {
-    palette: {
-      primary1Color: '#543a73',
-      primary2Color: '#eb557a',
-      primary3Color: '#ebd07a'
-    }
-  };
-        
-  const theme = getMuiTheme(customTheme);
 
   function App (data = {}) {
     return (

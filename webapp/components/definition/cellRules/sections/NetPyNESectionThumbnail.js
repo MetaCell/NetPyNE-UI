@@ -37,7 +37,7 @@ export default class NetPyNESectionThumbnail extends React.Component {
 
     let label;
     if (isHovered && selected) {
-      label = <FontIcon className="fa fa-trash-o"/> 
+      label = <FontIcon className="fa fa-trash-o" style={{ color: "white" }}/> 
     } else {
       label = name.length > 14 ? `${name.slice(0,10)}...` : name
     }

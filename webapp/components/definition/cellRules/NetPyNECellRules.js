@@ -2,8 +2,10 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import ContentAdd from '@material-ui/icons/Add';
 import NavigationMoreHoriz from '@material-ui/icons/MoreHoriz';
-import { Card, CardHeader, CardContent } from '@material-ui/core';
-import FloatingActionButton from '@material-ui/core/Fab';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import Fab from '@material-ui/core/Fab';
 import NetPyNECellRule from './NetPyNECellRule';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import NetPyNESection from './sections/NetPyNESection';
@@ -17,27 +19,18 @@ import Dialog from '@material-ui/core/Dialog/Dialog';
 import Utils from '../../../Utils';
 import NetPyNEHome from '../../general/NetPyNEHome';
 
-const styles = {
-  rightArrow : {
-    float: 'left',
-    color: 'grey',
-    fontSize: "20px",
-    marginLeft: '15px'
-  },
-  cellRule: {
-    marginTop: "15px",
-    float: "left",
-    textAlign: 'center'
-  },
-  sections: {
-    container: {
-      marginLeft: '15px',
-      float: 'left',
-      borderRadius: 25,
-      boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 6px 0 rgba(0, 0, 0, 0.19)',
-    }
-  }
-}
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
+import { withStyles } from '@material-ui/core/styles'
+
+const styles = ({ spacing }) => ({
+  arrowRight : { marginLeft: spacing(1) },
+  addCellRule: { marginLeft: spacing(1) },
+  sections: { marginLeft: spacing(1) }
+})
 
 export default class NetPyNECellRules extends React.Component {
 
@@ -448,8 +441,8 @@ export default class NetPyNECellRules extends React.Component {
     switch (rule) {
     case 'cellRule':
       if (page !== 'main'){
-        if (selectedCellRule.length > 8 ){
-          return selectedCellRule.slice(0,7) + '...'
+        if (selectedCellRule.length > 6 ){
+          return selectedCellRule.slice(0,5) + '...'
         } else {
           return selectedCellRule
         }
@@ -492,23 +485,27 @@ export default class NetPyNECellRules extends React.Component {
     let selection = null;
     let container = null;
 
-    const actions = (
-      <Button 
-        variant="contained"
-        color="primary"
-        label={"BACK"}
-        onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
-      />
-    )
-
     const dialogPop = (errorMessage != undefined 
       ? <Dialog
         title={errorMessage}
         open={true}
-        actions={actions}
-        bodyStyle={{ overflow: 'auto' }}
-        style={{ whiteSpace: "pre-wrap" }}>
-        {errorDetails}
+        style={{ whiteSpace: "pre-wrap" }}
+      >
+        <DialogTitle id="alert-dialog-title">{errorMessage}</DialogTitle>
+        <DialogContent style={{ overflow: 'auto' }}>
+          <DialogContentText id="alert-dialog-description">
+            {errorDetails}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button 
+            variant="contained"
+            color="primary"
+            onClick={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
+          >
+              Back
+          </Button>
+        </DialogActions>
       </Dialog> 
       : undefined
     );
@@ -591,34 +588,42 @@ export default class NetPyNECellRules extends React.Component {
               handleClick={() => this.setState({ page: 'main', selectedCellRule: undefined, selectedSection: undefined, selectedMechanism: undefined })}
             />
 
-            <FloatingActionButton
-              id="newCellRuleButton"
-              style={styles.cellRule}
-              color={ page == 'main' ? 'primary' : 'secondary'}
-              data-tooltip={ this.createTooltip('cellRule')}
-              className={"actionButton smallActionButton"}
-              onClick={() => this.handleHierarchyClick('main')}
-            >
-              { this.createLabel('cellRule')}
-            </FloatingActionButton>
-            
-            <NavigationChevronRight style={styles.rightArrow}/>
+            <div className='ml-2'>
+              <Fab
+                id="newCellRuleButton"
+                style={{ minWidth: 56 }}
+                color={ page == 'main' ? 'primary' : 'secondary'}
+                data-tooltip={ this.createTooltip('cellRule')}
+                onClick={() => this.handleHierarchyClick('main')}
+              >
+                {this.createLabel('cellRule')}
+              </Fab>
+            </div>
 
-            <Button
-              id="newSectionButton"
-              variant="contained"
-              style={styles.sections.container}
-              color={ page === 'mechanisms' ? 'secondary' : 'primary'}
-              disabled={ selectedCellRule == undefined }
-              onClick={ () => this.handleHierarchyClick('sections') }
-              data-tooltip={ this.createTooltip('section')}
-            >
-              <p style={{ color: 'white', height: '100%' }}>
+            <NavigationChevronRight
+              className='ml-2'
+              color='disabled'
+            />
+
+            <div className='ml-2'>
+              <Fab
+                id="newSectionButton"
+                variant="extended"
+                style={{ minWidth: '100px' }}
+                color={ page === 'mechanisms' ? 'secondary' : 'primary'}
+                disabled={ selectedCellRule == undefined }
+                onClick={ () => this.handleHierarchyClick('sections') }
+                data-tooltip={ this.createTooltip('section')}
+              >
                 {this.createLabel('sections')}
-              </p>
-            </Button>
+              </Fab>
+            </div>
+            
 
-            <NavigationChevronRight style={styles.rightArrow}/>
+            <NavigationChevronRight 
+              className='ml-2'
+              color='disabled'
+            />
 
             <NetPyNENewMechanism
               handleClick={this.handleNewMechanism}

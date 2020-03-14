@@ -1,43 +1,39 @@
 import React from 'react';
-import FontIcon from '@material-ui/core/Icon';
-import IconButton from '@material-ui/core/IconButton';
-import pink from '@material-ui/core/colors/pink';
+import Icon from '@material-ui/core/Icon';
 import NavigationChevronRight from '@material-ui/icons/ChevronRight';
+import { makeStyles } from '@material-ui/core/styles'
 
-const pink400 = pink[400];
-
-export default ({ handleClick, selection }) => (
-  <span>
-    <IconButton
-      style={styles.home.container}
-      data-tooltip={selection ? "Unselect" : undefined}
-      color='secondary'
-      onClick={ () => handleClick()}
-    >
-      <FontIcon className="fa fa-home customHome"/>
-    </IconButton>
-    <NavigationChevronRight style={styles.rightArrow}/>
-  </span>
-)
-
-const styles = {
-  rightArrow : {
-    float: 'left',
-    color: 'grey',
-    fontSize: "20px",
-    marginLeft: '15px',
-    marginTop: '7px',
-  },
-  home: {
-    container : {
-      float: 'left',
-      height: '36px',
-      width: '36px',
-      padding: '0px'
-    },
-    icon: {
-      width: '36px',
-      height: '36px'
-    }
+const useStyles = makeStyles(({ spacing, palette }) => ({
+  rightArrow : { marginLeft: spacing(1) },
+  home: { },
+  root: {
+    display: 'flex',
+    alignItems: 'center'
   }
+}))
+
+
+export default ({ handleClick, selection }) => {
+  const classes = useStyles();
+  
+  return (
+    <div className={classes.root}>
+      <div
+        data-tooltip={selection ? "Unselect" : undefined}
+        onClick={ () => handleClick()}
+      >
+        <Icon
+          fontSize='large' 
+          color='secondary'
+          className="fa fa-home"
+          style={{ fontSize: 50 }}
+        />
+      </div>
+      
+      <NavigationChevronRight className={classes.rightArrow} color="disabled"/>
+    </div>
+  )
+  
 }
+
+const styles = {}

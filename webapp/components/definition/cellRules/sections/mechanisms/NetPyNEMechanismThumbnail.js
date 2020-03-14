@@ -11,9 +11,10 @@ const styles = {
   trash: {
     zIndex:10,
     marginTop:37,
-    marginLeft:40,
+    marginLeft:37,
     position:"absolute",
-    backgroundColor:"#f23d7a"
+    backgroundColor:"#f23d7a",
+    color: 'white'
   }
 }
 export default class NetPyNEMechanismThumbnail extends React.Component {
@@ -61,6 +62,8 @@ export default class NetPyNEMechanismThumbnail extends React.Component {
     return (
       <div style={styles.main}>
         <IconButton
+          disableFocusRipple
+          disableRipple
           id={`mechThumb${name}`}
           onMouseEnter={ () => this.setState({ isHovered: true }) }
           onMouseLeave={ () => this.setState({ isHovered: false }) }
@@ -70,7 +73,7 @@ export default class NetPyNEMechanismThumbnail extends React.Component {
         >
           <div>
             { label }
-            <FontIcon color="primary" className="gpt-fullgear"/>
+            <FontIcon style={{ color: changeColor, '&:hover': { color: hoverColor } }} className="gpt-fullgear"/>
           </div>
         </IconButton>
         <DeleteDialogBox

@@ -4,12 +4,14 @@ html,
 body {
   height: 100%;
   background: white !important;
+  font-size: 16px;
 }
 
 :root {
   --m2: 8px;
   --m4: 16px;
   --icon-size: 24px;
+  --breadcrumb-min-width: 420px;
 }
 
 #footer {
@@ -25,55 +27,20 @@ body {
   height: 100% !important;
 }
 
-.actionButton {
+button.actionButton {
   font-size: 15px;
   margin: 10px;
   width: 120px;
   height: 120px;
   float: left;
   cursor: pointer;
-}
-
-.actionButton button {
   overflow: visible!important;
-  width: 120px !important;
-  height: 120px !important;
   color: white;
   :hover {
     border-radius: 120px;
   }
 }
 
-
-.actionButton div {
-  width: 120px !important;
-  height: 120px !important;
-  display: table-cell;
-  vertical-align: middle;
-  text-align: center;
-}
-
-.smallActionButton {
-  float: left;
-  text-align: center;
-  border-radius: 40px;
-  width: 70px !important;
-  height: 70px !important;
-  overflow: visible !important;
-  margin-top: 10px !important;
-}
-
-.smallActionButton button {
-  border-radius: 40px;
-  width: 70px !important;
-  height: 70px !important;
-}
-
-.smallActionButton div {
-  border-radius: 40px;
-  width: 69px !important;
-  height: 70px !important;
-}
 .selectedActionButton button {
   background-color: @primary_color!important;
 }
@@ -118,42 +85,39 @@ body {
   color: white !important;
   margin-top: 5px;
 }
-.gearAddButton {
-  padding: 0 !important;
-  margin-top: 4px !important;
-  margin-left: 5px !important;
-}
-.gearAddButton button {
-  overflow: visible!important;
-}
-.gearAddButton .gpt-fullgear {
-  // color: @complementary_color!important;
-  font-size: 40px !important;
-  height: 40px !important;
-  width: 40px !important;
-  text-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px;
-}
-.gearAddButton svg {
-  color: rgb(255, 255, 255) !important;
-  height: 24px !important;
-  width: 24px !important;
-  position: absolute !important;
-  top: 11px !important;
-  left: 12px !important;
-  pointer-events: none;
-}
-.gearAddLabel {
-  font-size: 12px;
-  text-align: center;
-  position: absolute;
-  width: 24px !important;
-  height: 24px !important;
-  top: 0px;
-  color: white !important;
-  left: 4px;
-  pointer-events: none;
-  z-index: 10;
-}
+
+// .gearAddButton button {
+//   overflow: visible!important;
+// }
+
+// .gearAddButton .gpt-fullgear {
+//   // color: @complementary_color!important;
+//   font-size: 40px !important;
+//   height: 40px !important;
+//   width: 40px !important;
+//   text-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px;
+// }
+// .gearAddButton svg {
+//   color: rgb(255, 255, 255) !important;
+//   height: 24px !important;
+//   width: 24px !important;
+//   position: absolute !important;
+//   top: 11px !important;
+//   left: 12px !important;
+//   pointer-events: none;
+// }
+// .gearAddLabel {
+//   font-size: 12px;
+//   text-align: center;
+//   position: absolute;
+//   width: 24px !important;
+//   height: 24px !important;
+//   top: 0px;
+//   color: white !important;
+//   left: 4px;
+//   pointer-events: none;
+//   z-index: 10;
+// }
 .gearThumbButton {
   width: 120px !important;
   height: 120px !important;
@@ -195,10 +159,6 @@ body {
   color: #aaaaaa;
   cursor: pointer;
 }
-.customHome {
-  font-size: 50px !important;
-  margin-top: -14px !important;
-} 
 .helpIcon:hover {
   color: @primary_color;
 }
@@ -209,7 +169,8 @@ body {
   display: flex;
   align-items: center;
   overflow: visible;
-  margin-top: 5px;
+  justify-content: flex-start;
+  min-width: var(--breadcrumb-min-width);
 }
 
 .hiddenModal {
@@ -236,6 +197,7 @@ body {
 
 .netpyneField {
   width: 100% !important;
+  margin: 10px 0;
   > div:first-of-type {
     width: 95%;
     > div {
@@ -291,7 +253,6 @@ body {
 
 .thumbnails {
   width: 40%;
-  height: 420;
   overflow: visible;
   float: left;
 }
@@ -387,12 +348,6 @@ body {
   outline: none;
 }
 
-#newCellRuleButton {
-  overflow: visible !important;
-}
-#newCellRuleButton div > div {
-  border-radius: 50px !important;  
-}
 #newSectionButton {
   overflow: visible !important;
 }
@@ -401,6 +356,7 @@ body {
 }
 /**
  * Tooltip Styles   The tooltip will OVERFLOW, so make sure to allow overflow in the parent!!!
+ * actionButton
  */
 
 /* Add this attribute to the element that needs a tooltip */
@@ -522,6 +478,9 @@ body {
   flex: 10;
 }
 
+.ml-2 {
+  margin-left: var(--m2);
+}
 .mr-2 {
   margin-right: var(--m2);
 }
@@ -573,4 +532,9 @@ body {
 }
 .b-4 {
   bottom: var(--m4);
+}
+
+
+.add-rule {
+  min-width: '56px';
 }

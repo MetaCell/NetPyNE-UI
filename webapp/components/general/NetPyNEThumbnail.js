@@ -55,8 +55,9 @@ export default class NetPyNEThumbnail extends React.Component {
           data-tooltip={isHovered && name.length > 14 ? name : undefined}
           className={"actionButton " + (selected ? "selectedActionButton" : "")} 
           onClick={() => this.handleClick()}
+          color={selected ? "secondary" : "primary"}
         >
-          {(this.state.isHovered && selected) ? <Icon className="fa fa-trash-o"/> : label}}
+          {(this.state.isHovered && selected) ? <Icon className="fa fa-trash-o"/> : label}
         </Fab>
         <DeleteDialogBox
           open={dialogOpen}

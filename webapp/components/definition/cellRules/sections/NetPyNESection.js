@@ -3,12 +3,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import FontIcon from '@material-ui/core/Icon';
 import CardContent from '@material-ui/core/CardContent';
-import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
+import BottomNavigation from '@material-ui/core/BottomNavigation';
+import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import Select from '../../../general/Select';
 import ListComponent from '../../../general/List';
 import NetPyNEField from '../../../general/NetPyNEField';
-import Dialog from '@material-ui/core/Dialog/Dialog';
-import Button from '@material-ui/core/Button';
 
 import Utils from '../../../../Utils';
 
@@ -93,28 +92,6 @@ export default class NetPyNESection extends React.Component {
   }
       
   render () {
-    var actions = [
-      <Button
-        variant="contained"
-        color="primary"
-        label={"BACK"}
-        onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
-      />
-    ];
-    var title = this.state.errorMessage;
-    var children = this.state.errorDetails;
-    var dialogPop = (this.state.errorMessage != undefined
-      ? <Dialog
-        title={title}
-        open={true}
-        actions={actions}
-        bodyStyle={{ overflow: 'auto' }}
-        style={{ whiteSpace: "pre-wrap" }}>
-        {children}
-      </Dialog> 
-      : undefined
-    );
-
     var content = <div/>;
     var that = this;
     if (this.state.sectionId == "General") {
@@ -191,8 +168,8 @@ export default class NetPyNESection extends React.Component {
     return (
       <div>
 
-        <CardContent>
-          <BottomNavigation value={this.state.selectedIndex}>
+        <CardContent style={{ "zIndex": 0 }}>
+          <BottomNavigation value={this.state.selectedIndex} showLabels>
             {bottomNavigationItems}
           </BottomNavigation>
         </CardContent>

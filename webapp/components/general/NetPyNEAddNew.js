@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
 import ContentAdd from '@material-ui/icons/Add';
-import FloatingActionButton from '@material-ui/core/Fab';
+import Fab from '@material-ui/core/Fab';
+import { withStyles } from '@material-ui/core/styles';
 
-export default class NetPyNEAddNew extends React.Component {
+const styles = ({ spacing }) => ({
+  root : { 
+    marginLeft: spacing(1),
+    minWidth: 56
+  } 
+})
+
+class NetPyNEAddNew extends React.Component {
 
   constructor (props) {
     super(props);
@@ -17,25 +25,19 @@ export default class NetPyNEAddNew extends React.Component {
   }
 
   render () {
+    const { classes } = this.props
     return (
-      <FloatingActionButton 
+      <Fab 
         id={this.props.id}
-        style={styles.add}
         onClick={this.handleClick}
         data-tooltip="Create rule"
-        className={"actionButton smallActionButton"}
+        color='primary'
+        className={classes.root}
       >
         <ContentAdd />
-      </FloatingActionButton>
+      </Fab>
     );
   }
 }
 
-
-const styles = {
-  add: {
-    marginTop: "15px",
-    float: "left",
-    textAlign: 'center'
-  }
-}
+export default withStyles(styles)(NetPyNEAddNew)
