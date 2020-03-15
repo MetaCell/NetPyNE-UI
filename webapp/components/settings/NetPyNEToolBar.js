@@ -115,7 +115,7 @@ export default class NetPyNEToolBar extends React.Component {
       <IconButton
         id="appBar"
         tooltip={'File options'}
-        style={{ width: 40, height: 40, borderRadius: 25, overflow: 'hidden' }}
+        style={{ color: 'white' }}
         onClick={() => this.setState({ open: !this.state.open })}
       >
         <NavigationMenu />

@@ -7,12 +7,25 @@ import ListComponent from '../../general/List';
 import NetPyNEField from '../../general/NetPyNEField';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
+
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
 
-export default class NetPyNEStimulationSource extends React.Component {
+const styles = ({ spacing }) => ({
+  selectField: { 
+    marginTop: spacing(3),
+    width: '100%'
+  },
+})
+
+class NetPyNEStimulationSource extends React.Component {
 
   constructor (props) {
     super(props);
@@ -93,27 +106,27 @@ export default class NetPyNEStimulationSource extends React.Component {
   }
 
   render () {
-    var actions = [
-      <Button
-        variant="contained"
-        color="primary"
-        label={"BACK"}
-        onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
-      />
-    ];
-    var title = this.state.errorMessage;
-    var children = this.state.errorDetails;
+    const { classes } = this.props
     var dialogPop = (this.state.errorMessage != undefined) ? (
       <Dialog
-        title={title}
         open={true}
-        actions={actions}
-        bodyStyle={{ overflow: 'auto' }}
         style={{ whiteSpace: "pre-wrap" }}>
-        {children}
-      </Dialog> 
+        <DialogTitle id="alert-dialog-title">{this.state.errorMessage}</DialogTitle>
+        <DialogContent style={{ overflow: 'auto' }}>
+          <DialogContentText id="alert-dialog-description">
+            {this.state.errorDetails}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
+          >BACK</Button>
+        </DialogActions>
+      </Dialog>
     )
-      : undefined;
+      : undefined
 
     if (this.state.sourceType == 'IClamp') {
       var variableContent = (
@@ -281,7 +294,7 @@ export default class NetPyNEStimulationSource extends React.Component {
           />
           <br />
 
-          <NetPyNEField id="netParams.stimSourceParams.type" className={"netpyneFieldNoWidth"} noStyle>
+          <NetPyNEField id="netParams.stimSourceParams.type" className={classes.selectField}>
             <Select
               id={"stimSourceSelect"}
               label="stimulation type"
@@ -310,3 +323,6 @@ export default class NetPyNEStimulationSource extends React.Component {
     );
   }
 }
+
+
+export default withStyles(styles)(NetPyNEStimulationSource)

@@ -3,30 +3,14 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import NavigationMoreHoriz from '@material-ui/icons/MoreHoriz';
 import { withStyles } from '@material-ui/core/styles'
-import Icon from '@material-ui/core/Icon'
 import Utils from '../../../../../Utils';
 import ContentAdd from '@material-ui/icons/Add'
 
-const styless = ({ spacing, palette }) => ({ 
+const styles = ({ spacing, palette }) => ({ 
   icon : { color: palette.primary.main },
-  disabledIcon : { color: '#d1d1d1', cursor: 'auto' }, 
+  disabledIcon : { color: '#d1d1d1', cursor: 'auto' },
+  iconContent: { position: 'absolute', color: 'white', top: '17px', left: '17px' },
 })
-
-
-const hoverColor = '#66d2e2';
-// const changeColor = 'rgb(0, 188, 212)';
-
-const styles = {
-  anchorOrigin: {
-    horizontal: 'left', 
-    vertical: 'bottom'
-  },
-  anchorTarget: {
-    horizontal: 'left',
-    vertical: 'top'
-  },
-  color: 'white'
-};
 
 class NetPyNENewMechanism extends React.Component {
 
@@ -71,15 +55,15 @@ class NetPyNENewMechanism extends React.Component {
     }
   }
 
-  createLabel (){
+  createLabel (classes){
     const { disabled, blockButton } = this.props;
     if (disabled) {
       return ""
     } else {
       if (blockButton) {
-        return <NavigationMoreHoriz style={{ position: 'absolute', color: 'white', top: '15px', left: '15px' }}/>
+        return <NavigationMoreHoriz className={classes.iconContent}/>
       } else {
-        return <ContentAdd style={{ position: 'absolute', color: 'white', top: '15px', left: '15px' }}/>
+        return <ContentAdd className={classes.iconContent}/>
       }
     }
   }
@@ -100,7 +84,7 @@ class NetPyNENewMechanism extends React.Component {
               style={{ fontSize: '56px' }}
               className="gpt-fullgear"
             />
-            {this.createLabel()}
+            {this.createLabel(classes)}
           </div>
           
         </div>
@@ -127,4 +111,4 @@ class NetPyNENewMechanism extends React.Component {
   }
 }
 
-export default withStyles(styless)(NetPyNENewMechanism)
+export default withStyles(styles)(NetPyNENewMechanism)

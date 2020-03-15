@@ -231,29 +231,40 @@ export default class ListComponent extends Component {
 
     return (
       <div>
-        <TextField
-          id={this.props.id}
-          label={this.props.label ? 'Add new ' + this.props.label : 'Add new item'}
-          onChange={this.handleNewItemChange}
-          onKeyPress={e => e.key === 'Enter' ? this.addChild() : null }
-          value={this.state.newItemValue}
-          style={{ width: '100%' }}
-          helperText={this.state.newItemErrorText}
-        />
-        {!this.state.newItemErrorText 
+        <div style={{ display: 'flex', alignItems: 'baseline' }}>
+          <TextField
+            id={this.props.id}
+            label={this.props.label ? 'Add new ' + this.props.label : 'Add new item'}
+            onChange={this.handleNewItemChange}
+            onKeyPress={e => e.key === 'Enter' ? this.addChild() : null }
+            value={this.state.newItemValue}
+            style={{ width: '100%' }}
+            helperText={this.state.newItemErrorText}
+          />
+          {!this.state.newItemErrorText 
           && (
-            <IconButton
-              id={this.props.id + "AddButton"}
-              className={'listButtonLarge'}
-              onClick={this.addChild}
-              data-tooltip='Add item to the list'
-            >
-              <Icon className={'fa fa-plus-circle listIcon'} />
-            </IconButton>
+            <span>
+              <IconButton
+                id={this.props.id + "AddButton"}
+                className={'listButtonLarge'}
+                onClick={this.addChild}
+                data-tooltip='Add item to the list'
+              >
+                <Icon className={'fa fa-plus-circle listIcon'} />
+              </IconButton>
+            </span>
           )
-        }
+          }
+        </div>
+        
 
-        {childrenWithExtraProp.length > 0 && <div style={{ marginTop: '15px', marginLeft: '50px', paddingRight: '15px', padding: '0px 5px', float: 'left' }}>{childrenWithExtraProp}</div>}
+        {childrenWithExtraProp.length > 0 && (
+          <div 
+            style={{ marginTop: '15px', marginLeft: '50px', paddingRight: '15px', padding: '0px 5px', float: 'left' }}
+          >
+            {childrenWithExtraProp}
+          </div>
+        )}
       </div>
     )
   }

@@ -161,7 +161,7 @@ export default class NetPyNEField extends Component {
       }
 
       return (
-        <div style={this.props.style} {...className}>
+        <div style={{ ...this.props.style, display:'flex' }} {...className}>
           <div style={{ float: 'left' }}>
             {childWithProp}
           </div>

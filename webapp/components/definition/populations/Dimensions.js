@@ -3,16 +3,28 @@ import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Utils from '../../../Utils';
+import { withStyles } from '@material-ui/core/styles';
 
 import NetPyNEField from '../../general/NetPyNEField';
 var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 
+const styles = ({ spacing }) => ({
+  selectField: { 
+    marginTop: spacing(3),
+    width: '100%'
+  },
+  field:{
+    width: '95%!important',
+    marginLeft: spacing(3)
+  }
+})
+
 /**
  * Population Dimensions Component
  */
-export default class DimensionsComponent extends Component {
+class DimensionsComponent extends Component {
 
   constructor (props) {
     super(props);
@@ -78,10 +90,10 @@ export default class DimensionsComponent extends Component {
   }
 
   render () {
-
+    const { classes } = this.props
     return (
       <div>
-        <NetPyNEField id="netParams.popParams.numCells" className={"netpyneFieldNoWidth"} noStyle>
+        <NetPyNEField id="netParams.popParams.numCells" className={classes.selectField}>
           <Select
             id={"popParamsDimensionsSelect"}
             value={this.state.dimension}
@@ -101,7 +113,7 @@ export default class DimensionsComponent extends Component {
         </NetPyNEField>
         {
           this.state.dimension != undefined && this.state.dimension != ""
-            ? <NetPyNEField id={"netParams.popParams." + this.state.dimension} className={"netpyneRightField"} noStyle>
+            ? <NetPyNEField id={"netParams.popParams." + this.state.dimension} className={classes.fields}>
               <PythonControlledTextField
                 id={"popParamsDimensions"}
                 handleChange={this.handleDimValueChange}
@@ -116,3 +128,5 @@ export default class DimensionsComponent extends Component {
     )
   }
 }
+
+export default withStyles(styles)(DimensionsComponent)

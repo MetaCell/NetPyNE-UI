@@ -7,11 +7,11 @@ const hoverColor = '#66d2e2';
 const changeColor = 'rgb(0, 188, 212)';
 
 const styles = {
-  main: { float: 'left' },
+  main: { float: 'left', '&:hover': { backgroundColor: 'red' } },
   trash: {
     zIndex:10,
     marginTop:37,
-    marginLeft:37,
+    marginLeft:38,
     position:"absolute",
     backgroundColor:"#f23d7a",
     color: 'white'
@@ -47,7 +47,7 @@ export default class NetPyNEMechanismThumbnail extends React.Component {
   }
 
   render () {
-    const { name, selected } = this.props;
+    const { name, selected, classes } = this.props;
     const { dialogOpen, isHovered } = this.state;
     let label;
     if (isHovered && selected) {
@@ -62,8 +62,7 @@ export default class NetPyNEMechanismThumbnail extends React.Component {
     return (
       <div style={styles.main}>
         <IconButton
-          disableFocusRipple
-          disableRipple
+          style={{ '&:hover': { backgroundColor: 'red' } }}
           id={`mechThumb${name}`}
           onMouseEnter={ () => this.setState({ isHovered: true }) }
           onMouseLeave={ () => this.setState({ isHovered: false }) }

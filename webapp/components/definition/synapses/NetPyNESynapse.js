@@ -5,11 +5,19 @@ import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles'
+
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 
-export default class NetPyNESynapse extends React.Component {
+
+const styles = ({ spacing }) => ({ selectField: { marginTop: spacing(3) } })
+class NetPyNESynapse extends React.Component {
 
   constructor (props) {
     super(props);
@@ -87,24 +95,27 @@ export default class NetPyNESynapse extends React.Component {
   }
 
   render () {
-    var actions = [
-      <Button
-        variant="contained"
-        color="primary"
-        label={"BACK"}
-        onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
-      />
-    ];
-    var title = this.state.errorMessage;
-    var children = this.state.errorDetails;
-    var dialogPop = (this.state.errorMessage != undefined) ? <Dialog
-      title={title}
-      open={true}
-      actions={actions}
-      bodyStyle={{ overflow: 'auto' }}
-      style={{ whiteSpace: "pre-wrap" }}>
-      {children}
-    </Dialog> : undefined;
+    const { classes } = this.props
+    var dialogPop = (this.state.errorMessage != undefined) ? (
+      <Dialog
+        open={true}
+        style={{ whiteSpace: "pre-wrap" }}>
+        <DialogTitle id="alert-dialog-title">{this.state.errorMessage}</DialogTitle>
+        <DialogContent style={{ overflow: 'auto' }}>
+          <DialogContentText id="alert-dialog-description">
+            {this.state.errorDetails}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
+          >BACK</Button>
+        </DialogActions>
+      </Dialog>
+    )
+      : undefined
 
     if (this.state.synMechMod == '' || this.state.synMechMod == undefined) {
       var content = <div/>
@@ -144,8 +155,8 @@ export default class NetPyNESynapse extends React.Component {
           className={"netpyneField"}
           label="Synapse name"
         />
-        <br/>
-        <NetPyNEField id="netParams.synMechParams.mod" className={"netpyneFieldNoWidth"} noStyle>
+        
+        <NetPyNEField id="netParams.synMechParams.mod" className={classes.selectField}>
           <Select 
             id={"synapseModSelect"}
             value={this.state.synMechMod}
@@ -159,3 +170,6 @@ export default class NetPyNESynapse extends React.Component {
     );
   }
 }
+
+
+export default withStyles(styles)(NetPyNESynapse);

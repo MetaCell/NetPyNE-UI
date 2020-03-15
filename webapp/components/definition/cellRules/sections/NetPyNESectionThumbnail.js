@@ -3,7 +3,7 @@ import FontIcon from '@material-ui/core/Icon';
 import Button from '@material-ui/core/Button';
 import DeleteDialogBox from '../../../general/DeleteDialogBox';
 
-const styles = { btn: { borderRadius: '25px' } };
+const styles = { btn: { borderRadius: '25px', marginRight: '8px' } };
 
 export default class NetPyNESectionThumbnail extends React.Component {
 
@@ -46,7 +46,7 @@ export default class NetPyNESectionThumbnail extends React.Component {
         <Button
           variant="contained"
           id={name}
-          color="primary"
+          color={selected ? 'secondary' : 'primary'}
           style={ styles.btn }
           onMouseEnter={ () => this.setState({ isHovered: true }) }
           onMouseLeave={ () => this.setState({ isHovered: false }) }

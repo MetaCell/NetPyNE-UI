@@ -4,7 +4,6 @@ import Button from '@material-ui/core/Button';
 import Canvas from 'geppetto-client/js/components/interface/3dCanvas/Canvas';
 import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
 import IconButton from 'geppetto-client/js/components/controls/iconButton/IconButton';
-import Popover from '@material-ui/core/Popover';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Utils from '../../Utils';

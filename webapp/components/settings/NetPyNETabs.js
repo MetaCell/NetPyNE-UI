@@ -61,7 +61,6 @@ export default class NetPyNETabs extends React.Component {
         id={"defineNetwork"} 
         onClick={() => this.props.handleChange('define')} 
         style={{ flex: 1, borderRadius: 10, marginLeft: 5, ...this.getLabelStyle('define') }} 
-        color={this.getBackgroundStyle('define')} 
       >
         {'Define your Network'}
       </Button>
@@ -70,7 +69,6 @@ export default class NetPyNETabs extends React.Component {
         id={"simulateNetwork"} 
         onClick={() => this.props.handleChange('simulate')} 
         style={{ flex: 1, borderRadius: 10, marginLeft: 5, ...this.getLabelStyle('simulate') }} 
-        color={this.getBackgroundStyle('simulate')} 
       >
         {this.state.simulateTabLabel}
       </Button>
@@ -79,7 +77,7 @@ export default class NetPyNETabs extends React.Component {
         id="transit"
         onMouseEnter={() => this.setState({ transitionOptionsHovered: true })} 
         onMouseLeave={() => this.setState({ transitionOptionsHovered: false })}
-        style={{ color: '#ffffff' }}
+        style={{ color: 'white' }}
       >
         <NavigationExpandMoreIcon />
       </IconButton>

@@ -591,7 +591,7 @@ export default class NetPyNECellRules extends React.Component {
             <div className='ml-2'>
               <Fab
                 id="newCellRuleButton"
-                style={{ minWidth: 56 }}
+                style={{ width: 70, height: 70 }}
                 color={ page == 'main' ? 'primary' : 'secondary'}
                 data-tooltip={ this.createTooltip('cellRule')}
                 onClick={() => this.handleHierarchyClick('main')}

@@ -12,8 +12,8 @@ const primaryColor = 'rgb(84, 58, 115)'
 export default createMuiTheme({
   typography: {
     useNextVariants: true,
-    htmlFontSize: 14,
-    fontSize: 14,
+    htmlFontSize: 12,
+    fontSize: 10,
     fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
     button: {
       textTransform: "none",
@@ -33,14 +33,13 @@ export default createMuiTheme({
         boxShadow: 'none !important' 
       },
     },
-    MuiIconButton:{ root: { '&:hover': { backgroundColor: 'inherit' } } },
     MuiSelect: {
       root: {
         outline: 'none !important', 
         border: 'none !important', 
         boxShadow: 'none !important'
       },
-      select: { "&:focus" :{ background: "none" } }
-    },
+      select: { "&:focus" :{ background: "none" } },
+    }
   }
 });
