@@ -6,6 +6,7 @@ import FontIcon from '@material-ui/core/Icon';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
 import DimensionsComponent from './Dimensions';
+import DimensionsConnection from '../../../redux/reduxconnect/DimensionsConnection';
 import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
@@ -104,7 +105,7 @@ class NetPyNEPopulation extends React.Component {
         // Rename the population in Python
         Utils.renameKey('netParams.popParams', storedValue, newValue, (response, newValue) => { 
           this.renaming = false
-          GEPPETTO.trigger('populations_change');
+          this.props.updateCards()
         });
         this.renaming = true;
       });
@@ -158,7 +159,7 @@ class NetPyNEPopulation extends React.Component {
             <PythonControlledTextField
               callback={(newValue, oldValue) => {
                 Utils.evalPythonMessage("netpyne_geppetto.propagate_field_rename", ['cellType', newValue, oldValue])
-                GEPPETTO.trigger('cellType_change')
+                this.props.updateCards()
               }}
               model={"netParams.popParams['" + this.props.name + "']['cellType']"}
             />
@@ -168,13 +169,13 @@ class NetPyNEPopulation extends React.Component {
             <PythonControlledTextField
               callback={(newValue, oldValue) => {
                 Utils.evalPythonMessage("netpyne_geppetto.propagate_field_rename", ['cellModel', newValue, oldValue])
-                GEPPETTO.trigger('cellModel_change')
+                this.props.updateCards()
               }}
               model={"netParams.popParams['" + this.props.name + "']['cellModel']"}
             />
           </NetPyNEField>
 
-          <DimensionsComponent modelName={this.props.name} />
+          <DimensionsConnection modelName={this.props.name} />
           {dialogPop}
         </div>
       )

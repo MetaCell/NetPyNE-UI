@@ -25,17 +25,13 @@ export default class NetPyNEInclude extends Component {
  
   componentDidMount () {
     this.collectInfo();
-    GEPPETTO.on('populations_change', () => {
-      this.collectInfo();
-    })
-    GEPPETTO.on("population_update_dimension", () => { // different event to avoid triggers on cellParams, stimSourceParams, etc
-      this.collectInfo();
-    })
-  }
-  componentWillUnmount (){
-    GEPPETTO.off('populations_change')
   }
   
+  componentDidUpdate (prevProps, prevState) {
+    if (this.props.updates !== prevProps.updates) {
+      this.collectInfo();
+    }
+  }
   
   getDataTemplate = () => ({
     gids: [],

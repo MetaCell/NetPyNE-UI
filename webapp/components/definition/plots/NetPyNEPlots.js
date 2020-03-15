@@ -129,8 +129,6 @@ export default class NetPyNEPlots extends React.Component {
                 style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
                 handleClick={this.handleNewPlot} 
               />
-            />
-
             </div>
             <div style={{ clear: "both" }}></div>
             {plots}

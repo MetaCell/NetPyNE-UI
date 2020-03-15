@@ -18,6 +18,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+import PythonMethodControlledSelectFieldConnection from '../../../redux/reduxconnect/PythonMethodControlledSelectFieldConnection'
 var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
 var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(Select);
@@ -35,24 +36,6 @@ export default class NetPyNEConnectivityRule extends React.Component {
       errorDetails: undefined
     };
   }
-
-  componentDidMount (){
-    GEPPETTO.on('populations_change', () => {
-      this.forceUpdate();
-    })
-    GEPPETTO.on('cellType_change', () => {
-      this.forceUpdate();
-    })
-    GEPPETTO.on('cellModel_change', () => {
-      this.forceUpdate();
-    })
-  }
-
-  componentWillUnmount (){
-    GEPPETTO.off('populations_change')
-    GEPPETTO.off('cellType_change')
-    GEPPETTO.off('cellModel_change')
-  }  
 
   handleRenameChange = event => {
     var storedValue = this.props.name;
@@ -156,7 +139,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
           </NetPyNEField>
 
           <NetPyNEField id={"netParams.connParams.synMech"} >
-            <PythonMethodControlledSelectField
+            <PythonMethodControlledSelectFieldConnection
               model={"netParams.connParams['" + this.props.name + "']['synMech']"}
               method={"netpyne_geppetto.getAvailableSynMech"}
               postProcessItems={(pythonData, selected) => pythonData.map(name => (
@@ -218,7 +201,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
     } else if (this.state.sectionId == "Pre Conditions") {
       var content = <div>
         <NetPyNEField id={"netParams.connParams.preConds.pop"} >
-          <PythonMethodControlledSelectField
+          <PythonMethodControlledSelectFieldConnection
             model={"netParams.connParams['" + this.props.name + "']['preConds']['pop']"}
             method={"netpyne_geppetto.getAvailablePops"}
             postProcessItems={this.postProcessMenuItems}
@@ -226,7 +209,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
           />
         </NetPyNEField>
         <NetPyNEField id={"netParams.connParams.preConds.cellModel"} >
-          <PythonMethodControlledSelectField
+          <PythonMethodControlledSelectFieldConnection
             model={"netParams.connParams['" + this.props.name + "']['preConds']['cellModel']"}
             method={"netpyne_geppetto.getAvailableCellModels"}
             postProcessItems={this.postProcessMenuItems}
@@ -234,7 +217,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
           />
         </NetPyNEField>
         <NetPyNEField id={"netParams.connParams.preConds.cellType"} >
-          <PythonMethodControlledSelectField
+          <PythonMethodControlledSelectFieldConnection
             model={"netParams.connParams['" + this.props.name + "']['preConds']['cellType']"}
             method={"netpyne_geppetto.getAvailableCellTypes"}
             postProcessItems={this.postProcessMenuItems}
@@ -279,7 +262,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
     } else if (this.state.sectionId == "Post Conditions") {
       var content = <div>
         <NetPyNEField id={"netParams.connParams.postConds.pop"} >
-          <PythonMethodControlledSelectField
+          <PythonMethodControlledSelectFieldConnection
             model={"netParams.connParams['" + this.props.name + "']['postConds']['pop']"}
             method={"netpyne_geppetto.getAvailablePops"}
             postProcessItems={this.postProcessMenuItems}
@@ -287,7 +270,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
           />
         </NetPyNEField>
         <NetPyNEField id={"netParams.connParams.postConds.cellModel"} >
-          <PythonMethodControlledSelectField
+          <PythonMethodControlledSelectFieldConnection
             model={"netParams.connParams['" + this.props.name + "']['postConds']['cellModel']"}
             method={"netpyne_geppetto.getAvailableCellModels"}
             postProcessItems={this.postProcessMenuItems}
@@ -295,7 +278,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
           />
         </NetPyNEField>
         <NetPyNEField id={"netParams.connParams.postConds.cellType"} >
-          <PythonMethodControlledSelectField
+          <PythonMethodControlledSelectFieldConnection
             model={"netParams.connParams['" + this.props.name + "']['postConds']['cellType']"}
             method={"netpyne_geppetto.getAvailableCellTypes"}
             postProcessItems={this.postProcessMenuItems}

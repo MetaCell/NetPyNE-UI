@@ -20,7 +20,8 @@
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@geppettoengine/geppetto-client": "file:./geppetto-client",
-    "@material-ui/icons": "^4.9.1"
+    "@material-ui/icons": "^4.9.1",
+    "react-redux": "^7.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",

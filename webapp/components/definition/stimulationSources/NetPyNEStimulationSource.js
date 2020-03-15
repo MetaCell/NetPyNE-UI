@@ -47,7 +47,16 @@ class NetPyNEStimulationSource extends React.Component {
 
   UNSAFE_componentWillReceiveProps (nextProps) {
     if (this.state.currentName != nextProps.name) {
+      Utils.evalPythonMessage("netpyne_geppetto.netParams.stimSourceParams['" + nextProps.name + "']['type']")
+        .then(response => {
+          if (response !== this.state.sourceType) {
+            this.setState({ sourceType: response })
+            this.props.updateCards()
+          }
+        })
+
       this.setState({ currentName: nextProps.name, sourceType: '' });
+      
     }
   }
 
@@ -61,7 +70,7 @@ class NetPyNEStimulationSource extends React.Component {
       this.triggerUpdate(() => {
         Utils.renameKey('netParams.stimSourceParams', storedValue, newValue, (response, newValue) => {
           this.renaming = false
-          GEPPETTO.trigger('stimSources_change');
+          this.props.updateCards()
         });
         this.renaming = true;
         /*
@@ -93,6 +102,7 @@ class NetPyNEStimulationSource extends React.Component {
           responses.forEach( (response, index) => {
             if (response && this.state.sourceType != opts[index]) {
               this.setState({ sourceType: opts[index] })
+              this.props.updateCards()
             }
           })
         }
@@ -102,7 +112,7 @@ class NetPyNEStimulationSource extends React.Component {
   handleStimSourceTypeChange (event) {
     Utils.execPythonMessage("netpyne_geppetto.netParams.stimSourceParams['" + this.state.currentName + "']['type'] = '" + event.target.value + "'");
     this.setState({ sourceType: event.target.value });
-    GEPPETTO.trigger('stimSources_change', this.state.currentName);
+    this.props.updateCards()
   }
 
   render () {

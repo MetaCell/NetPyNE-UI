@@ -1,11 +1,11 @@
 import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import Transition from './components/transition/Transition';
-import NetPyNEPopulations from './components/definition/populations/NetPyNEPopulations';
+import PythonControlledNetPyNEPopulations from './redux/reduxconnect/NetPyNEPopulationsConnection';
 import NetPyNECellRules from './components/definition/cellRules/NetPyNECellRules';
-import NetPyNESynapses from './components/definition/synapses/NetPyNESynapses';
+import PythonControlledNetPyNESynapses from './redux/reduxconnect/NetPyNESynapsesConnection';
 import NetPyNEConnectivityRules from './components/definition/connectivity/NetPyNEConnectivityRules';
-import NetPyNEStimulationSources from './components/definition/stimulationSources/NetPyNEStimulationSources';
+import PythonControlledNetPyNEStimulationSources from './redux/reduxconnect/NetPyNEStimulationSourcesConnection';
 import NetPyNEStimulationTargets from './components/definition/stimulationTargets/NetPyNEStimulationTargets';
 import NetPyNEPlots from './components/definition/plots/NetPyNEPlots';
 import NetPyNESimConfig from './components/definition/configuration/NetPyNESimConfig';
@@ -14,11 +14,11 @@ import NetPyNEToolBar from './components/settings/NetPyNEToolBar';
 import NetPyNETabs from './components/settings/NetPyNETabs';
 
 var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledNetPyNEPopulations = PythonControlledCapability.createPythonControlledComponent(NetPyNEPopulations);
+
 var PythonControlledNetPyNECellRules = PythonControlledCapability.createPythonControlledComponent(NetPyNECellRules);
-var PythonControlledNetPyNESynapses = PythonControlledCapability.createPythonControlledComponent(NetPyNESynapses);
+
 var PythonControlledNetPyNEConnectivity = PythonControlledCapability.createPythonControlledComponent(NetPyNEConnectivityRules);
-var PythonControlledNetPyNEStimulationSources = PythonControlledCapability.createPythonControlledComponent(NetPyNEStimulationSources);
+
 var PythonControlledNetPyNEStimulationTargets = PythonControlledCapability.createPythonControlledComponent(NetPyNEStimulationTargets);
 var PythonControlledNetPyNEPlots = PythonControlledCapability.createPythonControlledComponent(NetPyNEPlots);
 
@@ -140,7 +140,7 @@ export default class NetPyNE extends React.Component {
       return <div></div>
     } else {
       if (this.state.value == 'define'){
-        var content = <div>
+        var content = <div style={{ marginBottom: "50px" }}>
           <PythonControlledNetPyNEPopulations model={"netParams.popParams"} />
           <PythonControlledNetPyNECellRules model={"netParams.cellParams"} />
           <PythonControlledNetPyNESynapses model={"netParams.synMechParams"} />

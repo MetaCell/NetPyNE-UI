@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Select from '../../../general/Select';
 import TimeRange from '../TimeRange'
-import NetPyNEInclude from '../NetPyNEInclude';
+import NetPyNEIncludeConnection from '../../../../redux/reduxconnect/NetPyNEIncludeConnection';
 import ListComponent from '../../../general/List';
 import NetPyNEField from '../../../general/NetPyNEField';
 
@@ -21,7 +21,7 @@ export default class PlotSpikeStats extends React.Component {
   render () {
     var tag = "simConfig.analysis['plotSpikeStats']"
     return <div>
-      <NetPyNEInclude
+      <NetPyNEIncludeConnection
         id={"simConfig.analysis.plotSpikeStats.include"}
         model={tag + "['include']"} 
         defaultOptions={['all', 'allCells', 'allNetStims']}

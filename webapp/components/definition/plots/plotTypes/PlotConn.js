@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Select from '../../../general/Select';
-import NetPyNEInclude from '../NetPyNEInclude';
+import NetPyNEIncludeConnection from '../../../../redux/reduxconnect/NetPyNEIncludeConnection';
 import NetPyNEField from '../../../general/NetPyNEField';
 
 var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
@@ -16,7 +16,7 @@ export default class plotConn extends React.Component {
   render () {
     var tag = "simConfig.analysis['plotConn']"
     return <div>
-      <NetPyNEInclude
+      <NetPyNEIncludeConnection
         id={"simConfig.analysis.plotConn.include"}
         model={tag + "['include']"} 
         defaultOptions={['all', 'allCells', 'allNetStims']}

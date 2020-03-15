@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Utils from '../../../Utils';
 import NetPyNEField from '../../general/NetPyNEField';
-import Select from '../../general/Select';
+
 import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 
@@ -14,8 +14,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(Select);
+import PythonMethodControlledSelectFieldConnection from '../../../redux/reduxconnect/PythonMethodControlledSelectFieldConnection'
 
 
 export default class NetPyNECellRule extends React.Component {
@@ -27,24 +26,6 @@ export default class NetPyNECellRule extends React.Component {
       errorMessage: undefined,
       errorDetails: undefined
     };
-  }
-
-  componentDidMount (){
-    GEPPETTO.on('populations_change', () => {
-      this.forceUpdate();
-    })
-    GEPPETTO.on('cellType_change', () => {
-      this.forceUpdate();
-    })
-    GEPPETTO.on('cellModel_change', () => {
-      this.forceUpdate();
-    })
-  }
-
-  componentWillUnmount (){
-    GEPPETTO.off('populations_change')
-    GEPPETTO.off('cellType_change')
-    GEPPETTO.off('cellModel_change')
   }
 
   handleRenameChange = event => {
@@ -130,7 +111,7 @@ export default class NetPyNECellRule extends React.Component {
           </div>
 
           <NetPyNEField id={"netParams.cellParams.conds.cellType"} >
-            <PythonMethodControlledSelectField
+            <PythonMethodControlledSelectFieldConnection
               model={"netParams.cellParams['" + this.state.currentName + "']['conds']['cellType']"}
               method={"netpyne_geppetto.getAvailableCellTypes"}
               postProcessItems={this.postProcessMenuItems}
@@ -139,7 +120,7 @@ export default class NetPyNECellRule extends React.Component {
           </NetPyNEField>
           
           <NetPyNEField id={"netParams.cellParams.conds.cellModel"} >
-            <PythonMethodControlledSelectField
+            <PythonMethodControlledSelectFieldConnection
               model={"netParams.cellParams['" + this.state.currentName + "']['conds']['cellModel']"}
               method={"netpyne_geppetto.getAvailableCellModels"}
               postProcessItems={this.postProcessMenuItems}
@@ -148,7 +129,7 @@ export default class NetPyNECellRule extends React.Component {
           </NetPyNEField>
 
           <NetPyNEField id={"netParams.cellParams.conds.pop"} >
-            <PythonMethodControlledSelectField
+            <PythonMethodControlledSelectFieldConnection
               model={"netParams.cellParams['" + this.state.currentName + "']['conds']['pop']"}
               method={"netpyne_geppetto.getAvailablePops"}
               postProcessItems={this.postProcessMenuItems}

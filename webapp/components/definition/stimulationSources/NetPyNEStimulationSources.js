@@ -5,7 +5,7 @@ import Utils from '../../../Utils';
 import NetPyNEHome from '../../general/NetPyNEHome';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
-import NetPyNEStimulationSource from './NetPyNEStimulationSource';
+import NetPyNEStimulationSourceConnection from '../../../redux/reduxconnect/NetPyNEStimulationSourceConnection';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
 
@@ -44,7 +44,7 @@ export default class NetPyNEStimulationSources extends Component {
     this.setState({
       value: model,
       selectedStimulationSource: StimulationSourceId
-    }, () => GEPPETTO.trigger('stimSources_change'));
+    }, () => this.props.updateCards());
   }
 
   hasSelectedStimulationSourceBeenRenamed (prevState, currentState) {
@@ -93,7 +93,7 @@ export default class NetPyNEStimulationSources extends Component {
               errorDetails: "Leading digits or whitespaces are not allowed in Population names.\n"
                                           + m + " has been renamed " + newValue
             },
-            () => Utils.renameKey('netParams.stimSourceParams', m, newValue, (response, newValue) => GEPPETTO.trigger('stimSources_change')));
+            () => Utils.renameKey('netParams.stimSourceParams', m, newValue, (response, newValue) => this.props.updateCards()));
           }
         }
       }
@@ -117,7 +117,7 @@ export default class NetPyNEStimulationSources extends Component {
     Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ['stimSourceParams', name]).then(response => {
       var model = this.state.value;
       delete model[name];
-      this.setState({ value: model, selectedStimulationSource: undefined, deletedStimulationSource: name }, () => GEPPETTO.trigger('stimSources_change'));
+      this.setState({ value: model, selectedStimulationSource: undefined, deletedStimulationSource: name }, () => this.props.updateCards());
     });
   }
 
@@ -165,7 +165,7 @@ export default class NetPyNEStimulationSources extends Component {
     
     var selectedStimulationSource = undefined;
     if ((this.state.selectedStimulationSource !== undefined) && Object.keys(model).indexOf(this.state.selectedStimulationSource) > -1) {
-      selectedStimulationSource = <NetPyNEStimulationSource name={this.state.selectedStimulationSource} renameHandler={this.handleRenameChildren} />;
+      selectedStimulationSource = <NetPyNEStimulationSourceConnection name={this.state.selectedStimulationSource} renameHandler={this.handleRenameChildren} />;
     }
     
     var content = (

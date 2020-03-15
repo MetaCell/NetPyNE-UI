@@ -83,9 +83,7 @@ class DimensionsComponent extends Component {
       // Set Population Dimension Python Side
       Utils
         .evalPythonMessage('netpyne_geppetto.netParams.popParams.setParam', [this.props.modelName, this.props.dimensionType, newValue])
-        .then(function (response) {
-          GEPPETTO.trigger("population_update_dimension")
-        });
+        .then(() => this.props.callback())
     });
   }
 
@@ -120,6 +118,9 @@ class DimensionsComponent extends Component {
                 model={"netParams.popParams['" + this.state.modelName + "']['" + this.state.dimension + "']"}
                 modelName={this.state.modelName}
                 dimensionType={this.state.dimension}
+                callback={(newValue, oldValue) => {
+                  this.props.updateCards()
+                }}
               />
             </NetPyNEField>
             : null

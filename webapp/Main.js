@@ -16,15 +16,22 @@ jQuery(function () {
   var PythonConsole = require('geppetto-client/js/components/interface/pythonConsole/PythonConsole');
   var theme = require('./Theme').default
 
+  const Provider = require("react-redux").Provider;
+  const configureStore = require('./redux/store').default;
+
   require('./css/netpyne.less');
   require('./css/material.less');
   require('./css/traceback.less');
+
+  const store = configureStore();
 
   function App (data = {}) {
     return (
       <div>
         <MuiThemeProvider theme={theme}>
-          <NetPyNE {...data}></NetPyNE>
+          <Provider store={store}>
+            <NetPyNE {...data}></NetPyNE>
+          </Provider>
         </MuiThemeProvider>
 
         <div id="footer">

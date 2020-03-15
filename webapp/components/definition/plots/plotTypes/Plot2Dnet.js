@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Checkbox from '../../../general/Checkbox';
 import Select from '../../../general/Select';
-import NetPyNEInclude from '../NetPyNEInclude';
+import NetPyNEIncludeConnection from '../../../../redux/reduxconnect/NetPyNEIncludeConnection';
 import NetPyNEField from '../../../general/NetPyNEField';
 
 var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
@@ -18,7 +18,7 @@ export default class Plot2Dnet extends React.Component {
   render () {
     var tag = "simConfig.analysis['plot2Dnet']"
     return <div>
-      <NetPyNEInclude
+      <NetPyNEIncludeConnection
         id={"simConfig.analysis.plot2Dnet.include"}
         model={tag + "['include']"} 
         defaultOptions={['all', 'allCells', 'allNetStims']}

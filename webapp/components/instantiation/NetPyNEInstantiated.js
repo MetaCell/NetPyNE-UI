@@ -92,6 +92,9 @@ export default class NetPyNEInstantiated extends React.Component {
     };
 
     newPlotWidget (name, svgResponse, data, i, total) {
+      if (svgResponse === '') {
+        return
+      }
       var s = svgResponse;
       var that = this;
       G.addWidget(1).then(w => {

@@ -3,7 +3,7 @@ import Checkbox from '../../../general/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import Select from '../../../general/Select';
 import TimeRange from '../TimeRange'
-import NetPyNEInclude from '../NetPyNEInclude';
+import NetPyNEIncludeConnection from '../../../../redux/reduxconnect/NetPyNEIncludeConnection';
 import NetPyNEField from '../../../general/NetPyNEField';
 
 var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
@@ -21,7 +21,7 @@ export default class PlotSpikeHist extends React.Component {
   render () {
     var tag = "simConfig.analysis['plotSpikeHist']"
     return <div >
-      <NetPyNEInclude
+      <NetPyNEIncludeConnection
         id={"simConfig.analysis.plotSpikeHist.include"}
         model={tag + "['include']"} 
         defaultOptions={['all', 'allCells', 'allNetStims']}

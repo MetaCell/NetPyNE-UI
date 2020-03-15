@@ -2,7 +2,7 @@ import React,{ Component } from 'react';
 import { Card, CardHeader, CardContent } from '@material-ui/core';
 
 import Utils from '../../../Utils';
-import NetPyNESynapse from './NetPyNESynapse';
+import NetPyNESynapseConnection from '../../../redux/reduxconnect/NetPyNESynapseConnection';
 import NetPyNEHome from '../../general/NetPyNEHome';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
@@ -44,7 +44,7 @@ export default class NetPyNESynapses extends Component {
     this.setState({
       value: model,
       selectedSynapse: SynapseId
-    }, () => GEPPETTO.trigger('synapses_change'));
+    }, () => this.props.updateCards())
   }
 
   hasSelectedSynapseBeenRenamed (prevState, currentState) {
@@ -93,7 +93,7 @@ export default class NetPyNESynapses extends Component {
               errorDetails: "Leading digits or whitespaces are not allowed in Synapses names.\n"
                                           + m + " has been renamed " + newValue
             },
-            () => Utils.renameKey('netParams.synMechParams', m, newValue, (response, newValue) => GEPPETTO.trigger('synapses_change')));
+            () => Utils.renameKey('netParams.synMechParams', m, newValue, (response, newValue) => this.props.updateCards()));
           }
         }
       }
@@ -117,7 +117,7 @@ export default class NetPyNESynapses extends Component {
     Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ['synMechParams', name]).then(response => {
       var model = this.state.value;
       delete model[name];
-      this.setState({ value: model, selectedSynapse: undefined, deletedSynapse: name }, () => GEPPETTO.trigger('synapses_change'));
+      this.setState({ value: model, selectedSynapse: undefined, deletedSynapse: name }, () => this.props.updateCards());
     });
   }
 
@@ -165,7 +165,7 @@ export default class NetPyNESynapses extends Component {
     }
     var selectedSynapse = undefined;
     if ((this.state.selectedSynapse !== undefined) && Object.keys(model).indexOf(this.state.selectedSynapse) > -1) {
-      selectedSynapse = <NetPyNESynapse name={this.state.selectedSynapse} renameHandler={this.handleRenameChildren} />;
+      selectedSynapse = <NetPyNESynapseConnection name={this.state.selectedSynapse} renameHandler={this.handleRenameChildren} />;
     }
 
     return (
