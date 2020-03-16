@@ -16,7 +16,7 @@ const styles = ({ spacing, typography, zIndex }) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'flex-end',
-    width: '100%'
+    width: '103%'
   },
   icon: { 
     '&:hover': { backgroundColor: 'inherit' },

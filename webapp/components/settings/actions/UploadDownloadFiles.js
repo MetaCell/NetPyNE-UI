@@ -12,7 +12,25 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import FileBrowser from '../../general/FileBrowser';
 
-const styles = {
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = ({ spacing, typography, zIndex }) => ({ 
+  container: { 
+    marginTop: spacing(2),
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    width: '100%'
+  },
+  icon: { 
+    '&:hover': { backgroundColor: 'inherit' },
+    flex: '0 0 4%',
+    marginRight: spacing(2),
+    width: typography.h3.fontSize,
+    height: typography.h3.fontSize,
+    padding: '0px!important',
+    zIndex: zIndex.modal
+  },
   input: {
     outline: 'none',
     border: 'none',
@@ -23,8 +41,9 @@ const styles = {
       boxShadow: 'none',
     }
   }
-}
-export default class UploadDownloadFile extends React.Component {
+})
+
+class UploadDownloadFile extends React.Component {
   constructor (props) {
     super(props);
     this.state = this.initialState()
@@ -175,19 +194,19 @@ export default class UploadDownloadFile extends React.Component {
     
 
     render () {
+      const { classes } = this.props
       const { mode } = this.props
         
       switch (mode) {
       case 'UPLOAD':
         var content = (
           <div>
-            <div className="flex-row">
+            <div className={classes.container}>
               <div >
                 <input 
                   multiple
                   type="file" 
-                  style={{ ...styles.input }}
-                  className="form-control" 
+                  className={classes.input}
                   onChange={this.onUploadFileArrayChange}
                 />
                       
@@ -203,16 +222,16 @@ export default class UploadDownloadFile extends React.Component {
       case 'DOWNLOAD':
         var content = (
           <div>
-            <div className="flex-row">
+            <div className={classes.container}>
               <IconButton
-                className='flex-row-icon'
+                className={classes.icon}
                 onClick={() => this.showExplorerDialog('.py')} 
                 tooltip-data='File explorer'
               >
                 <Icon className={'fa fa-folder-o listIcon'} />
               </IconButton>
               <TextField 
-                className="netpyneFieldNoWidth fx-11 no-z-index"
+                className='netpyneField'
                 value={this.state.downloadPathsDisplayText}
                 onChange={event => this.changeDownloadFilePathsDisplayText(event.target.value)}
                 label="Files:"
@@ -272,3 +291,5 @@ export default class UploadDownloadFile extends React.Component {
       )
     }
 }
+
+export default withStyles(styles)(UploadDownloadFile)
