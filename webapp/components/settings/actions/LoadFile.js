@@ -18,6 +18,33 @@ const orange500 = orange[500], grey400 = grey[400];
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = ({ spacing, typography, zIndex }) => ({ 
+  container: { 
+    marginTop: spacing(2),
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    width: '100%'
+  },
+  checkboxes: { marginTop: spacing(8) },
+  selectField: { 
+    marginTop: spacing(3),
+    width: '100%'
+  },
+  icon: { 
+    '&:hover': { backgroundColor: 'inherit' },
+    flex: '0 0 4%',
+    marginRight: spacing(2),
+    width: typography.h3.fontSize,
+    height: typography.h3.fontSize,
+    padding: '0px!important',
+    zIndex: zIndex.modal
+  }
+})
+
+
 const loadOptions = [
   { label: 'High-level Network Parameters (netParams)', label2: 'Cell rules, connectivity rules, etc', state: 'loadNetParams' },
   { label: 'Simulation Configuration (simConfig)', label2: 'duration, recorded variables, etc', state: 'loadSimCfg' },
@@ -25,7 +52,7 @@ const loadOptions = [
   { label: 'Simulation Data', label2: 'Spikes, traces, etc', state: 'loadSimData' }
 ]
 
-export default class LoadFile extends React.Component {
+class LoadFile extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -81,6 +108,7 @@ export default class LoadFile extends React.Component {
   }
 
   render () {
+    const { classes } = this.props
     /*
      * freeze instance means we will get the latest instance, so it will not be required an update of the instance in the future.
      * similar for simulation
@@ -92,6 +120,7 @@ export default class LoadFile extends React.Component {
     const disableLoadMod = this.state.areModFieldsRequired === '' ? true : !this.state.areModFieldsRequired
 
     return (
+      
       <ActionDialog
         title={'Open JSON file'}
         buttonLabel={'Load'}
@@ -103,10 +132,10 @@ export default class LoadFile extends React.Component {
       >
         <div style={{ width: '100%', marginTop: -8 }}>
 
-          <div className="flex-row">
+          <div className={classes.container}>
             <IconButton
               id="loadJsonFile"
-              className='flex-row-icon'
+              className={classes.icon}
               onClick={() => this.showExplorerDialog('jsonModelFolder', false)} 
               tooltip-data='File explorer'
             >
@@ -123,30 +152,31 @@ export default class LoadFile extends React.Component {
 
           </div>
           
-
-          <List> 
-            {loadOptions.map((loadOption, index) => (
-              <ListItem 
-                style={{ height: 50, width:'49%', float:index % 2 == 0 ? 'left' : 'right', marginTop: index > 1 ? "20px" : "-10px" }}
-                key={index}
-              >
-                <ListItemIcon>
-                  <Checkbox 
-                    onChange={() => this.setState(({ [loadOption.state]: oldState, ...others }) => ({ [loadOption.state]: !oldState }))} 
-                    checked={this.state[loadOption.state]} 
+          <div className={classes.checkboxes}>
+            <List> 
+              {loadOptions.map((loadOption, index) => (
+                <ListItem 
+                  style={{ height: 50, width:'49%', float:index % 2 == 0 ? 'left' : 'right', marginTop: index > 1 ? "20px" : "-10px" }}
+                  key={index}
+                >
+                  <ListItemIcon>
+                    <Checkbox 
+                      onChange={() => this.setState(({ [loadOption.state]: oldState, ...others }) => ({ [loadOption.state]: !oldState }))} 
+                      checked={this.state[loadOption.state]} 
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={loadOption.label}
+                    secondary={loadOption.label2}
                   />
-                </ListItemIcon>
-                <ListItemText
-                  primary={loadOption.label}
-                  secondary={loadOption.label2}
-                />
-              </ListItem>
-            ))}
-          </List>
+                </ListItem>
+              ))}
+            </List>
+          </div>
 
 
           <div>
-            <FormControl>
+            <FormControl className={classes.selectField}>
               <InputLabel >Are custom mod files required for this model?</InputLabel>
               <Select
                 className="netpyneField"
@@ -170,9 +200,9 @@ export default class LoadFile extends React.Component {
             </FormControl>
             
 
-            <div className="flex-row">
+            <div className={classes.container}>
               <IconButton
-                className='flex-row-icon'
+                className={classes.icon}
                 onClick={() => this.showExplorerDialog('modFolder', true)} 
                 tooltip-data='File explorer'
                 disabled={disableLoadMod} 
@@ -207,3 +237,5 @@ export default class LoadFile extends React.Component {
     )
   }
 }
+
+export default withStyles(styles)(LoadFile)

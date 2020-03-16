@@ -15,7 +15,33 @@ const grey400 = grey[400];
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 
-export default class ImportExportHLS extends React.Component {
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = ({ spacing, typography, zIndex }) => ({ 
+  container: { 
+    marginTop: spacing(2),
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    width: '100%'
+  },
+  selectField: { 
+    marginTop: spacing(3),
+    width: '100%'
+  },
+  selectFieldLabel: { top: -spacing(2) },
+  icon: { 
+    '&:hover': { backgroundColor: 'inherit' },
+    flex: '0 0 4%',
+    marginRight: spacing(2),
+    width: typography.h3.fontSize,
+    height: typography.h3.fontSize,
+    padding: '0px!important',
+    zIndex: zIndex.modal
+  }
+})
+
+class ImportExportHLS extends React.Component {
   constructor (props) {
     super(props);
     this.state = this.initialState()
@@ -127,15 +153,16 @@ export default class ImportExportHLS extends React.Component {
   }
 
   render () {
+    const { classes } = this.props
     const disableLoadMod = this.state.loadMod === '' ? true : !this.state.loadMod
     switch (this.props.mode) {
     case 'IMPORT':
       var content = (
         <div>
-          <div className="flex-row">
+          <div className={classes.container}>
             <IconButton
               id="appBarImportFileName"
-              className='flex-row-icon'
+              className={classes.icon}
               onClick={() => this.showExplorerDialog('netParamsPath', false, '.py')} 
               tooltip-data='File explorer'
             >
@@ -151,9 +178,9 @@ export default class ImportExportHLS extends React.Component {
           </div>
 
 
-          <div className="flex-row">
+          <div className={classes.container}>
             <IconButton
-              className='flex-row-icon'
+              className={classes.icon}
               onClick={() => this.showExplorerDialog('simConfigPath', false, '.py')} 
               tooltip-data='File explorer'
             >
@@ -169,9 +196,9 @@ export default class ImportExportHLS extends React.Component {
               
           </div>
 
-          <div className="flex-row">
+          <div className={classes.container}>
             <IconButton
-              className='flex-row-icon'
+              className={classes.icon}
               onClick={() => this.showExplorerDialog('modFolder', true, false)} 
               tooltip-data='File explorer'
             >
@@ -189,7 +216,7 @@ export default class ImportExportHLS extends React.Component {
           </div>
 
 
-          <div className="flex-row">
+          <div className={classes.container}>
             <TextField 
               className="netpyneRightField fx-6 mr-2"
               label="NetParams variable" 
@@ -204,11 +231,10 @@ export default class ImportExportHLS extends React.Component {
             />
           </div>
           
-          <FormControl>
-            <InputLabel>Are custom mod files required for this model?</InputLabel>
+          <FormControl className={classes.selectField}>
+            <InputLabel className={classes.selectFieldLabel}>Are custom mod files required for this model?</InputLabel>
             <Select
               id="appBarImportRequiresMod"
-              className="netpyneField"
               style={{ marginTop:0 }}
               value={this.state.loadMod}
               onChange={event => this.setState({ loadMod: event.target.value })}
@@ -274,3 +300,5 @@ export default class ImportExportHLS extends React.Component {
     )
   }
 }
+
+export default withStyles(styles)(ImportExportHLS)

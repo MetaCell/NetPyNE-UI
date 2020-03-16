@@ -231,6 +231,8 @@ export default class UploadDownloadFile extends React.Component {
       return (
         <div>
           <Dialog
+            fullWidth
+            maxWidth='sm'
             open={this.props.open && this.state.open}
             onClose={() => this.closeDialog()}
           >

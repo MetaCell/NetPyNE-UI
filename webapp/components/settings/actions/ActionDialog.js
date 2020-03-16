@@ -161,6 +161,8 @@ export default class ActionDialog extends React.Component {
       return (
 
         <Dialog
+          fullWidth
+          maxWidth='sm'
           open={this.state.open}
           onClose={() => this.closeDialog()}
         >
