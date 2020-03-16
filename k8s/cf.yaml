@@ -124,7 +124,7 @@ steps:
       - CHART_NAME=jupyterhub
       - RELEASE_NAME=${{RELEASE_NAME}}
       - KUBE_CONTEXT=geppetto-cluster@metacellllc
-      - NAMESPACE=netpyne
+      - NAMESPACE=${{NAMESPACE}}
       - TILLER_NAMESPACE=kube-system
       - CHART_VERSION=0.9.0-beta.4
       - 'CHART_REPO_URL=https://jupyterhub.github.io/helm-chart/'

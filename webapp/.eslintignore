@@ -1,0 +1,9 @@
+etc/*
+node/*
+build/*
+META-INF/*
+**/tests/casperjs/**/*.js
+**/tests/jest-puppeteer/**/*.js
+**/*min.js
+geppetto-client/**
+node_modules/**

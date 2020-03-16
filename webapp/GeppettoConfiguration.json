@@ -10,10 +10,7 @@
         "geppetto-default/ComponentsInitialization": false,
         "geppetto-netpyne/ComponentsInitialization": true
     },
-    "themes": {
-        "geppetto-default/colors": false,
-        "geppetto-netpyne/css/colors": true
-    },
+    "themes": "css/colors",
     "properties": {
         "title" : "NetPyNE",
         "description": "NetPyNE-UI is a user interface for building, visualizing and simulationg neuronal network models using NetPyNE.",

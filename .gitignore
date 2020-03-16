@@ -9,6 +9,12 @@ netpyne/
 org.geppetto.frontend.jupyter/
 *.ipynb
 init.py
+webapp/node_modules
+webapp/geppetto-client
+webapp/build
+tests
+netpyne_workspace
+Dockerfile_mini
 npm*
 .vscode
 app.log
