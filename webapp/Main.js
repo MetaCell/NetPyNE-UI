@@ -51,6 +51,7 @@ jQuery(function () {
   GEPPETTO.G.debug(false); // Change this to true to see messages on the Geppetto console while loading
   GEPPETTO.Resources.COLORS.DEFAULT = "#6f54aa";
   GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NetPyNE");
+  
 
   GEPPETTO.on('jupyter_geppetto_extension_ready', data => {
     let project = { id: 1, name: 'Project', experiments: [{ "id": 1, "name": 'Experiment', "status": 'DESIGN' }] }

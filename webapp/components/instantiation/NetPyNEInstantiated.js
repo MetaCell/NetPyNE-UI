@@ -178,6 +178,10 @@ export default class NetPyNEInstantiated extends React.Component {
         this.setState({ bringItToFront: 0 })
         this.showWidgets(true)
       });
+
+      GEPPETTO.on(GEPPETTO.Events.Model_loaded, () => {
+        this.props.modelLoaded();
+      });
     }
 
     componentWillUnmount (){

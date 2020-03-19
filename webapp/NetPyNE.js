@@ -9,9 +9,9 @@ import PythonControlledNetPyNEStimulationSources from './redux/reduxconnect/NetP
 import NetPyNEStimulationTargets from './components/definition/stimulationTargets/NetPyNEStimulationTargets';
 import NetPyNEPlots from './components/definition/plots/NetPyNEPlots';
 import NetPyNESimConfig from './components/definition/configuration/NetPyNESimConfig';
-import NetPyNEInstantiated from './components/instantiation/NetPyNEInstantiated';
 import NetPyNEToolBar from './components/settings/NetPyNEToolBar';
 import NetPyNETabs from './components/settings/NetPyNETabs';
+import LayoutManager from './redux/reduxconnect/LayoutManagerContainer';
 
 var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
 
@@ -30,7 +30,6 @@ export default class NetPyNE extends React.Component {
     this.state = {
       value: 'define',
       prevValue: 'define',
-      model: null,
       tabClicked: false,
       freezeInstance: false,
       freezeSimulation: false,
@@ -49,8 +48,6 @@ export default class NetPyNE extends React.Component {
       window.metadata = nextProps.data.metadata;
       window.currentFolder = nextProps.data.currentFolder;
       window.isDocker = nextProps.data.isDocker;
- 
-      this.setState({ model: nextProps.data })
     }
   }
 
@@ -136,7 +133,7 @@ export default class NetPyNE extends React.Component {
   }
   
   render () {
-    if (this.state.model == null) {
+    if (!this.props.data) {
       return <div></div>
     } else {
       if (this.state.value == 'define'){
@@ -147,15 +144,15 @@ export default class NetPyNE extends React.Component {
           <PythonControlledNetPyNEConnectivity model={"netParams.connParams"} />
           <PythonControlledNetPyNEStimulationSources model={"netParams.stimSourceParams"} />
           <PythonControlledNetPyNEStimulationTargets model={"netParams.stimTargetParams"} />
-          <NetPyNESimConfig model={this.state.model.simConfig} />
+          <NetPyNESimConfig model={this.props.data.simConfig} />
           <PythonControlledNetPyNEPlots model={"simConfig.analysis"} />
         </div>
       } else {
-        var content = <NetPyNEInstantiated key={this.state.freezeInstance ? "FIXME" : "PLEASE"} ref={"simulate"} model={this.state.model} page={"simulate"} />
+        var content = <LayoutManager />
       }
       
       return (
-        <div style={{ height: '100%', width:'100%' }} >
+        <div style={{ height: '100%', width:'100%', display: 'flex', flexDirection: 'column' }} >
           <div style={{ position: 'relative', zIndex: '100' }}>
             <Toolbar id="appBar" style={{ backgroundColor: '#543a73', width:'100%', boxShadow: '0 0px 4px 0 rgba(0, 0, 0, 0.2), 0 0px 8px 0 rgba(0, 0, 0, 0.19)', position: 'relative', top: '0px', left: '0px', zIndex: 100 }}>
               <div style={{ marginLeft: -12 }} >
@@ -180,7 +177,7 @@ export default class NetPyNE extends React.Component {
             fastForwardInstantiation={this.state.fastForwardInstantiation}
             fastForwardSimulation={this.state.fastForwardSimulation}
           />
-
+          
           {content}
         </div>
       )

@@ -18,3 +18,5 @@ Dockerfile_mini
 npm*
 .vscode
 app.log
+utilities/x86_64
+.idea
