@@ -35,7 +35,7 @@ export const FLEXLAYOUT_DEFAULT_STATE = {
 const MODEL_LOADED_STATE_WIDGETS = {
   '3dcanvas': { 
     id: '3DCanvas', 
-    name: '3DCanvas', 
+    name: 'Network', 
     status: WidgetStatus.MINIMIZED, 
     icon: 'fa-python',
     component: '3DCanvas', 

@@ -1,16 +1,12 @@
 import React from 'react';
-import Checkbox from '../../../general/Checkbox';
-import TextField from '@material-ui/core/TextField';
-import Select from '../../../general/Select';
-import TimeRange from '../TimeRange'
-import ListComponent from '../../../general/List';
-import NetPyNEField from '../../../general/NetPyNEField';
 
-var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
-var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
-var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
-var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(Select);
+import {
+  NetPyNEField,
+  NetPyNECheckbox,
+  NetPyNETextField,
+  NetPyNESelectField,
+  ListComponent
+} from 'netpyne/components';
 
 export default class PlotLFP extends React.Component {
 
@@ -23,11 +19,11 @@ export default class PlotLFP extends React.Component {
     var tag = "simConfig.analysis['plotLFP']"
     return <div>
       <NetPyNEField id="simConfig.analysis.plotLFP.electrodes" className="listStyle" >
-        <PythonControlledListComponent model={tag + "['electrodes']"} />
+        <ListComponent model={tag + "['electrodes']"} />
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotLFP.plots">
-        <PythonControlledSelectField model={tag + "['plots']"} multiple={true}/>
+        <NetPyNESelectField model={tag + "['plots']"} multiple={true}/>
       </NetPyNEField>
               
       <NetPyNEField id="simConfig.analysis.plotLFP.timeRange" >
@@ -35,31 +31,31 @@ export default class PlotLFP extends React.Component {
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotLFP.NFFT" >
-        <PythonControlledTextField model={tag + "['NFFT']"}/>
+        <NetPyNETextField model={tag + "['NFFT']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotLFP.noverlap" >
-        <PythonControlledTextField model={tag + "['noverlap']"}/>
+        <NetPyNETextField model={tag + "['noverlap']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotLFP.maxFreq" >
-        <PythonControlledTextField model={tag + "['maxFreq']"}/>
+        <NetPyNETextField model={tag + "['maxFreq']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotLFP.nperseg" >
-        <PythonControlledTextField model={tag + "['nperseg']"}/>
+        <NetPyNETextField model={tag + "['nperseg']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotLFP.smooth" >
-        <PythonControlledTextField model={tag + "['smooth']"}/>
+        <NetPyNETextField model={tag + "['smooth']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotLFP.separation" >
-        <PythonControlledTextField model={tag + "['separation']"}/>
+        <NetPyNETextField model={tag + "['separation']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotLFP.includeAxon" className={"netpyneCheckbox"} >
-        <PythonControlledCheckbox model={tag + "['includeAxon']"} />
+        <NetPyNECheckbox model={tag + "['includeAxon']"} />
       </NetPyNEField>
     </div>
   }

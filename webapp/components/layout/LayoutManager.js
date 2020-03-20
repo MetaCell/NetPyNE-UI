@@ -274,7 +274,7 @@ export default class LayoutManager extends Component {
   render () {
     
     return (
-      <div style={{ position: 'relative', flexGrow: 1}}>
+      <div style={{ position: 'relative', flexGrow: 1 }}>
         <FlexLayout.Layout
           ref="layout"
           model={this.model}

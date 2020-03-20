@@ -2,10 +2,8 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Utils from '../../../../../Utils';
 import { withStyles } from '@material-ui/core/styles';
-
-var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
-
+import { NetPyNETextField, } from 'netpyne/components';
+ 
 const styles = ({ spacing }) => ({
   fields: { 
     marginTop: spacing(3),
@@ -32,7 +30,7 @@ class NetPyNEMechanism extends React.Component {
     } else {
       var tag = "netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.section + "']['mechs']['" + this.state.currentName + "']"
       return this.state.mechFields.map((name, i) =>
-        <PythonControlledTextField id={"mechName" + name} name={name} key={name} model={tag + "['" + name + "']"} label={name} realType={"float"} className={classes.fields}/>
+        <NetPyNETextField id={"mechName" + name} name={name} key={name} model={tag + "['" + name + "']"} label={name} realType={"float"} className={classes.fields}/>
       )
     }
   };

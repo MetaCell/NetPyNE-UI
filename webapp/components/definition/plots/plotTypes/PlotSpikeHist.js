@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
-import Checkbox from '../../../general/Checkbox';
-import TextField from '@material-ui/core/TextField';
-import Select from '../../../general/Select';
 import TimeRange from '../TimeRange'
-import NetPyNEIncludeConnection from '../../../../redux/reduxconnect/NetPyNEIncludeConnection';
-import NetPyNEField from '../../../general/NetPyNEField';
 
-var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
-var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
-var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(Select);
+import {
+  NetPyNEInclude,
+  NetPyNEField,
+  NetPyNECheckbox,
+  NetPyNETextField
+} from 'netpyne/components';
 
 export default class PlotSpikeHist extends React.Component {
 
@@ -21,7 +18,7 @@ export default class PlotSpikeHist extends React.Component {
   render () {
     var tag = "simConfig.analysis['plotSpikeHist']"
     return <div >
-      <NetPyNEIncludeConnection
+      <NetPyNEInclude
         id={"simConfig.analysis.plotSpikeHist.include"}
         model={tag + "['include']"} 
         defaultOptions={['all', 'allCells', 'allNetStims']}
@@ -33,19 +30,19 @@ export default class PlotSpikeHist extends React.Component {
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotSpikeHist.binSize" >
-        <PythonControlledTextField model={tag + "['binSize']"}/>
+        <NetPyNETextField model={tag + "['binSize']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotSpikeHist.graphType" className="listStyle" >
-        <PythonControlledSelectField model={tag + "['graphType']"} />
+        <NetPyNESelectField model={tag + "['graphType']"} />
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotSpikeHist.yaxis" className="listStyle" >
-        <PythonControlledSelectField model={tag + "['yaxis']"} />
+        <NetPyNESelectField model={tag + "['yaxis']"} />
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotSpikeHist.overlay" className={"netpyneCheckbox"} >
-        <PythonControlledCheckbox model={tag + "['overlay']"} />
+        <NetPyNECheckbox model={tag + "['overlay']"} />
       </NetPyNEField>
     </div>
   }

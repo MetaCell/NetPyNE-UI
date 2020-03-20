@@ -3,10 +3,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 
 import Button from '@material-ui/core/Button';
-import Utils from '../../../Utils';
-import NetPyNEField from '../../general/NetPyNEField';
 
-import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 
 import DialogActions from '@material-ui/core/DialogActions';
@@ -14,8 +11,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import PythonMethodControlledSelectFieldConnection from '../../../redux/reduxconnect/PythonMethodControlledSelectFieldConnection'
-
+import { NetPyNESelectField, NetPyNEField, NetPyNECoordsRange } from 'netpyne/components';
+import Utils from '../../../Utils';
 
 export default class NetPyNECellRule extends React.Component {
 
@@ -111,7 +108,7 @@ export default class NetPyNECellRule extends React.Component {
           </div>
 
           <NetPyNEField id={"netParams.cellParams.conds.cellType"} >
-            <PythonMethodControlledSelectFieldConnection
+            <SelectField
               model={"netParams.cellParams['" + this.state.currentName + "']['conds']['cellType']"}
               method={"netpyne_geppetto.getAvailableCellTypes"}
               postProcessItems={this.postProcessMenuItems}
@@ -120,7 +117,7 @@ export default class NetPyNECellRule extends React.Component {
           </NetPyNEField>
           
           <NetPyNEField id={"netParams.cellParams.conds.cellModel"} >
-            <PythonMethodControlledSelectFieldConnection
+            <SelectField
               model={"netParams.cellParams['" + this.state.currentName + "']['conds']['cellModel']"}
               method={"netpyne_geppetto.getAvailableCellModels"}
               postProcessItems={this.postProcessMenuItems}
@@ -129,7 +126,7 @@ export default class NetPyNECellRule extends React.Component {
           </NetPyNEField>
 
           <NetPyNEField id={"netParams.cellParams.conds.pop"} >
-            <PythonMethodControlledSelectFieldConnection
+            <SelectField
               model={"netParams.cellParams['" + this.state.currentName + "']['conds']['pop']"}
               method={"netpyne_geppetto.getAvailablePops"}
               postProcessItems={this.postProcessMenuItems}

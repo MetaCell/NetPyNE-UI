@@ -36,7 +36,6 @@ const styles = {
   instantiatedContainer: {
     height: '100%', 
     width: '100%', 
-    position: 'fixed'
   },
   controlpanelBtn: {
     position: 'absolute', 
@@ -179,9 +178,7 @@ export default class NetPyNEInstantiated extends React.Component {
         this.showWidgets(true)
       });
 
-      GEPPETTO.on(GEPPETTO.Events.Model_loaded, () => {
-        this.props.modelLoaded();
-      });
+      
     }
 
     componentWillUnmount (){

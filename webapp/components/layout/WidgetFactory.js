@@ -2,11 +2,11 @@ import React, { lazy, Suspense } from 'react';
 
 import PythonConsole from 'geppetto-client/js/components/interface/pythonConsole/PythonConsole';
 
+import { NetPyNEInstantiated } from 'netpyne/components';
 
 export default class WidgetFactory{
 
   constructor () {
-
     this.widgets = {};
   }
 

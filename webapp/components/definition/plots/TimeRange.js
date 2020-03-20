@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
-import AdapterComponent from '../../general/AdapterComponent';
 
-var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledAdapterComponent = PythonControlledCapability.createPythonControlledControl(AdapterComponent);
- 
+import { AdapterComponent } from 'netpyne/components';
+
+
 export default class TimeRange extends Component {
  
   constructor (props) {
@@ -14,7 +13,7 @@ export default class TimeRange extends Component {
   render () {
     return (
       <div className={"netpyneRightField"}>
-        <PythonControlledAdapterComponent 
+        <AdapterComponent 
           model={this.props.model}
           convertToPython={state => {
             if (state[state.lastUpdated].toString().endsWith(".")) {
@@ -32,7 +31,7 @@ export default class TimeRange extends Component {
         >
           <TextField label="Starting time" id="min" style={{ marginLeft: 10 }}/>
           <TextField label="Ending time" id="max" style={{ marginLeft: 10 }}/>
-        </PythonControlledAdapterComponent>
+        </AdapterComponent>
       </div>
     );
   }

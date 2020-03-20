@@ -5,19 +5,16 @@ import FontIcon from '@material-ui/core/Icon';
 import CardContent from '@material-ui/core/CardContent';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import Select from '../../../general/Select';
-import ListComponent from '../../../general/List';
-import NetPyNEField from '../../../general/NetPyNEField';
 
 import Utils from '../../../../Utils';
 
-var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
-var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
-var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(Select);
+import {
+  NetPyNEField,
+  NetPyNETextField,
+  NetPyNESelectField,
+  ListComponent
+} from 'netpyne/components';
 
-const hoverColor = '#66d2e2';
-const changeColor = 'rgb(0, 188, 212)';
 
 export default class NetPyNESection extends React.Component {
 
@@ -110,23 +107,23 @@ export default class NetPyNESection extends React.Component {
 
       content = (<div>
         <NetPyNEField id="netParams.cellParams.secs.geom.diam" >
-          <PythonControlledTextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['diam']"} />
+          <NetPyNETextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['diam']"} />
         </NetPyNEField>
 
         <NetPyNEField id="netParams.cellParams.secs.geom.L" >
-          <PythonControlledTextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['L']"} />
+          <NetPyNETextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['L']"} />
         </NetPyNEField>
 
         <NetPyNEField id="netParams.cellParams.secs.geom.Ra" >
-          <PythonControlledTextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['Ra']"} />
+          <NetPyNETextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['Ra']"} />
         </NetPyNEField>
 
         <NetPyNEField id="netParams.cellParams.secs.geom.cm" >
-          <PythonControlledTextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['cm']"} />
+          <NetPyNETextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['cm']"} />
         </NetPyNEField>
 
         <NetPyNEField id="netParams.cellParams.secs.geom.pt3d" className="listStyle">
-          <PythonControlledListComponent
+          <ListComponent
             model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['pt3d']"} />
         </NetPyNEField>
 
@@ -134,7 +131,7 @@ export default class NetPyNESection extends React.Component {
     } else if (this.state.sectionId == "Topology") {
       content = (<div>
         <NetPyNEField id="netParams.cellParams.secs.topol.parentSec" >
-          <PythonMethodControlledSelectField
+          <NetPyNESelectField
             model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['topol']['parentSec']"}
             method={"netpyne_geppetto.getAvailableSections"}
             postProcessItems={this.postProcessMenuItems}
@@ -143,14 +140,14 @@ export default class NetPyNESection extends React.Component {
         <br />
         
         <NetPyNEField id="netParams.cellParams.secs.topol.parentX" >
-          <PythonControlledTextField
+          <NetPyNETextField
             model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['topol']['parentX']"}
           />
         </NetPyNEField>
         <br />
         
         <NetPyNEField id="netParams.cellParams.secs.topol.childX" >
-          <PythonControlledTextField
+          <NetPyNETextField
             model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['topol']['childX']"} 
           />
         </NetPyNEField>

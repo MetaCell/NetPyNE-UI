@@ -42,6 +42,7 @@ export default class NetPyNEToolBar extends React.Component {
     this.snackBarMessage = message
     this.setState({ openSnackBar: true }) 
   }
+  
 
   render () {
 
@@ -51,28 +52,24 @@ export default class NetPyNEToolBar extends React.Component {
         var content = <LoadFile
           open={this.state.openDialogBox}
           onRequestClose={() => this.setState({ openDialogBox: false })}
-          changeTab={this.props.changeTab}
         />
         break;
       case 'Save':
         var content = <SaveFile
           open={this.state.openDialogBox}    
           onRequestClose={() => this.setState({ openDialogBox: false })}
-          changeTab={this.props.changeTab}
         />
         break;
       case 'ImportHLS':
         var content = <ImportExportHLS 
           open={this.state.openDialogBox}
           onRequestClose={() => this.setState({ openDialogBox: false })}
-          changeTab={this.props.changeTab}
           mode ={"IMPORT"}/>
         break;
       case 'ExportHLS':
         var content = <ImportExportHLS 
           open={this.state.openDialogBox}
           onRequestClose={() => this.setState({ openDialogBox: false })}
-          changeTab={this.props.changeTab}
           mode ={"EXPORT"}
         />
         break;
@@ -86,7 +83,6 @@ export default class NetPyNEToolBar extends React.Component {
         var content = <NewModel
           open={this.state.openDialogBox}
           onRequestClose={() => this.setState({ openDialogBox: false })}
-          changeTab={this.props.changeTab}
         />
         break;
       case 'UploadFiles':

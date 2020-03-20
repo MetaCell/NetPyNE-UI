@@ -10,9 +10,9 @@
     "build": "webpack --mode none -p --progress",
     "prebuild-dev": "eslint . --color",
     "build-dev": "webpack --mode none --devtool eval",
-    "prebuild-dev-noTest": "eslint . --color",
+    "prebuild-dev-noTest": "eslint . --color --fix",
     "build-dev-noTest": "webpack --mode none --devtool source-map --env.noTest=true",
-    "prebuild-dev-noTest:watch": "eslint . --color",
+    "prebuild-dev-noTest:watch": "eslint . --color --fix",
     "build-dev-noTest:watch": "webpack --mode none --devtool source-map --env.noTest=true --progress --watch",
     "prestart": "eslint . --color",
     "start": "node --max_old_space_size=2048 node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress  --config webpack.config.dev.js"
@@ -21,6 +21,7 @@
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@geppettoengine/geppetto-client": "file:./geppetto-client",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.46",
     "react-redux": "^7.2.0"
   },
   "devDependencies": {

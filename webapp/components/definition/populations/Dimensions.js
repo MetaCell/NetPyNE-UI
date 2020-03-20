@@ -5,10 +5,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Utils from '../../../Utils';
 import { withStyles } from '@material-ui/core/styles';
 
-import NetPyNEField from '../../general/NetPyNEField';
-var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
-
-var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
+import {
+  NetPyNEField,
+  NetPyNETextField,
+} from 'netpyne/components';
 
 const styles = ({ spacing }) => ({
   selectField: { 
@@ -112,7 +112,7 @@ class DimensionsComponent extends Component {
         {
           this.state.dimension != undefined && this.state.dimension != ""
             ? <NetPyNEField id={"netParams.popParams." + this.state.dimension} className={classes.fields}>
-              <PythonControlledTextField
+              <NetPyNETextField
                 id={"popParamsDimensions"}
                 handleChange={this.handleDimValueChange}
                 model={"netParams.popParams['" + this.state.modelName + "']['" + this.state.dimension + "']"}

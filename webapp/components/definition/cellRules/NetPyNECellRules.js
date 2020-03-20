@@ -6,13 +6,20 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Fab from '@material-ui/core/Fab';
-import NetPyNECellRuleConnection from '../../../redux/reduxconnect/NetPyNECellRuleConnection';
-import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
+
+
+import {
+  NetPyNECellRule, 
+  NetPyNEThumbnail
+} from 'netpyne/components';
+
+
 import NetPyNESection from './sections/NetPyNESection';
 import NetPyNESectionThumbnail from './sections/NetPyNESectionThumbnail';
 import NetPyNEMechanism from './sections/mechanisms/NetPyNEMechanism';
 import NetPyNENewMechanism from './sections/mechanisms/NetPyNENewMechanism';
 import NetPyNEMechanismThumbnail from './sections/mechanisms/NetPyNEMechanismThumbnail';
+
 import NavigationChevronRight from '@material-ui/icons/ChevronRight';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 
@@ -513,7 +520,7 @@ export default class NetPyNECellRules extends React.Component {
     if (page == 'main') {
       if ( selectedCellRule !== undefined && model && Object.keys(model).indexOf(selectedCellRule) > -1) {
         selection = (
-          <NetPyNECellRuleConnection
+          <NetPyNECellRule
             name={selectedCellRule}
             selectPage={this.selectPage}
             model={model[selectedCellRule]}

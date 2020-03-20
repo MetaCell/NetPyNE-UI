@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
-import Checkbox from '../../../general/Checkbox';
-import TextField from '@material-ui/core/TextField';
-import Select from '../../../general/Select';
 import TimeRange from '../TimeRange'
-import NetPyNEIncludeConnection from '../../../../redux/reduxconnect/NetPyNEIncludeConnection';
-import NetPyNEField from '../../../general/NetPyNEField';
 
-var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
-var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
-var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(Select);
+import {
+  NetPyNEInclude,
+  NetPyNEField,
+  NetPyNESelectField,
+} from 'netpyne/components';
 
 export default class PlotTraces extends React.Component {
 
@@ -21,7 +17,7 @@ export default class PlotTraces extends React.Component {
   render () {
     var tag = "simConfig.analysis['plotTraces']"
     return <div>
-      <NetPyNEIncludeConnection
+      <NetPyNEInclude
         id={"simConfig.analysis.plotTraces.include"}
         model={tag + "['include']"} 
         defaultOptions={['all', 'allCells', 'allNetStims']}
@@ -33,15 +29,15 @@ export default class PlotTraces extends React.Component {
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotTraces.oneFigPer" className="listStyle" >
-        <PythonControlledSelectField model={tag + "['oneFigPer']"} />
+        <NetPyNESelectField model={tag + "['oneFigPer']"} />
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotTraces.overlay" className={"netpyneCheckbox"} >
-        <PythonControlledCheckbox model={tag + "['overlay']"} />
+        <NetPyNECheckbox model={tag + "['overlay']"} />
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotTraces.rerun" className={"netpyneCheckbox"} >
-        <PythonControlledCheckbox model={tag + "['rerun']"} />
+        <NetPyNECheckbox model={tag + "['rerun']"} />
       </NetPyNEField>
     </div>
   }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Select from '../../general/Select';
 import Utils from '../../../Utils';
-import NetPyNEField from '../../general/NetPyNEField';
+
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles'
@@ -12,9 +12,10 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
-
+import {
+  NetPyNEField,
+  NetPyNETextField,
+} from "netpyne/components";
 
 const styles = ({ spacing }) => ({ selectField: { marginTop: spacing(3) } })
 class NetPyNESynapse extends React.Component {
@@ -123,21 +124,21 @@ class NetPyNESynapse extends React.Component {
       var content = (
         <div>
           <NetPyNEField id="netParams.synMechParams.tau1">
-            <PythonControlledTextField
+            <NetPyNETextField
               model={"netParams.synMechParams['" + this.props.name + "']['tau1']"}
             />
           </NetPyNEField>
           
           {(this.state.synMechMod == "Exp2Syn") ? <div>
             <NetPyNEField id="netParams.synMechParams.tau2">
-              <PythonControlledTextField
+              <NetPyNETextField
                 model={"netParams.synMechParams['" + this.props.name + "']['tau2']"}
               />
             </NetPyNEField>
           </div> : null}
           
           <NetPyNEField id="netParams.synMechParams.e" >
-            <PythonControlledTextField
+            <NetPyNETextField
               model={"netParams.synMechParams['" + this.props.name + "']['e']"}
             />
           </NetPyNEField>

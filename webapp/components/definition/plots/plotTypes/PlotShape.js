@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
-import Checkbox from '../../../general/Checkbox';
-import TextField from '@material-ui/core/TextField';
-import Select from '../../../general/Select';
-import ListComponent from '../../../general/List'; 
-import NetPyNEField from '../../../general/NetPyNEField';
 
-var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
-var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
-var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(Select);
-var PythonControlledListComponent = PythonControlledCapability.createPythonControlledControl(ListComponent);
+import {
+  NetPyNEField,
+  NetPyNECheckbox,
+  NetPyNETextField,
+  NetPyNESelectField,
+  ListComponent
+} from 'netpyne/components';
 
 export default class PlotShape extends React.Component {
 
@@ -22,55 +19,55 @@ export default class PlotShape extends React.Component {
     var tag = "simConfig.analysis['plotShape']"
     return <div>
       <NetPyNEField id="simConfig.analysis.plotShape.includePre" className="listStyle" >
-        <PythonControlledListComponent model={tag + "['includePre']"} />
+        <ListComponent model={tag + "['includePre']"} />
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotShape.includePost" className="listStyle" >
-        <PythonControlledListComponent model={tag + "['includePost']"} />
+        <ListComponent model={tag + "['includePost']"} />
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotShape.synStyle" >
-        <PythonControlledTextField model={tag + "['synStyle']"} />
+        <NetPyNETextField model={tag + "['synStyle']"} />
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotShape.dist" >
-        <PythonControlledTextField model={tag + "['dist']"} />
+        <NetPyNETextField model={tag + "['dist']"} />
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotShape.synSize" >
-        <PythonControlledTextField model={tag + "['synSize']"} />
+        <NetPyNETextField model={tag + "['synSize']"} />
       </NetPyNEField>
 
       <NetPyNEField id={"simConfig.analysis.plotShape.cvar"} >
-        <PythonControlledSelectField model={tag + "['cvar']"} />
+        <NetPyNESelectField model={tag + "['cvar']"} />
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotShape.cvals" className="listStyle" >
-        <PythonControlledListComponent model={tag + "['cvals']"} />
+        <ListComponent model={tag + "['cvals']"} />
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotShape.bkgColor" className="listStyle" >
-        <PythonControlledListComponent model={tag + "['bkgColor']"} />
+        <ListComponent model={tag + "['bkgColor']"} />
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotShape.ivprops" >
-        <PythonControlledTextField model={tag + "['ivprops']"} />
+        <NetPyNETextField model={tag + "['ivprops']"} />
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotShape.iv" className={"netpyneCheckbox"} >
-        <PythonControlledCheckbox model={tag + "['iv']"} />
+        <NetPyNECheckbox model={tag + "['iv']"} />
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotShape.includeAxon" className={"netpyneCheckbox"} >
-        <PythonControlledCheckbox model={tag + "['includeAxon']"} />
+        <NetPyNECheckbox model={tag + "['includeAxon']"} />
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotShape.showSyns" className={"netpyneCheckbox"} >
-        <PythonControlledCheckbox model={tag + "['showSyncs']"} />
+        <NetPyNECheckbox model={tag + "['showSyncs']"} />
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotShape.showElectrodes" className={"netpyneCheckbox"} >
-        <PythonControlledCheckbox model={tag + "['showElectrodes']"} />
+        <NetPyNECheckbox model={tag + "['showElectrodes']"} />
       </NetPyNEField>
     </div>
   }
