@@ -10,7 +10,7 @@ export default class Select extends Component {
         <InputLabel>{this.props.label}</InputLabel>
         <MuiSelect
           id={this.props.id}
-          value={this.props.value}
+          value={!this.props.multiple && this.props.value.length === 0 ? '' : this.props.value}
           onChange={this.props.onChange}
           multiple={!!this.props.multiple}
         >

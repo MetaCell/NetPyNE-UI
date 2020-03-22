@@ -1,3 +1,4 @@
+import React from 'react'
 import { connect } from "react-redux";
 import PythonControlledCapability from "geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability";
 
@@ -12,6 +13,7 @@ import { updateCards, editModel, createNetwork, createAndSimulateNetwork, showNe
 
 
 const updateCardsDispatch = dispatch => ({ updateCards: () => dispatch(updateCards) });
+const editModelDispatch = dispatch => ({ editModel: () => dispatch(editModel) });
 
 
 /** **** COMPONENT PROXIES ******/
@@ -39,7 +41,10 @@ export const ListComponent = PythonControlledCapability.createPythonControlledCo
 );
 
 import _NetPyNE from "./NetPyNE";
-export const NetPyNE = connect(state => state.general, null)(_NetPyNE);
+export const NetPyNE = connect(
+  state => ({ editMode: state.general.editMode, }),
+  editModelDispatch
+)(_NetPyNE);
 
 import NetPyNEAddNew from "./general/NetPyNEAddNew";
 export { NetPyNEAddNew };
@@ -183,4 +188,8 @@ export const NetPyNETextField = PythonControlledCapability.createPythonControlle
   TextField
 );
 
-
+import _NetPyNEInclude from './definition/plots/NetPyNEInclude';
+export const NetPyNEInclude = connect(
+  (state, ownProps) => ({ ...ownProps, updates: state.general.updates }),
+  null
+)(_NetPyNEInclude);

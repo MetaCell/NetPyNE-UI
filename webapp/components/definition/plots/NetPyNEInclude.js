@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
-import Menu from '@material-ui/core/Menu';
+
 import Divider from '@material-ui/core/Divider';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
-import Popover from '@material-ui/core/Popover/Popover';
+import Popover from '@material-ui/core/Popover';
 import Utils from '../../../Utils';
-import NetPyNEField from '../../general/NetPyNEField';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import CheckIcon from '@material-ui/icons/Check';
 import List from '@material-ui/core/List';
 import ListItemText from '@material-ui/core/ListItemText';
+
+import { NetPyNEField, } from 'netpyne/components';
+
 export default class NetPyNEInclude extends Component {
  
   constructor (props) {
@@ -135,7 +137,7 @@ export default class NetPyNEInclude extends Component {
 
   collectInfo = async () => {
     const numberOfCellsByPopulation = await Utils.evalPythonMessage("netpyne_geppetto.getGIDs", [])
-    
+    console.log(numberOfCellsByPopulation)
     if (numberOfCellsByPopulation) {
       const dataInPythonFormat = await Utils.evalPythonMessage("netpyne_geppetto.getInclude", [this.props.model.split("'")[1]])
       let included

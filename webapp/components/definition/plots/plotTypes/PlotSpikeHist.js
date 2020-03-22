@@ -5,7 +5,8 @@ import {
   NetPyNEInclude,
   NetPyNEField,
   NetPyNECheckbox,
-  NetPyNETextField
+  NetPyNETextField,
+  NetPyNESelectField
 } from 'netpyne/components';
 
 export default class PlotSpikeHist extends React.Component {

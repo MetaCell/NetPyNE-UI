@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import SelectField from './Select';
 import Utils from '../../Utils';
 
-import { AdapterComponent, } from "netpyne/components"; 
+import { AdapterComponent, NetPyNEField } from "netpyne/components"; 
 
 export default class NetPyNECoordsRange extends Component {
  

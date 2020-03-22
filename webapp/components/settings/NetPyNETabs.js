@@ -6,14 +6,36 @@ import IconButton from "@material-ui/core/IconButton";
 import NavigationExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+import { withStyles } from '@material-ui/core/styles'
 
-export default class NetPyNETabs extends React.Component {
+const style = ({ palette, shape, spacing, typography }) => ({ 
+  container: { 
+    backgroundColor: palette.primary.main, 
+    flexGrow: 1 
+  },
+  toggleButton: { 
+    flex: 1, 
+    borderRadius: shape.borderRadius, 
+    marginLeft: spacing(1), 
+    background: 'transparent', 
+    border: 'none', 
+    color: palette.common.white + '!important'
+  },
+  toggleButtonSelected: { 
+    fontWeight: typography.fontWeightBold,
+    color: palette.common.white
+  },
+  menu: { position: "absolute", top: "6px", right: "28px" }
+})
+
+class NetPyNETabs extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
       simulateTabLabel: "Create network",
       transitionOptionsHovered: false,
-      anchorEl: null
+      anchorEl: null,
+      editTab: true
     };
     this.rightTabAction = this.props.createNetwork;
     this.handleTransitionOptionsChange = this.handleTransitionOptionsChange.bind(
@@ -29,8 +51,10 @@ export default class NetPyNETabs extends React.Component {
   handleChange = tab => {
     if (tab == "define") {
       this.props.editModel();
+      this.setState({ editTab: true })
     } else {
       this.rightTabAction();
+      this.setState({ editTab: false })
     }
   };
 
@@ -59,23 +83,23 @@ export default class NetPyNETabs extends React.Component {
   };
 
   render () {
+    const { classes } = this.props
+    const { editTab } = this.state
     return (
       <div style={{ width: "100%", alignItems: "center", display: "flex" }}>
         <ToggleButtonGroup
           value="chooseMode"
           exclusive
-          color="primary"
-          style={{background: 'none', border: 'none'}}
+          className={classes.container}
           onChange={e => this.handleChange(e.currentTarget.value)}
           aria-label="Choose mode"
-
-          style={{flexGrow: 1}}
         >
           <ToggleButton
             id={"defineNetwork"}
             value="define"
             color="primary"
-            style={{ flex: 1, borderRadius: 10, marginLeft: 5, background: 'transparent', border: 'none', color: 'white' }}
+            selected={editTab}
+            classes={{ root: classes.toggleButton, selected: classes.toggleButtonSelected }}
           >
             {"Define your Network"}
           </ToggleButton>
@@ -84,7 +108,8 @@ export default class NetPyNETabs extends React.Component {
             id={"simulateNetwork"}
             value="simulate"
             color="primary"
-            style={{ flex: 1, borderRadius: 10, marginLeft: 5, background: 'transparent', border: 'none', color: 'white' }}
+            selected={!editTab}
+            classes={{ root: classes.toggleButton, selected: classes.toggleButtonSelected }}
           >
             {this.state.simulateTabLabel}
           </ToggleButton>
@@ -106,7 +131,7 @@ export default class NetPyNETabs extends React.Component {
           value={this.state.simulateTabLabel}
           open={Boolean(this.state.anchorEl)}
           anchorEl={this.state.anchorEl}
-          style={{ position: "absolute", top: "6px", right: "28px" }}
+          className={classes.menu}
           onClose={this.handleClose}
         >
           <MenuItem
@@ -135,3 +160,6 @@ export default class NetPyNETabs extends React.Component {
     );
   }
 }
+
+
+export default withStyles(style)(NetPyNETabs)

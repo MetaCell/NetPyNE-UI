@@ -5,6 +5,7 @@ import {
   NetPyNEInclude,
   NetPyNEField,
   NetPyNESelectField,
+  NetPyNECheckbox
 } from 'netpyne/components';
 
 export default class PlotTraces extends React.Component {

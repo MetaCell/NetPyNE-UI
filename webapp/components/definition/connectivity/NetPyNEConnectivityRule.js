@@ -1,5 +1,5 @@
 import React from "react";
-
+import TextField from '@material-ui/core/TextField';
 import FontIcon from "@material-ui/core/Icon";
 import CardContent from "@material-ui/core/CardContent";
 import { BottomNavigation, BottomNavigationAction } from "@material-ui/core";
@@ -14,6 +14,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import {
   NetPyNESelectField,
   NetPyNEField,
+  NetPyNETextField,
   ListComponent,
   NetPyNECoordsRange
 } from "netpyne/components";
@@ -155,7 +156,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
           </NetPyNEField>
 
           <NetPyNEField id={"netParams.connParams.synMech"}>
-            <SelectField
+            <NetPyNESelectField
               model={
                 "netParams.connParams['" + this.props.name + "']['synMech']"
               }
@@ -171,61 +172,31 @@ export default class NetPyNEConnectivityRule extends React.Component {
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.convergence">
-            <TextField
-              model={
-                "netParams.connParams['" + this.props.name + "']['convergence']"
-              }
-            />
+            <NetPyNETextField model={"netParams.connParams['" + this.props.name + "']['convergence']"}/>
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.divergence">
-            <TextField
-              model={
-                "netParams.connParams['" + this.props.name + "']['divergence']"
-              }
-            />
+            <NetPyNETextField model={"netParams.connParams['" + this.props.name + "']['divergence']"}/>
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.probability">
-            <TextField
-              model={
-                "netParams.connParams['" + this.props.name + "']['probability']"
-              }
-            />
+            <NetPyNETextField model={"netParams.connParams['" + this.props.name + "']['probability']"}/>
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.synsPerConn">
-            <TextField
-              model={
-                "netParams.connParams['" + this.props.name + "']['synsPerConn']"
-              }
-            />
+            <NetPyNETextField model={"netParams.connParams['" + this.props.name + "']['synsPerConn']"}/>
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.weight">
-            <TextField
-              model={
-                "netParams.connParams['" + this.props.name + "']['weight']"
-              }
-            />
+            <NetPyNETextField model={"netParams.connParams['" + this.props.name + "']['weight']"}/>
           </NetPyNEField>
 
-          <NetPyNEField
-            id="netParams.connParams.delay"
-            className="listStyle"
-            noStyle
-          >
-            <TextField
-              model={"netParams.connParams['" + this.props.name + "']['delay']"}
-            />
+          <NetPyNEField id="netParams.connParams.delay">
+            <NetPyNETextField model={"netParams.connParams['" + this.props.name + "']['delay']"} />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.plasticity">
-            <TextField
-              model={
-                "netParams.connParams['" + this.props.name + "']['plasticity']"
-              }
-            />
+            <NetPyNETextField model={"netParams.connParams['" + this.props.name + "']['plasticity']"}/>
           </NetPyNEField>
           {dialogPop}
         </div>
@@ -234,7 +205,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
       var content = (
         <div>
           <NetPyNEField id={"netParams.connParams.preConds.pop"}>
-            <SelectField
+            <NetPyNESelectField
               model={
                 "netParams.connParams['"
                 + this.props.name
@@ -246,7 +217,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
             />
           </NetPyNEField>
           <NetPyNEField id={"netParams.connParams.preConds.cellModel"}>
-            <SelectField
+            <NetPyNESelectField
               model={
                 "netParams.connParams['"
                 + this.props.name
@@ -258,7 +229,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
             />
           </NetPyNEField>
           <NetPyNEField id={"netParams.connParams.preConds.cellType"}>
-            <SelectField
+            <NetPyNESelectField
               model={
                 "netParams.connParams['"
                 + this.props.name
@@ -308,7 +279,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
       var content = (
         <div>
           <NetPyNEField id={"netParams.connParams.postConds.pop"}>
-            <SelectField
+            <NetPyNESelectField
               model={
                 "netParams.connParams['"
                 + this.props.name
@@ -320,7 +291,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
             />
           </NetPyNEField>
           <NetPyNEField id={"netParams.connParams.postConds.cellModel"}>
-            <SelectField
+            <NetPyNESelectField
               model={
                 "netParams.connParams['"
                 + this.props.name
@@ -332,7 +303,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
             />
           </NetPyNEField>
           <NetPyNEField id={"netParams.connParams.postConds.cellType"}>
-            <SelectField
+            <NetPyNESelectField
               model={
                 "netParams.connParams['"
                 + this.props.name

@@ -66,7 +66,7 @@ jQuery(function () {
       GEPPETTO.on(GEPPETTO.Events.Model_loaded, () => {
         store.dispatch(modelLoaded);
       });
-      ReactDOM.render(<App data={data} />, document.querySelector('#mainContainer'));
+      ReactDOM.render(<App data={data} />, document.querySelector('#mainContainer'), store.dispatch(modelLoaded));
       GEPPETTO.trigger("spinner:hide");
     })
   });

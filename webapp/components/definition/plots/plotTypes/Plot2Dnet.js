@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import {
   NetPyNEInclude,
   NetPyNEField,
-  SelectField
+  NetPyNESelectField,
+  NetPyNECheckbox
 } from 'netpyne/components';
 
 
@@ -25,7 +26,7 @@ export default class Plot2Dnet extends React.Component {
       />
       
       <NetPyNEField id="simConfig.analysis.plot2Dnet.view" className="listStyle" >
-        <SelectField model={tag + "['view']"} />
+        <NetPyNESelectField model={tag + "['view']"} />
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plot2Dnet.showConns" className={"netpyneCheckbox"} >

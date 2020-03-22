@@ -1,11 +1,11 @@
 import React from 'react';
-
+import TimeRange from '../TimeRange'
 import {
   NetPyNEField,
   NetPyNECheckbox,
   NetPyNETextField,
   NetPyNESelectField,
-  ListComponent
+  ListComponent,
 } from 'netpyne/components';
 
 export default class PlotLFP extends React.Component {
