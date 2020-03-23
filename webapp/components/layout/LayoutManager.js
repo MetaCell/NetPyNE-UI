@@ -169,7 +169,10 @@ export default class LayoutManager extends Component {
 
 
   findNewWidgets (widgets, oldWidgets) {
-    return oldWidgets ? Object.values(widgets).filter(widget => widget && !oldWidgets[widget.id]) : Object.values(widgets);
+    if (oldWidgets) {
+      return Object.values(widgets).filter(widget => widget && !oldWidgets[widget.id])
+    }
+    return Object.values(widgets)
   }
 
   findUpdatedWidgets (widgets, oldWidgets) {

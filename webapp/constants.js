@@ -14,3 +14,10 @@ export const WidgetStatus = {
   MAXIMIZED: 'MAXIMIZED',
   MINIMIZED: 'MINIMIZED'
 };
+
+
+export const NETPYNE_COMMANDS = { 
+  instantiateModel: 'netpyne_geppetto.instantiateNetPyNEModelInGeppetto',
+  simulateModel: 'netpyne_geppetto.simulateNetPyNEModelInGeppetto'
+}
+

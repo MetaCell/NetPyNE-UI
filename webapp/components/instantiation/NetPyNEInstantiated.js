@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { createRef } from 'react';
+import ReactDOM from 'react-dom'
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
-import Canvas from 'geppetto-client/js/components/interface/3dCanvas/Canvas';
+import Canvas from '@geppettoengine/geppetto-client/js/components/interface/3dCanvas/Canvas';
 import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
-import IconButton from 'geppetto-client/js/components/controls/iconButton/IconButton';
+import IconButton from '@geppettoengine/geppetto-client/js/components/controls/iconButton/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Utils from '../../Utils';
@@ -75,200 +76,254 @@ export default class NetPyNEInstantiated extends React.Component {
       controlPanelHidden: true,
       plotButtonOpen: false,
       openDialog: false,
-      bringItToFront: 0
+      bringItToFront: 0,
+      update: 0
     };
+    this.dimensions = { width: 200, height: 200 }
+    this.canvasRef = createRef();
         
-    this.widgets = [];
+    
     this.plotFigure = this.plotFigure.bind(this);
     this.newPlotWidget = this.newPlotWidget.bind(this);
-    this.getOpenedWidgets = this.getOpenedWidgets.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
   }
+
+  componentDidUpdate (){
+    this.resizeIfNeeded()
+  }
     
-    handleCloseDialog = () => {
-      this.setState({ openDialog: false });
-    };
+  handleCloseDialog = () => {
+    this.setState({ openDialog: false });
+  };
 
-    newPlotWidget (name, svgResponse, data, i, total) {
-      if (svgResponse === '') {
-        return
-      }
-      var s = svgResponse;
-      var that = this;
-      G.addWidget(1).then(w => {
-        if (total == 0) {
-          w.setName(name);
-        } else {
-          w.setName(name + " " + i);
-        }
-        w.$el.append(s);
-        var svg = $(w.$el).find("svg")[0];
-        svg.removeAttribute('width');
-        svg.removeAttribute('height');
-        svg.setAttribute('width', '100%');
-        svg.setAttribute('height', '98%');
-        that.widgets.push(w);
-        if (i < total) {
-          that.newPlotWidget(name, data[i++], data, i++, total)
-        }
-        w.showHistoryIcon(false);
-        w.showHelpIcon(false);
-      });
+  newPlotWidget (name, svgResponse, data, i, total) {
+    if (svgResponse === '') {
+      return
+    }
+    const pathName = `network.${name.replace(/ /g, '')}_${i}`
+    if (!window.plotSvgImages) {
+      window.plotSvgImages = { [pathName]: svgResponse }
+    } else {
+      window.plotSvgImages[pathName] = svgResponse
     }
 
-    processError (response, plotName) {
-      var parsedResponse = Utils.getErrorResponse(response);
-      if (parsedResponse) {
-        this.setState({
-          dialogTitle: "NetPyNE returned an error plotting " + plotName,
-          dialogMessage: parsedResponse['message'] + "\n " + parsedResponse['details'],
-          openDialog: true
-        });
-        return true;
-      }
-      return false;
+    this.props.newWidget({
+      path: pathName,
+      component: 'Plot',
+      panelName: 'topPanel'
+    })
+
+    if (i < total) {
+      this.newPlotWidget(name, data[i++], data, i++, total)
     }
 
-    plotFigure (plotName, plotMethod, plotType = false) {
-      Utils.evalPythonMessage('netpyne_geppetto.getPlot', [plotMethod, plotType], false)
-        .then(response => {
-          // TODO Fix this, use just JSON
-          if (typeof response === 'string'){
-            if (response.startsWith("{") && response.endsWith("}")) {
-              if (this.processError(response, plotName)){
-                return;
-              }
-            }
-            if (response.startsWith("[") && response.endsWith("]")) {
-              response = eval(response);
-            }
-          }
-          if ($.isArray(response)) {
-            this.newPlotWidget(plotName, response[0], response, 0, response.length - 1);
-          } else if (response == -1) {
-            this.processError(response, plotName)
-          } else {
-            this.newPlotWidget(plotName, response, response, 0, 0);
-          }
-        });
+    if (i === total) {
+      this.handleRequestClose()
     }
+  }
 
-    getOpenedWidgets () {
-      return this.widgets;
-    }
-
-    showWidgets (visible) {
-      GEPPETTO.WidgetFactory.getController(GEPPETTO.Widgets.POPUP).then(controller => {
-        controller.widgets.forEach(widget => {
-          if (visible){
-            widget.show()
-          } else {
-            widget.hide()
-          }
-        })
-      })
-    }
-
-    componentDidMount () {
-      this.refs.canvas.engine.setLinesThreshold(10000);
-      this.refs.canvas.displayAllInstances();
-      GEPPETTO.on(GEPPETTO.Events.Control_panel_close, () => {
-        this.setState({ bringItToFront: 0 })
-        this.showWidgets(true)
-      });
-
-      
-    }
-
-    componentWillUnmount (){
-      GEPPETTO.off(GEPPETTO.Events.Control_panel_close)
-    }
-
-    handleClick (event) {
-      // This prevents ghost click.
-      event.preventDefault();
-
+  processError (response, plotName) {
+    var parsedResponse = Utils.getErrorResponse(response);
+    if (parsedResponse) {
       this.setState({
-        plotButtonOpen: true,
-        anchorEl: event.currentTarget,
+        dialogTitle: "NetPyNE returned an error plotting " + plotName,
+        dialogMessage: parsedResponse['message'] + "\n " + parsedResponse['details'],
+        openDialog: true
       });
+      return true;
     }
+    return false;
+  }
 
-    handleRequestClose () {
-      this.setState({ plotButtonOpen: false, });
+  plotFigure (plotName, plotMethod, plotType = false) {
+    Utils.evalPythonMessage('netpyne_geppetto.getPlot', [plotMethod, plotType], false)
+      .then(response => {
+        // TODO Fix this, use just JSON
+        if (typeof response === 'string'){
+          if (response.startsWith("{") && response.endsWith("}")) {
+            if (this.processError(response, plotName)){
+              return;
+            }
+          }
+          if (response.startsWith("[") && response.endsWith("]")) {
+            response = eval(response);
+          }
+        }
+        if ($.isArray(response)) {
+          this.newPlotWidget(plotName, response[0], response, 0, response.length - 1);
+        } else if (response == -1) {
+          this.processError(response, plotName)
+        } else {
+          this.newPlotWidget(plotName, response, response, 0, 0);
+        }
+      });
+  }
+
+
+  componentDidMount () {
+    this.canvasRef.current.engine.setLinesThreshold(10000);
+    this.canvasRef.current.displayAllInstances();
+    this.canvasRef.current.engine.updateSceneWithNewInstances(window.Instances);
+    this.canvasRef.current.setBackgroundColor('#191919')
+    
+    window.addEventListener('resize', this.delayedResize.bind(this))
+    this.resizeIfNeeded()
+
+
+    GEPPETTO.on(GEPPETTO.Events.Control_panel_close, () => {
+      this.setState({ bringItToFront: 0 })
+    });
+  }
+
+  componentWillUnmount (){
+    GEPPETTO.off(GEPPETTO.Events.Control_panel_close)
+    clearTimeout(this.timer)
+    window.removeEventListener('resize', this.delayedResize)
+  }
+
+  handleClick (event) {
+    // This prevents ghost click.
+    event.preventDefault();
+
+    this.setState({
+      plotButtonOpen: true,
+      anchorEl: event.currentTarget,
+    });
+  }
+
+  handleRequestClose () {
+    this.setState({ plotButtonOpen: false, });
+  }
+    
+  updateInstances () {
+    this.canvasRef.current.engine.updateSceneWithNewInstances(window.Instances);
+  }
+
+  resizeCanvas () {
+    this.setState({ update: this.state.update++ })
+  }
+
+  resizeIfNeeded (){
+    const dimensions = this.getParentSize()
+    if (dimensions !== false && this.wasParentResized(dimensions)) {
+      this.dimensions = dimensions
+      this.resizeCanvas()
     }
+  }
+  
+  wasParentResized (dimensions) {
+    return dimensions.width !== this.dimensions.width || dimensions.height !== this.dimensions.height
+  }
 
-    render () {
-      return (
-        <div id="instantiatedContainer" style={{ ...styles.instantiatedContainer, zIndex: this.state.bringItToFront }}>
-          <Canvas
-            id="CanvasContainer"
-            name={"Canvas"}
-            componentType={'Canvas'}
-            ref={"canvas"}
-            style={{ height: '100%', width: '100%' }}
-          />
-          <div id="controlpanel" style={{ top: 0 }}>
-            <ControlPanel
-              icon={styles.Modal}
-              useBuiltInFilters={false}
-            >
-            </ControlPanel>
-          </div>
-          <IconButton style={styles.controlpanelBtn}
-            onClick={() => {
-              $('#controlpanel').show(); this.showWidgets(false); this.setState({ bringItToFront: 1 })
-            }}
-            icon={"fa-list"}
-            id={"ControlPanelButton"} />
-          <div>
-            <IconButton
-              onClick={this.handleClick}
-              style={styles.plotBtn}
-              label="Plot"
-              icon={"fa-bar-chart"}
-              id="PlotButton"
-            />
-            <Menu
-              open={this.state.plotButtonOpen}
-              onClose={this.handleRequestClose}
-              anchorEl={this.state.anchorEl}
-            >
-              {plots.map((plot, index) => (
-                <MenuItem 
-                  id={plot.id} 
-                  key={index}
-                  style={styles.menuItem}
-                  onClick={() => this.plotFigure(plot.plotName, plot.plotMethod, plot.plotType)}
-                >
-                  {plot.primaryText}
-                </MenuItem>
-              ))}
-            </Menu>
-          </div>
+  delayedResize () {
+    this.timer = setTimeout(() => this.resizeIfNeeded(), 100)
+  }
 
-          <Dialog
-            open={this.state.openDialog}
-            onClose={this.handleCloseDialog}
-            style={{ whiteSpace: "pre-wrap" }}
+  getParentSize () {
+    if (this.canvasRef.current === null) {
+      return false
+    }
+    const node = ReactDOM.findDOMNode(this)
+    return node.parentNode.getBoundingClientRect()
+  }
+
+  render () {
+    const { update } = this.state
+    return (
+      <div id="instantiatedContainer" style={{ ...styles.instantiatedContainer }}>
+          
+        <Canvas
+          id="CanvasContainer"
+          name="Canvas"
+          componentType='Canvas'
+          ref={this.canvasRef}
+          style={{ height: '100%', width: '100%' }}
+          update={update}
+        />
+        <div id="controlpanel" style={{ top: 0 }}>
+          <ControlPanel
+            icon={styles.Modal}
+            useBuiltInFilters={false}
           >
-            <DialogTitle>{this.state.dialogTitle}</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                {this.state.dialogMessage}
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button
-                id="netPyneDialog"
-                color="primary"
-                onClick={this.handleCloseDialog}
-              >Ok</Button>
-            </DialogActions>
-          </Dialog>
+          </ControlPanel>
+        </div>
+        <IconButton style={styles.controlpanelBtn}
+          onClick={() => {
+            $('#controlpanel').show(); this.setState({ bringItToFront: 1 })
+          }}
+          icon={"fa-list"}
+          id="ControlPanelButton" />
+        <div>
+          <IconButton
+            onClick={this.handleClick}
+            style={styles.plotBtn}
+            label="Plot"
+            icon="fa-bar-chart"
+            id="PlotButton"
+          />
+          <Menu
+            open={this.state.plotButtonOpen}
+            onClose={this.handleRequestClose}
+            anchorEl={this.state.anchorEl}
+          >
+            {plots.map((plot, index) => (
+              <MenuItem 
+                id={plot.id} 
+                key={index}
+                style={styles.menuItem}
+                onClick={() => this.plotFigure(plot.plotName, plot.plotMethod, plot.plotType)}
+              >
+                {plot.primaryText}
+              </MenuItem>
+            ))}
+          </Menu>
         </div>
 
-      );
-    }
+          
+        <IconButton 
+          color='secondary' 
+          id={"refreshInstanciatedNetworkButton"} 
+          key={"refreshInstanceButton"}
+          icon="fa-refresh"
+          onClick={() => this.instantiate({ usePrevInst: false })} 
+          style={{ position: 'absolute', right: 30, top: 80, zIndex: 1 }} 
+          tooltip-data={this.props.freezeInstance ? "Your network is in sync" : "Synchronise network"} 
+          disabled={!!this.props.freezeInstance} 
+        />
+        
+        
+        <IconButton 
+          color='secondary' 
+          id={"launchSimulationButton"}
+          icon="fa-rocket"
+          onClick={() => this.setState({ openDialog: true })} 
+          style={{ position: 'absolute', right: 30, top: 120, zIndex: 1 }} 
+          tooltip-data={this.props.freezeSimulation ? "You have already simulated your network" : "Simulate your network"} 
+          disabled={!!this.props.freezeSimulation} 
+        />
+        
+        <Dialog
+          open={this.state.openDialog}
+          onClose={this.handleCloseDialog}
+          style={{ whiteSpace: "pre-wrap" }}
+        >
+          <DialogTitle>{this.state.dialogTitle}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              {this.state.dialogMessage}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              id="netPyneDialog"
+              color="primary"
+              onClick={this.handleCloseDialog}
+            >Ok</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+
+    );
+  }
 }

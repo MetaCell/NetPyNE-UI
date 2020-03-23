@@ -1,8 +1,8 @@
 import React, { lazy, Suspense } from 'react';
 
-import PythonConsole from 'geppetto-client/js/components/interface/pythonConsole/PythonConsole';
+import PythonConsole from '@geppettoengine/geppetto-client/js/components/interface/pythonConsole/PythonConsole';
 
-import { NetPyNEInstantiated } from 'netpyne/components';
+import { NetPyNEInstantiated, HTMLViewer } from 'netpyne/components';
 
 export default class WidgetFactory{
 
@@ -36,8 +36,17 @@ export default class WidgetFactory{
     case "PythonConsole": {
       return <PythonConsole pythonNotebookPath={"notebooks/notebook.ipynb"} />;
     }
-    case "3DCanvas":
-      return <NetPyNEInstantiated ref={"simulate"} model={widgetConfig.model} page={"simulate"} />
+    case "D3Canvas":
+      return <NetPyNEInstantiated/>
+    case "Plot": {
+      const data = window.plotSvgImages[widgetConfig.id]
+      return (
+        <HTMLViewer 
+          content={data}
+          id={widgetConfig.id}
+        />
+      )
+    }
     }
   }
 

@@ -17,15 +17,19 @@ function removeUndefined (obj) {
 export const FLEXLAYOUT_DEFAULT_STATE = { 
   widgets: {
     
-    'python': { 
-      id: 'python', 
-      name: 'Python', 
-      status: WidgetStatus.MINIMIZED, 
-      icon: 'fa-python',
-      component: 'PythonConsole', 
-      panelName: "bottomPanel",
-      enableClose: false
-    },
+    /*
+     * 'python': { 
+     *   id: 'python', 
+     *   name: 'Python', 
+     *   status: WidgetStatus.ACTIVE, 
+     *   icon: 'fa-python',
+     *   component: 'PythonConsole', 
+     *   panelName: "bottomPanel",
+     *   enableClose: false
+     * },
+     */
+     
+    ...MODEL_LOADED_STATE_WIDGETS
     
   },
 
@@ -33,12 +37,12 @@ export const FLEXLAYOUT_DEFAULT_STATE = {
 
 
 const MODEL_LOADED_STATE_WIDGETS = {
-  '3dcanvas': { 
-    id: '3DCanvas', 
+  'D3Canvas': { 
+    id: 'D3Canvas', 
     name: 'Network', 
-    status: WidgetStatus.MINIMIZED, 
+    status: WidgetStatus.ACTIVE, 
     icon: 'fa-python',
-    component: '3DCanvas', 
+    component: 'D3Canvas', 
     panelName: "topPanel",
     enableClose: false
   }

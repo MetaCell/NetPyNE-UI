@@ -10,7 +10,7 @@ import {
 } from "../redux/actions/flexlayout";
 
 import { updateCards, editModel, createNetwork, createAndSimulateNetwork, showNetwork } from "../redux/actions/general";
-
+import { newWidget } from "../redux/actions/flexlayout";
 
 const updateCardsDispatch = dispatch => ({ updateCards: () => dispatch(updateCards) });
 const editModelDispatch = dispatch => ({ editModel: () => dispatch(editModel) });
@@ -18,45 +18,12 @@ const editModelDispatch = dispatch => ({ editModel: () => dispatch(editModel) })
 
 /** **** COMPONENT PROXIES ******/
 
-import _AdapterComponent from "./general/AdapterComponent";
-export const AdapterComponent = PythonControlledCapability.createPythonControlledControl(
-  _AdapterComponent
+// Python controlled
+
+import TextField from "@material-ui/core/TextField";
+export const NetPyNETextField = PythonControlledCapability.createPythonControlledControl(
+  TextField
 );
-
-import Checkbox from "./general/Checkbox";
-export const NetPyNECheckbox = PythonControlledCapability.createPythonControlledControl(
-  Checkbox
-);
-
-import _Dimensions from "./definition/populations/Dimensions";
-export const Dimensions = connect(
-  (state, ownProps) => ({ ...ownProps }),
-  updateCardsDispatch
-)(_Dimensions);
-
-
-import _ListComponent from "./general/List";
-export const ListComponent = PythonControlledCapability.createPythonControlledControl(
-  _ListComponent
-);
-
-import _NetPyNE from "./NetPyNE";
-export const NetPyNE = connect(
-  state => ({ editMode: state.general.editMode, }),
-  editModelDispatch
-)(_NetPyNE);
-
-import NetPyNEAddNew from "./general/NetPyNEAddNew";
-export { NetPyNEAddNew };
-
-import NetPyNEHome from "./general/NetPyNEHome";
-export { NetPyNEHome };
-
-import _NetPyNECellRule from "./definition/cellRules/NetPyNECellRule";
-export const NetPyNECellRule = connect((state, ownProps) => ({
-  ...ownProps,
-  updates: state.general.updates
-}))(_NetPyNECellRule);
 
 import _NetPyNECellRules from "./definition/cellRules/NetPyNECellRules";
 export const NetPyNECellRules = PythonControlledCapability.createPythonControlledComponent(
@@ -68,14 +35,54 @@ export const NetPyNEConnectivityRules = PythonControlledCapability.createPythonC
   _NetPyNEConnectivityRules
 );
 
-import NetPyNECoordsRange from "./general/NetPyNECoordsRange";
-export { NetPyNECoordsRange };
+import _NetPyNEPlots from "./definition/plots/NetPyNEPlots";
+export const NetPyNEPlots = PythonControlledCapability.createPythonControlledComponent(
+  _NetPyNEPlots
+);
 
-import NetPyNEField from "./general/NetPyNEField";
-export { NetPyNEField };
+import _ListComponent from "./general/List";
+export const ListComponent = PythonControlledCapability.createPythonControlledControl(
+  _ListComponent
+);
 
-import NetPyNEInstantiated from "./instantiation/NetPyNEInstantiated";
-export { NetPyNEInstantiated };
+import _AdapterComponent from "./general/AdapterComponent";
+export const AdapterComponent = PythonControlledCapability.createPythonControlledControl(
+  _AdapterComponent
+);
+
+import Checkbox from "./general/Checkbox";
+export const NetPyNECheckbox = PythonControlledCapability.createPythonControlledControl(
+  Checkbox
+);
+
+import _NetPyNEStimulationTargets from "./definition/stimulationTargets/NetPyNEStimulationTargets";
+export const NetPyNEStimulationTargets = PythonControlledCapability.createPythonControlledComponent(
+  _NetPyNEStimulationTargets
+);
+
+// ---------------------------------------------------------------------------------------- //
+
+// CONNECT
+
+import _Dimensions from "./definition/populations/Dimensions";
+export const Dimensions = connect(
+  (state, ownProps) => ({ ...ownProps }),
+  updateCardsDispatch
+)(_Dimensions);
+
+
+import _NetPyNE from "./NetPyNE";
+export const NetPyNE = connect(
+  state => ({ editMode: state.general.editMode, }),
+  editModelDispatch
+)(_NetPyNE);
+
+import _NetPyNECellRule from "./definition/cellRules/NetPyNECellRule";
+export const NetPyNECellRule = connect((state, ownProps) => ({
+  ...ownProps,
+  updates: state.general.updates
+}))(_NetPyNECellRule);
+
 
 import _LayoutManager from "./layout/LayoutManager";
 export const LayoutManager = connect(
@@ -88,10 +95,6 @@ export const LayoutManager = connect(
   })
 )(_LayoutManager);
 
-import _NetPyNEPlots from "./definition/plots/NetPyNEPlots";
-export const NetPyNEPlots = PythonControlledCapability.createPythonControlledComponent(
-  _NetPyNEPlots
-);
 
 import _NetPyNEPopulation from "./definition/populations/NetPyNEPopulation";
 export const NetPyNEPopulation = connect(
@@ -108,10 +111,6 @@ export const NetPyNEPopulations = connect(
     _NetPyNEPopulations
   )
 );
-
-import NetPyNESimConfig from "./definition/configuration/NetPyNESimConfig";
-export { NetPyNESimConfig };
-
 
 import _NetPyNEStimulationSource from "./definition/stimulationSources/NetPyNEStimulationSource";
 export const NetPyNEStimulationSource = connect(
@@ -138,10 +137,6 @@ export const NetPyNEStimulationTarget = connect(
   updateCardsDispatch
 )(_NetPyNEStimulationTarget);
 
-import _NetPyNEStimulationTargets from "./definition/stimulationTargets/NetPyNEStimulationTargets";
-export const NetPyNEStimulationTargets = PythonControlledCapability.createPythonControlledComponent(
-  _NetPyNEStimulationTargets
-);
 
 import _NetPyNESynapse from "./definition/synapses/NetPyNESynapse";
 export const NetPyNESynapse = connect(
@@ -166,10 +161,6 @@ export const NetPyNETabs = connect(
   })
 )(_NetPyNETabs);
 
-
-import NetPyNEThumbnail from "./general/NetPyNEThumbnail";
-export { NetPyNEThumbnail };
-
 import _NetPyNEToolbar from "./settings/NetPyNEToolBar";
 export const NetPyNEToolBar = connect(
   state => state.general
@@ -183,13 +174,26 @@ export const NetPyNESelectField = connect((state, ownProps) => ({
   SelectField
 ));
 
-import TextField from "@material-ui/core/TextField";
-export const NetPyNETextField = PythonControlledCapability.createPythonControlledControl(
-  TextField
-);
 
 import _NetPyNEInclude from './definition/plots/NetPyNEInclude';
 export const NetPyNEInclude = connect(
   (state, ownProps) => ({ ...ownProps, updates: state.general.updates }),
   null
 )(_NetPyNEInclude);
+
+import _NetPyNEInstantiated from "./instantiation/NetPyNEInstantiated"
+export const NetPyNEInstantiated = connect(
+  null,
+  dispatch => ({ newWidget: conf => dispatch(newWidget(conf)), })
+)(_NetPyNEInstantiated)
+
+// ---------------------------------------------------------------------------------------- //
+
+// DEFAULTS
+export { default as NetPyNEHome } from "./general/NetPyNEHome";
+export { default as NetPyNEField } from "./general/NetPyNEField";
+export { default as NetPyNEAddNew } from "./general/NetPyNEAddNew";
+export { default as NetPyNEThumbnail } from "./general/NetPyNEThumbnail";
+export { default as NetPyNECoordsRange } from "./general/NetPyNECoordsRange";
+export { default as NetPyNESimConfig } from "./definition/configuration/NetPyNESimConfig";
+export { default as HTMLViewer } from './general/HTMLViewer'
