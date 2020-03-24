@@ -22,6 +22,19 @@ export default class NetPyNE extends React.Component {
     
   }
 
+  openPythonCallDialog (event) {
+    const payload = { errorMessage: event['evalue'], errorDetails: event['traceback'].join('\n') }
+    this.props.pythonCallErrorDialogBox(payload)
+  }
+
+  componentDidMount () {
+    GEPPETTO.on(GEPPETTO.Events.Error_while_exec_python_command, this.openPythonCallDialog, this)
+  }
+
+  componentWillUnmount () {
+    GEPPETTO.off(GEPPETTO.Events.Error_while_exec_python_command, this.openPythonCallDialog, this)
+  }
+
   UNSAFE_componentWillReceiveProps (nextProps) {
     if (this.props.data != nextProps.data) {
       console.log("Initialising NetPyNE Tabs");

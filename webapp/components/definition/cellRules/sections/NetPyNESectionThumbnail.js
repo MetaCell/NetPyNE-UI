@@ -3,7 +3,7 @@ import FontIcon from '@material-ui/core/Icon';
 import Button from '@material-ui/core/Button';
 import DeleteDialogBox from '../../../general/DeleteDialogBox';
 
-const styles = { btn: { borderRadius: '25px', marginRight: '8px' } };
+const styles = { btn: { borderRadius: '25px', margin: '8px' } };
 
 export default class NetPyNESectionThumbnail extends React.Component {
 

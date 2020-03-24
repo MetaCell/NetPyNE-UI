@@ -307,6 +307,15 @@ export default class NetPyNECellRules extends React.Component {
     if (newMechanismName !== undefined) {
       this.setState({ selectedMechanism: newMechanismName });
     }
+
+    if (Object.keys(this.state.value).length === 0) {
+      this.setState({ 
+        selectedCellRule: undefined,
+        selectedSection: undefined,
+        selectedMechanism: undefined,
+        page: 'main'
+      })
+    }
   }
 
   handleHierarchyClick = nextPage => {
@@ -540,7 +549,7 @@ export default class NetPyNECellRules extends React.Component {
           />
         )
       }
-    } else if (page == "sections") {
+    } else if (page == "sections" && Object.keys(model).length > 0) {
       const sectionsModel = model[selectedCellRule].secs;
       if ( selectedSection !== undefined && Object.keys(sectionsModel).indexOf(selectedSection) > -1 ) {
         selection = (
@@ -562,7 +571,7 @@ export default class NetPyNECellRules extends React.Component {
           handleClick={this.selectSection} 
         />
       )
-    } else if (page == "mechanisms") {
+    } else if (page == "mechanisms" && Object.keys(model).length > 0) {
       const mechanismsModel = model[selectedCellRule].secs[selectedSection].mechs;
       if ((selectedMechanism !== undefined) && Object.keys(mechanismsModel).indexOf(selectedMechanism) > -1) {
         selection = (

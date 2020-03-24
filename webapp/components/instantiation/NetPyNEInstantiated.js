@@ -164,7 +164,11 @@ export default class NetPyNEInstantiated extends React.Component {
   componentDidMount () {
     this.canvasRef.current.engine.setLinesThreshold(10000);
     this.canvasRef.current.displayAllInstances();
-    this.canvasRef.current.engine.updateSceneWithNewInstances(window.Instances);
+    if (Instances.length > 2) {
+      // update canvas only if there are instances to show
+      this.canvasRef.current.engine.updateSceneWithNewInstances(window.Instances);
+    }
+    
     this.canvasRef.current.setBackgroundColor('#191919')
     
     window.addEventListener('resize', this.delayedResize.bind(this))

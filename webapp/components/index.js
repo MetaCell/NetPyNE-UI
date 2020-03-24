@@ -8,13 +8,13 @@ import {
   minimizeWidget,
   maximizeWidget
 } from "../redux/actions/flexlayout";
-
-import { updateCards, editModel, createNetwork, createAndSimulateNetwork, showNetwork } from "../redux/actions/general";
+import { openBackendErrorDialog, closeBackendErrorDialog } from '../redux/actions/errors';
+import { updateCards, editModel, createNetwork, createAndSimulateNetwork, showNetwork, pythonCall } from "../redux/actions/general";
+import { closeDrawerDialogBox, openDrawerDialogBox } from '../redux/actions/drawer';
 import { newWidget } from "../redux/actions/flexlayout";
 
 const updateCardsDispatch = dispatch => ({ updateCards: () => dispatch(updateCards) });
-const editModelDispatch = dispatch => ({ editModel: () => dispatch(editModel) });
-
+const pythonCallErrorDispatch = dispatch => ({ pythonCallErrorDialogBox: payload => dispatch(openBackendErrorDialog(payload)) });
 
 /** **** COMPONENT PROXIES ******/
 
@@ -74,7 +74,7 @@ export const Dimensions = connect(
 import _NetPyNE from "./NetPyNE";
 export const NetPyNE = connect(
   state => ({ editMode: state.general.editMode, }),
-  editModelDispatch
+  pythonCallErrorDispatch
 )(_NetPyNE);
 
 import _NetPyNECellRule from "./definition/cellRules/NetPyNECellRule";
@@ -163,7 +163,11 @@ export const NetPyNETabs = connect(
 
 import _NetPyNEToolbar from "./settings/NetPyNEToolBar";
 export const NetPyNEToolBar = connect(
-  state => state.general
+  state => ({ ...state.general, ...state.drawer }),
+  dispatch => ({
+    closeDrawerDialogBox: () => dispatch(closeDrawerDialogBox),
+    openDrawerDialogBox: () => dispatch(openDrawerDialogBox),
+  })
 )(_NetPyNEToolbar);
 
 import SelectField from "./general/Select";
@@ -187,6 +191,15 @@ export const NetPyNEInstantiated = connect(
   dispatch => ({ newWidget: conf => dispatch(newWidget(conf)), })
 )(_NetPyNEInstantiated)
 
+
+import _ActionDialog from './settings/actions/ActionDialog'
+export const ActionDialog = connect(
+  state => ({ ...state.errors, openErrorDialogBox: state.errors.openDialog }),
+  dispatch => ({ 
+    pythonCall: (cmd, args) => dispatch(pythonCall(cmd, args)),
+    closeBackendErrorDialog: () => dispatch(closeBackendErrorDialog)
+  })
+)(_ActionDialog)
 // ---------------------------------------------------------------------------------------- //
 
 // DEFAULTS

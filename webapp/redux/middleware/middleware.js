@@ -1,7 +1,9 @@
-import { UPDATE_CARDS, showNetwork, CREATE_NETWORK, CREATE_SIMULATE_NETWORK } from '../actions/general';
+import { UPDATE_CARDS, showNetwork, editModel, CREATE_NETWORK, CREATE_SIMULATE_NETWORK, PYTHON_CALL } from '../actions/general';
 import { openBackendErrorDialog } from '../actions/errors';
+import { closeDrawerDialogBox } from '../actions/drawer';
 import Utils from '../../Utils';
 import { NETPYNE_COMMANDS } from '../../constants';
+import { downloadJsonResponse, downloadPythonResponse } from './utils'
 
 export default store => next => action => {
   switch (action.type) {
@@ -16,10 +18,12 @@ export default store => next => action => {
   case CREATE_NETWORK:
     instantiateNetwork({}, next, showNetwork)
     break;
+  case PYTHON_CALL:
+    pythonCall(next, action)
+    break;
   default: {
     next(action);
   }
-  
   }
 }
 
@@ -51,11 +55,11 @@ const createSimulateBackendCall = async (cmd, payload, next, action, consoleMess
   const errorPayload = await processError(response)
   if (errorPayload) {
     GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-    next(openBackendErrorDialog(payload))
+    next(openBackendErrorDialog(errorPayload))
   } else {
     GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
     GEPPETTO.Manager.loadModel(response);
-    GEPPETTO.CommandController.log(consoleMessage + ' was completed.');
+    GEPPETTO.CommandController.log('Instantiation / Simulation completed.');
     GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
     next(action)
   }
@@ -67,4 +71,29 @@ const processError = response => {
     return { errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details'] }
   }
   return false
+}
+
+const pythonCall = async (next, action) => {
+  const response = await Utils.evalPythonMessage(action.cmd, [action.args])
+  const errorPayload = await processError(response)
+  if (errorPayload) {
+    GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+    next(openBackendErrorDialog(errorPayload))
+  } else {
+    switch (action.cmd) {
+    case NETPYNE_COMMANDS.exportModel:
+      downloadJsonResponse(response)
+      break;
+    case NETPYNE_COMMANDS.exportHLS:
+      downloadPythonResponse(response)
+      break;
+    case NETPYNE_COMMANDS.deleteModel:
+      next(editModel)
+      break;
+    default:
+      break;
+    }
+    GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+    next(closeDrawerDialogBox)
+  }
 }

@@ -145,7 +145,7 @@ const Utils = {
   },
 
   parsePythonException (exception){
-    return <pre dangerouslySetInnerHTML={{ __html: IPython.utils.fixConsole(exception) }}></pre>
+    return <pre style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: IPython.utils.fixConsole(exception) }}></pre>
   },
 
   handleUpdate (updateCondition, newValue, originalValue, context, componentName) {

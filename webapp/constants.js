@@ -18,6 +18,9 @@ export const WidgetStatus = {
 
 export const NETPYNE_COMMANDS = { 
   instantiateModel: 'netpyne_geppetto.instantiateNetPyNEModelInGeppetto',
-  simulateModel: 'netpyne_geppetto.simulateNetPyNEModelInGeppetto'
+  simulateModel: 'netpyne_geppetto.simulateNetPyNEModelInGeppetto',
+  importModel: 'netpyne_geppetto.importModel',
+  exportModel: 'netpyne_geppetto.exportModel',
+  exportHLS: 'netpyne_geppetto.exportHLS'
 }
 

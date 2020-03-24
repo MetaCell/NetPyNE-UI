@@ -7,7 +7,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import FileBrowser from '../../general/FileBrowser';
-import ActionDialog from './ActionDialog';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -19,6 +18,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 
 import { withStyles } from '@material-ui/core/styles';
+import { ActionDialog } from 'netpyne/components'
 
 const styles = ({ spacing, typography, zIndex }) => ({ 
   container: { 

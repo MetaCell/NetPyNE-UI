@@ -1,6 +1,6 @@
 import React from 'react';
-import ActionDialog from './ActionDialog';
 
+import { ActionDialog } from 'netpyne/components'
 export default class NewModel extends React.Component {
   constructor (props) {
     super(props);
