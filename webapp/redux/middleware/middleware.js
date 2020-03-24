@@ -1,4 +1,7 @@
-import { UPDATE_CARDS, showNetwork, editModel, CREATE_NETWORK, CREATE_SIMULATE_NETWORK, PYTHON_CALL } from '../actions/general';
+import { 
+  UPDATE_CARDS, CREATE_NETWORK, CREATE_SIMULATE_NETWORK, PYTHON_CALL, SIMULATE_NETWORK,
+  showNetwork, createNetwork, createAndSimulateNetwork, editModel,
+} from '../actions/general';
 import { openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
 import Utils from '../../Utils';
@@ -12,12 +15,15 @@ export default store => next => action => {
     console.log("Triggered card update")
     next(action);
     break;
-  case CREATE_SIMULATE_NETWORK:
-    simulateNetwork({ parallelSimulation: false }, next, showNetwork)
-    break;
   case CREATE_NETWORK:
-    instantiateNetwork({}, next, showNetwork)
+    instantiateNetwork({}, next, createNetwork)
     break;
+  case CREATE_SIMULATE_NETWORK:
+    simulateNetwork({ parallelSimulation: false }, next, action)
+    break;
+  case SIMULATE_NETWORK:
+    simulateNetwork({ parallelSimulation: false, usePrevInst: true }, next, action)
+    break
   case PYTHON_CALL:
     pythonCall(next, action)
     break;

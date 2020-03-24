@@ -38,9 +38,7 @@ class NetPyNETabs extends React.Component {
       editTab: true
     };
     this.rightTabAction = this.props.createNetwork;
-    this.handleTransitionOptionsChange = this.handleTransitionOptionsChange.bind(
-      this
-    );
+    this.handleTransitionOptionsChange = this.handleTransitionOptionsChange.bind(this);
   }
 
   componentDidUpdate (prevProps, prevState) {

@@ -15,7 +15,12 @@ export const WidgetStatus = {
   MINIMIZED: 'MINIMIZED'
 };
 
+export const MODEL_STATE = {
+  NOT_INSTANTIATED: 'NOT_INSTANTIATED',
+  INSTANTIATED: 'INSTANTIATED',
+  SIMULATED: 'SIMULATED'
 
+}
 export const NETPYNE_COMMANDS = { 
   instantiateModel: 'netpyne_geppetto.instantiateNetPyNEModelInGeppetto',
   simulateModel: 'netpyne_geppetto.simulateNetPyNEModelInGeppetto',
