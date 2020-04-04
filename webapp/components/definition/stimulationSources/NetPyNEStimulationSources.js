@@ -195,11 +195,6 @@ export default class NetPyNEStimulationSources extends Component {
 
     return (
       <Card style={{ clear: 'both' }}>
-        <CardHeader
-          title="Stimulation sources"
-          subheader="Define here the sources of stimulation in your network"
-          id={"StimulationSources"}
-        />
         {content}
         {dialogPop}
       </Card>

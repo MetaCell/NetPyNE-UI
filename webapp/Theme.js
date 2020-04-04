@@ -1,13 +1,15 @@
 
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import purple from '@material-ui/core/colors/purple';
-import pink from '@material-ui/core/colors/pink';
+import orange from '@material-ui/core/colors/orange';
 
-// pink
-const secondaryColor = pink['A200']
-// purple
-const primaryColor = 'rgb(84, 58, 115)'
+// orange
+const primaryColor = '#f67700'
+const secondaryColor = '#f67700'
 
+const bgLight = '#616161';
+const bgRegular = '#424242';
+const bgDark = '#212121';
 
 export default createMuiTheme({
   typography: {
@@ -21,8 +23,9 @@ export default createMuiTheme({
     }
   },
   palette: {
+    type: 'dark',
     primary: { main: primaryColor, },
-    secondary: { main: secondaryColor, }
+    secondary: { main: bgLight, }
   },
   overrides: {
     MuiInputLabel: { formControl: { top: '-6px' } },
@@ -30,8 +33,10 @@ export default createMuiTheme({
       input: {
         outline: 'none !important', 
         border: 'none !important', 
-        boxShadow: 'none !important' 
+        boxShadow: 'none !important',
       },
+      root:{ color: 'white' }
+
     },
     MuiSelect: {
       root: {
@@ -40,6 +45,23 @@ export default createMuiTheme({
         boxShadow: 'none !important'
       },
       select: { "&:focus" :{ background: "none" } },
-    }
+    },
+    MuiCard: { root: { height: '100%', backgroundColor: bgRegular, overflowY: 'auto' } },
+    MuiBottomNavigation: { root: { backgroundColor: bgRegular } },
+    MuiPaper: { root: { color: 'inherit' } },
+    MuiBottomNavigationAction: { root: { color: 'white' } },
+    MuiFab:{ 
+      secondary: { color: 'white' },
+      primary: { color: 'white' } 
+    },
+    MuiButton: { 
+      containedSecondary: { color: 'white' },
+      containedPrimary: { color: 'white' },
+    },
+    MuiMenuItem: { root: { color: 'white' } },
+
+    MuiListItemText: { root: { color: 'white' } },
+    MuiDialogTitle: { root: { color: 'white' } }
+    
   }
 });

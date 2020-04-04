@@ -9,7 +9,8 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
   root: {
     display: 'flex',
     alignItems: 'center'
-  }
+  },
+  icon: { color: palette.common.white, fontSize: 50 }
 }))
 
 
@@ -23,10 +24,9 @@ export default ({ handleClick, selection }) => {
         onClick={ () => handleClick()}
       >
         <Icon
-          fontSize='large' 
-          color='secondary'
+          fontSize='large'
+          classes={{ root: classes.icon }}
           className="fa fa-home"
-          style={{ fontSize: 50 }}
         />
       </div>
       

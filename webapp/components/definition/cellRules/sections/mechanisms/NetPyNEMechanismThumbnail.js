@@ -3,8 +3,8 @@ import IconButton from '@material-ui/core/IconButton';
 import FontIcon from '@material-ui/core/Icon';
 import DeleteDialogBox from '../../../../general/DeleteDialogBox';
 
-const hoverColor = '#66d2e2';
-const changeColor = 'rgb(0, 188, 212)';
+const hoverColor = 'white';
+const changeColor = 'white';
 
 const styles = {
   main: { float: 'left', '&:hover': { backgroundColor: 'red' } },
@@ -13,7 +13,6 @@ const styles = {
     marginTop:37,
     marginLeft:38,
     position:"absolute",
-    backgroundColor:"#f23d7a",
     color: 'white'
   }
 }
@@ -72,7 +71,7 @@ export default class NetPyNEMechanismThumbnail extends React.Component {
         >
           <div>
             { label }
-            <FontIcon style={{ color: changeColor, '&:hover': { color: hoverColor } }} className="gpt-fullgear"/>
+            <FontIcon color="primary" className="gpt-fullgear"/>
           </div>
         </IconButton>
         <DeleteDialogBox

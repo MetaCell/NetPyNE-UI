@@ -302,12 +302,6 @@ export default class NetPyNESimConfig extends React.Component {
 
     return (
       <Card style={{ clear: 'both' }}>
-        <CardHeader
-          title="Simulation configuration"
-          subheader="Define here the configuration options for the simulation"
-          id={"Configuration"}
-        />
-
         <CardContent className={"tabContainer"}>
           <div>
             <BottomNavigation value={this.state.selectedIndex}>

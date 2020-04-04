@@ -13,6 +13,7 @@ export default class Checkbox extends Component {
           control={
             <MuiCheckbox
               id={this.props.id}
+              color="primary"
               checked={this.props.checked || false}
               onChange={this.props.onChange}
             />

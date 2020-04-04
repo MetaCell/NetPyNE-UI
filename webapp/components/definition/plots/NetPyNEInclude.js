@@ -268,7 +268,7 @@ export default class NetPyNEInclude extends Component {
         onClose={() => this.closeSecondPopover()}
         onMouseLeave={() => this.closeSecondPopover()}
       >
-        <List style={{ width: 200 }}>
+        <List style={{ width: 200 }} dense>
           {menuItems}
         </List>
       </Popover>

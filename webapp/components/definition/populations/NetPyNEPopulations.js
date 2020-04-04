@@ -200,11 +200,6 @@ export default class NetPyNEPopulations extends React.Component {
 
     return (
       <Card style={{ clear: 'both' }}>
-        <CardHeader
-          title="Populations"
-          subheader="Define here the populations of your network"
-          id={"Populations"}
-        />
         <CardContent className={"tabContainer"} >
           <div className={"details"}>
             {selectedPopulation}

@@ -24,28 +24,122 @@ export const FLEXLAYOUT_DEFAULT_STATE = {
      *   status: WidgetStatus.ACTIVE, 
      *   icon: 'fa-python',
      *   component: 'PythonConsole', 
-     *   panelName: "bottomPanel",
+     *   panelName: "consolePanel",
      *   enableClose: false
      * },
      */
      
-    ...MODEL_LOADED_STATE_WIDGETS
+    ...EDIT_MODE_INITIAL_WIDGET_STATE
     
   },
 
 };
 
-
-const MODEL_LOADED_STATE_WIDGETS = {
+const SIMULATE_MODE_INITIAL_WIDGET_STATE = {
   'D3Canvas': { 
     id: 'D3Canvas', 
-    name: 'Network', 
+    name: 'Morphology', 
     status: WidgetStatus.ACTIVE, 
-    icon: 'fa-python',
+    icon: 'geppetto/build/popParams.png',
     component: 'D3Canvas', 
-    panelName: "topPanel",
-    enableClose: false
+    panelName: "rightPanel",
+    enableClose: false,
+    enableDrag: false,
+    enableRename: false
+  },
+}
+
+const EDIT_MODE_INITIAL_WIDGET_STATE = {
+  'popParams': { 
+    id: 'popParams', 
+    name: 'popParams', 
+    status: WidgetStatus.ACTIVE, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'popParams', 
+    panelName: "rightPanel",
+    enableClose: false,
+    enableDrag: false,
+    enableRename: false
+  },
+  'cellParams': { 
+    id: 'cellParams', 
+    name: 'cellParams', 
+    status: WidgetStatus.HIDDEN, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'cellParams', 
+    panelName: "rightPanel",
+    enableClose: false,
+    enableDrag: false,
+    enableRename: false
+  },
+  'synMechParams': { 
+    id: 'synMechParams', 
+    name: 'synMechParams', 
+    status: WidgetStatus.HIDDEN, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'synMechParams', 
+    panelName: "rightPanel",
+    enableClose: false,
+    enableDrag: false,
+    enableRename: false
+  },
+  'connParams': { 
+    id: 'connParams', 
+    name: 'connParams', 
+    status: WidgetStatus.HIDDEN, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'connParams', 
+    panelName: "rightPanel",
+    enableClose: false,
+    enableDrag: false,
+    enableRename: false
+  },
+  'stimSourceParams': { 
+    id: 'stimSourceParams', 
+    name: 'stimSourceParams', 
+    status: WidgetStatus.HIDDEN, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'stimSourceParams', 
+    panelName: "rightPanel",
+    enableClose: false,
+    enableDrag: false,
+    enableRename: false
+  },
+  'stimTargetParams': { 
+    id: 'stimTargetParams',
+    name: 'stimTargetParams',
+    status: WidgetStatus.HIDDEN, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'stimTargetParams',
+    panelName: "rightPanel",
+    enableClose: false,
+    enableDrag: false,
+    enableRename: false
+  },
+  'simConfig': { 
+    id: 'simConfig', 
+    name: 'simConfig', 
+    status: WidgetStatus.HIDDEN, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'simConfig', 
+    panelName: "rightPanel",
+    enableClose: false,
+    enableDrag: false,
+    enableRename: false
+  },
+  'analysis': { 
+    id: 'analysis', 
+    name: 'analysis', 
+    status: WidgetStatus.HIDDEN, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'analysis', 
+    panelName: "rightPanel",
+    enableClose: false,
+    enableDrag: false,
+    enableRename: false
   }
+  
+
 }
 
 
@@ -91,7 +185,7 @@ export default (state = FLEXLAYOUT_DEFAULT_STATE, action) => {
     return {
       ...state, widgets: { 
         ...state.widgets,
-        ...MODEL_LOADED_STATE_WIDGETS
+        ...EDIT_MODE_INITIAL_WIDGET_STATE
       }
     }
   

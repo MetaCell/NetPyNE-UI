@@ -221,11 +221,6 @@ export default class NetPyNEConnectivityRules extends Component {
 
     return (
       <Card style={{ clear: 'both' }}>
-        <CardHeader
-          title="Connectivity rules"
-          subheader="Define here the rules to generate the connections in your network"
-          id="Connections"
-        />
         {content}
       </Card>);
   }

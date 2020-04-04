@@ -174,11 +174,6 @@ export default class NetPyNESynapses extends Component {
 
     return (
       <Card style={{ clear: 'both' }}>
-        <CardHeader
-          title="Synaptic mechanisms"
-          subheader="Define here the synaptic mechanisms available in your network"
-          id={"Synapses"}
-        />
         <CardContent className={"tabContainer"}>
           <div className={"details"}>
             {selectedSynapse}

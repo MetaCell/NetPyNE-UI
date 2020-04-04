@@ -25,6 +25,7 @@ jQuery(function () {
   require('./css/netpyne.less');
   require('./css/material.less');
   require('./css/traceback.less');
+  require('./css/flexlayout.less');
 
   const store = configureStore();
 

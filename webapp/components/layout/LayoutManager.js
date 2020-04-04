@@ -6,56 +6,14 @@ import Actions from 'geppetto-client/js/components/interface/flexLayout2/src/mod
 import { WidgetStatus } from '../../constants';
 import { isEqual } from '../../Utils';
 import WidgetFactory from './WidgetFactory';
-
-
-const defaultLayoutConfiguration = {
-  "global": { sideBorders: 8 },
-  "layout": {
-    "type": "row",
-    "weight": 100,
-    "id": "root",
-    "children": [
-     
-      {
-        "type": "row",
-        "weight": 100,
-        "children": [
-          {
-            "type": "tabset",
-            "weight": 70,
-            "id": "topPanel",
-            "enableDeleteWhenEmpty": false,
-            "children": [
-            ]
-          },
-          {
-            "type": "tabset",
-            "weight": 30,
-            "id": "bottomPanel",
-            "enableDeleteWhenEmpty": false,
-            "children": [
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  "borders": [
-    {
-      "type": "border",
-      "location": "bottom",
-      "size": 100,
-      "children": [],
-      "barSize": 10
-    }
-  ]
-};
+import TabsetIconFactory from './TabsetIconFactory'
+import defaultLayoutConfiguration from './layoutConf.json';
 
 /**
  * Transforms a widget configutation into a flexlayout node descriptor
  */
 function widget2Node (configuration) {
-  const { id, name, component, instancePath, status, panelName, enableClose = true } = configuration;
+  const { id, name, component, instancePath, status, panelName, enableClose = true, ...others } = configuration;
   return {
     id,
     name,
@@ -66,6 +24,7 @@ function widget2Node (configuration) {
     enableClose: enableClose,
     // attr defined inside config, will also be available from within flexlayout nodes.  For example:  node.getNodeById(id).getConfig()
     config: configuration ,
+    ...others
   };
 }
 
@@ -82,6 +41,7 @@ export default class LayoutManager extends Component {
     
 
     this.widgetFactory = this.props.widgetFactory ? this.props.widgetFactory : new WidgetFactory();
+    this.tabsetIconFactory = this.props.TabsetIconFactory ? this.props.TabsetIconFactory : new TabsetIconFactory();
   }
   componentDidMount () {
     const { widgets } = this.props;
@@ -165,6 +125,10 @@ export default class LayoutManager extends Component {
   
   factory (node) {
     return this.widgetFactory.factory(node.getConfig());
+  }
+
+  iconFactory (node) {
+    return this.tabsetIconFactory.factory(node.getConfig());
   }
 
 
@@ -282,6 +246,7 @@ export default class LayoutManager extends Component {
           ref="layout"
           model={this.model}
           factory={this.factory.bind(this)}
+          iconFactory={this.iconFactory.bind(this)}
           onAction={action => this.onAction(action)}
           clickOnBordersAction={node => this.clickOnBordersAction(node)}
           onRenderTabSet={(node, renderValues) => this.onRenderTabSet(node, renderValues)}

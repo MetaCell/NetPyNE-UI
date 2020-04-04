@@ -33,6 +33,7 @@ if ( isWin ) {
 
 const availableExtensions = [
   { from: path.resolve(__dirname, geppetto_client_path, "static/*"), to: 'static', flatten: true },
+  { from: path.resolve(__dirname, "images/*"), to: '', flatten: true },
 ];
 
 module.exports = function (env){

@@ -194,11 +194,6 @@ export default class NetPyNEStimulationTargets extends Component {
 
     return (
       <Card style={{ clear: 'both' }}>
-        <CardHeader
-          title="Stimulation target rules"
-          subheader="Define here the rules to connect stimulation sources to targets in your network"
-          id="StimulationTargets"
-        />
         {content}
         {dialogPop}
       </Card>
