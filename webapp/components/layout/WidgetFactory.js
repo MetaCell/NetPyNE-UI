@@ -12,7 +12,8 @@ import {
   NetPyNEStimulationTargets,
   NetPyNESimConfig,
   NetPyNEPopulations,
-  NetPyNEPlots
+  NetPyNEPlots,
+  NetPyNEPythonConsole
 } from "netpyne/components";
 
 export default class WidgetFactory{
@@ -45,7 +46,7 @@ export default class WidgetFactory{
     const component = widgetConfig.component;
     switch (component) {
     case "PythonConsole": {
-      return <PythonConsole pythonNotebookPath={"notebooks/notebook.ipynb"} />;
+      return <NetPyNEPythonConsole />;
     }
     case "D3Canvas":
       return <NetPyNEInstantiated/>

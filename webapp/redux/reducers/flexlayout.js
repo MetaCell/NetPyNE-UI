@@ -17,20 +17,18 @@ function removeUndefined (obj) {
 export const FLEXLAYOUT_DEFAULT_STATE = { 
   widgets: {
     
-    /*
-     * 'python': { 
-     *   id: 'python', 
-     *   name: 'Python', 
-     *   status: WidgetStatus.ACTIVE, 
-     *   icon: 'fa-python',
-     *   component: 'PythonConsole', 
-     *   panelName: "consolePanel",
-     *   enableClose: false
-     * },
-     */
-     
-    ...EDIT_MODE_INITIAL_WIDGET_STATE
     
+    'python': { 
+      id: 'python', 
+      name: 'Python', 
+      status: WidgetStatus.ACTIVE, 
+      icon: 'fa fa-code',
+      component: 'PythonConsole', 
+      panelName: "consolePanel",
+      enableClose: false,
+      enableDrag: false,
+      enableRename: false
+    },
   },
 
 };
@@ -40,7 +38,7 @@ const SIMULATE_MODE_INITIAL_WIDGET_STATE = {
     id: 'D3Canvas', 
     name: 'Morphology', 
     status: WidgetStatus.ACTIVE, 
-    icon: 'geppetto/build/popParams.png',
+    icon: 'fa fa-dot-circle-o',
     component: 'D3Canvas', 
     panelName: "rightPanel",
     enableClose: false,
@@ -220,5 +218,3 @@ function updateWidgetState (widgets, { status, panelName }) {
 function extractPanelName (action) {
   return action.data.component == "Plot" ? "bottomPanel" : "leftPanel";
 }
-
-    

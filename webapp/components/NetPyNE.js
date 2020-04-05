@@ -34,13 +34,10 @@ const styles = ({ zIndex, palette, spacing }) => ({
   drawer: { marginLeft: spacing(-1) },
   content: { position: "relative", zIndex: zIndex.appBar }
 })
-class NetPyNE extends React.Component {
-  constructor (props) {
-    super(props);
-    this.widgets = {};
-    
-  }
 
+
+class NetPyNE extends React.Component {
+  
   openPythonCallDialog (event) {
     const payload = { errorMessage: event['evalue'], errorDetails: event['traceback'].join('\n') }
     this.props.pythonCallErrorDialogBox(payload)
@@ -54,44 +51,24 @@ class NetPyNE extends React.Component {
     GEPPETTO.off(GEPPETTO.Events.Error_while_exec_python_command, this.openPythonCallDialog, this)
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps) {
-    if (this.props.data != nextProps.data) {
-      console.log("Initialising NetPyNE Tabs");
-
-      window.metadata = nextProps.data.metadata;
-      window.currentFolder = nextProps.data.currentFolder;
-      window.isDocker = nextProps.data.isDocker;
-    }
-  }
-  
-
   render () {
-    if (!this.props.data) {
-      return <div></div>;
-    } else {
-      const { classes } = this.props
-      if (this.props.editMode) {
-        var content = <LayoutManager/>;
-      } else {
-        var content = <LayoutManager />;
-      }
+    const { classes } = this.props
 
-      return (
-        <div className={classes.container}>
-          <div className={classes.content}>
-            <Toolbar id="appBar" className={classes.toolbar}>
-              <div className={classes.drawer}>
-                <NetPyNEToolBar />
-              </div>
-              <div className={classes.views}>
-                <NetPyNETabs />
-              </div>
-            </Toolbar>
-          </div>
-          {content}
+    return (
+      <div className={classes.container}>
+        <div className={classes.content}>
+          <Toolbar id="appBar" className={classes.toolbar}>
+            <div className={classes.drawer}>
+              <NetPyNEToolBar />
+            </div>
+            <div className={classes.views}>
+              <NetPyNETabs />
+            </div>
+          </Toolbar>
         </div>
-      );
-    }
+        <LayoutManager/>
+      </div>
+    );
   }
 }
 export default withStyles(styles)(NetPyNE)
