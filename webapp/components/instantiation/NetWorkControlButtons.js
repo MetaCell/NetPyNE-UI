@@ -9,7 +9,7 @@ import { PlotButtons } from 'netpyne/components'
 const styles = ({ spacing }) => ({
   container: {
     position: 'absolute',
-    top: spacing(3),
+    top: spacing(2),
     right: spacing(2)
   },
   innerContainer: { position: 'relative' },
@@ -26,6 +26,21 @@ class NetWorkControlButtons extends React.Component {
     return (
       <div className={classes.container}>
         <div style={{ position: 'relative' }}>
+
+          <Tooltip 
+            title={"Control panel"}
+            placement="left"
+          >
+            <div>
+              <IconButton 
+                className={classes.buttons}
+                onClick={() => $('#controlpanel').show()}
+                icon={"fa-list"}
+                id="ControlPanelButton"
+              />
+            </div>
+          </Tooltip>
+
           <Tooltip 
             title={disableRefreshInstance ? "Your network is in sync" : "Synchronise network"}
             placement="left"

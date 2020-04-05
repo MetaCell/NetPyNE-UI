@@ -1,7 +1,8 @@
 import { 
   UPDATE_CARDS, CREATE_NETWORK, CREATE_SIMULATE_NETWORK, PYTHON_CALL, SIMULATE_NETWORK,
-  showNetwork, createNetwork, createAndSimulateNetwork, editModel,
+  showNetwork, createNetwork, createAndSimulateNetwork, editModel, EDIT_MODEL
 } from '../actions/general';
+import { switchLayout } from '../actions/flexlayout'
 import { openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
 import Utils from '../../Utils';
@@ -15,6 +16,11 @@ export default store => next => action => {
     console.log("Triggered card update")
     next(action);
     break;
+  case EDIT_MODEL:{
+    next(action)
+    next(switchLayout)
+    break
+  }
   case CREATE_NETWORK:
     instantiateNetwork({}, next, createNetwork)
     break;
@@ -67,7 +73,10 @@ const createSimulateBackendCall = async (cmd, payload, next, action, consoleMess
     GEPPETTO.Manager.loadModel(response);
     GEPPETTO.CommandController.log('Instantiation / Simulation completed.');
     GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+
     next(action)
+    next(switchLayout)
+    
   }
 }
 

@@ -34,7 +34,7 @@
                             {
                                 "type": "tabset",
                                 "weight": 100,
-                                "id": "rightPanel",
+                                "id": "hlsPanel",
                                 "enableDeleteWhenEmpty": false,
                                 "children": [
                                 ]

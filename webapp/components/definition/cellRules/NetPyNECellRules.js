@@ -308,7 +308,7 @@ export default class NetPyNECellRules extends React.Component {
       this.setState({ selectedMechanism: newMechanismName });
     }
 
-    if (Object.keys(this.state.value).length === 0) {
+    if (this.state.value && Object.keys(this.state.value).length === 0) {
       this.setState({ 
         selectedCellRule: undefined,
         selectedSection: undefined,

@@ -30,7 +30,7 @@
                     {
                         "type": "tabset",
                         "weight": 100,
-                        "id": "middlePanel",
+                        "id": "morphoPanel",
                         "enableDeleteWhenEmpty": false,
                         "children": []
                     }
@@ -42,12 +42,12 @@
                 "children": [
                     {
                         "type": "row",
-                        "weight": 80,
+                        "weight": 60,
                         "children": [
                             {
                                 "type": "tabset",
                                 "weight": 100,
-                                "id": "rightPanel",
+                                "id": "plotPanel",
                                 "enableDeleteWhenEmpty": false,
                                 "children": [
                                 ]
@@ -56,7 +56,7 @@
                     },
                     {
                         "type": "row",
-                        "weight": 20,
+                        "weight": 40,
                         "children": [
                             {
                                 "type": "tabset",

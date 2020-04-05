@@ -134,6 +134,9 @@
         border-top-right-radius: @panelradius;
         border-top-left-radius: @panelradius;
         background-color: @box_color;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
     }
   
     .flexlayout__tab_button_content {
@@ -166,6 +169,7 @@
         &:before {
             content: "\00d7";
         }
+        height: inherit;
     }
     .flexlayout__splitter {
         background-color: inherit;

@@ -4,6 +4,7 @@ import {
   RESET_LAYOUT,
   DESTROY_WIDGET,
   ACTIVATE_WIDGET,
+  SWITCH_LAYOUT
 } from '../actions/flexlayout';
 
 import { MODEL_LOADED } from '../actions/general';
@@ -14,47 +15,37 @@ function removeUndefined (obj) {
   return Object.keys(obj).forEach(key => obj[key] === undefined ? delete obj[key] : '');
 }
 
-export const FLEXLAYOUT_DEFAULT_STATE = { 
-  widgets: {
-    
-    
-    'python': { 
-      id: 'python', 
-      name: 'Python', 
-      status: WidgetStatus.ACTIVE, 
-      icon: 'fa fa-code',
-      component: 'PythonConsole', 
-      panelName: "consolePanel",
-      enableClose: false,
-      enableDrag: false,
-      enableRename: false
-    },
-  },
-
+const PYTHON_CONSOLE_WIDGET = { 
+  id: 'python', 
+  name: 'Python', 
+  status: WidgetStatus.ACTIVE, 
+  icon: 'fa fa-code',
+  component: 'PythonConsole', 
+  panelName: "consolePanel",
+  enableClose: false,
+  enableDrag: false,
+  enableRename: false
 };
 
-const SIMULATE_MODE_INITIAL_WIDGET_STATE = {
-  'D3Canvas': { 
-    id: 'D3Canvas', 
-    name: 'Morphology', 
-    status: WidgetStatus.ACTIVE, 
-    icon: 'fa fa-dot-circle-o',
-    component: 'D3Canvas', 
-    panelName: "rightPanel",
-    enableClose: false,
-    enableDrag: false,
-    enableRename: false
-  },
+const MORPHOLOGY_WIDGET = {
+  id: 'D3Canvas', 
+  name: 'Morphology', 
+  status: WidgetStatus.ACTIVE, 
+  icon: 'fa fa-dot-circle-o',
+  component: 'D3Canvas', 
+  panelName: "morphoPanel",
+  enableClose: false,
+  enableDrag: false,
+  enableRename: false
 }
-
-const EDIT_MODE_INITIAL_WIDGET_STATE = {
+const HLS_WIDGETS = {
   'popParams': { 
     id: 'popParams', 
     name: 'popParams', 
     status: WidgetStatus.ACTIVE, 
     icon: 'fa fa-dot-circle-o',
     component: 'popParams', 
-    panelName: "rightPanel",
+    panelName: "hlsPanel",
     enableClose: false,
     enableDrag: false,
     enableRename: false
@@ -65,7 +56,7 @@ const EDIT_MODE_INITIAL_WIDGET_STATE = {
     status: WidgetStatus.HIDDEN, 
     icon: 'fa fa-dot-circle-o',
     component: 'cellParams', 
-    panelName: "rightPanel",
+    panelName: "hlsPanel",
     enableClose: false,
     enableDrag: false,
     enableRename: false
@@ -76,7 +67,7 @@ const EDIT_MODE_INITIAL_WIDGET_STATE = {
     status: WidgetStatus.HIDDEN, 
     icon: 'fa fa-dot-circle-o',
     component: 'synMechParams', 
-    panelName: "rightPanel",
+    panelName: "hlsPanel",
     enableClose: false,
     enableDrag: false,
     enableRename: false
@@ -87,7 +78,7 @@ const EDIT_MODE_INITIAL_WIDGET_STATE = {
     status: WidgetStatus.HIDDEN, 
     icon: 'fa fa-dot-circle-o',
     component: 'connParams', 
-    panelName: "rightPanel",
+    panelName: "hlsPanel",
     enableClose: false,
     enableDrag: false,
     enableRename: false
@@ -98,7 +89,7 @@ const EDIT_MODE_INITIAL_WIDGET_STATE = {
     status: WidgetStatus.HIDDEN, 
     icon: 'fa fa-dot-circle-o',
     component: 'stimSourceParams', 
-    panelName: "rightPanel",
+    panelName: "hlsPanel",
     enableClose: false,
     enableDrag: false,
     enableRename: false
@@ -109,7 +100,7 @@ const EDIT_MODE_INITIAL_WIDGET_STATE = {
     status: WidgetStatus.HIDDEN, 
     icon: 'fa fa-dot-circle-o',
     component: 'stimTargetParams',
-    panelName: "rightPanel",
+    panelName: "hlsPanel",
     enableClose: false,
     enableDrag: false,
     enableRename: false
@@ -120,7 +111,7 @@ const EDIT_MODE_INITIAL_WIDGET_STATE = {
     status: WidgetStatus.HIDDEN, 
     icon: 'fa fa-dot-circle-o',
     component: 'simConfig', 
-    panelName: "rightPanel",
+    panelName: "hlsPanel",
     enableClose: false,
     enableDrag: false,
     enableRename: false
@@ -131,7 +122,7 @@ const EDIT_MODE_INITIAL_WIDGET_STATE = {
     status: WidgetStatus.HIDDEN, 
     icon: 'fa fa-dot-circle-o',
     component: 'analysis', 
-    panelName: "rightPanel",
+    panelName: "hlsPanel",
     enableClose: false,
     enableDrag: false,
     enableRename: false
@@ -139,6 +130,14 @@ const EDIT_MODE_INITIAL_WIDGET_STATE = {
   
 
 }
+
+export const FLEXLAYOUT_DEFAULT_STATE = { 
+  widgets: { 'python': PYTHON_CONSOLE_WIDGET },
+  widgetsBackground: {
+    'python': PYTHON_CONSOLE_WIDGET,
+    'D3Canvas': MORPHOLOGY_WIDGET
+  }
+};
 
 
 export default (state = FLEXLAYOUT_DEFAULT_STATE, action) => {
@@ -180,14 +179,14 @@ export default (state = FLEXLAYOUT_DEFAULT_STATE, action) => {
     return FLEXLAYOUT_DEFAULT_STATE;
 
   case MODEL_LOADED: 
-    return {
-      ...state, widgets: { 
-        ...state.widgets,
-        ...EDIT_MODE_INITIAL_WIDGET_STATE
-      }
-    }
+    return { ...state, widgets: { ...state.widgets, ...HLS_WIDGETS } }
   
-
+  case SWITCH_LAYOUT: {
+    const { widgets, widgetsBackground, ...others } = state
+    return { ...others, widgets: { ...widgetsBackground }, widgetsBackground: { ...widgets } }
+  }
+    
+  
   default:
     return state
   }

@@ -89,7 +89,7 @@ export const NetPyNECellRule = connect((state, ownProps) => ({
 
 import _LayoutManager from "./layout/LayoutManager";
 export const LayoutManager = connect(
-  state => state.flexlayout,
+  state => ({ ...state.flexlayout, editMode: state.general.editMode }),
   dispatch => ({
     minimizeWidget: id => dispatch(minimizeWidget(id)),
     destroyWidget: id => dispatch(destroyWidget(id)),
@@ -227,7 +227,11 @@ export const PlotButtons = connect(
 import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole'
 export const NetPyNEPythonConsole = connect(
   null,
-  dispatch => ({ modelLoaded: () => dispatch(modelLoaded) })
+  dispatch => ({ 
+    modelLoaded: () => dispatch(modelLoaded), 
+    newWidget: widget => dispatch(newWidget(widget)),
+    activateWidget: widgetId => dispatch(activateWidget(widgetId))
+  })
 )(_NetPyNEPythonConsole)
 
 // ---------------------------------------------------------------------------------------- //
