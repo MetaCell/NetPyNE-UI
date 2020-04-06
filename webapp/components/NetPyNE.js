@@ -5,6 +5,7 @@ import {
   NetPyNEToolBar,
   NetPyNETabs,
   LayoutManager,
+  Drawer
 } from "netpyne/components";
 
 import { withStyles } from '@material-ui/core/styles'
@@ -32,7 +33,7 @@ const styles = ({ zIndex, palette, spacing }) => ({
     marginRight: spacing(-1)
   },
   drawer: { marginLeft: spacing(-1) },
-  content: { position: "relative", zIndex: zIndex.appBar }
+  content: { position: "relative", zIndex: zIndex.drawer + 1 }
 })
 
 
@@ -66,7 +67,10 @@ class NetPyNE extends React.Component {
             </div>
           </Toolbar>
         </div>
-        <LayoutManager/>
+        <div style={{ flexGrow:1, display: 'flex', flexDirection: 'row', position: 'relative' }}>
+          <Drawer/>
+          <LayoutManager/>
+        </div>
       </div>
     );
   }

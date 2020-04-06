@@ -234,6 +234,18 @@ export const NetPyNEPythonConsole = connect(
   })
 )(_NetPyNEPythonConsole)
 
+import _Drawer from './settings/Drawer'
+export const Drawer = connect(
+  state => ({ 
+    widgets: state.flexlayout.widgets,
+    editMode: state.general.editMode 
+  }),
+  dispatch => ({ 
+    newWidget: widget => dispatch(newWidget(widget)),
+    activateWidget: widgetId => dispatch(activateWidget(widgetId))
+  })
+)(_Drawer)
+
 // ---------------------------------------------------------------------------------------- //
 
 // DEFAULTS

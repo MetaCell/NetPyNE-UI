@@ -12,20 +12,7 @@
         "children": [
             {
                 "type": "row",
-                "weight": 10,
-                "children": [
-                    {
-                        "type": "tabset",
-                        "weight": 100,
-                        "id": "leftPanel",
-                        "enableDeleteWhenEmpty": false,
-                        "children": []
-                    }
-                ]
-            },
-            {
-                "type": "row",
-                "weight": 90,
+                "weight": 100,
                 "children": [
                     {
                         "type": "row",
@@ -59,15 +46,6 @@
                 ]
             }
         ]
-    },
-    "borders": [
-        {
-          "type": "border",
-          "location": "bottom",
-          "size": 100,
-          "children": [],
-          "barSize": 10
-        }
-      ]
+    }
   }
   

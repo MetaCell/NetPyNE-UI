@@ -25,7 +25,7 @@ export default createMuiTheme({
   palette: {
     type: 'dark',
     primary: { main: primaryColor, },
-    secondary: { main: bgLight, }
+    secondary: { main: bgLight, },
   },
   overrides: {
     MuiInputLabel: { formControl: { top: '-6px' } },

@@ -15,7 +15,7 @@ function removeUndefined (obj) {
   return Object.keys(obj).forEach(key => obj[key] === undefined ? delete obj[key] : '');
 }
 
-const PYTHON_CONSOLE_WIDGET = { 
+export const PYTHON_CONSOLE_WIDGET = { 
   id: 'python', 
   name: 'Python', 
   status: WidgetStatus.ACTIVE, 
@@ -27,104 +27,87 @@ const PYTHON_CONSOLE_WIDGET = {
   enableRename: false
 };
 
-const MORPHOLOGY_WIDGET = {
+export const MORPHOLOGY_WIDGET = {
   id: 'D3Canvas', 
   name: 'Morphology', 
   status: WidgetStatus.ACTIVE, 
   icon: 'fa fa-dot-circle-o',
   component: 'D3Canvas', 
   panelName: "morphoPanel",
-  enableClose: false,
-  enableDrag: false,
   enableRename: false
 }
-const HLS_WIDGETS = {
+
+export const HLS_WIDGETS = {
   'popParams': { 
     id: 'popParams', 
-    name: 'popParams', 
+    name: 'Populations', 
     status: WidgetStatus.ACTIVE, 
     icon: 'fa fa-dot-circle-o',
     component: 'popParams', 
     panelName: "hlsPanel",
-    enableClose: false,
-    enableDrag: false,
     enableRename: false
   },
   'cellParams': { 
     id: 'cellParams', 
-    name: 'cellParams', 
+    name: 'Cell rules', 
     status: WidgetStatus.HIDDEN, 
     icon: 'fa fa-dot-circle-o',
     component: 'cellParams', 
     panelName: "hlsPanel",
-    enableClose: false,
-    enableDrag: false,
     enableRename: false
   },
   'synMechParams': { 
     id: 'synMechParams', 
-    name: 'synMechParams', 
+    name: 'Synapses', 
     status: WidgetStatus.HIDDEN, 
     icon: 'fa fa-dot-circle-o',
     component: 'synMechParams', 
     panelName: "hlsPanel",
-    enableClose: false,
-    enableDrag: false,
     enableRename: false
   },
   'connParams': { 
     id: 'connParams', 
-    name: 'connParams', 
+    name: 'Connections', 
     status: WidgetStatus.HIDDEN, 
     icon: 'fa fa-dot-circle-o',
     component: 'connParams', 
     panelName: "hlsPanel",
-    enableClose: false,
-    enableDrag: false,
     enableRename: false
   },
   'stimSourceParams': { 
     id: 'stimSourceParams', 
-    name: 'stimSourceParams', 
+    name: 'Stim. sources', 
     status: WidgetStatus.HIDDEN, 
     icon: 'fa fa-dot-circle-o',
     component: 'stimSourceParams', 
     panelName: "hlsPanel",
-    enableClose: false,
-    enableDrag: false,
     enableRename: false
   },
   'stimTargetParams': { 
     id: 'stimTargetParams',
-    name: 'stimTargetParams',
+    name: 'Stim. targets',
     status: WidgetStatus.HIDDEN, 
     icon: 'fa fa-dot-circle-o',
     component: 'stimTargetParams',
     panelName: "hlsPanel",
-    enableClose: false,
-    enableDrag: false,
     enableRename: false
   },
   'simConfig': { 
     id: 'simConfig', 
-    name: 'simConfig', 
+    name: 'Settings', 
     status: WidgetStatus.HIDDEN, 
     icon: 'fa fa-dot-circle-o',
     component: 'simConfig', 
     panelName: "hlsPanel",
-    enableClose: false,
-    enableDrag: false,
     enableRename: false
   },
   'analysis': { 
     id: 'analysis', 
-    name: 'analysis', 
+    name: 'Anaylysis', 
     status: WidgetStatus.HIDDEN, 
     icon: 'fa fa-dot-circle-o',
     component: 'analysis', 
     panelName: "hlsPanel",
-    enableClose: false,
-    enableDrag: false,
     enableRename: false
   }
   
@@ -134,8 +117,8 @@ const HLS_WIDGETS = {
 export const FLEXLAYOUT_DEFAULT_STATE = { 
   widgets: { 'python': PYTHON_CONSOLE_WIDGET },
   widgetsBackground: {
+    'D3Canvas': MORPHOLOGY_WIDGET,
     'python': PYTHON_CONSOLE_WIDGET,
-    'D3Canvas': MORPHOLOGY_WIDGET
   }
 };
 
@@ -179,7 +162,7 @@ export default (state = FLEXLAYOUT_DEFAULT_STATE, action) => {
     return FLEXLAYOUT_DEFAULT_STATE;
 
   case MODEL_LOADED: 
-    return { ...state, widgets: { ...state.widgets, ...HLS_WIDGETS } }
+    return { ...state, widgets: { ...HLS_WIDGETS, ...state.widgets } }
   
   case SWITCH_LAYOUT: {
     const { widgets, widgetsBackground, ...others } = state
