@@ -34,6 +34,8 @@
 @bring-front: 1000;
 
 .flexlayout__layout {
+    border-left: none!important;
+    border-right: none!important;
     background-color: @color-dark;//color-light
     top: 0px;
     margin-top: @gutter / 2;
@@ -96,7 +98,7 @@
         border-top-left-radius: @panelradius;
         color: @color-white;
         display: flex;
-        align-items: center;
+        align-items: flex-end;
         margin-right: @tab-spacing;
         .flexlayout__tab_button_content {
             color: @secondary_color;
@@ -109,7 +111,7 @@
         border-top-right-radius: @panelradius;
         border-top-left-radius: @panelradius;
         display: flex;
-        align-items: center;
+        align-items: flex-end;
     }
   
     .flexlayout__border_bottom {
@@ -150,6 +152,11 @@
         margin-left: @spacing;
     }
   
+    .flexlayout__tab_button_trailing {
+        display: flex;
+        align-items: center;
+    }
+    
     // Thin white tab icons
     .flexlayout__border_button_trailing,
     .flexlayout__tab_button_trailing,

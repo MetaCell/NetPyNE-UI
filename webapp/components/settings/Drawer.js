@@ -24,18 +24,10 @@ import {
 const drawerOpenWidth = 200;
 const drawerCloseWidth = 54;
 
-const createTransition = (entering, transitions) => (
-  transitions.create('width', {
-    easing: transitions.easing.sharp,
-    duration: entering ? transitions.duration.enteringScreen : transitions.duration.leavingScreen,
-  })
-)
-
 const drawerCss = (entering, transitions, palette) => ({ 
   overflow: 'hidden',
   width: props => props.width,
   flexShrink: 0,
-  backgroundColor: props => props.dark ? palette.grey[900] : palette.grey[800],
   borderRight: 'none',
   transition: transitions.create('width', {
     easing: transitions.easing.sharp,
@@ -47,7 +39,7 @@ const useStyles = makeStyles(({ transitions, palette }) => ({
   openDrawer: drawerCss(true, transitions, palette),
 
   closeDrawer: drawerCss(false, transitions, palette),
-    
+
   colapse: {
     color: 'white',
     position: 'absolute',
@@ -64,7 +56,7 @@ const useStyles = makeStyles(({ transitions, palette }) => ({
 export default ({ widgets, newWidget, editMode }) => {
   const [expand, setExpand] = useState({ dark: !editMode })
   
-  const classes = useStyles({ dark: !editMode, width: expand ? drawerOpenWidth : drawerCloseWidth });
+  const classes = useStyles({ width: expand ? drawerOpenWidth : drawerCloseWidth });
 
   function createWidget (widgetId) {
     if (!widgets[widgetId]) {
@@ -116,7 +108,11 @@ export default ({ widgets, newWidget, editMode }) => {
           
           <IconButton
             className={classes.colapse}
-            onClick={() => setExpand(!expand)}
+            onClick={() => {
+              setExpand(!expand)
+              setTimeout(() => window.dispatchEvent(new Event('resize')), 400)
+              // pepe()
+            }}
           >
             {expand ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
           </IconButton>
@@ -128,4 +124,21 @@ export default ({ widgets, newWidget, editMode }) => {
     </div>
   )
   
+}
+
+const pepe = () => {
+  window.expansionTransit = {
+    timer: setInterval(() => {
+      window.dispatchEvent(new Event('resize'))
+      console.log(window.expansionTransit.count)
+      if (window.expansionTransit.count > 0) {
+        window.expansionTransit.count -= 1
+      } else {
+        clearInterval(window.expansionTransit.timer)
+        console.log('clear')
+      }
+      
+    }, 150), 
+    count: 1
+  }
 }

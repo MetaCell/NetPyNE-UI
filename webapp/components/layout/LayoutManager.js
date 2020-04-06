@@ -9,6 +9,10 @@ import WidgetFactory from './WidgetFactory';
 import TabsetIconFactory from './TabsetIconFactory'
 import defaultLayoutConfiguration from './layoutConf.json';
 import simulateLayoutConfiguration from './simulateLayoutConf.json';
+import Icon from '@material-ui/core/Icon';
+
+import { withStyles } from '@material-ui/core/styles'
+
 
 /**
  * Transforms a widget configutation into a flexlayout node descriptor
@@ -29,7 +33,20 @@ function widget2Node (configuration) {
   };
 }
 
-export default class LayoutManager extends Component {
+const styles = ({ spacing }) => ({
+  container: {
+    position: 'relative',
+    flexGrow: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'stretch'
+  },
+  spacer: { width: spacing(1) },
+  flexlayout: { position: 'relative', flexGrow: 1 }
+})
+
+
+class LayoutManager extends Component {
 
   constructor (props) {
     super(props);
@@ -256,31 +273,31 @@ export default class LayoutManager extends Component {
     model.doAction(FlexLayout.Actions.moveNode(node.getId(), 'bottomPanel', FlexLayout.DockLocation.CENTER, 0));
   }
 
-  onRenderTabSet (panel, renderValues) {
-    const model = this.getModel()
-    if (panel.getType() === "tabset") {
-      if (panel.getId() != 'leftPanel' && panel.getChildren().length > 0){
-        renderValues.buttons.push(<div key={panel.getId()} className="fa fa-window-minimize customIconFlexLayout" onClick={() => {
-          model.doAction(FlexLayout.Actions.moveNode(panel.getSelectedNode().getId(), "border_bottom", FlexLayout.DockLocation.CENTER, 0));
-        }} />);
-      }
-    }
+  onRenderTab (node,renderValues) {
+    renderValues.leading = <Icon className={node.getConfig().icon}/>
   }
   render () {
-    
+    const { classes } = this.props
     return (
-      <div style={{ position: 'relative', flexGrow: 1 }}>
-        <FlexLayout.Layout
-          ref="layout"
-          model={this.getModel()}
-          factory={this.factory.bind(this)}
-          iconFactory={this.iconFactory.bind(this)}
-          onAction={action => this.onAction(action)}
-          clickOnBordersAction={node => this.clickOnBordersAction(node)}
-          onRenderTabSet={(node, renderValues) => this.onRenderTabSet(node, renderValues)}
-        />
-     
+      <div className={classes.container}>
+        <div className={classes.spacer}/>
+        <div className={classes.flexlayout}>
+          <FlexLayout.Layout
+            ref="layout"
+            model={this.getModel()}
+            factory={this.factory.bind(this)}
+            iconFactory={this.iconFactory.bind(this)}
+            onAction={action => this.onAction(action)}
+            clickOnBordersAction={node => this.clickOnBordersAction(node)}
+            onRenderTab={(node,renderValues) => this.onRenderTab(node,renderValues)}
+          />
+        </div>
+        
+        <div className={classes.spacer}/>
       </div>
     )
   }
 }
+
+
+export default withStyles(styles)(LayoutManager)
