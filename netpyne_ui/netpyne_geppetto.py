@@ -512,6 +512,8 @@ class NetPyNEGeppetto():
             return False
 
     def validateFunction(self, functionString):
+        if isinstance(functionString, (float, int)): 
+            return True
         return validateFunction(functionString, self.netParams.__dict__)
 
     def exportHLS(self, args):

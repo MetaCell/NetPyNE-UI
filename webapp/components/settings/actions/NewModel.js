@@ -17,7 +17,7 @@ export default class NewModel extends React.Component {
         title={"Create new model"}
         {...this.props}
       >
-        <h4>The current model will be deleted</h4> 
+        <h4 style={{ color: 'white' }}>The current model will be deleted</h4> 
       </ActionDialog>
     )
   }

@@ -16,7 +16,7 @@
                 "children": [
                     {
                         "type": "row",
-                        "weight": 80,
+                        "weight": 65,
                         "children": [
                             {
                                 "type": "tabset",
@@ -30,7 +30,7 @@
                     },
                     {
                         "type": "row",
-                        "weight": 20,
+                        "weight": 35,
                         "children": [
                             {
                                 "type": "tabset",

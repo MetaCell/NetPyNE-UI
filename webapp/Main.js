@@ -17,6 +17,7 @@ jQuery(function () {
   require('./css/material.less');
   require('./css/traceback.less');
   require('./css/flexlayout.less');
+  require('./css/tree.less');
 
   const store = configureStore();
 
