@@ -17,7 +17,8 @@ import Typography from '@material-ui/core/Typography';
 import AdjustIcon from '@material-ui/icons/Adjust';
 import {
   HLS_WIDGETS, PYTHON_CONSOLE_WIDGET, 
-  FLEXLAYOUT_DEFAULT_STATE, MORPHOLOGY_WIDGET 
+  FLEXLAYOUT_DEFAULT_STATE, MORPHOLOGY_WIDGET,
+  PLOTS_WIDGETS
 } from '../../redux/reducers/flexlayout'
 
 
@@ -48,8 +49,8 @@ const useStyles = makeStyles(({ transitions, palette }) => ({
   },
   paper: { backgroundColor: palette.grey['900'] },
   
-  selected: { height: 60, color: palette.primary.main },
-  unselected: { height: 60, color: palette.common.white },
+  selected: { height: 48, color: palette.primary.main },
+  unselected: { height: 48, color: palette.common.white },
   noColor: { color: 'inherit' }
 }))
 
@@ -62,18 +63,30 @@ export default ({ widgets, newWidget, editMode }) => {
     if (!widgets[widgetId]) {
       let widget = HLS_WIDGETS[widgetId]
       if (!editMode) {
-        widget = MORPHOLOGY_WIDGET
+        widget = simulateModeWidget(widgetId)
       }
       
       newWidget({ path: widget.id, ...widget })
     }
   }
 
+  function simulateModeWidget (widgetId) {
+    if (widgetId.includes('Plot')) {
+      return PLOTS_WIDGETS[widgetId]
+    }
+    return MORPHOLOGY_WIDGET
+  }
+
+
   function getMenu () {
     if (editMode) {
       return Object.values({ ...HLS_WIDGETS, python: PYTHON_CONSOLE_WIDGET })
     } else {
-      return Object.values({ ...FLEXLAYOUT_DEFAULT_STATE.widgetsBackground, python: PYTHON_CONSOLE_WIDGET })
+      return Object.values({ 
+        ...FLEXLAYOUT_DEFAULT_STATE.widgetsBackground,
+        ...PLOTS_WIDGETS,
+        python: PYTHON_CONSOLE_WIDGET 
+      })
     }
     
   }
@@ -87,7 +100,7 @@ export default ({ widgets, newWidget, editMode }) => {
       >
         <div>
           <Toolbar/>
-          <List>
+          <List dense>
             {getMenu().map(({ name, id }) => (
               <ListItem 
                 button

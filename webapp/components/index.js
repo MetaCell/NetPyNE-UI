@@ -212,18 +212,6 @@ export const ActionDialog = connect(
   })
 )(_ActionDialog)
 
-
-import _PlotButton from './instantiation/PlotButtons'
-export const PlotButtons = connect(
-  state => ({ ...state.errors, openErrorDialogBox: state.errors.openDialog }),
-  dispatch => ({
-    newWidget: conf => dispatch(newWidget(conf)),
-    closeBackendErrorDialog: () => dispatch(closeBackendErrorDialog),
-    pythonCallErrorDialogBox: payload => dispatch(openBackendErrorDialog(payload)) 
-  })
-)(_PlotButton)
-
-
 import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole'
 export const NetPyNEPythonConsole = connect(
   null,

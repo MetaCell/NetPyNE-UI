@@ -27,6 +27,192 @@ export const PYTHON_CONSOLE_WIDGET = {
   enableRename: false
 };
 
+export const PLOTS_WIDGETS = {
+  connectionPlot: {
+    id: 'connectionPlot', 
+    name: 'Connections Plot', 
+    status: WidgetStatus.ACTIVE, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'Plot', 
+    panelName: "plotPanel",
+    enableRename: false,
+    method: {
+      plotMethod: 'plotConn', 
+      plotType: false
+    }
+  },
+  d2NetPlot: {
+    id: 'd2NetPlot', 
+    name: '2D Net Plot', 
+    status: WidgetStatus.ACTIVE, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'Plot', 
+    panelName: "plotPanel",
+    enableRename: false,
+    method: {
+      plotMethod: 'plot2Dnet', 
+      plotType: false
+    }
+  },
+  shapePlot: {
+    id: 'shapePlot', 
+    name: 'Shape Plot', 
+    status: WidgetStatus.ACTIVE, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'Plot', 
+    panelName: "plotPanel",
+    enableRename: false,
+    method: {
+      plotMethod: 'plotShape', 
+      plotType: false
+    }
+  },
+  tracesPlot: {
+    id: 'tracesPlot', 
+    name: 'Cell traces', 
+    status: WidgetStatus.ACTIVE, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'Plot', 
+    panelName: "plotPanel",
+    enableRename: false,
+    method: {
+      plotMethod: 'plotTraces', 
+      plotType: false
+    }
+  },
+  rasterPlot: {
+    id: 'rasterPlot', 
+    name: 'Raster plot', 
+    status: WidgetStatus.ACTIVE, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'Plot', 
+    panelName: "plotPanel",
+    enableRename: false,
+    method: {
+      plotMethod: 'plotRaster', 
+      plotType: false
+    }
+  },
+  spikePlot: {
+    id: 'spikePlot', 
+    name: 'Spike Hist Plot', 
+    status: WidgetStatus.ACTIVE, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'Plot', 
+    panelName: "plotPanel",
+    enableRename: false,
+    method: {
+      plotMethod: 'plotSpikeHist', 
+      plotType: false
+    }
+  },
+  spikeStatsPlot: {
+    id: 'spikeStatsPlot', 
+    name: 'Spike Stats Plot', 
+    status: WidgetStatus.ACTIVE, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'Plot', 
+    panelName: "plotPanel",
+    enableRename: false,
+    method: {
+      plotMethod: 'plotSpikeStats', 
+      plotType: false
+    }
+  },
+  ratePSDPlot: {
+    id: 'ratePSDPlot', 
+    name: 'Rate PSD Plot', 
+    status: WidgetStatus.ACTIVE, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'Plot', 
+    panelName: "plotPanel",
+    enableRename: false,
+    method: {
+      plotMethod: 'plotRatePSD', 
+      plotType: false
+    }
+  },
+  LFPTimeSeriesPlot: {
+    id: 'LFPTimeSeriesPlot', 
+    name: 'LFP Time Series Plot', 
+    status: WidgetStatus.ACTIVE, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'Plot', 
+    panelName: "plotPanel",
+    enableRename: false,
+    method: {
+      plotMethod: 'plotLFP',
+      plotType: 'timeSeries'
+    }
+  },
+  LFPLocationsPlot: {
+    id: 'LFPLocationsPlot', 
+    name: 'LFP PSD Plot', 
+    status: WidgetStatus.ACTIVE, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'Plot', 
+    panelName: "plotPanel",
+    enableRename: false,
+    method: {
+      plotMethod: 'plotLFP',
+      plotType: 'PSD'
+    }
+  },
+  LFPSpectrogramPlot: {
+    id: 'LFPSpectrogramPlot', 
+    name: 'LFP Spectrogram Plot', 
+    status: WidgetStatus.ACTIVE, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'Plot', 
+    panelName: "plotPanel",
+    enableRename: false,
+    method: {
+      plotMethod: 'plotLFP',
+      plotType: 'spectrogram'
+    }
+  },
+  LFPLocationsPlot2: {
+    id: 'LFPLocationsPlot2', 
+    name: 'LFP Locations Plot', 
+    status: WidgetStatus.ACTIVE, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'Plot', 
+    panelName: "plotPanel",
+    enableRename: false,
+    method: {
+      plotMethod: 'plotLFP',
+      plotType: 'locations'
+    }
+  },
+  grangerPlot: {
+    id: 'grangerPlot', 
+    name: 'Granger Plot', 
+    status: WidgetStatus.ACTIVE, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'Plot', 
+    panelName: "plotPanel",
+    enableRename: false,
+    method: {
+      plotMethod: 'granger',
+      plotType: false
+    }
+  },
+  rxdConcentrationPlot: {
+    id: 'rxdConcentrationPlot',
+    name: 'RxD concentration plot',
+    status: WidgetStatus.ACTIVE, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'Plot',
+    panelName: "plotPanel",
+    enableRename: false,
+    method: {
+      plotMethod: 'plotRxDConcentration',
+      plotType: false
+    }
+  }
+}
+
+
 export const MORPHOLOGY_WIDGET = {
   id: 'D3Canvas', 
   name: 'Morphology', 

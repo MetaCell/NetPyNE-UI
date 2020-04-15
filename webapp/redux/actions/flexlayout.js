@@ -16,7 +16,7 @@ export const newWidget = ({ path, component, panelName, ...others }) => ({
     id: path,
     instancePath: path,
     component: component,
-    name: path.slice(FILEVARIABLE_LENGTH),
+    name: path,
     status: WidgetStatus.ACTIVE,
     panelName: panelName,
     ...others

@@ -26,6 +26,7 @@ export const NETPYNE_COMMANDS = {
   simulateModel: 'netpyne_geppetto.simulateNetPyNEModelInGeppetto',
   importModel: 'netpyne_geppetto.importModel',
   exportModel: 'netpyne_geppetto.exportModel',
-  exportHLS: 'netpyne_geppetto.exportHLS'
+  exportHLS: 'netpyne_geppetto.exportHLS',
+  plotFigure: 'netpyne_geppetto.getPlot'
 }
 

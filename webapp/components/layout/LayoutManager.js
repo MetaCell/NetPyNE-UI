@@ -26,7 +26,7 @@ function widget2Node (configuration) {
     component,
     type: "tab",
     enableRename: false,
-    enableClose: enableClose,
+    enableClose,
     // attr defined inside config, will also be available from within flexlayout nodes.  For example:  node.getNodeById(id).getConfig()
     config: configuration ,
     ...others
