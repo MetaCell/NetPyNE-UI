@@ -91,13 +91,15 @@ export default ({ widgets, newWidget, editMode }) => {
 
   function getMenu () {
     if (editMode) {
-      return Object.values({ ...HLS_WIDGETS, python: PYTHON_CONSOLE_WIDGET })
+      const array = [...Object.values(HLS_WIDGETS), 
+                     PYTHON_CONSOLE_WIDGET]
+      return array
     } else {
-      return Object.values({ 
-        ...FLEXLAYOUT_DEFAULT_STATE.widgetsBackground,
-        ...PLOTS_WIDGETS,
-        python: PYTHON_CONSOLE_WIDGET 
-      })
+      const array = [MORPHOLOGY_WIDGET,
+                     ...Object.values(PLOTS_WIDGETS),
+                     PYTHON_CONSOLE_WIDGET]
+
+      return array
     }
     
   }
