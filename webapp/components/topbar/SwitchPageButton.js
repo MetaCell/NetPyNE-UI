@@ -58,7 +58,7 @@ class SwitchPageButton extends Component {
           onClick={this.handleClick.bind(this)}
           endIcon={<Icon className={this.props.editModelPage ? "fa fa-rocket" : "fa fa-pencil"}/>}
         >
-          {this.props.editModelPage ? this.props.pageTransitionMode : "Back to edition"}
+          {this.props.editModelPage ? this.props.pageTransitionMode : TOPBAR_CONSTANTS.BACK_TO_EDITION}
         </Button>
       
       </div>

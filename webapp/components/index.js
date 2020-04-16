@@ -155,17 +155,6 @@ export const NetPyNESynapses = connect(
   updateCardsDispatch
 )(PythonControlledCapability.createPythonControlledComponent(_NetPyNESynapses));
 
-import _NetPyNETabs from "./settings/NetPyNETabs";
-export const NetPyNETabs = connect(
-  state => state.general,
-  dispatch => ({
-    editModel: () => dispatch(editModel),
-    createNetwork: () => dispatch(createNetwork),
-    createAndSimulateNetwork: () => dispatch(createAndSimulateNetwork),
-    showNetwork: () => dispatch(showNetwork)
-  })
-)(_NetPyNETabs);
-
 import SelectField from "./general/Select";
 export const NetPyNESelectField = connect((state, ownProps) => ({
   ...ownProps,

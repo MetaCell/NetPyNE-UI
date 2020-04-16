@@ -46,6 +46,7 @@ export const TOPBAR_CONSTANTS = {
   DOWNLOAD_FILES: 'DOWNLOAD_FILES',
   CREATE_NETWORK: 'Create Network',
   CREATE_AND_SIMULATE_NETWORK:'Create and Simulate Network',
-  EXPLORE_EXISTING_NETWORK:'Explore Existing Network'
+  EXPLORE_EXISTING_NETWORK:'Explore Existing Network',
+  BACK_TO_EDITION: 'Back to edition'
 
 }
