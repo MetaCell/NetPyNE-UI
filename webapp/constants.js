@@ -30,3 +30,22 @@ export const NETPYNE_COMMANDS = {
   plotFigure: 'netpyne_geppetto.getPlot'
 }
 
+
+/*
+ * ------------------------------------------------------------------------------ //
+ * ------------------------------------------------------------------------------ //
+ */
+export const TOPBAR_CONSTANTS = { 
+  LOAD: 'LOAD',
+  SAVE: 'SAVE',
+  IMPORT_HLS: 'IMPORT_HLS',
+  EXPORT_HLS: 'EXPORT_HLS',
+  IMPORT_CELL_TEMPLATE: 'IMPORT_CELL_TEMPLATE',
+  NEW_MODEL: 'NEW_MODEL',
+  UPLOAD_FILES: 'UPLOAD_FILES',
+  DOWNLOAD_FILES: 'DOWNLOAD_FILES',
+  CREATE_NETWORK: 'Create Network',
+  CREATE_AND_SIMULATE_NETWORK:'Create and Simulate Network',
+  EXPLORE_EXISTING_NETWORK:'Explore Existing Network'
+
+}

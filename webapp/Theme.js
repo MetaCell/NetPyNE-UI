@@ -4,19 +4,21 @@ import purple from '@material-ui/core/colors/purple';
 import orange from '@material-ui/core/colors/orange';
 
 // orange
-const primaryColor = '#f67700'
-const secondaryColor = '#f67700'
+const primaryColor = '#37ABC8'
+const secondaryColor = '#37ABC8'
 
-const bgLight = '#616161';
-const bgRegular = '#424242';
-const bgDark = '#212121';
+export const bgLight = '#4A4A4A';
+export const bgRegular = '#434343';
+export const bgDark = '#353535';
+
+export const font = 'Roboto, Helvetica, Arial, sans-serif'
 
 export default createMuiTheme({
   typography: {
     useNextVariants: true,
     htmlFontSize: 12,
     fontSize: 10,
-    fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+    fontFamily: font,
     button: {
       textTransform: "none",
       fontSize: "1.0rem"

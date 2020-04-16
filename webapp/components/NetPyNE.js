@@ -1,9 +1,7 @@
 import React from "react";
-import Toolbar from "@material-ui/core/Toolbar";
 
 import {
-  NetPyNEToolBar,
-  NetPyNETabs,
+  Topbar,
   LayoutManager,
   Drawer
 } from "netpyne/components";
@@ -58,14 +56,7 @@ class NetPyNE extends React.Component {
     return (
       <div className={classes.container}>
         <div className={classes.content}>
-          <Toolbar id="appBar" className={classes.toolbar}>
-            <div className={classes.drawer}>
-              <NetPyNEToolBar />
-            </div>
-            <div className={classes.views}>
-              <NetPyNETabs />
-            </div>
-          </Toolbar>
+          <Topbar/>
         </div>
         <div style={{ flexGrow:1, display: 'flex', flexDirection: 'row', position: 'relative' }}>
           <Drawer/>

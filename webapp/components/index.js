@@ -16,6 +16,8 @@ import {
 } from "../redux/actions/general";
 import { closeDrawerDialogBox, openDrawerDialogBox } from '../redux/actions/drawer';
 
+import { openTopbarDialog, closeTopbarDialog, changePageTransitionMode } from '../redux/actions/topbar'
+
 const updateCardsDispatch = dispatch => ({ updateCards: () => dispatch(updateCards) });
 const pythonCallErrorDispatch = dispatch => ({ pythonCallErrorDialogBox: payload => dispatch(openBackendErrorDialog(payload)) });
 
@@ -164,15 +166,6 @@ export const NetPyNETabs = connect(
   })
 )(_NetPyNETabs);
 
-import _NetPyNEToolbar from "./settings/NetPyNEToolBar";
-export const NetPyNEToolBar = connect(
-  state => ({ ...state.general, ...state.drawer }),
-  dispatch => ({
-    closeDrawerDialogBox: () => dispatch(closeDrawerDialogBox),
-    openDrawerDialogBox: () => dispatch(openDrawerDialogBox),
-  })
-)(_NetPyNEToolbar);
-
 import SelectField from "./general/Select";
 export const NetPyNESelectField = connect((state, ownProps) => ({
   ...ownProps,
@@ -203,7 +196,7 @@ export const NetWorkControlButtons = connect(
   })
 )(_NetWorkControlButtons)
 
-import _ActionDialog from './settings/actions/ActionDialog'
+import _ActionDialog from './topbar/dialogs/ActionDialog'
 export const ActionDialog = connect(
   state => ({ ...state.errors, openErrorDialogBox: state.errors.openDialog }),
   dispatch => ({ 
@@ -233,6 +226,38 @@ export const Drawer = connect(
     activateWidget: widgetId => dispatch(activateWidget(widgetId))
   })
 )(_Drawer)
+
+
+import _Topbar from "./topbar/Topbar";
+export const Topbar = connect(
+  state => ({ 
+    dialogOpen: state.topbar.dialogOpen,
+    editMode: state.general.editMode,
+    topbarDialogName: state.topbar.dialogName,
+    pageTransitionMode: state.topbar.pageTransitionMode
+  }),
+  dispatch => ({ 
+    dispatchAction: action => dispatch(action),
+    closeDialog: () => dispatch(closeTopbarDialog),
+    changePageTransitionMode: mode => dispatch(changePageTransitionMode(mode))
+  })
+)(_Topbar)
+
+import _SwitchPageButton from "./topbar/SwitchPageButton";
+export const SwitchPageButton = connect(
+  state => ({ 
+    editModelPage: state.general.editMode,
+    pageTransitionMode: state.topbar.pageTransitionMode,
+  }),
+  dispatch => ({ 
+    switchToEditModelPage: () => dispatch(editModel),
+    changePageTransitionMode: mode => dispatch(changePageTransitionMode(mode)),
+    createNetwork: () => dispatch(createNetwork),
+    createAndSimulateNetwork: () => dispatch(createAndSimulateNetwork),
+    showNetwork: () => dispatch(showNetwork)
+  })
+)(_SwitchPageButton)
+
 
 // ---------------------------------------------------------------------------------------- //
 

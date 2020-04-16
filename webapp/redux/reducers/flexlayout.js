@@ -289,7 +289,7 @@ export const HLS_WIDGETS = {
   },
   'analysis': { 
     id: 'analysis', 
-    name: 'Anaylysis', 
+    name: 'Analysis', 
     status: WidgetStatus.HIDDEN, 
     icon: 'fa fa-dot-circle-o',
     component: 'analysis', 

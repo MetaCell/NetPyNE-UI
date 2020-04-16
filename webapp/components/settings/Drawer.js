@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
+
+import Paper from '@material-ui/core/Paper'
 
 import IconButton from '@material-ui/core/IconButton'
-import Toolbar from '@material-ui/core/Toolbar';
+
 import List from '@material-ui/core/List';
 
 import ListItem from '@material-ui/core/ListItem';
@@ -23,41 +24,51 @@ import {
 
 
 const drawerOpenWidth = 200;
-const drawerCloseWidth = 54;
+const drawerCloseWidth = 48;
 
-const drawerCss = (entering, transitions, palette) => ({ 
+const drawerCss = (entering, transitions, palette, spacing) => ({ 
   overflow: 'hidden',
+  marginTop: spacing(1),
+  marginBottom: spacing(1),
+  marginLeft: spacing(1),
   width: props => props.width,
   flexShrink: 0,
   borderRight: 'none',
+  position: 'relative',
   transition: transitions.create('width', {
     easing: transitions.easing.sharp,
     duration: entering ? transitions.duration.enteringScreen : transitions.duration.leavingScreen,
   })
 })
 
-const useStyles = makeStyles(({ transitions, palette }) => ({
-  openDrawer: drawerCss(true, transitions, palette),
+const useStyles = makeStyles(({ transitions, palette, spacing }) => ({
+  openDrawer: drawerCss(true, transitions, palette, spacing),
 
-  closeDrawer: drawerCss(false, transitions, palette),
+  closeDrawer: drawerCss(false, transitions, palette, spacing),
 
-  colapse: {
+  buttonContainer: { textAlign: 'end' },
+  button: {
     color: 'white',
-    position: 'absolute',
-    bottom: 0,
-    right: 2
+    marginBottom: spacing(1),
+    marginRight: props => props.expand ? spacing(1) : 0,
   },
-  paper: { backgroundColor: palette.grey['900'] },
+  text: { paddingLeft: spacing(1) },
+  container: { 
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexDirection: 'column',
+    height: '100%'
+  },
   
-  selected: { height: 48, color: palette.primary.main },
-  unselected: { height: 48, color: palette.common.white },
-  noColor: { color: 'inherit' }
+  selected: { color: palette.primary.main, paddingLeft: spacing(1) },
+  unselected: { color: palette.common.white, paddingLeft: spacing(1) },
+  icon: { color: 'inherit', minWidth: 'unset' }
 }))
 
 export default ({ widgets, newWidget, editMode }) => {
   const [expand, setExpand] = useState({ dark: !editMode })
   
-  const classes = useStyles({ width: expand ? drawerOpenWidth : drawerCloseWidth });
+  const classes = useStyles({ width: expand ? drawerOpenWidth : drawerCloseWidth, expand });
 
   function createWidget (widgetId) {
     if (!widgets[widgetId]) {
@@ -92,49 +103,48 @@ export default ({ widgets, newWidget, editMode }) => {
   }
   
   return (
-    <div>
-      <Drawer
-        variant="permanent"
-        className={expand ? classes.openDrawer : classes.closeDrawer}
-        classes={{ paper: expand ? classes.openDrawer : classes.closeDrawer }}
-      >
-        <div>
-          <Toolbar/>
+    <Paper className={expand ? classes.openDrawer : classes.closeDrawer}>
+      <div className={classes.container}>
+        <div >
           <List dense>
             {getMenu().map(({ name, id }) => (
               <ListItem 
                 button
                 key={name}
+                dense
+                disableGutters
                 className={widgets[id] ? classes.selected : classes.unselected}
                 onClick={() => createWidget(id)}
               >
-                <ListItemIcon className={classes.noColor}>
-                  <AdjustIcon/>
+                <ListItemIcon className={classes.icon}>
+                  <AdjustIcon fontSize="large"/>
                 </ListItemIcon>
-                <ListItemText>
+                <ListItemText className={classes.text}>
                   <Typography noWrap>{name}</Typography>
                 </ListItemText>
               </ListItem>
             ))}
           </List>
+        </div>
+        <div></div>
           
-          
+        <div className={classes.buttonContainer}>
           <IconButton
-            className={classes.colapse}
+            className={classes.button}
             onClick={() => {
               setExpand(!expand)
               setTimeout(() => window.dispatchEvent(new Event('resize')), 400)
-              // pepe()
+            // pepe()
             }}
           >
             {expand ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
           </IconButton>
+        </div>
 
           
-        </div>
+      </div>
         
-      </Drawer>
-    </div>
+    </Paper>
   )
   
 }
