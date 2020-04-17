@@ -7,23 +7,17 @@ import {
 } from "netpyne/components";
 
 import { withStyles } from '@material-ui/core/styles'
+import { NetPyNEPythonConsole } from 'netpyne/components'
 
 const styles = ({ zIndex, palette, spacing }) => ({
+  root: { height: '100%', overflow: 'hidden' },
   container: {
     height: "100%",
     width: "100%",
     display: "flex",
     flexDirection: "column"
   },
-  toolbar: {
-    backgroundColor: palette.primary.main,
-    width: "100%",
-    boxShadow: "0 0px 4px 0 rgba(0, 0, 0, 0.2), 0 0px 8px 0 rgba(0, 0, 0, 0.19)",
-    position: "relative",
-    top: 0,
-    left: 0,
-    zIndex: zIndex.appBar
-  },
+  console: { marginTop: 12, width: 0, height: 0 },
   views: {
     display: "flex",
     flexFlow: "rows",
@@ -31,7 +25,8 @@ const styles = ({ zIndex, palette, spacing }) => ({
     marginRight: spacing(-1)
   },
   drawer: { marginLeft: spacing(-1) },
-  content: { position: "relative", zIndex: zIndex.drawer + 1 }
+  topbar: { position: "relative", zIndex: zIndex.drawer + 1 },
+  content: { flexGrow:1, display: 'flex', flexDirection: 'row', position: 'relative' }
 })
 
 
@@ -54,14 +49,26 @@ class NetPyNE extends React.Component {
     const { classes } = this.props
 
     return (
-      <div className={classes.container}>
-        <div className={classes.content}>
-          <Topbar/>
+      <div className={classes.root}>
+        <div className={classes.container}>
+          <div className={classes.topbar}>
+            <Topbar/>
+          </div>
+          <div className={classes.content}>
+            <Drawer/>
+            <LayoutManager/>
+          </div>
         </div>
-        <div style={{ flexGrow:1, display: 'flex', flexDirection: 'row', position: 'relative' }}>
-          <Drawer/>
-          <LayoutManager/>
+
+
+        <div className={classes.console}>
+          {/* Flexlayout bottom panel gives weird layout so can't send the console there
+              when the widget is closed and the python console must remain open somewhere for the app to sync
+           */}
+          {!this.props.pythonConsoleWidget ? <NetPyNEPythonConsole /> : null}
         </div>
+      
+      
       </div>
     );
   }

@@ -2,27 +2,55 @@ import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 
 import Paper from '@material-ui/core/Paper'
-
 import IconButton from '@material-ui/core/IconButton'
-
 import List from '@material-ui/core/List';
-
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Typography from '@material-ui/core/Typography';
 
 import AdjustIcon from '@material-ui/icons/Adjust';
+import { WidgetStatus } from '../../constants';
 import {
   HLS_WIDGETS, PYTHON_CONSOLE_WIDGET, 
-  FLEXLAYOUT_DEFAULT_STATE, MORPHOLOGY_WIDGET,
-  PLOTS_WIDGETS
+  MORPHOLOGY_WIDGET,PLOTS_WIDGETS
 } from '../../redux/reducers/flexlayout'
 
+import {
+  PopulationIcon, CellIcon, SynapseIcon, NetworkIcon, 
+  SourceIcon, TargetIcon, CogsIcon, SliderHIcon, CodeIcon
+} from '../general/NetPyNEIcons'
 
+// Avoid defining properties with css || inline style
+const useIconStyles = makeStyles(({ palette }) => ({ icon: { color: props => props.selected ? palette.primary.main : palette.common.white } }))
+
+const DrawerIcon = ({ widgetId, selected }) => {
+  const classes = useIconStyles({ selected })
+  switch (widgetId) {
+  case 'popParams':
+    return <PopulationIcon fontSize="large" className={classes.icon}/>
+  case 'cellParams':
+    return <CellIcon fontSize="large" className={classes.icon}/>
+  case 'synMechParams':
+    return <SynapseIcon fontSize="large" className={classes.icon}/>
+  case 'connParams':
+    return <NetworkIcon fontSize="large" className={classes.icon}/>
+  case 'stimSourceParams':
+    return <SourceIcon fontSize="large" className={classes.icon}/>
+  case 'stimTargetParams':
+    return <TargetIcon fontSize="large" className={classes.icon}/>
+  case 'simConfig':
+    return <CogsIcon fontSize="large" className={classes.icon}/>
+  case 'analysis':
+    return <SliderHIcon fontSize="large" className={classes.icon}/>
+  case 'python':
+    return <CodeIcon fontSize="large" className={classes.icon}/>
+  default:
+    return <AdjustIcon fontSize="large" className={classes.icon}/>
+  }
+}
 const drawerOpenWidth = 200;
 const drawerCloseWidth = 48;
 
@@ -65,19 +93,24 @@ const useStyles = makeStyles(({ transitions, palette, spacing }) => ({
   icon: { color: 'inherit', minWidth: 'unset' }
 }))
 
-export default ({ widgets, newWidget, editMode }) => {
+export default ({ widgets, newWidget, editMode, activateWidget }) => {
   const [expand, setExpand] = useState({ dark: !editMode })
   
   const classes = useStyles({ width: expand ? drawerOpenWidth : drawerCloseWidth, expand });
 
-  function createWidget (widgetId) {
+  function createFocusWidget (widgetId) {
     if (!widgets[widgetId]) {
-      let widget = HLS_WIDGETS[widgetId]
+      // pick from the list of available widgets
+      let widget = ({ ...HLS_WIDGETS, python: PYTHON_CONSOLE_WIDGET })[widgetId]
       if (!editMode) {
         widget = simulateModeWidget(widgetId)
       }
       
       newWidget({ path: widget.id, ...widget })
+    } else {
+      if (widgets[widgetId].status !== WidgetStatus.ACTIVE) {
+        activateWidget(widgetId)
+      }
     }
   }
 
@@ -85,7 +118,8 @@ export default ({ widgets, newWidget, editMode }) => {
     if (widgetId.includes('Plot')) {
       return PLOTS_WIDGETS[widgetId]
     }
-    return MORPHOLOGY_WIDGET
+    // pick from the list of available widgets
+    return ({ D3Canvas: MORPHOLOGY_WIDGET, python: PYTHON_CONSOLE_WIDGET })[widgetId]
   }
 
 
@@ -116,10 +150,10 @@ export default ({ widgets, newWidget, editMode }) => {
                 dense
                 disableGutters
                 className={widgets[id] ? classes.selected : classes.unselected}
-                onClick={() => createWidget(id)}
+                onClick={() => createFocusWidget(id)}
               >
                 <ListItemIcon className={classes.icon}>
-                  <AdjustIcon fontSize="large"/>
+                  <DrawerIcon widgetId={id} selected={!!widgets[id]}/>
                 </ListItemIcon>
                 <ListItemText className={classes.text}>
                   <Typography noWrap>{name}</Typography>
@@ -136,34 +170,12 @@ export default ({ widgets, newWidget, editMode }) => {
             onClick={() => {
               setExpand(!expand)
               setTimeout(() => window.dispatchEvent(new Event('resize')), 400)
-            // pepe()
             }}
           >
             {expand ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
           </IconButton>
         </div>
-
-          
       </div>
-        
     </Paper>
   )
-  
-}
-
-const pepe = () => {
-  window.expansionTransit = {
-    timer: setInterval(() => {
-      window.dispatchEvent(new Event('resize'))
-      console.log(window.expansionTransit.count)
-      if (window.expansionTransit.count > 0) {
-        window.expansionTransit.count -= 1
-      } else {
-        clearInterval(window.expansionTransit.timer)
-        console.log('clear')
-      }
-      
-    }, 150), 
-    count: 1
-  }
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as FlexLayout from 'geppetto-client/js/components/interface/flexLayout2/src/index';
-import Actions from 'geppetto-client/js/components/interface/flexLayout2/src/model/Actions';
+import Actions from '@geppettoengine/geppetto-client/js/components/interface/flexLayout2/src/model/Actions';
 
 
 import { WidgetStatus } from '../../constants';
@@ -8,7 +8,6 @@ import { isEqual } from '../../Utils';
 import WidgetFactory from './WidgetFactory';
 import TabsetIconFactory from './TabsetIconFactory'
 import defaultLayoutConfiguration from './layoutConf.json';
-import simulateLayoutConfiguration from './simulateLayoutConf.json';
 import Icon from '@material-ui/core/Icon';
 
 import { withStyles } from '@material-ui/core/styles'
@@ -62,7 +61,7 @@ class LayoutManager extends Component {
 
     this.cacheModels = { 
       edit: FlexLayout.Model.fromJson(layout), 
-      simulate: FlexLayout.Model.fromJson(simulateLayoutConfiguration) 
+      simulate: FlexLayout.Model.fromJson(layout) 
     }
   }
 
@@ -82,10 +81,6 @@ class LayoutManager extends Component {
     const newWidgets = this.findNewWidgets(widgets, oldWidgets);
     if (newWidgets.length > 0) {
       this.addWidgets(newWidgets);
-    }
-
-    if (!this.props.editMode && !this.cacheModels.simulate.getNodeById(widgets.python.id)) {
-      this.addWidgets([widgets.python]);
     }
     
     const updatedWidgets = this.findUpdatedWidgets(widgets, oldWidgets);
@@ -136,7 +131,40 @@ class LayoutManager extends Component {
   }
 
   addWidget (widgetConfiguration) {
-    this.refs.layout.addTabToTabSet(widgetConfiguration.panelName, widget2Node(widgetConfiguration));
+    const model = this.getModel()
+    let tabset = model.getNodeById(widgetConfiguration.panelName)
+    if (tabset === undefined) {
+      this.createTabSet(widgetConfiguration.panelName)
+    }
+    this.refs.layout.addTabToTabSet(widgetConfiguration.panelName, widget2Node(widgetConfiguration))
+  }
+  
+  createTabSet (tabsetID) {
+    // In case the tabset doesn't exist
+    const model = this.getModel()
+    const rootNode = model.getNodeById("root")
+
+    const pyPanel = model.getNodeById('consolePanel')
+    if (pyPanel) {
+      pyPanel._setWeight(20)
+    }
+
+    let hrow = new FlexLayout.RowNode(model, {});
+    hrow._setWeight(100)
+
+    const tabset = new FlexLayout.TabSetNode(model, { id: tabsetID });
+    tabset._setWeight(80)
+    
+    hrow._addChild(tabset)
+    
+    rootNode.getChildren().forEach(child => hrow._addChild(child))
+    rootNode._removeAll()
+    rootNode._addChild(hrow, 0);
+    if (!this.props.editMode && tabsetID === 'plotPanel') {
+      // We need to resize Geppetto 3D canvas to new panel sizes
+      setTimeout(() => window.dispatchEvent(new Event('resize')), 1000)
+      
+    }
   }
 
   updateWidgets (widgets) {
@@ -214,9 +242,29 @@ class LayoutManager extends Component {
     case Actions.MOVE_NODE :
       window.dispatchEvent(new Event('resize'));
       break;
+    case Actions.ADD_NODE:{
+      if (this.props.editMode && action.data.toNode === 'hlsPanel') {
+        action.data.index = this.findWidgetInsertionIndex(action.data.json.config.pos)
+      }
+      break
     }
-       
+    }
     model.doAction(action);
+  }
+
+  findWidgetInsertionIndex (position) {
+    const model = this.getModel()
+    const tabset = model.getNodeById('hlsPanel')
+        
+    const positions = tabset.getChildren().map(node => node.getConfig().pos)
+    var index = -1
+    for (let i = 0; i < positions.length; i++) {
+      if (position < positions[i]) {
+        index = i
+        break
+      }
+    }
+    return index
   }
 
   onActionMaximizeWidget (action) {
@@ -270,7 +318,11 @@ class LayoutManager extends Component {
 
   clickOnBordersAction (node) {
     const model = this.getModel()
-    model.doAction(FlexLayout.Actions.moveNode(node.getId(), 'bottomPanel', FlexLayout.DockLocation.CENTER, 0));
+    let tabset = model.getNodeById('consolePanel')
+    if (tabset === undefined) {
+      this.createTabSet('consolePanel')
+    }
+    model.doAction(FlexLayout.Actions.moveNode(node.getId(), 'consolePanel', FlexLayout.DockLocation.CENTER, 0));
   }
 
   onRenderTab (node,renderValues) {

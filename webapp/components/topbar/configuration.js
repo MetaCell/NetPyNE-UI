@@ -60,87 +60,122 @@ export default {
     {
       label: "NetPyNE-UI",
       position: "bottom-start",
+      list: [
+        {
+          label: "About...",
+          action: {
+            handlerAction: "",
+            parameters: []
+          }
+        },
+        {
+          label: "Contribute",
+          action: {
+            handlerAction: "",
+            parameters: []
+          }
+        },
+      ]
+    },
+    {
+      label: "File",
+      position: "bottom-start",
       icon: "",
       list: [
         {
           label: "New",
           icon: "",
-          action: {
-            handlerAction: "redux",
-            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.NEW_MODEL]
-          }
-        },
-        {
-          label: "Open...",
-          icon: "",
           list: [
             {
-              label: "JSON",
+              label: "Blank",
+              icon: "",
               action: {
-                handlerAction: 'redux',
-                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.LOAD]
-              }
-            },
-            {
-              label: "Python",
-              action: {
-                handlerAction: 'redux',
-                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.IMPORT_HLS]
-              }
-            },
-            {
-              label: "Cell template",
-              action: {
-                handlerAction: 'redux',
-                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.IMPORT_HLS]
+                handlerAction: "redux",
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.NEW_MODEL]
               }
             }
           ]
         },
         {
-          label: "Save...",
+          label: "Open",
+          icon: "",
+          action: {
+            handlerAction: 'redux',
+            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.LOAD]
+          }
+        },
+        {
+          label: "Save",
+          icon: "",
+          action: {
+            handlerAction: 'redux',
+            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.SAVE]
+          }
+        },
+        {
+          label: "Import...",
           icon: "",
           list: [
             {
-              label: "JSON",
+              label: "From python...",
+              icon: "",
               action: {
-                handlerAction: 'redux',
-                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.SAVE]
+                handlerAction: "redux",
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.IMPORT_HLS]
               }
             },
             {
-              label: "Python",
+              label: "From cell template...",
+              icon: "",
+              action: {
+                handlerAction: "redux",
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE]
+              }
+            }
+          ]
+        },
+        {
+          label: "Export...",
+          icon: "",
+          list: [
+            {
+              label: "To python...",
+              icon: "",
               action: {
                 handlerAction: 'redux',
                 parameters: [openTopbarDialog, TOPBAR_CONSTANTS.EXPORT_HLS]
-              },
+              }
             },
           ]
         },
         {
-          label: "Upload...",
+          label: "Resources...",
           icon: "",
-          action: {
-            handlerAction: 'redux',
-            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.UPLOAD_FILES]
-          }
-        },
-
-        {
-          label: "Download...",
-          icon: "",
-          action: {
-            handlerAction: 'redux',
-            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.DOWNLOAD_FILES]
-          }
-            
+          list: [
+            {
+              label: "Upload...",
+              icon: "",
+              action: {
+                handlerAction: "redux",
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.UPLOAD_FILES]
+              }
+            },
+            {
+              label: "Download...",
+              icon: "",
+              action: {
+                handlerAction: "redux",
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.DOWNLOAD_FILES]
+              }
+            }
+          ]
         },
       ]
     },
     {
-      label: "Simulation",
-      position: "bottom-start",
+      label: "Model",
       icon: "",
+      position: "bottom-start",
       list: [
         {
           label: TOPBAR_CONSTANTS.CREATE_NETWORK,
@@ -167,6 +202,14 @@ export default {
           }
         },
       ]
-    }
+    },
+    {
+      label: "Help",
+      icon: "",
+      action: {
+        handlerAction: '',
+        parameters: []
+      }
+    },
   ]
 }

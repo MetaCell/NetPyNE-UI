@@ -44,59 +44,58 @@ export default class ActionDialog extends React.Component {
     this.clearErrorDialogBox()
   }
   render () {
-    if (this.props.open || this.props.openErrorDialogBox) {
-      if (this.props.errorMessage === '') {
-        var title = this.props.title
-        var action = (
-          <Button 
-            id="appBarPerformActionButton"
-            key="appBarPerformActionButton"
-            variant="contained"
-            color="primary"
-            onClick={this.performAction}
-          >{this.props.buttonLabel}</Button>
-        )
-          
-        var content = this.props.children;
-      } else {
-        var action = (
-          <Button
-            variant="contained"
-            color="primary"
-            key="BACK"
-            onClick={() => this.handleClickGoBack()}
-          >BACK</Button>
-        )
-          
-        var title = this.props.errorMessage;
-        var content = Utils.parsePythonException(this.props.errorDetails);
-      }
-      return (
 
-        <Dialog
-          fullWidth
-          maxWidth={this.props.openErrorDialogBox ? 'md' : 'sm'}
-          open={!this.state.hide || this.props.openErrorDialogBox}
-          onClose={() => this.cancelDialog()}
-        >
-          <DialogTitle>{title}</DialogTitle>
-          <DialogContent>
-            {content}
-          </DialogContent>
-          <DialogActions>
-            <Button 
-              color="primary" 
-              onClick={this.cancelDialog} 
-              style={styles.cancel}
-              key="CANCEL"
-            >
-            CANCEL
-            </Button>
-            {action}
-          </DialogActions>
-        </Dialog>
-      );
+    if (this.props.errorMessage === '') {
+      var title = this.props.title
+      var action = (
+        <Button 
+          id="appBarPerformActionButton"
+          key="appBarPerformActionButton"
+          variant="contained"
+          color="primary"
+          onClick={this.performAction}
+        >{this.props.buttonLabel}</Button>
+      )
+          
+      var content = this.props.children;
+    } else {
+      var action = (
+        <Button
+          variant="contained"
+          color="primary"
+          key="BACK"
+          onClick={() => this.handleClickGoBack()}
+        >BACK</Button>
+      )
+          
+      var title = this.props.errorMessage;
+      var content = Utils.parsePythonException(this.props.errorDetails);
     }
-    return null;
+    return (
+
+      <Dialog
+        fullWidth
+        style={{ zIndex: 3000 }}
+        maxWidth={this.props.openErrorDialogBox ? 'md' : 'sm'}
+        open={!this.state.hide || this.props.openErrorDialogBox}
+        onClose={() => this.cancelDialog()}
+      >
+        <DialogTitle>{title}</DialogTitle>
+        <DialogContent>
+          {content}
+        </DialogContent>
+        <DialogActions>
+          <Button 
+            color="primary" 
+            onClick={this.cancelDialog} 
+            style={styles.cancel}
+            key="CANCEL"
+          >
+            CANCEL
+          </Button>
+          {action}
+        </DialogActions>
+      </Dialog>
+    );
   }
 }

@@ -78,7 +78,7 @@ export const Dimensions = connect(
 
 import _NetPyNE from "./NetPyNE";
 export const NetPyNE = connect(
-  state => ({ editMode: state.general.editMode, }),
+  state => ({ editMode: state.general.editMode, pythonConsoleWidget: state.flexlayout.widgets['python'] }),
   pythonCallErrorDispatch
 )(_NetPyNE);
 

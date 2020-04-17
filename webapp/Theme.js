@@ -1,11 +1,8 @@
 
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
-import purple from '@material-ui/core/colors/purple';
-import orange from '@material-ui/core/colors/orange';
 
 // orange
 const primaryColor = '#37ABC8'
-const secondaryColor = '#37ABC8'
 
 export const bgLight = '#4A4A4A';
 export const bgRegular = '#434343';
@@ -63,7 +60,8 @@ export default createMuiTheme({
     MuiMenuItem: { root: { color: 'white' } },
 
     MuiListItemText: { root: { color: 'white' } },
-    MuiDialogTitle: { root: { color: 'white' } }
+    MuiDialogTitle: { root: { color: 'white' } },
+    MuiTypography: { root: { color: 'white' } }
     
   }
 });

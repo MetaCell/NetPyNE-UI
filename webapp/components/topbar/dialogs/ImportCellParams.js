@@ -147,14 +147,15 @@ class ImportCellParams extends React.Component {
           <NetPyNEField id="netParams.importCellParams.importSynMechs" >
             <Checkbox
               checked={importSynMechs}
+              className="netpyne-checkbox"
               onChange={() => this.updateCheck('importSynMechs')}
             />
           </NetPyNEField>
             
           <NetPyNEField id="netParams.importCellParams.compileMod" >
             <Checkbox
+              className="netpyne-checkbox"
               checked={compileMod}
-              id="importCellTemplateCompileMods"
               onChange={() => this.updateCheck('compileMod')}
             />
           </NetPyNEField>

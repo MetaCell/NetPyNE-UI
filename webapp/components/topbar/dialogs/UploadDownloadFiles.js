@@ -253,7 +253,7 @@ class UploadDownloadFile extends React.Component {
           <Dialog
             fullWidth
             maxWidth='sm'
-            open={this.props.open && this.state.open}
+            open={this.state.open}
             onClose={() => this.closeDialog()}
           >
             <DialogTitle>{title}</DialogTitle>

@@ -22,9 +22,10 @@ export const PYTHON_CONSOLE_WIDGET = {
   icon: 'fa fa-code',
   component: 'PythonConsole', 
   panelName: "consolePanel",
-  enableClose: false,
-  enableDrag: false,
-  enableRename: false
+  enableClose: true,
+  enableDrag: true,
+  enableRename: false,
+  pos: 100
 };
 
 export const PLOTS_WIDGETS = {
@@ -231,7 +232,8 @@ export const HLS_WIDGETS = {
     icon: 'fa fa-dot-circle-o',
     component: 'popParams', 
     panelName: "hlsPanel",
-    enableRename: false
+    enableRename: false,
+    pos: 0
   },
   'cellParams': { 
     id: 'cellParams', 
@@ -240,7 +242,8 @@ export const HLS_WIDGETS = {
     icon: 'fa fa-dot-circle-o',
     component: 'cellParams', 
     panelName: "hlsPanel",
-    enableRename: false
+    enableRename: false,
+    pos: 1
   },
   'synMechParams': { 
     id: 'synMechParams', 
@@ -249,7 +252,8 @@ export const HLS_WIDGETS = {
     icon: 'fa fa-dot-circle-o',
     component: 'synMechParams', 
     panelName: "hlsPanel",
-    enableRename: false
+    enableRename: false,
+    pos: 2
   },
   'connParams': { 
     id: 'connParams', 
@@ -258,7 +262,8 @@ export const HLS_WIDGETS = {
     icon: 'fa fa-dot-circle-o',
     component: 'connParams', 
     panelName: "hlsPanel",
-    enableRename: false
+    enableRename: false,
+    pos: 3
   },
   'stimSourceParams': { 
     id: 'stimSourceParams', 
@@ -267,7 +272,8 @@ export const HLS_WIDGETS = {
     icon: 'fa fa-dot-circle-o',
     component: 'stimSourceParams', 
     panelName: "hlsPanel",
-    enableRename: false
+    enableRename: false,
+    pos: 4
   },
   'stimTargetParams': { 
     id: 'stimTargetParams',
@@ -276,7 +282,8 @@ export const HLS_WIDGETS = {
     icon: 'fa fa-dot-circle-o',
     component: 'stimTargetParams',
     panelName: "hlsPanel",
-    enableRename: false
+    enableRename: false,
+    pos: 5
   },
   'simConfig': { 
     id: 'simConfig', 
@@ -285,7 +292,8 @@ export const HLS_WIDGETS = {
     icon: 'fa fa-dot-circle-o',
     component: 'simConfig', 
     panelName: "hlsPanel",
-    enableRename: false
+    enableRename: false,
+    pos: 6
   },
   'analysis': { 
     id: 'analysis', 
@@ -294,17 +302,19 @@ export const HLS_WIDGETS = {
     icon: 'fa fa-dot-circle-o',
     component: 'analysis', 
     panelName: "hlsPanel",
-    enableRename: false
+    enableRename: false,
+    pos: 7
   }
   
 
 }
 
 export const FLEXLAYOUT_DEFAULT_STATE = { 
-  widgets: { 'python': PYTHON_CONSOLE_WIDGET },
+  // 'python': PYTHON_CONSOLE_WIDGET 
+  widgets: {},
   widgetsBackground: {
     'D3Canvas': MORPHOLOGY_WIDGET,
-    'python': PYTHON_CONSOLE_WIDGET,
+    // 'python': PYTHON_CONSOLE_WIDGET,
   }
 };
 
@@ -338,7 +348,7 @@ export default (state = FLEXLAYOUT_DEFAULT_STATE, action) => {
     
     return {
       ...state, widgets: { 
-        ...updateWidgetState(state.widgets, { panelName: state.widgets[action.data.id], status: WidgetStatus.ACTIVE }), 
+        ...activateWidget(state.widgets, activatedWidget.panelName), 
         [action.data.id]: { ...activatedWidget, status: WidgetStatus.ACTIVE }
       }
     }
@@ -385,4 +395,16 @@ function updateWidgetState (widgets, { status, panelName }) {
 
 function extractPanelName (action) {
   return action.data.component == "Plot" ? "bottomPanel" : "leftPanel";
+}
+
+
+function activateWidget ( widgets, panelName) {
+  const newWidgets = {}
+  Object.values(widgets).forEach(widget => {
+    newWidgets[widget.id] = { ...widget }
+    if (widget.panelName === panelName) {
+      newWidgets[widget.id].status = WidgetStatus.HIDDEN
+    }
+  })
+  return newWidgets
 }

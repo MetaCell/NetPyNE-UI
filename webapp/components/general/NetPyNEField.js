@@ -72,6 +72,7 @@ export default class NetPyNEField extends Component {
               onClick={() => this.handleOpenHelp(help)}
             />
             <Dialog
+              style={{ zIndex: 5000 }}
               open={this.state.openHelp}
               onClose={() => this.setState({ openHelp: false })}
             >
