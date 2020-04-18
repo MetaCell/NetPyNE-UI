@@ -61,12 +61,12 @@ class NetPyNE extends React.Component {
         </div>
 
 
-        <div className={classes.console}>
-          {/* Flexlayout bottom panel gives weird layout so can't send the console there
-              when the widget is closed and the python console must remain open somewhere for the app to sync
-           */}
-          {!this.props.pythonConsoleWidget ? <NetPyNEPythonConsole /> : null}
-        </div>
+        {/* <div className={classes.console}>
+           // Flexlayout bottom panel gives weird layout so can't send the console there
+           // when the widget is closed and the python console must remain open somewhere for the app to sync
+           
+           {!this.props.pythonConsoleWidget ? <NetPyNEPythonConsole /> : null}
+        </div> */}
       
       
       </div>

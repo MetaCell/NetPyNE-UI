@@ -136,7 +136,12 @@ class LayoutManager extends Component {
     if (tabset === undefined) {
       this.createTabSet(widgetConfiguration.panelName)
     }
-    this.refs.layout.addTabToTabSet(widgetConfiguration.panelName, widget2Node(widgetConfiguration))
+    if (widgetConfiguration.status === WidgetStatus.BORDER){
+      this.refs.layout.addTabToTabSet('border_bottom', widget2Node(widgetConfiguration))
+    } else {
+      this.refs.layout.addTabToTabSet(widgetConfiguration.panelName, widget2Node(widgetConfiguration))
+    }
+    
   }
   
   createTabSet (tabsetID) {
@@ -144,26 +149,25 @@ class LayoutManager extends Component {
     const model = this.getModel()
     const rootNode = model.getNodeById("root")
 
-    const pyPanel = model.getNodeById('consolePanel')
-    if (pyPanel) {
-      pyPanel._setWeight(20)
-    }
-
     let hrow = new FlexLayout.RowNode(model, {});
     hrow._setWeight(100)
 
     const tabset = new FlexLayout.TabSetNode(model, { id: tabsetID });
     tabset._setWeight(80)
-    
+      
     hrow._addChild(tabset)
-    
-    rootNode.getChildren().forEach(child => hrow._addChild(child))
+      
+    rootNode.getChildren().forEach(child => {
+      const newWeight = child.getWeight() / 2
+      child._setWeight(newWeight)
+      hrow._addChild(child)
+    })
+
     rootNode._removeAll()
     rootNode._addChild(hrow, 0);
     if (!this.props.editMode && tabsetID === 'plotPanel') {
       // We need to resize Geppetto 3D canvas to new panel sizes
       setTimeout(() => window.dispatchEvent(new Event('resize')), 1000)
-      
     }
   }
 

@@ -12,7 +12,8 @@ export const WidgetStatus = {
   HIDDEN: 'HIDDEN',
   ACTIVE: 'ACTIVE',
   MAXIMIZED: 'MAXIMIZED',
-  MINIMIZED: 'MINIMIZED'
+  MINIMIZED: 'MINIMIZED',
+  BORDER: 'BORDER'
 };
 
 export const MODEL_STATE = {

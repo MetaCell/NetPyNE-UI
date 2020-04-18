@@ -310,11 +310,10 @@ export const HLS_WIDGETS = {
 }
 
 export const FLEXLAYOUT_DEFAULT_STATE = { 
-  // 'python': PYTHON_CONSOLE_WIDGET 
-  widgets: {},
+  widgets: { python: PYTHON_CONSOLE_WIDGET },
   widgetsBackground: {
-    'D3Canvas': MORPHOLOGY_WIDGET,
-    // 'python': PYTHON_CONSOLE_WIDGET,
+    D3Canvas: MORPHOLOGY_WIDGET,
+    python: PYTHON_CONSOLE_WIDGET,
   }
 };
 

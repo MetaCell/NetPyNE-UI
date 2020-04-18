@@ -3,13 +3,16 @@
         "sideBorders": 8,
         "tabSetHeaderHeight": 26,
         "tabSetTabStripHeight": 26,
-        "enableEdgeDock": false
+        "enableEdgeDock": false,
+        "borderBarSize": "0px"
     },
     "layout": {
         "type": "tabset",
         "weight": 100,
         "id": "root",
-        "children": []
+        "children": [
+            
+        ]
     }
   }
   
