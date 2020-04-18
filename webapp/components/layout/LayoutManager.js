@@ -11,7 +11,7 @@ import defaultLayoutConfiguration from './layoutConf.json';
 import Icon from '@material-ui/core/Icon';
 
 import { withStyles } from '@material-ui/core/styles'
-
+import onAction from './OnLayoutAction';
 
 /**
  * Transforms a widget configutation into a flexlayout node descriptor
@@ -219,102 +219,11 @@ class LayoutManager extends Component {
   findDeletedWidgets (widgets, oldWidgets) {
     return oldWidgets ? Object.values(oldWidgets).filter(widget => widget && !widgets[widget.id]) : Object.values(widgets);
   }
-  
-
-  onAction (action) {
-    const model = this.getModel()
-    switch (action.type){
-    case Actions.SET_ACTIVE_TABSET:
-      break;
-    case Actions.SELECT_TAB: 
-      this.activateWidget(action.data.tabNode);
-      window.dispatchEvent(new Event('resize'));
-      break;
-    case Actions.DELETE_TAB:
-      this.onActionDeleteWidget(action);
-      window.dispatchEvent(new Event('resize'));
-      break;
-    case Actions.MAXIMIZE_TOGGLE:
-      this.onActionMaximizeWidget(action);
-      window.dispatchEvent(new Event('resize'));
-      break;
-    case Actions.ADJUST_SPLIT:
-    case Actions.MOVE_NODE :
-      window.dispatchEvent(new Event('resize'));
-      break;
-    case Actions.ADD_NODE:{
-      if (this.props.editMode && action.data.toNode === 'hlsPanel') {
-        action.data.index = this.findWidgetInsertionIndex(action.data.json.config.pos)
-      }
-      break
-    }
-    }
-    model.doAction(action);
-  }
-
-  findWidgetInsertionIndex (position) {
-    const model = this.getModel()
-    const tabset = model.getNodeById('hlsPanel')
-        
-    const positions = tabset.getChildren().map(node => node.getConfig().pos)
-    var index = -1
-    for (let i = 0; i < positions.length; i++) {
-      if (position < positions[i]) {
-        index = i
-        break
-      }
-    }
-    return index
-  }
-
-  onActionMaximizeWidget (action) {
-    const model = this.getModel()
-    const { widgets } = this.props;
-    const { maximizeWidget, activateWidget } = this;
-    const panel2maximize = model.getNodeById(action.data.node);
-    
-    if (panel2maximize.getChildren().length > 0) {
-      const widgetId2maximize = panel2maximize.getSelectedNode().getId();
-      const maximizedWidget = this.findMaximizedWidget(widgets);
-      if (maximizedWidget) {
-        if (maximizedWidget.id !== widgetId2maximize) {
-          maximizeWidget(widgetId2maximize);
-        }
-        activateWidget(maximizedWidget.id);
-      
-      } else {
-        maximizeWidget(widgetId2maximize);
-      }
-    }
-    
-  }
 
   findMaximizedWidget (widgets) {
     return Object.values(widgets).find(widget => widget && widget.status == WidgetStatus.MAXIMIZED);
   }
-
-  onActionDeleteWidget (action) {
-    const model = this.getModel()
-    const { widgets } = this.props;
-    const maximizedWidget = this.findMaximizedWidget(widgets);
-    // change widget status
-    this.destroyWidget(action.data.node);
-    // check if the current maximized widget is the same than in the action dispatched
-    if (maximizedWidget && maximizedWidget.id == action.data.node) {
-      // find if there exists another widget in the maximized panel that could take its place
-      const panelChildren = model.getActiveTabset().getChildren();
-      const index = panelChildren.findIndex(child => child.getId() == action.data.node);
-      // Understand if the tab to the left or right of the destroyed tab will be the next one to be maximized
-      if (index != -1 && panelChildren.length > 1) {
-        if (index == 0) {
-          this.onActionMaximizeWidget(panelChildren[1].getId());
-        } else {
-          this.onActionMaximizeWidget(panelChildren[index - 1].getId());
-        }
-      }
-    }
-  }
-
+  
 
   clickOnBordersAction (node) {
     const model = this.getModel()
@@ -329,7 +238,7 @@ class LayoutManager extends Component {
     renderValues.leading = <Icon className={node.getConfig().icon}/>
   }
   render () {
-    const { classes } = this.props
+    const { classes, widgets } = this.props
     return (
       <div className={classes.container}>
         <div className={classes.spacer}/>
@@ -339,12 +248,11 @@ class LayoutManager extends Component {
             model={this.getModel()}
             factory={this.factory.bind(this)}
             iconFactory={this.iconFactory.bind(this)}
-            onAction={action => this.onAction(action)}
+            onAction={action => onAction(action, widgets, this.getModel(), this.props.updateWidget, this.activateWidget, this.destroyWidget, this.maximizeWidget, this.minimizeWidget)}
             clickOnBordersAction={node => this.clickOnBordersAction(node)}
             onRenderTab={(node,renderValues) => this.onRenderTab(node,renderValues)}
           />
         </div>
-        
         <div className={classes.spacer}/>
       </div>
     )

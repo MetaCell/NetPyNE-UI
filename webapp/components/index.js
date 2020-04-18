@@ -7,6 +7,7 @@ import {
   destroyWidget,
   minimizeWidget,
   maximizeWidget,
+  updateWidget,
   newWidget
 } from "../redux/actions/flexlayout";
 import { openBackendErrorDialog, closeBackendErrorDialog } from '../redux/actions/errors';
@@ -93,6 +94,7 @@ import _LayoutManager from "./layout/LayoutManager";
 export const LayoutManager = connect(
   state => ({ ...state.flexlayout, editMode: state.general.editMode }),
   dispatch => ({
+    updateWidget: widget => dispatch(updateWidget(widget)),
     minimizeWidget: id => dispatch(minimizeWidget(id)),
     destroyWidget: id => dispatch(destroyWidget(id)),
     maximizeWidget: id => dispatch(maximizeWidget(id)),
