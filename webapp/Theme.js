@@ -2,7 +2,7 @@
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 
 // orange
-const primaryColor = '#37ABC8'
+export const primaryColor = '#37ABC8'
 
 export const bgLight = '#4A4A4A';
 export const bgRegular = '#434343';

@@ -8,7 +8,6 @@ import { isEqual } from '../../Utils';
 import WidgetFactory from './WidgetFactory';
 import TabsetIconFactory from './TabsetIconFactory'
 import defaultLayoutConfiguration from './layoutConf.json';
-import Icon from '@material-ui/core/Icon';
 
 import { withStyles } from '@material-ui/core/styles'
 import onAction from './OnLayoutAction';
@@ -239,7 +238,7 @@ class LayoutManager extends Component {
   }
 
   onRenderTab (node,renderValues) {
-    renderValues.leading = <Icon className={node.getConfig().icon}/>
+    console.log('pepe')
   }
   render () {
     const { classes, widgets } = this.props

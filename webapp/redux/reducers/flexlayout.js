@@ -14,26 +14,23 @@ import { WidgetStatus } from '../../constants';
 function removeUndefined (obj) {
   return Object.keys(obj).forEach(key => obj[key] === undefined ? delete obj[key] : '');
 }
-
-export const PYTHON_CONSOLE_WIDGET = { 
-  id: 'python', 
+export const getPythonConsoleWidget = editMode => ({
+  id: editMode ? 'pythonEdit' : 'pythonExplore', 
   name: 'Python', 
   status: WidgetStatus.ACTIVE, 
-  icon: 'fa fa-code',
   component: 'PythonConsole', 
   panelName: "consolePanel",
   enableClose: true,
   enableDrag: true,
   enableRename: false,
   pos: 100
-};
+})
 
 export const PLOTS_WIDGETS = {
   connectionPlot: {
     id: 'connectionPlot', 
     name: 'Connections Plot', 
     status: WidgetStatus.ACTIVE, 
-    icon: 'fa fa-dot-circle-o',
     component: 'Plot', 
     panelName: "plotPanel",
     enableRename: false,
@@ -46,7 +43,6 @@ export const PLOTS_WIDGETS = {
     id: 'd2NetPlot', 
     name: '2D Net Plot', 
     status: WidgetStatus.ACTIVE, 
-    icon: 'fa fa-dot-circle-o',
     component: 'Plot', 
     panelName: "plotPanel",
     enableRename: false,
@@ -59,7 +55,6 @@ export const PLOTS_WIDGETS = {
     id: 'shapePlot', 
     name: 'Shape Plot', 
     status: WidgetStatus.ACTIVE, 
-    icon: 'fa fa-dot-circle-o',
     component: 'Plot', 
     panelName: "plotPanel",
     enableRename: false,
@@ -72,7 +67,6 @@ export const PLOTS_WIDGETS = {
     id: 'tracesPlot', 
     name: 'Cell traces', 
     status: WidgetStatus.ACTIVE, 
-    icon: 'fa fa-dot-circle-o',
     component: 'Plot', 
     panelName: "plotPanel",
     enableRename: false,
@@ -85,7 +79,6 @@ export const PLOTS_WIDGETS = {
     id: 'rasterPlot', 
     name: 'Raster plot', 
     status: WidgetStatus.ACTIVE, 
-    icon: 'fa fa-dot-circle-o',
     component: 'Plot', 
     panelName: "plotPanel",
     enableRename: false,
@@ -98,7 +91,6 @@ export const PLOTS_WIDGETS = {
     id: 'spikePlot', 
     name: 'Spike Hist Plot', 
     status: WidgetStatus.ACTIVE, 
-    icon: 'fa fa-dot-circle-o',
     component: 'Plot', 
     panelName: "plotPanel",
     enableRename: false,
@@ -111,7 +103,6 @@ export const PLOTS_WIDGETS = {
     id: 'spikeStatsPlot', 
     name: 'Spike Stats Plot', 
     status: WidgetStatus.ACTIVE, 
-    icon: 'fa fa-dot-circle-o',
     component: 'Plot', 
     panelName: "plotPanel",
     enableRename: false,
@@ -124,7 +115,6 @@ export const PLOTS_WIDGETS = {
     id: 'ratePSDPlot', 
     name: 'Rate PSD Plot', 
     status: WidgetStatus.ACTIVE, 
-    icon: 'fa fa-dot-circle-o',
     component: 'Plot', 
     panelName: "plotPanel",
     enableRename: false,
@@ -137,7 +127,6 @@ export const PLOTS_WIDGETS = {
     id: 'LFPTimeSeriesPlot', 
     name: 'LFP Time Series Plot', 
     status: WidgetStatus.ACTIVE, 
-    icon: 'fa fa-dot-circle-o',
     component: 'Plot', 
     panelName: "plotPanel",
     enableRename: false,
@@ -146,11 +135,10 @@ export const PLOTS_WIDGETS = {
       plotType: 'timeSeries'
     }
   },
-  LFPLocationsPlot: {
-    id: 'LFPLocationsPlot', 
+  LFPPSDPlot: {
+    id: 'LFPPSDPlot', 
     name: 'LFP PSD Plot', 
     status: WidgetStatus.ACTIVE, 
-    icon: 'fa fa-dot-circle-o',
     component: 'Plot', 
     panelName: "plotPanel",
     enableRename: false,
@@ -163,7 +151,6 @@ export const PLOTS_WIDGETS = {
     id: 'LFPSpectrogramPlot', 
     name: 'LFP Spectrogram Plot', 
     status: WidgetStatus.ACTIVE, 
-    icon: 'fa fa-dot-circle-o',
     component: 'Plot', 
     panelName: "plotPanel",
     enableRename: false,
@@ -172,11 +159,10 @@ export const PLOTS_WIDGETS = {
       plotType: 'spectrogram'
     }
   },
-  LFPLocationsPlot2: {
-    id: 'LFPLocationsPlot2', 
-    name: 'LFP Locations Plot', 
+  LFPLocationsPlot: {
+    id: 'LFPLocationsPlot',
+    name: 'LFP Locations Plot',
     status: WidgetStatus.ACTIVE, 
-    icon: 'fa fa-dot-circle-o',
     component: 'Plot', 
     panelName: "plotPanel",
     enableRename: false,
@@ -189,7 +175,6 @@ export const PLOTS_WIDGETS = {
     id: 'grangerPlot', 
     name: 'Granger Plot', 
     status: WidgetStatus.ACTIVE, 
-    icon: 'fa fa-dot-circle-o',
     component: 'Plot', 
     panelName: "plotPanel",
     enableRename: false,
@@ -202,7 +187,6 @@ export const PLOTS_WIDGETS = {
     id: 'rxdConcentrationPlot',
     name: 'RxD concentration plot',
     status: WidgetStatus.ACTIVE, 
-    icon: 'fa fa-dot-circle-o',
     component: 'Plot',
     panelName: "plotPanel",
     enableRename: false,
@@ -218,7 +202,6 @@ export const MORPHOLOGY_WIDGET = {
   id: 'D3Canvas', 
   name: 'Morphology', 
   status: WidgetStatus.ACTIVE, 
-  icon: 'fa fa-dot-circle-o',
   component: 'D3Canvas', 
   panelName: "morphoPanel",
   enableRename: false
@@ -229,7 +212,6 @@ export const HLS_WIDGETS = {
     id: 'popParams', 
     name: 'Populations', 
     status: WidgetStatus.ACTIVE, 
-    icon: 'fa fa-dot-circle-o',
     component: 'popParams', 
     panelName: "hlsPanel",
     enableRename: false,
@@ -239,7 +221,6 @@ export const HLS_WIDGETS = {
     id: 'cellParams', 
     name: 'Cell rules', 
     status: WidgetStatus.HIDDEN, 
-    icon: 'fa fa-dot-circle-o',
     component: 'cellParams', 
     panelName: "hlsPanel",
     enableRename: false,
@@ -249,7 +230,6 @@ export const HLS_WIDGETS = {
     id: 'synMechParams', 
     name: 'Synapses', 
     status: WidgetStatus.HIDDEN, 
-    icon: 'fa fa-dot-circle-o',
     component: 'synMechParams', 
     panelName: "hlsPanel",
     enableRename: false,
@@ -259,7 +239,6 @@ export const HLS_WIDGETS = {
     id: 'connParams', 
     name: 'Connections', 
     status: WidgetStatus.HIDDEN, 
-    icon: 'fa fa-dot-circle-o',
     component: 'connParams', 
     panelName: "hlsPanel",
     enableRename: false,
@@ -269,7 +248,6 @@ export const HLS_WIDGETS = {
     id: 'stimSourceParams', 
     name: 'Stim. sources', 
     status: WidgetStatus.HIDDEN, 
-    icon: 'fa fa-dot-circle-o',
     component: 'stimSourceParams', 
     panelName: "hlsPanel",
     enableRename: false,
@@ -279,7 +257,6 @@ export const HLS_WIDGETS = {
     id: 'stimTargetParams',
     name: 'Stim. targets',
     status: WidgetStatus.HIDDEN, 
-    icon: 'fa fa-dot-circle-o',
     component: 'stimTargetParams',
     panelName: "hlsPanel",
     enableRename: false,
@@ -289,7 +266,6 @@ export const HLS_WIDGETS = {
     id: 'simConfig', 
     name: 'Settings', 
     status: WidgetStatus.HIDDEN, 
-    icon: 'fa fa-dot-circle-o',
     component: 'simConfig', 
     panelName: "hlsPanel",
     enableRename: false,
@@ -299,7 +275,6 @@ export const HLS_WIDGETS = {
     id: 'analysis', 
     name: 'Analysis', 
     status: WidgetStatus.HIDDEN, 
-    icon: 'fa fa-dot-circle-o',
     component: 'analysis', 
     panelName: "hlsPanel",
     enableRename: false,
@@ -310,10 +285,10 @@ export const HLS_WIDGETS = {
 }
 
 export const FLEXLAYOUT_DEFAULT_STATE = { 
-  widgets: { python: PYTHON_CONSOLE_WIDGET },
+  widgets: { pythonEdit: getPythonConsoleWidget(true) },
   widgetsBackground: {
     D3Canvas: MORPHOLOGY_WIDGET,
-    python: PYTHON_CONSOLE_WIDGET,
+    pythonExplore: getPythonConsoleWidget(false),
   }
 };
 

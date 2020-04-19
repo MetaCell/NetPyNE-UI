@@ -236,7 +236,6 @@ class ImportExportHLS extends React.Component {
           <FormControl className={classes.selectField}>
             <InputLabel className={classes.selectFieldLabel}>Are custom mod files required for this model?</InputLabel>
             <Select
-              id="appBarImportRequiresMod"
               style={{ marginTop:0 }}
               value={this.state.loadMod === undefined ? '' : this.state.loadMod}
               onChange={event => this.setState({ loadMod: event.target.value })}

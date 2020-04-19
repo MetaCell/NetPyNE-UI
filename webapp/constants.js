@@ -51,3 +51,37 @@ export const TOPBAR_CONSTANTS = {
   BACK_TO_EDITION: 'Back to edition'
 
 }
+
+/*
+ * ------------------------------------------------------------------------------ //
+ * ------------------------------------------------------------------------------ //
+ */
+
+export const WIDGETS_IDS = {
+  POP_PARAMS: 'popParams',
+  CELL_PARAMS: 'celParams',
+  SYN_MECH_PARAMS: 'synMechParams',
+  CONN_PARAMS: 'connParams',
+  STIM_SOURCE_PARAMS: 'stimSourceParams',
+  STIM_TARGET_PARAMS: 'stimTargetParams',
+  SIM_CONFIG: 'simConfig',
+  ANALYSIS: "analysis",
+  MORPHOLOGY: 'D3Canvas',
+  CONNECTION_PLOT: 'connectionPlot',
+  D2_NET_PLOT: 'd2NetPlot',
+  SHAPE_PLOT: 'shapePlot',
+  TRACES_PLOT: 'tracesPlot',
+  RASTER_PLOT: 'rasterPlot',
+  SPIKE_PLOT: 'spikePlot',
+  SPIKE_STATS_PLOT: 'spikeStatsPlot',
+  RATE_PSD_PLOT: 'ratePSDPlot',
+  LFP_TIMESERIES_PLOT: 'LFPTimeSeriesPlot',
+  LFP_PSD_PLOT: 'LFPPSDPlot',
+  LFP_SPECTROGRAM_PLOT: 'LFPSpectrogramPlot',
+  LFP_LOCATION_PLOT: 'LFPLocationsPlot',
+  GRAGER_PLOT: 'grangerPlot',
+  RXD_CONCENTRATION_PLOT: 'rxdConcentrationPlot',
+  PYTHON_CONSOLE_EDIT: 'pythonEdit',
+  PYTHON_CONSOLE_EXPLORE: 'pythonExplore',
+
+}

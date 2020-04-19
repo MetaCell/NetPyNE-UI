@@ -75,7 +75,6 @@ export default class ActionDialog extends React.Component {
 
       <Dialog
         fullWidth
-        style={{ zIndex: 3000 }}
         maxWidth={this.props.openErrorDialogBox ? 'md' : 'sm'}
         open={!this.state.hide || this.props.openErrorDialogBox}
         onClose={() => this.cancelDialog()}

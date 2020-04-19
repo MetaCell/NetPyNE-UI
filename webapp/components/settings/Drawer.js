@@ -11,46 +11,16 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Typography from '@material-ui/core/Typography';
 
-import AdjustIcon from '@material-ui/icons/Adjust';
 import { WidgetStatus } from '../../constants';
 import {
-  HLS_WIDGETS, PYTHON_CONSOLE_WIDGET, 
+  HLS_WIDGETS, getPythonConsoleWidget, 
   MORPHOLOGY_WIDGET,PLOTS_WIDGETS
 } from '../../redux/reducers/flexlayout'
 
-import {
-  PopulationIcon, CellIcon, SynapseIcon, NetworkIcon, 
-  SourceIcon, TargetIcon, CogsIcon, SliderHIcon, CodeIcon
-} from '../general/NetPyNEIcons'
+import DrawerIcon from '../general/NetPyNEIcons'
+
 
 // Avoid defining properties with css || inline style
-const useIconStyles = makeStyles(({ palette }) => ({ icon: { color: props => props.selected ? palette.primary.main : palette.common.white } }))
-
-const DrawerIcon = ({ widgetId, selected }) => {
-  const classes = useIconStyles({ selected })
-  switch (widgetId) {
-  case 'popParams':
-    return <PopulationIcon fontSize="large" className={classes.icon}/>
-  case 'cellParams':
-    return <CellIcon fontSize="large" className={classes.icon}/>
-  case 'synMechParams':
-    return <SynapseIcon fontSize="large" className={classes.icon}/>
-  case 'connParams':
-    return <NetworkIcon fontSize="large" className={classes.icon}/>
-  case 'stimSourceParams':
-    return <SourceIcon fontSize="large" className={classes.icon}/>
-  case 'stimTargetParams':
-    return <TargetIcon fontSize="large" className={classes.icon}/>
-  case 'simConfig':
-    return <CogsIcon fontSize="large" className={classes.icon}/>
-  case 'analysis':
-    return <SliderHIcon fontSize="large" className={classes.icon}/>
-  case 'python':
-    return <CodeIcon fontSize="large" className={classes.icon}/>
-  default:
-    return <AdjustIcon fontSize="large" className={classes.icon}/>
-  }
-}
 const drawerOpenWidth = 200;
 const drawerCloseWidth = 48;
 
@@ -101,7 +71,7 @@ export default ({ widgets, newWidget, editMode, activateWidget }) => {
   function createFocusWidget (widgetId) {
     if (!widgets[widgetId]) {
       // pick from the list of available widgets
-      let widget = ({ ...HLS_WIDGETS, python: PYTHON_CONSOLE_WIDGET })[widgetId]
+      let widget = ({ ...HLS_WIDGETS, pythonEdit: getPythonConsoleWidget(true) })[widgetId]
       if (!editMode) {
         widget = simulateModeWidget(widgetId)
       }
@@ -119,19 +89,19 @@ export default ({ widgets, newWidget, editMode, activateWidget }) => {
       return PLOTS_WIDGETS[widgetId]
     }
     // pick from the list of available widgets
-    return ({ D3Canvas: MORPHOLOGY_WIDGET, python: PYTHON_CONSOLE_WIDGET })[widgetId]
+    return ({ D3Canvas: MORPHOLOGY_WIDGET, pythonExplore: getPythonConsoleWidget(false) })[widgetId]
   }
 
 
   function getMenu () {
     if (editMode) {
       const array = [...Object.values(HLS_WIDGETS), 
-                     PYTHON_CONSOLE_WIDGET]
+                     getPythonConsoleWidget(true)]
       return array
     } else {
       const array = [MORPHOLOGY_WIDGET,
                      ...Object.values(PLOTS_WIDGETS),
-                     PYTHON_CONSOLE_WIDGET]
+                     getPythonConsoleWidget(false)]
 
       return array
     }
