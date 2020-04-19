@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { makeStyles } from '@material-ui/core/styles';
+
 
 import Paper from '@material-ui/core/Paper'
 import IconButton from '@material-ui/core/IconButton'
@@ -13,95 +13,68 @@ import Typography from '@material-ui/core/Typography';
 
 import { WidgetStatus } from '../../constants';
 import {
-  HLS_WIDGETS, getPythonConsoleWidget, 
-  MORPHOLOGY_WIDGET,PLOTS_WIDGETS
+  DEFAULT_HLS_WIDGETS, getPythonDefaultConsoleWidget, 
+  DEFAULT_MORPHOLOGY_WIDGET,DEFAULT_PLOTS_WIDGETS
 } from '../../redux/reducers/flexlayout'
 
 import DrawerIcon from '../general/NetPyNEIcons'
+import useStyles from './useStyles'
 
 
-// Avoid defining properties with css || inline style
 const drawerOpenWidth = 200;
 const drawerCloseWidth = 48;
 
-const drawerCss = (entering, transitions, palette, spacing) => ({ 
-  overflow: 'hidden',
-  marginTop: spacing(1),
-  marginBottom: spacing(1),
-  marginLeft: spacing(1),
-  width: props => props.width,
-  flexShrink: 0,
-  borderRight: 'none',
-  position: 'relative',
-  transition: transitions.create('width', {
-    easing: transitions.easing.sharp,
-    duration: entering ? transitions.duration.enteringScreen : transitions.duration.leavingScreen,
-  })
-})
 
-const useStyles = makeStyles(({ transitions, palette, spacing }) => ({
-  openDrawer: drawerCss(true, transitions, palette, spacing),
-
-  closeDrawer: drawerCss(false, transitions, palette, spacing),
-
-  buttonContainer: { textAlign: 'end' },
-  button: {
-    color: 'white',
-    marginBottom: spacing(1),
-    marginRight: props => props.expand ? spacing(1) : 0,
-  },
-  text: { paddingLeft: spacing(1) },
-  container: { 
-    display: 'flex',
-    justifyContent: 'space-between',
-    flexDirection: 'column',
-    height: '100%'
-  },
-  
-  selected: { color: palette.primary.main, paddingLeft: spacing(1) },
-  unselected: { color: palette.common.white, paddingLeft: spacing(1) },
-  icon: { color: 'inherit', minWidth: 'unset' }
-}))
-
-export default ({ widgets, newWidget, editMode, activateWidget }) => {
-  const [expand, setExpand] = useState({ dark: !editMode })
+export default ({ widgets, newWidget, editMode, activateWidget, updateWidget }) => {
+  const [expand, setExpand] = useState(false)
   
   const classes = useStyles({ width: expand ? drawerOpenWidth : drawerCloseWidth, expand });
 
-  function createFocusWidget (widgetId) {
+  function createOrFocusWidget (widgetId) {
     if (!widgets[widgetId]) {
-      // pick from the list of available widgets
-      let widget = ({ ...HLS_WIDGETS, pythonEdit: getPythonConsoleWidget(true) })[widgetId]
-      if (!editMode) {
-        widget = simulateModeWidget(widgetId)
-      }
-      
-      newWidget({ path: widget.id, ...widget })
+      const widgetConf = getNewWidgetConf(widgetId)
+      newWidget({ path: widgetConf.id, ...widgetConf })
     } else {
-      if (widgets[widgetId].status !== WidgetStatus.ACTIVE) {
+      if (widgets[widgetId].status === WidgetStatus.BORDER) {
+        updateBorderWidget(widgetId)
+      } else if (widgets[widgetId].status !== WidgetStatus.ACTIVE) {
         activateWidget(widgetId)
       }
     }
   }
 
-  function simulateModeWidget (widgetId) {
-    if (widgetId.includes('Plot')) {
-      return PLOTS_WIDGETS[widgetId]
+  // Move python widget from BORDER to a visible tabset
+  function updateBorderWidget (widgetId) {
+    const updatedWidget = { ...widgets[widgetId] }
+    updatedWidget.status = WidgetStatus.ACTIVE
+    updatedWidget.panelName = getPythonDefaultConsoleWidget(editMode).panelName
+    updateWidget(updatedWidget)
+  }
+
+  function getNewWidgetConf (widgetId) {
+    if (editMode) {
+      // return a High Level Specification widget
+      return ({ ...DEFAULT_HLS_WIDGETS, pythonEdit: getPythonDefaultConsoleWidget(true) })[widgetId]
     }
-    // pick from the list of available widgets
-    return ({ D3Canvas: MORPHOLOGY_WIDGET, pythonExplore: getPythonConsoleWidget(false) })[widgetId]
+    
+    if (widgetId.includes('Plot')) {
+      // return a plot widget
+      return DEFAULT_PLOTS_WIDGETS[widgetId]
+    }
+    // return either 3dcanvas or python console
+    return ({ D3Canvas: DEFAULT_MORPHOLOGY_WIDGET, pythonExplore: getPythonDefaultConsoleWidget(false) })[widgetId]
   }
 
 
   function getMenu () {
     if (editMode) {
-      const array = [...Object.values(HLS_WIDGETS), 
-                     getPythonConsoleWidget(true)]
+      const array = [...Object.values(DEFAULT_HLS_WIDGETS), 
+                     getPythonDefaultConsoleWidget(true)]
       return array
     } else {
-      const array = [MORPHOLOGY_WIDGET,
-                     ...Object.values(PLOTS_WIDGETS),
-                     getPythonConsoleWidget(false)]
+      const array = [DEFAULT_MORPHOLOGY_WIDGET,
+                     ...Object.values(DEFAULT_PLOTS_WIDGETS),
+                     getPythonDefaultConsoleWidget(false)]
 
       return array
     }
@@ -120,10 +93,10 @@ export default ({ widgets, newWidget, editMode, activateWidget }) => {
                 dense
                 disableGutters
                 className={widgets[id] ? classes.selected : classes.unselected}
-                onClick={() => createFocusWidget(id)}
+                onClick={() => createOrFocusWidget(id)}
               >
                 <ListItemIcon className={classes.icon}>
-                  <DrawerIcon widgetId={id} selected={!!widgets[id]}/>
+                  <DrawerIcon widgetId={id} selected={!!widgets[id] && widgets[id].status !== WidgetStatus.BORDER}/>
                 </ListItemIcon>
                 <ListItemText className={classes.text}>
                   <Typography noWrap>{name}</Typography>

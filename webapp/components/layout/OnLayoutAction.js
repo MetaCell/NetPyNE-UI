@@ -1,16 +1,21 @@
 import Actions from '@geppettoengine/geppetto-client/js/components/interface/flexLayout2/src/model/Actions';
-import { WidgetStatus } from '../../constants';
+import { WidgetStatus, WIDGETS_IDS } from '../../constants';
 
-const onAction = (action, widgets, model, udpateWidget, activateWidget, destroyWidget, maximizeWidget, minimizeWidget) => {
+const onAction = (action, widgets, model, updateWidget, activateWidget, destroyWidget, maximizeWidget, minimizeWidget) => {
   switch (action.type){
   case Actions.SET_ACTIVE_TABSET:
     break;
   case Actions.SELECT_TAB: 
     activateWidget(action.data.tabNode);
     break;
-  case Actions.DELETE_TAB:
-    onActionDeleteWidget(action, widgets, model, destroyWidget);
+  case Actions.DELETE_TAB:{
+    onActionDeleteWidget(action, widgets, model, updateWidget, destroyWidget);
+    if (action.data.node.includes('python')) {
+      // prevent python widget from been destroyed
+      return
+    } 
     break;
+  }
   case Actions.MAXIMIZE_TOGGLE:
     onActionMaximizeWidget(action, widgets, model, maximizeWidget);
     break;
@@ -35,7 +40,7 @@ const onAction = (action, widgets, model, udpateWidget, activateWidget, destroyW
 
   // Flexlayout needs to create a tabset before we can update the panelName for the moved widget
   if (action.type === Actions.MOVE_NODE){
-    moveNode(action, widgets, model, fromTabsetId, udpateWidget, activateWidget)
+    moveNode(action, widgets, model, fromTabsetId, updateWidget, activateWidget)
   }
   window.dispatchEvent(new Event('resize'));
 }
@@ -93,13 +98,21 @@ const findWidgetInsertionIndex = (action, widgets, model) => {
 
 const findMaximizedWidget = widgets => Object.values(widgets).find(widget => widget && widget.status == WidgetStatus.MAXIMIZED)
 
-const onActionDeleteWidget = (action, widgets, model, destroyWidget) => {
-  const maximizedWidget = findMaximizedWidget(widgets);
+const onActionDeleteWidget = (action, widgets, model, updateWidget, destroyWidget) => {
+  if (action.data.node === WIDGETS_IDS.EDIT_MODE.PYTHON_CONSOLE_EDIT || action.data.node === WIDGETS_IDS.EXPLORE_MODE.PYTHON_CONSOLE_EXPLORE){
+    moveWidgetToBorder(action, widgets, updateWidget)
+  } else {
+    destroyWidget(action.data.node);
+  }
   // change widget status
-  destroyWidget(action.data.node);
+  updateMaximizedWidget(action, widgets, model)
+}
+
+const updateMaximizedWidget = (action, widgets, model) => {
+  const maximizedWidget = findMaximizedWidget(widgets);
   // check if the current maximized widget is the same than in the action dispatched
   if (maximizedWidget && maximizedWidget.id == action.data.node) {
-    // find if there exists another widget in the maximized panel that could take its place
+  // find if there exists another widget in the maximized panel that could take its place
     const panelChildren = model.getActiveTabset().getChildren();
     const index = panelChildren.findIndex(child => child.getId() == action.data.node);
     // Understand if the tab to the left or right of the destroyed tab will be the next one to be maximized
@@ -111,6 +124,16 @@ const onActionDeleteWidget = (action, widgets, model, destroyWidget) => {
       }
     }
   }
+}
+
+const moveWidgetToBorder = (action, widgets, udpateWidget) => {
+  var updatedWidget = { ...widgets[action.data.node] }
+  if (updatedWidget === undefined) {
+    return
+  }
+  updatedWidget.status = WidgetStatus.BORDER
+  updatedWidget.panelName = "border_bottom"
+  udpateWidget(updatedWidget)
 }
 
 const onActionMaximizeWidget = (action, widgets, model, activateWidget, maximizeWidget) => {

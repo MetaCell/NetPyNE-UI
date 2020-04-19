@@ -14,7 +14,7 @@ import { WidgetStatus } from '../../constants';
 function removeUndefined (obj) {
   return Object.keys(obj).forEach(key => obj[key] === undefined ? delete obj[key] : '');
 }
-export const getPythonConsoleWidget = editMode => ({
+export const getPythonDefaultConsoleWidget = editMode => ({
   id: editMode ? 'pythonEdit' : 'pythonExplore', 
   name: 'Python', 
   status: WidgetStatus.ACTIVE, 
@@ -26,7 +26,7 @@ export const getPythonConsoleWidget = editMode => ({
   pos: 100
 })
 
-export const PLOTS_WIDGETS = {
+export const DEFAULT_PLOTS_WIDGETS = {
   connectionPlot: {
     id: 'connectionPlot', 
     name: 'Connections Plot', 
@@ -198,7 +198,7 @@ export const PLOTS_WIDGETS = {
 }
 
 
-export const MORPHOLOGY_WIDGET = {
+export const DEFAULT_MORPHOLOGY_WIDGET = {
   id: 'D3Canvas', 
   name: 'Morphology', 
   status: WidgetStatus.ACTIVE, 
@@ -207,7 +207,7 @@ export const MORPHOLOGY_WIDGET = {
   enableRename: false
 }
 
-export const HLS_WIDGETS = {
+export const DEFAULT_HLS_WIDGETS = {
   'popParams': { 
     id: 'popParams', 
     name: 'Populations', 
@@ -285,10 +285,10 @@ export const HLS_WIDGETS = {
 }
 
 export const FLEXLAYOUT_DEFAULT_STATE = { 
-  widgets: { pythonEdit: getPythonConsoleWidget(true) },
+  widgets: { pythonEdit: getPythonDefaultConsoleWidget(true) },
   widgetsBackground: {
-    D3Canvas: MORPHOLOGY_WIDGET,
-    pythonExplore: getPythonConsoleWidget(false),
+    D3Canvas: DEFAULT_MORPHOLOGY_WIDGET,
+    pythonExplore: getPythonDefaultConsoleWidget(false),
   }
 };
 
@@ -332,7 +332,7 @@ export default (state = FLEXLAYOUT_DEFAULT_STATE, action) => {
     return FLEXLAYOUT_DEFAULT_STATE;
 
   case MODEL_LOADED: 
-    return { ...state, widgets: { ...HLS_WIDGETS, ...state.widgets } }
+    return { ...state, widgets: { ...DEFAULT_HLS_WIDGETS, ...state.widgets } }
   
   case SWITCH_LAYOUT: {
     const { widgets, widgetsBackground, ...others } = state

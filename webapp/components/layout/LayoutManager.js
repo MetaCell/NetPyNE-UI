@@ -3,7 +3,7 @@ import * as FlexLayout from 'geppetto-client/js/components/interface/flexLayout2
 import Actions from '@geppettoengine/geppetto-client/js/components/interface/flexLayout2/src/model/Actions';
 
 
-import { WidgetStatus } from '../../constants';
+import { WidgetStatus, WIDGETS_IDS } from '../../constants';
 import { isEqual } from '../../Utils';
 import WidgetFactory from './WidgetFactory';
 import TabsetIconFactory from './TabsetIconFactory'
@@ -11,6 +11,7 @@ import defaultLayoutConfiguration from './layoutConf.json';
 
 import { withStyles } from '@material-ui/core/styles'
 import onAction from './OnLayoutAction';
+import { getPythonDefaultConsoleWidget } from '../../redux/reducers/flexlayout';
 
 /**
  * Transforms a widget configutation into a flexlayout node descriptor
@@ -77,6 +78,7 @@ class LayoutManager extends Component {
 
     const { widgets } = this.props;
     const oldWidgets = prevProps.widgets;
+    
     const newWidgets = this.findNewWidgets(widgets, oldWidgets);
     if (newWidgets.length > 0) {
       this.addWidgets(newWidgets);
@@ -84,11 +86,10 @@ class LayoutManager extends Component {
     
     const updatedWidgets = this.findUpdatedWidgets(widgets, oldWidgets);
     if (updatedWidgets) {
-      this.updateWidgets(updatedWidgets);
+      this.updateWidgets(updatedWidgets, oldWidgets);
     }
 
     const deletedWidgets = this.findDeletedWidgets(widgets, oldWidgets);
-
     if (deletedWidgets) {
       this.deleteWidgets(deletedWidgets);
     }
@@ -170,19 +171,23 @@ class LayoutManager extends Component {
     }
   }
 
-  updateWidgets (widgets) {
+  updateWidgets (widgets, oldWidgets) {
     const model = this.getModel()
     for (let widget of widgets) {
 
       this.updateWidget(widget);
    
-      // This updates plotly.js plots to new panel sizes
-      if (widget.status == WidgetStatus.ACTIVE) {
-        model.doAction(FlexLayout.Actions.selectTab(widget.id));
+      if (oldWidgets[widget.id].status === WidgetStatus.BORDER && widget.status !== WidgetStatus.BORDER) {
+        this.restoreWidgetFromBottom(widget)
+      } else if (oldWidgets[widget.id].status !== WidgetStatus.BORDER && widget.status === WidgetStatus.BORDER){
+        this.moveWidget(widget)
+      } else {
+        // update plotly.js plots to new panel sizes
+        if (widget.status == WidgetStatus.ACTIVE) {
+          model.doAction(FlexLayout.Actions.selectTab(widget.id));
+        }
       }
-      
     }
-    // window.dispatchEvent(new Event('resize'));
   }
 
   updateWidget (widget) {
@@ -228,31 +233,40 @@ class LayoutManager extends Component {
   }
   
 
-  clickOnBordersAction (node) {
+  restoreWidgetFromBottom (widget) {
     const model = this.getModel()
-    let tabset = model.getNodeById('consolePanel')
+    // We only allow python console to be send to the bottom
+    const panelName = getPythonDefaultConsoleWidget(this.props.editMode).panelName
+    let tabset = model.getNodeById(panelName)
     if (tabset === undefined) {
-      this.createTabSet('consolePanel')
+      this.createTabSet(panelName)
     }
-    model.doAction(FlexLayout.Actions.moveNode(node.getId(), 'consolePanel', FlexLayout.DockLocation.CENTER, 0));
+    this.moveWidget(widget)
   }
 
+  
+  moveWidget (widget) {
+    const model = this.getModel()
+    model.doAction(FlexLayout.Actions.moveNode(widget.id, widget.panelName, FlexLayout.DockLocation.CENTER, 0));
+    // Resize of canvas and SVG images
+    window.dispatchEvent(new Event('resize'));
+  }
+  
   onRenderTab (node,renderValues) {
-    console.log('pepe')
   }
   render () {
     const { classes, widgets } = this.props
+    const model = this.getModel()
     return (
       <div className={classes.container}>
         <div className={classes.spacer}/>
         <div className={classes.flexlayout}>
           <FlexLayout.Layout
             ref="layout"
-            model={this.getModel()}
+            model={model}
             factory={this.factory.bind(this)}
             iconFactory={this.iconFactory.bind(this)}
-            onAction={action => onAction(action, widgets, this.getModel(), this.props.updateWidget, this.activateWidget, this.destroyWidget, this.maximizeWidget, this.minimizeWidget)}
-            clickOnBordersAction={node => this.clickOnBordersAction(node)}
+            onAction={action => onAction(action, widgets, model, this.props.updateWidget, this.activateWidget, this.destroyWidget, this.maximizeWidget, this.minimizeWidget)}
             onRenderTab={(node,renderValues) => this.onRenderTab(node,renderValues)}
           />
         </div>

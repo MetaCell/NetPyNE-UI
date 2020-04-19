@@ -79,7 +79,7 @@ export const Dimensions = connect(
 
 import _NetPyNE from "./NetPyNE";
 export const NetPyNE = connect(
-  state => ({ editMode: state.general.editMode, pythonConsoleWidget: state.flexlayout.widgets['python'] }),
+  state => ({ editMode: state.general.editMode }),
   pythonCallErrorDispatch
 )(_NetPyNE);
 
@@ -213,6 +213,7 @@ export const Drawer = connect(
     editMode: state.general.editMode 
   }),
   dispatch => ({ 
+    updateWidget: newConf => dispatch(updateWidget(newConf)),
     newWidget: widget => dispatch(newWidget(widget)),
     activateWidget: widgetId => dispatch(activateWidget(widgetId))
   })
