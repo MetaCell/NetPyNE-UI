@@ -5,9 +5,9 @@ import Button from '@material-ui/core/Button';
 import Utils from '../../../Utils';
 import NetPyNEHome from '../../general/NetPyNEHome';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
-import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
-import NetPyNEConnectivityRule from './NetPyNEConnectivityRule';
 
+import NetPyNEConnectivityRule from './NetPyNEConnectivityRule';
+import { NetPyNEThumbnail } from 'netpyne/components'
 export default class NetPyNEConnectivityRules extends Component {
 
   constructor (props) {
@@ -25,7 +25,6 @@ export default class NetPyNEConnectivityRules extends Component {
 
     this.selectConnectivityRule = this.selectConnectivityRule.bind(this);
     this.handleNewConnectivityRule = this.handleNewConnectivityRule.bind(this);
-    this.deleteConnectivityRule = this.deleteConnectivityRule.bind(this);
 
     this.handleRenameChildren = this.handleRenameChildren.bind(this);
   }
@@ -52,7 +51,7 @@ export default class NetPyNEConnectivityRules extends Component {
     // Get Key and Value
     var key = Object.keys(defaultConnectivityRules)[0];
     var value = defaultConnectivityRules[key];
-    var model = this.state.value;
+    const model = { ...this.state.value }
 
     // Get New Available ID
     var connectivityRuleId = Utils.getAvailableKey(model, key);
@@ -138,14 +137,6 @@ export default class NetPyNEConnectivityRules extends Component {
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged || errorDialogOpen;
   }
 
-  deleteConnectivityRule (name) {
-    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ['connParams', name]).then(response => {
-      var model = this.state.value;
-      delete model[name];
-      this.setState({ value: model, selectedConnectivityRule: undefined, deletedConnectivityRule: name });
-    });
-  }
-
   handleRenameChildren (childName) {
     childName = childName.replace(/\s*$/,"");
     var childrenList = Object.keys(this.state.value);
@@ -188,7 +179,7 @@ export default class NetPyNEConnectivityRules extends Component {
           name={c} 
           key={c} 
           selected={c == this.state.selectedConnectivityRule} 
-          deleteMethod={this.deleteConnectivityRule}
+          paramPath="connParams"
           handleClick={this.selectConnectivityRule} />);
       }
       var selectedConnectivityRule = undefined;

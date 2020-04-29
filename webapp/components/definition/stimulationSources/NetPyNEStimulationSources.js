@@ -25,7 +25,6 @@ export default class NetPyNEStimulationSources extends Component {
     };
     this.selectStimulationSource = this.selectStimulationSource.bind(this);
     this.handleNewStimulationSource = this.handleNewStimulationSource.bind(this);
-    this.deleteStimulationSource = this.deleteStimulationSource.bind(this);
 
     this.handleRenameChildren = this.handleRenameChildren.bind(this);
   }
@@ -39,7 +38,7 @@ export default class NetPyNEStimulationSources extends Component {
     var defaultStimulationSources = { 'stim_source': { 'type': '' } };
     var key = Object.keys(defaultStimulationSources)[0];
     var value = defaultStimulationSources[key];
-    var model = this.state.value;
+    var model = { ...this.state.value };
     var StimulationSourceId = Utils.getAvailableKey(model, key);
     var newStimulationSource = Object.assign({ name: StimulationSourceId }, value);
     Utils.execPythonMessage('netpyne_geppetto.netParams.stimSourceParams["' + StimulationSourceId + '"] = ' + JSON.stringify(value));
@@ -116,14 +115,6 @@ export default class NetPyNEStimulationSources extends Component {
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged || errorDialogOpen;
   }
 
-  deleteStimulationSource (name) {
-    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ['stimSourceParams', name]).then(response => {
-      var model = this.state.value;
-      delete model[name];
-      this.setState({ value: model, selectedStimulationSource: undefined, deletedStimulationSource: name }, () => this.props.updateCards());
-    });
-  }
-
   handleRenameChildren (childName) {
     childName = childName.replace(/\s*$/,"");
     var childrenList = Object.keys(this.state.value);
@@ -162,7 +153,7 @@ export default class NetPyNEStimulationSources extends Component {
         name={c} 
         key={c} 
         selected={c == this.state.selectedStimulationSource} 
-        deleteMethod={this.deleteStimulationSource}
+        paramPath="stimSourceParams"
         handleClick={this.selectStimulationSource} />);
     }
     

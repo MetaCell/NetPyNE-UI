@@ -496,11 +496,14 @@ class NetPyNEGeppetto():
                 else:
                     pass
             else:
-                population = getattr(self.netParams, model).pop(label)
+                # remove rule
+                rule = getattr(self.netParams, model).pop(label)
+
+                # side effect on other rules
                 if "popParams" in model:
                     self.propagate_field_rename("pop", None, label)
-                    self.propagate_field_rename("cellModel", None, population['cellModel'])
-                    self.propagate_field_rename("cellType", None, population['cellType'])
+                    self.propagate_field_rename("cellModel", None, rule['cellModel'])
+                    self.propagate_field_rename("cellType", None, rule['cellType'])
 
                 elif "stimSourceParams" in model:
 

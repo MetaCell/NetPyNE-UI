@@ -13,7 +13,7 @@ import {
 import { openBackendErrorDialog, closeBackendErrorDialog } from '../redux/actions/errors';
 import {
   updateCards, editModel, simulateNetwork, createNetwork, 
-  createAndSimulateNetwork, showNetwork, pythonCall, modelLoaded 
+  createAndSimulateNetwork, showNetwork, pythonCall, modelLoaded, deleteNetParamsObj
 } from "../redux/actions/general";
 import { closeDrawerDialogBox, openDrawerDialogBox } from '../redux/actions/drawer';
 
@@ -250,6 +250,11 @@ export const SwitchPageButton = connect(
   })
 )(_SwitchPageButton)
 
+import _NetPyNEThumbnail from "./general/NetPyNEThumbnail";
+export const NetPyNEThumbnail = connect(
+  state => ({}),
+  dispatch => ({ deleteNetParamsObj: payload => dispatch(deleteNetParamsObj(payload)), })
+)(_NetPyNEThumbnail)
 
 // ---------------------------------------------------------------------------------------- //
 
@@ -257,7 +262,6 @@ export const SwitchPageButton = connect(
 export { default as NetPyNEHome } from "./general/NetPyNEHome";
 export { default as NetPyNEField } from "./general/NetPyNEField";
 export { default as NetPyNEAddNew } from "./general/NetPyNEAddNew";
-export { default as NetPyNEThumbnail } from "./general/NetPyNEThumbnail";
 export { default as NetPyNECoordsRange } from "./general/NetPyNECoordsRange";
 export { default as NetPyNESimConfig } from "./definition/configuration/NetPyNESimConfig";
 export { default as HTMLViewer } from './general/HTMLViewer'

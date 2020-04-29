@@ -3,22 +3,21 @@ import Button from '@material-ui/core/Button';
 import ContentAdd from '@material-ui/icons/Add';
 import NavigationMoreHoriz from '@material-ui/icons/MoreHoriz';
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
+
 import CardContent from '@material-ui/core/CardContent';
 import Fab from '@material-ui/core/Fab';
 
 
 import {
   NetPyNECellRule, 
-  NetPyNEThumbnail
+  NetPyNEThumbnail,
 } from 'netpyne/components';
 
 
 import NetPyNESection from './sections/NetPyNESection';
-import NetPyNESectionThumbnail from './sections/NetPyNESectionThumbnail';
+
 import NetPyNEMechanism from './sections/mechanisms/NetPyNEMechanism';
 import NetPyNENewMechanism from './sections/mechanisms/NetPyNENewMechanism';
-import NetPyNEMechanismThumbnail from './sections/mechanisms/NetPyNEMechanismThumbnail';
 
 import NavigationChevronRight from '@material-ui/icons/ChevronRight';
 import Dialog from '@material-ui/core/Dialog/Dialog';
@@ -31,7 +30,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { withStyles } from '@material-ui/core/styles'
 
 const styles = ({ spacing }) => ({
   arrowRight : { marginLeft: spacing(1) },
@@ -59,7 +57,6 @@ export default class NetPyNECellRules extends React.Component {
 
     this.selectCellRule = this.selectCellRule.bind(this);
     this.handleNewCellRule = this.handleNewCellRule.bind(this);
-    this.deleteCellRule = this.deleteCellRule.bind(this);
 
     this.selectSection = this.selectSection.bind(this);
     this.handleNewSection = this.handleNewSection.bind(this);
@@ -84,7 +81,7 @@ export default class NetPyNECellRules extends React.Component {
   handleNewCellRule (defaultCellRules) {
     var key = Object.keys(defaultCellRules)[0];
     var value = defaultCellRules[key];
-    var { value: model } = this.state;
+    var model = { ...this.state.value };
 
     // Get New Available ID
     var cellRuleId = Utils.getAvailableKey(model, key);
@@ -108,8 +105,12 @@ export default class NetPyNECellRules extends React.Component {
   handleNewSection (defaultSectionValues) {
     let key = Object.keys(defaultSectionValues)[0];
     let value = defaultSectionValues[key];
-    const { value: model, selectedCellRule } = this.state;
-    
+    const { selectedCellRule } = this.state;
+    const model = {}
+    Object.keys(this.state.value).forEach(cellRuleName => {
+      const { secs, ...others } = this.state.value[cellRuleName]
+      model[cellRuleName] = { ...others, secs: { ...secs } }
+    })
     // Get New Available ID
     var sectionId = Utils.getAvailableKey(model[selectedCellRule]['secs'], key);
     var newSection = Object.assign({ name: sectionId }, value);
@@ -132,8 +133,18 @@ export default class NetPyNECellRules extends React.Component {
   }
 
   handleNewMechanism (mechanism) {
-    const { value: model, selectedCellRule, selectedSection } = this.state;
-    
+    const { selectedCellRule, selectedSection } = this.state;
+    const model = {}
+    Object.keys(this.state.value).forEach(cellRuleName => {
+      const { secs, ...cellOthers } = this.state.value[cellRuleName]
+      const sections = {}
+      Object.keys(secs).forEach(sectionName => {
+        const { mechs, ...secOthers } = this.state.value[cellRuleName].secs[sectionName]
+        sections[sectionName] = { ...secOthers, mechs: { ...mechs } }
+      })
+      model[cellRuleName] = { ...cellOthers, secs: { ...sections } }
+    })
+
     // Create Mechanism Client side
     if (model[selectedCellRule].secs[selectedSection]['mechs'] == undefined) {
       model[selectedCellRule].secs[selectedSection]['mechs'] = {};
@@ -362,14 +373,6 @@ export default class NetPyNECellRules extends React.Component {
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged || errorDialogOpen;
   }
 
-  deleteCellRule (name) {
-    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ['cellParams', name]).then(response => {
-      var model = this.state.value;
-      delete model[name];
-      this.setState({ value: model, selectedCellRule: undefined, deletedCellRule: name });
-    });
-  }
-
   deleteMechanism (name) {
     if (this.state.selectedCellRule != undefined && this.state.selectedSection != undefined) {
       Utils.evalPythonMessage('netpyne_geppetto.deleteParam', [[this.state.selectedCellRule, this.state.selectedSection], name]).then(response => {
@@ -543,8 +546,8 @@ export default class NetPyNECellRules extends React.Component {
             id={cellRuleName}
             name={cellRuleName}
             key={cellRuleName} 
+            paramPath="cellParams"
             selected={cellRuleName == selectedCellRule}
-            deleteMethod={this.deleteCellRule}
             handleClick={this.selectCellRule} 
           />
         )
@@ -563,11 +566,12 @@ export default class NetPyNECellRules extends React.Component {
         )
       }
       container = Object.keys(sectionsModel).map( sectionName => 
-        <NetPyNESectionThumbnail 
+        <NetPyNEThumbnail 
+          isButton
           key={sectionName} 
           name={sectionName}
           selected={sectionName == selectedSection}
-          deleteMethod={this.deleteSection}
+          paramPath={[selectedCellRule]}
           handleClick={this.selectSection} 
         />
       )
@@ -579,17 +583,19 @@ export default class NetPyNECellRules extends React.Component {
             cellRule={selectedCellRule}
             section={selectedSection} 
             name={selectedMechanism} 
+            paramPath={[selectedCellRule, selectedSection]}
             model={mechanismsModel[selectedMechanism]}
           />
         )
       }
       container = Object.keys(mechanismsModel).map( mechName => 
-        <NetPyNEMechanismThumbnail 
+        <NetPyNEThumbnail 
+          isCog
           name={mechName} 
           key={mechName} 
           selected={mechName == selectedMechanism} 
           model={mechanismsModel[mechName]} 
-          deleteMethod={this.deleteMechanism}
+          paramPath={[selectedCellRule, selectedSection]}
           handleClick={this.selectMechanism} 
         />
       )

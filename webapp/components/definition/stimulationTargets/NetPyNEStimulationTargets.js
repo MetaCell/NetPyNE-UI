@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardHeader, CardContent } from '@material-ui/core';
+import { Card, CardContent } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
 
@@ -26,7 +26,6 @@ export default class NetPyNEStimulationTargets extends Component {
     };
     this.selectStimulationTarget = this.selectStimulationTarget.bind(this);
     this.handleNewStimulationTarget = this.handleNewStimulationTarget.bind(this);
-    this.deleteStimulationTarget = this.deleteStimulationTarget.bind(this);
 
     this.handleRenameChildren = this.handleRenameChildren.bind(this);
   }
@@ -117,14 +116,6 @@ export default class NetPyNEStimulationTargets extends Component {
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged || errorDialogOpen;
   }
 
-  deleteStimulationTarget (name) {
-    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ['stimTargetParams', name]).then(response => {
-      var model = this.state.value;
-      delete model[name];
-      this.setState({ value: model, selectedStimulationTarget: undefined, deletedStimulationTarget: name });
-    });
-  }
-
   handleRenameChildren (childName) {
     childName = childName.replace(/\s*$/,"");
     var childrenList = Object.keys(this.state.value);
@@ -163,7 +154,7 @@ export default class NetPyNEStimulationTargets extends Component {
         name={c} 
         key={c} 
         selected={c == this.state.selectedStimulationTarget} 
-        deleteMethod={this.deleteStimulationTarget}
+        paramPath="stimTargetParams"
         handleClick={this.selectStimulationTarget} />);
     }
     var selectedStimulationTarget = undefined;

@@ -26,7 +26,6 @@ export default class NetPyNESynapses extends Component {
     };
     this.selectSynapse = this.selectSynapse.bind(this);
     this.handleNewSynapse = this.handleNewSynapse.bind(this);
-    this.deleteSynapse = this.deleteSynapse.bind(this);
 
     this.handleRenameChildren = this.handleRenameChildren.bind(this);
   }
@@ -40,7 +39,7 @@ export default class NetPyNESynapses extends Component {
     var defaultSynapses = { 'Synapse': { 'mod': '' } };
     var key = Object.keys(defaultSynapses)[0];
     var value = defaultSynapses[key];
-    var model = this.state.value;
+    var model = { ...this.state.value };
     var SynapseId = Utils.getAvailableKey(model, key);
     var newSynapse = Object.assign({ name: SynapseId }, value);
     Utils.execPythonMessage('netpyne_geppetto.netParams.synMechParams["' + SynapseId + '"] = ' + JSON.stringify(value));
@@ -117,14 +116,6 @@ export default class NetPyNESynapses extends Component {
     return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged || errorDialogOpen;
   }
 
-  deleteSynapse (name) {
-    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ['synMechParams', name]).then(response => {
-      var model = this.state.value;
-      delete model[name];
-      this.setState({ value: model, selectedSynapse: undefined, deletedSynapse: name }, () => this.props.updateCards());
-    });
-  }
-
   handleRenameChildren (childName) {
     childName = childName.replace(/\s*$/,"");
     var childrenList = Object.keys(this.state.value);
@@ -164,7 +155,7 @@ export default class NetPyNESynapses extends Component {
         name={c} 
         key={c} 
         selected={c == this.state.selectedSynapse}
-        deleteMethod={this.deleteSynapse}
+        paramPath="synMechParams"
         handleClick={this.selectSynapse} />);
     }
     var selectedSynapse = undefined;

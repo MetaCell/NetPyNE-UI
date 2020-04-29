@@ -5,6 +5,7 @@ import { NOTEBOOK_DEFAULT_STATE } from "./reducers/notebook";
 import { FLEXLAYOUT_DEFAULT_STATE } from "./reducers/flexlayout";
 import middleware from './middleware/middleware';
 import plotMiddleware from './middleware/plotMiddleware';
+import rulesMiddleware from './middleware/rulesOperationsMiddleware';
 
 const INIT_STATE = { 
   general: GENERAL_DEFAULT_STATE,
@@ -19,7 +20,7 @@ function configureStore (state = INIT_STATE) {
   return createStore(
     all,
     state,
-    composeEnhancers(applyMiddleware(plotMiddleware, middleware))
+    composeEnhancers(applyMiddleware(plotMiddleware, middleware, rulesMiddleware))
   );
 }
 

@@ -27,7 +27,6 @@ export default class NetPyNEPopulations extends React.Component {
 
     this.handleNewPopulation = this.handleNewPopulation.bind(this);
     this.selectPopulation = this.selectPopulation.bind(this);
-    this.deletePopulation = this.deletePopulation.bind(this);
     this.handleRenameChildren = this.handleRenameChildren.bind(this);
   }
 
@@ -112,7 +111,7 @@ export default class NetPyNEPopulations extends React.Component {
     // Get Key and Value
     var key = Object.keys(defaultPopulationValues)[0];
     var value = defaultPopulationValues[key];
-    var model = this.state.value;
+    var model = { ...this.state.value };
 
     // Get New Available ID
     var populationId = Utils.getAvailableKey(model, key);
@@ -136,16 +135,6 @@ export default class NetPyNEPopulations extends React.Component {
   /* Method that handles button click */
   selectPopulation (populationName) {
     this.setState({ selectedPopulation: populationName });
-  }
-
-  deletePopulation (name) {
-    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ["popParams", name]).then(response => {
-      if (response) {
-        var model = this.state.value;
-        delete model[name];
-        this.setState({ value: model, selectedPopulation: undefined, populationDeleted: name }, () => this.props.updateCards());
-      }
-    });
   }
 
   handleRenameChildren (childName) {
@@ -189,7 +178,7 @@ export default class NetPyNEPopulations extends React.Component {
         populations.push(<NetPyNEThumbnail 
           name={key} key={key} 
           selected={key == this.state.selectedPopulation}
-          deleteMethod={this.deletePopulation}
+          paramPath="popParams"
           handleClick={this.selectPopulation} />);
       }
       var selectedPopulation = undefined;
@@ -204,6 +193,7 @@ export default class NetPyNEPopulations extends React.Component {
           <div className={"details"}>
             {selectedPopulation}
           </div>
+
           <div className={"thumbnails"}>
             <div className="breadcrumb">
               <NetPyNEHome

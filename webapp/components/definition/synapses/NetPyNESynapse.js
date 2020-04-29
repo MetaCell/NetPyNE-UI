@@ -72,19 +72,26 @@ class NetPyNESynapse extends React.Component {
   }
   
   componentDidMount () {
+    this.__mounter = true
     this.updateLayout();
+  }
+  componentWillUnmount () {
+    this.__mounter = false
   }
 
   updateLayout () {
+
     Utils
       .evalPythonMessage("[value == netpyne_geppetto.netParams.synMechParams['" + this.state.currentName + "']['mod'] for value in ['ExpSyn', 'Exp2Syn']]")
       .then(response => { 
-        if (response[0]) {
-          this.setState({ synMechMod: "ExpSyn" })
-        } else if (response[1]) {
-          this.setState({ synMechMod: "Exp2Syn" })
-        } else {
-          this.setState({ synMechMod: "Exp2Syn" })
+        if (this.__mounter) {
+          if (response[0]) {
+            this.setState({ synMechMod: "ExpSyn" })
+          } else if (response[1]) {
+            this.setState({ synMechMod: "Exp2Syn" })
+          } else {
+            this.setState({ synMechMod: "Exp2Syn" })
+          }
         }
       });
   }

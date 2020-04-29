@@ -32,7 +32,11 @@ class DimensionsComponent extends Component {
       modelName: props.modelName,
       dimension: 'numCells'
     };
-    this.popDimensionsOptions = [{ label: 'Number of cells', value: 'numCells' }, { label: 'Density', value: 'density' }, { label: 'Grid spacing', value: 'gridSpacing' }];
+    this.popDimensionsOptions = [
+      { label: 'Number of cells', value: 'numCells' },
+      { label: 'Density', value: 'density' },
+      { label: 'Grid spacing', value: 'gridSpacing' }
+    ];
 
   }
 
@@ -41,9 +45,12 @@ class DimensionsComponent extends Component {
       this.updateLayout();
     }
   }
-
+  componentWillUnmount () {
+    this.mounted = false
+  }
 
   componentDidMount () {
+    this.mounted = true
     this.updateLayout();
   }
 
@@ -64,11 +71,14 @@ class DimensionsComponent extends Component {
     // Get population dimension by asking each for each key
     Promise.all(requests).then(values => {
       var index = values.indexOf(true);
-      if (index == -1) {
-        this.setState({ dimension: 'numCells' });
-      } else {
-        this.setState({ dimension: this.popDimensionsOptions[index].value });
+      if (this.mounted) {
+        if (index == -1) {
+          this.setState({ dimension: 'numCells' });
+        } else {
+          this.setState({ dimension: this.popDimensionsOptions[index].value });
+        }
       }
+      
     });
   }
 
