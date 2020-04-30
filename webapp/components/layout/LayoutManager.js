@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
 import * as FlexLayout from 'geppetto-client/js/components/interface/flexLayout2/src/index';
-import Actions from 'geppetto-client/js/components/interface/flexLayout2/src/model/Actions';
+import Actions from '@geppettoengine/geppetto-client/js/components/interface/flexLayout2/src/model/Actions';
 
 
-import { WidgetStatus } from '../../constants';
+import { WidgetStatus, WIDGETS_IDS } from '../../constants';
 import { isEqual } from '../../Utils';
 import WidgetFactory from './WidgetFactory';
 import TabsetIconFactory from './TabsetIconFactory'
 import defaultLayoutConfiguration from './layoutConf.json';
-import simulateLayoutConfiguration from './simulateLayoutConf.json';
-import Icon from '@material-ui/core/Icon';
 
 import { withStyles } from '@material-ui/core/styles'
-
+import onAction from './OnLayoutAction';
+import { getPythonDefaultConsoleWidget } from '../../redux/reducers/flexlayout';
 
 /**
  * Transforms a widget configutation into a flexlayout node descriptor
@@ -26,7 +25,7 @@ function widget2Node (configuration) {
     component,
     type: "tab",
     enableRename: false,
-    enableClose: enableClose,
+    enableClose,
     // attr defined inside config, will also be available from within flexlayout nodes.  For example:  node.getNodeById(id).getConfig()
     config: configuration ,
     ...others
@@ -62,7 +61,7 @@ class LayoutManager extends Component {
 
     this.cacheModels = { 
       edit: FlexLayout.Model.fromJson(layout), 
-      simulate: FlexLayout.Model.fromJson(simulateLayoutConfiguration) 
+      simulate: FlexLayout.Model.fromJson(layout) 
     }
   }
 
@@ -79,22 +78,18 @@ class LayoutManager extends Component {
 
     const { widgets } = this.props;
     const oldWidgets = prevProps.widgets;
+    
     const newWidgets = this.findNewWidgets(widgets, oldWidgets);
     if (newWidgets.length > 0) {
       this.addWidgets(newWidgets);
     }
-
-    if (!this.props.editMode && !this.cacheModels.simulate.getNodeById(widgets.python.id)) {
-      this.addWidgets([widgets.python]);
-    }
     
     const updatedWidgets = this.findUpdatedWidgets(widgets, oldWidgets);
     if (updatedWidgets) {
-      this.updateWidgets(updatedWidgets);
+      this.updateWidgets(updatedWidgets, oldWidgets);
     }
 
     const deletedWidgets = this.findDeletedWidgets(widgets, oldWidgets);
-
     if (deletedWidgets) {
       this.deleteWidgets(deletedWidgets);
     }
@@ -136,22 +131,63 @@ class LayoutManager extends Component {
   }
 
   addWidget (widgetConfiguration) {
-    this.refs.layout.addTabToTabSet(widgetConfiguration.panelName, widget2Node(widgetConfiguration));
+    const model = this.getModel()
+    let tabset = model.getNodeById(widgetConfiguration.panelName)
+    if (tabset === undefined) {
+      this.createTabSet(widgetConfiguration.panelName)
+    }
+    if (widgetConfiguration.status === WidgetStatus.BORDER){
+      this.refs.layout.addTabToTabSet('border_bottom', widget2Node(widgetConfiguration))
+    } else {
+      this.refs.layout.addTabToTabSet(widgetConfiguration.panelName, widget2Node(widgetConfiguration))
+    }
+    
+  }
+  
+  createTabSet (tabsetID) {
+    // In case the tabset doesn't exist
+    const model = this.getModel()
+    const rootNode = model.getNodeById("root")
+
+    let hrow = new FlexLayout.RowNode(model, {});
+    hrow._setWeight(100)
+
+    const tabset = new FlexLayout.TabSetNode(model, { id: tabsetID });
+    tabset._setWeight(80)
+      
+    hrow._addChild(tabset)
+      
+    rootNode.getChildren().forEach(child => {
+      const newWeight = child.getWeight() / 2
+      child._setWeight(newWeight)
+      hrow._addChild(child)
+    })
+
+    rootNode._removeAll()
+    rootNode._addChild(hrow, 0);
+    if (!this.props.editMode && tabsetID === 'plotPanel') {
+      // We need to resize Geppetto 3D canvas to new panel sizes
+      setTimeout(() => window.dispatchEvent(new Event('resize')), 1000)
+    }
   }
 
-  updateWidgets (widgets) {
+  updateWidgets (widgets, oldWidgets) {
     const model = this.getModel()
     for (let widget of widgets) {
 
       this.updateWidget(widget);
    
-      // This updates plotly.js plots to new panel sizes
-      if (widget.status == WidgetStatus.ACTIVE) {
-        model.doAction(FlexLayout.Actions.selectTab(widget.id));
+      if (oldWidgets[widget.id].status === WidgetStatus.BORDER && widget.status !== WidgetStatus.BORDER) {
+        this.restoreWidgetFromBottom(widget)
+      } else if (oldWidgets[widget.id].status !== WidgetStatus.BORDER && widget.status === WidgetStatus.BORDER){
+        this.moveWidget(widget)
+      } else {
+        // update plotly.js plots to new panel sizes
+        if (widget.status == WidgetStatus.ACTIVE) {
+          model.doAction(FlexLayout.Actions.selectTab(widget.id));
+        }
       }
-      
     }
-    // window.dispatchEvent(new Event('resize'));
   }
 
   updateWidget (widget) {
@@ -191,108 +227,49 @@ class LayoutManager extends Component {
   findDeletedWidgets (widgets, oldWidgets) {
     return oldWidgets ? Object.values(oldWidgets).filter(widget => widget && !widgets[widget.id]) : Object.values(widgets);
   }
-  
-
-  onAction (action) {
-    const model = this.getModel()
-    switch (action.type){
-    case Actions.SET_ACTIVE_TABSET:
-      break;
-    case Actions.SELECT_TAB: 
-      this.activateWidget(action.data.tabNode);
-      window.dispatchEvent(new Event('resize'));
-      break;
-    case Actions.DELETE_TAB:
-      this.onActionDeleteWidget(action);
-      window.dispatchEvent(new Event('resize'));
-      break;
-    case Actions.MAXIMIZE_TOGGLE:
-      this.onActionMaximizeWidget(action);
-      window.dispatchEvent(new Event('resize'));
-      break;
-    case Actions.ADJUST_SPLIT:
-    case Actions.MOVE_NODE :
-      window.dispatchEvent(new Event('resize'));
-      break;
-    }
-       
-    model.doAction(action);
-  }
-
-  onActionMaximizeWidget (action) {
-    const model = this.getModel()
-    const { widgets } = this.props;
-    const { maximizeWidget, activateWidget } = this;
-    const panel2maximize = model.getNodeById(action.data.node);
-    
-    if (panel2maximize.getChildren().length > 0) {
-      const widgetId2maximize = panel2maximize.getSelectedNode().getId();
-      const maximizedWidget = this.findMaximizedWidget(widgets);
-      if (maximizedWidget) {
-        if (maximizedWidget.id !== widgetId2maximize) {
-          maximizeWidget(widgetId2maximize);
-        }
-        activateWidget(maximizedWidget.id);
-      
-      } else {
-        maximizeWidget(widgetId2maximize);
-      }
-    }
-    
-  }
 
   findMaximizedWidget (widgets) {
     return Object.values(widgets).find(widget => widget && widget.status == WidgetStatus.MAXIMIZED);
   }
+  
 
-  onActionDeleteWidget (action) {
+  restoreWidgetFromBottom (widget) {
     const model = this.getModel()
-    const { widgets } = this.props;
-    const maximizedWidget = this.findMaximizedWidget(widgets);
-    // change widget status
-    this.destroyWidget(action.data.node);
-    // check if the current maximized widget is the same than in the action dispatched
-    if (maximizedWidget && maximizedWidget.id == action.data.node) {
-      // find if there exists another widget in the maximized panel that could take its place
-      const panelChildren = model.getActiveTabset().getChildren();
-      const index = panelChildren.findIndex(child => child.getId() == action.data.node);
-      // Understand if the tab to the left or right of the destroyed tab will be the next one to be maximized
-      if (index != -1 && panelChildren.length > 1) {
-        if (index == 0) {
-          this.onActionMaximizeWidget(panelChildren[1].getId());
-        } else {
-          this.onActionMaximizeWidget(panelChildren[index - 1].getId());
-        }
-      }
+    // We only allow python console to be send to the bottom
+    const panelName = getPythonDefaultConsoleWidget(this.props.editMode).panelName
+    let tabset = model.getNodeById(panelName)
+    if (tabset === undefined) {
+      this.createTabSet(panelName)
     }
+    this.moveWidget(widget)
   }
 
-
-  clickOnBordersAction (node) {
+  
+  moveWidget (widget) {
     const model = this.getModel()
-    model.doAction(FlexLayout.Actions.moveNode(node.getId(), 'bottomPanel', FlexLayout.DockLocation.CENTER, 0));
+    model.doAction(FlexLayout.Actions.moveNode(widget.id, widget.panelName, FlexLayout.DockLocation.CENTER, 0));
+    // Resize of canvas and SVG images
+    window.dispatchEvent(new Event('resize'));
   }
-
+  
   onRenderTab (node,renderValues) {
-    renderValues.leading = <Icon className={node.getConfig().icon}/>
   }
   render () {
-    const { classes } = this.props
+    const { classes, widgets } = this.props
+    const model = this.getModel()
     return (
       <div className={classes.container}>
         <div className={classes.spacer}/>
         <div className={classes.flexlayout}>
           <FlexLayout.Layout
             ref="layout"
-            model={this.getModel()}
+            model={model}
             factory={this.factory.bind(this)}
             iconFactory={this.iconFactory.bind(this)}
-            onAction={action => this.onAction(action)}
-            clickOnBordersAction={node => this.clickOnBordersAction(node)}
+            onAction={action => onAction(action, widgets, model, this.props.updateWidget, this.activateWidget, this.destroyWidget, this.maximizeWidget, this.minimizeWidget)}
             onRenderTab={(node,renderValues) => this.onRenderTab(node,renderValues)}
           />
         </div>
-        
         <div className={classes.spacer}/>
       </div>
     )

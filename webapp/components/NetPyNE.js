@@ -1,9 +1,7 @@
 import React from "react";
-import Toolbar from "@material-ui/core/Toolbar";
 
 import {
-  NetPyNEToolBar,
-  NetPyNETabs,
+  Topbar,
   LayoutManager,
   Drawer
 } from "netpyne/components";
@@ -11,29 +9,15 @@ import {
 import { withStyles } from '@material-ui/core/styles'
 
 const styles = ({ zIndex, palette, spacing }) => ({
+  root: { height: '100%', overflow: 'hidden' },
   container: {
     height: "100%",
     width: "100%",
     display: "flex",
     flexDirection: "column"
   },
-  toolbar: {
-    backgroundColor: palette.primary.main,
-    width: "100%",
-    boxShadow: "0 0px 4px 0 rgba(0, 0, 0, 0.2), 0 0px 8px 0 rgba(0, 0, 0, 0.19)",
-    position: "relative",
-    top: 0,
-    left: 0,
-    zIndex: zIndex.appBar
-  },
-  views: {
-    display: "flex",
-    flexFlow: "rows",
-    width: "100%",
-    marginRight: spacing(-1)
-  },
-  drawer: { marginLeft: spacing(-1) },
-  content: { position: "relative", zIndex: zIndex.drawer + 1 }
+  topbar: { position: "relative", zIndex: zIndex.drawer + 1 },
+  content: { flexGrow:1, display: 'flex', flexDirection: 'row', position: 'relative' }
 })
 
 
@@ -54,22 +38,16 @@ class NetPyNE extends React.Component {
 
   render () {
     const { classes } = this.props
-
     return (
-      <div className={classes.container}>
-        <div className={classes.content}>
-          <Toolbar id="appBar" className={classes.toolbar}>
-            <div className={classes.drawer}>
-              <NetPyNEToolBar />
-            </div>
-            <div className={classes.views}>
-              <NetPyNETabs />
-            </div>
-          </Toolbar>
-        </div>
-        <div style={{ flexGrow:1, display: 'flex', flexDirection: 'row', position: 'relative' }}>
-          <Drawer/>
-          <LayoutManager/>
+      <div className={classes.root}>
+        <div className={classes.container}>
+          <div className={classes.topbar}>
+            <Topbar/>
+          </div>
+          <div className={classes.content}>
+            <Drawer/>
+            <LayoutManager/>
+          </div>
         </div>
       </div>
     );

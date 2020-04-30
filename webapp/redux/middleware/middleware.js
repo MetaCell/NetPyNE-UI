@@ -86,7 +86,7 @@ const createSimulateBackendCall = async (cmd, payload, next, action, consoleMess
   }
 }
 
-const processError = response => {
+export const processError = response => {
   var parsedResponse = Utils.getErrorResponse(response);
   if (parsedResponse) {
     return { errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details'] }

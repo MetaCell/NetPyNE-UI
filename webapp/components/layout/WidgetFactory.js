@@ -1,6 +1,4 @@
-import React, { lazy, Suspense } from 'react';
-
-import PythonConsole from '@geppettoengine/geppetto-client/js/components/interface/pythonConsole/PythonConsole';
+import React, { lazy, Suspense } from 'react'
 
 import { NetPyNEInstantiated, HTMLViewer } from 'netpyne/components';
 

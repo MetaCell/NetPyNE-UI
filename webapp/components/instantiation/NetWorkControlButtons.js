@@ -4,7 +4,6 @@ import { Tooltip } from 'netpyne/components';
 
 import { MODEL_STATE } from '../../constants'
 import { withStyles } from '@material-ui/core/styles';
-import { PlotButtons } from 'netpyne/components'
 
 const styles = ({ spacing }) => ({
   container: {
@@ -76,9 +75,6 @@ class NetWorkControlButtons extends React.Component {
             </div>
           
           </Tooltip>
-
-          
-          <PlotButtons/>
           
         </div>
       </div>

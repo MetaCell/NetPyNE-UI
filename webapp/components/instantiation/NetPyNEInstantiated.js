@@ -2,7 +2,7 @@ import React, { createRef } from 'react';
 import ReactDOM from 'react-dom'
 import Canvas from '@geppettoengine/geppetto-client/js/components/interface/3dCanvas/Canvas';
 import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
-import IconButton from '@geppettoengine/geppetto-client/js/components/controls/iconButton/IconButton';
+
 import { NetWorkControlButtons } from 'netpyne/components'
 
 

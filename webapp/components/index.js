@@ -7,6 +7,7 @@ import {
   destroyWidget,
   minimizeWidget,
   maximizeWidget,
+  updateWidget,
   newWidget
 } from "../redux/actions/flexlayout";
 import { openBackendErrorDialog, closeBackendErrorDialog } from '../redux/actions/errors';
@@ -15,6 +16,8 @@ import {
   createAndSimulateNetwork, showNetwork, pythonCall, modelLoaded 
 } from "../redux/actions/general";
 import { closeDrawerDialogBox, openDrawerDialogBox } from '../redux/actions/drawer';
+
+import { openTopbarDialog, closeTopbarDialog, changePageTransitionMode } from '../redux/actions/topbar'
 
 const updateCardsDispatch = dispatch => ({ updateCards: () => dispatch(updateCards) });
 const pythonCallErrorDispatch = dispatch => ({ pythonCallErrorDialogBox: payload => dispatch(openBackendErrorDialog(payload)) });
@@ -76,7 +79,7 @@ export const Dimensions = connect(
 
 import _NetPyNE from "./NetPyNE";
 export const NetPyNE = connect(
-  state => ({ editMode: state.general.editMode, }),
+  state => ({ editMode: state.general.editMode }),
   pythonCallErrorDispatch
 )(_NetPyNE);
 
@@ -91,6 +94,7 @@ import _LayoutManager from "./layout/LayoutManager";
 export const LayoutManager = connect(
   state => ({ ...state.flexlayout, editMode: state.general.editMode }),
   dispatch => ({
+    updateWidget: widget => dispatch(updateWidget(widget)),
     minimizeWidget: id => dispatch(minimizeWidget(id)),
     destroyWidget: id => dispatch(destroyWidget(id)),
     maximizeWidget: id => dispatch(maximizeWidget(id)),
@@ -153,26 +157,6 @@ export const NetPyNESynapses = connect(
   updateCardsDispatch
 )(PythonControlledCapability.createPythonControlledComponent(_NetPyNESynapses));
 
-import _NetPyNETabs from "./settings/NetPyNETabs";
-export const NetPyNETabs = connect(
-  state => state.general,
-  dispatch => ({
-    editModel: () => dispatch(editModel),
-    createNetwork: () => dispatch(createNetwork),
-    createAndSimulateNetwork: () => dispatch(createAndSimulateNetwork),
-    showNetwork: () => dispatch(showNetwork)
-  })
-)(_NetPyNETabs);
-
-import _NetPyNEToolbar from "./settings/NetPyNEToolBar";
-export const NetPyNEToolBar = connect(
-  state => ({ ...state.general, ...state.drawer }),
-  dispatch => ({
-    closeDrawerDialogBox: () => dispatch(closeDrawerDialogBox),
-    openDrawerDialogBox: () => dispatch(openDrawerDialogBox),
-  })
-)(_NetPyNEToolbar);
-
 import SelectField from "./general/Select";
 export const NetPyNESelectField = connect((state, ownProps) => ({
   ...ownProps,
@@ -203,7 +187,7 @@ export const NetWorkControlButtons = connect(
   })
 )(_NetWorkControlButtons)
 
-import _ActionDialog from './settings/actions/ActionDialog'
+import _ActionDialog from './topbar/dialogs/ActionDialog'
 export const ActionDialog = connect(
   state => ({ ...state.errors, openErrorDialogBox: state.errors.openDialog }),
   dispatch => ({ 
@@ -211,18 +195,6 @@ export const ActionDialog = connect(
     closeBackendErrorDialog: () => dispatch(closeBackendErrorDialog)
   })
 )(_ActionDialog)
-
-
-import _PlotButton from './instantiation/PlotButtons'
-export const PlotButtons = connect(
-  state => ({ ...state.errors, openErrorDialogBox: state.errors.openDialog }),
-  dispatch => ({
-    newWidget: conf => dispatch(newWidget(conf)),
-    closeBackendErrorDialog: () => dispatch(closeBackendErrorDialog),
-    pythonCallErrorDialogBox: payload => dispatch(openBackendErrorDialog(payload)) 
-  })
-)(_PlotButton)
-
 
 import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole'
 export const NetPyNEPythonConsole = connect(
@@ -241,10 +213,43 @@ export const Drawer = connect(
     editMode: state.general.editMode 
   }),
   dispatch => ({ 
+    updateWidget: newConf => dispatch(updateWidget(newConf)),
     newWidget: widget => dispatch(newWidget(widget)),
     activateWidget: widgetId => dispatch(activateWidget(widgetId))
   })
 )(_Drawer)
+
+
+import _Topbar from "./topbar/Topbar";
+export const Topbar = connect(
+  state => ({ 
+    dialogOpen: state.topbar.dialogOpen,
+    editMode: state.general.editMode,
+    topbarDialogName: state.topbar.dialogName,
+    pageTransitionMode: state.topbar.pageTransitionMode
+  }),
+  dispatch => ({ 
+    dispatchAction: action => dispatch(action),
+    closeDialog: () => dispatch(closeTopbarDialog),
+    changePageTransitionMode: mode => dispatch(changePageTransitionMode(mode))
+  })
+)(_Topbar)
+
+import _SwitchPageButton from "./topbar/SwitchPageButton";
+export const SwitchPageButton = connect(
+  state => ({ 
+    editModelPage: state.general.editMode,
+    pageTransitionMode: state.topbar.pageTransitionMode,
+  }),
+  dispatch => ({ 
+    switchToEditModelPage: () => dispatch(editModel),
+    changePageTransitionMode: mode => dispatch(changePageTransitionMode(mode)),
+    createNetwork: () => dispatch(createNetwork),
+    createAndSimulateNetwork: () => dispatch(createAndSimulateNetwork),
+    showNetwork: () => dispatch(showNetwork)
+  })
+)(_SwitchPageButton)
+
 
 // ---------------------------------------------------------------------------------------- //
 

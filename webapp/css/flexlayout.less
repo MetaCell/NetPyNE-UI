@@ -98,20 +98,22 @@
         border-top-left-radius: @panelradius;
         color: @color-white;
         display: flex;
-        align-items: flex-end;
+        align-items: flex-start;
         margin-right: @tab-spacing;
+        margin-top: 0px;
         .flexlayout__tab_button_content {
             color: @secondary_color;
         }
     }
   
     .flexlayout__tab_button--unselected {
+        margin-top: 0px;
         margin-right: @tab-spacing;
         background-color: @color-regular;
         border-top-right-radius: @panelradius;
         border-top-left-radius: @panelradius;
         display: flex;
-        align-items: flex-end;
+        align-items: flex-start;
     }
   
     .flexlayout__border_bottom {
@@ -130,6 +132,7 @@
     
             font-size: @font-size-panels;
         }
+        visibility: hidden;
         border: none;
         margin: 0;
         margin-right: @tab-spacing;
@@ -142,19 +145,18 @@
     }
   
     .flexlayout__tab_button_content {
+        margin-top: unset;
         color: @secondary_color;
         font-family: @font;
         font-size: @font-size-panels;
-        margin-top: -3px;
         padding: 0;
         font-weight: normal;
         color: #b9b9b9;
-        margin-left: @spacing;
     }
   
     .flexlayout__tab_button_trailing {
-        display: flex;
-        align-items: center;
+        margin-left: @spacing;
+        margin-top: unset;
     }
     
     // Thin white tab icons

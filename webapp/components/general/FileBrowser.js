@@ -140,6 +140,7 @@ export default class FileBrowser extends React.Component {
       <Dialog
         open={this.props.open}
         onClose={() => this.props.onRequestClose()}
+        style={{ zIndex: 5000 }}
       >
         <DialogContent>
           <div style={{ marginBottom: '15px', color: 'white' }}>

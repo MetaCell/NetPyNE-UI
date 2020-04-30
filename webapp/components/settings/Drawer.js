@@ -1,144 +1,124 @@
 import React, { useState } from 'react'
-import { makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
 
+
+import Paper from '@material-ui/core/Paper'
 import IconButton from '@material-ui/core/IconButton'
-import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
-
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Typography from '@material-ui/core/Typography';
 
-import AdjustIcon from '@material-ui/icons/Adjust';
+import { WidgetStatus } from '../../constants';
 import {
-  HLS_WIDGETS, PYTHON_CONSOLE_WIDGET, 
-  FLEXLAYOUT_DEFAULT_STATE, MORPHOLOGY_WIDGET 
+  DEFAULT_HLS_WIDGETS, getPythonDefaultConsoleWidget, 
+  DEFAULT_MORPHOLOGY_WIDGET,DEFAULT_PLOTS_WIDGETS
 } from '../../redux/reducers/flexlayout'
+
+import DrawerIcon from '../general/NetPyNEIcons'
+import useStyles from './useStyles'
 
 
 const drawerOpenWidth = 200;
-const drawerCloseWidth = 54;
+const drawerCloseWidth = 48;
 
-const drawerCss = (entering, transitions, palette) => ({ 
-  overflow: 'hidden',
-  width: props => props.width,
-  flexShrink: 0,
-  borderRight: 'none',
-  transition: transitions.create('width', {
-    easing: transitions.easing.sharp,
-    duration: entering ? transitions.duration.enteringScreen : transitions.duration.leavingScreen,
-  })
-})
 
-const useStyles = makeStyles(({ transitions, palette }) => ({
-  openDrawer: drawerCss(true, transitions, palette),
-
-  closeDrawer: drawerCss(false, transitions, palette),
-
-  colapse: {
-    color: 'white',
-    position: 'absolute',
-    bottom: 0,
-    right: 2
-  },
-  paper: { backgroundColor: palette.grey['900'] },
+export default ({ widgets, newWidget, editMode, activateWidget, updateWidget }) => {
+  const [expand, setExpand] = useState(false)
   
-  selected: { height: 60, color: palette.primary.main },
-  unselected: { height: 60, color: palette.common.white },
-  noColor: { color: 'inherit' }
-}))
+  const classes = useStyles({ width: expand ? drawerOpenWidth : drawerCloseWidth, expand });
 
-export default ({ widgets, newWidget, editMode }) => {
-  const [expand, setExpand] = useState({ dark: !editMode })
-  
-  const classes = useStyles({ width: expand ? drawerOpenWidth : drawerCloseWidth });
-
-  function createWidget (widgetId) {
+  function createOrFocusWidget (widgetId) {
     if (!widgets[widgetId]) {
-      let widget = HLS_WIDGETS[widgetId]
-      if (!editMode) {
-        widget = MORPHOLOGY_WIDGET
+      const widgetConf = getNewWidgetConf(widgetId)
+      newWidget({ path: widgetConf.id, ...widgetConf })
+    } else {
+      if (widgets[widgetId].status === WidgetStatus.BORDER) {
+        updateBorderWidget(widgetId)
+      } else if (widgets[widgetId].status !== WidgetStatus.ACTIVE) {
+        activateWidget(widgetId)
       }
-      
-      newWidget({ path: widget.id, ...widget })
     }
   }
 
+  // Move python widget from BORDER to a visible tabset
+  function updateBorderWidget (widgetId) {
+    const updatedWidget = { ...widgets[widgetId] }
+    updatedWidget.status = WidgetStatus.ACTIVE
+    updatedWidget.panelName = getPythonDefaultConsoleWidget(editMode).panelName
+    updateWidget(updatedWidget)
+  }
+
+  function getNewWidgetConf (widgetId) {
+    if (editMode) {
+      // return a High Level Specification widget
+      return ({ ...DEFAULT_HLS_WIDGETS, pythonEdit: getPythonDefaultConsoleWidget(true) })[widgetId]
+    }
+    
+    if (widgetId.includes('Plot')) {
+      // return a plot widget
+      return DEFAULT_PLOTS_WIDGETS[widgetId]
+    }
+    // return either 3dcanvas or python console
+    return ({ D3Canvas: DEFAULT_MORPHOLOGY_WIDGET, pythonExplore: getPythonDefaultConsoleWidget(false) })[widgetId]
+  }
+
+
   function getMenu () {
     if (editMode) {
-      return Object.values({ ...HLS_WIDGETS, python: PYTHON_CONSOLE_WIDGET })
+      const array = [...Object.values(DEFAULT_HLS_WIDGETS), 
+                     getPythonDefaultConsoleWidget(true)]
+      return array
     } else {
-      return Object.values({ ...FLEXLAYOUT_DEFAULT_STATE.widgetsBackground, python: PYTHON_CONSOLE_WIDGET })
+      const array = [DEFAULT_MORPHOLOGY_WIDGET,
+                     ...Object.values(DEFAULT_PLOTS_WIDGETS),
+                     getPythonDefaultConsoleWidget(false)]
+
+      return array
     }
     
   }
   
   return (
-    <div>
-      <Drawer
-        variant="permanent"
-        className={expand ? classes.openDrawer : classes.closeDrawer}
-        classes={{ paper: expand ? classes.openDrawer : classes.closeDrawer }}
-      >
-        <div>
-          <Toolbar/>
-          <List>
+    <Paper className={expand ? classes.openDrawer : classes.closeDrawer}>
+      <div className={classes.container}>
+        <div >
+          <List dense>
             {getMenu().map(({ name, id }) => (
               <ListItem 
                 button
                 key={name}
+                dense
+                disableGutters
                 className={widgets[id] ? classes.selected : classes.unselected}
-                onClick={() => createWidget(id)}
+                onClick={() => createOrFocusWidget(id)}
               >
-                <ListItemIcon className={classes.noColor}>
-                  <AdjustIcon/>
+                <ListItemIcon className={classes.icon}>
+                  <DrawerIcon widgetId={id} selected={!!widgets[id] && widgets[id].status !== WidgetStatus.BORDER}/>
                 </ListItemIcon>
-                <ListItemText>
+                <ListItemText className={classes.text}>
                   <Typography noWrap>{name}</Typography>
                 </ListItemText>
               </ListItem>
             ))}
           </List>
+        </div>
+        <div></div>
           
-          
+        <div className={classes.buttonContainer}>
           <IconButton
-            className={classes.colapse}
+            className={classes.button}
             onClick={() => {
               setExpand(!expand)
               setTimeout(() => window.dispatchEvent(new Event('resize')), 400)
-              // pepe()
             }}
           >
             {expand ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
           </IconButton>
-
-          
         </div>
-        
-      </Drawer>
-    </div>
+      </div>
+    </Paper>
   )
-  
-}
-
-const pepe = () => {
-  window.expansionTransit = {
-    timer: setInterval(() => {
-      window.dispatchEvent(new Event('resize'))
-      console.log(window.expansionTransit.count)
-      if (window.expansionTransit.count > 0) {
-        window.expansionTransit.count -= 1
-      } else {
-        clearInterval(window.expansionTransit.timer)
-        console.log('clear')
-      }
-      
-    }, 150), 
-    count: 1
-  }
 }
