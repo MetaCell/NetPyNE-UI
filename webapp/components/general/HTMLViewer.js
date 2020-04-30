@@ -51,10 +51,15 @@ class CustomHTMLViewer extends Component {
 
   adjustSVGSize () {
     const svg = this.getSvgComponent()
-    svg.removeAttribute('width');
-    svg.removeAttribute('height');
-    svg.setAttribute('width', `${this.dimensions.width}px`);
-    svg.setAttribute('height', `${this.dimensions.height}px`);
+    if (svg) {
+      const width = (this.dimensions.width - 20) > 0 ? `${this.dimensions.width - 20}px` : '0px'
+      const height = (this.dimensions.height - 20) > 0 ? `${this.dimensions.height - 20}px` : '0px'
+      svg.removeAttribute('width');
+      svg.removeAttribute('height');
+      svg.setAttribute('width', width);
+      svg.setAttribute('height', height);
+    }
+    
   }
 
   resizeIfNeeded (){

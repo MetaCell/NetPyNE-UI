@@ -27,8 +27,8 @@ export default class NetPyNENewPlot extends React.Component {
   
   render () {
     return <div>
-      <Fab size='small' style={{ margin: 10, float: 'left' }} onClick={this.handleButtonClick}>
-        <ContentAdd />
+      <Fab size='small' color='primary' style={{ margin: 10, float: 'left' }} onClick={this.handleButtonClick}>
+        <ContentAdd style={{ color: 'white' }}/>
       </Fab>
       <Menu 
         open={Boolean(this.state.anchorEl)}

@@ -14,7 +14,8 @@ import FileBrowser from '../../general/FileBrowser';
 
 import { withStyles } from '@material-ui/core/styles';
 
-const styles = ({ spacing, typography, zIndex }) => ({ 
+const styles = ({ spacing, typography, zIndex, palette }) => ({ 
+  root: { color: palette.common.white },
   container: { 
     marginTop: spacing(2),
     display: 'flex',
@@ -200,7 +201,7 @@ class UploadDownloadFile extends React.Component {
       switch (mode) {
       case 'UPLOAD':
         var content = (
-          <div>
+          <div className={classes.root}>
             <div className={classes.container}>
               <div >
                 <input 
@@ -221,7 +222,7 @@ class UploadDownloadFile extends React.Component {
         break;
       case 'DOWNLOAD':
         var content = (
-          <div>
+          <div className={classes.root}>
             <div className={classes.container}>
               <IconButton
                 className={classes.icon}

@@ -63,7 +63,7 @@ class PlotButtons extends React.Component {
     this.props.newWidget({
       path: pathName,
       component: 'Plot',
-      panelName: 'topPanel'
+      panelName: 'plotPanel'
     })
 
     if (i < total) {

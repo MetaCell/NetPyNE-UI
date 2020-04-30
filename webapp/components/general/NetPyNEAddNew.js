@@ -3,11 +3,12 @@ import ContentAdd from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 import { withStyles } from '@material-ui/core/styles';
 
-const styles = ({ spacing }) => ({
+const styles = ({ spacing, palette }) => ({
   root : { 
     marginLeft: spacing(1),
     minWidth: 56
-  } 
+  },
+  plus:{ color: palette.common.white }
 })
 
 class NetPyNEAddNew extends React.Component {
@@ -34,7 +35,7 @@ class NetPyNEAddNew extends React.Component {
         color='primary'
         className={classes.root}
       >
-        <ContentAdd />
+        <ContentAdd className={classes.plus}/>
       </Fab>
     );
   }

@@ -4,6 +4,18 @@ import PythonConsole from '@geppettoengine/geppetto-client/js/components/interfa
 
 import { NetPyNEInstantiated, HTMLViewer } from 'netpyne/components';
 
+import {
+  NetPyNESynapses,
+  NetPyNEConnectivityRules,
+  NetPyNECellRules,
+  NetPyNEStimulationSources,
+  NetPyNEStimulationTargets,
+  NetPyNESimConfig,
+  NetPyNEPopulations,
+  NetPyNEPlots,
+  NetPyNEPythonConsole
+} from "netpyne/components";
+
 export default class WidgetFactory{
 
   constructor () {
@@ -34,7 +46,7 @@ export default class WidgetFactory{
     const component = widgetConfig.component;
     switch (component) {
     case "PythonConsole": {
-      return <PythonConsole pythonNotebookPath={"notebooks/notebook.ipynb"} />;
+      return <NetPyNEPythonConsole />;
     }
     case "D3Canvas":
       return <NetPyNEInstantiated/>
@@ -46,6 +58,31 @@ export default class WidgetFactory{
           id={widgetConfig.id}
         />
       )
+    }
+
+    case "popParams":{
+      return <NetPyNEPopulations model={"netParams.popParams"} />
+    }
+    case "cellParams":{
+      return <NetPyNECellRules model={"netParams.cellParams"} />
+    }
+    case "synMechParams":{
+      return <NetPyNESynapses model={"netParams.synMechParams"} />
+    }
+    case "connParams":{
+      return <NetPyNEConnectivityRules model={"netParams.connParams"} />
+    }
+    case "stimSourceParams":{
+      return <NetPyNEStimulationSources model={"netParams.stimSourceParams"} />
+    }
+    case "stimTargetParams":{
+      return <NetPyNEStimulationTargets model={"netParams.stimTargetParams"} />
+    }
+    case "simConfig":{
+      return <NetPyNESimConfig model={"simConfig"} />
+    }
+    case "analysis":{
+      return <NetPyNEPlots model={"simConfig.analysis"} />
     }
     }
   }

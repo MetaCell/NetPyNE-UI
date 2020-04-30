@@ -6,56 +6,19 @@ import Actions from 'geppetto-client/js/components/interface/flexLayout2/src/mod
 import { WidgetStatus } from '../../constants';
 import { isEqual } from '../../Utils';
 import WidgetFactory from './WidgetFactory';
+import TabsetIconFactory from './TabsetIconFactory'
+import defaultLayoutConfiguration from './layoutConf.json';
+import simulateLayoutConfiguration from './simulateLayoutConf.json';
+import Icon from '@material-ui/core/Icon';
 
+import { withStyles } from '@material-ui/core/styles'
 
-const defaultLayoutConfiguration = {
-  "global": { sideBorders: 8 },
-  "layout": {
-    "type": "row",
-    "weight": 100,
-    "id": "root",
-    "children": [
-     
-      {
-        "type": "row",
-        "weight": 100,
-        "children": [
-          {
-            "type": "tabset",
-            "weight": 70,
-            "id": "topPanel",
-            "enableDeleteWhenEmpty": false,
-            "children": [
-            ]
-          },
-          {
-            "type": "tabset",
-            "weight": 30,
-            "id": "bottomPanel",
-            "enableDeleteWhenEmpty": false,
-            "children": [
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  "borders": [
-    {
-      "type": "border",
-      "location": "bottom",
-      "size": 100,
-      "children": [],
-      "barSize": 10
-    }
-  ]
-};
 
 /**
  * Transforms a widget configutation into a flexlayout node descriptor
  */
 function widget2Node (configuration) {
-  const { id, name, component, instancePath, status, panelName, enableClose = true } = configuration;
+  const { id, name, component, instancePath, status, panelName, enableClose = true, ...others } = configuration;
   return {
     id,
     name,
@@ -66,15 +29,28 @@ function widget2Node (configuration) {
     enableClose: enableClose,
     // attr defined inside config, will also be available from within flexlayout nodes.  For example:  node.getNodeById(id).getConfig()
     config: configuration ,
+    ...others
   };
 }
 
-export default class LayoutManager extends Component {
+const styles = ({ spacing }) => ({
+  container: {
+    position: 'relative',
+    flexGrow: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'stretch'
+  },
+  spacer: { width: spacing(1) },
+  flexlayout: { position: 'relative', flexGrow: 1 }
+})
+
+
+class LayoutManager extends Component {
 
   constructor (props) {
     super(props);
     const layout = this.props.layout ? this.props.layout : defaultLayoutConfiguration;
-    this.model = FlexLayout.Model.fromJson(layout);
     this.destroyWidget = this.props.destroyWidget ? this.props.destroyWidget : () => console.debug('destroyWidget not defined');
     this.activateWidget = this.props.activateWidget ? this.props.activateWidget : () => console.debug('activateWidget not defined');
     this.maximizeWidget = this.props.maximizeWidget ? this.props.maximizeWidget : () => console.debug('maximizeWidget not defined');
@@ -82,18 +58,34 @@ export default class LayoutManager extends Component {
     
 
     this.widgetFactory = this.props.widgetFactory ? this.props.widgetFactory : new WidgetFactory();
+    this.tabsetIconFactory = this.props.TabsetIconFactory ? this.props.TabsetIconFactory : new TabsetIconFactory();
+
+    this.cacheModels = { 
+      edit: FlexLayout.Model.fromJson(layout), 
+      simulate: FlexLayout.Model.fromJson(simulateLayoutConfiguration) 
+    }
   }
+
+
   componentDidMount () {
     const { widgets } = this.props;
     this.addWidgets(Object.values(widgets));
   }
 
   componentDidUpdate (prevProps, prevState) {
+    if (prevProps.editMode !== this.props.editMode) {
+      return 
+    }
+
     const { widgets } = this.props;
     const oldWidgets = prevProps.widgets;
     const newWidgets = this.findNewWidgets(widgets, oldWidgets);
-    if (newWidgets) {
+    if (newWidgets.length > 0) {
       this.addWidgets(newWidgets);
+    }
+
+    if (!this.props.editMode && !this.cacheModels.simulate.getNodeById(widgets.python.id)) {
+      this.addWidgets([widgets.python]);
     }
     
     const updatedWidgets = this.findUpdatedWidgets(widgets, oldWidgets);
@@ -108,8 +100,15 @@ export default class LayoutManager extends Component {
     }
   }
  
+  getModel () {
+    if (this.props.editMode) {
+      return this.cacheModels.edit
+    }
+    return this.cacheModels.simulate
+  }
+  
   addWidgets (widgets) {
-    const { model } = this;
+    const model = this.getModel()
     for (let newWidgetDescriptor of widgets) {
 
       if (!model.getNodeById(newWidgetDescriptor.id)) {
@@ -122,7 +121,7 @@ export default class LayoutManager extends Component {
     for (let widget of widgets) {
    
       if (widget.status == WidgetStatus.ACTIVE) {
-        this.model.doAction(FlexLayout.Actions.selectTab(widget.id));
+        model.doAction(FlexLayout.Actions.selectTab(widget.id));
       }
       
     }
@@ -130,8 +129,9 @@ export default class LayoutManager extends Component {
   }
 
   deleteWidgets (widgets) {
+    const model = this.getModel()
     for (let widget of widgets) {
-      this.model.doAction(FlexLayout.Actions.deleteTab(widget.id));
+      model.doAction(FlexLayout.Actions.deleteTab(widget.id));
     }
   }
 
@@ -140,14 +140,14 @@ export default class LayoutManager extends Component {
   }
 
   updateWidgets (widgets) {
-
+    const model = this.getModel()
     for (let widget of widgets) {
 
       this.updateWidget(widget);
    
       // This updates plotly.js plots to new panel sizes
       if (widget.status == WidgetStatus.ACTIVE) {
-        this.model.doAction(FlexLayout.Actions.selectTab(widget.id));
+        model.doAction(FlexLayout.Actions.selectTab(widget.id));
       }
       
     }
@@ -155,9 +155,10 @@ export default class LayoutManager extends Component {
   }
 
   updateWidget (widget) {
+    const model = this.getModel()
     if (widget) {
       this.widgetFactory.updateWidget(widget);
-      this.model.doAction(Actions.updateNodeAttributes(widget.id, widget2Node(widget))); 
+      model.doAction(Actions.updateNodeAttributes(widget.id, widget2Node(widget))); 
     }
     
   }
@@ -165,6 +166,11 @@ export default class LayoutManager extends Component {
   
   factory (node) {
     return this.widgetFactory.factory(node.getConfig());
+  }
+
+  iconFactory (node) {
+    // TODO move to newest flexlayout-react to add this functionality
+    return this.tabsetIconFactory.factory(node.getConfig());
   }
 
 
@@ -188,6 +194,7 @@ export default class LayoutManager extends Component {
   
 
   onAction (action) {
+    const model = this.getModel()
     switch (action.type){
     case Actions.SET_ACTIVE_TABSET:
       break;
@@ -209,11 +216,11 @@ export default class LayoutManager extends Component {
       break;
     }
        
-    this.model.doAction(action);
+    model.doAction(action);
   }
 
   onActionMaximizeWidget (action) {
-    const { model } = this;
+    const model = this.getModel()
     const { widgets } = this.props;
     const { maximizeWidget, activateWidget } = this;
     const panel2maximize = model.getNodeById(action.data.node);
@@ -239,7 +246,7 @@ export default class LayoutManager extends Component {
   }
 
   onActionDeleteWidget (action) {
-    const { model } = this;
+    const model = this.getModel()
     const { widgets } = this.props;
     const maximizedWidget = this.findMaximizedWidget(widgets);
     // change widget status
@@ -262,32 +269,35 @@ export default class LayoutManager extends Component {
 
 
   clickOnBordersAction (node) {
-    this.model.doAction(FlexLayout.Actions.moveNode(node.getId(), 'bottomPanel', FlexLayout.DockLocation.CENTER, 0));
+    const model = this.getModel()
+    model.doAction(FlexLayout.Actions.moveNode(node.getId(), 'bottomPanel', FlexLayout.DockLocation.CENTER, 0));
   }
 
-  onRenderTabSet (panel, renderValues) {
-    if (panel.getType() === "tabset") {
-      if (panel.getId() != 'leftPanel' && panel.getChildren().length > 0){
-        renderValues.buttons.push(<div key={panel.getId()} className="fa fa-window-minimize customIconFlexLayout" onClick={() => {
-          this.model.doAction(FlexLayout.Actions.moveNode(panel.getSelectedNode().getId(), "border_bottom", FlexLayout.DockLocation.CENTER, 0));
-        }} />);
-      }
-    }
+  onRenderTab (node,renderValues) {
+    renderValues.leading = <Icon className={node.getConfig().icon}/>
   }
   render () {
-    
+    const { classes } = this.props
     return (
-      <div style={{ position: 'relative', flexGrow: 1 }}>
-        <FlexLayout.Layout
-          ref="layout"
-          model={this.model}
-          factory={this.factory.bind(this)}
-          onAction={action => this.onAction(action)}
-          clickOnBordersAction={node => this.clickOnBordersAction(node)}
-          onRenderTabSet={(node, renderValues) => this.onRenderTabSet(node, renderValues)}
-        />
-     
+      <div className={classes.container}>
+        <div className={classes.spacer}/>
+        <div className={classes.flexlayout}>
+          <FlexLayout.Layout
+            ref="layout"
+            model={this.getModel()}
+            factory={this.factory.bind(this)}
+            iconFactory={this.iconFactory.bind(this)}
+            onAction={action => this.onAction(action)}
+            clickOnBordersAction={node => this.clickOnBordersAction(node)}
+            onRenderTab={(node,renderValues) => this.onRenderTab(node,renderValues)}
+          />
+        </div>
+        
+        <div className={classes.spacer}/>
       </div>
     )
   }
 }
+
+
+export default withStyles(styles)(LayoutManager)

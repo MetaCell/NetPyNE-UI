@@ -1,5 +1,5 @@
 import React from 'react';
-import Tree from 'geppetto-client/js/components/interface/tree/Tree'
+import Tree from '@geppettoengine/geppetto-client/js/components/interface/tree/Tree'
 import Utils from '../../Utils';
 import Button from '@material-ui/core/Button';
 import { changeNodeAtPath } from 'react-sortable-tree';
@@ -142,7 +142,7 @@ export default class FileBrowser extends React.Component {
         onClose={() => this.props.onRequestClose()}
       >
         <DialogContent>
-          <div style={{ marginBottom: '15px' }}>
+          <div style={{ marginBottom: '15px', color: 'white' }}>
             <b>{selectMessage}</b>
             These paths are relative to:<br/>
             <div className="flex-row fx-center ">

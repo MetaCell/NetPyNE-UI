@@ -7,8 +7,10 @@ export const RESET_LAYOUT = 'RESET_LAYOUT';
 export const DESTROY_WIDGET = 'DESTROY_WIDGET';
 export const ADD_PLOT_TO_EXISTING_WIDGET = 'ADD_PLOT_TO_EXISTING_WIDGET'
 
+export const SWITCH_LAYOUT = 'SWITCH_LAYOUT'
 
-export const newWidget = ({ path, component, panelName }) => ({
+
+export const newWidget = ({ path, component, panelName, ...others }) => ({
   type: ADD_WIDGET,
   data: {
     id: path,
@@ -16,7 +18,8 @@ export const newWidget = ({ path, component, panelName }) => ({
     component: component,
     name: path.slice(FILEVARIABLE_LENGTH),
     status: WidgetStatus.ACTIVE,
-    panelName: panelName
+    panelName: panelName,
+    ...others
   }
 });
 
@@ -56,3 +59,4 @@ export const destroyWidget = id => ({
 
 export const resetLayout = { type: RESET_LAYOUT, };
 
+export const switchLayout = { type: SWITCH_LAYOUT, };

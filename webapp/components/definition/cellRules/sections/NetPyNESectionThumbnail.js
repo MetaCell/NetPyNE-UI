@@ -46,7 +46,7 @@ export default class NetPyNESectionThumbnail extends React.Component {
         <Button
           variant="contained"
           id={name}
-          color={selected ? 'secondary' : 'primary'}
+          color={selected ? 'primary' : 'secondary'}
           style={ styles.btn }
           onMouseEnter={ () => this.setState({ isHovered: true }) }
           onMouseLeave={ () => this.setState({ isHovered: false }) }

@@ -117,11 +117,6 @@ export default class NetPyNEPlots extends React.Component {
 
     return (
       <Card style={{ clear: 'both' }}>
-        <CardHeader
-          title="Plots configuration"
-          subheader="Define here the options to customize the plots"
-          id="Plots"
-        />
         <CardContent className={"tabContainer"} >
           <div className={"thumbnails"}>
             <div className="breadcrumb">

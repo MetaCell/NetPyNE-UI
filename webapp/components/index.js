@@ -6,12 +6,15 @@ import {
   activateWidget,
   destroyWidget,
   minimizeWidget,
-  maximizeWidget
+  maximizeWidget,
+  newWidget
 } from "../redux/actions/flexlayout";
 import { openBackendErrorDialog, closeBackendErrorDialog } from '../redux/actions/errors';
-import { updateCards, editModel, simulateNetwork, createNetwork, createAndSimulateNetwork, showNetwork, pythonCall } from "../redux/actions/general";
+import {
+  updateCards, editModel, simulateNetwork, createNetwork, 
+  createAndSimulateNetwork, showNetwork, pythonCall, modelLoaded 
+} from "../redux/actions/general";
 import { closeDrawerDialogBox, openDrawerDialogBox } from '../redux/actions/drawer';
-import { newWidget } from "../redux/actions/flexlayout";
 
 const updateCardsDispatch = dispatch => ({ updateCards: () => dispatch(updateCards) });
 const pythonCallErrorDispatch = dispatch => ({ pythonCallErrorDialogBox: payload => dispatch(openBackendErrorDialog(payload)) });
@@ -86,7 +89,7 @@ export const NetPyNECellRule = connect((state, ownProps) => ({
 
 import _LayoutManager from "./layout/LayoutManager";
 export const LayoutManager = connect(
-  state => state.flexlayout,
+  state => ({ ...state.flexlayout, editMode: state.general.editMode }),
   dispatch => ({
     minimizeWidget: id => dispatch(minimizeWidget(id)),
     destroyWidget: id => dispatch(destroyWidget(id)),
@@ -219,6 +222,30 @@ export const PlotButtons = connect(
     pythonCallErrorDialogBox: payload => dispatch(openBackendErrorDialog(payload)) 
   })
 )(_PlotButton)
+
+
+import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole'
+export const NetPyNEPythonConsole = connect(
+  null,
+  dispatch => ({ 
+    modelLoaded: () => dispatch(modelLoaded), 
+    newWidget: widget => dispatch(newWidget(widget)),
+    activateWidget: widgetId => dispatch(activateWidget(widgetId))
+  })
+)(_NetPyNEPythonConsole)
+
+import _Drawer from './settings/Drawer'
+export const Drawer = connect(
+  state => ({ 
+    widgets: state.flexlayout.widgets,
+    editMode: state.general.editMode 
+  }),
+  dispatch => ({ 
+    newWidget: widget => dispatch(newWidget(widget)),
+    activateWidget: widgetId => dispatch(activateWidget(widgetId))
+  })
+)(_Drawer)
+
 // ---------------------------------------------------------------------------------------- //
 
 // DEFAULTS

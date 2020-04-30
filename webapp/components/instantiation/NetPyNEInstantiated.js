@@ -12,18 +12,13 @@ const styles = {
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
     zIndex: '999',
     height: '100%',
-    width: '100%',
+    width: '98%',
     overflow: 'hidden'
   },
 
   instantiatedContainer: {
     height: '100%', 
     width: '100%', 
-  },
-  controlpanelBtn: {
-    position: 'absolute', 
-    left: 34, 
-    top: 280 
   },
 };
 
@@ -121,15 +116,6 @@ export default class NetPyNEInstantiated extends React.Component {
           >
           </ControlPanel>
         </div>
-
-        <IconButton style={styles.controlpanelBtn}
-          onClick={() => {
-            $('#controlpanel').show()
-            this.setState({ bringItToFront: 1 })
-          }}
-          icon={"fa-list"}
-          id="ControlPanelButton"
-        />
 
         <NetWorkControlButtons/>
 

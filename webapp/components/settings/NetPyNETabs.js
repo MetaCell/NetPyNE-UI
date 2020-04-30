@@ -48,11 +48,16 @@ class NetPyNETabs extends React.Component {
   }
   handleChange = tab => {
     if (tab == "define") {
-      this.props.editModel();
-      this.setState({ editTab: true })
+      if (!this.props.editMode) {
+        this.props.editModel();
+        this.setState({ editTab: true })
+      }
+      
     } else {
-      this.rightTabAction();
-      this.setState({ editTab: false })
+      if (this.props.editMode) {
+        this.rightTabAction();
+        this.setState({ editTab: false })
+      }
     }
   };
 

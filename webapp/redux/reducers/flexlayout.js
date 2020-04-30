@@ -4,6 +4,7 @@ import {
   RESET_LAYOUT,
   DESTROY_WIDGET,
   ACTIVATE_WIDGET,
+  SWITCH_LAYOUT
 } from '../actions/flexlayout';
 
 import { MODEL_LOADED } from '../actions/general';
@@ -14,39 +15,112 @@ function removeUndefined (obj) {
   return Object.keys(obj).forEach(key => obj[key] === undefined ? delete obj[key] : '');
 }
 
-export const FLEXLAYOUT_DEFAULT_STATE = { 
-  widgets: {
-    
-    /*
-     * 'python': { 
-     *   id: 'python', 
-     *   name: 'Python', 
-     *   status: WidgetStatus.ACTIVE, 
-     *   icon: 'fa-python',
-     *   component: 'PythonConsole', 
-     *   panelName: "bottomPanel",
-     *   enableClose: false
-     * },
-     */
-     
-    ...MODEL_LOADED_STATE_WIDGETS
-    
-  },
-
+export const PYTHON_CONSOLE_WIDGET = { 
+  id: 'python', 
+  name: 'Python', 
+  status: WidgetStatus.ACTIVE, 
+  icon: 'fa fa-code',
+  component: 'PythonConsole', 
+  panelName: "consolePanel",
+  enableClose: false,
+  enableDrag: false,
+  enableRename: false
 };
 
-
-const MODEL_LOADED_STATE_WIDGETS = {
-  'D3Canvas': { 
-    id: 'D3Canvas', 
-    name: 'Network', 
-    status: WidgetStatus.ACTIVE, 
-    icon: 'fa-python',
-    component: 'D3Canvas', 
-    panelName: "topPanel",
-    enableClose: false
-  }
+export const MORPHOLOGY_WIDGET = {
+  id: 'D3Canvas', 
+  name: 'Morphology', 
+  status: WidgetStatus.ACTIVE, 
+  icon: 'fa fa-dot-circle-o',
+  component: 'D3Canvas', 
+  panelName: "morphoPanel",
+  enableRename: false
 }
+
+export const HLS_WIDGETS = {
+  'popParams': { 
+    id: 'popParams', 
+    name: 'Populations', 
+    status: WidgetStatus.ACTIVE, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'popParams', 
+    panelName: "hlsPanel",
+    enableRename: false
+  },
+  'cellParams': { 
+    id: 'cellParams', 
+    name: 'Cell rules', 
+    status: WidgetStatus.HIDDEN, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'cellParams', 
+    panelName: "hlsPanel",
+    enableRename: false
+  },
+  'synMechParams': { 
+    id: 'synMechParams', 
+    name: 'Synapses', 
+    status: WidgetStatus.HIDDEN, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'synMechParams', 
+    panelName: "hlsPanel",
+    enableRename: false
+  },
+  'connParams': { 
+    id: 'connParams', 
+    name: 'Connections', 
+    status: WidgetStatus.HIDDEN, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'connParams', 
+    panelName: "hlsPanel",
+    enableRename: false
+  },
+  'stimSourceParams': { 
+    id: 'stimSourceParams', 
+    name: 'Stim. sources', 
+    status: WidgetStatus.HIDDEN, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'stimSourceParams', 
+    panelName: "hlsPanel",
+    enableRename: false
+  },
+  'stimTargetParams': { 
+    id: 'stimTargetParams',
+    name: 'Stim. targets',
+    status: WidgetStatus.HIDDEN, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'stimTargetParams',
+    panelName: "hlsPanel",
+    enableRename: false
+  },
+  'simConfig': { 
+    id: 'simConfig', 
+    name: 'Settings', 
+    status: WidgetStatus.HIDDEN, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'simConfig', 
+    panelName: "hlsPanel",
+    enableRename: false
+  },
+  'analysis': { 
+    id: 'analysis', 
+    name: 'Anaylysis', 
+    status: WidgetStatus.HIDDEN, 
+    icon: 'fa fa-dot-circle-o',
+    component: 'analysis', 
+    panelName: "hlsPanel",
+    enableRename: false
+  }
+  
+
+}
+
+export const FLEXLAYOUT_DEFAULT_STATE = { 
+  widgets: { 'python': PYTHON_CONSOLE_WIDGET },
+  widgetsBackground: {
+    'D3Canvas': MORPHOLOGY_WIDGET,
+    'python': PYTHON_CONSOLE_WIDGET,
+  }
+};
 
 
 export default (state = FLEXLAYOUT_DEFAULT_STATE, action) => {
@@ -88,14 +162,14 @@ export default (state = FLEXLAYOUT_DEFAULT_STATE, action) => {
     return FLEXLAYOUT_DEFAULT_STATE;
 
   case MODEL_LOADED: 
-    return {
-      ...state, widgets: { 
-        ...state.widgets,
-        ...MODEL_LOADED_STATE_WIDGETS
-      }
-    }
+    return { ...state, widgets: { ...HLS_WIDGETS, ...state.widgets } }
   
-
+  case SWITCH_LAYOUT: {
+    const { widgets, widgetsBackground, ...others } = state
+    return { ...others, widgets: { ...widgetsBackground }, widgetsBackground: { ...widgets } }
+  }
+    
+  
   default:
     return state
   }
@@ -126,5 +200,3 @@ function updateWidgetState (widgets, { status, panelName }) {
 function extractPanelName (action) {
   return action.data.component == "Plot" ? "bottomPanel" : "leftPanel";
 }
-
-    

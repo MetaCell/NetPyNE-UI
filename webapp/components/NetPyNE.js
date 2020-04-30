@@ -1,27 +1,44 @@
 import React from "react";
 import Toolbar from "@material-ui/core/Toolbar";
-import Transition from "./transition/Transition";
+
 import {
-  NetPyNESynapses,
-  NetPyNEConnectivityRules,
-  NetPyNECellRules,
-  NetPyNEStimulationSources,
-  NetPyNEStimulationTargets,
-  NetPyNESimConfig,
   NetPyNEToolBar,
   NetPyNETabs,
-  NetPyNEPopulations,
   LayoutManager,
-  NetPyNEPlots
+  Drawer
 } from "netpyne/components";
 
-export default class NetPyNE extends React.Component {
-  constructor (props) {
-    super(props);
-    this.widgets = {};
-    
-  }
+import { withStyles } from '@material-ui/core/styles'
 
+const styles = ({ zIndex, palette, spacing }) => ({
+  container: {
+    height: "100%",
+    width: "100%",
+    display: "flex",
+    flexDirection: "column"
+  },
+  toolbar: {
+    backgroundColor: palette.primary.main,
+    width: "100%",
+    boxShadow: "0 0px 4px 0 rgba(0, 0, 0, 0.2), 0 0px 8px 0 rgba(0, 0, 0, 0.19)",
+    position: "relative",
+    top: 0,
+    left: 0,
+    zIndex: zIndex.appBar
+  },
+  views: {
+    display: "flex",
+    flexFlow: "rows",
+    width: "100%",
+    marginRight: spacing(-1)
+  },
+  drawer: { marginLeft: spacing(-1) },
+  content: { position: "relative", zIndex: zIndex.drawer + 1 }
+})
+
+
+class NetPyNE extends React.Component {
+  
   openPythonCallDialog (event) {
     const payload = { errorMessage: event['evalue'], errorDetails: event['traceback'].join('\n') }
     this.props.pythonCallErrorDialogBox(payload)
@@ -35,94 +52,27 @@ export default class NetPyNE extends React.Component {
     GEPPETTO.off(GEPPETTO.Events.Error_while_exec_python_command, this.openPythonCallDialog, this)
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps) {
-    if (this.props.data != nextProps.data) {
-      console.log("Initialising NetPyNE Tabs");
-
-      window.metadata = nextProps.data.metadata;
-      window.currentFolder = nextProps.data.currentFolder;
-      window.isDocker = nextProps.data.isDocker;
-    }
-  }
-  
-
   render () {
-    if (!this.props.data) {
-      return <div></div>;
-    } else {
-      if (this.props.editMode) {
-        var content = (
-          <div style={{ marginBottom: "50px" }}>
-            <NetPyNEPopulations model={"netParams.popParams"} />
-            <NetPyNECellRules model={"netParams.cellParams"} />
-            <NetPyNESynapses model={"netParams.synMechParams"} />
-            <NetPyNEConnectivityRules model={"netParams.connParams"} />
-            <NetPyNEStimulationSources model={"netParams.stimSourceParams"} />
-            <NetPyNEStimulationTargets model={"netParams.stimTargetParams"} />
-            <NetPyNESimConfig model={this.props.data.simConfig} />
-            <NetPyNEPlots model={"simConfig.analysis"} />
-          </div>
-        );
-      } else {
-        var content = <LayoutManager />;
-      }
+    const { classes } = this.props
 
-      return (
-        <div
-          style={{
-            height: "100%",
-            width: "100%",
-            display: "flex",
-            flexDirection: "column"
-          }}
-        >
-          <div style={{ position: "relative", zIndex: "100" }}>
-            <Toolbar
-              id="appBar"
-              style={{
-                backgroundColor: "#543a73",
-                width: "100%",
-                boxShadow:
-                  "0 0px 4px 0 rgba(0, 0, 0, 0.2), 0 0px 8px 0 rgba(0, 0, 0, 0.19)",
-                position: "relative",
-                top: "0px",
-                left: "0px",
-                zIndex: 100
-              }}
-            >
-              <div style={{ marginLeft: -12 }}>
-                <NetPyNEToolBar />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexFlow: "rows",
-                  width: "100%",
-                  marginRight: -10
-                }}
-              >
-                <NetPyNETabs />
-              </div>
-            </Toolbar>
-          </div>
-
-          {/** TODO Reengineer Transition using the middleware to handle simulation and instantiation. The transition should only show content related to what actually we want to do
-          <Transition
-            tab={this.state.value}
-            clickOnTab={this.state.tabClicked}
-            handleDeactivateInstanceUpdate={this.handleDeactivateInstanceUpdate}
-            handleDeactivateSimulationUpdate={
-              this.handleDeactivateSimulationUpdate
-            }
-            freezeInstance={this.state.freezeInstance}
-            freezeSimulation={this.state.freezeSimulation}
-            fastForwardInstantiation={this.state.fastForwardInstantiation}
-            fastForwardSimulation={this.state.fastForwardSimulation}
-          /> */}
-
-          {content}
+    return (
+      <div className={classes.container}>
+        <div className={classes.content}>
+          <Toolbar id="appBar" className={classes.toolbar}>
+            <div className={classes.drawer}>
+              <NetPyNEToolBar />
+            </div>
+            <div className={classes.views}>
+              <NetPyNETabs />
+            </div>
+          </Toolbar>
         </div>
-      );
-    }
+        <div style={{ flexGrow:1, display: 'flex', flexDirection: 'row', position: 'relative' }}>
+          <Drawer/>
+          <LayoutManager/>
+        </div>
+      </div>
+    );
   }
 }
+export default withStyles(styles)(NetPyNE)

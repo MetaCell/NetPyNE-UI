@@ -308,7 +308,7 @@ export default class NetPyNECellRules extends React.Component {
       this.setState({ selectedMechanism: newMechanismName });
     }
 
-    if (Object.keys(this.state.value).length === 0) {
+    if (this.state.value && Object.keys(this.state.value).length === 0) {
       this.setState({ 
         selectedCellRule: undefined,
         selectedSection: undefined,
@@ -463,7 +463,7 @@ export default class NetPyNECellRules extends React.Component {
           return selectedCellRule
         }
       } else {
-        return <ContentAdd/>
+        return <ContentAdd style={{ color: 'white' }}/>
       }
 
     case 'sections':
@@ -479,7 +479,7 @@ export default class NetPyNECellRules extends React.Component {
         }
       } else {
         if (page == "sections" ) {
-          return <ContentAdd style={{ height: '100%' }}/>
+          return <ContentAdd style={{ height: '100%', color: 'white' }}/>
         } else {
           if (selectedCellRule) {
             if (!!model && !!model[selectedCellRule] && Object.keys(model[selectedCellRule]['secs']).length > 0){
@@ -659,11 +659,6 @@ export default class NetPyNECellRules extends React.Component {
 
     return (
       <Card style={{ clear: 'both' }}>
-        <CardHeader
-          id="CellRules"
-          title="Cell rules"
-          subheader="Define here the rules to set the biophysics and morphology of the cells in your network"
-        />
         {content}
         {dialogPop}
       </Card>

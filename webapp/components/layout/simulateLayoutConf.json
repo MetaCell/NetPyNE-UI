@@ -1,0 +1,64 @@
+{
+    "global": {
+        "sideBorders": 8,
+        "tabSetHeaderHeight": 26,
+        "tabSetTabStripHeight": 26,
+        "enableEdgeDock": false
+    },
+    "layout": {
+        "type": "tabset",
+        "weight": 100,
+        "id": "root",
+        "children": [
+            {
+                "type": "row",
+                "weight": 50,
+                "children": [
+                    {
+                        "type": "tabset",
+                        "weight": 100,
+                        "id": "morphoPanel",
+                        "enableDeleteWhenEmpty": false,
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "type": "row",
+                "weight": 50,
+                "children": [
+                    {
+                        "type": "row",
+                        "weight": 65,
+                        "children": [
+                            {
+                                "type": "tabset",
+                                "weight": 100,
+                                "id": "plotPanel",
+                                "enableDeleteWhenEmpty": false,
+                                "children": [
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "row",
+                        "weight": 35,
+                        "children": [
+                            {
+                                "type": "tabset",
+                                "weight": 100,
+                                "id": "consolePanel",
+                                "enableDeleteWhenEmpty": false,
+                                "children": [
+                                ]
+                            }
+                        ]
+                    }
+
+                ]
+            }
+        ]
+    }
+  }
+  
