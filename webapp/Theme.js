@@ -5,7 +5,7 @@ import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 export const primaryColor = '#37ABC8'
 
 export const bgLight = '#4A4A4A';
-export const bgRegular = '#434343';
+export const bgRegular = '#424242';
 export const bgDark = '#353535';
 
 export const font = 'Roboto, Helvetica, Arial, sans-serif'

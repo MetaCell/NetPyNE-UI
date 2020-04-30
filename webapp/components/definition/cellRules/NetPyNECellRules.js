@@ -2,15 +2,13 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import ContentAdd from '@material-ui/icons/Add';
 import NavigationMoreHoriz from '@material-ui/icons/MoreHoriz';
-import Card from '@material-ui/core/Card';
-
-import CardContent from '@material-ui/core/CardContent';
 import Fab from '@material-ui/core/Fab';
 
 
 import {
   NetPyNECellRule, 
   NetPyNEThumbnail,
+  GridLayout
 } from 'netpyne/components';
 
 
@@ -600,16 +598,16 @@ export default class NetPyNECellRules extends React.Component {
         />
       )
     }
-    
-    const content = (
-      <CardContent className={"tabContainer"}>
-        <div className={"thumbnails"}>
-          <div className="breadcrumb">
+
+    return (
+      <div style={{ height: '100%', overflowY: 'visible', overflowX: 'hidden', marginRight: '-8px' }}>
+        <GridLayout>
+          
+          <div className="breadcrumby">
             <NetPyNEHome
               selection={selectedCellRule}
               handleClick={() => this.setState({ page: 'main', selectedCellRule: undefined, selectedSection: undefined, selectedMechanism: undefined })}
             />
-
             <div className='ml-2'>
               <Fab
                 id="newCellRuleButton"
@@ -621,12 +619,10 @@ export default class NetPyNECellRules extends React.Component {
                 {this.createLabel('cellRule')}
               </Fab>
             </div>
-
             <NavigationChevronRight
               className='ml-2'
               color='disabled'
             />
-
             <div className='ml-2'>
               <Fab
                 id="newSectionButton"
@@ -641,12 +637,10 @@ export default class NetPyNECellRules extends React.Component {
               </Fab>
             </div>
             
-
             <NavigationChevronRight 
               className='ml-2'
               color='disabled'
             />
-
             <NetPyNENewMechanism
               handleClick={this.handleNewMechanism}
               disabled={selectedSection == undefined || page == 'main'}
@@ -654,20 +648,13 @@ export default class NetPyNECellRules extends React.Component {
               blockButton={page != 'mechanisms' && !!model && !!model[selectedCellRule] && !!model[selectedCellRule]['secs'][selectedSection] && Object.keys(model[selectedCellRule]['secs'][selectedSection]['mechs']).length > 0}
             /> 
           </div>
-          <div style={{ clear: "both" }}/>
-          { container }
-        </div>
-        <div className="details">
-          { selection }
-        </div>
-      </CardContent>
-    );
 
-    return (
-      <Card style={{ clear: 'both' }}>
-        {content}
+          { container }
+          { selection }
+        
+        </GridLayout>
         {dialogPop}
-      </Card>
+      </div>
     );
   }
 }

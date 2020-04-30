@@ -2,7 +2,6 @@ import React from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import FontIcon from '@material-ui/core/Icon';
-import CardContent from '@material-ui/core/CardContent';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 
@@ -164,16 +163,11 @@ export default class NetPyNESection extends React.Component {
     
     return (
       <div>
-
-        <CardContent style={{ "zIndex": 0 }}>
-          <BottomNavigation value={this.state.selectedIndex} showLabels>
-            {bottomNavigationItems}
-          </BottomNavigation>
-        </CardContent>
+        <BottomNavigation style={{ borderRadius: '4px' }} value={this.state.selectedIndex} showLabels>
+          {bottomNavigationItems}
+        </BottomNavigation>
         <br />
         {content}
-
-
       </div>
     );
   }

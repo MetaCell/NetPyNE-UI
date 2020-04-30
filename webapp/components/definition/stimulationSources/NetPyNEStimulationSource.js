@@ -302,6 +302,7 @@ class NetPyNEStimulationSource extends React.Component {
             className={"netpyneField"}
             id={"sourceName"}
             label="Stimulation source name"
+            style={{ marginTop: 8 }}
           />
           <br />
 

@@ -119,7 +119,7 @@ export default class NetPyNEPlots extends React.Component {
       <Card style={{ clear: 'both' }}>
         <CardContent className={"tabContainer"} >
           <div className={"thumbnails"}>
-            <div className="breadcrumb">
+            <div className="breadcrumby">
               <NetPyNENewPlot 
                 style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
                 handleClick={this.handleNewPlot} 

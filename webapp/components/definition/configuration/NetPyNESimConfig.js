@@ -304,7 +304,7 @@ export default class NetPyNESimConfig extends React.Component {
       <Card style={{ clear: 'both' }}>
         <CardContent className={"tabContainer"}>
           <div>
-            <BottomNavigation value={this.state.selectedIndex}>
+            <BottomNavigation style={{ borderRadius: '4px' }} value={this.state.selectedIndex}>
               <BottomNavigationAction id={"configGeneral"} key={'General'} label={'General'} icon={<FontIcon className={"fa fa-bars"} />} onClick={() => this.select(0, 'General')} />
               <BottomNavigationAction id={"configRecord"} key={'Record'} label={'Record'} icon={<FontIcon className={"fa fa-circle"} />} onClick={() => this.select(1, 'Record')} />
               <BottomNavigationAction id={"configSaveConfiguration"} key={'SaveConfiguration'} label={'Save Configuration'} icon={<FontIcon className={"fa fa-floppy-o"} />} onClick={() => this.select(2, 'SaveConfiguration')} />

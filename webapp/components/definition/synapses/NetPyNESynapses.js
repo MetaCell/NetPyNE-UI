@@ -1,5 +1,4 @@
 import React,{ Component } from 'react';
-import { Card, CardHeader, CardContent } from '@material-ui/core';
 
 import Utils from '../../../Utils';
 import Dialog from '@material-ui/core/Dialog/Dialog';
@@ -10,7 +9,8 @@ import {
   NetPyNEHome,
   NetPyNEAddNew,
   NetPyNEThumbnail,
-  NetPyNESynapse
+  NetPyNESynapse,
+  GridLayout
 } from 'netpyne/components';
 
 export default class NetPyNESynapses extends Component {
@@ -164,25 +164,29 @@ export default class NetPyNESynapses extends Component {
     }
 
     return (
-      <Card style={{ clear: 'both' }}>
-        <CardContent className={"tabContainer"}>
-          <div className={"details"}>
-            {selectedSynapse}
+      <div style={{ height: '100%', overflowY: 'visible', overflowX: 'hidden', marginRight: '-8px', marginTop: '-8px' }}>
+
+        <GridLayout>
+          <div className="breadcrumby">
+            <NetPyNEHome
+              selection={this.state.selectedSynapse}
+              handleClick={() => this.setState({ selectedSynapse: undefined })}
+            />
+            <NetPyNEAddNew id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
           </div>
-          <div className={"thumbnails"}>
-            <div className="breadcrumb">
-              <NetPyNEHome
-                selection={this.state.selectedSynapse}
-                handleClick={() => this.setState({ selectedSynapse: undefined })}
-              />
-              <NetPyNEAddNew id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
-            </div>
-            <div style={{ clear: "both" }}></div>
+
+          <div>
             {Synapses}
-            {dialogPop}
           </div>
-        </CardContent>
-      </Card>
+
+          <div>
+            {selectedSynapse}
+            
+          </div>
+        </GridLayout>
+        {dialogPop}
+      </div>
+      
     );
   }
 }

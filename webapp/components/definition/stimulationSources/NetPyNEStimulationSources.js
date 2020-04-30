@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardHeader, CardContent } from '@material-ui/core';
+
 
 import Utils from '../../../Utils';
 import Dialog from '@material-ui/core/Dialog/Dialog';
@@ -10,6 +10,7 @@ import {
   NetPyNEAddNew,
   NetPyNEThumbnail,
   NetPyNEStimulationSource,
+  GridLayout
 } from 'netpyne/components';
 
 export default class NetPyNEStimulationSources extends Component {
@@ -161,14 +162,12 @@ export default class NetPyNEStimulationSources extends Component {
     if ((this.state.selectedStimulationSource !== undefined) && Object.keys(model).indexOf(this.state.selectedStimulationSource) > -1) {
       selectedStimulationSource = <NetPyNEStimulationSource name={this.state.selectedStimulationSource} renameHandler={this.handleRenameChildren} />;
     }
-    
-    var content = (
-      <CardContent className={"tabContainer"} >
-        <div className={"details"}>
-          {selectedStimulationSource}
-        </div>
-        <div className={"thumbnails"}>
-          <div className="breadcrumb">
+
+    return (
+      <div style={{ height: '100%', overflowY: 'visible', overflowX: 'hidden', marginRight: '-8px' }}>
+
+        <GridLayout>
+          <div className="breadcrumby">
             <NetPyNEHome
               selection={this.state.selectedStimulationSource}
               handleClick={() => this.setState({ selectedStimulationSource: undefined })}
@@ -178,17 +177,12 @@ export default class NetPyNEStimulationSources extends Component {
               handleClick={this.handleNewStimulationSource}
             />
           </div>
-          <div style={{ clear: "both" }}></div>
           {StimulationSources}
-        </div>
-      </CardContent>
-    );
-
-    return (
-      <Card style={{ clear: 'both' }}>
-        {content}
+          {selectedStimulationSource}
+        </GridLayout>
         {dialogPop}
-      </Card>
+      </div>
+      
     );
   }
 }

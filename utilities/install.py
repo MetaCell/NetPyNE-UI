@@ -82,7 +82,7 @@ branch = None
 clone_repo(project='openworm',
            repo_name='pygeppetto',
            folder='pygeppetto',
-           default_branch='development'
+           default_branch='master'
 )
 subprocess.call(['python3', '-m', 'pip', 'install', '-e', '.'], cwd='./pygeppetto/')
 
@@ -90,7 +90,7 @@ subprocess.call(['python3', '-m', 'pip', 'install', '-e', '.'], cwd='./pygeppett
 clone_repo(project='openworm',
            repo_name='org.geppetto.frontend.jupyter',
            folder='org.geppetto.frontend.jupyter',
-           default_branch='development'
+           default_branch='master'
 )
 
 

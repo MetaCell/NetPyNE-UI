@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import { Card, CardHeader, CardContent } from '@material-ui/core';
+import React from 'react';
 import Utils from '../../../Utils';
 
 import {
@@ -7,6 +6,7 @@ import {
   NetPyNEAddNew,
   NetPyNEThumbnail,
   NetPyNEPopulation,
+  GridLayout
 } from 'netpyne/components';
 
 
@@ -188,32 +188,24 @@ export default class NetPyNEPopulations extends React.Component {
     }
 
     return (
-      <Card style={{ clear: 'both' }}>
-        <CardContent className={"tabContainer"} >
-          <div className={"details"}>
-            {selectedPopulation}
+      <div style={{ height: '100%', overflowY: 'visible', overflowX: 'hidden', marginRight: '-8px' }}>
+        <GridLayout>
+          <div className="breadcrumby">
+            <NetPyNEHome
+              selection={this.state.selectedPopulation}
+              handleClick={() => this.setState({ selectedPopulation: undefined })}
+            />
+            <NetPyNEAddNew 
+              id={"newPopulationButton"} 
+              handleClick={this.handleNewPopulation}
+            />
           </div>
 
-          <div className={"thumbnails"}>
-            <div className="breadcrumb">
-              <NetPyNEHome
-                selection={this.state.selectedPopulation}
-                handleClick={() => this.setState({ selectedPopulation: undefined })}
-              />
-
-              <NetPyNEAddNew 
-                id={"newPopulationButton"} 
-                handleClick={this.handleNewPopulation}
-              />
-
-            </div>
-            <div style={{ clear: "both" }}></div>
-            {populations}
-          </div>
-        </CardContent>
+          {populations}
+          {selectedPopulation}
+        </GridLayout>
         {dialogPop}
-      </Card>
-
+      </div>
     );
   }
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardContent } from '@material-ui/core';
+
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
 
@@ -9,7 +9,8 @@ import {
   NetPyNEHome,
   NetPyNEAddNew,
   NetPyNEThumbnail,
-  NetPyNEStimulationTarget
+  NetPyNEStimulationTarget,
+  GridLayout
 } from 'netpyne/components';
 
 
@@ -162,13 +163,10 @@ export default class NetPyNEStimulationTargets extends Component {
       selectedStimulationTarget = <NetPyNEStimulationTarget name={this.state.selectedStimulationTarget} renameHandler={this.handleRenameChildren}/>;
     }
 
-    var content = (
-      <CardContent className={"tabContainer"} >
-        <div className={"details"}>
-          {selectedStimulationTarget}
-        </div>
-        <div className={"thumbnails"}>
-          <div className="breadcrumb">
+    return (
+      <div style={{ height: '100%', overflowY: 'visible', overflowX: 'hidden', marginRight: '-8px' }}>
+        <GridLayout>
+          <div className="breadcrumby">
             <NetPyNEHome
               selection={this.state.selectedStimulationTarget}
               handleClick={() => this.setState({ selectedStimulationTarget: undefined })}
@@ -177,17 +175,12 @@ export default class NetPyNEStimulationTargets extends Component {
             <NetPyNEAddNew id={"newStimulationTargetButton"} handleClick={this.handleNewStimulationTarget} />
 
           </div>
-          <div style={{ clear: "both" }}></div>
           {StimulationTargets}
-        </div>
-      </CardContent>
-    );
-
-    return (
-      <Card style={{ clear: 'both' }}>
-        {content}
+          {selectedStimulationTarget}
+        </GridLayout>
         {dialogPop}
-      </Card>
+      </div>
+
     );
   }
 }

@@ -1,6 +1,5 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
-import { CardContent } from '@material-ui/core';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import FontIcon from '@material-ui/core/Icon';
 import Utils from '../../../Utils';
@@ -222,11 +221,9 @@ class NetPyNEPopulation extends React.Component {
 
     return (
       <div>
-        <CardContent>
-          <BottomNavigation value={this.state.selectedIndex}>
-            {this.getModelParameters()}
-          </BottomNavigation>
-        </CardContent>
+        <BottomNavigation style={{ borderRadius: '4px' }} value={this.state.selectedIndex}>
+          {this.getModelParameters()}
+        </BottomNavigation>
         <br />
         {content}
       </div>

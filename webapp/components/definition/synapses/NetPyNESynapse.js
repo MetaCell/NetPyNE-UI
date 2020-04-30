@@ -162,6 +162,7 @@ class NetPyNESynapse extends React.Component {
           disabled={this.renaming}
           className={"netpyneField"}
           label="Synapse name"
+          style={{ marginTop: 8 }}
         />
         
         <NetPyNEField id="netParams.synMechParams.mod" className={classes.selectField}>

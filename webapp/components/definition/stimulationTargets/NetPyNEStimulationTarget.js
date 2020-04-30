@@ -1,5 +1,4 @@
 import React from 'react';
-import CardText from '@material-ui/core/Card';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import CondsIcon from '@material-ui/icons/LocalOffer';
@@ -254,11 +253,9 @@ export default class NetPyNEStimulationTarget extends React.Component {
     
     return (
       <div>
-        <CardText>
-          <BottomNavigation value={this.state.selectedIndex}>
-            {bottomNavigationItems}
-          </BottomNavigation>
-        </CardText>
+        <BottomNavigation style={{ borderRadius: '4px' }} value={this.state.selectedIndex}>
+          {bottomNavigationItems}
+        </BottomNavigation>
         <br />
         {content}
         {extraContent}

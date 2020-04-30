@@ -266,3 +266,4 @@ export { default as NetPyNECoordsRange } from "./general/NetPyNECoordsRange";
 export { default as NetPyNESimConfig } from "./definition/configuration/NetPyNESimConfig";
 export { default as HTMLViewer } from './general/HTMLViewer'
 export { default as Tooltip } from './general/Tooltip'
+export { default as GridLayout } from './general/GridLayout'
