@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import Select from '../../../general/Select';
-import NetPyNEIncludeConnection from '../../../../redux/reduxconnect/NetPyNEIncludeConnection';
-import NetPyNEField from '../../../general/NetPyNEField';
 
-var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledSelectField = PythonControlledCapability.createPythonControlledControl(Select);
+import {
+  NetPyNEInclude,
+  NetPyNEField,
+  NetPyNESelectField
+} from 'netpyne/components';
+
 
 export default class plotConn extends React.Component {
 
@@ -16,7 +17,7 @@ export default class plotConn extends React.Component {
   render () {
     var tag = "simConfig.analysis['plotConn']"
     return <div>
-      <NetPyNEIncludeConnection
+      <NetPyNEInclude
         id={"simConfig.analysis.plotConn.include"}
         model={tag + "['include']"} 
         defaultOptions={['all', 'allCells', 'allNetStims']}
@@ -24,15 +25,15 @@ export default class plotConn extends React.Component {
       />
         
       <NetPyNEField id="simConfig.analysis.plotConn.feature" className="listStyle" >
-        <PythonControlledSelectField model={tag + "['feature']"} />
+        <NetPyNESelectField model={tag + "['feature']"} />
       </NetPyNEField>
         
       <NetPyNEField id="simConfig.analysis.plotConn.groupBy" className="listStyle" >
-        <PythonControlledSelectField model={tag + "['groupBy']"} />
+        <NetPyNESelectField model={tag + "['groupBy']"} />
       </NetPyNEField>
         
       <NetPyNEField id="simConfig.analysis.plotConn.orderBy" className="listStyle" >
-        <PythonControlledSelectField model={tag + "['orderBy']"} />
+        <NetPyNESelectField model={tag + "['orderBy']"} />
       </NetPyNEField>
     </div>
   }

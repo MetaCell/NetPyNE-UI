@@ -145,7 +145,7 @@ const Utils = {
   },
 
   parsePythonException (exception){
-    return <pre dangerouslySetInnerHTML={{ __html: IPython.utils.fixConsole(exception) }}></pre>
+    return <pre style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: IPython.utils.fixConsole(exception) }}></pre>
   },
 
   handleUpdate (updateCondition, newValue, originalValue, context, componentName) {
@@ -183,6 +183,34 @@ const Utils = {
 
   execPythonMessage: execPythonMessage,
   evalPythonMessage: evalPythonMessage
+}
+
+/**
+ * Deep object comparison
+ * @param {*} a 
+ * @param {*} b 
+ */
+export function isEqual (a, b) {
+  if (a === b) {
+    return true;
+  }
+  if (a instanceof Date && b instanceof Date) {
+    return a.getTime() === b.getTime();
+  }
+  if (!a || !b || (typeof a !== 'object' && typeof b !== 'object')) {
+    return a === b;
+  }
+  if (a === null || a === undefined || b === null || b === undefined) {
+    return false;
+  }
+  if (a.prototype !== b.prototype) {
+    return false;
+  }
+  let keys = Object.keys(a);
+  if (keys.length !== Object.keys(b).length) {
+    return false;
+  }
+  return keys.every(k => isEqual(a[k], b[k]));
 }
 
 export default Utils

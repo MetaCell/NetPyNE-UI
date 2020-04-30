@@ -6,9 +6,9 @@ import logging
 import pygeppetto.model as pygeppetto
 from pygeppetto.model.model_factory import GeppettoModelFactory
 from pygeppetto.model.values import Point, ArrayElement, ArrayValue
+from pygeppetto.services.model_interpreter import ModelInterpreter
 
-
-class NetPyNEModelInterpreter():
+class NetPyNEModelInterpreter(ModelInterpreter):
 
     def __init__(self):
         self.factory = GeppettoModelFactory()

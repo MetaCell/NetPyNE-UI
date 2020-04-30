@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import { Card, CardHeader, CardContent } from '@material-ui/core';
-
-import Utils from '../../../Utils';
-import NetPyNEHome from '../../general/NetPyNEHome';
-import NetPyNEAddNew from '../../general/NetPyNEAddNew';
-import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
-import NetPyNEStimulationTargetConnection from '../../../redux/reduxconnect/NetPyNEStimulationTargetConnection';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
+
+import Utils from '../../../Utils';
+
+import {
+  NetPyNEHome,
+  NetPyNEAddNew,
+  NetPyNEThumbnail,
+  NetPyNEStimulationTarget
+} from 'netpyne/components';
 
 
 export default class NetPyNEStimulationTargets extends Component {
@@ -165,7 +168,7 @@ export default class NetPyNEStimulationTargets extends Component {
     }
     var selectedStimulationTarget = undefined;
     if ((this.state.selectedStimulationTarget !== undefined) && Object.keys(model).indexOf(this.state.selectedStimulationTarget) > -1) {
-      selectedStimulationTarget = <NetPyNEStimulationTargetConnection name={this.state.selectedStimulationTarget} renameHandler={this.handleRenameChildren}/>;
+      selectedStimulationTarget = <NetPyNEStimulationTarget name={this.state.selectedStimulationTarget} renameHandler={this.handleRenameChildren}/>;
     }
 
     var content = (

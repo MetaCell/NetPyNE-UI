@@ -4,10 +4,7 @@ import { CardContent } from '@material-ui/core';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import FontIcon from '@material-ui/core/Icon';
 import Utils from '../../../Utils';
-import NetPyNEField from '../../general/NetPyNEField';
-import DimensionsComponent from './Dimensions';
-import DimensionsConnection from '../../../redux/reduxconnect/DimensionsConnection';
-import NetPyNECoordsRange from '../../general/NetPyNECoordsRange';
+
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
 
@@ -18,8 +15,12 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { withStyles } from '@material-ui/core/styles';
 
-var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
+import {
+  Dimensions,
+  NetPyNEField,
+  NetPyNETextField,
+  NetPyNECoordsRange
+} from 'netpyne/components';
 
 const styles = ({ spacing }) => ({
   fields: { 
@@ -61,7 +62,7 @@ class NetPyNEPopulation extends React.Component {
             cellModelFields = [];
             // Get Fields for new metadata
             cellModelFields = Utils.getFieldsFromMetadataTree(response, key => (<NetPyNEField id={key} >
-              <PythonControlledTextField
+              <NetPyNETextField
                 model={"netParams.popParams['" + this.state.currentName + "']['" + key.split(".").pop() + "']"}
               />
             </NetPyNEField>));
@@ -156,7 +157,7 @@ class NetPyNEPopulation extends React.Component {
           />
 
           <NetPyNEField id="netParams.popParams.cellType" >
-            <PythonControlledTextField
+            <NetPyNETextField
               callback={(newValue, oldValue) => {
                 Utils.evalPythonMessage("netpyne_geppetto.propagate_field_rename", ['cellType', newValue, oldValue])
                 this.props.updateCards()
@@ -166,7 +167,7 @@ class NetPyNEPopulation extends React.Component {
           </NetPyNEField>
           
           <NetPyNEField id="netParams.popParams.cellModel" >
-            <PythonControlledTextField
+            <NetPyNETextField
               callback={(newValue, oldValue) => {
                 Utils.evalPythonMessage("netpyne_geppetto.propagate_field_rename", ['cellModel', newValue, oldValue])
                 this.props.updateCards()
@@ -175,7 +176,7 @@ class NetPyNEPopulation extends React.Component {
             />
           </NetPyNEField>
 
-          <DimensionsConnection modelName={this.props.name} />
+          <Dimensions modelName={this.props.name} />
           {dialogPop}
         </div>
       )

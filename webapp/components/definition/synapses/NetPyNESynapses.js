@@ -2,12 +2,16 @@ import React,{ Component } from 'react';
 import { Card, CardHeader, CardContent } from '@material-ui/core';
 
 import Utils from '../../../Utils';
-import NetPyNESynapseConnection from '../../../redux/reduxconnect/NetPyNESynapseConnection';
-import NetPyNEHome from '../../general/NetPyNEHome';
-import NetPyNEAddNew from '../../general/NetPyNEAddNew';
-import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
+
+
+import {
+  NetPyNEHome,
+  NetPyNEAddNew,
+  NetPyNEThumbnail,
+  NetPyNESynapse
+} from 'netpyne/components';
 
 export default class NetPyNESynapses extends Component {
 
@@ -165,7 +169,7 @@ export default class NetPyNESynapses extends Component {
     }
     var selectedSynapse = undefined;
     if ((this.state.selectedSynapse !== undefined) && Object.keys(model).indexOf(this.state.selectedSynapse) > -1) {
-      selectedSynapse = <NetPyNESynapseConnection name={this.state.selectedSynapse} renameHandler={this.handleRenameChildren} />;
+      selectedSynapse = <NetPyNESynapse name={this.state.selectedSynapse} renameHandler={this.handleRenameChildren} />;
     }
 
     return (

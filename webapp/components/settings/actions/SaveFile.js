@@ -3,13 +3,14 @@ import Checkbox from '../../general/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import { List, ListItem } from '@material-ui/core';
 import Utils from '../../../Utils';
-import ActionDialog from './ActionDialog';
 
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import { withStyles } from '@material-ui/core/styles';
+import { ActionDialog } from 'netpyne/components'
 
+import { NETPYNE_COMMANDS } from '../../../constants'
 const styles = ({ spacing }) => ({ container: { marginTop: spacing(10), }, })
 
 const saveOptions = [
@@ -29,7 +30,6 @@ class SaveFile extends React.Component {
       simData: true,
       netCells: true
     }
-        
   }
 
   componentDidMount () {
@@ -44,8 +44,8 @@ class SaveFile extends React.Component {
     const { classes } = this.props
     return (
       <ActionDialog
-        command ={'netpyne_geppetto.exportModel'}
-        message = {GEPPETTO.Resources.EXPORTING_MODEL}
+        command={NETPYNE_COMMANDS.exportModel}
+        message={GEPPETTO.Resources.EXPORTING_MODEL}
         buttonLabel={'Save'}
         title={'Save as JSON file'}
         args={this.state}

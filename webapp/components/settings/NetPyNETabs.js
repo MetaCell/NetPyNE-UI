@@ -1,50 +1,76 @@
-import React from 'react';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
-import NavigationExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import React from "react";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
+import IconButton from "@material-ui/core/IconButton";
 
+import NavigationExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ToggleButton from "@material-ui/lab/ToggleButton";
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+import { withStyles } from '@material-ui/core/styles'
 
-export default class NetPyNETabs extends React.Component {
+const style = ({ palette, shape, spacing, typography }) => ({ 
+  container: { 
+    backgroundColor: palette.primary.main, 
+    flexGrow: 1 
+  },
+  toggleButton: { 
+    flex: 1, 
+    borderRadius: shape.borderRadius, 
+    marginLeft: spacing(1), 
+    background: 'transparent', 
+    border: 'none', 
+    color: palette.common.white + '!important'
+  },
+  toggleButtonSelected: { 
+    fontWeight: typography.fontWeightBold,
+    color: palette.common.white
+  },
+  menu: { position: "absolute", top: "6px", right: "28px" }
+})
+
+class NetPyNETabs extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      simulateTabLabel: 'Create network',
-      label: 'define',
+      simulateTabLabel: "Create network",
       transitionOptionsHovered: false,
-      anchorEl: null
-    }
-
+      anchorEl: null,
+      editTab: true
+    };
+    this.rightTabAction = this.props.createNetwork;
     this.handleTransitionOptionsChange = this.handleTransitionOptionsChange.bind(this);
   }
 
   componentDidUpdate (prevProps, prevState) {
     if (this.props.label != prevProps.label) {
-      this.setState({ label:this.props.label });
+      this.setState({ label: this.props.label });
     }
   }
-
-  handleTransitionOptionsChange (e, v) {
-    this.props.handleTransitionOptionsChange(e.target.innerText)
-    this.setState({ simulateTabLabel: e.target.innerText, anchorEl: null });
-  }
-
-  getLabelStyle (label) {
-    var style = { color: 'white', fontWeight: 400 }
-    if (label == this.state.label) {
-      style['fontWeight'] = 600;
+  handleChange = tab => {
+    if (tab == "define") {
+      this.props.editModel();
+      this.setState({ editTab: true })
+    } else {
+      this.rightTabAction();
+      this.setState({ editTab: false })
     }
-    return style;
-  }
+  };
 
-  getBackgroundStyle (label) {
-    var color = 'primary';
-    if (label == this.state.label || (label == 'simulate' && this.state.transitionOptionsHovered)) {
-      color = 'secondary';
+  handleTransitionOptionsChange = e => {
+    const value = e.target.innerText;
+    switch (value) {
+    case "Create and Simulate Network":
+      this.rightTabAction = this.props.createAndSimulateNetwork;
+      break;
+    case "Create Network":
+      this.rightTabAction = this.props.createNetwork;
+      break;
+    default:
+      this.rightTabAction = this.props.showNetwork;
     }
-    return color;
-  }
+    
+    this.setState({ simulateTabLabel: value, anchorEl: null });
+  };
 
   handleClick = event => {
     this.setState({ anchorEl: event.currentTarget });
@@ -55,63 +81,83 @@ export default class NetPyNETabs extends React.Component {
   };
 
   render () {
+    const { classes } = this.props
+    const { editTab } = this.state
+    return (
+      <div style={{ width: "100%", alignItems: "center", display: "flex" }}>
+        <ToggleButtonGroup
+          value="chooseMode"
+          exclusive
+          className={classes.container}
+          onChange={e => this.handleChange(e.currentTarget.value)}
+          aria-label="Choose mode"
+        >
+          <ToggleButton
+            id={"defineNetwork"}
+            value="define"
+            color="primary"
+            selected={editTab}
+            classes={{ root: classes.toggleButton, selected: classes.toggleButtonSelected }}
+          >
+            {"Define your Network"}
+          </ToggleButton>
 
-    return <div style={{ width: '100%', alignItems: 'center', display: 'flex' }}>
-      <Button 
-        id={"defineNetwork"} 
-        onClick={() => this.props.handleChange('define')} 
-        style={{ flex: 1, borderRadius: 10, marginLeft: 5, ...this.getLabelStyle('define') }} 
-      >
-        {'Define your Network'}
-      </Button>
+          <ToggleButton
+            id={"simulateNetwork"}
+            value="simulate"
+            color="primary"
+            selected={!editTab}
+            classes={{ root: classes.toggleButton, selected: classes.toggleButtonSelected }}
+          >
+            {this.state.simulateTabLabel}
+          </ToggleButton>
+        </ToggleButtonGroup>
+        <IconButton
+          onClick={this.handleClick}
+          id="transit"
+          onMouseEnter={() => this.setState({ transitionOptionsHovered: true })}
+          onMouseLeave={() =>
+            this.setState({ transitionOptionsHovered: false })
+          }
+          style={{ color: "white" }}
+        >
+          <NavigationExpandMoreIcon />
+        </IconButton>
 
-      <Button 
-        id={"simulateNetwork"} 
-        onClick={() => this.props.handleChange('simulate')} 
-        style={{ flex: 1, borderRadius: 10, marginLeft: 5, ...this.getLabelStyle('simulate') }} 
-      >
-        {this.state.simulateTabLabel}
-      </Button>
-      <IconButton 
-        onClick={this.handleClick} 
-        id="transit"
-        onMouseEnter={() => this.setState({ transitionOptionsHovered: true })} 
-        onMouseLeave={() => this.setState({ transitionOptionsHovered: false })}
-        style={{ color: 'white' }}
-      >
-        <NavigationExpandMoreIcon />
-      </IconButton>
-      
-      <Menu
-        id="transit"
-        value={this.state.simulateTabLabel}
-        open={Boolean(this.state.anchorEl)}
-        anchorEl={this.state.anchorEl}
-        style={{ position: 'absolute', top: '6px', right: '28px' }}
-        onClose={this.handleClose}
-      >
-        <MenuItem 
-          id="transitCreate"
-          value="Create Network"
-          onClick={this.handleTransitionOptionsChange}
+        <Menu
+          id="transit"
+          value={this.state.simulateTabLabel}
+          open={Boolean(this.state.anchorEl)}
+          anchorEl={this.state.anchorEl}
+          className={classes.menu}
+          onClose={this.handleClose}
         >
-          Create Network
-        </MenuItem>
-        <MenuItem 
-          id="transitSimulate" 
-          value="Create and Simulate Network"
-          onClick={this.handleTransitionOptionsChange}
-        >
-          Create and Simulate Network
-        </MenuItem>
-        <MenuItem 
-          id="transitExplore" 
-          value="Explore Existing Network"
-          onClick={this.handleTransitionOptionsChange}
-        >
-          Explore Existing Network
-        </MenuItem>
-      </Menu>
-    </div>
+          <MenuItem
+            id="transitCreate"
+            value="Create Network"
+            onClick={this.handleTransitionOptionsChange}
+          >
+            Create Network
+          </MenuItem>
+          <MenuItem
+            id="transitSimulate"
+            value="Create and Simulate Network"
+            onClick={this.handleTransitionOptionsChange}
+          >
+            Create and Simulate Network
+          </MenuItem>
+          <MenuItem
+            id="transitExplore"
+            value="Explore Existing Network"
+            onClick={this.handleTransitionOptionsChange}
+          >
+            Explore Existing Network
+          </MenuItem>
+        </Menu>
+      </div>
+    );
   }
 }
+
+
+export default withStyles(style)(NetPyNETabs)

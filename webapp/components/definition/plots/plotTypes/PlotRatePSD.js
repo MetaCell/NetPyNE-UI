@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import Checkbox from '../../../general/Checkbox';
-import TextField from '@material-ui/core/TextField';
-import TimeRange from '../TimeRange'
-import NetPyNEIncludeConnection from '../../../../redux/reduxconnect/NetPyNEIncludeConnection';
-import NetPyNEField from '../../../general/NetPyNEField';
 
-var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledCheckbox = PythonControlledCapability.createPythonControlledControl(Checkbox);
-var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
+import TimeRange from '../TimeRange'
+import {
+  NetPyNEInclude,
+  NetPyNEField,
+  NetPyNECheckbox,
+  NetPyNETextField
+} from 'netpyne/components';
 
 export default class PlotRatePSD extends React.Component {
 
@@ -19,7 +18,7 @@ export default class PlotRatePSD extends React.Component {
   render () {
     var tag = "simConfig.analysis['plotRatePSD']"
     return <div>
-      <NetPyNEIncludeConnection
+      <NetPyNEInclude
         id={"simConfig.analysis.plotRatePSD.include"}
         model={tag + "['include']"} 
         defaultOptions={['all', 'allCells', 'allNetStims']}
@@ -31,27 +30,27 @@ export default class PlotRatePSD extends React.Component {
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotRatePSD.binSize" >
-        <PythonControlledTextField model={tag + "['binSize']"}/>
+        <NetPyNETextField model={tag + "['binSize']"}/>
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotRatePSD.maxFreq" >
-        <PythonControlledTextField model={tag + "['maxFreq']"}/>
+        <NetPyNETextField model={tag + "['maxFreq']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotRatePSD.NFFT" >
-        <PythonControlledTextField model={tag + "['NFFT']"}/>
+        <NetPyNETextField model={tag + "['NFFT']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotRatePSD.noverlap" >
-        <PythonControlledTextField model={tag + "['noverlap']"}/>
+        <NetPyNETextField model={tag + "['noverlap']"}/>
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotRatePSD.smooth" >
-        <PythonControlledTextField model={tag + "['smooth']"}/>
+        <NetPyNETextField model={tag + "['smooth']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotRatePSD.overlay" className={"netpyneCheckbox"} >
-        <PythonControlledCheckbox model={tag + "['overlay']"} />
+        <NetPyNECheckbox model={tag + "['overlay']"} />
       </NetPyNEField>
     </div>
   }

@@ -6,13 +6,20 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Fab from '@material-ui/core/Fab';
-import NetPyNECellRuleConnection from '../../../redux/reduxconnect/NetPyNECellRuleConnection';
-import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
+
+
+import {
+  NetPyNECellRule, 
+  NetPyNEThumbnail
+} from 'netpyne/components';
+
+
 import NetPyNESection from './sections/NetPyNESection';
 import NetPyNESectionThumbnail from './sections/NetPyNESectionThumbnail';
 import NetPyNEMechanism from './sections/mechanisms/NetPyNEMechanism';
 import NetPyNENewMechanism from './sections/mechanisms/NetPyNENewMechanism';
 import NetPyNEMechanismThumbnail from './sections/mechanisms/NetPyNEMechanismThumbnail';
+
 import NavigationChevronRight from '@material-ui/icons/ChevronRight';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 
@@ -300,6 +307,15 @@ export default class NetPyNECellRules extends React.Component {
     if (newMechanismName !== undefined) {
       this.setState({ selectedMechanism: newMechanismName });
     }
+
+    if (Object.keys(this.state.value).length === 0) {
+      this.setState({ 
+        selectedCellRule: undefined,
+        selectedSection: undefined,
+        selectedMechanism: undefined,
+        page: 'main'
+      })
+    }
   }
 
   handleHierarchyClick = nextPage => {
@@ -513,7 +529,7 @@ export default class NetPyNECellRules extends React.Component {
     if (page == 'main') {
       if ( selectedCellRule !== undefined && model && Object.keys(model).indexOf(selectedCellRule) > -1) {
         selection = (
-          <NetPyNECellRuleConnection
+          <NetPyNECellRule
             name={selectedCellRule}
             selectPage={this.selectPage}
             model={model[selectedCellRule]}
@@ -533,7 +549,7 @@ export default class NetPyNECellRules extends React.Component {
           />
         )
       }
-    } else if (page == "sections") {
+    } else if (page == "sections" && Object.keys(model).length > 0) {
       const sectionsModel = model[selectedCellRule].secs;
       if ( selectedSection !== undefined && Object.keys(sectionsModel).indexOf(selectedSection) > -1 ) {
         selection = (
@@ -555,7 +571,7 @@ export default class NetPyNECellRules extends React.Component {
           handleClick={this.selectSection} 
         />
       )
-    } else if (page == "mechanisms") {
+    } else if (page == "mechanisms" && Object.keys(model).length > 0) {
       const mechanismsModel = model[selectedCellRule].secs[selectedSection].mechs;
       if ((selectedMechanism !== undefined) && Object.keys(mechanismsModel).indexOf(selectedMechanism) > -1) {
         selection = (

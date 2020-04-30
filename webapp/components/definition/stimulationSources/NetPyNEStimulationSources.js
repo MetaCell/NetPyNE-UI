@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import { Card, CardHeader, CardContent } from '@material-ui/core';
 
 import Utils from '../../../Utils';
-import NetPyNEHome from '../../general/NetPyNEHome';
-import NetPyNEAddNew from '../../general/NetPyNEAddNew';
-import NetPyNEThumbnail from '../../general/NetPyNEThumbnail';
-import NetPyNEStimulationSourceConnection from '../../../redux/reduxconnect/NetPyNEStimulationSourceConnection';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
+
+import {
+  NetPyNEHome,
+  NetPyNEAddNew,
+  NetPyNEThumbnail,
+  NetPyNEStimulationSource,
+} from 'netpyne/components';
 
 export default class NetPyNEStimulationSources extends Component {
 
@@ -165,7 +168,7 @@ export default class NetPyNEStimulationSources extends Component {
     
     var selectedStimulationSource = undefined;
     if ((this.state.selectedStimulationSource !== undefined) && Object.keys(model).indexOf(this.state.selectedStimulationSource) > -1) {
-      selectedStimulationSource = <NetPyNEStimulationSourceConnection name={this.state.selectedStimulationSource} renameHandler={this.handleRenameChildren} />;
+      selectedStimulationSource = <NetPyNEStimulationSource name={this.state.selectedStimulationSource} renameHandler={this.handleRenameChildren} />;
     }
     
     var content = (

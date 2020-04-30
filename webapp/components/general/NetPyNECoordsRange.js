@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
+
 import SelectField from './Select';
 import Utils from '../../Utils';
-import NetPyNEField from './NetPyNEField';
-import AdapterComponent from './AdapterComponent';
 
-var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledAdapterComponent = PythonControlledCapability.createPythonControlledControl(AdapterComponent);
- 
+import { AdapterComponent, NetPyNEField } from "netpyne/components"; 
+
 export default class NetPyNECoordsRange extends Component {
  
   constructor (props) {
@@ -105,7 +103,7 @@ export default class NetPyNECoordsRange extends Component {
         </NetPyNEField>
         {(this.state.rangeType != undefined)
           ? <div className={"netpyneRightField"}>
-            <PythonControlledAdapterComponent
+            <AdapterComponent
               model={path}
               convertToPython={state => {
                 if (!state[state.lastUpdated].toString().endsWith(".")
@@ -126,7 +124,7 @@ export default class NetPyNECoordsRange extends Component {
             >
               <TextField label="Minimum" id={min} style={{ marginLeft: 10 }}/>
               <TextField label="Maximum" id={max} style={{ marginLeft: 10 }}/>
-            </PythonControlledAdapterComponent>
+            </AdapterComponent>
           </div>
           : null}
         <br />

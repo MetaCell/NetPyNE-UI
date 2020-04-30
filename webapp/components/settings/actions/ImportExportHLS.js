@@ -5,7 +5,6 @@ import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import { orange , grey } from '@material-ui/core/colors';
 import FileBrowser from '../../general/FileBrowser';
-import ActionDialog from './ActionDialog';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText'
@@ -16,6 +15,9 @@ import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 
 import { withStyles } from '@material-ui/core/styles';
+
+import { NETPYNE_COMMANDS } from '../../../constants'
+import { ActionDialog } from 'netpyne/components'
 
 const styles = ({ spacing, typography, zIndex }) => ({ 
   container: { 
@@ -236,13 +238,13 @@ class ImportExportHLS extends React.Component {
             <Select
               id="appBarImportRequiresMod"
               style={{ marginTop:0 }}
-              value={this.state.loadMod}
+              value={this.state.loadMod === undefined ? '' : this.state.loadMod}
               onChange={event => this.setState({ loadMod: event.target.value })}
             >
               <MenuItem value={true}>Yes, this model requires custom mod files</MenuItem>
               <MenuItem id="appBarImportRequiresModNo" value={false} >No, this model only requires NEURON built-in mod files</MenuItem>
             </Select>
-            <FormHelperText>{this.state.loadMod === undefined ? "This field is required." : ''}</FormHelperText>
+            <FormHelperText error={!this.state.loadMod}>{this.state.loadMod === undefined ? "This field is required." : ''}</FormHelperText>
           </FormControl>
             
             
@@ -263,7 +265,7 @@ class ImportExportHLS extends React.Component {
 
         </div>
       )
-      var command = 'netpyne_geppetto.importModel';
+      var command = NETPYNE_COMMANDS.importModel;
       var message = 'IMPORTING MODEL';
       var buttonLabel = 'Import'
       var title = 'Import from Python scripts'
@@ -279,7 +281,7 @@ class ImportExportHLS extends React.Component {
           }}
         />
       )
-      var command = 'netpyne_geppetto.exportHLS';
+      var command = NETPYNE_COMMANDS.exportHLS;
       var message = 'EXPORTING MODEL';
       var buttonLabel = 'Export'
       var title = 'Export as Python script'

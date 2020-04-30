@@ -5,10 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import CondsIcon from '@material-ui/icons/LocalOffer';
 import StimTargetIcon from '@material-ui/icons/Reorder';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
-import Utils from '../../../Utils';
-import Select from '../../general/Select';
-import NetPyNEField from '../../general/NetPyNEField';
-import StimulationConditions from './StimulationConditions';
+
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
 
@@ -17,10 +14,15 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import PythonMethodControlledSelectFieldConnection from '../../../redux/reduxconnect/PythonMethodControlledSelectFieldConnection'
-var PythonControlledCapability = require('geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability');
-var PythonControlledTextField = PythonControlledCapability.createPythonControlledControl(TextField);
-var PythonMethodControlledSelectField = PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(Select);
+import Utils from '../../../Utils';
+import StimulationConditions from './StimulationConditions';
+
+import {
+  NetPyNEField,
+  NetPyNETextField,
+  NetPyNESelectField
+} from 'netpyne/components';
+
 
 export default class NetPyNEStimulationTarget extends React.Component {
 
@@ -188,7 +190,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
           <br/>
           
           <NetPyNEField id={"netParams.stimTargetParams.source"} >
-            <PythonMethodControlledSelectFieldConnection
+            <NetPyNESelectField
               model={"netParams.stimTargetParams['" + this.props.name + "']['source']"}
               method={"netpyne_geppetto.getAvailableStimSources"}
               postProcessItems={this.postProcessMenuItems}
@@ -196,13 +198,13 @@ export default class NetPyNEStimulationTarget extends React.Component {
           </NetPyNEField>
           
           <NetPyNEField id="netParams.stimTargetParams.sec">
-            <PythonControlledTextField
+            <NetPyNETextField
               model={"netParams.stimTargetParams['" + this.props.name + "']['sec']"}
             />
           </NetPyNEField>
           
           <NetPyNEField id="netParams.stimTargetParams.loc">
-            <PythonControlledTextField
+            <NetPyNETextField
               model={"netParams.stimTargetParams['" + this.props.name + "']['loc']"}
             />
           </NetPyNEField>
@@ -212,7 +214,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
         var extraContent = (
           <div>
             <NetPyNEField id={"netParams.stimTargetParams.synMech"} >
-              <PythonMethodControlledSelectFieldConnection
+              <NetPyNESelectField
                 model={"netParams.stimTargetParams['" + this.props.name + "']['synMech']"}
                 method={"netpyne_geppetto.getAvailableSynMech"}
                 postProcessItems={this.postProcessMenuItems4SynMech}
@@ -220,19 +222,19 @@ export default class NetPyNEStimulationTarget extends React.Component {
             </NetPyNEField>
           
             <NetPyNEField id="netParams.stimTargetParams.weight" >
-              <PythonControlledTextField
+              <NetPyNETextField
                 model={"netParams.stimTargetParams['" + this.props.name + "']['weight']"}
               />
             </NetPyNEField>
           
             <NetPyNEField id="netParams.stimTargetParams.delay" >
-              <PythonControlledTextField
+              <NetPyNETextField
                 model={"netParams.stimTargetParams['" + this.props.name + "']['delay']"}
               />
             </NetPyNEField>
           
             <NetPyNEField id="netParams.stimTargetParams.synsPerConn" >
-              <PythonControlledTextField
+              <NetPyNETextField
                 model={"netParams.stimTargetParams['" + this.props.name + "']['synsPerConn']"}
               />
             </NetPyNEField>

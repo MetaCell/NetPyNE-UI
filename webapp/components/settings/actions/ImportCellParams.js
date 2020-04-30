@@ -1,14 +1,13 @@
 import React from 'react';
 import Checkbox from '../../general/Checkbox';
 import TextField from '@material-ui/core/TextField';
-import ActionDialog from './ActionDialog';
 import ListComponent from '../../general/List';
 import FileBrowser from '../../general/FileBrowser';
 import NetPyNEField from '../../general/NetPyNEField';
-
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 import { withStyles } from '@material-ui/core/styles';
+import { ActionDialog } from 'netpyne/components'
 
 const styles = ({ spacing, typography, zIndex }) => ({ 
   container: { 
