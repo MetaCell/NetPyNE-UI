@@ -189,21 +189,19 @@ export default class NetPyNEConnectivityRules extends Component {
     }
 
     return (
-      <div style={{ height: '100%', overflowY: 'visible', overflowX: 'hidden', marginRight: '-8px' }}>
-        <GridLayout>
-          <div className="breadcrumby">
-            <NetPyNEHome
-              selection={this.state.selectedConnectivityRule}
-              handleClick={() => this.setState({ selectedConnectivityRule: undefined })}
-            />
-            <NetPyNEAddNew id={"newConnectivityRuleButton"} handleClick={this.handleNewConnectivityRule} />
-          </div>
+      <GridLayout>
+        <div className="breadcrumby">
+          <NetPyNEHome
+            selection={this.state.selectedConnectivityRule}
+            handleClick={() => this.setState({ selectedConnectivityRule: undefined })}
+          />
+          <NetPyNEAddNew id={"newConnectivityRuleButton"} handleClick={this.handleNewConnectivityRule} />
+        </div>
 
-          {ConnectivityRules}
-          {selectedConnectivityRule}
-        </GridLayout>
+        {ConnectivityRules}
+        {selectedConnectivityRule}
         {dialogPop}
-      </div>
+      </GridLayout>
     )
   }
 }

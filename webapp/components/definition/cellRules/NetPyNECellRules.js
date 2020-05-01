@@ -362,8 +362,15 @@ export default class NetPyNECellRules extends React.Component {
         var oldLength = this.state.value[this.state.selectedCellRule] == undefined ? 0 : Object.keys(this.state.value[this.state.selectedCellRule].secs).length;
         newItemCreated = ((newItemCreated || oldLength != Object.keys(nextState.value[this.state.selectedCellRule].secs).length));
       }
-      if (this.state.selectedSection != undefined && nextState.value[this.state.selectedCellRule] != undefined && nextState.value[this.state.selectedCellRule].secs[this.state.selectedSection] != undefined) {
-        var oldLength = this.state.value[this.state.selectedCellRule].secs[this.state.selectedSection] == undefined ? 0 : Object.keys(this.state.value[this.state.selectedCellRule].secs[this.state.selectedSection].mechs).length;
+      if (
+        this.state.selectedSection != undefined 
+        && this.state.value[this.state.selectedCellRule]
+        && nextState.value[this.state.selectedCellRule] != undefined 
+        && nextState.value[this.state.selectedCellRule].secs[this.state.selectedSection] != undefined
+      ) {
+        var oldLength = this.state.value[this.state.selectedCellRule].secs[this.state.selectedSection] == undefined 
+          ? 0 
+          : Object.keys(this.state.value[this.state.selectedCellRule].secs[this.state.selectedSection].mechs).length;
         newItemCreated = (newItemCreated || oldLength != Object.keys(nextState.value[this.state.selectedCellRule].secs[this.state.selectedSection].mechs).length);
       }
     }
@@ -588,62 +595,59 @@ export default class NetPyNECellRules extends React.Component {
     }
 
     return (
-      <div style={{ height: '100%', overflowY: 'visible', overflowX: 'hidden', marginRight: '-8px' }}>
-        <GridLayout>
+      <GridLayout>
           
-          <div className="breadcrumby">
-            <NetPyNEHome
-              selection={selectedCellRule}
-              handleClick={() => this.setState({ page: 'main', selectedCellRule: undefined, selectedSection: undefined, selectedMechanism: undefined })}
-            />
-            <div className='ml-2'>
-              <Fab
-                id="newCellRuleButton"
-                style={{ width: 42, height: 42 }}
-                color={ page == 'main' ? 'primary' : 'secondary'}
-                data-tooltip={ this.createTooltip('cellRule')}
-                onClick={() => this.handleHierarchyClick('main')}
-              >
-                {this.createLabel('cellRule')}
-              </Fab>
-            </div>
-            <NavigationChevronRight
-              className='ml-2'
-              color='disabled'
-            />
-            <div className='ml-2'>
-              <Fab
-                id="newSectionButton"
-                variant="extended"
-                style={{ minWidth: 100, height: 42 }}
-                color={ page === 'mechanisms' ? 'secondary' : 'primary'}
-                disabled={ selectedCellRule == undefined }
-                onClick={ () => this.handleHierarchyClick('sections') }
-                data-tooltip={ this.createTooltip('section')}
-              >
-                {this.createLabel('sections')}
-              </Fab>
-            </div>
-            
-            <NavigationChevronRight 
-              className='ml-2'
-              color='disabled'
-            />
-            <NetPyNENewMechanism
-              className="ml-2"
-              handleClick={this.handleNewMechanism}
-              disabled={selectedSection == undefined || page == 'main'}
-              handleHierarchyClick={ () => this.handleHierarchyClick('mechanisms')}
-              blockButton={page != 'mechanisms' && !!model && !!model[selectedCellRule] && !!model[selectedCellRule]['secs'][selectedSection] && Object.keys(model[selectedCellRule]['secs'][selectedSection]['mechs']).length > 0}
-            /> 
+        <div className="breadcrumby">
+          <NetPyNEHome
+            selection={selectedCellRule}
+            handleClick={() => this.setState({ page: 'main', selectedCellRule: undefined, selectedSection: undefined, selectedMechanism: undefined })}
+          />
+          <div className='ml-2'>
+            <Fab
+              id="newCellRuleButton"
+              style={{ width: 40, height: 40 }}
+              color={ page == 'main' ? 'primary' : 'secondary'}
+              data-tooltip={ this.createTooltip('cellRule')}
+              onClick={() => this.handleHierarchyClick('main')}
+            >
+              {this.createLabel('cellRule')}
+            </Fab>
           </div>
+          <NavigationChevronRight
+            className='ml-2'
+            color='disabled'
+          />
+          <div className='ml-2'>
+            <Fab
+              id="newSectionButton"
+              variant="extended"
+              style={{ minWidth: 100, height: 40 }}
+              color={ page === 'mechanisms' ? 'secondary' : 'primary'}
+              disabled={ selectedCellRule == undefined }
+              onClick={ () => this.handleHierarchyClick('sections') }
+              data-tooltip={ this.createTooltip('section')}
+            >
+              {this.createLabel('sections')}
+            </Fab>
+          </div>
+            
+          <NavigationChevronRight 
+            className='ml-2'
+            color='disabled'
+          />
+          <NetPyNENewMechanism
+            className="ml-2"
+            handleClick={this.handleNewMechanism}
+            disabled={selectedSection == undefined || page == 'main'}
+            handleHierarchyClick={ () => this.handleHierarchyClick('mechanisms')}
+            blockButton={page != 'mechanisms' && !!model && !!model[selectedCellRule] && !!model[selectedCellRule]['secs'][selectedSection] && Object.keys(model[selectedCellRule]['secs'][selectedSection]['mechs']).length > 0}
+          /> 
+        </div>
 
-          { container }
-          { selection }
-        
-        </GridLayout>
-        {dialogPop}
-      </div>
+        { container }
+        { selection }
+        { dialogPop }
+      </GridLayout>
     );
   }
 }

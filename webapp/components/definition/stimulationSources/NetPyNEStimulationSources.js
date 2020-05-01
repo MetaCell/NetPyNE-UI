@@ -164,25 +164,21 @@ export default class NetPyNEStimulationSources extends Component {
     }
 
     return (
-      <div style={{ height: '100%', overflowY: 'visible', overflowX: 'hidden', marginRight: '-8px' }}>
-
-        <GridLayout>
-          <div className="breadcrumby">
-            <NetPyNEHome
-              selection={this.state.selectedStimulationSource}
-              handleClick={() => this.setState({ selectedStimulationSource: undefined })}
-            />
-            <NetPyNEAddNew 
-              id={"newStimulationSourceButton"} 
-              handleClick={this.handleNewStimulationSource}
-            />
-          </div>
-          {StimulationSources}
-          {selectedStimulationSource}
-        </GridLayout>
+      <GridLayout>
+        <div className="breadcrumby">
+          <NetPyNEHome
+            selection={this.state.selectedStimulationSource}
+            handleClick={() => this.setState({ selectedStimulationSource: undefined })}
+          />
+          <NetPyNEAddNew 
+            id={"newStimulationSourceButton"} 
+            handleClick={this.handleNewStimulationSource}
+          />
+        </div>
+        {StimulationSources}
+        {selectedStimulationSource}
         {dialogPop}
-      </div>
-      
+      </GridLayout>
     );
   }
 }

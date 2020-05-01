@@ -16,33 +16,39 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
     marginBottom: spacing(1)
   },
   paper: { height: '100%', backgroundColor: bgDark },
+  root: { height: '100%', overflowY: 'visible', overflowX: 'hidden', marginRight: -spacing(1) }
 }))
 
 export default function GridLayout ({ children }) {
   const classes = useStyles()
-  const [breadcramp, thumbnail, ...rhs] = children
+  // left-hand-side-top   -   left-hand-side-bottom   -   right-hand-side   -   others
+  const [lhst, lhsb, rhs, ...others] = children
   return (
-    <Grid container className={classes.container} alignItems="flex-start">
+    <div className={classes.root}>
+      <Grid container className={classes.container} alignItems="flex-start">
 
-      <Grid item className={classes.grid}>
-        <Paper className={classes.paper} >
-          <SingleComponent>
-            {breadcramp}
-            {thumbnail}
-          </SingleComponent>
-        </Paper>
-        
+        <Grid item className={classes.grid}>
+          <Paper className={classes.paper} >
+            <SingleComponent>
+              {lhst}
+              {lhsb}
+            </SingleComponent>
+          </Paper>
+  
+        </Grid>
+
+        <Grid item className={classes.grid}>
+          <Paper className={classes.paper}>
+            <SingleComponent>
+              {[rhs]}
+            </SingleComponent>
+          </Paper>
+        </Grid>
+
       </Grid>
-
-      <Grid item className={classes.grid}>
-        <Paper className={classes.paper}>
-          <SingleComponent>
-            {rhs}
-          </SingleComponent>
-        </Paper>
-      </Grid>
-
-    </Grid>
+      {others}
+    </div>
+    
   )
 }
 
@@ -63,7 +69,7 @@ const useComponentStyles = makeStyles(({ spacing }) => ({
   }
 }))
 
-function SingleComponent ({ children }) {
+function SingleComponent ({ children = [] }) {
   const classes = useComponentStyles()
   const [topChild, ...otherChildren] = children
 

@@ -164,23 +164,20 @@ export default class NetPyNEStimulationTargets extends Component {
     }
 
     return (
-      <div style={{ height: '100%', overflowY: 'visible', overflowX: 'hidden', marginRight: '-8px' }}>
-        <GridLayout>
-          <div className="breadcrumby">
-            <NetPyNEHome
-              selection={this.state.selectedStimulationTarget}
-              handleClick={() => this.setState({ selectedStimulationTarget: undefined })}
-            />
+      <GridLayout>
+        <div className="breadcrumby">
+          <NetPyNEHome
+            selection={this.state.selectedStimulationTarget}
+            handleClick={() => this.setState({ selectedStimulationTarget: undefined })}
+          />
             
-            <NetPyNEAddNew id={"newStimulationTargetButton"} handleClick={this.handleNewStimulationTarget} />
+          <NetPyNEAddNew id={"newStimulationTargetButton"} handleClick={this.handleNewStimulationTarget} />
 
-          </div>
-          {StimulationTargets}
-          {selectedStimulationTarget}
-        </GridLayout>
+        </div>
+        {StimulationTargets}
+        {selectedStimulationTarget}
         {dialogPop}
-      </div>
-
+      </GridLayout>
     );
   }
 }

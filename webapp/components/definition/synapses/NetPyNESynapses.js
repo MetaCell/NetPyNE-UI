@@ -164,29 +164,19 @@ export default class NetPyNESynapses extends Component {
     }
 
     return (
-      <div style={{ height: '100%', overflowY: 'visible', overflowX: 'hidden', marginRight: '-8px' }}>
+      <GridLayout>
+        <div className="breadcrumby">
+          <NetPyNEHome
+            selection={this.state.selectedSynapse}
+            handleClick={() => this.setState({ selectedSynapse: undefined })}
+          />
+          <NetPyNEAddNew id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
+        </div>
 
-        <GridLayout>
-          <div className="breadcrumby">
-            <NetPyNEHome
-              selection={this.state.selectedSynapse}
-              handleClick={() => this.setState({ selectedSynapse: undefined })}
-            />
-            <NetPyNEAddNew id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
-          </div>
-
-          <div>
-            {Synapses}
-          </div>
-
-          <div>
-            {selectedSynapse}
-            
-          </div>
-        </GridLayout>
+        {Synapses}
+        {selectedSynapse}
         {dialogPop}
-      </div>
-      
+      </GridLayout>
     );
   }
 }

@@ -188,24 +188,22 @@ export default class NetPyNEPopulations extends React.Component {
     }
 
     return (
-      <div style={{ height: '100%', overflowY: 'visible', overflowX: 'hidden', marginRight: '-8px' }}>
-        <GridLayout>
-          <div className="breadcrumby">
-            <NetPyNEHome
-              selection={this.state.selectedPopulation}
-              handleClick={() => this.setState({ selectedPopulation: undefined })}
-            />
-            <NetPyNEAddNew 
-              id={"newPopulationButton"} 
-              handleClick={this.handleNewPopulation}
-            />
-          </div>
+      <GridLayout>
+        <div className="breadcrumby">
+          <NetPyNEHome
+            selection={this.state.selectedPopulation}
+            handleClick={() => this.setState({ selectedPopulation: undefined })}
+          />
+          <NetPyNEAddNew 
+            id={"newPopulationButton"} 
+            handleClick={this.handleNewPopulation}
+          />
+        </div>
 
-          {populations}
-          {selectedPopulation}
-        </GridLayout>
+        {populations}
+        {selectedPopulation}
         {dialogPop}
-      </div>
+      </GridLayout>
     );
   }
 }

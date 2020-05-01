@@ -4,10 +4,7 @@ import Fab from '@material-ui/core/Fab';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = ({ spacing, palette }) => ({
-  root : { 
-    marginLeft: spacing(1),
-    minWidth: 42
-  },
+  root : { marginLeft: spacing(1), },
   plus:{ color: palette.common.white }
 })
 

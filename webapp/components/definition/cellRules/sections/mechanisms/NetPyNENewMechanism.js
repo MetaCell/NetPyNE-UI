@@ -6,13 +6,15 @@ import { withStyles } from '@material-ui/core/styles'
 import Utils from '../../../../../Utils';
 import ContentAdd from '@material-ui/icons/Add'
 import { MechIcon } from '../../../../general/NetPyNEIcons'
+
+const fontSize = 40
 const styles = ({ spacing, palette }) => ({ 
   icon : { color: palette.primary.main },
   disabledIcon : { color: '#d1d1d1', cursor: 'auto' },
   iconContent: { position: 'absolute', color: 'white' },
   cogIconContent: {
-    width: 42,
-    height: 42,
+    width: fontSize,
+    height: fontSize,
     position: 'absolute',
     display: 'flex',
     alignItems: 'center',
@@ -20,10 +22,10 @@ const styles = ({ spacing, palette }) => ({
   },
   container: {
     position: 'relative',
-    width: 42,
-    height: 42
+    width: fontSize,
+    height: fontSize
   },
-  cogIcon: { width: 42, height:42, position: 'absolute' }
+  cogIcon: { width: fontSize, height:fontSize, position: 'absolute' }
 
 })
 
@@ -96,7 +98,7 @@ class NetPyNENewMechanism extends React.Component {
         >
           <div>
             <div className={classes.container}>
-              <MechIcon color={disabled ? "disabled" : "primary"} style={{ width: 42, height: 42, overflow: 'visible' }} className={classes.cogIcon}/>
+              <MechIcon color={disabled ? "disabled" : "primary"} style={{ width: fontSize, height: fontSize, overflow: 'visible' }} className={classes.cogIcon}/>
               <span className={classes.cogIconContent}>
                 {this.createLabel(classes)}
               </span>
