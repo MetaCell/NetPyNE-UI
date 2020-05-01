@@ -37,7 +37,6 @@ class Filter extends Component {
           autoComplete
           openOnFocus
           autoHighlight
-          autoSelect
           value={value === '' ? null : value}
           options={options}
           classes={{ inputRoot: classes.underline, listbox: classes.listbox }}

@@ -24,7 +24,7 @@ export default class NetPyNEPopulations extends React.Component {
       populationDeleted: undefined,
       errorMessage: undefined,
       errorDetails: undefined,
-      filterPopValue: '',
+      filterPopValue: null,
     };
 
     this.handleNewPopulation = this.handleNewPopulation.bind(this);
