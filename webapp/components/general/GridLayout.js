@@ -56,16 +56,15 @@ const useComponentStyles = makeStyles(({ spacing }) => ({
   container: { 
     display: 'flex',
     flexDirection: 'column',
-    maxHeight: '-webkit-fill-available',
+    height: '100%',
     margin: `0px ${spacing(1)}px`,
     paddingTop: spacing(1)
   },
-  firefox: { maxHeight: '-moz-available' },
-  otherBrowsers: { maxHeight: 'fill-available' },
   element: {
     overflowY:'auto', 
     overflowX:'hidden', 
-    maxHeight: '100%'
+    maxHeight: '100%',
+    height: '100%'
   }
 }))
 
@@ -74,7 +73,7 @@ function SingleComponent ({ children = [] }) {
   const [topChild, ...otherChildren] = children
 
   return (
-    <div className={`${classes.container} ${classes.firefox} ${classes.otherBrowsers}`}>
+    <div className={classes.container}>
       <div >
         {otherChildren.length > 0 ? topChild : null}
       </div>
