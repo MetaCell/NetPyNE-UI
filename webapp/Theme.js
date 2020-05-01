@@ -46,7 +46,7 @@ export default createMuiTheme({
       select: { "&:focus" :{ background: "none" }, paddingLeft: '4px' },
     },
     MuiCard: { root: { height: '100%', backgroundColor: bgRegular, overflowY: 'auto' } },
-    MuiBottomNavigation: { root: { backgroundColor: bgRegular } },
+    MuiBottomNavigation: { root: { backgroundColor: bgRegular, height: 58 } },
     MuiPaper: { root: { color: 'inherit' } },
     MuiBottomNavigationAction: { root: { color: 'white' } },
     MuiFab:{ 

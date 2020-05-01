@@ -458,26 +458,14 @@ export default class NetPyNECellRules extends React.Component {
     switch (rule) {
     case 'cellRule':
       if (page !== 'main'){
-        if (selectedCellRule.length > 6 ){
-          return selectedCellRule.slice(0,5) + '...'
-        } else {
-          return selectedCellRule
-        }
+        return 'CR'
       } else {
         return <ContentAdd style={{ color: 'white' }}/>
       }
 
     case 'sections':
       if ( page === 'mechanisms' ) {
-        if (selectedSection != undefined) {
-          if (selectedSection.length > 9 ) {
-            return selectedSection.slice(0,7) + "..."
-          } else {
-            return selectedSection
-          }
-        } else {
-          return ''
-        }
+        return 'S'
       } else {
         if (page == "sections" ) {
           return <ContentAdd style={{ height: '100%', color: 'white' }}/>
@@ -611,7 +599,7 @@ export default class NetPyNECellRules extends React.Component {
             <div className='ml-2'>
               <Fab
                 id="newCellRuleButton"
-                style={{ width: 70, height: 70 }}
+                style={{ width: 42, height: 42 }}
                 color={ page == 'main' ? 'primary' : 'secondary'}
                 data-tooltip={ this.createTooltip('cellRule')}
                 onClick={() => this.handleHierarchyClick('main')}
@@ -627,7 +615,7 @@ export default class NetPyNECellRules extends React.Component {
               <Fab
                 id="newSectionButton"
                 variant="extended"
-                style={{ minWidth: '100px' }}
+                style={{ minWidth: 100, height: 42 }}
                 color={ page === 'mechanisms' ? 'secondary' : 'primary'}
                 disabled={ selectedCellRule == undefined }
                 onClick={ () => this.handleHierarchyClick('sections') }
@@ -642,6 +630,7 @@ export default class NetPyNECellRules extends React.Component {
               color='disabled'
             />
             <NetPyNENewMechanism
+              className="ml-2"
               handleClick={this.handleNewMechanism}
               disabled={selectedSection == undefined || page == 'main'}
               handleHierarchyClick={ () => this.handleHierarchyClick('mechanisms')}

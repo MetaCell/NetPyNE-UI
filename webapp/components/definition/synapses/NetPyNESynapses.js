@@ -164,7 +164,7 @@ export default class NetPyNESynapses extends Component {
     }
 
     return (
-      <div style={{ height: '100%', overflowY: 'visible', overflowX: 'hidden', marginRight: '-8px', marginTop: '-8px' }}>
+      <div style={{ height: '100%', overflowY: 'visible', overflowX: 'hidden', marginRight: '-8px' }}>
 
         <GridLayout>
           <div className="breadcrumby">

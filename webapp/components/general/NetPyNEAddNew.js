@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = ({ spacing, palette }) => ({
   root : { 
     marginLeft: spacing(1),
-    minWidth: 56
+    minWidth: 42
   },
   plus:{ color: palette.common.white }
 })
@@ -29,6 +29,7 @@ class NetPyNEAddNew extends React.Component {
     const { classes } = this.props
     return (
       <Fab 
+        size="small"
         id={this.props.id}
         onClick={this.handleClick}
         data-tooltip="Create rule"

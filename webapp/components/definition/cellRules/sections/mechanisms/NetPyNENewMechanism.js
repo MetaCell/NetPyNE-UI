@@ -5,11 +5,26 @@ import NavigationMoreHoriz from '@material-ui/icons/MoreHoriz';
 import { withStyles } from '@material-ui/core/styles'
 import Utils from '../../../../../Utils';
 import ContentAdd from '@material-ui/icons/Add'
-
+import { MechIcon } from '../../../../general/NetPyNEIcons'
 const styles = ({ spacing, palette }) => ({ 
   icon : { color: palette.primary.main },
   disabledIcon : { color: '#d1d1d1', cursor: 'auto' },
-  iconContent: { position: 'absolute', color: 'white', top: '17px', left: '17px' },
+  iconContent: { position: 'absolute', color: 'white' },
+  cogIconContent: {
+    width: 42,
+    height: 42,
+    position: 'absolute',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  container: {
+    position: 'relative',
+    width: 42,
+    height: 42
+  },
+  cogIcon: { width: 42, height:42, position: 'absolute' }
+
 })
 
 class NetPyNENewMechanism extends React.Component {
@@ -68,11 +83,11 @@ class NetPyNENewMechanism extends React.Component {
     }
   }
   render () {
-    const { disabled, classes } = this.props;
+    const { disabled, classes, className } = this.props;
     const { open, anchorEl, mechanisms } = this.state;
     const tooltip = disabled ? {} : { 'data-tooltip': this.createTooltip() }
     return (
-      <div>
+      <div className={className}>
         <div
           id="newMechButton"
           className={disabled ? classes.disabledIcon : classes.icon}
@@ -80,13 +95,13 @@ class NetPyNENewMechanism extends React.Component {
           {...tooltip}
         >
           <div>
-            <i 
-              style={{ fontSize: '56px' }}
-              className="gpt-fullgear"
-            />
-            {this.createLabel(classes)}
+            <div className={classes.container}>
+              <MechIcon color={disabled ? "disabled" : "primary"} style={{ width: 42, height: 42, overflow: 'visible' }} className={classes.cogIcon}/>
+              <span className={classes.cogIconContent}>
+                {this.createLabel(classes)}
+              </span>
+            </div>
           </div>
-          
         </div>
       
 
