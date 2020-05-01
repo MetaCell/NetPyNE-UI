@@ -10,7 +10,8 @@ import {
   NetPyNEAddNew,
   NetPyNEThumbnail,
   NetPyNEStimulationTarget,
-  GridLayout
+  GridLayout,
+  Filter
 } from 'netpyne/components';
 
 
@@ -23,7 +24,8 @@ export default class NetPyNEStimulationTargets extends Component {
       deletedStimulationTarget: undefined,
       page: "main",
       errorMessage: undefined,
-      errorDetails: undefined
+      errorDetails: undefined,
+      filterValue: null
     };
     this.selectStimulationTarget = this.selectStimulationTarget.bind(this);
     this.handleNewStimulationTarget = this.handleNewStimulationTarget.bind(this);
@@ -114,7 +116,8 @@ export default class NetPyNEStimulationTargets extends Component {
       newItemCreated = ((Object.keys(this.state.value).length != Object.keys(nextState.value).length));
     }
     var errorDialogOpen = (this.state.errorDetails !== nextState.errorDetails);
-    return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged || errorDialogOpen;
+    const filterValueChanged = nextState.filterValue !== this.state.filterValue
+    return filterValueChanged || newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged || errorDialogOpen;
   }
 
   handleRenameChildren (childName) {
@@ -149,15 +152,19 @@ export default class NetPyNEStimulationTargets extends Component {
     </Dialog> : undefined;
 
     var model = this.state.value;
-    var StimulationTargets = [];
-    for (var c in model) {
-      StimulationTargets.push(<NetPyNEThumbnail 
-        name={c} 
-        key={c} 
-        selected={c == this.state.selectedStimulationTarget} 
-        paramPath="stimTargetParams"
-        handleClick={this.selectStimulationTarget} />);
-    }
+    
+    const filterName = this.state.filterValue === null ? '' : this.state.filterValue
+    var StimulationTargets = Object.keys(model || [])
+      .filter(stimTargetName => stimTargetName.toLowerCase().includes(filterName.toLowerCase()))
+      .map(stimTargetName => (
+        <NetPyNEThumbnail 
+          name={stimTargetName} 
+          key={stimTargetName} 
+          selected={stimTargetName == this.state.selectedStimulationTarget} 
+          paramPath="stimTargetParams"
+          handleClick={this.selectStimulationTarget} />
+      ));
+
     var selectedStimulationTarget = undefined;
     if ((this.state.selectedStimulationTarget !== undefined) && Object.keys(model).indexOf(this.state.selectedStimulationTarget) > -1) {
       selectedStimulationTarget = <NetPyNEStimulationTarget name={this.state.selectedStimulationTarget} renameHandler={this.handleRenameChildren}/>;
@@ -165,14 +172,22 @@ export default class NetPyNEStimulationTargets extends Component {
 
     return (
       <GridLayout>
-        <div className="breadcrumby">
-          <NetPyNEHome
-            selection={this.state.selectedStimulationTarget}
-            handleClick={() => this.setState({ selectedStimulationTarget: undefined })}
-          />
+        <div>
+          <div className="breadcrumby">
+            <NetPyNEHome
+              selection={this.state.selectedStimulationTarget}
+              handleClick={() => this.setState({ selectedStimulationTarget: undefined })}
+            />
             
-          <NetPyNEAddNew id={"newStimulationTargetButton"} handleClick={this.handleNewStimulationTarget} />
+            <NetPyNEAddNew id={"newStimulationTargetButton"} handleClick={this.handleNewStimulationTarget} />
 
+          </div>
+          <Filter
+            value={this.state.filterValue}
+            label="Filter stimulation target rule by name..."
+            handleFilterChange={newValue => this.setState({ filterValue: newValue })}
+            options={model === undefined ? [] : Object.keys(model)}
+          />
         </div>
         {StimulationTargets}
         {selectedStimulationTarget}

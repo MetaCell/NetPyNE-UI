@@ -7,7 +7,7 @@ import NetPyNEHome from '../../general/NetPyNEHome';
 import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 
 import NetPyNEConnectivityRule from './NetPyNEConnectivityRule';
-import { NetPyNEThumbnail, GridLayout } from 'netpyne/components'
+import { NetPyNEThumbnail, GridLayout, Filter } from 'netpyne/components'
 export default class NetPyNEConnectivityRules extends Component {
 
   constructor (props) {
@@ -18,7 +18,8 @@ export default class NetPyNEConnectivityRules extends Component {
       deletedConnectivityRule: undefined,
       page: "main",
       errorMessage: undefined,
-      errorDetails: undefined
+      errorDetails: undefined,
+      filterValue: null
     };
 
     this.selectPage = this.selectPage.bind(this);
@@ -134,7 +135,8 @@ export default class NetPyNEConnectivityRules extends Component {
       newItemCreated = ((Object.keys(this.state.value).length != Object.keys(nextState.value).length));
     }
     var errorDialogOpen = (this.state.errorDetails !== nextState.errorDetails);
-    return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged || errorDialogOpen;
+    const filterValueChanged = nextState.filterValue !== this.state.filterValue
+    return filterValueChanged || newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged || errorDialogOpen;
   }
 
   handleRenameChildren (childName) {
@@ -173,15 +175,19 @@ export default class NetPyNEConnectivityRules extends Component {
     var content;
     if (this.state.page == 'main') {
 
-      var ConnectivityRules = [];
-      for (var c in model) {
-        ConnectivityRules.push(<NetPyNEThumbnail 
-          name={c} 
-          key={c} 
-          selected={c == this.state.selectedConnectivityRule} 
-          paramPath="connParams"
-          handleClick={this.selectConnectivityRule} />);
-      }
+      const filterName = this.state.filterValue === null ? '' : this.state.filterValue
+      var ConnectivityRules = Object.keys(model || [])
+        .filter(connName => connName.toLowerCase().includes(filterName.toLowerCase()))
+        .map(connName => (
+          <NetPyNEThumbnail 
+            name={connName} 
+            key={connName} 
+            selected={connName == this.state.selectedConnectivityRule} 
+            paramPath="connParams"
+            handleClick={this.selectConnectivityRule} />
+        ));
+
+      
       var selectedConnectivityRule = undefined;
       if ((this.state.selectedConnectivityRule !== undefined) && Object.keys(model).indexOf(this.state.selectedConnectivityRule) > -1) {
         selectedConnectivityRule = <NetPyNEConnectivityRule name={this.state.selectedConnectivityRule} model={this.state.value[this.state.selectedConnectivityRule]} selectPage={this.selectPage} renameHandler={this.handleRenameChildren} />;
@@ -190,14 +196,21 @@ export default class NetPyNEConnectivityRules extends Component {
 
     return (
       <GridLayout>
-        <div className="breadcrumby">
-          <NetPyNEHome
-            selection={this.state.selectedConnectivityRule}
-            handleClick={() => this.setState({ selectedConnectivityRule: undefined })}
+        <div>
+          <div className="breadcrumby">
+            <NetPyNEHome
+              selection={this.state.selectedConnectivityRule}
+              handleClick={() => this.setState({ selectedConnectivityRule: undefined })}
+            />
+            <NetPyNEAddNew id={"newConnectivityRuleButton"} handleClick={this.handleNewConnectivityRule} />
+          </div>
+          <Filter
+            value={this.state.filterValue}
+            label="Filter connectivity rule by name..."
+            handleFilterChange={newValue => this.setState({ filterValue: newValue })}
+            options={model === undefined ? [] : Object.keys(model)}
           />
-          <NetPyNEAddNew id={"newConnectivityRuleButton"} handleClick={this.handleNewConnectivityRule} />
         </div>
-
         {ConnectivityRules}
         {selectedConnectivityRule}
         {dialogPop}

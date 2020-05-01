@@ -6,7 +6,8 @@ import {
   NetPyNEAddNew,
   NetPyNEThumbnail,
   NetPyNEPopulation,
-  GridLayout
+  GridLayout,
+  Filter
 } from 'netpyne/components';
 
 
@@ -22,7 +23,8 @@ export default class NetPyNEPopulations extends React.Component {
       selectedPopulation: undefined,
       populationDeleted: undefined,
       errorMessage: undefined,
-      errorDetails: undefined
+      errorDetails: undefined,
+      filterPopValue: '',
     };
 
     this.handleNewPopulation = this.handleNewPopulation.bind(this);
@@ -103,7 +105,8 @@ export default class NetPyNEPopulations extends React.Component {
     }
     // check if the dialog has been triggered due name convention or name collision errors.
     var errorDialogOpen = (this.state.errorDetails !== nextState.errorDetails);
-    return newModel || newItemCreated || itemRenamed || selectionChanged || errorDialogOpen;
+    var filterChanged = nextState.filterPopValue !== this.state.filterPopValue
+    return filterChanged || newModel || newItemCreated || itemRenamed || selectionChanged || errorDialogOpen;
   }
 
   handleNewPopulation () {
@@ -173,14 +176,17 @@ export default class NetPyNEPopulations extends React.Component {
       for (var m in model) {
         model[m].name = m;
       }
-      var populations = [];
-      for (var key in model) {
-        populations.push(<NetPyNEThumbnail 
-          name={key} key={key} 
-          selected={key == this.state.selectedPopulation}
-          paramPath="popParams"
-          handleClick={this.selectPopulation} />);
-      }
+      const filterName = this.state.filterPopValue === null ? '' : this.state.filterPopValue
+      var populations = Object.keys(model)
+        .filter(popName => popName.toLowerCase().includes(filterName.toLowerCase()))
+        .map(popName => (
+          <NetPyNEThumbnail 
+            name={popName} key={popName} 
+            selected={popName == this.state.selectedPopulation}
+            paramPath="popParams"
+            handleClick={this.selectPopulation} />
+        ));
+      
       var selectedPopulation = undefined;
       if ((this.state.selectedPopulation !== undefined) && Object.keys(model).indexOf(this.state.selectedPopulation) > -1) {
         selectedPopulation = <NetPyNEPopulation name={this.state.selectedPopulation} model={this.state.value[this.state.selectedPopulation]} renameHandler={this.handleRenameChildren}/>;
@@ -189,16 +195,26 @@ export default class NetPyNEPopulations extends React.Component {
 
     return (
       <GridLayout>
-        <div className="breadcrumby">
-          <NetPyNEHome
-            selection={this.state.selectedPopulation}
-            handleClick={() => this.setState({ selectedPopulation: undefined })}
+        <div>
+          <div className="breadcrumby">
+            <NetPyNEHome
+              selection={this.state.selectedPopulation}
+              handleClick={() => this.setState({ selectedPopulation: undefined })}
+            />
+            <NetPyNEAddNew 
+              id={"newPopulationButton"} 
+              handleClick={this.handleNewPopulation}
+            />
+          </div>
+          <Filter
+            value={this.state.filterPopValue}
+            label="Filter population by name..."
+            handleFilterChange={newValue => this.setState({ filterPopValue: newValue })}
+            options={model === undefined ? [] : Object.keys(model)}
           />
-          <NetPyNEAddNew 
-            id={"newPopulationButton"} 
-            handleClick={this.handleNewPopulation}
-          />
+          
         </div>
+        
 
         {populations}
         {selectedPopulation}

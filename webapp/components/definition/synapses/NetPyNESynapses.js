@@ -10,7 +10,8 @@ import {
   NetPyNEAddNew,
   NetPyNEThumbnail,
   NetPyNESynapse,
-  GridLayout
+  GridLayout,
+  Filter
 } from 'netpyne/components';
 
 export default class NetPyNESynapses extends Component {
@@ -22,7 +23,8 @@ export default class NetPyNESynapses extends Component {
       deletedSynapse: undefined,
       page: "main",
       errorMessage: undefined,
-      errorDetails: undefined
+      errorDetails: undefined,
+      filterValue: null
     };
     this.selectSynapse = this.selectSynapse.bind(this);
     this.handleNewSynapse = this.handleNewSynapse.bind(this);
@@ -113,7 +115,8 @@ export default class NetPyNESynapses extends Component {
       newItemCreated = ((Object.keys(this.state.value).length != Object.keys(nextState.value).length));
     }
     var errorDialogOpen = (this.state.errorDetails !== nextState.errorDetails);
-    return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged || errorDialogOpen;
+    const filterValueChanged = nextState.filterValue !== this.state.filterValue
+    return filterValueChanged || newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged || errorDialogOpen;
   }
 
   handleRenameChildren (childName) {
@@ -148,16 +151,18 @@ export default class NetPyNESynapses extends Component {
     </Dialog> : undefined;
 
     var model = this.state.value;
-    var Synapses = [];
-    for (var c in model) {
-      Synapses.push(<NetPyNEThumbnail
-        id={"synThumb" + c.replace(" ", "")}
-        name={c} 
-        key={c} 
-        selected={c == this.state.selectedSynapse}
-        paramPath="synMechParams"
-        handleClick={this.selectSynapse} />);
-    }
+    const filterName = this.state.filterValue === null ? '' : this.state.filterValue
+    var Synapses = Object.keys(model || [])
+      .filter(synName => synName.toLowerCase().includes(filterName.toLowerCase()))
+      .map(synName => (
+        <NetPyNEThumbnail 
+          name={synName} 
+          key={synName} 
+          selected={synName == this.state.selectedSynapse} 
+          paramPath="synMechParams"
+          handleClick={this.selectSynapse} />
+      ));
+
     var selectedSynapse = undefined;
     if ((this.state.selectedSynapse !== undefined) && Object.keys(model).indexOf(this.state.selectedSynapse) > -1) {
       selectedSynapse = <NetPyNESynapse name={this.state.selectedSynapse} renameHandler={this.handleRenameChildren} />;
@@ -165,13 +170,22 @@ export default class NetPyNESynapses extends Component {
 
     return (
       <GridLayout>
-        <div className="breadcrumby">
-          <NetPyNEHome
-            selection={this.state.selectedSynapse}
-            handleClick={() => this.setState({ selectedSynapse: undefined })}
+        <div>
+          <div className="breadcrumby">
+            <NetPyNEHome
+              selection={this.state.selectedSynapse}
+              handleClick={() => this.setState({ selectedSynapse: undefined })}
+            />
+            <NetPyNEAddNew id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
+          </div>
+          <Filter
+            value={this.state.filterValue}
+            label="Filter synapse rule by name..."
+            handleFilterChange={newValue => this.setState({ filterValue: newValue })}
+            options={model === undefined ? [] : Object.keys(model)}
           />
-          <NetPyNEAddNew id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
         </div>
+        
 
         {Synapses}
         {selectedSynapse}

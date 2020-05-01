@@ -267,3 +267,4 @@ export { default as NetPyNESimConfig } from "./definition/configuration/NetPyNES
 export { default as HTMLViewer } from './general/HTMLViewer'
 export { default as Tooltip } from './general/Tooltip'
 export { default as GridLayout } from './general/GridLayout'
+export { default as Filter } from './general/Filter'
