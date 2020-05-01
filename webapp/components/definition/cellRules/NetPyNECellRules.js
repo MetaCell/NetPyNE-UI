@@ -571,7 +571,7 @@ export default class NetPyNECellRules extends React.Component {
               handleClick={this.selectCellRule} />
           ));
       }
-    } else if (page == "sections" && Object.keys(model).length > 0) {
+    } else if (page == "sections" && Object.keys(model).length > 0 && model[selectedCellRule]) {
       const sectionsModel = model[selectedCellRule].secs;
       
 
@@ -600,7 +600,7 @@ export default class NetPyNECellRules extends React.Component {
             handleClick={this.selectSection} 
           />)
 
-    } else if (page == "mechanisms" && Object.keys(model).length > 0) {
+    } else if (page == "mechanisms" && Object.keys(model).length > 0 && model[selectedCellRule] && model[selectedCellRule].secs[selectedSection]) {
       const mechanismsModel = model[selectedCellRule].secs[selectedSection].mechs;
       if ((selectedMechanism !== undefined) && Object.keys(mechanismsModel).indexOf(selectedMechanism) > -1) {
         selection = (
