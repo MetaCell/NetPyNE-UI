@@ -5,13 +5,12 @@ import Paper from '@material-ui/core/Paper'
 import { bgDark } from '../../Theme'
 
 const useStyles = makeStyles(({ spacing, palette }) => ({ 
-  container:{ height: 'calc(100% - 8px)' },
+  container:{ height: 'calc(100% - 8px)', alignItems: 'stretch' },
   grid: {
-    flex: 1,
+    flex: '1 0 0',
     minWidth: 400,
     minHeight: 350,
     maxHeight: '100%',
-    height: '100%',
     marginRight: spacing(1),
     marginBottom: spacing(1)
   },
@@ -64,7 +63,7 @@ const useComponentStyles = makeStyles(({ spacing }) => ({
     overflowY:'auto', 
     overflowX:'hidden', 
     maxHeight: '100%',
-    height: '100%'
+    // height: '100%'
   }
 }))
 
