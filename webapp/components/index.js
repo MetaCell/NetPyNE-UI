@@ -4,7 +4,7 @@ import PythonControlledCapability from "geppetto-client/js/communication/geppett
 
 import {
   activateWidget,
-  destroyWidget,
+  addWidgets,
   minimizeWidget,
   maximizeWidget,
   updateWidget,
@@ -80,7 +80,13 @@ export const Dimensions = connect(
 import _NetPyNE from "./NetPyNE";
 export const NetPyNE = connect(
   state => ({ editMode: state.general.editMode }),
-  pythonCallErrorDispatch
+  dispatch => ({ 
+    pythonCallErrorDialogBox: payload => dispatch(openBackendErrorDialog(payload)),
+    addWidgets: payload => dispatch(addWidgets(payload)),
+    modelLoaded: () => dispatch(modelLoaded), 
+    newWidget: widget => dispatch(newWidget(widget)),
+    activateWidget: widgetId => dispatch(activateWidget(widgetId))
+  })
 )(_NetPyNE);
 
 import _NetPyNECellRule from "./definition/cellRules/NetPyNECellRule";
@@ -90,17 +96,10 @@ export const NetPyNECellRule = connect((state, ownProps) => ({
 }))(_NetPyNECellRule);
 
 
-import _LayoutManager from "./layout/LayoutManager";
-export const LayoutManager = connect(
-  state => ({ ...state.layout, editMode: state.general.editMode }),
-  dispatch => ({
-    updateWidget: widget => dispatch(updateWidget(widget)),
-    minimizeWidget: id => dispatch(minimizeWidget(id)),
-    destroyWidget: id => dispatch(destroyWidget(id)),
-    maximizeWidget: id => dispatch(maximizeWidget(id)),
-    activateWidget: id => dispatch(activateWidget(id))
-  })
-)(_LayoutManager);
+import { getInstance as getLayoutManagerInstance } from "./layout/LayoutManager";
+export const LayoutManager = () => connect(state => ({
+  layout: state.layout,
+}))(getLayoutManagerInstance().getComponent());
 
 
 import _NetPyNEPopulation from "./definition/populations/NetPyNEPopulation";
@@ -196,22 +195,16 @@ export const ActionDialog = connect(
   })
 )(_ActionDialog)
 
-import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole'
+import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole';
 export const NetPyNEPythonConsole = connect(
   null,
-  dispatch => ({ 
-    modelLoaded: () => dispatch(modelLoaded), 
-    newWidget: widget => dispatch(newWidget(widget)),
-    activateWidget: widgetId => dispatch(activateWidget(widgetId))
-  })
+  null
 )(_NetPyNEPythonConsole)
+
 
 import _Drawer from './settings/Drawer'
 export const Drawer = connect(
-  state => ({ 
-    widgets: state.flexlayout.widgets,
-    editMode: state.general.editMode 
-  }),
+  state => ({ editMode: state.general.editMode,  layout: state.layout }),
   dispatch => ({ 
     updateWidget: newConf => dispatch(updateWidget(newConf)),
     newWidget: widget => dispatch(newWidget(widget)),

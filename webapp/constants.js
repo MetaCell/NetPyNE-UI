@@ -1,9 +1,9 @@
 export const MODULE_NOT_FOUND_ERROR = 'ModuleNotFoundError';
 export const NAME_ERROR = "NameError";
 export const FILEVARIABLE_LENGTH = 'network.'.length;
-import { WidgetStatus } from './components/layout/constants';
+import { WidgetStatus } from './components/layout/model';
 import { getPythonDefaultConsoleWidget } from './components/layout/utils';
-export {getPythonDefaultConsoleWidget, WidgetStatus};
+export { getPythonDefaultConsoleWidget, WidgetStatus };
 
 export const MODEL_STATE = {
   NOT_INSTANTIATED: 'NOT_INSTANTIATED',
@@ -85,7 +85,6 @@ export const WIDGETS_IDS = {
   
 
 }
-
 
 
 export const DEFAULT_PLOTS_WIDGETS = {
