@@ -19,7 +19,7 @@ const styles = ({ spacing, shape }) => ({
     "&&&:before": { borderBottom: "none" },
     "&&:after": { borderBottom: "none" }
   },
-  listbox: { color: 'white' }
+  listbox: { color: 'white', maxHeight: '20vh' }
 })
 class Filter extends Component {
   render () {
@@ -32,6 +32,7 @@ class Filter extends Component {
         </div>
         
         <Autocomplete
+          debug
           className={classes.filter}
           clearOnEscape
           autoComplete
