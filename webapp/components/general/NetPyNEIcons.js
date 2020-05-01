@@ -3,8 +3,8 @@ import React from 'react'
 import SvgIcon from '@material-ui/core/SvgIcon';
 import AdjustIcon from '@material-ui/icons/Adjust';
 import { makeStyles } from '@material-ui/core/styles';
-import { WIDGETS_IDS } from '../../constants'
-import { primaryColor } from '../../Theme'
+import { WIDGETS_IDS } from '../../constants';
+import { primaryColor } from '../../theme';
 // Avoid defining properties with css || inline style
 const useIconStyles = makeStyles(({ palette }) => ({ icon: { color: props => props.selected ? palette.primary.main : palette.common.white } }))
 

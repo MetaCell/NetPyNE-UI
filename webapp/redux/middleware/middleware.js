@@ -2,7 +2,7 @@ import {
   UPDATE_CARDS, CREATE_NETWORK, CREATE_SIMULATE_NETWORK, PYTHON_CALL, SIMULATE_NETWORK,
   showNetwork, createNetwork, createAndSimulateNetwork, editModel, EDIT_MODEL
 } from '../actions/general';
-import { switchLayout } from '../actions/flexlayout'
+import { switchLayout } from '../actions/layout'
 import { openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
 import Utils from '../../Utils';

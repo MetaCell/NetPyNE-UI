@@ -3,7 +3,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Menu from '@geppettoengine/geppetto-client/js/components/interface/menu/Menu';
 
 import toolbarConfig from './configuration'
-import { bgDark } from '../../Theme'
+import { bgDark } from '../../theme'
 
 import LoadFileDialog from './dialogs/LoadFile';
 import SaveFileDialog from './dialogs/SaveFile';

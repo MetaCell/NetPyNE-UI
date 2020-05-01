@@ -9,7 +9,7 @@ import {
   maximizeWidget,
   updateWidget,
   newWidget
-} from "../redux/actions/flexlayout";
+} from "../redux/actions/layout";
 import { openBackendErrorDialog, closeBackendErrorDialog } from '../redux/actions/errors';
 import {
   updateCards, editModel, simulateNetwork, createNetwork, 
@@ -92,7 +92,7 @@ export const NetPyNECellRule = connect((state, ownProps) => ({
 
 import _LayoutManager from "./layout/LayoutManager";
 export const LayoutManager = connect(
-  state => ({ ...state.flexlayout, editMode: state.general.editMode }),
+  state => ({ ...state.layout, editMode: state.general.editMode }),
   dispatch => ({
     updateWidget: widget => dispatch(updateWidget(widget)),
     minimizeWidget: id => dispatch(minimizeWidget(id)),

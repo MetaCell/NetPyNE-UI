@@ -1,13 +1,12 @@
-import { WidgetStatus, FILEVARIABLE_LENGTH } from '../../constants';
+import { WidgetStatus } from '../../components/layout/constants';
 
+export const SET_LAYOUT = 'SET_LAYOUT';
 export const UPDATE_WIDGET = 'UPDATE_WIDGET';
 export const ACTIVATE_WIDGET = 'ACTIVATE_WIDGET';
 export const ADD_WIDGET = 'ADD_WIDGET';
 export const RESET_LAYOUT = 'RESET_LAYOUT';
 export const DESTROY_WIDGET = 'DESTROY_WIDGET';
 export const ADD_PLOT_TO_EXISTING_WIDGET = 'ADD_PLOT_TO_EXISTING_WIDGET'
-
-export const SWITCH_LAYOUT = 'SWITCH_LAYOUT'
 
 
 export const newWidget = ({ path, component, panelName, ...others }) => ({
@@ -26,6 +25,11 @@ export const newWidget = ({ path, component, panelName, ...others }) => ({
 export const updateWidget = (newConf => ({
   type: UPDATE_WIDGET,
   data: newConf
+}))
+
+export const setLayout = (newLayout => ({
+  type: SET_LAYOUT,
+  data: newLayout
 }))
 
 
@@ -58,5 +62,3 @@ export const destroyWidget = id => ({
 });
 
 export const resetLayout = { type: RESET_LAYOUT, };
-
-export const switchLayout = { type: SWITCH_LAYOUT, };

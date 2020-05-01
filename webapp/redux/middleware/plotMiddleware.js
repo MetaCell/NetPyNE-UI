@@ -1,4 +1,4 @@
-import { ADD_WIDGET, newWidget } from '../actions/flexlayout';
+import { ADD_WIDGET, newWidget } from '../actions/layout';
 import Utils from '../../Utils';
 import { NETPYNE_COMMANDS } from '../../constants';
 

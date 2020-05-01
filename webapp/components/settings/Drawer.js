@@ -11,11 +11,11 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Typography from '@material-ui/core/Typography';
 
-import { WidgetStatus } from '../../constants';
+import { WidgetStatus } from '../layout/constants';
 import {
   DEFAULT_HLS_WIDGETS, getPythonDefaultConsoleWidget, 
   DEFAULT_MORPHOLOGY_WIDGET,DEFAULT_PLOTS_WIDGETS
-} from '../../redux/reducers/flexlayout'
+} from '../../constants';
 
 import DrawerIcon from '../general/NetPyNEIcons'
 import useStyles from './useStyles'

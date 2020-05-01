@@ -8,7 +8,7 @@ jQuery(function () {
   const MuiThemeProvider = require('@material-ui/core/styles').MuiThemeProvider;
   const NetPyNE = require('./components').NetPyNE;
 
-  const theme = require('./Theme').default
+  const theme = require('./theme').default
 
   const Provider = require("react-redux").Provider;
   const configureStore = require('./redux/store').default;

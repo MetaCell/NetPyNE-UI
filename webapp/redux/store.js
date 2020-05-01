@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, compose } from "redux";
 import all from "./reducers/all";
 import { GENERAL_DEFAULT_STATE } from "./reducers/general";
 import { NOTEBOOK_DEFAULT_STATE } from "./reducers/notebook";
-import { FLEXLAYOUT_DEFAULT_STATE } from "./reducers/flexlayout";
+import { FLEXLAYOUT_DEFAULT_STATE } from "./reducers/layout";
 import middleware from './middleware/middleware';
 import plotMiddleware from './middleware/plotMiddleware';
 
