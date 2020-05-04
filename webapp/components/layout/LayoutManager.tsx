@@ -44,12 +44,14 @@ class LayoutManager {
   widgetFactory: WidgetFactory;
   tabsetIconFactory: TabsetIconFactory;
   dispatch;
-
+  layoutManager = this;
+  enableMinimize = false;
 
   constructor(
     model,
     widgetFactory: WidgetFactory = null,
     tabsetIconFactory: TabsetIconFactory = null,
+    enableMinimize = false
   ) {
     this.model = FlexLayout.Model.fromJson(
       model ? model : defaultLayoutConfiguration
@@ -61,6 +63,7 @@ class LayoutManager {
       : new TabsetIconFactory();
     this.middleware = this.middleware.bind(this);
     this.factory = this.factory.bind(this);
+    this.enableMinimize = enableMinimize;
   }
 
   addWidget(widgetConfiguration) {
@@ -79,7 +82,17 @@ class LayoutManager {
     );
   }
 
-  Component = ({classes}) =>  (
+  onRenderTabSet = (panel, renderValues) => {
+    if (panel.getType() === "tabset" && this.enableMinimize) {
+      if (panel.getId() != 'leftPanel' && panel.getChildren().length > 0){
+        renderValues.buttons.push(<div key={panel.getId()} className="fa fa-window-minimize customIconFlexLayout" onClick={() => {
+          this.minimizeWidget(panel.getSelectedNode().getId()) 
+        }} />);
+      }
+    }
+  }
+
+  Component = (layoutManager: LayoutManager) => ({classes}) =>  (
         <div className={classes.container}>
           <div className={classes.spacer}/>
           <div className={classes.flexlayout}>
@@ -87,15 +100,15 @@ class LayoutManager {
               model={this.model}
               factory={this.factory}
               // iconFactory={layoutManager.iconFactory.bind(this)}
-              onAction={action => this.onAction(action)}
-              onRenderTab={(node,renderValues) => null}
+              onAction={action => layoutManager.onAction(action)}
+              onRenderTab={(node,renderValues) => layoutManager.onRenderTabSet(node, renderValues)}
             />
           </div>
           <div className={classes.spacer}/>
         </div>
       );
 
-  getComponent = () => withStyles(styles)(this.Component);
+  getComponent = () => withStyles(styles)(this.Component(this));
 
 
   private createTabSet(tabsetID) {
@@ -194,7 +207,7 @@ class LayoutManager {
         break;
       case Actions.DELETE_TAB: {
         if (this.getWidget(action.data.node).hideOnClose) {
-          this.moveWidgetToBorder(action);
+          this.minimizeWidget(action.data.node);
           defaultAction = false;
         }
         break;
@@ -273,15 +286,19 @@ class LayoutManager {
     }
   }
 
-  moveWidgetToBorder(action) {
+   
 
-    var updatedWidget = this.getWidget(action.id);
+
+  minimizeWidget(widgetId) {
+
+    var updatedWidget = this.getWidget(widgetId);
     if (updatedWidget === undefined) {
       return;
     }
-    updatedWidget.status = WidgetStatus.BORDER;
+    updatedWidget.status = WidgetStatus.MINIMIZED;
     updatedWidget.panelName = "border_bottom";
     this.updateWidget(updatedWidget);
+    // this.model.doAction(FlexLayout.Actions.moveNode(widgetId, "border_bottom", FlexLayout.DockLocation.CENTER, 0));
   }
 
   updateWidget (widget: Widget) {
@@ -290,6 +307,7 @@ class LayoutManager {
       this.widgetFactory.updateWidget(widget);
       model.doAction(Actions.updateNodeAttributes(widget.id, widget2Node(widget))); 
     }
+    this.model.doAction(FlexLayout.Actions.moveNode(widget.id, widget.panelName, FlexLayout.DockLocation.CENTER, widget.pos));
     
   }
   onActionMaximizeWidget(action) {

@@ -3,7 +3,6 @@ import React, { Component } from 'react'
 import PythonConsole from '@geppettoengine/geppetto-client/js/components/interface/pythonConsole/PythonConsole';
 
 export default class NetPyNEPythonConsole extends Component {
-
   
 
   componentWillUnmount () {
@@ -11,8 +10,6 @@ export default class NetPyNEPythonConsole extends Component {
   }
 
   componentDidMount () {
-
-  
     
     
   }

@@ -12,7 +12,6 @@ export enum WidgetStatus {
   ACTIVE = "ACTIVE",
   MAXIMIZED = "MAXIMIZED",
   MINIMIZED = "MINIMIZED",
-  BORDER = "BORDER",
 }
 
 export interface ExtendedNode extends Node {
@@ -22,7 +21,7 @@ export interface ExtendedNode extends Node {
 export interface Widget {
   id: string;
   status: WidgetStatus;
-  panelName: String;
+  panelName: string;
   hideOnClose?: boolean;
   name: string;
   enableClose?: boolean;

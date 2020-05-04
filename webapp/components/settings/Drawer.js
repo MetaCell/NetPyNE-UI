@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import { WidgetStatus } from '../layout/model';
 import {
   DEFAULT_HLS_WIDGETS, getPythonDefaultConsoleWidget, 
-  DEFAULT_MORPHOLOGY_WIDGET,DEFAULT_PLOTS_WIDGETS
+  DEFAULT_MORPHOLOGY_WIDGET,DEFAULT_PLOTS_WIDGETS, TOP_PANEL
 } from '../../constants';
 
 import DrawerIcon from '../general/NetPyNEIcons';
@@ -36,7 +36,7 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
       const widgetConf = getNewWidgetConf(widgetId)
       newWidget({ path: widgetConf.id, ...widgetConf })
     } else {
-      if (widget.status === WidgetStatus.BORDER) {
+      if (widget.status === WidgetStatus.MINIMIZED) {
         updateBorderWidget(widgetId)
       } else if (widget.status !== WidgetStatus.ACTIVE) {
         activateWidget(widgetId)
@@ -48,7 +48,7 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
   function updateBorderWidget (widgetId) {
     const updatedWidget = { ...layoutManager.getWidget(widgetId) }
     updatedWidget.status = WidgetStatus.ACTIVE
-    updatedWidget.panelName = getPythonDefaultConsoleWidget(editMode).panelName
+    updatedWidget.panelName = TOP_PANEL;
     updateWidget(updatedWidget)
   }
 
@@ -68,7 +68,7 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
 
 
   function getMenu () {
-    return layoutManager.getWidgets();
+    return layoutManager.getWidgets().sort((w1, w2) => w1.pos - w2.pos);
     /*
      * if (editMode) {
      *   const array = [...Object.values(DEFAULT_HLS_WIDGETS), 
@@ -91,7 +91,7 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
     const widget = layoutManager.getWidget(id);
     return <ListItem button key={name} dense disableGutters className={widget ? classes.selected : classes.unselected} onClick={() => createOrFocusWidget(id)}>
       <ListItemIcon className={classes.icon}>
-        <DrawerIcon widgetId={id} selected={widget && widget.status !== WidgetStatus.BORDER} />
+        <DrawerIcon widgetId={id} selected={widget && widget.status !== WidgetStatus.MINIMIZED} />
       </ListItemIcon>
       <ListItemText className={classes.text}>
         <Typography noWrap>{name}</Typography>

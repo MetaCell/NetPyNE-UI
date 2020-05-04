@@ -4,6 +4,7 @@ export const FILEVARIABLE_LENGTH = 'network.'.length;
 import { WidgetStatus } from './components/layout/model';
 import { getPythonDefaultConsoleWidget } from './components/layout/utils';
 export { getPythonDefaultConsoleWidget, WidgetStatus };
+export const TOP_PANEL = "hlsPanel";
 
 export const MODEL_STATE = {
   NOT_INSTANTIATED: 'NOT_INSTANTIATED',
@@ -95,6 +96,7 @@ export const DEFAULT_PLOTS_WIDGETS = {
     component: 'Plot', 
     panelName: "plotPanel",
     enableRename: false,
+    hideOnClose: true,
     method: {
       plotMethod: 'plotConn', 
       plotType: false
@@ -107,6 +109,7 @@ export const DEFAULT_PLOTS_WIDGETS = {
     component: 'Plot', 
     panelName: "plotPanel",
     enableRename: false,
+    hideOnClose: true,
     method: {
       plotMethod: 'plot2Dnet', 
       plotType: false
@@ -119,6 +122,7 @@ export const DEFAULT_PLOTS_WIDGETS = {
     component: 'Plot', 
     panelName: "plotPanel",
     enableRename: false,
+    hideOnClose: true,
     method: {
       plotMethod: 'plotShape', 
       plotType: false
@@ -130,6 +134,7 @@ export const DEFAULT_PLOTS_WIDGETS = {
     status: WidgetStatus.ACTIVE, 
     component: 'Plot', 
     panelName: "plotPanel",
+    hideOnClose: true,
     enableRename: false,
     method: {
       plotMethod: 'plotTraces', 
@@ -143,6 +148,7 @@ export const DEFAULT_PLOTS_WIDGETS = {
     component: 'Plot', 
     panelName: "plotPanel",
     enableRename: false,
+    hideOnClose: true,
     method: {
       plotMethod: 'plotRaster', 
       plotType: false
@@ -155,6 +161,7 @@ export const DEFAULT_PLOTS_WIDGETS = {
     component: 'Plot', 
     panelName: "plotPanel",
     enableRename: false,
+    hideOnClose: true,
     method: {
       plotMethod: 'plotSpikeHist', 
       plotType: false
@@ -166,6 +173,7 @@ export const DEFAULT_PLOTS_WIDGETS = {
     status: WidgetStatus.ACTIVE, 
     component: 'Plot', 
     panelName: "plotPanel",
+    hideOnClose: true,
     enableRename: false,
     method: {
       plotMethod: 'plotSpikeStats', 
@@ -179,6 +187,7 @@ export const DEFAULT_PLOTS_WIDGETS = {
     component: 'Plot', 
     panelName: "plotPanel",
     enableRename: false,
+    hideOnClose: true,
     method: {
       plotMethod: 'plotRatePSD', 
       plotType: false
@@ -191,6 +200,7 @@ export const DEFAULT_PLOTS_WIDGETS = {
     component: 'Plot', 
     panelName: "plotPanel",
     enableRename: false,
+    hideOnClose: true,
     method: {
       plotMethod: 'plotLFP',
       plotType: 'timeSeries'
@@ -202,6 +212,7 @@ export const DEFAULT_PLOTS_WIDGETS = {
     status: WidgetStatus.ACTIVE, 
     component: 'Plot', 
     panelName: "plotPanel",
+    hideOnClose: true,
     enableRename: false,
     method: {
       plotMethod: 'plotLFP',
@@ -215,6 +226,7 @@ export const DEFAULT_PLOTS_WIDGETS = {
     component: 'Plot', 
     panelName: "plotPanel",
     enableRename: false,
+    hideOnClose: true,
     method: {
       plotMethod: 'plotLFP',
       plotType: 'spectrogram'
@@ -227,6 +239,7 @@ export const DEFAULT_PLOTS_WIDGETS = {
     component: 'Plot', 
     panelName: "plotPanel",
     enableRename: false,
+    hideOnClose: true,
     method: {
       plotMethod: 'plotLFP',
       plotType: 'locations'
@@ -237,6 +250,7 @@ export const DEFAULT_PLOTS_WIDGETS = {
     name: 'Granger Plot', 
     status: WidgetStatus.ACTIVE, 
     component: 'Plot', 
+    hideOnClose: true,
     panelName: "plotPanel",
     enableRename: false,
     method: {
@@ -250,6 +264,7 @@ export const DEFAULT_PLOTS_WIDGETS = {
     status: WidgetStatus.ACTIVE, 
     component: 'Plot',
     panelName: "plotPanel",
+    hideOnClose: true,
     enableRename: false,
     method: {
       plotMethod: 'plotRxDConcentration',
@@ -268,14 +283,16 @@ export const DEFAULT_MORPHOLOGY_WIDGET = {
   enableRename: false
 }
 
+
 export const DEFAULT_HLS_WIDGETS = {
   'popParams': { 
     id: 'popParams', 
     name: 'Populations', 
     status: WidgetStatus.ACTIVE, 
     component: 'popParams', 
-    panelName: "hlsPanel",
+    panelName: TOP_PANEL,
     enableRename: false,
+    hideOnClose: true,
     pos: 0
   },
   'cellParams': { 
@@ -283,8 +300,9 @@ export const DEFAULT_HLS_WIDGETS = {
     name: 'Cell rules', 
     status: WidgetStatus.HIDDEN, 
     component: 'cellParams', 
-    panelName: "hlsPanel",
+    panelName: TOP_PANEL,
     enableRename: false,
+    hideOnClose: true,
     pos: 1
   },
   'synMechParams': { 
@@ -292,8 +310,9 @@ export const DEFAULT_HLS_WIDGETS = {
     name: 'Synapses', 
     status: WidgetStatus.HIDDEN, 
     component: 'synMechParams', 
-    panelName: "hlsPanel",
+    panelName: TOP_PANEL,
     enableRename: false,
+    hideOnClose: true,
     pos: 2
   },
   'connParams': { 
@@ -301,7 +320,8 @@ export const DEFAULT_HLS_WIDGETS = {
     name: 'Connections', 
     status: WidgetStatus.HIDDEN, 
     component: 'connParams', 
-    panelName: "hlsPanel",
+    panelName: TOP_PANEL,
+    hideOnClose: true,
     enableRename: false,
     pos: 3
   },
@@ -310,7 +330,8 @@ export const DEFAULT_HLS_WIDGETS = {
     name: 'Stim. sources', 
     status: WidgetStatus.HIDDEN, 
     component: 'stimSourceParams', 
-    panelName: "hlsPanel",
+    hideOnClose: true,
+    panelName: TOP_PANEL,
     enableRename: false,
     pos: 4
   },
@@ -319,25 +340,28 @@ export const DEFAULT_HLS_WIDGETS = {
     name: 'Stim. targets',
     status: WidgetStatus.HIDDEN, 
     component: 'stimTargetParams',
-    panelName: "hlsPanel",
+    hideOnClose: true,
+    panelName: TOP_PANEL,
     enableRename: false,
     pos: 5
   },
   'simConfig': { 
     id: 'simConfig', 
     name: 'Settings', 
-    status: WidgetStatus.HIDDEN, 
+    status: WidgetStatus.HIDDEN,
+    hideOnClose: true, 
     component: 'simConfig', 
-    panelName: "hlsPanel",
+    panelName: TOP_PANEL,
     enableRename: false,
     pos: 6
   },
   'analysis': { 
     id: 'analysis', 
     name: 'Analysis', 
-    status: WidgetStatus.HIDDEN, 
+    status: WidgetStatus.HIDDEN,
+    hideOnClose: true, 
     component: 'analysis', 
-    panelName: "hlsPanel",
+    panelName: TOP_PANEL,
     enableRename: false,
     pos: 7
   }
