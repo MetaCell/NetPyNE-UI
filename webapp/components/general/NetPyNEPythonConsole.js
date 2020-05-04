@@ -2,11 +2,14 @@ import React, { Component } from 'react'
 
 import PythonConsole from '@geppettoengine/geppetto-client/js/components/interface/pythonConsole/PythonConsole';
 
-export default class NetPyNEPythonConsole extends Component {
+export class NetPyNEPythonConsole extends Component {
   
+  shouldComponentUpdate () {
+    return false;
+  }
 
   componentWillUnmount () {
-    console.log("unmounting python console")
+    console.info("unmounting python console");
   }
 
   componentDidMount () {
@@ -17,3 +20,6 @@ export default class NetPyNEPythonConsole extends Component {
     return <PythonConsole pythonNotebookPath={"notebooks/notebook.ipynb"} />
   }
 }
+
+
+export default NetPyNEPythonConsole;

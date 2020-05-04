@@ -2,8 +2,8 @@ export const MODULE_NOT_FOUND_ERROR = 'ModuleNotFoundError';
 export const NAME_ERROR = "NameError";
 export const FILEVARIABLE_LENGTH = 'network.'.length;
 import { WidgetStatus } from './components/layout/model';
-import { getPythonDefaultConsoleWidget } from './components/layout/utils';
-export { getPythonDefaultConsoleWidget, WidgetStatus };
+import { MINIMIZED_PANEL } from './components/layout';
+export { WidgetStatus };
 export const TOP_PANEL = "hlsPanel";
 
 export const MODEL_STATE = {
@@ -21,13 +21,19 @@ export const NETPYNE_COMMANDS = {
   plotFigure: 'netpyne_geppetto.getPlot'
 }
 
-export const FLEXLAYOUT_DEFAULT_STATE = { 
-  widgets: { pythonEdit: getPythonDefaultConsoleWidget(true) },
-  widgetsBackground: {
-    D3Canvas: DEFAULT_MORPHOLOGY_WIDGET,
-    pythonExplore: getPythonDefaultConsoleWidget(false),
-  }
-};2
+export const PYTHON_CONSOLE_WIDGET = {
+  id: 'python', 
+  name: 'Python', 
+  status: WidgetStatus.MINIMIZED, 
+  component: 'PythonConsole', 
+  panelName: MINIMIZED_PANEL,
+  defaultPanel: "consolePanel",
+  enableClose: true,
+  enableDrag: true,
+  enableRename: false,
+  hideOnClose: true,
+  pos: 1000
+}
 /*
  * ------------------------------------------------------------------------------ //
  * ------------------------------------------------------------------------------ //
@@ -44,7 +50,7 @@ export const TOPBAR_CONSTANTS = {
   CREATE_NETWORK: 'Create Network',
   CREATE_AND_SIMULATE_NETWORK:'Create and Simulate Network',
   EXPLORE_EXISTING_NETWORK:'Explore Existing Network',
-  BACK_TO_EDITION: 'Back to edition'
+  BACK_TO_EDITION: 'Back to edit'
 
 }
 
@@ -63,7 +69,7 @@ export const WIDGETS_IDS = {
     STIM_TARGET_PARAMS: 'stimTargetParams',
     SIM_CONFIG: 'simConfig',
     ANALYSIS: "analysis",
-    PYTHON_CONSOLE_EDIT: 'pythonEdit',
+    
   },
   EXPLORE_MODE: {
     MORPHOLOGY: 'D3Canvas',
@@ -81,111 +87,125 @@ export const WIDGETS_IDS = {
     LFP_LOCATION_PLOT: 'LFPLocationsPlot',
     GRAGER_PLOT: 'grangerPlot',
     RXD_CONCENTRATION_PLOT: 'rxdConcentrationPlot',
-    PYTHON_CONSOLE_EXPLORE: 'pythonExplore',
-  }
+  },
+  PYTHON_CONSOLE: PYTHON_CONSOLE_WIDGET.id
   
 
 }
-
-
-export const DEFAULT_PLOTS_WIDGETS = {
+let pos = 1;
+export const PLOT_WIDGETS = {
   connectionPlot: {
     id: 'connectionPlot', 
     name: 'Connections Plot', 
-    status: WidgetStatus.ACTIVE, 
+    status: WidgetStatus.MINIMIZED, 
     component: 'Plot', 
-    panelName: "plotPanel",
+    panelName: MINIMIZED_PANEL,
+    defaultPanel: "plotPanel",
     enableRename: false,
     hideOnClose: true,
     method: {
       plotMethod: 'plotConn', 
       plotType: false
-    }
+    },
+    pos: pos++
   },
   d2NetPlot: {
     id: 'd2NetPlot', 
     name: '2D Net Plot', 
-    status: WidgetStatus.ACTIVE, 
+    status: WidgetStatus.MINIMIZED, 
     component: 'Plot', 
-    panelName: "plotPanel",
+    panelName: MINIMIZED_PANEL,
+    defaultPanel: "plotPanel",
     enableRename: false,
     hideOnClose: true,
     method: {
       plotMethod: 'plot2Dnet', 
       plotType: false
-    }
+    },
+    pos: pos++
   },
   shapePlot: {
     id: 'shapePlot', 
     name: 'Shape Plot', 
-    status: WidgetStatus.ACTIVE, 
+    status: WidgetStatus.MINIMIZED, 
     component: 'Plot', 
-    panelName: "plotPanel",
+    panelName: MINIMIZED_PANEL,
+    defaultPanel: "plotPanel",
     enableRename: false,
     hideOnClose: true,
     method: {
       plotMethod: 'plotShape', 
       plotType: false
-    }
+    },
+    pos: pos++
   },
   tracesPlot: {
     id: 'tracesPlot', 
     name: 'Cell traces', 
-    status: WidgetStatus.ACTIVE, 
+    status: WidgetStatus.MINIMIZED, 
     component: 'Plot', 
-    panelName: "plotPanel",
+    panelName: MINIMIZED_PANEL,
+    defaultPanel: "plotPanel",
     hideOnClose: true,
     enableRename: false,
     method: {
       plotMethod: 'plotTraces', 
       plotType: false
-    }
+    },
+    pos: pos++
   },
   rasterPlot: {
     id: 'rasterPlot', 
     name: 'Raster plot', 
-    status: WidgetStatus.ACTIVE, 
+    status: WidgetStatus.MINIMIZED, 
     component: 'Plot', 
-    panelName: "plotPanel",
+    panelName: MINIMIZED_PANEL,
+    defaultPanel: "plotPanel",
     enableRename: false,
     hideOnClose: true,
     method: {
       plotMethod: 'plotRaster', 
       plotType: false
-    }
+    },
+    pos: pos++
   },
   spikePlot: {
     id: 'spikePlot', 
     name: 'Spike Hist Plot', 
-    status: WidgetStatus.ACTIVE, 
+    status: WidgetStatus.MINIMIZED, 
     component: 'Plot', 
-    panelName: "plotPanel",
+    panelName: MINIMIZED_PANEL,
+    defaultPanel: "plotPanel",
     enableRename: false,
     hideOnClose: true,
     method: {
       plotMethod: 'plotSpikeHist', 
       plotType: false
-    }
+    },
+    pos: pos++
   },
   spikeStatsPlot: {
     id: 'spikeStatsPlot', 
     name: 'Spike Stats Plot', 
-    status: WidgetStatus.ACTIVE, 
+    status: WidgetStatus.MINIMIZED, 
     component: 'Plot', 
-    panelName: "plotPanel",
+    panelName: MINIMIZED_PANEL,
+    defaultPanel: "plotPanel",
     hideOnClose: true,
     enableRename: false,
     method: {
       plotMethod: 'plotSpikeStats', 
       plotType: false
-    }
+    },
+    pos: pos++
   },
   ratePSDPlot: {
     id: 'ratePSDPlot', 
     name: 'Rate PSD Plot', 
-    status: WidgetStatus.ACTIVE, 
+    status: WidgetStatus.MINIMIZED, 
     component: 'Plot', 
-    panelName: "plotPanel",
+    panelName: MINIMIZED_PANEL,
+    defaultPanel: "plotPanel",
     enableRename: false,
     hideOnClose: true,
     method: {
@@ -196,95 +216,114 @@ export const DEFAULT_PLOTS_WIDGETS = {
   LFPTimeSeriesPlot: {
     id: 'LFPTimeSeriesPlot', 
     name: 'LFP Time Series Plot', 
-    status: WidgetStatus.ACTIVE, 
+    status: WidgetStatus.MINIMIZED, 
     component: 'Plot', 
-    panelName: "plotPanel",
+    panelName: MINIMIZED_PANEL,
+    defaultPanel: "plotPanel",
     enableRename: false,
     hideOnClose: true,
     method: {
       plotMethod: 'plotLFP',
       plotType: 'timeSeries'
-    }
+    },
+    pos: pos++
   },
   LFPPSDPlot: {
     id: 'LFPPSDPlot', 
     name: 'LFP PSD Plot', 
-    status: WidgetStatus.ACTIVE, 
+    status: WidgetStatus.MINIMIZED, 
     component: 'Plot', 
-    panelName: "plotPanel",
+    panelName: MINIMIZED_PANEL,
+    defaultPanel: "plotPanel",
     hideOnClose: true,
     enableRename: false,
     method: {
       plotMethod: 'plotLFP',
       plotType: 'PSD'
-    }
+    },
+    pos: pos++
   },
   LFPSpectrogramPlot: {
     id: 'LFPSpectrogramPlot', 
     name: 'LFP Spectrogram Plot', 
-    status: WidgetStatus.ACTIVE, 
+    status: WidgetStatus.MINIMIZED, 
     component: 'Plot', 
-    panelName: "plotPanel",
+    panelName: MINIMIZED_PANEL,
+    defaultPanel: "plotPanel",
     enableRename: false,
     hideOnClose: true,
     method: {
       plotMethod: 'plotLFP',
       plotType: 'spectrogram'
-    }
+    },
+    pos: pos++
   },
   LFPLocationsPlot: {
     id: 'LFPLocationsPlot',
     name: 'LFP Locations Plot',
-    status: WidgetStatus.ACTIVE, 
+    status: WidgetStatus.MINIMIZED, 
     component: 'Plot', 
-    panelName: "plotPanel",
+    panelName: MINIMIZED_PANEL,
+    defaultPanel: "plotPanel",
     enableRename: false,
     hideOnClose: true,
     method: {
       plotMethod: 'plotLFP',
       plotType: 'locations'
-    }
+    },
+    pos: pos++
   },
   grangerPlot: {
     id: 'grangerPlot', 
     name: 'Granger Plot', 
-    status: WidgetStatus.ACTIVE, 
+    status: WidgetStatus.MINIMIZED, 
     component: 'Plot', 
     hideOnClose: true,
-    panelName: "plotPanel",
+    panelName: MINIMIZED_PANEL,
+    defaultPanel: "plotPanel",
     enableRename: false,
     method: {
       plotMethod: 'granger',
       plotType: false
-    }
+    },
+    pos: pos++
   },
   rxdConcentrationPlot: {
     id: 'rxdConcentrationPlot',
     name: 'RxD concentration plot',
-    status: WidgetStatus.ACTIVE, 
+    status: WidgetStatus.MINIMIZED, 
     component: 'Plot',
-    panelName: "plotPanel",
+    panelName: MINIMIZED_PANEL,
+    defaultPanel: "plotPanel",
     hideOnClose: true,
     enableRename: false,
     method: {
       plotMethod: 'plotRxDConcentration',
       plotType: false
-    }
+    },
+    pos: pos++
   }
 }
 
-
-export const DEFAULT_MORPHOLOGY_WIDGET = {
-  id: 'D3Canvas', 
-  name: 'Morphology', 
-  status: WidgetStatus.ACTIVE, 
-  component: 'D3Canvas', 
-  panelName: "morphoPanel",
-  enableRename: false
+export const DEFAULT_NETWORK_WIDGETS = {
+  PYTHON_CONSOLE_WIDGET,
+  D3Canvas: {
+    id: 'D3Canvas', 
+    name: 'Morphology', 
+    status: WidgetStatus.ACTIVE, 
+    component: 'D3Canvas', 
+    panelName: "morphoPanel",
+    enableRename: false,
+    hideOnClose: true,
+    pos: 0
+  },
+  ...PLOT_WIDGETS,
+  [PYTHON_CONSOLE_WIDGET.id]: PYTHON_CONSOLE_WIDGET
 }
 
 
-export const DEFAULT_HLS_WIDGETS = {
+export const EDIT_WIDGETS = {
+  [PYTHON_CONSOLE_WIDGET.id]: PYTHON_CONSOLE_WIDGET,
   'popParams': { 
     id: 'popParams', 
     name: 'Populations', 

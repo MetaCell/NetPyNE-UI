@@ -21,9 +21,11 @@ import {
   DESTROY_WIDGET,
   ACTIVATE_WIDGET,
   SET_LAYOUT,
+  SET_WIDGETS,
   setLayout
 } from "./actions";
 
+import { MINIMIZED_PANEL } from '.';
 
 const styles = (theme) => createStyles({
   container: {
@@ -66,7 +68,10 @@ class LayoutManager {
     this.enableMinimize = enableMinimize;
   }
 
-  addWidget(widgetConfiguration) {
+  addWidget(widgetConfiguration: Widget) {
+    if(this.getWidget(widgetConfiguration.id)) {
+      return this.updateWidget(widgetConfiguration);
+    }
     const { model } = this;
     let tabset = model.getNodeById(widgetConfiguration.panelName);
     if (tabset === undefined) {
@@ -77,7 +82,7 @@ class LayoutManager {
         widget2Node(widgetConfiguration),
         widgetConfiguration.panelName,
         DockLocation.CENTER,
-        widgetConfiguration.index ? widgetConfiguration.index : -1
+        widgetConfiguration.pos ? widgetConfiguration.pos : -1
       )
     );
   }
@@ -141,16 +146,16 @@ class LayoutManager {
 
   middleware = (store) => (next) => (action) => {
     const model = this.model;
-
+    console.debug(action);
     switch (action.type) {
       case ADD_WIDGET: {
+
         this.addWidget(action.data);
+        
         break;
       }
       case ADD_WIDGETS: {
-        for(let widget of action.data){
-          this.addWidget(widget);
-        }
+        this.addWidgets(action.data);
         break;
       }
       case UPDATE_WIDGET: {
@@ -160,14 +165,25 @@ class LayoutManager {
 
       case DESTROY_WIDGET: {
         const widget = action.data;
-        model.doAction(Actions.deleteTab(widget.id));
+        this.deleteWidget(widget);
         break;
       }
 
       case ACTIVATE_WIDGET: {
-        model.doAction(Actions.updateNodeAttributes(action.data.id, {status: WidgetStatus.ACTIVE})); 
         action.data.status = WidgetStatus.ACTIVE;
+        this.updateWidget(action.data);
         break;
+      }
+      case SET_WIDGETS: {
+        const newWidgets: Map<string, Widget> = action.data;
+        for(let widget of this.getWidgets()) {
+          if(!newWidgets[widget.id]){
+            this.deleteWidget(widget);
+          }
+        }
+        this.addWidgets(Object.values(newWidgets));
+        break;
+
       }
 
       case SET_LAYOUT: {
@@ -184,6 +200,26 @@ class LayoutManager {
 
     next(setLayout(model.toJson()));
   };
+
+  private addWidgets(newWidgets: Array<Widget>) {
+    let active = null;
+    for (let widget of newWidgets) {
+      if (widget.status == WidgetStatus.ACTIVE) {
+        active = widget.id;
+      }
+
+      this.addWidget(widget);
+      
+    }
+    if (active) {
+      this.model.doAction(FlexLayout.Actions.selectTab(active));
+    }
+  }
+
+  private deleteWidget( widget: any) {
+   this.model.doAction(Actions.deleteTab(widget.id));
+  }
+
   getWidgets() {
  
     let nodes = [];
@@ -261,7 +297,8 @@ class LayoutManager {
     
 
   getWidget(id): Widget {
-    return (this.model.getNodeById(id)['_attributes'] as ExtendedNode).config;
+    const node = this.model.getNodeById(id);
+    return node && node['_attributes'] ? (node['_attributes'] as ExtendedNode).config: null;
   }
 
 
@@ -291,25 +328,38 @@ class LayoutManager {
 
   minimizeWidget(widgetId) {
 
-    var updatedWidget = this.getWidget(widgetId);
+    var updatedWidget = {...this.getWidget(widgetId)};
     if (updatedWidget === undefined) {
       return;
     }
     updatedWidget.status = WidgetStatus.MINIMIZED;
-    updatedWidget.panelName = "border_bottom";
+    updatedWidget.defaultPanel = updatedWidget.panelName;
+    updatedWidget.panelName = MINIMIZED_PANEL;
     this.updateWidget(updatedWidget);
     // this.model.doAction(FlexLayout.Actions.moveNode(widgetId, "border_bottom", FlexLayout.DockLocation.CENTER, 0));
   }
 
   updateWidget (widget: Widget) {
     const { model } = this;
-    if (widget) {
+    if(!widget){
+      debugger;
+    }
+      const previousWidget = this.getWidget(widget.id);
+      if(previousWidget.status != widget.status) {
+        if(previousWidget.status == WidgetStatus.MINIMIZED) {
+          this.restoreWidget(widget);
+        }
+        else {
+          this.moveWidget(widget);
+        }
+      }
       this.widgetFactory.updateWidget(widget);
       model.doAction(Actions.updateNodeAttributes(widget.id, widget2Node(widget))); 
-    }
-    this.model.doAction(FlexLayout.Actions.moveNode(widget.id, widget.panelName, FlexLayout.DockLocation.CENTER, widget.pos));
-    
+      if (widget.status == WidgetStatus.ACTIVE) {
+        model.doAction(FlexLayout.Actions.selectTab(widget.id));
+      }
   }
+
   onActionMaximizeWidget(action) {
     // const { model } = this;
     // const panel2maximize = <Panel>model.getNodeById(action.data.node);
@@ -337,9 +387,10 @@ class LayoutManager {
     return this.tabsetIconFactory.factory(node.getConfig());
   }
 
-  restoreWidget(widget) {
+  restoreWidget(widget: Widget) {
     const { model } = this;
-    const panelName = widget.panelName;
+    widget.panelName = widget.defaultPanel;
+    const panelName = widget.panelName ;
     let tabset = model.getNodeById(panelName);
     if (tabset === undefined) {
       this.createTabSet(panelName);
@@ -354,7 +405,7 @@ class LayoutManager {
         widget.id,
         widget.panelName,
         FlexLayout.DockLocation.CENTER,
-        0
+        widget.pos
       )
     );
     // Resize of canvas and SVG images

@@ -21,7 +21,7 @@ function configureStore (state = INIT_STATE) {
   const store = createStore(
     all,
     state,
-    composeEnhancers(applyMiddleware(plotMiddleware, middleware,layoutManager.middleware))
+    composeEnhancers(applyMiddleware( middleware, plotMiddleware, layoutManager.middleware,))
   );
   layoutManager.dispatch = store.dispatch;
   return store;

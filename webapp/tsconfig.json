@@ -4,7 +4,7 @@
       "sourceMap": true,
       "noImplicitAny": false,
       "module": "commonjs",
-      "target": "es6",
+      "target": "es2017",
       "stripInternal":true,
       "skipLibCheck": true,
       "alwaysStrict":false,

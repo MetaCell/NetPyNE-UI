@@ -4,9 +4,7 @@ import PythonControlledCapability from "geppetto-client/js/communication/geppett
 
 import {
   activateWidget,
-  addWidgets,
-  minimizeWidget,
-  maximizeWidget,
+  setWidgets,
   updateWidget,
   newWidget
 } from "../redux/actions/layout";
@@ -79,10 +77,10 @@ export const Dimensions = connect(
 
 import _NetPyNE from "./NetPyNE";
 export const NetPyNE = connect(
-  state => ({ editMode: state.general.editMode }),
+  null,
   dispatch => ({ 
     pythonCallErrorDialogBox: payload => dispatch(openBackendErrorDialog(payload)),
-    addWidgets: payload => dispatch(addWidgets(payload)),
+    setWidgets: payload => dispatch(setWidgets(payload)),
     modelLoaded: () => dispatch(modelLoaded), 
     newWidget: widget => dispatch(newWidget(widget)),
     activateWidget: widgetId => dispatch(activateWidget(widgetId))
@@ -193,12 +191,7 @@ export const ActionDialog = connect(
   })
 )(_ActionDialog)
 
-import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole';
-export const NetPyNEPythonConsole = connect(
-  null,
-  null
-)(_NetPyNEPythonConsole)
-
+export { NetPyNEPythonConsole } from './general/NetPyNEPythonConsole';
 
 import _Drawer from './settings/Drawer'
 export const Drawer = connect(

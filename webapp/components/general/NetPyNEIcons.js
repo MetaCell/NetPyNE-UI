@@ -27,8 +27,7 @@ export default ({ widgetId, selected }) => {
     return <CogsIcon fontSize="large" className={classes.icon}/>
   case WIDGETS_IDS.EDIT_MODE.ANALYSIS:
     return <SliderHIcon fontSize="large" className={classes.icon}/>
-  case WIDGETS_IDS.EXPLORE_MODE.PYTHON_CONSOLE_EXPLORE:
-  case WIDGETS_IDS.EDIT_MODE.PYTHON_CONSOLE_EDIT:
+  case WIDGETS_IDS.PYTHON_CONSOLE:
     return <CodeIcon fontSize="large" className={classes.icon}/>
   case WIDGETS_IDS.EXPLORE_MODE.CONNECTION_PLOT:
     return <ConnectivityPlotIcon fontSize="large" className={classes.icon}/>

@@ -20,17 +20,14 @@ const styles = ({ zIndex, palette, spacing }) => ({
   content: { flexGrow:1, display: 'flex', flexDirection: 'row', position: 'relative' }
 });
 
-import {
-  DEFAULT_HLS_WIDGETS, getPythonDefaultConsoleWidget, 
-  DEFAULT_MORPHOLOGY_WIDGET,DEFAULT_PLOTS_WIDGETS
-} from '../constants'
+import { EDIT_WIDGETS, PYTHON_CONSOLE_WIDGET, WidgetStatus } from '../constants'
 
 
 class NetPyNE extends React.Component {
   
   openPythonCallDialog (event) {
     const payload = { errorMessage: event['evalue'], errorDetails: event['traceback'].join('\n') }
-    this.props.pythonCallErrorDialogBox(payload)
+    this.props.pythonCallErrorDialogBox(payload);
   }
 
   addMetadataToWindow (data) {
@@ -43,7 +40,7 @@ class NetPyNE extends React.Component {
 
   componentDidMount () {
     GEPPETTO.on(GEPPETTO.Events.Error_while_exec_python_command, this.openPythonCallDialog, this);
-    this.props.addWidgets([getPythonDefaultConsoleWidget(true) ]);
+    this.props.setWidgets({ [PYTHON_CONSOLE_WIDGET.id]: { ...PYTHON_CONSOLE_WIDGET, panelName: PYTHON_CONSOLE_WIDGET.defaultPanel, status: WidgetStatus.ACTIVE } });
     GEPPETTO.on('jupyter_geppetto_extension_ready', data => {
       let project = { id: 1, name: 'Project', experiments: [{ "id": 1, "name": 'Experiment', "status": 'DESIGN' }] }
       GEPPETTO.Manager.loadProject(project, false);
@@ -53,7 +50,7 @@ class NetPyNE extends React.Component {
         const data = Utils.convertToJSON(response);
         this.addMetadataToWindow(data);
         this.props.modelLoaded();
-        this.props.addWidgets(Object.values(DEFAULT_HLS_WIDGETS));
+        this.props.setWidgets(EDIT_WIDGETS);
         GEPPETTO.trigger("spinner:hide");
       })
       

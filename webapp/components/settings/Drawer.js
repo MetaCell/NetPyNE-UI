@@ -13,8 +13,8 @@ import Typography from '@material-ui/core/Typography';
 
 import { WidgetStatus } from '../layout/model';
 import {
-  DEFAULT_HLS_WIDGETS, getPythonDefaultConsoleWidget, 
-  DEFAULT_MORPHOLOGY_WIDGET,DEFAULT_PLOTS_WIDGETS, TOP_PANEL
+  EDIT_WIDGETS, getPythonDefaultConsoleWidget, 
+  DEFAULT_MORPHOLOGY_WIDGET,DEFAULT_NETWORK_WIDGETS, TOP_PANEL
 } from '../../constants';
 
 import DrawerIcon from '../general/NetPyNEIcons';
@@ -30,6 +30,7 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
   
   const classes = useStyles({ width: expand ? drawerOpenWidth : drawerCloseWidth, expand });
   const layoutManager = require('../layout/LayoutManager').getInstance();
+
   function createOrFocusWidget (widgetId) {
     const widget = { ...layoutManager.getWidget(widgetId) };
     if (!widget) {
@@ -48,43 +49,23 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
   function updateBorderWidget (widgetId) {
     const updatedWidget = { ...layoutManager.getWidget(widgetId) }
     updatedWidget.status = WidgetStatus.ACTIVE
-    updatedWidget.panelName = TOP_PANEL;
+    updatedWidget.panelName = updatedWidget.defaultPanel || TOP_PANEL;
     updateWidget(updatedWidget)
   }
 
   function getNewWidgetConf (widgetId) {
     if (editMode) {
       // return a High Level Specification widget
-      return ({ ...DEFAULT_HLS_WIDGETS, pythonEdit: getPythonDefaultConsoleWidget(true) })[widgetId]
+      return EDIT_WIDGETS[widgetId]
     }
     
-    if (widgetId.includes('Plot')) {
-      // return a plot widget
-      return DEFAULT_PLOTS_WIDGETS[widgetId]
-    }
     // return either 3dcanvas or python console
-    return ({ D3Canvas: DEFAULT_MORPHOLOGY_WIDGET, pythonExplore: getPythonDefaultConsoleWidget(false) })[widgetId]
+    return DEFAULT_MORPHOLOGY_WIDGET[widgetId]
   }
 
 
   function getMenu () {
     return layoutManager.getWidgets().sort((w1, w2) => w1.pos - w2.pos);
-    /*
-     * if (editMode) {
-     *   const array = [...Object.values(DEFAULT_HLS_WIDGETS), 
-     *                  getPythonDefaultConsoleWidget(true)]
-     *   return array
-     * } else {
-     *   const array = [DEFAULT_MORPHOLOGY_WIDGET,
-     *                  ...Object.values(DEFAULT_PLOTS_WIDGETS),
-     *                  getPythonDefaultConsoleWidget(false)]
-     */
-
-    /*
-     *   return array
-     * }
-     */
-    
   }
   
   const mapItem = ({ name, id }) => {

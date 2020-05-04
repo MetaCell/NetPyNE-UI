@@ -22,6 +22,7 @@ export interface Widget {
   id: string;
   status: WidgetStatus;
   panelName: string;
+  defaultPanel?: any;
   hideOnClose?: boolean;
   name: string;
   enableClose?: boolean;
