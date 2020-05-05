@@ -54,6 +54,6 @@ extended.optimization = {
   removeEmptyChunks: false,
 };
 
-extended.devtool = 'eval-source-map';
+extended.devtool = 'source-map';
 
 module.exports = extended;
