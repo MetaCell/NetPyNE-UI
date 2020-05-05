@@ -147,6 +147,7 @@ class LayoutManager {
   middleware = (store) => (next) => (action) => {
     const model = this.model;
     console.debug(action);
+    next(action);
     switch (action.type) {
       case ADD_WIDGET: {
 

@@ -1,6 +1,6 @@
 import { 
-  UPDATE_CARDS, CREATE_NETWORK, CREATE_SIMULATE_NETWORK, PYTHON_CALL, SIMULATE_NETWORK, SHOW_NETWORK,
-  showNetwork, createNetwork, createAndSimulateNetwork, editModel, EDIT_MODEL
+  UPDATE_CARDS, CREATE_NETWORK, CREATE_SIMULATE_NETWORK, PYTHON_CALL, SIMULATE_NETWORK, SHOW_NETWORK, 
+  editModel, EDIT_MODEL
 } from '../actions/general';
 
 import { openBackendErrorDialog } from '../actions/errors';
@@ -18,16 +18,19 @@ let previousLayout = { edit: undefined, network: undefined };
 export default store => next => action => {
   const errorCallback = errorPayload => next(openBackendErrorDialog(errorPayload));
 
-  const switchLayoutAction = (edit = true) => {
+  const switchLayoutAction = (edit = true, reset = true) => {
     previousLayout[store.getState().general.editMode ? 'edit' : 'network'] = store.layout;
+    if (reset) {
+      previousLayout = { edit: undefined, network: undefined };
+    }
     return next(edit  
-      ? previousLayout.edit ? setLayout(previousLayout.edit) : setWidgets(Constants.EDIT_WIDGETS)  
-      : previousLayout.network ? setLayout(previousLayout.network) : setWidgets(Constants.DEFAULT_NETWORK_WIDGETS));
+      ? previousLayout.edit ? setLayout(previousLayout.edit) : setWidgets({ ...Constants.EDIT_WIDGETS })  
+      : previousLayout.network ? setLayout(previousLayout.network) : setWidgets({ ...Constants.DEFAULT_NETWORK_WIDGETS }));
   }
-  const toNetworkCallback = () => {
+  const toNetworkCallback = reset => () => {
     
     if (store.getState().general.editMode) {
-      switchLayoutAction(false);
+      switchLayoutAction(false, reset);
     }
     next(action);
   };
@@ -38,25 +41,25 @@ export default store => next => action => {
     next(action);
     break;
   case SHOW_NETWORK:
-    switchLayoutAction(false);
+    switchLayoutAction(false, false);
     break;
   case EDIT_MODEL:{
     next(action);
-    next(setWidgets(Constants.EDIT_WIDGETS));
+    switchLayoutAction(true);
     break
   }
   case CREATE_NETWORK:{
       
-    instantiateNetwork({}).then(toNetworkCallback, errorCallback);
+    instantiateNetwork({}).then(toNetworkCallback(true), errorCallback);
     break;
   }
   case CREATE_SIMULATE_NETWORK:{
-    simulateNetwork({ parallelSimulation: false }).then(toNetworkCallback, errorCallback);
+    simulateNetwork({ parallelSimulation: false }).then(toNetworkCallback(true), errorCallback);
     break;
   }
     
   case SIMULATE_NETWORK:
-    simulateNetwork({ parallelSimulation: false, usePrevInst: true }).then(toNetworkCallback, errorCallback);
+    simulateNetwork({ parallelSimulation: false, usePrevInst: true }).then(toNetworkCallback(true), errorCallback);
     break
   case PYTHON_CALL: {
     const callback = response => {
@@ -69,8 +72,8 @@ export default store => next => action => {
         break;
       case NETPYNE_COMMANDS.deleteModel:
         next(editModel);
-        next(setWidgets(Constants.EDIT_WIDGETS));
-        previousLayout = { edit: undefined, network: undefined };
+        switchLayoutAction(true, true);
+       
         break;
       default:
         break;
