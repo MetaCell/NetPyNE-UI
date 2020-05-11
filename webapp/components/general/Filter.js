@@ -3,7 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { withStyles } from '@material-ui/core/styles'
 import Icon from '@material-ui/core/Icon'
-import { bgRegular } from '../../Theme'
+import { bgRegular } from '../../theme'
 
 const styles = ({ spacing, shape }) => ({
   root: {

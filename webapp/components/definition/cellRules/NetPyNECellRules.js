@@ -29,6 +29,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+import RulePath from '../../general/RulePath'
+import ExpansionPanel from '../../general/ExpansionPanel'
 
 const styles = ({ spacing }) => ({
   arrowRight : { marginLeft: spacing(1) },
@@ -319,7 +321,7 @@ export default class NetPyNECellRules extends React.Component {
       this.setState({ selectedMechanism: newMechanismName });
     }
 
-    if (this.state.value && Object.keys(this.state.value).length === 0) {
+    if (this.state.value && Object.keys(this.state.value).length === 0 && (prevState.value && Object.keys(prevState.value).length !== 0)) {
       this.setState({ 
         selectedCellRule: undefined,
         selectedSection: undefined,
@@ -517,6 +519,20 @@ export default class NetPyNECellRules extends React.Component {
     return []
   }
 
+  getCopyPath () {
+    const basePath = "netParams.cellParams"
+    switch (this.state.page) {
+    case "main":
+      return `${basePath}["${this.state.selectedCellRule}"]`
+    case "sections":
+      return `${basePath}["${this.state.selectedCellRule}"].secs["${this.state.selectedSection}"]`
+    case "mechanisms":
+      return `${basePath}["${this.state.selectedCellRule}"].secs["${this.state.selectedSection}"].mechs["${this.state.selectedMechanism}"]`
+    default:
+      return "undefined"
+    }
+  }
+
   render () {
 
     const { value: model, page, selectedCellRule, selectedSection, selectedMechanism, errorMessage, errorDetails } = this.state;
@@ -634,52 +650,56 @@ export default class NetPyNECellRules extends React.Component {
       <GridLayout>
           
         <div>
-          <div className="breadcrumby">
-            <NetPyNEHome
-              selection={selectedCellRule}
-              handleClick={() => this.setState({ page: 'main', selectedCellRule: undefined, selectedSection: undefined, selectedMechanism: undefined })}
-            />
-            <div className='ml-2'>
-              <Fab
-                id="newCellRuleButton"
-                style={{ width: 40, height: 40 }}
-                color={ page == 'main' ? 'primary' : 'secondary'}
-                data-tooltip={ this.createTooltip('cellRule')}
-                onClick={() => this.handleHierarchyClick('main')}
-              >
-                {this.createLabel('cellRule')}
-              </Fab>
-            </div>
-            <NavigationChevronRight
-              className='ml-2'
-              color='disabled'
-            />
-            <div className='ml-2'>
-              <Fab
-                id="newSectionButton"
-                variant="extended"
-                style={{ minWidth: 100, height: 40 }}
-                color={ page === 'mechanisms' ? 'secondary' : 'primary'}
-                disabled={ selectedCellRule == undefined }
-                onClick={ () => this.handleHierarchyClick('sections') }
-                data-tooltip={ this.createTooltip('section')}
-              >
-                {this.createLabel('sections')}
-              </Fab>
-            </div>
+          <ExpansionPanel>
+            <div className="breadcrumby">
+              <NetPyNEHome
+                selection={selectedCellRule}
+                handleClick={() => this.setState({ page: 'main', selectedCellRule: undefined, selectedSection: undefined, selectedMechanism: undefined })}
+              />
+              <div className='ml-2'>
+                <Fab
+                  id="newCellRuleButton"
+                  style={{ width: 40, height: 40 }}
+                  color={ page == 'main' ? 'primary' : 'secondary'}
+                  data-tooltip={ this.createTooltip('cellRule')}
+                  onClick={() => this.handleHierarchyClick('main')}
+                >
+                  {this.createLabel('cellRule')}
+                </Fab>
+              </div>
+              <NavigationChevronRight
+                className='ml-2'
+                color='disabled'
+              />
+              <div className='ml-2'>
+                <Fab
+                  id="newSectionButton"
+                  variant="extended"
+                  style={{ minWidth: 100, height: 40 }}
+                  color={ page === 'mechanisms' ? 'secondary' : 'primary'}
+                  disabled={ selectedCellRule == undefined }
+                  onClick={ () => this.handleHierarchyClick('sections') }
+                  data-tooltip={ this.createTooltip('section')}
+                >
+                  {this.createLabel('sections')}
+                </Fab>
+              </div>
             
-            <NavigationChevronRight 
-              className='ml-2'
-              color='disabled'
-            />
-            <NetPyNENewMechanism
-              className="ml-2"
-              handleClick={this.handleNewMechanism}
-              disabled={selectedSection == undefined || page == 'main'}
-              handleHierarchyClick={ () => this.handleHierarchyClick('mechanisms')}
-              blockButton={page != 'mechanisms' && !!model && !!model[selectedCellRule] && !!model[selectedCellRule]['secs'][selectedSection] && Object.keys(model[selectedCellRule]['secs'][selectedSection]['mechs']).length > 0}
-            /> 
-          </div>
+              <NavigationChevronRight 
+                className='ml-2'
+                color='disabled'
+              />
+              <NetPyNENewMechanism
+                className="ml-2"
+                handleClick={this.handleNewMechanism}
+                disabled={selectedSection == undefined || page == 'main'}
+                handleHierarchyClick={ () => this.handleHierarchyClick('mechanisms')}
+                blockButton={page != 'mechanisms' && !!model && !!model[selectedCellRule] && !!model[selectedCellRule]['secs'][selectedSection] && Object.keys(model[selectedCellRule]['secs'][selectedSection]['mechs']).length > 0}
+              /> 
+            </div>
+            <RulePath text={this.getCopyPath()}/>
+          </ExpansionPanel>
+          
 
           <Filter
             value={this.state.filterValue}

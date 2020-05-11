@@ -16,8 +16,9 @@ class NetPyNEAddNew extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick () {
+  handleClick (event) {
     if (this.props.handleClick) {
+      event.stopPropagation()
       this.props.handleClick();
     }
   }

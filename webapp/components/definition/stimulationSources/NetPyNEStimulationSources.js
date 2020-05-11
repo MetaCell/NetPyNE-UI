@@ -14,6 +14,9 @@ import {
   Filter
 } from 'netpyne/components';
 
+import RulePath from '../../general/RulePath'
+import ExpansionPanel from '../../general/ExpansionPanel'
+
 export default class NetPyNEStimulationSources extends Component {
 
   constructor (props) {
@@ -172,16 +175,21 @@ export default class NetPyNEStimulationSources extends Component {
     return (
       <GridLayout>
         <div>
-          <div className="breadcrumby">
-            <NetPyNEHome
-              selection={this.state.selectedStimulationSource}
-              handleClick={() => this.setState({ selectedStimulationSource: undefined })}
-            />
-            <NetPyNEAddNew 
-              id={"newStimulationSourceButton"} 
-              handleClick={this.handleNewStimulationSource}
-            />
-          </div>
+          <ExpansionPanel>
+            <div className="breadcrumby">
+              <NetPyNEHome
+                selection={this.state.selectedStimulationSource}
+                handleClick={() => this.setState({ selectedStimulationSource: undefined })}
+              />
+              <NetPyNEAddNew 
+                id={"newStimulationSourceButton"} 
+                handleClick={this.handleNewStimulationSource}
+              />
+            </div>
+            <RulePath text={`netParams.stimSourceParams["${this.state.selectedStimulationSource}"]`}/>
+          </ExpansionPanel>
+
+          
           <Filter
             value={this.state.filterValue}
             label="Filter stimulation source rule by name..."

@@ -10,6 +10,8 @@ import {
   Filter
 } from 'netpyne/components';
 
+import RulePath from '../../general/RulePath'
+import ExpansionPanel from '../../general/ExpansionPanel'
 
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
@@ -196,16 +198,21 @@ export default class NetPyNEPopulations extends React.Component {
     return (
       <GridLayout>
         <div>
-          <div className="breadcrumby">
-            <NetPyNEHome
-              selection={this.state.selectedPopulation}
-              handleClick={() => this.setState({ selectedPopulation: undefined })}
-            />
-            <NetPyNEAddNew 
-              id={"newPopulationButton"} 
-              handleClick={this.handleNewPopulation}
-            />
-          </div>
+
+          <ExpansionPanel>
+            <div className="breadcrumby">
+              <NetPyNEHome
+                selection={this.state.selectedPopulation}
+                handleClick={() => this.setState({ selectedPopulation: undefined })}
+              />
+              <NetPyNEAddNew 
+                id={"newPopulationButton"} 
+                handleClick={this.handleNewPopulation}
+              />
+            </div>
+            <RulePath text={`netParams.popParams["${this.state.selectedPopulation}"]`}/>
+          </ExpansionPanel>
+
           <Filter
             value={this.state.filterPopValue}
             label="Filter population by name..."

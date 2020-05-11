@@ -8,6 +8,9 @@ import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 
 import NetPyNEConnectivityRule from './NetPyNEConnectivityRule';
 import { NetPyNEThumbnail, GridLayout, Filter } from 'netpyne/components'
+
+import RulePath from '../../general/RulePath'
+import ExpansionPanel from '../../general/ExpansionPanel'
 export default class NetPyNEConnectivityRules extends Component {
 
   constructor (props) {
@@ -197,13 +200,17 @@ export default class NetPyNEConnectivityRules extends Component {
     return (
       <GridLayout>
         <div>
-          <div className="breadcrumby">
-            <NetPyNEHome
-              selection={this.state.selectedConnectivityRule}
-              handleClick={() => this.setState({ selectedConnectivityRule: undefined })}
-            />
-            <NetPyNEAddNew id={"newConnectivityRuleButton"} handleClick={this.handleNewConnectivityRule} />
-          </div>
+          <ExpansionPanel>
+            <div className="breadcrumby">
+              <NetPyNEHome
+                selection={this.state.selectedConnectivityRule}
+                handleClick={() => this.setState({ selectedConnectivityRule: undefined })}
+              />
+              <NetPyNEAddNew id={"newConnectivityRuleButton"} handleClick={this.handleNewConnectivityRule} />
+            </div>
+            <RulePath text={`netParams.connParams["${this.state.selectedConnectivityRule}"]`}/>
+          </ExpansionPanel>
+          
           <Filter
             value={this.state.filterValue}
             label="Filter connectivity rule by name..."

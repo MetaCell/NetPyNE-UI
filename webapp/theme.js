@@ -61,7 +61,18 @@ export default createMuiTheme({
 
     MuiListItemText: { root: { color: 'white' } },
     MuiDialogTitle: { root: { color: 'white' } },
-    MuiTypography: { root: { color: 'white' } }
-    
+    MuiTypography: { root: { color: 'white' } },
+    MuiCollapse: { 
+      container: { padding: 0 },
+      wrapper: { padding: "0px!important" }
+    },
+    MuiExpansionPanelSummary: { 
+      root: { padding: '0px!important', margin: 0, minHeight: 'unset!important' },
+      content: { margin: '0px!important', cursor: 'auto' },
+      expandIcon: { marginRight: 0 }
+    },
+    MuiExpansionPanelDetails: { root: { padding: 0, margin: 0, minHeight: 'unset!important' } },
+    MuiExpansionPanel: { root: { padding: 0, margin: '0px!important', minHeight: 'unset' } },
+    MuiAutocomplete: { popupIndicator: { marginRight: 0 } }
   }
 });

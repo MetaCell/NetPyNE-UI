@@ -21,7 +21,10 @@ export default ({ handleClick, selection }) => {
     <div className={classes.root}>
       <div
         data-tooltip={selection ? "Unselect" : undefined}
-        onClick={ () => handleClick()}
+        onClick={ event => {
+          event.stopPropagation()
+          handleClick()
+        }}
       >
         <Icon
           classes={{ root: classes.icon }}

@@ -12,10 +12,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Typography from '@material-ui/core/Typography';
 
 import { WidgetStatus } from '../layout/model';
-import {
-  EDIT_WIDGETS, getPythonDefaultConsoleWidget, 
-  DEFAULT_MORPHOLOGY_WIDGET,DEFAULT_NETWORK_WIDGETS, TOP_PANEL
-} from '../../constants';
+import { EDIT_WIDGETS,DEFAULT_NETWORK_WIDGETS, TOP_PANEL } from '../../constants';
 
 import DrawerIcon from '../general/NetPyNEIcons';
 import useStyles from './useStyles';
@@ -60,7 +57,7 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
     }
     
     // return either 3dcanvas or python console
-    return DEFAULT_MORPHOLOGY_WIDGET[widgetId]
+    return DEFAULT_NETWORK_WIDGETS[widgetId]
   }
 
 

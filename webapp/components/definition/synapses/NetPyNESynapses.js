@@ -14,6 +14,9 @@ import {
   Filter
 } from 'netpyne/components';
 
+import RulePath from '../../general/RulePath'
+import ExpansionPanel from '../../general/ExpansionPanel'
+
 export default class NetPyNESynapses extends Component {
 
   constructor (props) {
@@ -171,13 +174,17 @@ export default class NetPyNESynapses extends Component {
     return (
       <GridLayout>
         <div>
-          <div className="breadcrumby">
-            <NetPyNEHome
-              selection={this.state.selectedSynapse}
-              handleClick={() => this.setState({ selectedSynapse: undefined })}
-            />
-            <NetPyNEAddNew id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
-          </div>
+          <ExpansionPanel>
+            <div className="breadcrumby">
+              <NetPyNEHome
+                selection={this.state.selectedSynapse}
+                handleClick={() => this.setState({ selectedSynapse: undefined })}
+              />
+              <NetPyNEAddNew id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
+            </div>
+            <RulePath text={`netParams.synMechParams["${this.state.selectedSynapse}"]`}/>
+          </ExpansionPanel>
+          
           <Filter
             value={this.state.filterValue}
             label="Filter synapse rule by name..."

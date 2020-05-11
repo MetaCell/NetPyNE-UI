@@ -14,6 +14,8 @@ import {
   Filter
 } from 'netpyne/components';
 
+import RulePath from '../../general/RulePath'
+import ExpansionPanel from '../../general/ExpansionPanel'
 
 export default class NetPyNEStimulationTargets extends Component {
 
@@ -173,15 +175,19 @@ export default class NetPyNEStimulationTargets extends Component {
     return (
       <GridLayout>
         <div>
-          <div className="breadcrumby">
-            <NetPyNEHome
-              selection={this.state.selectedStimulationTarget}
-              handleClick={() => this.setState({ selectedStimulationTarget: undefined })}
-            />
+          <ExpansionPanel>
+            <div className="breadcrumby">
+              <NetPyNEHome
+                selection={this.state.selectedStimulationTarget}
+                handleClick={() => this.setState({ selectedStimulationTarget: undefined })}
+              />
             
-            <NetPyNEAddNew id={"newStimulationTargetButton"} handleClick={this.handleNewStimulationTarget} />
+              <NetPyNEAddNew id={"newStimulationTargetButton"} handleClick={this.handleNewStimulationTarget} />
 
-          </div>
+            </div>
+            <RulePath text={`netParams.stimTargetParams["${this.state.selectedStimulationTarget}"]`}/>
+          </ExpansionPanel>
+          
           <Filter
             value={this.state.filterValue}
             label="Filter stimulation target rule by name..."

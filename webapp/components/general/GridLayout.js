@@ -2,7 +2,7 @@ import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
-import { bgDark } from '../../Theme'
+import { bgDark } from '../../theme'
 
 const useStyles = makeStyles(({ spacing, palette }) => ({ 
   container:{ height: 'calc(100% - 8px)', alignItems: 'stretch' },
