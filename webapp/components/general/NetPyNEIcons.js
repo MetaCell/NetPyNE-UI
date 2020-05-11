@@ -3,8 +3,8 @@ import React from 'react'
 import SvgIcon from '@material-ui/core/SvgIcon';
 import AdjustIcon from '@material-ui/icons/Adjust';
 import { makeStyles } from '@material-ui/core/styles';
-import { WIDGETS_IDS } from '../../constants'
-import { primaryColor } from '../../Theme'
+import { WIDGETS_IDS } from '../../constants';
+import { primaryColor } from '../../theme';
 // Avoid defining properties with css || inline style
 const useIconStyles = makeStyles(({ palette }) => ({ icon: { color: props => props.selected ? palette.primary.main : palette.common.white } }))
 
@@ -27,8 +27,7 @@ export default ({ widgetId, selected }) => {
     return <CogsIcon fontSize="large" className={classes.icon}/>
   case WIDGETS_IDS.EDIT_MODE.ANALYSIS:
     return <SliderHIcon fontSize="large" className={classes.icon}/>
-  case WIDGETS_IDS.EXPLORE_MODE.PYTHON_CONSOLE_EXPLORE:
-  case WIDGETS_IDS.EDIT_MODE.PYTHON_CONSOLE_EDIT:
+  case WIDGETS_IDS.PYTHON_CONSOLE:
     return <CodeIcon fontSize="large" className={classes.icon}/>
   case WIDGETS_IDS.EXPLORE_MODE.CONNECTION_PLOT:
     return <ConnectivityPlotIcon fontSize="large" className={classes.icon}/>
