@@ -4,7 +4,7 @@ import TimeRange from '../TimeRange'
 import {
   NetPyNEInclude,
   NetPyNEField,
-  NetPyNESelectField,
+  SelectField,
   ListComponent
 } from 'netpyne/components';
 
@@ -34,11 +34,11 @@ export default class PlotSpikeStats extends React.Component {
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotSpikeStats.graphType" className="listStyle" >
-        <NetPyNESelectField model={tag + "['graphType']"} />
+        <SelectField model={tag + "['graphType']"} />
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotSpikeStats.stats" className="listStyle" >
-        <NetPyNESelectField model={tag + "['stats']"} />
+        <SelectField model={tag + "['stats']"} />
       </NetPyNEField>
     </div>
   }

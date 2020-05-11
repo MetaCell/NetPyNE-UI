@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardHeader, CardContent } from '@material-ui/core';
+
 import Utils from '../../../Utils';
 import PlotLFP from './plotTypes/PlotLFP';
 import PlotConn from './plotTypes/PlotConn';
@@ -14,6 +14,10 @@ import PlotSpikeStats from './plotTypes/PlotSpikeStats';
 import NetPyNENewPlot from './NetPyNENewPlot';
 import NetPyNEPlotThumbnail from './NetPyNEPlotThumbnail';
 
+import { GridLayout } from 'netpyne/components';
+
+import RulePath from '../../general/RulePath'
+import ExpansionPanel from '../../general/ExpansionPanel'
 export default class NetPyNEPlots extends React.Component {
 
   constructor (props) {
@@ -116,23 +120,26 @@ export default class NetPyNEPlots extends React.Component {
     }
 
     return (
-      <Card style={{ clear: 'both' }}>
-        <CardContent className={"tabContainer"} >
-          <div className={"thumbnails"}>
+      <GridLayout>
+        <div>
+
+          <ExpansionPanel>
             <div className="breadcrumby">
               <NetPyNENewPlot 
                 style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
                 handleClick={this.handleNewPlot} 
               />
             </div>
-            <div style={{ clear: "both" }}></div>
-            {plots}
-          </div>
-          <div className={"details"}>
-            {selectedPlot}
-          </div>
-        </CardContent>
-      </Card>
+            <RulePath text={`simConfig.analysis["${this.state.selectedPlot}"]`}/>
+          </ExpansionPanel>
+          
+        </div>
+        
+
+        {plots}
+        {selectedPlot}
+        {null}
+      </GridLayout>
     );
   }
 }

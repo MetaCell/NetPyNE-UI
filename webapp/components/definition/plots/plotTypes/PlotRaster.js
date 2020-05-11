@@ -4,7 +4,7 @@ import TimeRange from '../TimeRange';
 import {
   NetPyNEInclude,
   NetPyNEField,
-  NetPyNESelectField,
+  SelectField,
   NetPyNECheckbox,
   NetPyNETextField
 } from 'netpyne/components';
@@ -41,15 +41,15 @@ export default class PlotRaster extends React.Component {
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotRaster.orderBy" className="listStyle" >
-        <NetPyNESelectField model={tag + "['orderBy']"} />
+        <SelectField model={tag + "['orderBy']"} />
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotRaster.popRates" className="listStyle" >
-        <NetPyNESelectField model={tag + "['popRates']"} />
+        <SelectField model={tag + "['popRates']"} />
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotRaster.spikeHist" className="listStyle" >
-        <NetPyNESelectField model={tag + "['spikeHist']"} />
+        <SelectField model={tag + "['spikeHist']"} />
       </NetPyNEField>
         
       <NetPyNEField id="simConfig.analysis.plotRaster.spikeHistBin" >

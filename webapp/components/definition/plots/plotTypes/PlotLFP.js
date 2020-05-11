@@ -4,7 +4,7 @@ import {
   NetPyNEField,
   NetPyNECheckbox,
   NetPyNETextField,
-  NetPyNESelectField,
+  SelectField,
   ListComponent,
 } from 'netpyne/components';
 
@@ -23,7 +23,7 @@ export default class PlotLFP extends React.Component {
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotLFP.plots">
-        <NetPyNESelectField model={tag + "['plots']"} multiple={true}/>
+        <SelectField model={tag + "['plots']"} multiple={true}/>
       </NetPyNEField>
               
       <NetPyNEField id="simConfig.analysis.plotLFP.timeRange" >

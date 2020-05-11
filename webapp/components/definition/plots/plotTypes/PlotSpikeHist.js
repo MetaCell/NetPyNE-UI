@@ -6,7 +6,7 @@ import {
   NetPyNEField,
   NetPyNECheckbox,
   NetPyNETextField,
-  NetPyNESelectField
+  SelectField
 } from 'netpyne/components';
 
 export default class PlotSpikeHist extends React.Component {
@@ -35,11 +35,11 @@ export default class PlotSpikeHist extends React.Component {
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotSpikeHist.graphType" className="listStyle" >
-        <NetPyNESelectField model={tag + "['graphType']"} />
+        <SelectField model={tag + "['graphType']"} />
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotSpikeHist.yaxis" className="listStyle" >
-        <NetPyNESelectField model={tag + "['yaxis']"} />
+        <SelectField model={tag + "['yaxis']"} />
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotSpikeHist.overlay" className={"netpyneCheckbox"} >

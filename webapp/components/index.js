@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from "react-redux";
-import PythonControlledCapability from "geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability";
+import PythonControlledCapability from "@geppettoengine/geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability";
 
 import {
   activateWidget,
@@ -62,6 +62,10 @@ export const NetPyNECheckbox = PythonControlledCapability.createPythonControlled
 import _NetPyNEStimulationTargets from "./definition/stimulationTargets/NetPyNEStimulationTargets";
 export const NetPyNEStimulationTargets = PythonControlledCapability.createPythonControlledComponent(
   _NetPyNEStimulationTargets
+);
+
+export const SelectField = PythonControlledCapability.createPythonControlledControl(
+  _SelectField
 );
 
 // ---------------------------------------------------------------------------------------- //
@@ -152,12 +156,12 @@ export const NetPyNESynapses = connect(
   updateCardsDispatch
 )(PythonControlledCapability.createPythonControlledComponent(_NetPyNESynapses));
 
-import SelectField from "./general/Select";
+import _SelectField from "./general/Select";
 export const NetPyNESelectField = connect((state, ownProps) => ({
   ...ownProps,
   updates: String(state.general.updates)
 }))(PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(
-  SelectField
+  _SelectField
 ));
 
 
