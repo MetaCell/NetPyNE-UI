@@ -49,7 +49,7 @@ const DrawerItem = ({ id, name, widget, expanded, createOrFocusWidget, classes }
   }
 
   return (
-    <Tooltip title={id} placement="right" >
+    <Tooltip title={name} placement="right" >
       {drawerItemContent}
     </Tooltip>
   )
