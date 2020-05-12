@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
 import FontIcon from '@material-ui/core/Icon';
-import { Card, CardHeader, CardContent } from '@material-ui/core';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
-
+import { withStyles } from '@material-ui/core/styles'
 
 import {
   NetPyNEField,
   NetPyNECheckbox,
   NetPyNETextField,
-  NetPyNESelectField,
+  SelectField,
   ListComponent,
   GridLayout
 } from 'netpyne/components';
 
-export default class NetPyNESimConfig extends React.Component {
+class NetPyNESimConfig extends React.Component {
 
   constructor (props) {
     super(props);
@@ -54,6 +53,14 @@ export default class NetPyNESimConfig extends React.Component {
 
           <NetPyNEField id="simConfig.seeds" className="listStyle">
             <ListComponent model={"simConfig.seeds"} />
+          </NetPyNEField>
+
+          <NetPyNEField id="simConfig.checkErrors" className={"netpyneCheckbox"} >
+            <NetPyNECheckbox model={"simConfig.checkErrors"} />
+          </NetPyNEField>
+
+          <NetPyNEField id="simConfig.checkErrorsVerbose" className={"netpyneCheckbox"} >
+            <NetPyNECheckbox model={"simConfig.checkErrorsVerbose"} />
           </NetPyNEField>
         </div>
       )
@@ -220,21 +227,6 @@ export default class NetPyNESimConfig extends React.Component {
           </NetPyNEField>
         </div>
       )
-    } else if (this.state.sectionId == 'ErrorChecking') {
-      contentLeft = (
-        <div >
-          <NetPyNEField id="simConfig.checkErrors" className={"netpyneCheckbox"} >
-            <NetPyNECheckbox model={"simConfig.checkErrors"} />
-          </NetPyNEField>
-        </div >
-      )
-      contentRight = (
-        <div >
-          <NetPyNEField id="simConfig.checkErrorsVerbose" className={"netpyneCheckbox"} >
-            <NetPyNECheckbox model={"simConfig.checkErrorsVerbose"} />
-          </NetPyNEField>
-        </div>
-      )
     } else if (this.state.sectionId == 'netParams') {
       var contentLeft = (
         <div >
@@ -283,7 +275,7 @@ export default class NetPyNESimConfig extends React.Component {
           </NetPyNEField>
 
           <NetPyNEField id="netParams.shape">
-            <NetPyNESelectField model={"netParams.shape"} />
+            <SelectField model={"netParams.shape"} />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.rotateCellsRandomly" >
@@ -293,19 +285,29 @@ export default class NetPyNESimConfig extends React.Component {
         </div>
       )
     }
-
+    const { classes } = this.props
     return (
-      <GridLayout>
-        <BottomNavigation style={{ borderRadius: '4px' }} value={this.state.selectedIndex}>
+      <div className={ classes.root }>
+        <BottomNavigation showLabels className={classes.bottomNav} value={this.state.selectedIndex}>
           <BottomNavigationAction id={"configGeneral"} key={'General'} label={'General'} icon={<FontIcon className={"fa fa-bars"} />} onClick={() => this.select(0, 'General')} />
           <BottomNavigationAction id={"configRecord"} key={'Record'} label={'Record'} icon={<FontIcon className={"fa fa-circle"} />} onClick={() => this.select(1, 'Record')} />
           <BottomNavigationAction id={"configSaveConfiguration"} key={'SaveConfiguration'} label={'Save Configuration'} icon={<FontIcon className={"fa fa-floppy-o"} />} onClick={() => this.select(2, 'SaveConfiguration')} />
-          <BottomNavigationAction id={"configErrorChecking"} key={'ErrorChecking'} label={'Error Checking'} icon={<FontIcon className={"fa fa-exclamation"} />} onClick={() => this.select(3, 'ErrorChecking')} />
           <BottomNavigationAction id={"confignetParams"} key={'netParams'} label={'Network Attributes'} icon={<FontIcon className={"fa fa-cog"} />} onClick={() => this.select(4, 'netParams')} />
         </BottomNavigation>
-        {contentLeft}
-        {contentRight}
-      </GridLayout>
+        <GridLayout>
+          <div/>
+          {contentLeft}
+          {contentRight}
+        </GridLayout>
+      </div>
+      
     );
   }
 }
+
+const styles = ({ shape }) => ({ 
+  root: { height: 'calc(100% - 58px)' },
+  bottomNav: shape.borderRadius
+})
+
+export default withStyles(styles)(NetPyNESimConfig)

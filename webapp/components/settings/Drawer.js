@@ -17,6 +17,7 @@ import { EDIT_WIDGETS,DEFAULT_NETWORK_WIDGETS, TOP_PANEL } from '../../constants
 import DrawerIcon from '../general/NetPyNEIcons';
 import useStyles from './useStyles';
 
+import Tooltip from '../general/Tooltip'
 
 const drawerOpenWidth = 200;
 const drawerCloseWidth = 48;
@@ -67,14 +68,20 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
   
   const mapItem = ({ name, id }) => {
     const widget = layoutManager.getWidget(id);
-    return <ListItem button key={name} dense disableGutters className={widget ? classes.selected : classes.unselected} onClick={() => createOrFocusWidget(id)}>
+
+    const item = (<ListItem button key={name} dense disableGutters className={widget ? classes.selected : classes.unselected} onClick={() => createOrFocusWidget(id)}>
       <ListItemIcon className={classes.icon}>
         <DrawerIcon widgetId={id} selected={widget && widget.status !== WidgetStatus.MINIMIZED} />
       </ListItemIcon>
       <ListItemText className={classes.text}>
         <Typography noWrap>{name}</Typography>
       </ListItemText>
-    </ListItem>
+    </ListItem>)
+
+    // Show tooltip only when drawer is collapsed
+    return expand ? item : <Tooltip title={widget.name} placement="right">{item}</Tooltip>
+
+    
   };
   
   return (

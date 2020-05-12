@@ -1,10 +1,10 @@
 import React from 'react'
 import Tooltip from '@material-ui/core/Tooltip'
 import { makeStyles } from '@material-ui/core/styles';
-
+import { bgDark } from '../../theme'
 const tooltipStyle = makeStyles(({ palette, typography }) => ({
-  arrow: { color: palette.common.black, },
-  tooltip: { backgroundColor: palette.common.black, fontSize: typography.subtitle1.fontSize },
+  arrow: { color: bgDark, },
+  tooltip: { backgroundColor: bgDark, fontSize: typography.subtitle1.fontSize },
 }));
 
 export default function CustomTooltip (props) {

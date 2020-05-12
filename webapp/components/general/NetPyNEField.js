@@ -104,7 +104,7 @@ export default class NetPyNEField extends Component {
             name = child.type.options.name
           }
         }
-        if (!["Select", "TextField", "Checkbox", "MuiTextField", "PythonControlledControlWithPythonDataFetch"].some(componentName => name.includes(componentName))) {
+        if (["Select", "TextField", "Checkbox", "MuiTextField", "PythonControlledControlWithPythonDataFetch"].indexOf(name) === -1){
           extraProps['validate'] = this.setErrorMessage;
           extraProps['prePythonSyncProcessing'] = this.prePythonSyncProcessing;
 

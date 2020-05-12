@@ -4,6 +4,9 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { withStyles } from '@material-ui/core/styles'
 import Icon from '@material-ui/core/Icon'
 import { bgRegular } from '../../theme'
+import CloseIcon from '@material-ui/icons/Close';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import Tooltip from './Tooltip'
 
 const styles = ({ spacing, shape }) => ({
   root: {
@@ -22,6 +25,7 @@ const styles = ({ spacing, shape }) => ({
   listbox: { color: 'white', maxHeight: '20vh' }
 })
 class Filter extends Component {
+  state = { open: false }
   render () {
     const { value, handleFilterChange, options, label, classes, ...others } = this.props
 
@@ -32,7 +36,9 @@ class Filter extends Component {
         </div>
         
         <Autocomplete
-          debug
+          open={this.state.open}
+          onClose={() => this.setState({ open: false })}
+          onOpen={() => this.setState({ open: true })}
           className={classes.filter}
           clearOnEscape
           autoComplete
@@ -40,15 +46,22 @@ class Filter extends Component {
           autoHighlight
           value={value === '' ? null : value}
           options={options}
+          openText={''}
+          closeText={''}
+          clearText={''}
+          closeIcon={
+            <Tooltip title="Clear" placement="top">
+              <CloseIcon fontSize="small" />
+            </Tooltip>
+          }
+          popupIcon={
+            <Tooltip title={this.state.open ? "Close" : "Open"} placement="top">
+              <ArrowDropDownIcon />
+            </Tooltip>
+          }
           classes={{ inputRoot: classes.underline, listbox: classes.listbox }}
           onChange={(event, newValue) => handleFilterChange(newValue)}
-          renderInput={props => (
-            <TextField 
-              {...props}
-              label={label} 
-            />
-            
-          )}
+          renderInput={props => <TextField {...props} label={label}/>}
           {...others}
         />
       </div>
