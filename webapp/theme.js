@@ -71,7 +71,7 @@ export default createMuiTheme({
       content: { margin: '0px!important', cursor: 'auto' },
       expandIcon: { marginRight: 0 }
     },
-    MuiExpansionPanelDetails: { root: { padding: 0, margin: 0, minHeight: 'unset!important' } },
+    MuiExpansionPanelDetails: { root: { padding: 0, margin: 0, minHeight: 'unset!important', flexDirection: 'column' } },
     MuiExpansionPanel: { root: { padding: 0, margin: '0px!important', minHeight: 'unset' } },
     MuiAutocomplete: { popupIndicator: { marginRight: 0 } }
   }

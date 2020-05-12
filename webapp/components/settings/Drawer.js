@@ -69,17 +69,19 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
   const mapItem = ({ name, id }) => {
     const widget = layoutManager.getWidget(id);
 
-    const item = (<ListItem button key={name} dense disableGutters className={widget ? classes.selected : classes.unselected} onClick={() => createOrFocusWidget(id)}>
-      <ListItemIcon className={classes.icon}>
-        <DrawerIcon widgetId={id} selected={widget && widget.status !== WidgetStatus.MINIMIZED} />
-      </ListItemIcon>
-      <ListItemText className={classes.text}>
-        <Typography noWrap>{name}</Typography>
-      </ListItemText>
-    </ListItem>)
+    const item = (
+      <ListItem button key={name} dense disableGutters className={widget ? classes.selected : classes.unselected} onClick={() => createOrFocusWidget(id)}>
+        <ListItemIcon className={classes.icon}>
+          <DrawerIcon widgetId={id} selected={widget && widget.status !== WidgetStatus.MINIMIZED} />
+        </ListItemIcon>
+        <ListItemText className={classes.text}>
+          <Typography noWrap>{name}</Typography>
+        </ListItemText>
+      </ListItem>
+    )
 
     // Show tooltip only when drawer is collapsed
-    return expand ? item : <Tooltip title={widget.name} placement="right">{item}</Tooltip>
+    return expand ? item : <Tooltip key={name} title={widget.name} placement="right">{item}</Tooltip>
 
     
   };

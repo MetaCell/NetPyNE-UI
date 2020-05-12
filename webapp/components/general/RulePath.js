@@ -8,7 +8,7 @@ import { withStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 
 const styles = ({ spacing, palette }) => ({ 
-  root: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', margin: `0px ${spacing(1)}px ${spacing(1)}px ${spacing(1)}px` },
+  root: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: `0px ${spacing(1)}px 0px ${spacing(1)}px` },
   text: { color: palette.text.secondary },
   icon: { marginRight: 2 }
 })

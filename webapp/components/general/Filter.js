@@ -10,17 +10,15 @@ import Tooltip from './Tooltip'
 
 const styles = ({ spacing, shape }) => ({
   root: {
-    marginTop: spacing(1),
-    marginBottom: spacing(1),
     display: 'flex',
     backgroundColor: bgRegular,
     borderRadius: shape.borderRadius
   },
-  adornment: { display: 'flex', alignItems: 'center', paddingLeft: spacing(1) },
+  adornment: { display: 'flex', alignItems: 'center', paddingLeft: spacing(1), paddingTop: spacing(1) },
   filter: { flex: 1, paddingRight: spacing(1), paddingTop: spacing(1), paddingBottom: spacing(1) },
   underline: {
-    "&&&:before": { borderBottom: "none" },
-    "&&:after": { borderBottom: "none" }
+    "&&&:before": { },
+    "&&:after": { }
   },
   listbox: { color: 'white', maxHeight: '20vh' }
 })
@@ -32,7 +30,7 @@ class Filter extends Component {
     return (
       <div className={classes.root}>
         <div className={classes.adornment}>
-          <Icon className="fa fa-filter"/>
+          <Icon className="fa fa-filter" fontSize="small"/>
         </div>
         
         <Autocomplete

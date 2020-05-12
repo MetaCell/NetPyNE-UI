@@ -15,6 +15,7 @@ import ExpansionPanel from '../../general/ExpansionPanel'
 
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 
 export default class NetPyNEPopulations extends React.Component {
 
@@ -210,15 +211,17 @@ export default class NetPyNEPopulations extends React.Component {
                 handleClick={this.handleNewPopulation}
               />
             </div>
+            <Divider />
             <RulePath text={`netParams.popParams["${this.state.selectedPopulation}"]`}/>
+            <Divider />
+            <Filter
+              value={this.state.filterPopValue}
+              label="Filter population by name..."
+              handleFilterChange={newValue => this.setState({ filterPopValue: newValue })}
+              options={model === undefined ? [] : Object.keys(model)}
+            />
           </ExpansionPanel>
-
-          <Filter
-            value={this.state.filterPopValue}
-            label="Filter population by name..."
-            handleFilterChange={newValue => this.setState({ filterPopValue: newValue })}
-            options={model === undefined ? [] : Object.keys(model)}
-          />
+          
           
         </div>
         
