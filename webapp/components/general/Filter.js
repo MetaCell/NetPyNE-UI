@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles'
 import Icon from '@material-ui/core/Icon'
 import { bgRegular } from '../../theme'
 import CloseIcon from '@material-ui/icons/Close';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Tooltip from './Tooltip'
 
 const styles = ({ spacing, shape }) => ({
@@ -56,7 +56,7 @@ class Filter extends Component {
           }
           popupIcon={
             <Tooltip title={this.state.open ? "Close" : "Open"} placement="top">
-              <ArrowDropDownIcon />
+              <ExpandMoreIcon />
             </Tooltip>
           }
           classes={{ inputRoot: classes.underline, listbox: classes.listbox }}

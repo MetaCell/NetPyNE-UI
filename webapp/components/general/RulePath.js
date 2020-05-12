@@ -3,12 +3,12 @@ import MuiAlert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton'
 import FileCopyIcon from '@material-ui/icons/FileCopy';
-import Tooltip from '@material-ui/core/Tooltip';
+import Tooltip from './Tooltip';
 import { withStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 
 const styles = ({ spacing, palette }) => ({ 
-  root: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', margin: spacing(1) },
+  root: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', margin: `0px ${spacing(1)}px ${spacing(1)}px ${spacing(1)}px` },
   text: { color: palette.text.secondary },
   icon: { marginRight: 2 }
 })

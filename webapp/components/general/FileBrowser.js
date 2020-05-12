@@ -139,6 +139,8 @@ export default class FileBrowser extends React.Component {
     return (
       <Dialog
         open={this.props.open}
+        fullWidth
+        maxWidth="sm"
         onClose={() => this.props.onRequestClose()}
         style={{ zIndex: 5000 }}
       >

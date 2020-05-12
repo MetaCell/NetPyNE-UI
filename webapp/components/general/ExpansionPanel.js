@@ -26,9 +26,7 @@ class NetPyNEExpansionPanel extends Component {
             size: 'small'
           }}
           expandIcon={
-            <Tooltip 
-              enterDelay={2000}
-              enterTouchDelay={2000}
+            <Tooltip
               title={this.state.expanded ? "Collapse" : "Expand"} placement="top"
             >
               {this.state.expanded ? <ExpandLessIcon fontSize="inherit"/> : <ExpandMoreIcon fontSize="inherit"/>}
