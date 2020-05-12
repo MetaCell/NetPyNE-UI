@@ -16,7 +16,7 @@ import {
 
 import RulePath from '../../general/RulePath'
 import ExpansionPanel from '../../general/ExpansionPanel'
-
+import Divider from '@material-ui/core/Divider';
 export default class NetPyNESynapses extends Component {
 
   constructor (props) {
@@ -182,15 +182,18 @@ export default class NetPyNESynapses extends Component {
               />
               <NetPyNEAddNew id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
             </div>
+            <Divider />
             <RulePath text={`netParams.synMechParams["${this.state.selectedSynapse}"]`}/>
+            <Divider />
+            <Filter
+              value={this.state.filterValue}
+              label="Filter synapse rule by name..."
+              handleFilterChange={newValue => this.setState({ filterValue: newValue })}
+              options={model === undefined ? [] : Object.keys(model)}
+            />
           </ExpansionPanel>
           
-          <Filter
-            value={this.state.filterValue}
-            label="Filter synapse rule by name..."
-            handleFilterChange={newValue => this.setState({ filterValue: newValue })}
-            options={model === undefined ? [] : Object.keys(model)}
-          />
+          
         </div>
         
 

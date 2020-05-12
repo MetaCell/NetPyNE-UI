@@ -16,6 +16,7 @@ import {
 
 import RulePath from '../../general/RulePath'
 import ExpansionPanel from '../../general/ExpansionPanel'
+import Divider from '@material-ui/core/Divider';
 
 export default class NetPyNEStimulationSources extends Component {
 
@@ -186,16 +187,18 @@ export default class NetPyNEStimulationSources extends Component {
                 handleClick={this.handleNewStimulationSource}
               />
             </div>
+            <Divider />
             <RulePath text={`netParams.stimSourceParams["${this.state.selectedStimulationSource}"]`}/>
+            <Divider />
+            <Filter
+              value={this.state.filterValue}
+              label="Filter stimulation source rule by name..."
+              handleFilterChange={newValue => this.setState({ filterValue: newValue })}
+              options={model === undefined ? [] : Object.keys(model)}
+            />
           </ExpansionPanel>
-
           
-          <Filter
-            value={this.state.filterValue}
-            label="Filter stimulation source rule by name..."
-            handleFilterChange={newValue => this.setState({ filterValue: newValue })}
-            options={model === undefined ? [] : Object.keys(model)}
-          />
+          
         </div>
         
         {StimulationSources}

@@ -31,6 +31,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import RulePath from '../../general/RulePath'
 import ExpansionPanel from '../../general/ExpansionPanel'
+import Divider from '@material-ui/core/Divider';
 
 const styles = ({ spacing }) => ({
   arrowRight : { marginLeft: spacing(1) },
@@ -697,16 +698,16 @@ export default class NetPyNECellRules extends React.Component {
                 blockButton={page != 'mechanisms' && !!model && !!model[selectedCellRule] && !!model[selectedCellRule]['secs'][selectedSection] && Object.keys(model[selectedCellRule]['secs'][selectedSection]['mechs']).length > 0}
               /> 
             </div>
+            <Divider />
             <RulePath text={this.getCopyPath()}/>
+            <Divider />
+            <Filter
+              value={this.state.filterValue}
+              label={`Filter ${page === 'main' ? 'cell rule' : page === 'sections' ? 'section' : 'mechanism'} by name...`}
+              handleFilterChange={newValue => this.setState({ filterValue: newValue })}
+              options={this.getFilterOptions()}
+            />
           </ExpansionPanel>
-          
-
-          <Filter
-            value={this.state.filterValue}
-            label={`Filter ${page === 'main' ? 'cell rule' : page === 'sections' ? 'section' : 'mechanism'} by name...`}
-            handleFilterChange={newValue => this.setState({ filterValue: newValue })}
-            options={this.getFilterOptions()}
-          />
         </div>
         
 

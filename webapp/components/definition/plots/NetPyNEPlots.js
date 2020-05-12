@@ -122,15 +122,11 @@ export default class NetPyNEPlots extends React.Component {
     return (
       <GridLayout>
         <div>
-
           <ExpansionPanel>
             <div className="breadcrumby">
-              <NetPyNENewPlot 
-                style={{ float: 'left', marginTop: "12px", marginLeft: "18px" }}
-                handleClick={this.handleNewPlot} 
-              />
+              <NetPyNENewPlot handleClick={this.handleNewPlot} />
             </div>
-            <RulePath text={`simConfig.analysis["${this.state.selectedPlot}"]`}/>
+            <RulePath style={{ paddingBottom: 8 }} text={`simConfig.analysis["${this.state.selectedPlot}"]`}/>
           </ExpansionPanel>
           
         </div>

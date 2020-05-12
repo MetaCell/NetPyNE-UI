@@ -11,6 +11,7 @@ import { NetPyNEThumbnail, GridLayout, Filter } from 'netpyne/components'
 
 import RulePath from '../../general/RulePath'
 import ExpansionPanel from '../../general/ExpansionPanel'
+import Divider from '@material-ui/core/Divider';
 export default class NetPyNEConnectivityRules extends Component {
 
   constructor (props) {
@@ -208,15 +209,18 @@ export default class NetPyNEConnectivityRules extends Component {
               />
               <NetPyNEAddNew id={"newConnectivityRuleButton"} handleClick={this.handleNewConnectivityRule} />
             </div>
+            <Divider />
             <RulePath text={`netParams.connParams["${this.state.selectedConnectivityRule}"]`}/>
+            <Divider />
+            <Filter
+              value={this.state.filterValue}
+              label="Filter connectivity rule by name..."
+              handleFilterChange={newValue => this.setState({ filterValue: newValue })}
+              options={model === undefined ? [] : Object.keys(model)}
+            />
           </ExpansionPanel>
           
-          <Filter
-            value={this.state.filterValue}
-            label="Filter connectivity rule by name..."
-            handleFilterChange={newValue => this.setState({ filterValue: newValue })}
-            options={model === undefined ? [] : Object.keys(model)}
-          />
+          
         </div>
         {ConnectivityRules}
         {selectedConnectivityRule}

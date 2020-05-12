@@ -10,7 +10,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
     display: 'flex',
     alignItems: 'center'
   },
-  icon: { color: palette.common.white, fontSize: 42 }
+  icon: { color: palette.common.white, fontSize: 40 }
 }))
 
 

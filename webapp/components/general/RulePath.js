@@ -46,9 +46,9 @@ class RulePath extends Component {
   }
 
   render () {
-    const { text, classes } = this.props
+    const { text, style, classes, ...others } = this.props
     return (
-      <div className={classes.root}>
+      <div className={classes.root} style={style} {...others}>
         <Typography variant="caption" className={classes.text} ref={this.textAreaRef}>{text.includes('undefined') ? 'Select a rule' : text}</Typography>
         
         <div className={classes.icon}>

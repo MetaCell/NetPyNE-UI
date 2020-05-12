@@ -85,9 +85,7 @@ export const NetPyNE = connect(
   dispatch => ({ 
     pythonCallErrorDialogBox: payload => dispatch(openBackendErrorDialog(payload)),
     setWidgets: payload => dispatch(setWidgets(payload)),
-    modelLoaded: () => dispatch(modelLoaded), 
-    newWidget: widget => dispatch(newWidget(widget)),
-    activateWidget: widgetId => dispatch(activateWidget(widgetId))
+    modelLoaded: () => dispatch(modelLoaded)
   })
 )(_NetPyNE);
 
