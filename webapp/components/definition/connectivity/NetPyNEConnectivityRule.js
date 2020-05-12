@@ -9,7 +9,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import MenuItem from "@material-ui/core/MenuItem";
-
+import Paper from '@material-ui/core/Paper'
 import {
   NetPyNESelectField,
   NetPyNEField,
@@ -383,7 +383,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
 
     return (
       <div>
-        <BottomNavigation style={{ borderRadius: '4px' }} value={this.state.selectedIndex}>
+        <BottomNavigation component={Paper} showLabels style={{ borderRadius: '4px' }} value={this.state.selectedIndex}>
           {bottomNavigationItems}
         </BottomNavigation>
         <br />

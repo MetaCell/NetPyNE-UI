@@ -6,10 +6,10 @@ import { withStyles } from '@material-ui/core/styles'
 import Utils from '../../../../../Utils';
 import ContentAdd from '@material-ui/icons/Add'
 import { MechIcon } from '../../../../general/NetPyNEIcons'
-
+import Tooltip from '../../../../general/Tooltip'
 const fontSize = 40
 const styles = ({ spacing, palette }) => ({ 
-  icon : { color: palette.primary.main },
+  icon : { color: palette.primary.main, cursor: 'pointer' },
   disabledIcon : { color: '#d1d1d1', cursor: 'auto' },
   iconContent: { position: 'absolute', color: 'white' },
   cogIconContent: {
@@ -87,24 +87,25 @@ class NetPyNENewMechanism extends React.Component {
   render () {
     const { disabled, classes, className } = this.props;
     const { open, anchorEl, mechanisms } = this.state;
-    const tooltip = disabled ? {} : { 'data-tooltip': this.createTooltip() }
+    const tooltip = disabled ? '' : this.createTooltip()
     return (
       <div className={className}>
-        <div
-          id="newMechButton"
-          className={disabled ? classes.disabledIcon : classes.icon}
-          onClick={ e => !disabled && this.handleButtonClick(e.currentTarget) }
-          {...tooltip}
-        >
-          <div>
-            <div className={classes.container}>
-              <MechIcon color={disabled ? "disabled" : "primary"} style={{ width: fontSize, height: fontSize, overflow: 'visible' }} className={classes.cogIcon}/>
-              <span className={classes.cogIconContent}>
-                {this.createLabel(classes)}
-              </span>
+        <Tooltip title={tooltip} placement="top">
+          <div
+            id="newMechButton"
+            className={disabled ? classes.disabledIcon : classes.icon}
+            onClick={ e => !disabled && this.handleButtonClick(e.currentTarget) }
+          >
+            <div>
+              <div className={classes.container}>
+                <MechIcon color={disabled ? "disabled" : "primary"} style={{ width: fontSize, height: fontSize, overflow: 'visible' }} className={classes.cogIcon}/>
+                <span className={classes.cogIconContent}>
+                  {this.createLabel(classes)}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
+        </Tooltip>
       
 
         <Menu 

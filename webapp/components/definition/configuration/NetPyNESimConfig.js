@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import FontIcon from '@material-ui/core/Icon';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles'
-
+import Paper from '@material-ui/core/Paper'
+import { bgDark } from '../../../theme'
 import {
   NetPyNEField,
   NetPyNECheckbox,
@@ -288,11 +289,11 @@ class NetPyNESimConfig extends React.Component {
     const { classes } = this.props
     return (
       <div className={ classes.root }>
-        <BottomNavigation showLabels className={classes.bottomNav} value={this.state.selectedIndex}>
+        <BottomNavigation component={Paper} showLabels className={classes.bottomNav} value={this.state.selectedIndex}>
           <BottomNavigationAction id={"configGeneral"} key={'General'} label={'General'} icon={<FontIcon className={"fa fa-bars"} />} onClick={() => this.select(0, 'General')} />
           <BottomNavigationAction id={"configRecord"} key={'Record'} label={'Record'} icon={<FontIcon className={"fa fa-circle"} />} onClick={() => this.select(1, 'Record')} />
           <BottomNavigationAction id={"configSaveConfiguration"} key={'SaveConfiguration'} label={'Save Configuration'} icon={<FontIcon className={"fa fa-floppy-o"} />} onClick={() => this.select(2, 'SaveConfiguration')} />
-          <BottomNavigationAction id={"confignetParams"} key={'netParams'} label={'Network Attributes'} icon={<FontIcon className={"fa fa-cog"} />} onClick={() => this.select(4, 'netParams')} />
+          <BottomNavigationAction id={"confignetParams"} key={'netParams'} label={'Network Attributes'} icon={<FontIcon className={"fa fa-cog"} />} onClick={() => this.select(3, 'netParams')} />
         </BottomNavigation>
         <GridLayout>
           <div/>
@@ -305,9 +306,14 @@ class NetPyNESimConfig extends React.Component {
   }
 }
 
-const styles = ({ shape }) => ({ 
-  root: { height: 'calc(100% - 58px)' },
-  bottomNav: shape.borderRadius
+const styles = ({ shape, spacing }) => ({ 
+  root: { height: `calc(100% - 56px - ${spacing(1)}px)` },
+  bottomNav: {
+    borderRadius: shape.borderRadius, 
+    backgroundColor: bgDark,
+    marginBottom: spacing(1)
+  },
+  
 })
 
 export default withStyles(styles)(NetPyNESimConfig)

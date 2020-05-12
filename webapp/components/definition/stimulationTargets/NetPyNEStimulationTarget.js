@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import CondsIcon from '@material-ui/icons/LocalOffer';
 import StimTargetIcon from '@material-ui/icons/Reorder';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
-
+import Paper from '@material-ui/core/Paper'
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
 
@@ -253,7 +253,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
     
     return (
       <div>
-        <BottomNavigation style={{ borderRadius: '4px' }} value={this.state.selectedIndex}>
+        <BottomNavigation component={Paper} showLabels style={{ borderRadius: '4px' }} value={this.state.selectedIndex}>
           {bottomNavigationItems}
         </BottomNavigation>
         <br />

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
-
+import Tooltip from './Tooltip'
 /**
  * Generic List/Dict Component
  */
@@ -244,14 +244,16 @@ export default class ListComponent extends Component {
           {!this.state.newItemErrorText 
           && (
             <span>
-              <IconButton
-                id={this.props.id + "AddButton"}
-                className={'listButtonLarge'}
-                onClick={this.addChild}
-                data-tooltip='Add item to the list'
-              >
-                <Icon className={'fa fa-plus-circle listIcon'} />
-              </IconButton>
+              <Tooltip title="Add item to the list" placement="top">
+                <IconButton
+                  id={this.props.id + "AddButton"}
+                  className={'listButtonLarge'}
+                  onClick={this.addChild}
+                >
+                  <Icon className={'fa fa-plus-circle listIcon'} />
+                </IconButton>
+              </Tooltip>
+              
             </span>
           )
           }

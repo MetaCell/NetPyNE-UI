@@ -13,7 +13,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { withStyles } from '@material-ui/core/styles';
-
+import Paper from '@material-ui/core/Paper'
 import {
   Dimensions,
   NetPyNEField,
@@ -221,7 +221,7 @@ class NetPyNEPopulation extends React.Component {
 
     return (
       <div>
-        <BottomNavigation style={{ borderRadius: '4px' }} value={this.state.selectedIndex}>
+        <BottomNavigation component={Paper} showLabels style={{ borderRadius: '4px' }} value={this.state.selectedIndex}>
           {this.getModelParameters()}
         </BottomNavigation>
         <br />

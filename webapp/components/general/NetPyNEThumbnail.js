@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteDialogBox from './DeleteDialogBox';
 import Icon from '@material-ui/core/Icon';
-
+import Tooltip from './Tooltip'
 const styles = { 
   btn: { borderRadius: '25px', margin: '8px' },
   cog: {
@@ -53,8 +53,6 @@ export default class NetPyNEThumbnail extends React.Component {
       onClick: () => this.handleClick(),
       onMouseEnter: () => this.setState({ isHovered: true }),
       onMouseLeave: () => this.setState({ isHovered: false }),
-      'data-tooltip': this.state.isHovered && name.length > 14 ? name : undefined,
-
     }
   }
   render () {
@@ -75,7 +73,7 @@ export default class NetPyNEThumbnail extends React.Component {
     const props = this.getCommonProps()
     return (
       <div>
-        {getButton(isCog, isButton, label, selected, isHovered, props)}
+        {getButton(isCog, isButton, label, selected, isHovered, name, props)}
         <DeleteDialogBox
           open={dialogOpen}
           onDialogResponse={this.handleDialogBox}
@@ -85,50 +83,59 @@ export default class NetPyNEThumbnail extends React.Component {
   }
 }
 
-const getButton = (isCogButton, isRegularButton, label, selected, isHovered, props) => {
+const getButton = (isCogButton, isRegularButton, label, selected, isHovered, tooltip, props) => {
   if (isCogButton) {
-    return getCogButton(label, selected, isHovered, props)
+    return getCogButton(label, selected, isHovered, tooltip, props)
   }
   if (isRegularButton) {
-    return getRegularButton(label, selected, isHovered, props)
+    return getRegularButton(label, selected, isHovered, tooltip, props)
   }
-  return getFabButton(label, selected, isHovered, props)
+  return getFabButton(label, selected, isHovered, tooltip, props)
 }
 
-const getCogButton = (label, selected, isHovered, others) => (
-  <IconButton
-    className={"gearThumbButton " + (selected ? "selectedGearButton" : "")}
-    {...others}
-  >
-    <div>
-      {(isHovered && selected) 
-        ? <Icon className="fa fa-trash-o" style={styles.cog}/> 
-        : <span className="gearThumbLabel">
-          {label}
-        </span>
+const getCogButton = (label, selected, isHovered, tooltip, others) => (
+  <Tooltip title={tooltip} placement="top">
+    <IconButton
+      className={"gearThumbButton " + (selected ? "selectedGearButton" : "")}
+      {...others}
+    >
+      <div>
+        {(isHovered && selected) 
+          ? <Icon className="fa fa-trash-o" style={styles.cog}/> 
+          : <span className="gearThumbLabel">
+            {label}
+          </span>
         
-      }
-      <Icon color="primary" className="gpt-fullgear"/>
-    </div>
-  </IconButton> 
+        }
+        <Icon color="primary" className="gpt-fullgear"/>
+      </div>
+    </IconButton> 
+  </Tooltip>
+  
 )
 
-const getRegularButton = (label, selected, isHovered, others) => (
-  <Button
-    variant="contained"
-    style={ styles.btn }
-    className={"rectangularActionButton " + (selected ? "selectedRectangularActionButton " : "")} 
-    {...others}
-  >
-    {(isHovered && selected) ? <Icon className="fa fa-trash-o"/> : label}
-  </Button>
+const getRegularButton = (label, selected, isHovered, tooltip, others) => (
+  <Tooltip title={tooltip} placement="top">
+    <Button
+      variant="contained"
+      style={ styles.btn }
+      className={"rectangularActionButton " + (selected ? "selectedRectangularActionButton " : "")} 
+      {...others}
+    >
+      {(isHovered && selected) ? <Icon className="fa fa-trash-o"/> : label}
+    </Button>
+  </Tooltip>
+  
 )
 
-const getFabButton = (label, selected, isHovered, others) => (
-  <Fab 
-    className={"actionButton " + (selected ? "selectedActionButton" : "")} 
-    {...others}
-  >
-    {(isHovered && selected) ? <Icon className="fa fa-trash-o"/> : label}
-  </Fab>
+const getFabButton = (label, selected, isHovered, tooltip, others) => (
+  <Tooltip title={tooltip} placement="top">
+    <Fab 
+      className={"actionButton " + (selected ? "selectedActionButton" : "")} 
+      {...others}
+    >
+      {(isHovered && selected) ? <Icon className="fa fa-trash-o"/> : label}
+    </Fab>
+  </Tooltip>
+  
 )

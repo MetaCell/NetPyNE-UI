@@ -32,6 +32,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import RulePath from '../../general/RulePath'
 import ExpansionPanel from '../../general/ExpansionPanel'
 import Divider from '@material-ui/core/Divider';
+import Tooltip from '../../general/Tooltip';
 
 const styles = ({ spacing }) => ({
   arrowRight : { marginLeft: spacing(1) },
@@ -658,32 +659,38 @@ export default class NetPyNECellRules extends React.Component {
                 handleClick={() => this.setState({ page: 'main', selectedCellRule: undefined, selectedSection: undefined, selectedMechanism: undefined })}
               />
               <div className='ml-2'>
-                <Fab
-                  id="newCellRuleButton"
-                  style={{ width: 40, height: 40 }}
-                  color={ page == 'main' ? 'primary' : 'secondary'}
-                  data-tooltip={ this.createTooltip('cellRule')}
-                  onClick={() => this.handleHierarchyClick('main')}
-                >
-                  {this.createLabel('cellRule')}
-                </Fab>
+                <Tooltip title={this.createTooltip('cellRule')} placement="top">
+                  <Fab
+                    id="newCellRuleButton"
+                    style={{ width: 40, height: 40 }}
+                    color={ page == 'main' ? 'primary' : 'secondary'}
+                    onClick={() => this.handleHierarchyClick('main')}
+                  >
+                    {this.createLabel('cellRule')}
+                  </Fab>
+                </Tooltip>
               </div>
               <NavigationChevronRight
                 className='ml-2'
                 color='disabled'
               />
               <div className='ml-2'>
-                <Fab
-                  id="newSectionButton"
-                  variant="extended"
-                  style={{ minWidth: 100, height: 40 }}
-                  color={ page === 'mechanisms' ? 'secondary' : 'primary'}
-                  disabled={ selectedCellRule == undefined }
-                  onClick={ () => this.handleHierarchyClick('sections') }
-                  data-tooltip={ this.createTooltip('section')}
-                >
-                  {this.createLabel('sections')}
-                </Fab>
+                <Tooltip title={this.createTooltip('section')} placement="top">
+                  <div>
+                    <Fab
+                      id="newSectionButton"
+                      variant="extended"
+                      style={{ minWidth: 100, height: 40 }}
+                      color={ page === 'mechanisms' ? 'secondary' : 'primary'}
+                      disabled={ selectedCellRule == undefined }
+                      onClick={ () => this.handleHierarchyClick('sections') }
+                    >
+                      {this.createLabel('sections')}
+                    </Fab>
+                  </div>
+                  
+                </Tooltip>
+                
               </div>
             
               <NavigationChevronRight 
