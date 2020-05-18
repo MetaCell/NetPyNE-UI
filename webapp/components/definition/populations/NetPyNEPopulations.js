@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import { Card, CardHeader, CardContent } from '@material-ui/core';
+import React from 'react';
 import Utils from '../../../Utils';
 
 import {
@@ -7,11 +6,16 @@ import {
   NetPyNEAddNew,
   NetPyNEThumbnail,
   NetPyNEPopulation,
+  GridLayout,
+  Filter
 } from 'netpyne/components';
 
+import RulePath from '../../general/RulePath'
+import ExpansionPanel from '../../general/ExpansionPanel'
 
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 
 export default class NetPyNEPopulations extends React.Component {
 
@@ -22,12 +26,12 @@ export default class NetPyNEPopulations extends React.Component {
       selectedPopulation: undefined,
       populationDeleted: undefined,
       errorMessage: undefined,
-      errorDetails: undefined
+      errorDetails: undefined,
+      filterPopValue: null,
     };
 
     this.handleNewPopulation = this.handleNewPopulation.bind(this);
     this.selectPopulation = this.selectPopulation.bind(this);
-    this.deletePopulation = this.deletePopulation.bind(this);
     this.handleRenameChildren = this.handleRenameChildren.bind(this);
   }
 
@@ -104,7 +108,8 @@ export default class NetPyNEPopulations extends React.Component {
     }
     // check if the dialog has been triggered due name convention or name collision errors.
     var errorDialogOpen = (this.state.errorDetails !== nextState.errorDetails);
-    return newModel || newItemCreated || itemRenamed || selectionChanged || errorDialogOpen;
+    var filterChanged = nextState.filterPopValue !== this.state.filterPopValue
+    return filterChanged || newModel || newItemCreated || itemRenamed || selectionChanged || errorDialogOpen;
   }
 
   handleNewPopulation () {
@@ -112,7 +117,7 @@ export default class NetPyNEPopulations extends React.Component {
     // Get Key and Value
     var key = Object.keys(defaultPopulationValues)[0];
     var value = defaultPopulationValues[key];
-    var model = this.state.value;
+    var model = { ...this.state.value };
 
     // Get New Available ID
     var populationId = Utils.getAvailableKey(model, key);
@@ -136,16 +141,6 @@ export default class NetPyNEPopulations extends React.Component {
   /* Method that handles button click */
   selectPopulation (populationName) {
     this.setState({ selectedPopulation: populationName });
-  }
-
-  deletePopulation (name) {
-    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ["popParams", name]).then(response => {
-      if (response) {
-        var model = this.state.value;
-        delete model[name];
-        this.setState({ value: model, selectedPopulation: undefined, populationDeleted: name }, () => this.props.updateCards());
-      }
-    });
   }
 
   handleRenameChildren (childName) {
@@ -184,14 +179,17 @@ export default class NetPyNEPopulations extends React.Component {
       for (var m in model) {
         model[m].name = m;
       }
-      var populations = [];
-      for (var key in model) {
-        populations.push(<NetPyNEThumbnail 
-          name={key} key={key} 
-          selected={key == this.state.selectedPopulation}
-          deleteMethod={this.deletePopulation}
-          handleClick={this.selectPopulation} />);
-      }
+      const filterName = this.state.filterPopValue === null ? '' : this.state.filterPopValue
+      var populations = Object.keys(model)
+        .filter(popName => popName.toLowerCase().includes(filterName.toLowerCase()))
+        .map(popName => (
+          <NetPyNEThumbnail 
+            name={popName} key={popName} 
+            selected={popName == this.state.selectedPopulation}
+            paramPath="popParams"
+            handleClick={this.selectPopulation} />
+        ));
+      
       var selectedPopulation = undefined;
       if ((this.state.selectedPopulation !== undefined) && Object.keys(model).indexOf(this.state.selectedPopulation) > -1) {
         selectedPopulation = <NetPyNEPopulation name={this.state.selectedPopulation} model={this.state.value[this.state.selectedPopulation]} renameHandler={this.handleRenameChildren}/>;
@@ -199,31 +197,39 @@ export default class NetPyNEPopulations extends React.Component {
     }
 
     return (
-      <Card style={{ clear: 'both' }}>
-        <CardContent className={"tabContainer"} >
-          <div className={"details"}>
-            {selectedPopulation}
-          </div>
-          <div className={"thumbnails"}>
-            <div className="breadcrumb">
+      <GridLayout>
+        <div>
+
+          <ExpansionPanel>
+            <div className="breadcrumby">
               <NetPyNEHome
                 selection={this.state.selectedPopulation}
                 handleClick={() => this.setState({ selectedPopulation: undefined })}
               />
-
               <NetPyNEAddNew 
                 id={"newPopulationButton"} 
                 handleClick={this.handleNewPopulation}
               />
-
             </div>
-            <div style={{ clear: "both" }}></div>
-            {populations}
-          </div>
-        </CardContent>
-        {dialogPop}
-      </Card>
+            <Divider />
+            <RulePath text={`netParams.popParams["${this.state.selectedPopulation}"]`}/>
+            <Divider />
+            <Filter
+              value={this.state.filterPopValue}
+              label="Filter population by name..."
+              handleFilterChange={newValue => this.setState({ filterPopValue: newValue })}
+              options={model === undefined ? [] : Object.keys(model)}
+            />
+          </ExpansionPanel>
+          
+          
+        </div>
+        
 
+        {populations}
+        {selectedPopulation}
+        {dialogPop}
+      </GridLayout>
     );
   }
 }

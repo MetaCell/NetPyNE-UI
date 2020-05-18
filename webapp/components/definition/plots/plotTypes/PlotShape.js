@@ -4,7 +4,7 @@ import {
   NetPyNEField,
   NetPyNECheckbox,
   NetPyNETextField,
-  NetPyNESelectField,
+  SelectField,
   ListComponent
 } from 'netpyne/components';
 
@@ -39,7 +39,7 @@ export default class PlotShape extends React.Component {
       </NetPyNEField>
 
       <NetPyNEField id={"simConfig.analysis.plotShape.cvar"} >
-        <NetPyNESelectField model={tag + "['cvar']"} />
+        <SelectField model={tag + "['cvar']"} />
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotShape.cvals" className="listStyle" >

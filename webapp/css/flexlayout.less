@@ -16,7 +16,7 @@
 
 @spacing: 8px;
 
-@inner-layout-padding: @gutter / 2;
+@inner-layout-padding: 8px 8px 0px 8px;
 
 @explorer-tooltip-z-index: 3;
 @explorer-tooltip-top: -50px !important;
@@ -220,5 +220,16 @@
 .flexlayout__tab:hover {
     .node-legend {
       visibility: visible; 
+    }
+}
+
+
+.MuiAutocomplete-listbox {
+    &::-webkit-scrollbar-thumb {
+        background: @secondary_color;
+        border-radius: @panelradius;
+    }
+    &::-webkit-scrollbar {
+        width: @gutter / 2;
     }
 }

@@ -4,6 +4,7 @@ import { GENERAL_DEFAULT_STATE } from "./reducers/general";
 import { NOTEBOOK_DEFAULT_STATE } from "./reducers/notebook";
 import middleware from './middleware/middleware';
 import plotMiddleware from './middleware/plotMiddleware';
+import rulesMiddleware from './middleware/rulesOperationsMiddleware';
 import { initLayoutManager } from '../components/layout/LayoutManager';
 import FLEXLAYOUT_DEFAULT_STATE from '../components/layout/defaultLayout';
 
@@ -21,7 +22,7 @@ function configureStore (state = INIT_STATE) {
   const store = createStore(
     all,
     state,
-    composeEnhancers(applyMiddleware( middleware, plotMiddleware, layoutManager.middleware,))
+    composeEnhancers(applyMiddleware( middleware, plotMiddleware, rulesMiddleware, layoutManager.middleware))
   );
   layoutManager.dispatch = store.dispatch;
   return store;

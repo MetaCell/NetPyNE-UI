@@ -58,6 +58,7 @@ class NetPyNEMechanism extends React.Component {
           label="Mechanism"
           className={"netpyneField"}
           disabled={true}
+          style={{ marginTop: 8 }}
         />
         <br />
         {content}

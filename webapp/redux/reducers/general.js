@@ -33,7 +33,7 @@ function reduceGeneral (state, action) {
   case SIMULATE_NETWORK:
     return { editMode: false, modelState: MODEL_STATE.SIMULATED }
   case EDIT_MODEL:
-    return { editMode: true, modelState: MODEL_STATE.NOT_INSTANTIATED }
+    return { editMode: true, updates: state.updates + 1, modelState: MODEL_STATE.NOT_INSTANTIATED }
   default: {
     return { ...state };
   }

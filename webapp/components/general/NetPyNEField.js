@@ -104,7 +104,7 @@ export default class NetPyNEField extends Component {
             name = child.type.options.name
           }
         }
-        if (["Select", "TextField", "Checkbox", "MuiTextField", "PythonControlledControlWithPythonDataFetch"].indexOf(name) == -1) {
+        if (["Select", "TextField", "Checkbox", "MuiTextField", "PythonControlledControlWithPythonDataFetch"].indexOf(name) === -1){
           extraProps['validate'] = this.setErrorMessage;
           extraProps['prePythonSyncProcessing'] = this.prePythonSyncProcessing;
 
@@ -136,6 +136,7 @@ export default class NetPyNEField extends Component {
 
         var options = Utils.getMetadataField(this.props.id, "options");
         if (options) {
+          extraProps['pepe'] = 22
           extraProps['children'] = options.map(name => (
             <MenuItem
               id={name}

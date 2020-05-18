@@ -3,6 +3,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ContentAdd from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
+import Tooltip from '../../general/Tooltip'
 
 export default class NetPyNENewPlot extends React.Component {
 
@@ -27,9 +28,12 @@ export default class NetPyNENewPlot extends React.Component {
   
   render () {
     return <div>
-      <Fab size='small' color='primary' style={{ margin: 10, float: 'left' }} onClick={this.handleButtonClick}>
-        <ContentAdd style={{ color: 'white' }}/>
-      </Fab>
+      <Tooltip title="Add new plot" placement="top">
+        <Fab size='small' color='primary' onClick={this.handleButtonClick}>
+          <ContentAdd style={{ color: 'white' }}/>
+        </Fab>
+      </Tooltip>
+      
       <Menu 
         open={Boolean(this.state.anchorEl)}
         anchorEl={this.state.anchorEl}

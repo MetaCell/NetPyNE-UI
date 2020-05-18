@@ -1,6 +1,5 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
-import { CardContent } from '@material-ui/core';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import FontIcon from '@material-ui/core/Icon';
 import Utils from '../../../Utils';
@@ -14,7 +13,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { withStyles } from '@material-ui/core/styles';
-
+import Paper from '@material-ui/core/Paper'
 import {
   Dimensions,
   NetPyNEField,
@@ -222,11 +221,9 @@ class NetPyNEPopulation extends React.Component {
 
     return (
       <div>
-        <CardContent>
-          <BottomNavigation value={this.state.selectedIndex}>
-            {this.getModelParameters()}
-          </BottomNavigation>
-        </CardContent>
+        <BottomNavigation component={Paper} showLabels style={{ borderRadius: '4px' }} value={this.state.selectedIndex}>
+          {this.getModelParameters()}
+        </BottomNavigation>
         <br />
         {content}
       </div>

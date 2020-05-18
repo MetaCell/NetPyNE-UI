@@ -18,7 +18,8 @@ export const NETPYNE_COMMANDS = {
   importModel: 'netpyne_geppetto.importModel',
   exportModel: 'netpyne_geppetto.exportModel',
   exportHLS: 'netpyne_geppetto.exportHLS',
-  plotFigure: 'netpyne_geppetto.getPlot'
+  plotFigure: 'netpyne_geppetto.getPlot',
+  deleteParam: 'netpyne_geppetto.deleteParam'
 }
 
 export const PYTHON_CONSOLE_WIDGET = {

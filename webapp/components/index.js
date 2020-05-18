@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from "react-redux";
-import PythonControlledCapability from "geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability";
+import PythonControlledCapability from "@geppettoengine/geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability";
 
 import {
   activateWidget,
@@ -11,7 +11,7 @@ import {
 import { openBackendErrorDialog, closeBackendErrorDialog } from '../redux/actions/errors';
 import {
   updateCards, editModel, simulateNetwork, createNetwork, 
-  createAndSimulateNetwork, showNetwork, pythonCall, modelLoaded 
+  createAndSimulateNetwork, showNetwork, pythonCall, modelLoaded, deleteNetParamsObj
 } from "../redux/actions/general";
 import { closeDrawerDialogBox, openDrawerDialogBox } from '../redux/actions/drawer';
 
@@ -64,6 +64,10 @@ export const NetPyNEStimulationTargets = PythonControlledCapability.createPython
   _NetPyNEStimulationTargets
 );
 
+export const SelectField = PythonControlledCapability.createPythonControlledControl(
+  _SelectField
+);
+
 // ---------------------------------------------------------------------------------------- //
 
 // CONNECT
@@ -81,9 +85,7 @@ export const NetPyNE = connect(
   dispatch => ({ 
     pythonCallErrorDialogBox: payload => dispatch(openBackendErrorDialog(payload)),
     setWidgets: payload => dispatch(setWidgets(payload)),
-    modelLoaded: () => dispatch(modelLoaded), 
-    newWidget: widget => dispatch(newWidget(widget)),
-    activateWidget: widgetId => dispatch(activateWidget(widgetId))
+    modelLoaded: () => dispatch(modelLoaded)
   })
 )(_NetPyNE);
 
@@ -152,12 +154,12 @@ export const NetPyNESynapses = connect(
   updateCardsDispatch
 )(PythonControlledCapability.createPythonControlledComponent(_NetPyNESynapses));
 
-import SelectField from "./general/Select";
+import _SelectField from "./general/Select";
 export const NetPyNESelectField = connect((state, ownProps) => ({
   ...ownProps,
   updates: String(state.general.updates)
 }))(PythonControlledCapability.createPythonControlledControlWithPythonDataFetch(
-  SelectField
+  _SelectField
 ));
 
 
@@ -234,6 +236,11 @@ export const SwitchPageButton = connect(
   })
 )(_SwitchPageButton)
 
+import _NetPyNEThumbnail from "./general/NetPyNEThumbnail";
+export const NetPyNEThumbnail = connect(
+  state => ({}),
+  dispatch => ({ deleteNetParamsObj: payload => dispatch(deleteNetParamsObj(payload)), })
+)(_NetPyNEThumbnail)
 
 // ---------------------------------------------------------------------------------------- //
 
@@ -241,8 +248,9 @@ export const SwitchPageButton = connect(
 export { default as NetPyNEHome } from "./general/NetPyNEHome";
 export { default as NetPyNEField } from "./general/NetPyNEField";
 export { default as NetPyNEAddNew } from "./general/NetPyNEAddNew";
-export { default as NetPyNEThumbnail } from "./general/NetPyNEThumbnail";
 export { default as NetPyNECoordsRange } from "./general/NetPyNECoordsRange";
 export { default as NetPyNESimConfig } from "./definition/configuration/NetPyNESimConfig";
 export { default as HTMLViewer } from './general/HTMLViewer'
 export { default as Tooltip } from './general/Tooltip'
+export { default as GridLayout } from './general/GridLayout'
+export { default as Filter } from './general/Filter'

@@ -14,16 +14,47 @@ import Typography from '@material-ui/core/Typography';
 import { WidgetStatus } from '../layout/model';
 import {
   EDIT_WIDGETS, getPythonDefaultConsoleWidget, 
-  DEFAULT_MORPHOLOGY_WIDGET,DEFAULT_NETWORK_WIDGETS, TOP_PANEL
+  DEFAULT_NETWORK_WIDGETS, TOP_PANEL
 } from '../../constants';
 
 import DrawerIcon from '../general/NetPyNEIcons';
 import useStyles from './useStyles';
-
+import Tooltip from '../general/Tooltip'
 
 const drawerOpenWidth = 200;
 const drawerCloseWidth = 48;
 
+
+const DrawerItem = ({ id, name, widget, expanded, createOrFocusWidget, classes }) => {
+  const drawerItemContent = (
+    <ListItem
+      button
+      key={id}
+      dense
+      disableGutters
+      className={widget ? classes.selected : classes.unselected}
+      onClick={() => createOrFocusWidget(id)}
+    >
+      <ListItemIcon className={classes.icon}>
+        <DrawerIcon widgetId={id} selected={widget && widget.status !== WidgetStatus.MINIMIZED} />
+      </ListItemIcon>
+      <ListItemText className={classes.text}>
+        <Typography noWrap>{name}</Typography>
+      </ListItemText>
+    </ListItem>
+  )
+
+  if (expanded) {
+    return drawerItemContent
+  }
+
+  return (
+    <Tooltip title={name} placement="right" >
+      {drawerItemContent}
+    </Tooltip>
+  )
+  
+}
 
 export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
   const [expand, setExpand] = useState(false)
@@ -39,7 +70,7 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
     } else {
       if (widget.status === WidgetStatus.MINIMIZED) {
         updateBorderWidget(widgetId)
-      } else if (widget.status !== WidgetStatus.ACTIVE) {
+      } else {
         activateWidget(widgetId)
       }
     }
@@ -60,7 +91,7 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
     }
     
     // return either 3dcanvas or python console
-    return DEFAULT_MORPHOLOGY_WIDGET[widgetId]
+    return DEFAULT_NETWORK_WIDGETS[widgetId]
   }
 
 
@@ -70,14 +101,19 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
   
   const mapItem = ({ name, id }) => {
     const widget = layoutManager.getWidget(id);
-    return <ListItem button key={name} dense disableGutters className={widget ? classes.selected : classes.unselected} onClick={() => createOrFocusWidget(id)}>
-      <ListItemIcon className={classes.icon}>
-        <DrawerIcon widgetId={id} selected={widget && widget.status !== WidgetStatus.MINIMIZED} />
-      </ListItemIcon>
-      <ListItemText className={classes.text}>
-        <Typography noWrap>{name}</Typography>
-      </ListItemText>
-    </ListItem>
+    return (
+      <DrawerItem 
+        key={id}
+        id={id}
+        name={name}
+        widget={widget}
+        expanded={expand}
+        classes={classes}
+        createOrFocusWidget={createOrFocusWidget}
+      />
+      
+    )
+    
   };
   
   return (

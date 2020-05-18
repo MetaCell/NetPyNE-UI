@@ -4,8 +4,8 @@ import TimeRange from '../TimeRange'
 import {
   NetPyNEInclude,
   NetPyNEField,
-  NetPyNESelectField,
-  NetPyNECheckbox
+  NetPyNECheckbox,
+  SelectField
 } from 'netpyne/components';
 
 export default class PlotTraces extends React.Component {
@@ -30,7 +30,7 @@ export default class PlotTraces extends React.Component {
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotTraces.oneFigPer" className="listStyle" >
-        <NetPyNESelectField model={tag + "['oneFigPer']"} />
+        <SelectField model={tag + "['oneFigPer']"} />
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotTraces.overlay" className={"netpyneCheckbox"} >

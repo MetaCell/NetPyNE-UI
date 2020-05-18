@@ -137,7 +137,6 @@ export default class NetPyNEInclude extends Component {
 
   collectInfo = async () => {
     const numberOfCellsByPopulation = await Utils.evalPythonMessage("netpyne_geppetto.getGIDs", [])
-    console.log(numberOfCellsByPopulation)
     if (numberOfCellsByPopulation) {
       const dataInPythonFormat = await Utils.evalPythonMessage("netpyne_geppetto.getInclude", [this.props.model.split("'")[1]])
       let included

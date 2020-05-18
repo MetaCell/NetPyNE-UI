@@ -172,7 +172,9 @@ class LayoutManager {
 
       case ACTIVATE_WIDGET: {
         action.data.status = WidgetStatus.ACTIVE;
-        this.updateWidget(action.data);
+        const widget = this.getWidget(action.data.id)
+        widget.status = WidgetStatus.ACTIVE;
+        this.updateWidget(widget);
         break;
       }
       case SET_WIDGETS: {

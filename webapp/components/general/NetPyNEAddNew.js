@@ -2,12 +2,10 @@ import React, { Component } from 'react';
 import ContentAdd from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 import { withStyles } from '@material-ui/core/styles';
+import Tooltip from './Tooltip'
 
 const styles = ({ spacing, palette }) => ({
-  root : { 
-    marginLeft: spacing(1),
-    minWidth: 56
-  },
+  root : { marginLeft: spacing(1), },
   plus:{ color: palette.common.white }
 })
 
@@ -19,8 +17,9 @@ class NetPyNEAddNew extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick () {
+  handleClick (event) {
     if (this.props.handleClick) {
+      event.stopPropagation()
       this.props.handleClick();
     }
   }
@@ -28,15 +27,18 @@ class NetPyNEAddNew extends React.Component {
   render () {
     const { classes } = this.props
     return (
-      <Fab 
-        id={this.props.id}
-        onClick={this.handleClick}
-        data-tooltip="Create rule"
-        color='primary'
-        className={classes.root}
-      >
-        <ContentAdd className={classes.plus}/>
-      </Fab>
+      <Tooltip title="Create rule" placement="top">
+        <Fab 
+          size="small"
+          color='primary'
+          id={this.props.id}
+          className={classes.root}
+          onClick={this.handleClick}
+        >
+          <ContentAdd className={classes.plus}/>
+        </Fab>
+      </Tooltip>
+      
     );
   }
 }

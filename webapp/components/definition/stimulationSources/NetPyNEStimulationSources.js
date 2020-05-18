@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardHeader, CardContent } from '@material-ui/core';
+
 
 import Utils from '../../../Utils';
 import Dialog from '@material-ui/core/Dialog/Dialog';
@@ -10,7 +10,13 @@ import {
   NetPyNEAddNew,
   NetPyNEThumbnail,
   NetPyNEStimulationSource,
+  GridLayout,
+  Filter
 } from 'netpyne/components';
+
+import RulePath from '../../general/RulePath'
+import ExpansionPanel from '../../general/ExpansionPanel'
+import Divider from '@material-ui/core/Divider';
 
 export default class NetPyNEStimulationSources extends Component {
 
@@ -21,11 +27,11 @@ export default class NetPyNEStimulationSources extends Component {
       deletedStimulationSource: undefined,
       page: "main",
       errorMessage: undefined,
-      errorDetails: undefined
+      errorDetails: undefined,
+      filterValue: null
     };
     this.selectStimulationSource = this.selectStimulationSource.bind(this);
     this.handleNewStimulationSource = this.handleNewStimulationSource.bind(this);
-    this.deleteStimulationSource = this.deleteStimulationSource.bind(this);
 
     this.handleRenameChildren = this.handleRenameChildren.bind(this);
   }
@@ -39,7 +45,7 @@ export default class NetPyNEStimulationSources extends Component {
     var defaultStimulationSources = { 'stim_source': { 'type': '' } };
     var key = Object.keys(defaultStimulationSources)[0];
     var value = defaultStimulationSources[key];
-    var model = this.state.value;
+    var model = { ...this.state.value };
     var StimulationSourceId = Utils.getAvailableKey(model, key);
     var newStimulationSource = Object.assign({ name: StimulationSourceId }, value);
     Utils.execPythonMessage('netpyne_geppetto.netParams.stimSourceParams["' + StimulationSourceId + '"] = ' + JSON.stringify(value));
@@ -113,15 +119,8 @@ export default class NetPyNEStimulationSources extends Component {
       newItemCreated = ((Object.keys(this.state.value).length != Object.keys(nextState.value).length));
     }
     var errorDialogOpen = (this.state.errorDetails !== nextState.errorDetails);
-    return newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged || errorDialogOpen;
-  }
-
-  deleteStimulationSource (name) {
-    Utils.evalPythonMessage('netpyne_geppetto.deleteParam', ['stimSourceParams', name]).then(response => {
-      var model = this.state.value;
-      delete model[name];
-      this.setState({ value: model, selectedStimulationSource: undefined, deletedStimulationSource: name }, () => this.props.updateCards());
-    });
+    const filterValueChanged = nextState.filterValue !== this.state.filterValue
+    return filterValueChanged || newModel || newItemCreated || itemRenamed || selectionChanged || pageChanged || errorDialogOpen;
   }
 
   handleRenameChildren (childName) {
@@ -156,48 +155,56 @@ export default class NetPyNEStimulationSources extends Component {
     </Dialog> : undefined;
 
     var model = this.state.value;
-    var StimulationSources = [];
-    for (var c in model) {
-      StimulationSources.push(<NetPyNEThumbnail 
-        name={c} 
-        key={c} 
-        selected={c == this.state.selectedStimulationSource} 
-        deleteMethod={this.deleteStimulationSource}
-        handleClick={this.selectStimulationSource} />);
-    }
+    const filterName = this.state.filterValue === null ? '' : this.state.filterValue
+    var StimulationSources = Object.keys(model || [])
+      .filter(stimSource => stimSource.toLowerCase().includes(filterName.toLowerCase()))
+      .map(stimSource => (
+        <NetPyNEThumbnail 
+          name={stimSource} 
+          key={stimSource} 
+          selected={stimSource == this.state.selectedStimulationSource} 
+          paramPath="stimSourceParams"
+          handleClick={this.selectStimulationSource} />
+      ));
+    
     
     var selectedStimulationSource = undefined;
     if ((this.state.selectedStimulationSource !== undefined) && Object.keys(model).indexOf(this.state.selectedStimulationSource) > -1) {
       selectedStimulationSource = <NetPyNEStimulationSource name={this.state.selectedStimulationSource} renameHandler={this.handleRenameChildren} />;
     }
-    
-    var content = (
-      <CardContent className={"tabContainer"} >
-        <div className={"details"}>
-          {selectedStimulationSource}
-        </div>
-        <div className={"thumbnails"}>
-          <div className="breadcrumb">
-            <NetPyNEHome
-              selection={this.state.selectedStimulationSource}
-              handleClick={() => this.setState({ selectedStimulationSource: undefined })}
-            />
-            <NetPyNEAddNew 
-              id={"newStimulationSourceButton"} 
-              handleClick={this.handleNewStimulationSource}
-            />
-          </div>
-          <div style={{ clear: "both" }}></div>
-          {StimulationSources}
-        </div>
-      </CardContent>
-    );
 
     return (
-      <Card style={{ clear: 'both' }}>
-        {content}
+      <GridLayout>
+        <div>
+          <ExpansionPanel>
+            <div className="breadcrumby">
+              <NetPyNEHome
+                selection={this.state.selectedStimulationSource}
+                handleClick={() => this.setState({ selectedStimulationSource: undefined })}
+              />
+              <NetPyNEAddNew 
+                id={"newStimulationSourceButton"} 
+                handleClick={this.handleNewStimulationSource}
+              />
+            </div>
+            <Divider />
+            <RulePath text={`netParams.stimSourceParams["${this.state.selectedStimulationSource}"]`}/>
+            <Divider />
+            <Filter
+              value={this.state.filterValue}
+              label="Filter stimulation source rule by name..."
+              handleFilterChange={newValue => this.setState({ filterValue: newValue })}
+              options={model === undefined ? [] : Object.keys(model)}
+            />
+          </ExpansionPanel>
+          
+          
+        </div>
+        
+        {StimulationSources}
+        {selectedStimulationSource}
         {dialogPop}
-      </Card>
+      </GridLayout>
     );
   }
 }

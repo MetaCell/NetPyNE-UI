@@ -1,7 +1,6 @@
 import React from "react";
 import TextField from '@material-ui/core/TextField';
 import FontIcon from "@material-ui/core/Icon";
-import CardContent from "@material-ui/core/CardContent";
 import { BottomNavigation, BottomNavigationAction } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import Button from "@material-ui/core/Button";
@@ -10,7 +9,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import MenuItem from "@material-ui/core/MenuItem";
-
+import Paper from '@material-ui/core/Paper'
 import {
   NetPyNESelectField,
   NetPyNEField,
@@ -384,11 +383,9 @@ export default class NetPyNEConnectivityRule extends React.Component {
 
     return (
       <div>
-        <CardContent>
-          <BottomNavigation value={this.state.selectedIndex}>
-            {bottomNavigationItems}
-          </BottomNavigation>
-        </CardContent>
+        <BottomNavigation component={Paper} showLabels style={{ borderRadius: '4px' }} value={this.state.selectedIndex}>
+          {bottomNavigationItems}
+        </BottomNavigation>
         <br />
         {content}
       </div>

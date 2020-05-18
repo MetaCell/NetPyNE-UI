@@ -101,6 +101,7 @@ export default class NetPyNECellRule extends React.Component {
             label="The name of the cell rule"
             className={"netpyneField"}
             id={"cellRuleName"}
+            style={{ marginTop: 8 }}
           />
 
           <div style={{ float: 'left', marginTop: '20px' }}>

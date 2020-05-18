@@ -1,11 +1,10 @@
 import React from 'react';
-import CardText from '@material-ui/core/Card';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import CondsIcon from '@material-ui/icons/LocalOffer';
 import StimTargetIcon from '@material-ui/icons/Reorder';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
-
+import Paper from '@material-ui/core/Paper'
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
 
@@ -254,11 +253,9 @@ export default class NetPyNEStimulationTarget extends React.Component {
     
     return (
       <div>
-        <CardText>
-          <BottomNavigation value={this.state.selectedIndex}>
-            {bottomNavigationItems}
-          </BottomNavigation>
-        </CardText>
+        <BottomNavigation component={Paper} showLabels style={{ borderRadius: '4px' }} value={this.state.selectedIndex}>
+          {bottomNavigationItems}
+        </BottomNavigation>
         <br />
         {content}
         {extraContent}
