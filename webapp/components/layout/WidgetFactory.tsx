@@ -1,6 +1,6 @@
-import React, { lazy, Suspense } from 'react'
+import * as React from 'react'
 
-import { NetPyNEInstantiated, HTMLViewer } from 'netpyne/components';
+import { NetPyNEInstantiated, HTMLViewer } from '..';
 
 import {
   NetPyNESynapses,
@@ -12,12 +12,15 @@ import {
   NetPyNEPopulations,
   NetPyNEPlots,
   NetPyNEPythonConsole
-} from "netpyne/components";
+} from "../";
+import { Widget } from './model';
 
 export default class WidgetFactory{
 
+  widgets: Map<string, Widget>;
+
   constructor () {
-    this.widgets = {};
+    this.widgets = new Map();
   }
 
   /**
@@ -49,7 +52,7 @@ export default class WidgetFactory{
     case "D3Canvas":
       return <NetPyNEInstantiated/>
     case "Plot": {
-      const data = window.plotSvgImages[widgetConfig.id]
+      const data = window['plotSvgImages'][widgetConfig.id]
       return (
         <HTMLViewer 
           content={data}

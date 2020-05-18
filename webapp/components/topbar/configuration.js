@@ -1,4 +1,4 @@
-import { bgLight, bgRegular, font, bgDark } from '../../Theme'
+import { bgLight, bgRegular, font, bgDark } from '../../theme'
 import { openTopbarDialog, changePageTransitionMode } from '../../redux/actions/topbar'
 import { TOPBAR_CONSTANTS } from '../../constants'
 const style = {
