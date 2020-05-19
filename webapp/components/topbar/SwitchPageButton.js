@@ -10,14 +10,14 @@ import { TOPBAR_CONSTANTS } from '../../constants'
 
 
 const styles = ({ palette, shape, spacing, typography }) => ({ 
-  container: { 
-    flexGrow: 1,
-    position: 'fixed',
-    top: 0,
-    right:0
+  container: {},
+  button: {
+    textTransform: 'uppercase',
+    letterSpacing: 2,
+    fontSize: '1rem',
+    borderRadius: 0
   },
   icon: { color: palette.common.white },
-  menu: { position: "absolute", top: "6px", right: "28px" }
 })
 
 

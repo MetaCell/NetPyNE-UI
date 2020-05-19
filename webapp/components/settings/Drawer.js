@@ -117,7 +117,7 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
   };
   
   return (
-    <Paper className={expand ? classes.openDrawer : classes.closeDrawer}>
+    <Paper elevation={0} className={expand ? classes.openDrawer : classes.closeDrawer}>
       <div className={classes.container}>
         <div >
           <List dense>

@@ -1,57 +1,32 @@
-@import "colors";
+@import "variables";
 
-@panelradius: 5px;
-@gutter: 16px;
-@icon-padding: 12px;
-@font-size-panels: 16px;
-@font: "Source Sans Pro", sans-serif;
-@inputradius: 30px;
-@font-weight-content: 300;
-@font-weight-label: 400;
-
-@font-size: 1rem;
-@font-size-sm: 0.8rem;
-@border-radius: @panelradius;
-@tab-spacing: 8px;
-
-@spacing: 8px;
-
-@inner-layout-padding: 8px 8px 0px 8px;
-
-@explorer-tooltip-z-index: 3;
-@explorer-tooltip-top: -50px !important;
-@explorer-tooltip-margin: 10px;
-
-@explorer-tooltip-title-font-size: 0.9em;
-
-@explorer-tooltip-subtitle-font-size: 12px;
-@explorer-tooltip-subtitle-font-weight: 100;
-
-@list-padding: 5px;
-
-@logo-size: 20px;
-@logo-margin: 3px;
-@bring-front: 1000;
 
 .flexlayout__layout {
     border-left: none!important;
     border-right: none!important;
-    background-color: @color-dark;//color-light
+    background-color: transparent;
     top: 0px;
     margin-top: @gutter / 2;
     margin-bottom: @gutter / 2;
     border-top: none;
   
     a {
-        color: @color-link;
+        color: @colorLink;
     }
 
     .flexlayout__tab {
-        padding: @inner-layout-padding;
-        background-color: @color-regular;//color-dark
-        border-top-right-radius: @panelradius;
-        border-bottom-right-radius: @panelradius;
-        border-bottom-left-radius: @panelradius;
+        padding: @tabSpacing;
+        background-color: @bgRegular;
+        border-top-right-radius: @radius;
+        border-bottom-right-radius: @radius;
+        border-bottom-left-radius: @radius;
+
+        > div {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: stretch;
+        }
   
         .svg-container,
         .main-svg,
@@ -76,69 +51,68 @@
     }
   
     .flexlayout__tabset {
-        background-color: @color-dark;//color-light
+        background-color: transparent;//color-light
         overflow: visible;
-        border-radius: 0px @panelradius @panelradius @panelradius;
+        border-radius: 0px @radius @radius @radius;
     }
     .flexlayout__tabset-selected {
-        background-color: @color-dark;//color-light
+        background-color: transparent;//color-light
     }
     .flexlayout__border_inner_bottom {
         position: fixed;
         bottom: 0;
         left: 0;
         padding-left: @gutter / 2;
-        border-top-right-radius: @panelradius;
-        border-top-left-radius: @panelradius;
+        border-top-right-radius: @radius;
+        border-top-left-radius: @radius;
     }
   
-    .flexlayout__tab_button--selected {
-        background-color: @color-regular;//was color-dark
-        border-top-right-radius: @panelradius;
-        border-top-left-radius: @panelradius;
-        color: @color-white;
+    .flexlayout__tab_button {
+        border-top-right-radius: @radius;
+        border-top-left-radius: @radius;
+        color: @textColor;
         display: flex;
         align-items: flex-start;
-        margin-right: @tab-spacing;
+        margin-right: 3px;
         margin-top: 0px;
-        .flexlayout__tab_button_content {
-            color: @secondary_color;
+        &.flexlayout__tab_button--selected {
+            background-color: @bgRegular;//was bgDark
+            
+            .flexlayout__tab_button_content {
+                color: @primaryColor;
+            }
+        }
+      
+        &.flexlayout__tab_button--unselected {
+            background-color: @bgDarkest;
         }
     }
-  
-    .flexlayout__tab_button--unselected {
-        margin-top: 0px;
-        margin-right: @tab-spacing;
-        background-color: @color-regular;
-        border-top-right-radius: @panelradius;
-        border-top-left-radius: @panelradius;
-        display: flex;
-        align-items: flex-start;
-    }
+
+    
   
     .flexlayout__border_bottom {
         overflow: visible;
-        background-color: @color-light;
+        background-color: @bgLight;
         border: none;
-        border-top-right-radius: @panelradius;
-        border-top-left-radius: @panelradius;
+        border-top-right-radius: @radius;
+        border-top-left-radius: @radius;
     }
   
     .flexlayout__border_button {
         .flexlayout__border_button_content {
             font-family: @font;
             // font-weight: bold;
-            color: @secondary_color;
+            color: @secondaryColor;
     
-            font-size: @font-size-panels;
+            font-size: @fontSizePanels;
         }
         visibility: hidden;
         border: none;
         margin: 0;
-        margin-right: @tab-spacing;
-        border-top-right-radius: @panelradius;
-        border-top-left-radius: @panelradius;
-        background-color: @box_color;
+        margin-right: @tabSpacing;
+        border-top-right-radius: @radius;
+        border-top-left-radius: @radius;
+        background-color: @bgRegular;
         display: flex;
         flex-direction: row;
         align-items: flex-end;
@@ -146,16 +120,16 @@
   
     .flexlayout__tab_button_content {
         margin-top: unset;
-        color: @secondary_color;
+        color: @secondaryColor;
         font-family: @font;
-        font-size: @font-size-panels;
+        font-size: @fontSizePanels;
         padding: 0;
         font-weight: normal;
         color: #b9b9b9;
     }
   
     .flexlayout__tab_button_trailing {
-        margin-left: @spacing;
+        margin-left: @tabSpacing;
         margin-top: unset;
     }
     
@@ -166,10 +140,10 @@
     .customIconFlexLayout,
     .flexlayout__tab_toolbar_button-min,
     .flexlayout__tab_button_overflow {
-        color: @color-white;
+        color: @textColor;
   
         &:hover {
-            color: @color-white;
+            color: @textColor;
         }
     }
   
@@ -184,32 +158,32 @@
         background-color: inherit;
     }
     .flexlayout__splitter:hover {
-        background-color: @secondary_color;
+        background-color: @secondaryColor;
     }
     
     .flexlayout__splitter {
-        border-radius: @panelradius;
+        border-radius: @radius;
     }
     
     .flexlayout__splitter_drag {
-        border: 1px solid @color-white;
+        border: 1px solid @textColor;
     }
     
     .flexlayout__popup_menu_item {
-        color: @color-white;
-        background-color: @box_color;
+        color: @textColor;
+        background-color: @bgRegular;
     }
 
 }
 
 .flexlayout__tab_header_outer {
-    background-color: @color-dark;//color-light
+    background-color: @bgDark;//color-light
 }
   
 .scrollbar {
     &::-webkit-scrollbar-thumb {
-        background: @secondary_color;
-        border-radius: @panelradius;
+        background: @secondaryColor;
+        border-radius: @radius;
     }
     &::-webkit-scrollbar {
         width: @gutter / 2;
@@ -226,8 +200,8 @@
 
 .MuiAutocomplete-listbox {
     &::-webkit-scrollbar-thumb {
-        background: @secondary_color;
-        border-radius: @panelradius;
+        background: @secondaryColor;
+        border-radius: @radius;
     }
     &::-webkit-scrollbar {
         width: @gutter / 2;

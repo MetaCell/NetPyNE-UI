@@ -1,22 +1,10 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core/styles'
-import Paper from '@material-ui/core/Paper'
-import { bgDark } from '../../theme'
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 
-const useStyles = makeStyles(({ spacing, palette }) => ({ 
-  container:{ height: 'calc(100% - 8px)', alignItems: 'stretch' },
-  grid: {
-    flex: '1 0 0',
-    minWidth: 400,
-    minHeight: 350,
-    maxHeight: '100%',
-    marginRight: spacing(1),
-    marginBottom: spacing(1)
-  },
-  paper: { height: '100%', backgroundColor: bgDark },
-  root: { height: '100%', overflowY: 'visible', overflowX: 'hidden', marginRight: -spacing(1) }
-}))
+const useStyles = makeStyles(({ spacing, palette }) => ({}))
 
 export default function GridLayout ({ children }) {
   const classes = useStyles()
@@ -24,63 +12,30 @@ export default function GridLayout ({ children }) {
   const [lhst, lhsb, rhs, ...others] = children
   return (
     <div className={classes.root}>
-      <Grid container className={classes.container} alignItems="flex-start">
+      <Grid container elevation={0} spacing={1} alignItems="stretch">
 
-        <Grid item className={classes.grid}>
-          <Paper className={classes.paper} >
-            <SingleComponent>
+        <Grid item>
+          <Card elevation={0}>
+            <CardContent > 
               {lhst}
               {lhsb}
-            </SingleComponent>
-          </Paper>
+            </CardContent>
+          </Card>
   
         </Grid>
 
-        <Grid item className={classes.grid}>
-          <Paper className={classes.paper}>
-            <SingleComponent>
-              {[rhs]}
-            </SingleComponent>
-          </Paper>
-        </Grid>
-
+        { rhs 
+          ? <Grid item >
+            <Card elevation={0}>
+              <CardContent> 
+                {[rhs]}
+              </CardContent>
+            </Card>
+          </Grid> : ''
+        }
       </Grid>
       {others}
     </div>
     
   )
-}
-
-const useComponentStyles = makeStyles(({ spacing }) => ({ 
-  container: { 
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
-    margin: `0px ${spacing(1)}px`,
-    paddingTop: spacing(1)
-  },
-  element: {
-    overflowY:'auto', 
-    overflowX:'hidden', 
-    maxHeight: '100%',
-    // height: '100%'
-  }
-}))
-
-function SingleComponent ({ children = [] }) {
-  const classes = useComponentStyles()
-  const [topChild, ...otherChildren] = children
-
-  return (
-    <div className={classes.container}>
-      <div >
-        {otherChildren.length > 0 ? topChild : null}
-      </div>
-
-      <div className={classes.element}>
-        {otherChildren.length > 0 ? otherChildren : topChild}
-      </div>
-    </div>
-  )
-  
 }

@@ -1,9 +1,11 @@
 @import "colors";
+@import (css) url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap');
+
 
 html,
 body {
   height: 100%;
-  background: @color-dark !important;
+  background: @bgDarker;
   font-size: 16px;
 }
 
@@ -51,7 +53,7 @@ button.actionButton {
 }
 
 .selectedActionButton button {
-  background-color: @primary_color!important;
+  background-color: @primaryColor!important;
 }
 
 .rectangularActionButton {
@@ -81,7 +83,7 @@ button.actionButton {
   text-align: center;
 }
 .selectedRectangularActionButton button {
-  background-color: @primary_color!important;
+  background-color: @primaryColor!important;
 }
 
 .addRectangularButton {
@@ -105,14 +107,14 @@ button.actionButton {
   overflow: visible;
 }
 .gearThumbButton .gpt-fullgear {
-  color: @color-light!important;
+  color: @bgLight!important;
   font-size: 100px !important;
   height: 100px !important;
   width: 100px !important;
   text-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px;
 }
 .selectedGearButton .gpt-fullgear {
-  color: @primary_color!important;
+  color: @primaryColor!important;
 }
 .gearThumbLabel {
   font-size: 15px;
@@ -140,20 +142,24 @@ button.actionButton {
   cursor: pointer;
 }
 .helpIcon:hover {
-  color: @primary_color;
+  color: @primaryColor;
 }
 
-.breadcrumby {
-  background-color: @color-regular;
+.breadcrumb {
   display: flex;
   align-items: center;
   overflow: visible;
+  background: transparent;
   justify-content: flex-start;
   margin: 0px;
-  border-radius: 4px;
+  border-radius: @radius;
   margin: @gutter / 2;
   flex-wrap: wrap;
+  .MuiIcon-colorDisabled {
+    color: black
+  }
 }
+
 
 .hiddenModal {
   position: absolute !important;
@@ -253,17 +259,17 @@ button.actionButton {
   margin-top: 43px;
   margin-right: 5px;
   font-size: 11px;
-  color: @secondary_color;
+  color: @secondaryColor;
 }
 
 .spinner-container {
-  color: @secondary_color!important;
+  color: @secondaryColor!important;
   p {
-    color: @secondary_color !important;
+    color: @secondaryColor !important;
   }
 }
 .listIcon {
-  color: @secondary_color!important;
+  color: @secondaryColor!important;
 }
 
 .listButtonLarge {
@@ -298,7 +304,7 @@ button.actionButton {
 
 .rst__rowContents {
   background: transparent;
-  color: @secondary_color;
+  color: @secondaryColor;
 
   cursor: pointer;
   box-shadow: none;
@@ -306,7 +312,7 @@ button.actionButton {
 
 .activeNode .rst__rowContents {
   background: transparent;
-  color: @primary_color;
+  color: @primaryColor;
 }
 
 .rst__rowLabel {
@@ -442,7 +448,7 @@ button.actionButton {
 }
 
 .MuiListItem-root.Mui-selected {
-  color: @primary_color;
+  color: @primaryColor;
 }
 
 div.flexlayout__layout{

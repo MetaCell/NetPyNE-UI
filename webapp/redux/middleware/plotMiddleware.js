@@ -49,7 +49,7 @@ const plotFigure = async (plotId, plotMethod, plotType = false) => {
       new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve(null)
-        }, 3000)
+        }, 10000)
       })]);
     console.log('Plot response received for', plotId);
     if (!response) {

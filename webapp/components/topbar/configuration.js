@@ -1,4 +1,4 @@
-import { bgLight, bgRegular, font, bgDark } from '../../theme'
+import { bgLight, bgRegular, font, bgDark, fontColor } from '../../theme'
 import { openTopbarDialog, changePageTransitionMode } from '../../redux/actions/topbar'
 import { TOPBAR_CONSTANTS } from '../../constants'
 const style = {
@@ -8,25 +8,26 @@ const style = {
     borderRadius: 0,
     border: 0,
     boxShadow: '0px 0px',
-    color: '#ffffff',
-    fontSize: '16px',
+    color: fontColor,
+    fontSize: '1rem',
     fontFamily: font,
     margin: '0px 0px 0px 0px',
-    minWidth: '44px',
-    height: '30px',
+    width: 'auto',
     textTransform: 'capitalize',
     textAlign: 'left',
     justifyContent: 'start',
-    fontWeight: '300',
+    fontWeight: '400',
+    minWidth: 'auto'
   },
   lighter: {
     background: bgRegular,
     backgroundColor: bgRegular,
   },
-  padding: {
+  labels: {
     fontSize: '14px',
     paddingTop: '8px',
-    paddingBottom: '8px'
+    paddingBottom: '8px',
+    width: 'auto'
   }
   
 }
@@ -39,7 +40,7 @@ export default {
     menuPadding: 0,
     fontFamily: font,
     menuFontSize: "14",
-    subMenuFontSize: "12",
+    subMenuFontSize: "14",
     backgroundColor: bgDark,
     buttonsStyle: {
       standard: style.standard,
@@ -48,21 +49,32 @@ export default {
         ...style.lighter
       }
     },
+    drawersStyle: { 
+      standard: { 
+        borderTop: 'none', 
+        borderBottom: 'none', 
+        borderRight: 'none', 
+        borderLeft: 'none', 
+        fontFamily: font,
+      }, hover: {}
+    },
     labelsStyle: {
-      standard: { ...style.padding, },
+      standard: { ...style.labels, },
       hover: {
         ...style.lighter,
-        ...style.padding
+        ...style.labels
       }
     }
   },
   buttons: [
     {
-      label: "NetPyNE-UI",
+      label: "NetPyNE",
       position: "bottom-start",
+      icon: "",
       list: [
         {
           label: "About...",
+          icon: "",
           action: {
             handlerAction: "",
             parameters: []
@@ -70,6 +82,7 @@ export default {
         },
         {
           label: "Contribute",
+          icon: "",
           action: {
             handlerAction: "",
             parameters: []

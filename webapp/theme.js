@@ -1,16 +1,21 @@
 
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+import lessToJs from 'less-vars-to-js';
 
-// orange
-export const primaryColor = '#37ABC8'
+// Read the less file in as string: using the raw-loader to override the default loader
+export const vars = lessToJs(require('!!raw-loader!./css/variables.less'), { resolveVariables: true, stripPrefix: true });
 
-export const bgLight = '#4A4A4A';
-export const bgRegular = '#424242';
-export const bgDark = '#353535';
+require('./css/netpyne.less');
+require('./css/material.less');
+require('./css/traceback.less');
+require('./css/flexlayout.less');
+require('./css/tree.less');
 
-export const font = 'Roboto, Helvetica, Arial, sans-serif'
+export const { primaryColor, secondaryColor, font, fontColor, bgLight, bgRegular, bgDark, bgDarker, bgDarkest } = vars;
 
-export default createMuiTheme({
+
+const rawTheme = {
+  darkMode: true,
   typography: {
     useNextVariants: true,
     htmlFontSize: 12,
@@ -23,8 +28,11 @@ export default createMuiTheme({
   },
   palette: {
     type: 'dark',
-    primary: { main: primaryColor, },
-    secondary: { main: bgLight, },
+    primary: {
+      main: primaryColor, 
+      dark: secondaryColor
+    },
+    secondary: { main: secondaryColor, dark: primaryColor },
   },
   overrides: {
     MuiInputLabel: { formControl: { top: '-6px' } },
@@ -34,7 +42,7 @@ export default createMuiTheme({
         border: 'none !important', 
         boxShadow: 'none !important',
       },
-      root:{ color: 'white' }
+      root:{ color: fontColor }
 
     },
     MuiSelect: {
@@ -45,27 +53,35 @@ export default createMuiTheme({
       },
       select: { "&:focus" :{ background: "none" }, paddingLeft: '4px' },
     },
-    MuiCard: { root: { height: '100%', backgroundColor: bgRegular, overflowY: 'auto' } },
-    MuiBottomNavigation: { root: { backgroundColor: bgRegular, height: 56 } },
-    MuiPaper: { root: { color: 'inherit' } },
-    MuiBottomNavigationAction: { root: { color: 'white', maxWidth: 'unset', whiteSpace: 'nowrap' } },
+    MuiGrid: {
+      root: {
+        display: 'flex',
+        alignItems: 'stretch',
+        flex: 1
+      }
+    },
+    MuiCard: { root: { backgroundColor: bgDarker, overflowY: 'auto', flex: 1 } },
+    MuiBottomNavigation: { root: { backgroundColor: bgRegular } },
+    MuiPaper: { root: { color: 'inherit', backgroundColor: bgRegular } },
+    MuiBottomNavigationAction: { root: { color: fontColor, textTransform: 'uppercase' } },
     MuiFab:{ 
-      secondary: { color: 'white' },
-      primary: { color: 'white' } 
+      secondary: { color: fontColor },
+      primary: { color: fontColor } 
     },
     MuiButton: { 
-      containedSecondary: { color: 'white' },
-      containedPrimary: { color: 'white' },
+      containedSecondary: { color: fontColor },
+      containedPrimary: { color: fontColor },
     },
-    MuiMenuItem: { root: { color: 'white' } },
+    MuiMenuItem: { root: { color: fontColor } },
 
-    MuiListItemText: { root: { color: 'white' } },
-    MuiDialogTitle: { root: { color: 'white' } },
-    MuiTypography: { root: { color: 'white' } },
+    MuiListItemText: { root: { color: fontColor } },
+    MuiDialogTitle: { root: { color: fontColor } },
+    MuiTypography: { root: { color: fontColor } },
     MuiCollapse: { 
       container: { padding: 0 },
       wrapper: { padding: "0px!important" }
     },
+    MuiIcon: { root: { } },
     MuiExpansionPanelSummary: { 
       root: { padding: '0px!important', margin: 0, minHeight: 'unset!important' },
       content: { margin: '0px!important', cursor: 'auto' },
@@ -75,4 +91,6 @@ export default createMuiTheme({
     MuiExpansionPanel: { root: { padding: 0, margin: '0px!important', minHeight: 'unset' } },
     MuiAutocomplete: { popupIndicator: { marginRight: 0 } }
   }
-});
+}
+
+export default createMuiTheme(rawTheme);

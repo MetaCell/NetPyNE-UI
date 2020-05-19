@@ -202,7 +202,7 @@ export default class NetPyNEConnectivityRules extends Component {
       <GridLayout>
         <div>
           <ExpansionPanel>
-            <div className="breadcrumby">
+            <div className="breadcrumb">
               <NetPyNEHome
                 selection={this.state.selectedConnectivityRule}
                 handleClick={() => this.setState({ selectedConnectivityRule: undefined })}

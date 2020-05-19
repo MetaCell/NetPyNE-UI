@@ -15,7 +15,15 @@ import UploadDownloadFilesDialog from './dialogs/UploadDownloadFiles';
 import { TOPBAR_CONSTANTS } from '../../constants';
 import { withStyles } from '@material-ui/core/styles'
 import { SwitchPageButton } from 'netpyne/components'
-const styles = () => ({ topbar: { backgroundColor: bgDark } })
+
+const styles = () => ({ 
+  topbar: { 
+    backgroundColor: bgDark,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  } 
+});
 
 class Topbar extends Component {
 
