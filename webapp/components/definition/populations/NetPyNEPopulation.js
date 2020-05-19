@@ -164,16 +164,6 @@ class NetPyNEPopulation extends React.Component {
               model={"netParams.popParams['" + this.props.name + "']['cellType']"}
             />
           </NetPyNEField>
-          
-          <NetPyNEField id="netParams.popParams.cellModel" >
-            <NetPyNETextField
-              callback={(newValue, oldValue) => {
-                Utils.evalPythonMessage("netpyne_geppetto.propagate_field_rename", ['cellModel', newValue, oldValue])
-                this.props.updateCards()
-              }}
-              model={"netParams.popParams['" + this.props.name + "']['cellModel']"}
-            />
-          </NetPyNEField>
 
           <Dimensions modelName={this.props.name} />
           {dialogPop}

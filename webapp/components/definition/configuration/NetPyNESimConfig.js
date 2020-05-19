@@ -295,7 +295,7 @@ class NetPyNESimConfig extends React.Component {
           <BottomNavigationAction id={"configSaveConfiguration"} key={'SaveConfiguration'} label={'Save Configuration'} icon={<FontIcon className={"fa fa-floppy-o"} />} onClick={() => this.select(2, 'SaveConfiguration')} />
           <BottomNavigationAction id={"confignetParams"} key={'netParams'} label={'Network Attributes'} icon={<FontIcon className={"fa fa-cog"} />} onClick={() => this.select(3, 'netParams')} />
         </BottomNavigation>
-        <GridLayout>
+        <GridLayout className={classes.layout}>
           <div/>
           {contentLeft}
           {contentRight}
@@ -307,12 +307,14 @@ class NetPyNESimConfig extends React.Component {
 }
 
 const styles = ({ shape, spacing }) => ({ 
-  root: { height: `calc(100% - 56px - ${spacing(1)}px)` },
+  root: { height: `calc(100% - 56px - ${spacing(1)}px)`, flexDirection: 'column' },
   bottomNav: {
     borderRadius: shape.borderRadius, 
     backgroundColor: bgDark,
-    marginBottom: spacing(1)
+    marginBottom: spacing(1),
+    overflow: 'hidden'
   },
+  layout: { height: "100%", display: 'flex' }
   
 })
 

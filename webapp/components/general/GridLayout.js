@@ -1,17 +1,13 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
-import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
-const useStyles = makeStyles(({ spacing, palette }) => ({}))
-
-export default function GridLayout ({ children }) {
-  const classes = useStyles()
+export default function GridLayout ({ children, className = '' }) {
   // left-hand-side-top   -   left-hand-side-bottom   -   right-hand-side   -   others
   const [lhst, lhsb, rhs, ...others] = children
   return (
-    <div className={classes.root}>
+    <div className={className}>
       <Grid container elevation={0} spacing={1} alignItems="stretch">
 
         <Grid item>

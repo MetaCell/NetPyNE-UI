@@ -154,10 +154,10 @@ export default class NetPyNECellRules extends React.Component {
       model[selectedCellRule].secs[selectedSection]['mechs'] = {};
       Utils.execPythonMessage('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"]["' + selectedSection + '"]["mechs"] = {}');
     }
-    var params = {};
     Utils
       .evalPythonMessage("netpyne_geppetto.getMechParams", [mechanism])
       .then(response => {
+        const params = {};
         response.forEach(param => params[param] = 0);
         Utils.execPythonMessage('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"]["' + selectedSection + '"]["mechs"]["' + mechanism + '"] = ' + JSON.stringify(params));
       })
@@ -343,7 +343,7 @@ export default class NetPyNECellRules extends React.Component {
      */
     if (nextPage === page) { 
       if (page === "main") {
-        this.handleNewCellRule({ 'CellRule': { 'conds':{}, 'secs':{} } });
+        this.handleNewCellRule({ 'CellType': { 'conds':{}, 'secs':{} } });
       } else if (page === "sections") {
         this.handleNewSection({ 'Section': { 'geom': {}, 'topol': {}, 'mechs': {} } });
       }
@@ -672,7 +672,7 @@ export default class NetPyNECellRules extends React.Component {
               </div>
               <Icon
                 color="disabled"
-                className="fa fa-angle-right"
+                className="fa fa-angle-right breadcrumb-spacer"
               />
               <div className='ml-2'>
                 <Tooltip title={this.createTooltip('section')} placement="top">
@@ -695,7 +695,7 @@ export default class NetPyNECellRules extends React.Component {
             
               <Icon
                 color="disabled"
-                className="fa fa-angle-right"
+                className="fa fa-angle-right breadcrumb-spacer"
               />
               <NetPyNENewMechanism
                 className="ml-2"

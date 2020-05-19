@@ -14,11 +14,11 @@ class NetPyNEExpansionPanel extends Component {
   state = { expanded: false }
   render () {
 
-    const { children, classes } = this.props
+    const { children, classes, ...others } = this.props
     const [summary, ...details] = children
 
     return (
-      <ExpansionPanel expanded={this.state.expanded}>
+      <ExpansionPanel expanded={this.state.expanded} {...others}>
         <ExpansionPanelSummary
           IconButtonProps={{ 
             onClick: () => this.setState({ expanded: !this.state.expanded }),

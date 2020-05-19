@@ -8,7 +8,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
     display: 'flex',
     alignItems: 'center'
   },
-  icon: { fontSize: 40, fontWeight: 'bold' }
+  icon: { fontSize: 40, fontWeight: 'bold', textAlign: 'center' }
 }))
 
 
@@ -33,7 +33,7 @@ export default ({ handleClick, selection }) => {
       </Tooltip>
       <Icon
         color="disabled"
-        className="fa fa-angle-right"
+        className="fa fa-angle-right breadcrumb-spacer"
       />
      
     </div>

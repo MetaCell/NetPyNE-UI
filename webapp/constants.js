@@ -325,21 +325,21 @@ export const DEFAULT_NETWORK_WIDGETS = {
 
 export const EDIT_WIDGETS = {
   [PYTHON_CONSOLE_WIDGET.id]: PYTHON_CONSOLE_WIDGET,
-  'popParams': { 
-    id: 'popParams', 
-    name: 'Populations', 
+  'cellParams': { 
+    id: 'cellParams', 
+    name: 'Cell types', 
     status: WidgetStatus.ACTIVE, 
-    component: 'popParams', 
+    component: 'cellParams', 
     panelName: TOP_PANEL,
     enableRename: false,
     hideOnClose: true,
     pos: 0
   },
-  'cellParams': { 
-    id: 'cellParams', 
-    name: 'Cell rules', 
+  'popParams': { 
+    id: 'popParams', 
+    name: 'Populations', 
     status: WidgetStatus.HIDDEN, 
-    component: 'cellParams', 
+    component: 'popParams', 
     panelName: TOP_PANEL,
     enableRename: false,
     hideOnClose: true,

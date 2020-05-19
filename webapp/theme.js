@@ -89,7 +89,8 @@ const rawTheme = {
     },
     MuiExpansionPanelDetails: { root: { padding: 0, margin: 0, minHeight: 'unset!important', flexDirection: 'column' } },
     MuiExpansionPanel: { root: { padding: 0, margin: '0px!important', minHeight: 'unset' } },
-    MuiAutocomplete: { popupIndicator: { marginRight: 0 } }
+    MuiAutocomplete: { popupIndicator: { marginRight: 0 } },
+    MuiCardContent: { root: { padding: 8 } }
   }
 }
 
