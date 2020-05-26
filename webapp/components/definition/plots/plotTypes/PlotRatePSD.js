@@ -30,23 +30,23 @@ export default class PlotRatePSD extends React.Component {
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotRatePSD.binSize" >
-        <NetPyNETextField model={tag + "['binSize']"}/>
+        <NetPyNETextField variant="filled" model={tag + "['binSize']"}/>
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotRatePSD.maxFreq" >
-        <NetPyNETextField model={tag + "['maxFreq']"}/>
+        <NetPyNETextField variant="filled" model={tag + "['maxFreq']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotRatePSD.NFFT" >
-        <NetPyNETextField model={tag + "['NFFT']"}/>
+        <NetPyNETextField variant="filled" model={tag + "['NFFT']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotRatePSD.noverlap" >
-        <NetPyNETextField model={tag + "['noverlap']"}/>
+        <NetPyNETextField variant="filled" model={tag + "['noverlap']"}/>
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotRatePSD.smooth" >
-        <NetPyNETextField model={tag + "['smooth']"}/>
+        <NetPyNETextField variant="filled" model={tag + "['smooth']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotRatePSD.overlay" className={"netpyneCheckbox"} >

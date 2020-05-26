@@ -97,6 +97,7 @@ class NetPyNECellRule extends React.Component {
         <div className={classes.root}>
 
           <TextField
+            variant="filled" 
             onChange={this.handleRenameChange}
             value={this.state.currentName}
             disabled={this.renaming}

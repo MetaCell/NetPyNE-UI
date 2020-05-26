@@ -122,8 +122,8 @@ export default class NetPyNECoordsRange extends Component {
               }
               }
             >
-              <TextField label="Minimum" id={min} style={{ marginLeft: 10 }}/>
-              <TextField label="Maximum" id={max} style={{ marginLeft: 10 }}/>
+              <TextField label="Minimum" id={min} style={{ marginLeft: 10 }} variant="filled" />
+              <TextField label="Maximum" id={max} style={{ marginLeft: 10 }} variant="filled" />
             </AdapterComponent>
           </div>
           : null}

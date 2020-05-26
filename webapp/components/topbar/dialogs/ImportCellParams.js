@@ -87,6 +87,7 @@ class ImportCellParams extends React.Component {
       >
         <div className={classes.root}>
           <TextField
+            variant="filled" 
             value={label}
             className="netpyneField" 
             id="importCellTemplateName"
@@ -96,6 +97,7 @@ class ImportCellParams extends React.Component {
 
           <NetPyNEField id="netParams.importCellParams.cellName" className={classes.textField}>
             <TextField
+              variant="filled" 
               value={cellName}
               id="importCellTemplateCellName"
               onChange={event => this.setState({ cellName: event.target.value })}
@@ -114,6 +116,7 @@ class ImportCellParams extends React.Component {
 
             <NetPyNEField id="netParams.importCellParams.fileName">
               <TextField 
+                variant="filled" 
                 value={fileName}
                 onChange={event => this.setState({ fileName: event.target.value })}
               />
@@ -134,6 +137,7 @@ class ImportCellParams extends React.Component {
 
             <NetPyNEField id="netParams.importCellParams.modFolder">
               <TextField 
+                variant="filled"
                 value={modFolder}
                 onChange={event => this.setState({ modFolder: event.target.value })} 
               />

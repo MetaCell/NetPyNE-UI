@@ -27,15 +27,15 @@ export default class PlotShape extends React.Component {
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotShape.synStyle" >
-        <NetPyNETextField model={tag + "['synStyle']"} />
+        <NetPyNETextField variant="filled" model={tag + "['synStyle']"} />
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotShape.dist" >
-        <NetPyNETextField model={tag + "['dist']"} />
+        <NetPyNETextField variant="filled" model={tag + "['dist']"} />
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotShape.synSize" >
-        <NetPyNETextField model={tag + "['synSize']"} />
+        <NetPyNETextField variant="filled" model={tag + "['synSize']"} />
       </NetPyNEField>
 
       <NetPyNEField id={"simConfig.analysis.plotShape.cvar"} >
@@ -51,7 +51,7 @@ export default class PlotShape extends React.Component {
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotShape.ivprops" >
-        <NetPyNETextField model={tag + "['ivprops']"} />
+        <NetPyNETextField variant="filled" model={tag + "['ivprops']"} />
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotShape.iv" className={"netpyneCheckbox"} >

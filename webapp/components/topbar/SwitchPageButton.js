@@ -5,7 +5,7 @@ import Menu from "@material-ui/core/Menu";
 
 import { withStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
-import Icon from '@material-ui/core/Icon'
+import Icon from '../general/NetPyNEIcons'
 import { TOPBAR_CONSTANTS } from '../../constants'
 
 
@@ -52,11 +52,10 @@ class SwitchPageButton extends Component {
       <div className={classes.container}>
         <Button
           variant="contained"
-          color="primary"
           size="small"
           className={classes.button}
           onClick={this.handleClick.bind(this)}
-          endIcon={<Icon className={this.props.editModelPage ? "fa fa-rocket" : "fa fa-pencil"}/>}
+          endIcon={<Icon name={this.props.editModelPage ? "rocket" : "pencil"} selected={false}/>}
         >
           {this.props.editModelPage ? this.props.pageTransitionMode : TOPBAR_CONSTANTS.BACK_TO_EDITION}
         </Button>

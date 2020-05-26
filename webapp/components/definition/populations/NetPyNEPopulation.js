@@ -62,6 +62,7 @@ class NetPyNEPopulation extends React.Component {
             // Get Fields for new metadata
             cellModelFields = Utils.getFieldsFromMetadataTree(response, key => (<NetPyNEField id={key} >
               <NetPyNETextField
+                variant="filled" 
                 model={"netParams.popParams['" + this.state.currentName + "']['" + key.split(".").pop() + "']"}
               />
             </NetPyNEField>));
@@ -147,6 +148,7 @@ class NetPyNEPopulation extends React.Component {
       var content = (
         <div id="populationMetadata">
           <TextField
+            variant="filled"
             onChange={this.handleRenameChange}
             value={this.state.currentName}
             disabled={this.renaming}
@@ -157,6 +159,7 @@ class NetPyNEPopulation extends React.Component {
 
           <NetPyNEField id="netParams.popParams.cellType" >
             <NetPyNETextField
+              variant="filled" 
               callback={(newValue, oldValue) => {
                 Utils.evalPythonMessage("netpyne_geppetto.propagate_field_rename", ['cellType', newValue, oldValue])
                 this.props.updateCards()

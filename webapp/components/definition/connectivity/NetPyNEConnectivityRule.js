@@ -134,6 +134,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
       var content = (
         <div>
           <TextField
+            variant="filled" 
             id={"ConnectivityName"}
             onChange={this.handleRenameChange}
             value={this.state.currentName}
@@ -171,31 +172,31 @@ export default class NetPyNEConnectivityRule extends React.Component {
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.convergence">
-            <NetPyNETextField model={"netParams.connParams['" + this.props.name + "']['convergence']"}/>
+            <NetPyNETextField variant="filled" model={"netParams.connParams['" + this.props.name + "']['convergence']"}/>
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.divergence">
-            <NetPyNETextField model={"netParams.connParams['" + this.props.name + "']['divergence']"}/>
+            <NetPyNETextField variant="filled" model={"netParams.connParams['" + this.props.name + "']['divergence']"}/>
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.probability">
-            <NetPyNETextField model={"netParams.connParams['" + this.props.name + "']['probability']"}/>
+            <NetPyNETextField variant="filled" model={"netParams.connParams['" + this.props.name + "']['probability']"}/>
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.synsPerConn">
-            <NetPyNETextField model={"netParams.connParams['" + this.props.name + "']['synsPerConn']"}/>
+            <NetPyNETextField variant="filled" model={"netParams.connParams['" + this.props.name + "']['synsPerConn']"}/>
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.weight">
-            <NetPyNETextField model={"netParams.connParams['" + this.props.name + "']['weight']"}/>
+            <NetPyNETextField variant="filled" model={"netParams.connParams['" + this.props.name + "']['weight']"}/>
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.delay">
-            <NetPyNETextField model={"netParams.connParams['" + this.props.name + "']['delay']"} />
+            <NetPyNETextField variant="filled" model={"netParams.connParams['" + this.props.name + "']['delay']"} />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.plasticity">
-            <NetPyNETextField model={"netParams.connParams['" + this.props.name + "']['plasticity']"}/>
+            <NetPyNETextField variant="filled" model={"netParams.connParams['" + this.props.name + "']['plasticity']"}/>
           </NetPyNEField>
           {dialogPop}
         </div>

@@ -179,6 +179,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
       var content = (
         <div>
           <TextField
+            variant="filled" 
             onChange={this.handleRenameChange}
             value = {this.state.currentName}
             disabled={this.renaming}
@@ -198,12 +199,14 @@ export default class NetPyNEStimulationTarget extends React.Component {
           
           <NetPyNEField id="netParams.stimTargetParams.sec">
             <NetPyNETextField
+              variant="filled" 
               model={"netParams.stimTargetParams['" + this.props.name + "']['sec']"}
             />
           </NetPyNEField>
           
           <NetPyNEField id="netParams.stimTargetParams.loc">
             <NetPyNETextField
+              variant="filled" 
               model={"netParams.stimTargetParams['" + this.props.name + "']['loc']"}
             />
           </NetPyNEField>
@@ -222,18 +225,21 @@ export default class NetPyNEStimulationTarget extends React.Component {
           
             <NetPyNEField id="netParams.stimTargetParams.weight" >
               <NetPyNETextField
+                variant="filled" 
                 model={"netParams.stimTargetParams['" + this.props.name + "']['weight']"}
               />
             </NetPyNEField>
           
             <NetPyNEField id="netParams.stimTargetParams.delay" >
               <NetPyNETextField
+                variant="filled" 
                 model={"netParams.stimTargetParams['" + this.props.name + "']['delay']"}
               />
             </NetPyNEField>
           
             <NetPyNEField id="netParams.stimTargetParams.synsPerConn" >
               <NetPyNETextField
+                variant="filled" 
                 model={"netParams.stimTargetParams['" + this.props.name + "']['synsPerConn']"}
               />
             </NetPyNEField>

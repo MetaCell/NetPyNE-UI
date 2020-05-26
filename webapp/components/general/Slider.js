@@ -39,6 +39,7 @@ export default class NetPyNESlider extends Component {
           />
 
           <TextField
+            variant="filled" 
             style={{ float: 'left', width: '40px', margin: '0 5px' }}
             value={this.state.value}
             onChange={event => this.handleSlider(event, event.target.value)}

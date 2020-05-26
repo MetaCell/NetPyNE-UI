@@ -29,8 +29,8 @@ export default class TimeRange extends Component {
             }
           }}
         >
-          <TextField label="Starting time" id="min" style={{ marginLeft: 10 }}/>
-          <TextField label="Ending time" id="max" style={{ marginLeft: 10 }}/>
+          <TextField variant="filled" label="Starting time" id="min" style={{ marginLeft: 10 }}/>
+          <TextField variant="filled" label="Ending time" id="max" style={{ marginLeft: 10 }}/>
         </AdapterComponent>
       </div>
     );

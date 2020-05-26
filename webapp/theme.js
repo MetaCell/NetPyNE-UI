@@ -11,7 +11,10 @@ require('./css/traceback.less');
 require('./css/flexlayout.less');
 require('./css/tree.less');
 
-export const { primaryColor, secondaryColor, font, fontColor, bgLight, bgRegular, bgDark, bgDarker, bgDarkest } = vars;
+export const {
+  primaryColor, secondaryColor, font, fontColor, 
+  bgLight, bgRegular, bgDark, bgDarker, bgDarkest, bgInputs 
+} = vars;
 
 
 const rawTheme = {
@@ -32,7 +35,10 @@ const rawTheme = {
       main: primaryColor, 
       dark: secondaryColor
     },
-    secondary: { main: secondaryColor, dark: primaryColor },
+    secondary: { 
+      main: secondaryColor, 
+      dark: primaryColor 
+    }
   },
   overrides: {
     MuiInputLabel: { formControl: { top: '-6px' } },
@@ -69,6 +75,10 @@ const rawTheme = {
       primary: { color: fontColor } 
     },
     MuiButton: { 
+      contained: { 
+        color: fontColor,
+        backgroundColor: bgInputs
+      },
       containedSecondary: { color: fontColor },
       containedPrimary: { color: fontColor },
     },
@@ -81,7 +91,7 @@ const rawTheme = {
       container: { padding: 0 },
       wrapper: { padding: "0px!important" }
     },
-    MuiIcon: { root: { } },
+    MuiIcon: { fontSizeLarge: { fontSize: '1.75rem' } },
     MuiExpansionPanelSummary: { 
       root: { padding: '0px!important', margin: 0, minHeight: 'unset!important' },
       content: { margin: '0px!important', cursor: 'auto' },

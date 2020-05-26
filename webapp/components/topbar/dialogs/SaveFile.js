@@ -52,6 +52,7 @@ class SaveFile extends React.Component {
         {...this.props}
       >
         <TextField 
+          variant="filled" 
           className="netpyneField" 
           value={this.state.fileName} 
           label="File name" 

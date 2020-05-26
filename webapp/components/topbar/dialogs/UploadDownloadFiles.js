@@ -232,6 +232,7 @@ class UploadDownloadFile extends React.Component {
                 <Icon className={'fa fa-folder-o listIcon'} />
               </IconButton>
               <TextField 
+                variant="filled" 
                 className='netpyneField'
                 value={this.state.downloadPathsDisplayText}
                 onChange={event => this.changeDownloadFilePathsDisplayText(event.target.value)}

@@ -24,7 +24,7 @@ export default makeStyles(({ transitions, palette, spacing }) => ({
   button: {
     color: 'white',
     marginBottom: spacing(1),
-    marginRight: props => props.expand ? spacing(1) : 0,
+    marginRight: spacing(1),
   },
   text: { paddingLeft: spacing(1) },
   container: { 

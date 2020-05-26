@@ -22,7 +22,7 @@ import useStyles from './useStyles';
 import Tooltip from '../general/Tooltip'
 
 const drawerOpenWidth = 200;
-const drawerCloseWidth = 48;
+const drawerCloseWidth = 44;
 
 
 const DrawerItem = ({ id, name, widget, expanded, createOrFocusWidget, classes }) => {
@@ -36,7 +36,7 @@ const DrawerItem = ({ id, name, widget, expanded, createOrFocusWidget, classes }
       onClick={() => createOrFocusWidget(id)}
     >
       <ListItemIcon className={classes.icon}>
-        <DrawerIcon widgetId={id} selected={widget && widget.status !== WidgetStatus.MINIMIZED} />
+        <DrawerIcon name={id} selected={widget && widget.status !== WidgetStatus.MINIMIZED} />
       </ListItemIcon>
       <ListItemText className={classes.text}>
         <Typography noWrap>{name}</Typography>
@@ -125,18 +125,24 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
           </List>
         </div>
         <div></div>
-          
+
+        
         <div className={classes.buttonContainer}>
-          <IconButton
-            className={classes.button}
-            onClick={() => {
-              setExpand(!expand)
-              setTimeout(() => window.dispatchEvent(new Event('resize')), 400)
-            }}
-          >
-            {expand ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
-          </IconButton>
+          <Tooltip title={expand ? "Collapse" : "Expand"}>  
+            <IconButton
+              className={classes.button}
+              size="small"
+              onClick={() => {
+                setExpand(!expand)
+                setTimeout(() => window.dispatchEvent(new Event('resize')), 400)
+              }}
+            >
+              {expand ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
+            </IconButton>
+          </Tooltip>  
         </div>
+        
+        
       </div>
     </Paper>
   )

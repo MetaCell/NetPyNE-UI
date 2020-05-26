@@ -171,6 +171,7 @@ class ImportExportHLS extends React.Component {
               <Icon className={'fa fa-folder-o listIcon'} />
             </IconButton>
             <TextField 
+              variant="filled" 
               className="netpyneFieldNoWidth fx-11 no-z-index"
               value={this.state.netParamsFullPath}
               onChange={event => this.onNetParamsPathChange(event.target.value)}
@@ -189,6 +190,7 @@ class ImportExportHLS extends React.Component {
               <Icon className={'fa fa-folder-o listIcon'} />
             </IconButton>
             <TextField 
+              variant="filled" 
               className="netpyneFieldNoWidth fx-11 no-z-index" 
               value={this.state.simConfigFullPath} 
               onChange={event => this.onSimConfigPathChange(event.target.value)} 
@@ -208,6 +210,7 @@ class ImportExportHLS extends React.Component {
             </IconButton>
 
             <TextField 
+              variant="filled" 
               className="netpyneFieldNoWidth fx-11 no-z-index"
               label="Path to mod files"
               disabled={disableLoadMod} 
@@ -220,12 +223,14 @@ class ImportExportHLS extends React.Component {
 
           <div className={classes.container}>
             <TextField 
+              variant="filled" 
               className="netpyneRightField fx-6 mr-2"
               label="NetParams variable" 
               value={this.state.netParamsVariable}
               onChange={event => this.setState({ netParamsVariable: event.target.value })}
             />
             <TextField
+              variant="filled" 
               className="netpyneRightField fx-6"
               label="SimConfig variable"
               value={this.state.simConfigVariable}
@@ -272,6 +277,7 @@ class ImportExportHLS extends React.Component {
     case 'EXPORT':
       var content = (
         <TextField
+          variant="filled" 
           className="netpyneField"
           label="File name"
           value={this.state.fileName}

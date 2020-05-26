@@ -37,15 +37,15 @@ class NetPyNESimConfig extends React.Component {
       contentLeft = (
         <div>
           <NetPyNEField id="simConfig.duration" >
-            <NetPyNETextField model={"simConfig.duration"} />
+            <NetPyNETextField variant="filled" model={"simConfig.duration"} />
           </NetPyNEField>
 
           <NetPyNEField id="simConfig.dt" >
-            <NetPyNETextField model={"simConfig.dt"} />
+            <NetPyNETextField variant="filled" model={"simConfig.dt"} />
           </NetPyNEField>
 
           <NetPyNEField id="simConfig.printRunTime" >
-            <NetPyNETextField model={"simConfig.printRunTime"} />
+            <NetPyNETextField variant="filled" model={"simConfig.printRunTime"} />
           </NetPyNEField>
 
           <NetPyNEField id="simConfig.hParams" className="listStyle">
@@ -125,18 +125,18 @@ class NetPyNESimConfig extends React.Component {
       contentLeft = (
         <div>
           <NetPyNEField id="simConfig.simLabel" >
-            <NetPyNETextField model={"simConfig.simLabel"} />
+            <NetPyNETextField variant="filled" model={"simConfig.simLabel"} />
           </NetPyNEField>
 
           {
             !window.isDocker
               && <NetPyNEField id="simConfig.saveFolder" >
-                <NetPyNETextField model={"simConfig.saveFolder"} />
+                <NetPyNETextField variant="filled" model={"simConfig.saveFolder"} />
               </NetPyNEField>
           }
 
           <NetPyNEField id="simConfig.filename" >
-            <NetPyNETextField model={"simConfig.filename"} />
+            <NetPyNETextField variant="filled" model={"simConfig.filename"} />
           </NetPyNEField>
 
           <NetPyNEField id="simConfig.saveDataInclude" className="listStyle">
@@ -144,7 +144,7 @@ class NetPyNESimConfig extends React.Component {
           </NetPyNEField>
 
           <NetPyNEField id="simConfig.backupCfgFile" >
-            <NetPyNETextField model={"simConfig.backupCfgFile"} />
+            <NetPyNETextField variant="filled" model={"simConfig.backupCfgFile"} />
           </NetPyNEField>
 
         </div>
@@ -212,7 +212,7 @@ class NetPyNESimConfig extends React.Component {
           </NetPyNEField>
             
           <NetPyNEField id="simConfig.recordStep" >
-            <NetPyNETextField model={"simConfig.recordStep"} />
+            <NetPyNETextField variant="filled" model={"simConfig.recordStep"} />
           </NetPyNEField>
             
         </div>
@@ -232,23 +232,23 @@ class NetPyNESimConfig extends React.Component {
       var contentLeft = (
         <div >
           <NetPyNEField id="netParams.scale" >
-            <NetPyNETextField model={"netParams.scale"} />
+            <NetPyNETextField variant="filled" model={"netParams.scale"} />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.defaultWeight" >
-            <NetPyNETextField model={"netParams.defaultWeight"} />
+            <NetPyNETextField variant="filled" model={"netParams.defaultWeight"} />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.defaultDelay" >
-            <NetPyNETextField model={"netParams.defaultDelay"} />
+            <NetPyNETextField variant="filled" model={"netParams.defaultDelay"} />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.scaleConnWeight" >
-            <NetPyNETextField model={"netParams.scaleConnWeight"} />
+            <NetPyNETextField variant="filled" model={"netParams.scaleConnWeight"} />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.scaleConnWeightNetStims" >
-            <NetPyNETextField model={"netParams.scaleConnWeightNetStims"} />
+            <NetPyNETextField variant="filled" model={"netParams.scaleConnWeightNetStims"} />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.scaleConnWeightModels" className={"listStyle"}>
@@ -260,27 +260,27 @@ class NetPyNESimConfig extends React.Component {
       contentRight = (
         <div >
           <NetPyNEField id="netParams.sizeX" >
-            <NetPyNETextField model={"netParams.sizeX"} />
+            <NetPyNETextField variant="filled" model={"netParams.sizeX"} />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.sizeY" >
-            <NetPyNETextField model={"netParams.sizeY"} />
+            <NetPyNETextField variant="filled" model={"netParams.sizeY"} />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.sizeZ" >
-            <NetPyNETextField model={"netParams.sizeZ"} />
+            <NetPyNETextField variant="filled" model={"netParams.sizeZ"} />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.propVelocity" >
-            <NetPyNETextField model={"netParams.propVelocity"} />
+            <NetPyNETextField variant="filled" model={"netParams.propVelocity"} />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.shape">
-            <SelectField model={"netParams.shape"} />
+            <SelectField variant="filled" model={"netParams.shape"} />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.rotateCellsRandomly" >
-            <NetPyNETextField model={"netParams.rotateCellsRandomly"} />
+            <NetPyNETextField variant="filled" model={"netParams.rotateCellsRandomly"} />
           </NetPyNEField>
 
         </div>

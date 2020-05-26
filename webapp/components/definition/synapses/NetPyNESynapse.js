@@ -132,6 +132,7 @@ class NetPyNESynapse extends React.Component {
         <div>
           <NetPyNEField id="netParams.synMechParams.tau1">
             <NetPyNETextField
+              variant="filled" 
               model={"netParams.synMechParams['" + this.props.name + "']['tau1']"}
             />
           </NetPyNEField>
@@ -139,6 +140,7 @@ class NetPyNESynapse extends React.Component {
           {(this.state.synMechMod == "Exp2Syn") ? <div>
             <NetPyNEField id="netParams.synMechParams.tau2">
               <NetPyNETextField
+                variant="filled" 
                 model={"netParams.synMechParams['" + this.props.name + "']['tau2']"}
               />
             </NetPyNEField>
@@ -146,6 +148,7 @@ class NetPyNESynapse extends React.Component {
           
           <NetPyNEField id="netParams.synMechParams.e" >
             <NetPyNETextField
+              variant="filled" 
               model={"netParams.synMechParams['" + this.props.name + "']['e']"}
             />
           </NetPyNEField>
@@ -156,6 +159,7 @@ class NetPyNESynapse extends React.Component {
     return (
       <div>
         <TextField
+          variant="filled"
           id={"synapseName"}
           onChange={this.handleRenameChange}
           value = {this.state.currentName}

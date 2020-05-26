@@ -124,6 +124,7 @@ class DimensionsComponent extends Component {
             ? <NetPyNEField id={"netParams.popParams." + this.state.dimension} className={classes.fields}>
               <NetPyNETextField
                 id={"popParamsDimensions"}
+                variant="filled" 
                 handleChange={this.handleDimValueChange}
                 model={"netParams.popParams['" + this.state.modelName + "']['" + this.state.dimension + "']"}
                 modelName={this.state.modelName}

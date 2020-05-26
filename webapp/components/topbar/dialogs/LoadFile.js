@@ -143,6 +143,7 @@ class LoadFile extends React.Component {
             </IconButton>
 
             <TextField 
+              variant="filled" 
               className="netpyneFieldNoWidth fx-11 no-z-index"
               label="Json file:" 
               value={this.state.jsonModelFolder} 
@@ -211,6 +212,7 @@ class LoadFile extends React.Component {
               </IconButton>
 
               <TextField 
+                variant="filled" 
                 className="netpyneFieldNoWidth fx-8 no-z-index"
                 label="Mod folder:"
                 disabled={disableLoadMod} 
