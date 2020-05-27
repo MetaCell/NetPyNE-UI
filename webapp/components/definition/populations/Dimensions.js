@@ -11,10 +11,7 @@ import {
 } from 'netpyne/components';
 
 const styles = ({ spacing }) => ({
-  selectField: { 
-    marginTop: spacing(3),
-    width: '100%'
-  },
+  selectField: { width: '100%' },
   field:{
     width: '95%!important',
     marginLeft: spacing(3)
@@ -103,7 +100,7 @@ class DimensionsComponent extends Component {
       <div>
         <NetPyNEField id="netParams.popParams.numCells" className={classes.selectField}>
           <Select
-            id={"popParamsDimensionsSelect"}
+            variant="filled"
             value={this.state.dimension}
             onChange={event => this.setState({ dimension: event.target.value })}
           >
@@ -121,20 +118,21 @@ class DimensionsComponent extends Component {
         </NetPyNEField>
         {
           this.state.dimension != undefined && this.state.dimension != ""
-            ? <NetPyNEField id={"netParams.popParams." + this.state.dimension} className={classes.fields}>
-              <NetPyNETextField
-                id={"popParamsDimensions"}
-                variant="filled" 
-                handleChange={this.handleDimValueChange}
-                model={"netParams.popParams['" + this.state.modelName + "']['" + this.state.dimension + "']"}
-                modelName={this.state.modelName}
-                dimensionType={this.state.dimension}
-                callback={(newValue, oldValue) => {
-                  this.props.updateCards()
-                }}
-              />
-            </NetPyNEField>
-            : null
+            && (
+              <NetPyNEField id={"netParams.popParams." + this.state.dimension} className={classes.fields}>
+                <NetPyNETextField
+                  id={"popParamsDimensions"}
+                  variant="filled" 
+                  handleChange={this.handleDimValueChange}
+                  model={"netParams.popParams['" + this.state.modelName + "']['" + this.state.dimension + "']"}
+                  modelName={this.state.modelName}
+                  dimensionType={this.state.dimension}
+                  callback={(newValue, oldValue) => {
+                    this.props.updateCards()
+                  }}
+                />
+              </NetPyNEField>
+            )
         }
       </div>
     )

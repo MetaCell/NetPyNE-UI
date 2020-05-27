@@ -71,7 +71,7 @@ subprocess.call(['python3', '-m', 'pip', 'install', '-e', '.'], cwd='./netpyne/'
 clone_repo(project='openworm',
            repo_name='geppetto-client',
            folder='geppetto-client',
-           default_branch='feature/178',
+           default_branch='development',
            cwdp='webapp/',
            recursive=False,
 )

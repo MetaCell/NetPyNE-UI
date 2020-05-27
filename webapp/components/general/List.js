@@ -3,6 +3,8 @@ import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 import Tooltip from './Tooltip'
+import Chip from '@material-ui/core/Chip'
+import Grid from '@material-ui/core/Grid'
 /**
  * Generic List/Dict Component
  */
@@ -31,6 +33,9 @@ export default class ListComponent extends Component {
           valid = false;
         }
       });
+      if (value.endsWith(',')) {
+        valid = false;
+      }
       break;
     case 'dict':
       var valid = (value.match(/:/g) || []).length == 1 && !value.startsWith(':') && !value.endsWith(':');
@@ -208,66 +213,48 @@ export default class ListComponent extends Component {
         var value = this.state.children[key];
       }
       return (
-        <div 
-          key={key} 
-          style={this.props.realType != 'dict(dict())' ? { marginRight: 30, float: 'left' } : { marginRight: 30 }}
-        >
-          <TextField
-            value={value}
-            id={this.props.id + index}
-            disabled
-          />
-          <IconButton
-            id={this.props.id + index + "RemoveButton"}
-            className={'listButtonSmall'}
-            onClick={() => this.removeChild(key)}
-            tooltip-data='Remove item from the list'
-          >
-            <Icon className={'fa fa-minus-circle listIcon'} />
-          </IconButton>
-        </div>
+        <Grid item key={key}>
+          <Chip key={key}label={value} onDelete={() => this.removeChild(key)} color="primary" />
+        </Grid>
       )
+      
     });
 
     return (
-      <div>
-        <div style={{ display: 'flex', alignItems: 'baseline' }}>
-          <TextField
-            id={this.props.id}
-            label={this.props.label ? 'Add new ' + this.props.label : 'Add new item'}
-            onChange={this.handleNewItemChange}
-            onKeyPress={e => e.key === 'Enter' ? this.addChild() : null }
-            value={this.state.newItemValue}
-            style={{ width: '100%' }}
-            helperText={this.state.newItemErrorText}
-          />
-          {!this.state.newItemErrorText 
-          && (
-            <span>
-              <Tooltip title="Add item to the list" placement="top">
-                <IconButton
-                  id={this.props.id + "AddButton"}
-                  className={'listButtonLarge'}
-                  onClick={this.addChild}
-                >
-                  <Icon className={'fa fa-plus-circle listIcon'} />
-                </IconButton>
-              </Tooltip>
-              
-            </span>
-          )
-          }
-        </div>
-        
+      <Grid container spacing={1}>
+        <Grid container item xs={12}>
+          <Grid item xs={11}>
+            <TextField
+              variant="filled"
+              id={this.props.id}
+              label={this.props.label ? 'Add new ' + this.props.label : 'Add new item'}
+              onChange={this.handleNewItemChange}
+              onKeyPress={e => e.key === 'Enter' ? this.addChild() : null }
+              value={this.state.newItemValue}
+              style={{ width: '100%' }}
+              helperText={this.state.newItemErrorText}
+            />
+          </Grid>
 
-        {childrenWithExtraProp.length > 0 && (
-          <div 
-            style={{ marginTop: '15px', marginLeft: '50px', paddingRight: '15px', padding: '0px 5px', float: 'left' }}
-          >
-            {childrenWithExtraProp}
-          </div>
-        )}
-      </div>
+          <Grid item xs={1}>
+            <Tooltip title="Add item to the list" placement="top">
+              <IconButton
+                onClick={this.addChild}
+                color="primary"
+              >
+                <Icon className="fa fa-plus-circle"/>
+              </IconButton>
+            </Tooltip>
+          </Grid>
+        
+        </Grid>
+        
+        <Grid container item xs={12} spacing={1}>
+          {childrenWithExtraProp}
+          
+        </Grid>
+        
+      </Grid>
     )
   }
 }

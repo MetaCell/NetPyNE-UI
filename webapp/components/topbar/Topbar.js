@@ -3,7 +3,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Menu from '@geppettoengine/geppetto-client/js/components/interface/menu/Menu';
 
 import toolbarConfig from './configuration'
-import { bgDark } from '../../theme'
+import { bgRegular, bgLight, font } from '../../theme'
 
 import LoadFileDialog from './dialogs/LoadFile';
 import SaveFileDialog from './dialogs/SaveFile';
@@ -18,7 +18,7 @@ import { SwitchPageButton } from 'netpyne/components'
 
 const styles = () => ({ 
   topbar: { 
-    backgroundColor: bgDark,
+    backgroundColor: bgRegular,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between'

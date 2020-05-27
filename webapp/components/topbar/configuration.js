@@ -1,36 +1,56 @@
-import { bgLight, bgRegular, font, bgDark, fontColor } from '../../theme'
+import React from 'react';
+import { bgRegular, bgDark, font, primaryColor, gutter, radius } from '../../theme'
+
 import { openTopbarDialog, changePageTransitionMode } from '../../redux/actions/topbar'
 import { TOPBAR_CONSTANTS } from '../../constants'
+
+
 const style = {
   standard: {
-    background: bgDark,
-    backgroundColor: bgDark,
+    background: bgRegular,
     borderRadius: 0,
     border: 0,
     boxShadow: '0px 0px',
-    color: fontColor,
-    fontSize: '1rem',
+    color: '#ffffff',
+    paddingLeft: 30,
+    paddingRight: 30,
+    fontSize: 16,
+    fontWeight: 400,
     fontFamily: font,
     margin: '0px 0px 0px 0px',
-    width: 'auto',
+    height: '100%',
+    borderLeft: 0,
+    borderRight: 0,
+    borderBottom: 0,
     textTransform: 'capitalize',
     textAlign: 'left',
     justifyContent: 'start',
-    fontWeight: '400',
-    minWidth: 'auto'
+
+    'hr': {}
+
   },
-  lighter: {
-    background: bgRegular,
-    backgroundColor: bgRegular,
-  },
-  labels: {
-    fontSize: '14px',
-    paddingTop: '8px',
-    paddingBottom: '8px',
-    width: 'auto'
+  lighter: { background: primaryColor },
+  padding: {
+    fontSize: 16,
+    paddingTop: `calc(${gutter} / 2)`,
+    paddingBottom: `calc(${gutter} / 2)`
   }
-  
+
 }
+
+const topLevelMenuItemStyle = {
+  standard: {
+    paddingLeft: `calc(${gutter} / 2)`,
+    paddingRight: `calc(${gutter} / 2)`,
+    background: bgDark,
+  },
+  hover: {
+    paddingLeft: `calc(${gutter} / 2)`,
+    paddingRight: `calc(${gutter} / 2)`,
+    background: '#202020',
+  },
+};
+
 
 export default {
   global: {
@@ -40,8 +60,8 @@ export default {
     menuPadding: 0,
     fontFamily: font,
     menuFontSize: "14",
-    subMenuFontSize: "14",
-    backgroundColor: bgDark,
+    subMenuFontSize: "12",
+    background: bgRegular,
     buttonsStyle: {
       standard: style.standard,
       hover: {
@@ -49,23 +69,31 @@ export default {
         ...style.lighter
       }
     },
-    drawersStyle: { 
-      standard: { 
-        borderTop: 'none', 
-        borderBottom: 'none', 
-        borderRight: 'none', 
-        borderLeft: 'none', 
-        fontFamily: font,
-      }, hover: {}
-    },
     labelsStyle: {
-      standard: { ...style.labels, },
+      standard: { ...style.padding, },
       hover: {
         ...style.lighter,
-        ...style.labels
+        ...style.padding
       }
-    }
+    },
+    drawersStyle: {
+      standard: {
+        top: 10,
+        backgroundColor: bgDark,
+        borderRadius: 0,
+        color: '#ffffff',
+        fontSize: 14,
+        fontFamily: font,
+        minWidth: 110,
+        borderLeft: 0,
+        borderRight: 0,
+        borderBottom: 0,
+        borderBottomLeftRadius: radius,
+        borderBottomRightRadius: radius,
+      }
+    },
   },
+  itemOptions: { customArrow: <i className="fa fa-caret-right menu-caret" /> },
   buttons: [
     {
       label: "NetPyNE",
@@ -88,12 +116,14 @@ export default {
             parameters: []
           }
         },
-      ]
+      ],
+      styles: topLevelMenuItemStyle
     },
     {
       label: "File",
       position: "bottom-start",
       icon: "",
+      styles: topLevelMenuItemStyle,
       list: [
         {
           label: "New",
@@ -189,6 +219,7 @@ export default {
       label: "Model",
       icon: "",
       position: "bottom-start",
+      styles: topLevelMenuItemStyle,
       list: [
         {
           label: TOPBAR_CONSTANTS.CREATE_NETWORK,
@@ -219,6 +250,7 @@ export default {
     {
       label: "Help",
       icon: "",
+      styles: topLevelMenuItemStyle,
       action: {
         handlerAction: '',
         parameters: []

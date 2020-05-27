@@ -13,7 +13,7 @@ require('./css/tree.less');
 
 export const {
   primaryColor, secondaryColor, font, fontColor, 
-  bgLight, bgRegular, bgDark, bgDarker, bgDarkest, bgInputs 
+  bgLight, bgRegular, bgDark, bgDarker, bgDarkest, bgInputs, gutter, radius
 } = vars;
 
 
@@ -69,7 +69,11 @@ const rawTheme = {
     MuiCard: { root: { backgroundColor: bgDarker, overflowY: 'auto', flex: 1 } },
     MuiBottomNavigation: { root: { backgroundColor: bgRegular } },
     MuiPaper: { root: { color: 'inherit', backgroundColor: bgRegular } },
-    MuiBottomNavigationAction: { root: { color: fontColor, textTransform: 'uppercase' } },
+    MuiBottomNavigationAction: { 
+      root: { color: fontColor, textTransform: 'uppercase' },
+      label: { fontSize: "0.65rem", "&.Mui-selected": { fontSize: "0.65rem" } },
+    },
+    MuiFormControl: { root: { overflow: 'hidden' } },
     MuiFab:{ 
       secondary: { color: fontColor },
       primary: { color: fontColor } 
@@ -82,9 +86,19 @@ const rawTheme = {
       containedSecondary: { color: fontColor },
       containedPrimary: { color: fontColor },
     },
-    MuiMenuItem: { root: { color: fontColor } },
-
-    MuiListItemText: { root: { color: fontColor } },
+    MuiMenuItem: { 
+      root:{
+        color: fontColor,
+        paddingTop: `calc(${gutter} / 2)`, 
+        fontSize: '1.0rem', 
+        fontWeight: 200
+      },
+      gutters: {
+        paddingLeft: `calc(${gutter} * 2)`,
+        paddingRight: `calc(${gutter} * 2)`
+      }
+       
+    },
     MuiDialogTitle: { root: { color: fontColor } },
     MuiTypography: { root: { color: fontColor } },
     MuiCollapse: { 

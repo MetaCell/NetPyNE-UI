@@ -17,7 +17,12 @@ const styles = ({ zIndex, palette, spacing }) => ({
     flexDirection: "column"
   },
   topbar: { position: "relative", zIndex: zIndex.drawer + 1 },
-  content: { flexGrow:1, display: 'flex', flexDirection: 'row', position: 'relative' }
+  content: { 
+    flexGrow:1, 
+    display: 'flex', 
+    flexDirection: 'row',
+    position: 'relative' 
+  }
 });
 
 import { EDIT_WIDGETS, PYTHON_CONSOLE_WIDGET, WidgetStatus } from '../constants'

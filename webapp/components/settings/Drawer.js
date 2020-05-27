@@ -21,7 +21,7 @@ import DrawerIcon from '../general/NetPyNEIcons';
 import useStyles from './useStyles';
 import Tooltip from '../general/Tooltip'
 
-const drawerOpenWidth = 200;
+const drawerOpenWidth = 160;
 const drawerCloseWidth = 44;
 
 
