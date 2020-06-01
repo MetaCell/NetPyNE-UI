@@ -25,36 +25,29 @@ const drawerOpenWidth = 160;
 const drawerCloseWidth = 44;
 
 
-const DrawerItem = ({ id, name, widget, expanded, createOrFocusWidget, classes }) => {
-  const drawerItemContent = (
-    <ListItem
-      button
-      key={id}
-      dense
-      disableGutters
-      className={widget ? classes.selected : classes.unselected}
-      onClick={() => createOrFocusWidget(id)}
-    >
-      <ListItemIcon className={classes.icon}>
-        <DrawerIcon name={id} selected={widget && widget.status !== WidgetStatus.MINIMIZED} />
-      </ListItemIcon>
-      <ListItemText className={classes.text}>
-        <Typography noWrap>{name}</Typography>
-      </ListItemText>
-    </ListItem>
-  )
-
-  if (expanded) {
-    return drawerItemContent
-  }
-
-  return (
-    <Tooltip title={name} placement="right" >
-      {drawerItemContent}
-    </Tooltip>
-  )
-  
-}
+const DrawerItem = ({ id, name, widget, expanded, createOrFocusWidget, disabled, classes }) => (
+  <Tooltip title={expanded ? "" : name} placement="right" >
+    <div>
+      <ListItem
+        button
+        key={id}
+        dense
+        disableGutters
+        disabled={disabled}
+        className={widget ? classes.selected : classes.unselected}
+        onClick={() => createOrFocusWidget(id)}
+      >
+        <ListItemIcon className={classes.icon}>
+          <DrawerIcon name={id} selected={widget && widget.status !== WidgetStatus.MINIMIZED} />
+        </ListItemIcon>
+        <ListItemText className={classes.text}>
+          <Typography noWrap>{name}</Typography>
+        </ListItemText>
+      </ListItem>
+    </div>
+    
+  </Tooltip>
+)
 
 export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
   const [expand, setExpand] = useState(false)
@@ -107,6 +100,7 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
         id={id}
         name={name}
         widget={widget}
+        disabled={widget.disabled}
         expanded={expand}
         classes={classes}
         createOrFocusWidget={createOrFocusWidget}
@@ -124,9 +118,9 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
             {getMenu().map(mapItem)}
           </List>
         </div>
-        <div></div>
 
-        
+        <div/>
+
         <div className={classes.buttonContainer}>
           <Tooltip title={expand ? "Collapse" : "Expand"}>  
             <IconButton

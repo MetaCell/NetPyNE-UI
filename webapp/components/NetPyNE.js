@@ -5,10 +5,10 @@ import {
   LayoutManager,
   Drawer
 } from "netpyne/components";
-
+import Splash from './general/Splash'
 import { withStyles } from '@material-ui/core/styles'
 import Utils from '../Utils';
-const styles = ({ zIndex, palette, spacing }) => ({
+const styles = ({ zIndex }) => ({
   root: { height: '100%', overflow: 'hidden' },
   container: {
     height: "100%",

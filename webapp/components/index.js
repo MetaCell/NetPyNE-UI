@@ -212,7 +212,8 @@ export const Topbar = connect(
     dialogOpen: state.topbar.dialogOpen,
     editMode: state.general.editMode,
     topbarDialogName: state.topbar.dialogName,
-    pageTransitionMode: state.topbar.pageTransitionMode
+    pageTransitionMode: state.topbar.pageTransitionMode,
+    modelLoaded: state.general.modelLoaded 
   }),
   dispatch => ({ 
     dispatchAction: action => dispatch(action),

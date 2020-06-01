@@ -4,6 +4,7 @@ import Menu from '@geppettoengine/geppetto-client/js/components/interface/menu/M
 
 import toolbarConfig from './configuration'
 import { bgRegular, bgLight, font } from '../../theme'
+import Splash from '../general/Splash'
 
 import LoadFileDialog from './dialogs/LoadFile';
 import SaveFileDialog from './dialogs/SaveFile';
@@ -126,8 +127,8 @@ class Topbar extends Component {
           />
           <SwitchPageButton/>
 
-          
-        </div>  
+        </div>
+        { this.props.modelLoaded ? null : <Splash/> }
         <Snackbar
           message={this.snackBarMessage}
           autoHideDuration={4000}

@@ -472,7 +472,7 @@ export default class NetPyNECellRules extends React.Component {
     switch (rule) {
     case 'cellRule':
       if (page !== 'main'){
-        return 'CR'
+        return 'CT'
       } else {
         return <ContentAdd style={{ color: 'white' }}/>
       }
