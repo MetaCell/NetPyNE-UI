@@ -37,7 +37,7 @@ export default class PlotRaster extends React.Component {
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotRaster.maxSpikes" >
-        <NetPyNETextField variant="filled" model={tag + "['maxSpikes']"}/>
+        <NetPyNETextField fullWidth variant="filled" model={tag + "['maxSpikes']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotRaster.orderBy" className="listStyle" >
@@ -53,7 +53,7 @@ export default class PlotRaster extends React.Component {
       </NetPyNEField>
         
       <NetPyNEField id="simConfig.analysis.plotRaster.spikeHistBin" >
-        <NetPyNETextField variant="filled" model={tag + "['spikeHistBin']"}/>
+        <NetPyNETextField fullWidth variant="filled" model={tag + "['spikeHistBin']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotRaster.orderInverse" className={"netpyneCheckbox"} >

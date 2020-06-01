@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Select from '../../general/Select';
 import Utils from '../../../Utils';
-
+import Box from '@material-ui/core/Box';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles'
@@ -133,6 +133,7 @@ class NetPyNESynapse extends React.Component {
           <NetPyNEField id="netParams.synMechParams.tau1">
             <NetPyNETextField
               variant="filled" 
+              fullWidth
               model={"netParams.synMechParams['" + this.props.name + "']['tau1']"}
             />
           </NetPyNEField>
@@ -140,6 +141,7 @@ class NetPyNESynapse extends React.Component {
           {(this.state.synMechMod == "Exp2Syn") ? <div>
             <NetPyNEField id="netParams.synMechParams.tau2">
               <NetPyNETextField
+                fullWidth
                 variant="filled" 
                 model={"netParams.synMechParams['" + this.props.name + "']['tau2']"}
               />
@@ -149,6 +151,7 @@ class NetPyNESynapse extends React.Component {
           <NetPyNEField id="netParams.synMechParams.e" >
             <NetPyNETextField
               variant="filled" 
+              fullWidth
               model={"netParams.synMechParams['" + this.props.name + "']['e']"}
             />
           </NetPyNEField>
@@ -158,16 +161,17 @@ class NetPyNESynapse extends React.Component {
 
     return (
       <div>
-        <TextField
-          variant="filled"
-          id={"synapseName"}
-          onChange={this.handleRenameChange}
-          value = {this.state.currentName}
-          disabled={this.renaming}
-          className={"netpyneField"}
-          label="Synapse name"
-          style={{ marginTop: 8 }}
-        />
+        <Box mb={1}>
+          <TextField
+            fullWidth
+            variant="filled"
+            onChange={this.handleRenameChange}
+            value = {this.state.currentName}
+            disabled={this.renaming}
+            label="The name of the synapse"
+          />
+        </Box>
+        
         
         <NetPyNEField id="netParams.synMechParams.mod" className={classes.selectField}>
           <Select 

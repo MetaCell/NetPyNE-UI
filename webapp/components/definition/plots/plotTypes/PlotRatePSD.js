@@ -30,23 +30,23 @@ export default class PlotRatePSD extends React.Component {
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotRatePSD.binSize" >
-        <NetPyNETextField variant="filled" model={tag + "['binSize']"}/>
+        <NetPyNETextField fullWidth variant="filled" model={tag + "['binSize']"}/>
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotRatePSD.maxFreq" >
-        <NetPyNETextField variant="filled" model={tag + "['maxFreq']"}/>
+        <NetPyNETextField fullWidth variant="filled" model={tag + "['maxFreq']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotRatePSD.NFFT" >
-        <NetPyNETextField variant="filled" model={tag + "['NFFT']"}/>
+        <NetPyNETextField fullWidth variant="filled" model={tag + "['NFFT']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotRatePSD.noverlap" >
-        <NetPyNETextField variant="filled" model={tag + "['noverlap']"}/>
+        <NetPyNETextField fullWidth variant="filled" model={tag + "['noverlap']"}/>
       </NetPyNEField>
 
       <NetPyNEField id="simConfig.analysis.plotRatePSD.smooth" >
-        <NetPyNETextField variant="filled" model={tag + "['smooth']"}/>
+        <NetPyNETextField fullWidth variant="filled" model={tag + "['smooth']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotRatePSD.overlay" className={"netpyneCheckbox"} >

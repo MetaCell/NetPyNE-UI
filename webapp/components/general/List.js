@@ -5,10 +5,11 @@ import Icon from '@material-ui/core/Icon';
 import Tooltip from './Tooltip'
 import Chip from '@material-ui/core/Chip'
 import Grid from '@material-ui/core/Grid'
+import { withStyles } from '@material-ui/core/styles'
 /**
  * Generic List/Dict Component
  */
-export default class ListComponent extends Component {
+class ListComponent extends Component {
 
   constructor (props) {
     super(props);
@@ -220,9 +221,10 @@ export default class ListComponent extends Component {
       
     });
 
+    const { classes } = this.props
     return (
       <Grid container spacing={1}>
-        <Grid container item xs={12}>
+        <Grid container item xs={12} alignItems="center">
           <Grid item xs={11}>
             <TextField
               variant="filled"
@@ -239,6 +241,7 @@ export default class ListComponent extends Component {
           <Grid item xs={1}>
             <Tooltip title="Add item to the list" placement="top">
               <IconButton
+                className={classes.addButton}
                 onClick={this.addChild}
                 color="primary"
               >
@@ -258,3 +261,8 @@ export default class ListComponent extends Component {
     )
   }
 }
+
+
+const styles = () => ({ addButton: { height: 48 } })
+
+export default withStyles(styles)(ListComponent)

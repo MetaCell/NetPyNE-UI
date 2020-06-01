@@ -3,7 +3,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 
 import Button from '@material-ui/core/Button';
-
+import Box from '@material-ui/core/Box'
 import Dialog from '@material-ui/core/Dialog/Dialog';
 
 import DialogActions from '@material-ui/core/DialogActions';
@@ -102,16 +102,14 @@ class NetPyNECellRule extends React.Component {
             value={this.state.currentName}
             disabled={this.renaming}
             label="The name of the cell type"
-            className={"netpyneField"}
             id={"cellRuleName"}
-            style={{ marginTop: 8 }}
           />
 
           
           <ExpansionPanel className={classes.expandable} elevation={0}>
-            <div>
+            <Box mb={1}>
               <b>Conditions (optional):</b>
-            </div>
+            </Box>
 
             <NetPyNEField id={"netParams.cellParams.conds.cellModel"} >
               <NetPyNESelectField

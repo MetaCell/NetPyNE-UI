@@ -3,7 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import FontIcon from '@material-ui/core/Icon';
 import Utils from '../../../Utils';
-
+import Box from '@material-ui/core/Box'
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
 
@@ -146,20 +146,23 @@ class NetPyNEPopulation extends React.Component {
       : undefined
     if (this.state.sectionId == "General") {
       var content = (
-        <div id="populationMetadata">
-          <TextField
-            variant="filled"
-            onChange={this.handleRenameChange}
-            value={this.state.currentName}
-            disabled={this.renaming}
-            label="The name of your population"
-            className={"netpyneField"}
-            id={"populationName"}
-          />
+        <div>
+          <Box mb={1}>
+            <TextField
+              variant="filled"
+              fullWidth
+              onChange={this.handleRenameChange}
+              value={this.state.currentName}
+              disabled={this.renaming}
+              label="The name of the population"
+            />
+          </Box>
+          
 
           <NetPyNEField id="netParams.popParams.cellType" >
             <NetPyNETextField
               variant="filled" 
+              fullWidth
               callback={(newValue, oldValue) => {
                 Utils.evalPythonMessage("netpyne_geppetto.propagate_field_rename", ['cellType', newValue, oldValue])
                 this.props.updateCards()
@@ -214,10 +217,9 @@ class NetPyNEPopulation extends React.Component {
 
     return (
       <div>
-        <BottomNavigation component={Paper} showLabels style={{ borderRadius: '4px' }} value={this.state.selectedIndex}>
+        <BottomNavigation component={Paper} showLabels value={this.state.selectedIndex}>
           {this.getModelParameters()}
         </BottomNavigation>
-        <br />
         {content}
       </div>
     );

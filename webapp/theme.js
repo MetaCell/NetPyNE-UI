@@ -41,7 +41,6 @@ const rawTheme = {
     }
   },
   overrides: {
-    MuiInputLabel: { formControl: { top: '-6px' } },
     MuiInput: {
       input: {
         outline: 'none !important', 
@@ -57,7 +56,7 @@ const rawTheme = {
         border: 'none !important', 
         boxShadow: 'none !important'
       },
-      select: { "&:focus" :{ background: "none" }, paddingLeft: '4px' },
+      select: { "&:focus" :{ background: "none" } },
     },
     MuiGrid: {
       root: {
@@ -67,13 +66,13 @@ const rawTheme = {
       }
     },
     MuiCard: { root: { backgroundColor: bgDarker, overflowY: 'auto', flex: 1 } },
-    MuiBottomNavigation: { root: { backgroundColor: bgRegular } },
+    MuiBottomNavigation: { root: { backgroundColor: bgRegular, marginBottom: 8, borderRadius: 4 } },
     MuiPaper: { root: { color: 'inherit', backgroundColor: bgRegular } },
     MuiBottomNavigationAction: { 
       root: { color: fontColor, textTransform: 'uppercase' },
       label: { fontSize: "0.65rem", "&.Mui-selected": { fontSize: "0.65rem" } },
     },
-    MuiFormControl: { root: { overflow: 'hidden' } },
+    MuiFormControl: { root: { overflow: 'visible' } },
     MuiFab:{ 
       secondary: { color: fontColor },
       primary: { color: fontColor } 

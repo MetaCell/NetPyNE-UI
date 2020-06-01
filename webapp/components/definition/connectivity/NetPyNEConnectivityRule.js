@@ -10,6 +10,8 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import MenuItem from "@material-ui/core/MenuItem";
 import Paper from '@material-ui/core/Paper'
+import Box from '@material-ui/core/Box';
+
 import {
   NetPyNESelectField,
   NetPyNEField,
@@ -100,48 +102,50 @@ export default class NetPyNEConnectivityRule extends React.Component {
   }
 
   render () {
-    var dialogPop
-      = this.state.errorMessage != undefined ? (
-        <Dialog open={true} style={{ whiteSpace: "pre-wrap" }}>
-          <DialogTitle id="alert-dialog-title">
-            {this.state.errorMessage}
-          </DialogTitle>
-          <DialogContent style={{ overflow: "auto" }}>
-            <DialogContentText id="alert-dialog-description">
-              {this.state.errorDetails}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() =>
-                this.setState({
-                  errorMessage: undefined,
-                  errorDetails: undefined
-                })
-              }
-            >
+    const dialogPop = this.state.errorMessage != undefined ? (
+      <Dialog open={true} style={{ whiteSpace: "pre-wrap" }}>
+        <DialogTitle id="alert-dialog-title">
+          {this.state.errorMessage}
+        </DialogTitle>
+        <DialogContent style={{ overflow: "auto" }}>
+          <DialogContentText id="alert-dialog-description">
+            {this.state.errorDetails}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() =>
+              this.setState({
+                errorMessage: undefined,
+                errorDetails: undefined
+              })
+            }
+          >
               BACK
-            </Button>
-          </DialogActions>
-        </Dialog>
-      ) : (
-        undefined
-      );
+          </Button>
+        </DialogActions>
+      </Dialog>
+    ) : (
+      undefined
+    );
 
     if (this.state.sectionId == "General") {
       var content = (
         <div>
-          <TextField
-            variant="filled" 
-            id={"ConnectivityName"}
-            onChange={this.handleRenameChange}
-            value={this.state.currentName}
-            disabled={this.renaming}
-            label="The name of the connectivity rule"
-            className="netpyneField"
-          />
+          <Box mb={1}>
+            <TextField
+              fullWidth
+              variant="filled" 
+              id={"ConnectivityName"}
+              onChange={this.handleRenameChange}
+              value={this.state.currentName}
+              disabled={this.renaming}
+              label="The name of the connectivity rule"
+            />
+          </Box>
+
 
           <NetPyNEField id="netParams.connParams.sec" className="listStyle">
             <ListComponent
@@ -160,6 +164,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
               model={
                 "netParams.connParams['" + this.props.name + "']['synMech']"
               }
+              fullWidth
               method={"netpyne_geppetto.getAvailableSynMech"}
               postProcessItems={(pythonData, selected) =>
                 pythonData.map(name => (
@@ -172,31 +177,31 @@ export default class NetPyNEConnectivityRule extends React.Component {
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.convergence">
-            <NetPyNETextField variant="filled" model={"netParams.connParams['" + this.props.name + "']['convergence']"}/>
+            <NetPyNETextField fullWidth variant="filled" model={"netParams.connParams['" + this.props.name + "']['convergence']"}/>
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.divergence">
-            <NetPyNETextField variant="filled" model={"netParams.connParams['" + this.props.name + "']['divergence']"}/>
+            <NetPyNETextField fullWidth variant="filled" model={"netParams.connParams['" + this.props.name + "']['divergence']"}/>
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.probability">
-            <NetPyNETextField variant="filled" model={"netParams.connParams['" + this.props.name + "']['probability']"}/>
+            <NetPyNETextField fullWidth variant="filled" model={"netParams.connParams['" + this.props.name + "']['probability']"}/>
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.synsPerConn">
-            <NetPyNETextField variant="filled" model={"netParams.connParams['" + this.props.name + "']['synsPerConn']"}/>
+            <NetPyNETextField fullWidth variant="filled" model={"netParams.connParams['" + this.props.name + "']['synsPerConn']"}/>
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.weight">
-            <NetPyNETextField variant="filled" model={"netParams.connParams['" + this.props.name + "']['weight']"}/>
+            <NetPyNETextField fullWidth variant="filled" model={"netParams.connParams['" + this.props.name + "']['weight']"}/>
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.delay">
-            <NetPyNETextField variant="filled" model={"netParams.connParams['" + this.props.name + "']['delay']"} />
+            <NetPyNETextField fullWidth variant="filled" model={"netParams.connParams['" + this.props.name + "']['delay']"} />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.plasticity">
-            <NetPyNETextField variant="filled" model={"netParams.connParams['" + this.props.name + "']['plasticity']"}/>
+            <NetPyNETextField fullWidth variant="filled" model={"netParams.connParams['" + this.props.name + "']['plasticity']"}/>
           </NetPyNEField>
           {dialogPop}
         </div>
@@ -223,6 +228,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
                 + this.props.name
                 + "']['preConds']['cellModel']"
               }
+              fullWidth
               method={"netpyne_geppetto.getAvailableCellModels"}
               postProcessItems={this.postProcessMenuItems}
               multiple
@@ -230,6 +236,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
           </NetPyNEField>
           <NetPyNEField id={"netParams.connParams.preConds.cellType"}>
             <NetPyNESelectField
+              fullWidth
               model={
                 "netParams.connParams['"
                 + this.props.name
@@ -285,6 +292,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
                 + this.props.name
                 + "']['postConds']['pop']"
               }
+              fullWidth
               method={"netpyne_geppetto.getAvailablePops"}
               postProcessItems={this.postProcessMenuItems}
               multiple
@@ -300,6 +308,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
               method={"netpyne_geppetto.getAvailableCellModels"}
               postProcessItems={this.postProcessMenuItems}
               multiple
+              fullWidth
             />
           </NetPyNEField>
           <NetPyNEField id={"netParams.connParams.postConds.cellType"}>
@@ -312,6 +321,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
               method={"netpyne_geppetto.getAvailableCellTypes"}
               postProcessItems={this.postProcessMenuItems}
               multiple
+              fullWidth
             />
           </NetPyNEField>
 
@@ -384,10 +394,9 @@ export default class NetPyNEConnectivityRule extends React.Component {
 
     return (
       <div>
-        <BottomNavigation component={Paper} showLabels style={{ borderRadius: '4px' }} value={this.state.selectedIndex}>
+        <BottomNavigation component={Paper} showLabels value={this.state.selectedIndex}>
           {bottomNavigationItems}
         </BottomNavigation>
-        <br />
         {content}
       </div>
     );

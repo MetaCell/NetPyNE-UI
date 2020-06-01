@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import Grid from '@material-ui/core/Grid';
 /**
  * The adapter component provides a mechanism to group graphical components.
  * that act as a single component when communicating to python.
@@ -60,9 +60,10 @@ export default class AdapterComponent extends Component {
     }));
 
     return (
-      <div>
-        {childrenWithExtraProp}
-      </div>
+      <Grid container spacing={1}>
+        <Grid item>{childrenWithExtraProp[0]}</Grid>
+        <Grid item>{childrenWithExtraProp[1]}</Grid>
+      </Grid>
     )
   }
 }

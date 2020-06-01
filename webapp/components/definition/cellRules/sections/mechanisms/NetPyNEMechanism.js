@@ -1,16 +1,10 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Utils from '../../../../../Utils';
-import { withStyles } from '@material-ui/core/styles';
-import { NetPyNETextField, } from 'netpyne/components';
+import Box from '@material-ui/core/Box'
+import { NetPyNETextField } from 'netpyne/components';
  
-const styles = ({ spacing }) => ({
-  fields: { 
-    marginTop: spacing(3),
-    width: '100%'
-  } 
-})
-class NetPyNEMechanism extends React.Component {
+export default class NetPyNEMechanism extends React.Component {
 
   constructor (props) {
     super(props);
@@ -24,19 +18,32 @@ class NetPyNEMechanism extends React.Component {
     this.setState({ currentName: nextProps.name });
   }
   
-  renderMechFields = classes => {
+  renderMechFields = () => {
     if (this.state.mechFields == '') {
       return <div key={"empty"}/>
-    } else {
-      var tag = "netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.section + "']['mechs']['" + this.state.currentName + "']"
-      return this.state.mechFields.map((name, i) =>
-        <NetPyNETextField variant="filled" variant="filled" id={"mechName" + name} name={name} key={name} model={tag + "['" + name + "']"} label={name} realType={"float"} className={classes.fields}/>
-      )
-    }
+    } 
+
+    const { currentName } = this.state
+    const { cellRule, section, } = this.props
+    let tag = `netParams.cellParams['${cellRule}']['secs']['${section}']['mechs']['${currentName}']`
+    
+    return this.state.mechFields.map((name, i) => (
+      <Box mb={1} key={name}>
+        <NetPyNETextField 
+          fullWidth
+          variant="filled"
+          name={name} 
+          model={`${tag}['${name}']`}
+          label={name}
+          realType={"float"}
+        />
+      </Box>
+      
+    ))
+    
   };
 
   render () {
-    const { classes } = this.props
     var content = []
     if (this.state.currentName != undefined && this.state.currentName != '') {
       Utils
@@ -46,25 +53,23 @@ class NetPyNEMechanism extends React.Component {
             this.setState({ mechFields: response })
           }
         })
-      content.push(this.renderMechFields(classes))
+      content.push(this.renderMechFields())
     }
     
     return (
       <div>
-        <TextField
-          variant="filled" 
-          id={"singleMechName"}
-          key="netpyneField"
-          value={this.state.currentName}
-          label="Mechanism"
-          className={"netpyneField"}
-          disabled={true}
-          style={{ marginTop: 8 }}
-        />
-        <br />
+        <Box mb={1}>
+          <TextField
+            variant="filled" 
+            fullWidth
+            value={this.state.currentName}
+            label="The name of the mechanism"
+            disabled={true}
+          />
+        </Box>
+        
         {content}
       </div>
     );
   }
 }
-export default withStyles(styles)(NetPyNEMechanism)

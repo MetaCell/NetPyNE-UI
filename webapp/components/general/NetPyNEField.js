@@ -9,6 +9,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { Tooltip } from 'netpyne/components'
+import Grid from '@material-ui/core/Grid'
+import Box from '@material-ui/core/Box'
 
 export default class NetPyNEField extends Component {
   constructor (props) {
@@ -65,12 +68,16 @@ export default class NetPyNEField extends Component {
       var help = Utils.getMetadataField(this.props.id, "help");
       if (help != undefined && help != '') {
         var helpComponent = (
-          <div className="helpIcon">
-            <i 
-              className="fa fa-question"
-              aria-hidden="true"
-              onClick={() => this.handleOpenHelp(help)}
-            />
+          <div>
+            <Tooltip title="Help" placement="top">
+              <div className="helpIcon">
+                <i 
+                  className="fa fa-question"
+                  aria-hidden="true"
+                  onClick={() => this.handleOpenHelp(help)}
+                />
+              </div>
+            </Tooltip>
             <Dialog
               style={{ zIndex: 5000 }}
               open={this.state.openHelp}
@@ -93,6 +100,7 @@ export default class NetPyNEField extends Component {
               </DialogActions>
             </Dialog>
           </div>
+          
         )
       }
 
@@ -136,7 +144,6 @@ export default class NetPyNEField extends Component {
 
         var options = Utils.getMetadataField(this.props.id, "options");
         if (options) {
-          extraProps['pepe'] = 22
           extraProps['children'] = options.map(name => (
             <MenuItem
               id={name}
@@ -152,24 +159,20 @@ export default class NetPyNEField extends Component {
       });
 
       var classes = [];
-      if (!this.props.noStyle) {
-        classes.push("netpyneField");
-      }
       if (this.props.className) {
         classes.push(this.props.className);
       }
-      if (classes.length > 0) {
-        var className = { className: classes.join(" ") }
-      }
 
       return (
-        <div style={{ ...this.props.style, display:'flex' }} {...className}>
-          <div style={{ float: 'left' }}>
-            {childWithProp}
-          </div>
+        <Grid container alignItems="center">
+          <Grid item>
+            <Box mb={1} width="100%">
+              {childWithProp}
+            </Box>
+            
+          </Grid>
           {helpComponent}
-          <div style={{ clear: "both" }}></div>
-        </div>
+        </Grid>
       );
     }
 }
