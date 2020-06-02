@@ -112,7 +112,7 @@ export default class NetPyNEField extends Component {
             name = child.type.options.name
           }
         }
-        if (["Select", "TextField", "Checkbox", "MuiTextField", "PythonControlledControlWithPythonDataFetch"].indexOf(name) === -1){
+        if (["Select", "TextField", "MuiFormControl", "Checkbox", "MuiTextField", "PythonControlledControlWithPythonDataFetch"].indexOf(name) === -1){
           extraProps['validate'] = this.setErrorMessage;
           extraProps['prePythonSyncProcessing'] = this.prePythonSyncProcessing;
 
@@ -154,6 +154,11 @@ export default class NetPyNEField extends Component {
             </MenuItem>
           ));
         }
+
+        // // This seems a more material way to add the help icon (at least for TextFields)
+        // if (child.props.fullWidth) {
+        //   extraProps.InputProps = { endAdornment: helpComponent }
+        // }
 
         return React.cloneElement(child, extraProps);
       });

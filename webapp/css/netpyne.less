@@ -17,6 +17,9 @@ body {
 }
 @gutter: 16px;
 @flexlayout-widget-border: 8px;
+@icon-size: 24px;
+@font-size: 16px;
+
 #footer {
   z-index: 2 !important;
 }
@@ -135,11 +138,12 @@ button.actionButton {
 .helpIcon {
   display: flex;
   align-items: center;
-  margin-left: 10px;
-  float: left;
-  font-size: 15px;
+  font-size: @font-size;
   color: #aaaaaa;
   cursor: pointer;
+  width: @icon-size;
+  height: @icon-size;
+  justify-content: center;
 }
 .helpIcon:hover {
   color: @primaryColor;
@@ -396,14 +400,6 @@ button.actionButton {
   }
 }
 
-.code-p {
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 3px;
-  background-color: rgba(0, 0, 0, 0.05);
-  padding: 2px; 
-  margin: 4px;
-}
-
 .fx-center {
   align-items: center;
 }
@@ -457,3 +453,16 @@ div.flexlayout__layout{
   color: @bgLight;
 }
 .menu-item-label { min-width: 10em }
+
+
+.spinner-backdrop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner-container {
+  position: unset;
+  top: unset;
+  left: unset;
+}

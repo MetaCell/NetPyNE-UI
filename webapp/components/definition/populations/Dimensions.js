@@ -102,7 +102,7 @@ class DimensionsComponent extends Component {
     return (
       <div>
         <NetPyNEField id="netParams.popParams.numCells" className={classes.selectField}>
-          <FormControl fullWidth margin="normal">
+          <FormControl fullWidth>
             <InputLabel>
               <Box mt={1} ml={2}>Dimension type</Box>
             </InputLabel>
@@ -129,7 +129,7 @@ class DimensionsComponent extends Component {
         {
           this.state.dimension != undefined && this.state.dimension != ""
             && (
-              <Box mt={1}>
+              <Box ml={1}>
                 <NetPyNEField id={"netParams.popParams." + this.state.dimension} className={classes.fields}>
                   <NetPyNETextField
                     fullWidth

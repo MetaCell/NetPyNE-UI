@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
-import Icon from '@material-ui/core/Icon';
+
 import Tooltip from './Tooltip'
 import Chip from '@material-ui/core/Chip'
 import Grid from '@material-ui/core/Grid'
+import NetPyNEIcon from '../general/NetPyNEIcons';
+import Box from '@material-ui/core/Box'
 import { withStyles } from '@material-ui/core/styles'
 /**
  * Generic List/Dict Component
@@ -213,51 +215,34 @@ class ListComponent extends Component {
       } else {
         var value = this.state.children[key];
       }
-      return (
-        <Grid item key={key}>
-          <Chip key={key}label={value} onDelete={() => this.removeChild(key)} color="primary" />
-        </Grid>
-      )
-      
+      return <Chip key={key} label={value} style={{ marginRight: 8 }} onDelete={() => this.removeChild(key)} color="primary" />
     });
 
     const { classes } = this.props
     return (
-      <Grid container spacing={1}>
-        <Grid container item xs={12} alignItems="center">
-          <Grid item xs={11}>
-            <TextField
-              variant="filled"
-              id={this.props.id}
-              label={this.props.label ? 'Add new ' + this.props.label : 'Add new item'}
-              onChange={this.handleNewItemChange}
-              onKeyPress={e => e.key === 'Enter' ? this.addChild() : null }
-              value={this.state.newItemValue}
-              style={{ width: '100%' }}
-              helperText={this.state.newItemErrorText}
-            />
-          </Grid>
+      <Box >
+        <TextField
+          variant="filled"
+          id={this.props.id}
+          label={this.props.label ? 'Add new ' + this.props.label : 'Add new item'}
+          onChange={this.handleNewItemChange}
+          onKeyPress={e => e.key === 'Enter' ? this.addChild() : null }
+          value={this.state.newItemValue}
+          fullWidth
+          helperText={this.state.newItemErrorText}
+          InputProps={{
+            endAdornment: (
+              <Tooltip title="Add item to the list" placement="top">
+                <IconButton size="small" onClick={this.addChild}>
+                  <NetPyNEIcon name="add"/>
+                </IconButton>
+              </Tooltip> 
+            )
+          }}
+        />
+        <Box m={1}>{childrenWithExtraProp}</Box>
 
-          <Grid item xs={1}>
-            <Tooltip title="Add item to the list" placement="top">
-              <IconButton
-                className={classes.addButton}
-                onClick={this.addChild}
-                color="primary"
-              >
-                <Icon className="fa fa-plus-circle"/>
-              </IconButton>
-            </Tooltip>
-          </Grid>
-        
-        </Grid>
-        
-        <Grid container item xs={12} spacing={1}>
-          {childrenWithExtraProp}
-          
-        </Grid>
-        
-      </Grid>
+      </Box>
     )
   }
 }

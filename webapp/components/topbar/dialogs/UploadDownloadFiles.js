@@ -9,9 +9,11 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
 
 import FileBrowser from '../../general/FileBrowser';
-
+import { Tooltip } from 'netpyne/components'
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = ({ spacing, typography, zIndex, palette }) => ({ 
@@ -222,25 +224,25 @@ class UploadDownloadFile extends React.Component {
         break;
       case 'DOWNLOAD':
         var content = (
-          <div className={classes.root}>
-            <div className={classes.container}>
-              <IconButton
-                className={classes.icon}
-                onClick={() => this.showExplorerDialog('.py')} 
-                tooltip-data='File explorer'
-              >
-                <Icon className={'fa fa-folder-o listIcon'} />
+          <Grid container alignItems="center" spacing={1}>
+            <Tooltip title="File explorer">
+              <IconButton onClick={() => this.showExplorerDialog('.py')} >
+                <Icon className={'fa fa-folder-o'} />
               </IconButton>
+            </Tooltip>
+
+
+            <Grid item>
               <TextField 
+                fullWidth
                 variant="filled" 
-                className='netpyneField'
                 value={this.state.downloadPathsDisplayText}
                 onChange={event => this.changeDownloadFilePathsDisplayText(event.target.value)}
                 label="Files:"
                 helperText="Select files to download"
               />
-            </div>
-          </div>
+            </Grid>
+          </Grid>
         )
 
         var buttonLabel = 'DOWNLOAD'
@@ -262,14 +264,7 @@ class UploadDownloadFile extends React.Component {
               {content}   
             </DialogContent>
             <DialogActions>
-              <Button 
-                onClick={() => {
-                  this.props.onRequestClose()
-                }}
-                style={{ marginRight: 10 }}
-              >
-                        CANCEL
-              </Button>
+              <Button onClick={() => this.props.onRequestClose()}>CANCEL</Button>
               <Button
                 color="primary"
                 id="appBarPerformActionButton"

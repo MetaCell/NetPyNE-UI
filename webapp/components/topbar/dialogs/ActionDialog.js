@@ -85,7 +85,6 @@ export default class ActionDialog extends React.Component {
         </DialogContent>
         <DialogActions>
           <Button 
-            color="primary" 
             onClick={this.cancelDialog} 
             style={styles.cancel}
             key="CANCEL"
