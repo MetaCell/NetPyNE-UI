@@ -177,7 +177,7 @@ export default class NetPyNEStimulationSources extends Component {
       <GridLayout>
         <div>
           <ExpansionPanel>
-            <div className="breadcrumby">
+            <div className="breadcrumb">
               <NetPyNEHome
                 selection={this.state.selectedStimulationSource}
                 handleClick={() => this.setState({ selectedStimulationSource: undefined })}

@@ -94,11 +94,11 @@ export default class NetPyNESection extends React.Component {
       content = (
         <div>
           <TextField
-            id={"cellParamsSectionName"}
+            fullWidth
+            variant="filled" 
             onChange={this.handleRenameChange}
             value = {this.state.currentName}
             label="The name of the section"
-            className={"netpyneField"}
           />
         </div>
       )
@@ -106,19 +106,19 @@ export default class NetPyNESection extends React.Component {
 
       content = (<div>
         <NetPyNEField id="netParams.cellParams.secs.geom.diam" >
-          <NetPyNETextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['diam']"} />
+          <NetPyNETextField fullWidth variant="filled" model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['diam']"} />
         </NetPyNEField>
 
         <NetPyNEField id="netParams.cellParams.secs.geom.L" >
-          <NetPyNETextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['L']"} />
+          <NetPyNETextField fullWidth variant="filled" model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['L']"} />
         </NetPyNEField>
 
         <NetPyNEField id="netParams.cellParams.secs.geom.Ra" >
-          <NetPyNETextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['Ra']"} />
+          <NetPyNETextField fullWidth variant="filled" model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['Ra']"} />
         </NetPyNEField>
 
         <NetPyNEField id="netParams.cellParams.secs.geom.cm" >
-          <NetPyNETextField model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['cm']"} />
+          <NetPyNETextField fullWidth variant="filled" model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['geom']['cm']"} />
         </NetPyNEField>
 
         <NetPyNEField id="netParams.cellParams.secs.geom.pt3d" className="listStyle">
@@ -136,17 +136,19 @@ export default class NetPyNESection extends React.Component {
             postProcessItems={this.postProcessMenuItems}
           />
         </NetPyNEField>
-        <br />
         
         <NetPyNEField id="netParams.cellParams.secs.topol.parentX" >
           <NetPyNETextField
+            fullWidth
+            variant="filled"
             model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['topol']['parentX']"}
           />
         </NetPyNEField>
-        <br />
         
         <NetPyNEField id="netParams.cellParams.secs.topol.childX" >
           <NetPyNETextField
+            fullWidth
+            variant="filled" 
             model={"netParams.cellParams['" + this.props.cellRule + "']['secs']['" + this.props.name + "']['topol']['childX']"} 
           />
         </NetPyNEField>
@@ -166,7 +168,6 @@ export default class NetPyNESection extends React.Component {
         <BottomNavigation component={Paper} showLabels style={{ borderRadius: '4px' }} value={this.state.selectedIndex} showLabels>
           {bottomNavigationItems}
         </BottomNavigation>
-        <br />
         {content}
       </div>
     );

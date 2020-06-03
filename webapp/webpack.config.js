@@ -34,6 +34,7 @@ if ( isWin ) {
 const availableExtensions = [
   { from: path.resolve(__dirname, geppetto_client_path, "static/*"), to: 'static', flatten: true },
   { from: path.resolve(__dirname, "images/*"), to: '', flatten: true },
+  { from: path.resolve(__dirname, "static"), to: 'static' },
 ];
 
 module.exports = function (env){
@@ -62,7 +63,7 @@ module.exports = function (env){
   
   var entries = {
     main: path.resolve(__dirname, "Main.js"),
-    admin: path.resolve(__dirname, geppetto_client_path, "js/pages/admin/admin.js"),
+    // admin: path.resolve(__dirname, geppetto_client_path, "js/pages/admin/admin.js"),
   };
 
   console.log("\nThe Webpack entries are:");
@@ -99,30 +100,13 @@ module.exports = function (env){
       new CopyWebpackPlugin(availableExtensions),
       new HtmlWebpackPlugin({
         filename: 'geppetto.vm',
-        template: path.resolve(__dirname, geppetto_client_path, 'js/pages/geppetto/geppetto.ejs'),
+        template: path.resolve(__dirname, 'geppetto.ejs'),
         GEPPETTO_CONFIGURATION: geppettoConfig,
         /*
          * chunks: ['main'] Not specifying the chunk since its not possible
          * yet (need to go to Webpack2) to specify UTF-8 as charset without
          * which we have errors
          */
-        chunks: []
-      }),
-      new HtmlWebpackPlugin({
-        filename: 'admin.vm',
-        template: path.resolve(__dirname, geppetto_client_path, 'js/pages/admin/admin.ejs'),
-        GEPPETTO_CONFIGURATION: geppettoConfig,
-        /*
-         * chunks: ['admin'] Not specifying the chunk since its not possible
-         * yet (need to go to Webpack2) to specify UTF-8 as charset without
-         * which we have errors
-         */
-        chunks: []
-      }),
-      new HtmlWebpackPlugin({
-        filename: 'dashboard.vm',
-        template: path.resolve(__dirname, geppetto_client_path, 'js/pages/dashboard/dashboard.ejs'),
-        GEPPETTO_CONFIGURATION: geppettoConfig,
         chunks: []
       }),
       new HtmlWebpackPlugin({
@@ -179,9 +163,18 @@ module.exports = function (env){
             { loader: "css-loader" }
           ]
         },
+        
         {
           test: /\.less$/,
-          loader: 'style-loader!css-loader!less-loader?{"modifyVars":{"url":"\'' + cssThemesPath + '\'"}}'
+          use: [
+            { loader: 'style-loader' },
+            { loader: 'css-loader' },
+            {
+              loader: 'less-loader',
+              options: { modifyVars: { url: path.resolve(__dirname, geppettoConfig.themes) } },
+            },
+            
+          ],
         },
         {
           test: /\.html$/,

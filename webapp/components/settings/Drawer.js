@@ -21,40 +21,33 @@ import DrawerIcon from '../general/NetPyNEIcons';
 import useStyles from './useStyles';
 import Tooltip from '../general/Tooltip'
 
-const drawerOpenWidth = 200;
-const drawerCloseWidth = 48;
+const drawerOpenWidth = 160;
+const drawerCloseWidth = 44;
 
 
-const DrawerItem = ({ id, name, widget, expanded, createOrFocusWidget, classes }) => {
-  const drawerItemContent = (
-    <ListItem
-      button
-      key={id}
-      dense
-      disableGutters
-      className={widget ? classes.selected : classes.unselected}
-      onClick={() => createOrFocusWidget(id)}
-    >
-      <ListItemIcon className={classes.icon}>
-        <DrawerIcon widgetId={id} selected={widget && widget.status !== WidgetStatus.MINIMIZED} />
-      </ListItemIcon>
-      <ListItemText className={classes.text}>
-        <Typography noWrap>{name}</Typography>
-      </ListItemText>
-    </ListItem>
-  )
-
-  if (expanded) {
-    return drawerItemContent
-  }
-
-  return (
-    <Tooltip title={name} placement="right" >
-      {drawerItemContent}
-    </Tooltip>
-  )
-  
-}
+const DrawerItem = ({ id, name, widget, expanded, createOrFocusWidget, disabled, classes }) => (
+  <Tooltip title={expanded ? "" : name} placement="right" >
+    <div>
+      <ListItem
+        button
+        key={id}
+        dense
+        disableGutters
+        disabled={disabled}
+        className={widget ? classes.selected : classes.unselected}
+        onClick={() => createOrFocusWidget(id)}
+      >
+        <ListItemIcon className={classes.icon}>
+          <DrawerIcon name={id} selected={widget && widget.status !== WidgetStatus.MINIMIZED} />
+        </ListItemIcon>
+        <ListItemText className={classes.text}>
+          <Typography noWrap>{name}</Typography>
+        </ListItemText>
+      </ListItem>
+    </div>
+    
+  </Tooltip>
+)
 
 export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
   const [expand, setExpand] = useState(false)
@@ -107,6 +100,7 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
         id={id}
         name={name}
         widget={widget}
+        disabled={widget.disabled}
         expanded={expand}
         classes={classes}
         createOrFocusWidget={createOrFocusWidget}
@@ -117,26 +111,32 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
   };
   
   return (
-    <Paper className={expand ? classes.openDrawer : classes.closeDrawer}>
+    <Paper elevation={0} className={expand ? classes.openDrawer : classes.closeDrawer}>
       <div className={classes.container}>
         <div >
           <List dense>
             {getMenu().map(mapItem)}
           </List>
         </div>
-        <div></div>
-          
+
+        <div/>
+
         <div className={classes.buttonContainer}>
-          <IconButton
-            className={classes.button}
-            onClick={() => {
-              setExpand(!expand)
-              setTimeout(() => window.dispatchEvent(new Event('resize')), 400)
-            }}
-          >
-            {expand ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
-          </IconButton>
+          <Tooltip title={expand ? "Collapse" : "Expand"}>  
+            <IconButton
+              className={classes.button}
+              size="small"
+              onClick={() => {
+                setExpand(!expand)
+                setTimeout(() => window.dispatchEvent(new Event('resize')), 400)
+              }}
+            >
+              {expand ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
+            </IconButton>
+          </Tooltip>  
         </div>
+        
+        
       </div>
     </Paper>
   )

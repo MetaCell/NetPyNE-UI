@@ -345,6 +345,8 @@ export default class NetPyNEInclude extends Component {
     return <div>
       <NetPyNEField id={this.props.id}>
         <TextField
+          fullWidth
+          variant="filled" 
           label="Include in the plot"
           value={this.state.label}
           onClick={e => this.handleMainPopoverOpen(true, e.preventDefault(), e.currentTarget)} 

@@ -1,9 +1,11 @@
 @import "colors";
+@import (css) url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap');
+
 
 html,
 body {
   height: 100%;
-  background: @color-dark !important;
+  background: @bgDarker;
   font-size: 16px;
 }
 
@@ -15,6 +17,9 @@ body {
 }
 @gutter: 16px;
 @flexlayout-widget-border: 8px;
+@icon-size: 24px;
+@font-size: 16px;
+
 #footer {
   z-index: 2 !important;
 }
@@ -51,7 +56,7 @@ button.actionButton {
 }
 
 .selectedActionButton button {
-  background-color: @primary_color!important;
+  background-color: @primaryColor!important;
 }
 
 .rectangularActionButton {
@@ -81,7 +86,7 @@ button.actionButton {
   text-align: center;
 }
 .selectedRectangularActionButton button {
-  background-color: @primary_color!important;
+  background-color: @primaryColor!important;
 }
 
 .addRectangularButton {
@@ -105,14 +110,14 @@ button.actionButton {
   overflow: visible;
 }
 .gearThumbButton .gpt-fullgear {
-  color: @color-light!important;
+  color: @bgLight!important;
   font-size: 100px !important;
   height: 100px !important;
   width: 100px !important;
   text-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px;
 }
 .selectedGearButton .gpt-fullgear {
-  color: @primary_color!important;
+  color: @primaryColor!important;
 }
 .gearThumbLabel {
   font-size: 15px;
@@ -133,26 +138,35 @@ button.actionButton {
 .helpIcon {
   display: flex;
   align-items: center;
-  margin-left: 10px;
-  float: left;
-  font-size: 15px;
+  font-size: @font-size;
   color: #aaaaaa;
   cursor: pointer;
+  width: @icon-size;
+  height: @icon-size;
+  justify-content: center;
 }
 .helpIcon:hover {
-  color: @primary_color;
+  color: @primaryColor;
 }
 
-.breadcrumby {
-  background-color: @color-regular;
+.breadcrumb {
   display: flex;
   align-items: center;
   overflow: visible;
+  background: transparent;
   justify-content: flex-start;
   margin: 0px;
-  border-radius: 4px;
-  margin: @gutter / 2;
+  padding: @gutter/2;
+  border-radius: @radius;
   flex-wrap: wrap;
+  .MuiIcon-colorDisabled {
+    color: black
+  }
+}
+.breadcrumb-spacer {
+  margin-left: var(--m2);
+  width: 40px;
+  text-align: center;
 }
 
 .hiddenModal {
@@ -175,27 +189,6 @@ button.actionButton {
   );
   background: linear-gradient(to bottom, #eaeaea 0%, #ececec 53%, #d6d6d6 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#d6d6d6',GradientType=0 );
-}
-
-.netpyneField {
-  width: 100% !important;
-  margin: 10px 0;
-  > div:first-of-type {
-    width: 95%;
-    > div {
-      width: 100% !important;
-      > div {
-        width: 100% !important;
-      }
-    }
-  }
-}
-.netpyneField,
-.netpyneFieldNoWidth {
-  float: left;
-  clear: left;
-  margin-right: 20px;
-  white-space: nowrap;
 }
 
 .tabContainer {
@@ -253,17 +246,17 @@ button.actionButton {
   margin-top: 43px;
   margin-right: 5px;
   font-size: 11px;
-  color: @secondary_color;
+  color: @secondaryColor;
 }
 
 .spinner-container {
-  color: @secondary_color!important;
+  color: @secondaryColor!important;
   p {
-    color: @secondary_color !important;
+    color: @secondaryColor !important;
   }
 }
 .listIcon {
-  color: @secondary_color!important;
+  color: @secondaryColor!important;
 }
 
 .listButtonLarge {
@@ -298,7 +291,7 @@ button.actionButton {
 
 .rst__rowContents {
   background: transparent;
-  color: @secondary_color;
+  color: @secondaryColor;
 
   cursor: pointer;
   box-shadow: none;
@@ -306,7 +299,7 @@ button.actionButton {
 
 .activeNode .rst__rowContents {
   background: transparent;
-  color: @primary_color;
+  color: @primaryColor;
 }
 
 .rst__rowLabel {
@@ -407,14 +400,6 @@ button.actionButton {
   }
 }
 
-.code-p {
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 3px;
-  background-color: rgba(0, 0, 0, 0.05);
-  padding: 2px; 
-  margin: 4px;
-}
-
 .fx-center {
   align-items: center;
 }
@@ -442,7 +427,7 @@ button.actionButton {
 }
 
 .MuiListItem-root.Mui-selected {
-  color: @primary_color;
+  color: @primaryColor;
 }
 
 div.flexlayout__layout{
@@ -451,4 +436,33 @@ div.flexlayout__layout{
 
 #simple-popper{
   z-index: 1500;
+}
+
+
+.image-icon {
+  width: 100%;
+  filter: brightness(0) invert(1);
+  &.selected,
+  &:hover {
+    filter: none;
+  }
+}
+
+.menu-caret{
+  margin-left: 1em;
+  color: @bgLight;
+}
+.menu-item-label { min-width: 10em }
+
+
+.spinner-backdrop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner-container {
+  position: unset;
+  top: unset;
+  left: unset;
 }

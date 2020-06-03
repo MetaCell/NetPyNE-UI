@@ -93,7 +93,6 @@ export const WIDGETS_IDS = {
   
 
 }
-let pos = 1;
 export const PLOT_WIDGETS = {
   connectionPlot: {
     id: 'connectionPlot', 
@@ -108,7 +107,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'plotConn', 
       plotType: false
     },
-    pos: pos++
+    pos: 1
   },
   d2NetPlot: {
     id: 'd2NetPlot', 
@@ -123,7 +122,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'plot2Dnet', 
       plotType: false
     },
-    pos: pos++
+    pos: 2
   },
   shapePlot: {
     id: 'shapePlot', 
@@ -138,7 +137,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'plotShape', 
       plotType: false
     },
-    pos: pos++
+    pos: 3
   },
   tracesPlot: {
     id: 'tracesPlot', 
@@ -153,7 +152,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'plotTraces', 
       plotType: false
     },
-    pos: pos++
+    pos: 4
   },
   rasterPlot: {
     id: 'rasterPlot', 
@@ -168,7 +167,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'plotRaster', 
       plotType: false
     },
-    pos: pos++
+    pos: 5
   },
   spikePlot: {
     id: 'spikePlot', 
@@ -183,7 +182,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'plotSpikeHist', 
       plotType: false
     },
-    pos: pos++
+    pos: 6
   },
   spikeStatsPlot: {
     id: 'spikeStatsPlot', 
@@ -198,7 +197,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'plotSpikeStats', 
       plotType: false
     },
-    pos: pos++
+    pos: 7
   },
   ratePSDPlot: {
     id: 'ratePSDPlot', 
@@ -212,7 +211,8 @@ export const PLOT_WIDGETS = {
     method: {
       plotMethod: 'plotRatePSD', 
       plotType: false
-    }
+    },
+    pos: 8
   },
   LFPTimeSeriesPlot: {
     id: 'LFPTimeSeriesPlot', 
@@ -227,7 +227,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'plotLFP',
       plotType: 'timeSeries'
     },
-    pos: pos++
+    pos: 9
   },
   LFPPSDPlot: {
     id: 'LFPPSDPlot', 
@@ -242,7 +242,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'plotLFP',
       plotType: 'PSD'
     },
-    pos: pos++
+    pos: 10
   },
   LFPSpectrogramPlot: {
     id: 'LFPSpectrogramPlot', 
@@ -257,7 +257,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'plotLFP',
       plotType: 'spectrogram'
     },
-    pos: pos++
+    pos: 11
   },
   LFPLocationsPlot: {
     id: 'LFPLocationsPlot',
@@ -272,7 +272,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'plotLFP',
       plotType: 'locations'
     },
-    pos: pos++
+    pos: 12
   },
   grangerPlot: {
     id: 'grangerPlot', 
@@ -287,7 +287,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'granger',
       plotType: false
     },
-    pos: pos++
+    pos: 13
   },
   rxdConcentrationPlot: {
     id: 'rxdConcentrationPlot',
@@ -302,7 +302,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'plotRxDConcentration',
       plotType: false
     },
-    pos: pos++
+    pos: 14
   }
 }
 
@@ -325,21 +325,21 @@ export const DEFAULT_NETWORK_WIDGETS = {
 
 export const EDIT_WIDGETS = {
   [PYTHON_CONSOLE_WIDGET.id]: PYTHON_CONSOLE_WIDGET,
-  'popParams': { 
-    id: 'popParams', 
-    name: 'Populations', 
+  'cellParams': { 
+    id: 'cellParams', 
+    name: 'Cell types', 
     status: WidgetStatus.ACTIVE, 
-    component: 'popParams', 
+    component: 'cellParams', 
     panelName: TOP_PANEL,
     enableRename: false,
     hideOnClose: true,
     pos: 0
   },
-  'cellParams': { 
-    id: 'cellParams', 
-    name: 'Cell rules', 
+  'popParams': { 
+    id: 'popParams', 
+    name: 'Populations', 
     status: WidgetStatus.HIDDEN, 
-    component: 'cellParams', 
+    component: 'popParams', 
     panelName: TOP_PANEL,
     enableRename: false,
     hideOnClose: true,

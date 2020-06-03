@@ -7,11 +7,9 @@ import Utils from '../../../Utils';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import { withStyles } from '@material-ui/core/styles';
 import { ActionDialog } from 'netpyne/components'
 
 import { NETPYNE_COMMANDS } from '../../../constants'
-const styles = ({ spacing }) => ({ container: { marginTop: spacing(10), }, })
 
 const saveOptions = [
   { label: 'High-level Network Parameters (netParams)', label2: 'Cell rules, connectivity rules, etc', state: 'loadNetParams' },
@@ -20,7 +18,7 @@ const saveOptions = [
   { label: 'Simulation Data', label2: 'Spikes, traces, etc', state: 'loadSimData' }
 ]
 
-class SaveFile extends React.Component {
+export default class SaveFile extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -41,7 +39,6 @@ class SaveFile extends React.Component {
   }
 
   render () {
-    const { classes } = this.props
     return (
       <ActionDialog
         command={NETPYNE_COMMANDS.exportModel}
@@ -52,23 +49,25 @@ class SaveFile extends React.Component {
         {...this.props}
       >
         <TextField 
-          className="netpyneField" 
+          variant="filled"
+          fullWidth
           value={this.state.fileName} 
           label="File name" 
           onChange={event => this.setState({ fileName: event.target.value })} 
         />
-        <div className={classes.container}>
-          <List >
+        <div >
+          <List style={{ display: 'flex', flexWrap: 'wrap' }}>
             {saveOptions.map((saveOption, index) => (
               <ListItem 
-                style={{ height: 50, width:'49%', float:index % 2 == 0 ? 'left' : 'right', marginTop: index > 1 ? "20px" : "-10px" }}
                 key={index}
+                style={{ width: '50%' }}
               >
                 <ListItemIcon>
                   <Checkbox 
                     disabled={index == 2 ? this.state.disableNetCells : index == 3 ? this.state.disableNetCells : false} 
                     onChange={() => this.setState(({ [saveOption.state]: oldState, ...others }) => ({ [saveOption.state]: !oldState }))} 
                     checked={this.state[saveOption.state]}
+                    noBackground
                   />
                 </ListItemIcon>
                 <ListItemText
@@ -85,5 +84,3 @@ class SaveFile extends React.Component {
     )
   }
 }
-
-export default withStyles(styles)(SaveFile)

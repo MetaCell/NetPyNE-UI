@@ -175,7 +175,7 @@ export default class NetPyNESynapses extends Component {
       <GridLayout>
         <div>
           <ExpansionPanel>
-            <div className="breadcrumby">
+            <div className="breadcrumb">
               <NetPyNEHome
                 selection={this.state.selectedSynapse}
                 handleClick={() => this.setState({ selectedSynapse: undefined })}

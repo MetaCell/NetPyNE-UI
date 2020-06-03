@@ -117,7 +117,7 @@ steps:
     
         debug:
           enabled: false
-    image: 'codefresh/cfstep-helm:2.12.2'
+    image: 'codefresh/cfstep-helm:2.15.2'
     title: Installing chart
     stage: deploy
     environment:

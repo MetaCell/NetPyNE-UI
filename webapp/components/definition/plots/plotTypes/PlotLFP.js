@@ -31,27 +31,27 @@ export default class PlotLFP extends React.Component {
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotLFP.NFFT" >
-        <NetPyNETextField model={tag + "['NFFT']"}/>
+        <NetPyNETextField fullWidth variant="filled" model={tag + "['NFFT']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotLFP.noverlap" >
-        <NetPyNETextField model={tag + "['noverlap']"}/>
+        <NetPyNETextField fullWidth variant="filled" model={tag + "['noverlap']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotLFP.maxFreq" >
-        <NetPyNETextField model={tag + "['maxFreq']"}/>
+        <NetPyNETextField fullWidth variant="filled" model={tag + "['maxFreq']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotLFP.nperseg" >
-        <NetPyNETextField model={tag + "['nperseg']"}/>
+        <NetPyNETextField fullWidth variant="filled" model={tag + "['nperseg']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotLFP.smooth" >
-        <NetPyNETextField model={tag + "['smooth']"}/>
+        <NetPyNETextField fullWidth variant="filled" model={tag + "['smooth']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotLFP.separation" >
-        <NetPyNETextField model={tag + "['separation']"}/>
+        <NetPyNETextField fullWidth variant="filled" model={tag + "['separation']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotLFP.includeAxon" className={"netpyneCheckbox"} >

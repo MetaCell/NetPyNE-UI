@@ -7,6 +7,7 @@ import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper'
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
 
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -178,18 +179,20 @@ export default class NetPyNEStimulationTarget extends React.Component {
     if (this.state.sectionId == "General") {
       var content = (
         <div>
-          <TextField
-            onChange={this.handleRenameChange}
-            value = {this.state.currentName}
-            disabled={this.renaming}
-            className={"netpyneField"}
-            id={"targetName"}
-            label="Stimulation target name"
-          />
-          <br/>
+          <Box mb={1}>
+            <TextField
+              fullWidth
+              variant="filled" 
+              onChange={this.handleRenameChange}
+              value = {this.state.currentName}
+              disabled={this.renaming}
+              label="The name of the stimulation target"
+            />
+          </Box>
           
           <NetPyNEField id={"netParams.stimTargetParams.source"} >
             <NetPyNESelectField
+              fullWidth
               model={"netParams.stimTargetParams['" + this.props.name + "']['source']"}
               method={"netpyne_geppetto.getAvailableStimSources"}
               postProcessItems={this.postProcessMenuItems}
@@ -198,12 +201,16 @@ export default class NetPyNEStimulationTarget extends React.Component {
           
           <NetPyNEField id="netParams.stimTargetParams.sec">
             <NetPyNETextField
+              fullWidth
+              variant="filled" 
               model={"netParams.stimTargetParams['" + this.props.name + "']['sec']"}
             />
           </NetPyNEField>
           
           <NetPyNEField id="netParams.stimTargetParams.loc">
             <NetPyNETextField
+              fullWidth
+              variant="filled" 
               model={"netParams.stimTargetParams['" + this.props.name + "']['loc']"}
             />
           </NetPyNEField>
@@ -214,6 +221,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
           <div>
             <NetPyNEField id={"netParams.stimTargetParams.synMech"} >
               <NetPyNESelectField
+                fullWidth
                 model={"netParams.stimTargetParams['" + this.props.name + "']['synMech']"}
                 method={"netpyne_geppetto.getAvailableSynMech"}
                 postProcessItems={this.postProcessMenuItems4SynMech}
@@ -222,18 +230,24 @@ export default class NetPyNEStimulationTarget extends React.Component {
           
             <NetPyNEField id="netParams.stimTargetParams.weight" >
               <NetPyNETextField
+                fullWidth
+                variant="filled" 
                 model={"netParams.stimTargetParams['" + this.props.name + "']['weight']"}
               />
             </NetPyNEField>
           
             <NetPyNEField id="netParams.stimTargetParams.delay" >
               <NetPyNETextField
+                fullWidth
+                variant="filled" 
                 model={"netParams.stimTargetParams['" + this.props.name + "']['delay']"}
               />
             </NetPyNEField>
           
             <NetPyNEField id="netParams.stimTargetParams.synsPerConn" >
               <NetPyNETextField
+                fullWidth
+                variant="filled" 
                 model={"netParams.stimTargetParams['" + this.props.name + "']['synsPerConn']"}
               />
             </NetPyNEField>
@@ -256,7 +270,6 @@ export default class NetPyNEStimulationTarget extends React.Component {
         <BottomNavigation component={Paper} showLabels style={{ borderRadius: '4px' }} value={this.state.selectedIndex}>
           {bottomNavigationItems}
         </BottomNavigation>
-        <br />
         {content}
         {extraContent}
         {dialogPop}

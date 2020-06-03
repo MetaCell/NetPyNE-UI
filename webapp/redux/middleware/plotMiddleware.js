@@ -14,9 +14,13 @@ async function setWidget (widget) {
 
   if (!result) {
     console.warn('Plot not retrieved:', widget.id);
-    return null;
+    widget.disabled = true;
+    return widget;
+    // return null;
+
   } else {
     console.log('Plot retrieved:', widget.id);
+    widget.disabled = false;
     return widget;
   }
   
@@ -28,7 +32,8 @@ export default store => next => action => {
   case SET_WIDGETS: {
     for (let widget of Object.values(action.data)) {
       if ((widget.id in PLOT_WIDGETS) && widget.method) {
-        delete action.data[widget.id];
+        // delete action.data[widget.id];
+        action.data[widget.id].disabled;
         setWidget(widget).then(widget => widget ? next(addWidget(widget)) : null);
       }
     }
@@ -49,7 +54,7 @@ const plotFigure = async (plotId, plotMethod, plotType = false) => {
       new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve(null)
-        }, 3000)
+        }, 10000)
       })]);
     console.log('Plot response received for', plotId);
     if (!response) {

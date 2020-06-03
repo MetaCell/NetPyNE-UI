@@ -31,7 +31,7 @@ export default class PlotSpikeHist extends React.Component {
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotSpikeHist.binSize" >
-        <NetPyNETextField model={tag + "['binSize']"}/>
+        <NetPyNETextField fullWidth variant="filled" model={tag + "['binSize']"}/>
       </NetPyNEField>
       
       <NetPyNEField id="simConfig.analysis.plotSpikeHist.graphType" className="listStyle" >

@@ -201,7 +201,7 @@ export default class NetPyNEPopulations extends React.Component {
         <div>
 
           <ExpansionPanel>
-            <div className="breadcrumby">
+            <div className="breadcrumb">
               <NetPyNEHome
                 selection={this.state.selectedPopulation}
                 handleClick={() => this.setState({ selectedPopulation: undefined })}

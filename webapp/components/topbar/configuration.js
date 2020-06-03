@@ -1,35 +1,56 @@
-import { bgLight, bgRegular, font, bgDark } from '../../theme'
+import React from 'react';
+import { bgRegular, bgDark, font, primaryColor, gutter, radius } from '../../theme'
+
 import { openTopbarDialog, changePageTransitionMode } from '../../redux/actions/topbar'
 import { TOPBAR_CONSTANTS } from '../../constants'
+
+
 const style = {
   standard: {
-    background: bgDark,
-    backgroundColor: bgDark,
+    background: bgRegular,
     borderRadius: 0,
     border: 0,
     boxShadow: '0px 0px',
     color: '#ffffff',
-    fontSize: '16px',
+    paddingLeft: 30,
+    paddingRight: 30,
+    fontSize: 16,
+    fontWeight: 400,
     fontFamily: font,
     margin: '0px 0px 0px 0px',
-    minWidth: '44px',
-    height: '30px',
+    height: '100%',
+    borderLeft: 0,
+    borderRight: 0,
+    borderBottom: 0,
     textTransform: 'capitalize',
     textAlign: 'left',
     justifyContent: 'start',
-    fontWeight: '300',
+
+    'hr': {}
+
   },
-  lighter: {
-    background: bgRegular,
-    backgroundColor: bgRegular,
-  },
+  lighter: { background: primaryColor },
   padding: {
-    fontSize: '14px',
-    paddingTop: '8px',
-    paddingBottom: '8px'
+    fontSize: 16,
+    paddingTop: `calc(${gutter} / 2)`,
+    paddingBottom: `calc(${gutter} / 2)`
   }
-  
+
 }
+
+const topLevelMenuItemStyle = {
+  standard: {
+    paddingLeft: `calc(${gutter} / 2)`,
+    paddingRight: `calc(${gutter} / 2)`,
+    background: bgDark,
+  },
+  hover: {
+    paddingLeft: `calc(${gutter} / 2)`,
+    paddingRight: `calc(${gutter} / 2)`,
+    background: '#202020',
+  },
+};
+
 
 export default {
   global: {
@@ -40,7 +61,7 @@ export default {
     fontFamily: font,
     menuFontSize: "14",
     subMenuFontSize: "12",
-    backgroundColor: bgDark,
+    background: bgRegular,
     buttonsStyle: {
       standard: style.standard,
       hover: {
@@ -54,15 +75,34 @@ export default {
         ...style.lighter,
         ...style.padding
       }
-    }
+    },
+    drawersStyle: {
+      standard: {
+        top: 10,
+        backgroundColor: bgDark,
+        borderRadius: 0,
+        color: '#ffffff',
+        fontSize: 14,
+        fontFamily: font,
+        minWidth: 110,
+        borderLeft: 0,
+        borderRight: 0,
+        borderBottom: 0,
+        borderBottomLeftRadius: radius,
+        borderBottomRightRadius: radius,
+      }
+    },
   },
+  itemOptions: { customArrow: <i className="fa fa-caret-right menu-caret" /> },
   buttons: [
     {
-      label: "NetPyNE-UI",
+      label: "NetPyNE",
       position: "bottom-start",
+      icon: "",
       list: [
         {
           label: "About...",
+          icon: "",
           action: {
             handlerAction: "",
             parameters: []
@@ -70,17 +110,20 @@ export default {
         },
         {
           label: "Contribute",
+          icon: "",
           action: {
             handlerAction: "",
             parameters: []
           }
         },
-      ]
+      ],
+      styles: topLevelMenuItemStyle
     },
     {
       label: "File",
       position: "bottom-start",
       icon: "",
+      styles: topLevelMenuItemStyle,
       list: [
         {
           label: "New",
@@ -176,6 +219,7 @@ export default {
       label: "Model",
       icon: "",
       position: "bottom-start",
+      styles: topLevelMenuItemStyle,
       list: [
         {
           label: TOPBAR_CONSTANTS.CREATE_NETWORK,
@@ -206,6 +250,7 @@ export default {
     {
       label: "Help",
       icon: "",
+      styles: topLevelMenuItemStyle,
       action: {
         handlerAction: '',
         parameters: []

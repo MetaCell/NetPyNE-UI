@@ -10,5 +10,5 @@ const tooltipStyle = makeStyles(({ palette, typography }) => ({
 export default function CustomTooltip (props) {
   const classes = tooltipStyle();
 
-  return <Tooltip arrow classes={classes} enterDelay={2000} enterTouchDelay={2000} {...props} />;
+  return <Tooltip arrow classes={classes} enterDelay={200} enterTouchDelay={200} {...props} />;
 }

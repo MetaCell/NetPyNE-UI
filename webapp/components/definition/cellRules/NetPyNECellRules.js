@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import ContentAdd from '@material-ui/icons/Add';
 import NavigationMoreHoriz from '@material-ui/icons/MoreHoriz';
 import Fab from '@material-ui/core/Fab';
-
+import Icon from '@material-ui/core/Icon';
 
 import {
   NetPyNECellRule, 
@@ -18,7 +18,7 @@ import NetPyNESection from './sections/NetPyNESection';
 import NetPyNEMechanism from './sections/mechanisms/NetPyNEMechanism';
 import NetPyNENewMechanism from './sections/mechanisms/NetPyNENewMechanism';
 
-import NavigationChevronRight from '@material-ui/icons/ChevronRight';
+
 import Dialog from '@material-ui/core/Dialog/Dialog';
 
 import Utils from '../../../Utils';
@@ -154,10 +154,10 @@ export default class NetPyNECellRules extends React.Component {
       model[selectedCellRule].secs[selectedSection]['mechs'] = {};
       Utils.execPythonMessage('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"]["' + selectedSection + '"]["mechs"] = {}');
     }
-    var params = {};
     Utils
       .evalPythonMessage("netpyne_geppetto.getMechParams", [mechanism])
       .then(response => {
+        const params = {};
         response.forEach(param => params[param] = 0);
         Utils.execPythonMessage('netpyne_geppetto.netParams.cellParams["' + selectedCellRule + '"]["secs"]["' + selectedSection + '"]["mechs"]["' + mechanism + '"] = ' + JSON.stringify(params));
       })
@@ -343,7 +343,7 @@ export default class NetPyNECellRules extends React.Component {
      */
     if (nextPage === page) { 
       if (page === "main") {
-        this.handleNewCellRule({ 'CellRule': { 'conds':{}, 'secs':{} } });
+        this.handleNewCellRule({ 'CellType': { 'conds':{}, 'secs':{} } });
       } else if (page === "sections") {
         this.handleNewSection({ 'Section': { 'geom': {}, 'topol': {}, 'mechs': {} } });
       }
@@ -472,7 +472,7 @@ export default class NetPyNECellRules extends React.Component {
     switch (rule) {
     case 'cellRule':
       if (page !== 'main'){
-        return 'CR'
+        return 'CT'
       } else {
         return <ContentAdd style={{ color: 'white' }}/>
       }
@@ -653,7 +653,7 @@ export default class NetPyNECellRules extends React.Component {
           
         <div>
           <ExpansionPanel>
-            <div className="breadcrumby">
+            <div className="breadcrumb">
               <NetPyNEHome
                 selection={selectedCellRule}
                 handleClick={() => this.setState({ page: 'main', selectedCellRule: undefined, selectedSection: undefined, selectedMechanism: undefined })}
@@ -670,9 +670,9 @@ export default class NetPyNECellRules extends React.Component {
                   </Fab>
                 </Tooltip>
               </div>
-              <NavigationChevronRight
-                className='ml-2'
-                color='disabled'
+              <Icon
+                color="disabled"
+                className="fa fa-angle-right breadcrumb-spacer"
               />
               <div className='ml-2'>
                 <Tooltip title={this.createTooltip('section')} placement="top">
@@ -693,9 +693,9 @@ export default class NetPyNECellRules extends React.Component {
                 
               </div>
             
-              <NavigationChevronRight 
-                className='ml-2'
-                color='disabled'
+              <Icon
+                color="disabled"
+                className="fa fa-angle-right breadcrumb-spacer"
               />
               <NetPyNENewMechanism
                 className="ml-2"

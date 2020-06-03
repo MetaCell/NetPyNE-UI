@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
-
+import Box from '@material-ui/core/Box'
 import SelectField from './Select';
 import Utils from '../../Utils';
 
@@ -102,7 +102,7 @@ export default class NetPyNECoordsRange extends Component {
           </SelectField>
         </NetPyNEField>
         {(this.state.rangeType != undefined)
-          ? <div className={"netpyneRightField"}>
+          ? <Box width="100%" p={1}>
             <AdapterComponent
               model={path}
               convertToPython={state => {
@@ -122,12 +122,11 @@ export default class NetPyNECoordsRange extends Component {
               }
               }
             >
-              <TextField label="Minimum" id={min} style={{ marginLeft: 10 }}/>
-              <TextField label="Maximum" id={max} style={{ marginLeft: 10 }}/>
+              <TextField label="Minimum" id={min} variant="filled" fullWidth/>
+              <TextField label="Maximum" id={max} variant="filled" fullWidth/>
             </AdapterComponent>
-          </div>
+          </Box>
           : null}
-        <br />
       </div>
     );
   }

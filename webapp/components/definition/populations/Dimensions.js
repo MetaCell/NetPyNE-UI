@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Utils from '../../../Utils';
 import { withStyles } from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box'
+
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
 
 import {
   NetPyNEField,
@@ -11,10 +14,7 @@ import {
 } from 'netpyne/components';
 
 const styles = ({ spacing }) => ({
-  selectField: { 
-    marginTop: spacing(3),
-    width: '100%'
-  },
+  selectField: { width: '100%' },
   field:{
     width: '95%!important',
     marginLeft: spacing(3)
@@ -102,38 +102,50 @@ class DimensionsComponent extends Component {
     return (
       <div>
         <NetPyNEField id="netParams.popParams.numCells" className={classes.selectField}>
-          <Select
-            id={"popParamsDimensionsSelect"}
-            value={this.state.dimension}
-            onChange={event => this.setState({ dimension: event.target.value })}
-          >
-            {(this.popDimensionsOptions != undefined)
-              ? this.popDimensionsOptions.map(popDimensionsOption => (
-                <MenuItem 
-                  id={"popParamS" + popDimensionsOption.value} 
-                  key={popDimensionsOption.value}
-                  value={popDimensionsOption.value}
-                >
-                  {popDimensionsOption.label}
-                </MenuItem>
-              )) : null}
-          </Select>
+          <FormControl fullWidth>
+            <InputLabel>
+              <Box mt={1} ml={2}>Dimension type</Box>
+            </InputLabel>
+            <Select
+              fullWidth
+              variant="filled"
+              value={this.state.dimension}
+              onChange={event => this.setState({ dimension: event.target.value })}
+            >
+              {(this.popDimensionsOptions != undefined)
+                ? this.popDimensionsOptions.map(popDimensionsOption => (
+                  <MenuItem 
+                    id={"popParamS" + popDimensionsOption.value} 
+                    key={popDimensionsOption.value}
+                    value={popDimensionsOption.value}
+                  >
+                    {popDimensionsOption.label}
+                  </MenuItem>
+                )) : null}
+            </Select>
+          </FormControl>
+          
         </NetPyNEField>
         {
           this.state.dimension != undefined && this.state.dimension != ""
-            ? <NetPyNEField id={"netParams.popParams." + this.state.dimension} className={classes.fields}>
-              <NetPyNETextField
-                id={"popParamsDimensions"}
-                handleChange={this.handleDimValueChange}
-                model={"netParams.popParams['" + this.state.modelName + "']['" + this.state.dimension + "']"}
-                modelName={this.state.modelName}
-                dimensionType={this.state.dimension}
-                callback={(newValue, oldValue) => {
-                  this.props.updateCards()
-                }}
-              />
-            </NetPyNEField>
-            : null
+            && (
+              <Box ml={1}>
+                <NetPyNEField id={"netParams.popParams." + this.state.dimension} className={classes.fields}>
+                  <NetPyNETextField
+                    fullWidth
+                    variant="filled" 
+                    handleChange={this.handleDimValueChange}
+                    model={"netParams.popParams['" + this.state.modelName + "']['" + this.state.dimension + "']"}
+                    modelName={this.state.modelName}
+                    dimensionType={this.state.dimension}
+                    callback={(newValue, oldValue) => {
+                      this.props.updateCards()
+                    }}
+                  />
+                </NetPyNEField>
+              </Box>
+              
+            )
         }
       </div>
     )

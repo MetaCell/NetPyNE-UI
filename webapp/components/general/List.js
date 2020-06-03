@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
-import Icon from '@material-ui/core/Icon';
+
 import Tooltip from './Tooltip'
+import Chip from '@material-ui/core/Chip'
+import Grid from '@material-ui/core/Grid'
+import NetPyNEIcon from '../general/NetPyNEIcons';
+import Box from '@material-ui/core/Box'
+import { withStyles } from '@material-ui/core/styles'
 /**
  * Generic List/Dict Component
  */
-export default class ListComponent extends Component {
+class ListComponent extends Component {
 
   constructor (props) {
     super(props);
@@ -31,6 +36,9 @@ export default class ListComponent extends Component {
           valid = false;
         }
       });
+      if (value.endsWith(',')) {
+        valid = false;
+      }
       break;
     case 'dict':
       var valid = (value.match(/:/g) || []).length == 1 && !value.startsWith(':') && !value.endsWith(':');
@@ -207,67 +215,39 @@ export default class ListComponent extends Component {
       } else {
         var value = this.state.children[key];
       }
-      return (
-        <div 
-          key={key} 
-          style={this.props.realType != 'dict(dict())' ? { marginRight: 30, float: 'left' } : { marginRight: 30 }}
-        >
-          <TextField
-            value={value}
-            id={this.props.id + index}
-            disabled
-          />
-          <IconButton
-            id={this.props.id + index + "RemoveButton"}
-            className={'listButtonSmall'}
-            onClick={() => this.removeChild(key)}
-            tooltip-data='Remove item from the list'
-          >
-            <Icon className={'fa fa-minus-circle listIcon'} />
-          </IconButton>
-        </div>
-      )
+      return <Chip key={key} label={value} style={{ marginRight: 8 }} onDelete={() => this.removeChild(key)} color="primary" />
     });
 
+    const { classes } = this.props
     return (
-      <div>
-        <div style={{ display: 'flex', alignItems: 'baseline' }}>
-          <TextField
-            id={this.props.id}
-            label={this.props.label ? 'Add new ' + this.props.label : 'Add new item'}
-            onChange={this.handleNewItemChange}
-            onKeyPress={e => e.key === 'Enter' ? this.addChild() : null }
-            value={this.state.newItemValue}
-            style={{ width: '100%' }}
-            helperText={this.state.newItemErrorText}
-          />
-          {!this.state.newItemErrorText 
-          && (
-            <span>
+      <Box >
+        <TextField
+          variant="filled"
+          id={this.props.id}
+          label={this.props.label ? 'Add new ' + this.props.label : 'Add new item'}
+          onChange={this.handleNewItemChange}
+          onKeyPress={e => e.key === 'Enter' ? this.addChild() : null }
+          value={this.state.newItemValue}
+          fullWidth
+          helperText={this.state.newItemErrorText}
+          InputProps={{
+            endAdornment: (
               <Tooltip title="Add item to the list" placement="top">
-                <IconButton
-                  id={this.props.id + "AddButton"}
-                  className={'listButtonLarge'}
-                  onClick={this.addChild}
-                >
-                  <Icon className={'fa fa-plus-circle listIcon'} />
+                <IconButton size="small" onClick={this.addChild}>
+                  <NetPyNEIcon name="add"/>
                 </IconButton>
-              </Tooltip>
-              
-            </span>
-          )
-          }
-        </div>
-        
+              </Tooltip> 
+            )
+          }}
+        />
+        <Box m={1}>{childrenWithExtraProp}</Box>
 
-        {childrenWithExtraProp.length > 0 && (
-          <div 
-            style={{ marginTop: '15px', marginLeft: '50px', paddingRight: '15px', padding: '0px 5px', float: 'left' }}
-          >
-            {childrenWithExtraProp}
-          </div>
-        )}
-      </div>
+      </Box>
     )
   }
 }
+
+
+const styles = () => ({ addButton: { height: 48 } })
+
+export default withStyles(styles)(ListComponent)

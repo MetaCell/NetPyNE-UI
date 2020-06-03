@@ -41,6 +41,7 @@ export default class StimulationConditions extends React.Component {
             method={"netpyne_geppetto.getAvailablePops"}
             postProcessItems={this.postProcessMenuItems}
             multiple={true}
+            fullWidth
           />
         </NetPyNEField>
 
@@ -51,6 +52,7 @@ export default class StimulationConditions extends React.Component {
               + this.props.name
               + "']['conds']['cellModel']"
             }
+            fullWidth
             method={"netpyne_geppetto.getAvailableCellModels"}
             postProcessItems={this.postProcessMenuItems}
             multiple={true}
@@ -67,6 +69,7 @@ export default class StimulationConditions extends React.Component {
             method={"netpyne_geppetto.getAvailableCellTypes"}
             postProcessItems={this.postProcessMenuItems}
             multiple={true}
+            fullWidth
           />
         </NetPyNEField>
 

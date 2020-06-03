@@ -14,7 +14,7 @@ export default class Select extends Component {
       value = ''
     }
     return (
-      <FormControl >
+      <FormControl variant="filled" fullWidth>
         <InputLabel>{this.props.label}</InputLabel>
         <MuiSelect
           id={this.props.id}

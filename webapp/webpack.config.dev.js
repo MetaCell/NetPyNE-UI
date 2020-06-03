@@ -1,5 +1,4 @@
 var webpackBaseConfig = require('./webpack.config.js');
-var path = require('path');
 var extended = webpackBaseConfig();
 
 extended.devServer = {
@@ -8,7 +7,7 @@ extended.devServer = {
   inline : true,
   publicPath: '/geppetto/build',
 
-  proxy : [ 
+  proxy : [
     {
       path : '/',
       target : 'http://localhost:8888'

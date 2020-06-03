@@ -4,14 +4,15 @@ import Utils from '../../Utils';
 import Button from '@material-ui/core/Button';
 import { changeNodeAtPath } from 'react-sortable-tree';
 import Dialog from '@material-ui/core/Dialog';
-
+import Box from '@material-ui/core/Box'
+import Grid from '@material-ui/core/Grid'
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-
+import { Tooltip } from 'netpyne/components'
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 import { walk } from 'react-sortable-tree';
-
+import { bgLight, fontColor } from '../../theme'
 export default class FileBrowser extends React.Component {
 
   constructor (props) {
@@ -121,8 +122,7 @@ export default class FileBrowser extends React.Component {
       <Button
         key='cancel'
         onClick={event => this.onCancelFileBrowser()}
-        style={{ marginRight: 16 }}
-      >cancel</Button>,
+      >CANCEL</Button>,
       <Button
         id="browserAccept"
         key="select"
@@ -132,7 +132,7 @@ export default class FileBrowser extends React.Component {
           this.props.onRequestClose(this.props.toggleMode ? this.getSelectedFiles() : this.state.selection )
         }}
         disabled={this.disableSelectButton()}
-      >select</Button>
+      >SELECT</Button>
     ];
         
     var selectMessage = this.props.exploreOnlyDirs ? "Select a folder. " : "Select a file. ";
@@ -142,37 +142,39 @@ export default class FileBrowser extends React.Component {
         fullWidth
         maxWidth="sm"
         onClose={() => this.props.onRequestClose()}
-        style={{ zIndex: 5000 }}
+        style={{ zIndex: 1350 }}
       >
         <DialogContent>
-          <div style={{ marginBottom: '15px', color: 'white' }}>
-            <b>{selectMessage}</b>
-            These paths are relative to:<br/>
-            <div className="flex-row fx-center ">
-              <span className="code-p w-80">{this.currentFolder || window.currentFolder}</span>
+          <Box color={fontColor}>{`${selectMessage}Paths are relative to:`}</Box>
+          
+          <Grid container alignItems="center">
+            <Grid item>
+              <Box m={1} p={1} color="lightgrey" bgcolor={bgLight}>{this.currentFolder || window.currentFolder}</Box>
+            </Grid>
+
+            <Tooltip title="Enclosing Folder" placement="top">
               <IconButton
-                id="file-browser-level-up"
                 disableTouchRipple
-                className='simple-icon mrg-2'
                 onClick={() => this.handleMoveUp()} 
-                tooltip-data='Enclosing Folder'
               >
-                <Icon className={'fa fa-level-up listIcon'} />
+                <Icon className={'fa fa-level-up'} />
               </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Home folder" placement="top">
               <IconButton
                 disableTouchRipple
-                className='simple-icon mrg-2'
                 onClick={() => this.handleMoveUp(true)} 
-                tooltip-data='Home folder'
               >
-                <Icon className={'fa fa-home listIcon'} />
+                <Icon className={'fa fa-home'} />
               </IconButton>
-            </div>
-            
-          </div>
-          < Tree
+            </Tooltip>
+          </Grid>
+          
+          
+          <Tree
             id="TreeContainerCutting"
-            style={{ width: "100%", height: "400px", float: 'left' }}
+            style={{ width: "100%", height: 400 }}
             treeData={[]}
             handleClick={this.handleClickVisualize}
             rowHeight={30}

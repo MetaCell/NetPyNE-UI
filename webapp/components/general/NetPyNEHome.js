@@ -1,16 +1,14 @@
 import React from 'react';
 import Icon from '@material-ui/core/Icon';
-import NavigationChevronRight from '@material-ui/icons/ChevronRight';
 import { makeStyles } from '@material-ui/core/styles'
 import Tooltip from '../general/Tooltip'
 const useStyles = makeStyles(({ spacing, palette }) => ({
-  rightArrow : { marginLeft: spacing(1) },
   home: { },
   root: {
     display: 'flex',
     alignItems: 'center'
   },
-  icon: { color: palette.common.white, fontSize: 40 }
+  icon: { fontSize: 40, fontWeight: 'bold', textAlign: 'center' }
 }))
 
 
@@ -27,14 +25,17 @@ export default ({ handleClick, selection }) => {
           }}
         >
           <Icon
+            color="primary"
             classes={{ root: classes.icon }}
-            className="fa fa-home"
+            className="fa fa-angle-right"
           />
         </div>
       </Tooltip>
-      
-      
-      <NavigationChevronRight className={classes.rightArrow} color="disabled"/>
+      <Icon
+        color="disabled"
+        className="fa fa-angle-right breadcrumb-spacer"
+      />
+     
     </div>
   )
   

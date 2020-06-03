@@ -5,10 +5,10 @@ import {
   LayoutManager,
   Drawer
 } from "netpyne/components";
-
+import Splash from './general/Splash'
 import { withStyles } from '@material-ui/core/styles'
 import Utils from '../Utils';
-const styles = ({ zIndex, palette, spacing }) => ({
+const styles = ({ zIndex }) => ({
   root: { height: '100%', overflow: 'hidden' },
   container: {
     height: "100%",
@@ -17,7 +17,12 @@ const styles = ({ zIndex, palette, spacing }) => ({
     flexDirection: "column"
   },
   topbar: { position: "relative", zIndex: zIndex.drawer + 1 },
-  content: { flexGrow:1, display: 'flex', flexDirection: 'row', position: 'relative' }
+  content: { 
+    flexGrow:1, 
+    display: 'flex', 
+    flexDirection: 'row',
+    position: 'relative' 
+  }
 });
 
 import { EDIT_WIDGETS, PYTHON_CONSOLE_WIDGET, WidgetStatus } from '../constants'
@@ -47,11 +52,12 @@ class NetPyNE extends React.Component {
       GEPPETTO.Manager.loadExperiment(1, [], []);
       Utils.execPythonMessage('from netpyne_ui.netpyne_geppetto import netpyne_geppetto');
       Utils.evalPythonMessage('netpyne_geppetto.getData',[]).then(response => {
+        GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "LOADING NETPYNE-UI");
         const data = Utils.convertToJSON(response);
         this.addMetadataToWindow(data);
-        this.props.modelLoaded();
         this.props.setWidgets(EDIT_WIDGETS);
-        GEPPETTO.trigger("spinner:hide");
+        this.props.modelLoaded();
+        GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
       })
       
     });

@@ -90,9 +90,13 @@ class LayoutManager {
   onRenderTabSet = (panel, renderValues) => {
     if (panel.getType() === "tabset" && this.enableMinimize) {
       if (panel.getId() != 'leftPanel' && panel.getChildren().length > 0){
-        renderValues.buttons.push(<div key={panel.getId()} className="fa fa-window-minimize customIconFlexLayout" onClick={() => {
-          this.minimizeWidget(panel.getSelectedNode().getId()) 
-        }} />);
+        renderValues.buttons.push(
+          <div 
+            key={panel.getId()} 
+            className="fa fa-window-minimize customIconFlexLayout" 
+            onClick={() => this.minimizeWidget(panel.getSelectedNode().getId())} 
+          />
+        );
       }
     }
   }
