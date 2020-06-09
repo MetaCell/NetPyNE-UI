@@ -63,7 +63,7 @@ class ImportExportHLS extends React.Component {
       simConfigModuleName: "",
       simConfigVariable: "simConfig",
       modFolder: "",
-      loadMod: '',
+      loadMod: false,
       compileMod: false,
       explorerDialogOpen: false,
       explorerParameter: "",
@@ -158,7 +158,6 @@ class ImportExportHLS extends React.Component {
 
   render () {
     const { classes } = this.props
-    const disableLoadMod = this.state.loadMod === '' ? true : !this.state.loadMod
     switch (this.props.mode) {
     case 'IMPORT':
       var content = (
@@ -205,33 +204,6 @@ class ImportExportHLS extends React.Component {
             </Grid>
           </Grid>
 
-          <Grid container alignItems="center" spacing={1}>
-            <Tooltip title="File explorer" placement="top">
-              <div>
-                <IconButton
-                  onClick={() => this.showExplorerDialog('modFolder', true, false)} 
-                  disabled={disableLoadMod}
-                >
-                  <Icon className="fa fa-folder-o" />
-                </IconButton>
-              </div>
-              
-            </Tooltip>
-
-            <Grid item>
-              <TextField 
-                variant="filled" 
-                fullWidth
-                label="Path to mod files"
-                disabled={disableLoadMod} 
-                value={this.state.modFolder} 
-                onClick={event => this.onModFolderPathChange(event.target.value)} 
-                helperText={"Only mod folders"}
-              />
-            </Grid>
-          </Grid>
-
-
           <Grid container spacing={1}>
             <Grid item>
               <TextField 
@@ -253,23 +225,34 @@ class ImportExportHLS extends React.Component {
             </Grid>
           </Grid>
           
-          
-          <FormControl fullWidth>
-            <InputLabel >Are custom mod files required for this model?</InputLabel>
-            <Select
+          <Box pt={2}>
+            <Grid container alignItems="center" spacing={1} >
+              <Tooltip title="File explorer" placement="top">
+                <div>
+                  <IconButton
+                    onClick={() => this.showExplorerDialog('modFolder', true, false)} 
+                  >
+                    <Icon className="fa fa-folder-o" />
+                  </IconButton>
+                </div>
+              
+              </Tooltip>
 
-              value={this.state.loadMod === undefined ? '' : this.state.loadMod}
-              onChange={event => this.setState({ loadMod: event.target.value })}
-            >
-              <MenuItem value={true}>Yes, this model requires custom mod files</MenuItem>
-              <MenuItem id="appBarImportRequiresModNo" value={false} >No, this model only requires NEURON built-in mod files</MenuItem>
-            </Select>
-            <FormHelperText error={!this.state.loadMod}>{this.state.loadMod === undefined ? "This field is required." : ''}</FormHelperText>
-          </FormControl>
-            
+              <Grid item>
+                <TextField 
+                  variant="filled" 
+                  fullWidth
+                  label="Path to mod files"
+                  value={this.state.modFolder} 
+                  onClick={event => this.onModFolderPathChange(event.target.value)} 
+                  helperText="Important: if external mod files are required please select the mod folder path"
+                />
+              </Grid>
+            </Grid>
+          </Box>
+          
             
           <Checkbox
-            disabled={this.state.loadMod === '' ? true : !this.state.loadMod}
             fullWidth
             noBackground
             label="Compile mod files"

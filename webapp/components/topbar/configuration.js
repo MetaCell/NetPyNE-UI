@@ -2,6 +2,7 @@ import React from 'react';
 import { bgRegular, bgDark, font, primaryColor, gutter, radius } from '../../theme'
 
 import { openTopbarDialog, changePageTransitionMode } from '../../redux/actions/topbar'
+import { openDialog } from '../../redux/actions/general'
 import { TOPBAR_CONSTANTS } from '../../constants'
 
 
@@ -104,16 +105,16 @@ export default {
           label: "About...",
           icon: "",
           action: {
-            handlerAction: "",
-            parameters: []
+            handlerAction: "redux",
+            parameters: [openDialog, { title: "About", message: "This is about tab" }]
           }
         },
         {
           label: "Contribute",
           icon: "",
           action: {
-            handlerAction: "",
-            parameters: []
+            handlerAction: "redux",
+            parameters: [openDialog, { title: "Contribute", message: "This is Contribute tab" }]
           }
         },
       ],

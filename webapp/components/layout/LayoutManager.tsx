@@ -129,9 +129,7 @@ class LayoutManager {
     hrow._setWeight(100);
 
     const tabset = new FlexLayout.TabSetNode(model, { id: tabsetID });
-    tabset._setWeight(80);
-
-    hrow._addChild(tabset);
+    tabset._setWeight(40);
 
     rootNode.getChildren().forEach(child => {
       if(child['getWeight']){
@@ -141,6 +139,7 @@ class LayoutManager {
       }
       
     });
+    hrow._addChild(tabset);
 
     rootNode._removeAll();
     rootNode._addChild(hrow, 0);

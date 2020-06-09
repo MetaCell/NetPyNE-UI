@@ -184,6 +184,7 @@ export default class NetPyNEStimulationSources extends Component {
               />
               <NetPyNEAddNew 
                 id={"newStimulationSourceButton"} 
+                title="Create new stimulation source"
                 handleClick={this.handleNewStimulationSource}
               />
             </div>

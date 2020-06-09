@@ -9,7 +9,7 @@ const style = ({ palette }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: palette.common.white
+    backgroundColor: 'inherit'
   }
 })
 
@@ -78,8 +78,8 @@ class CustomHTMLViewer extends Component {
   render () {
     const { classes } = this.props
     return (
-      <div className={classes.container} ref={this.containerRef}>
-        <HTMLViewer {...this.props} style={{ backgroundColor: 'white' }} />
+      <div id="plot" className={classes.container} ref={this.containerRef}>
+        <HTMLViewer {...this.props} style={{ backgroundColor: 'inherit' }} />
       </div>
     )
   }

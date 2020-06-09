@@ -180,7 +180,7 @@ export default class NetPyNESynapses extends Component {
                 selection={this.state.selectedSynapse}
                 handleClick={() => this.setState({ selectedSynapse: undefined })}
               />
-              <NetPyNEAddNew id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
+              <NetPyNEAddNew title="Create new synapse" id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
             </div>
             <Divider />
             <RulePath text={`netParams.synMechParams["${this.state.selectedSynapse}"]`}/>

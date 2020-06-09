@@ -145,12 +145,13 @@ class ImportCellParams extends React.Component {
                 variant="filled"
                 value={modFolder}
                 onChange={event => this.setState({ modFolder: event.target.value })} 
+                helperText="Important: if external mod files are required please select the mod folder path"
               />
             </NetPyNEField>
           </Grid>
         </Grid>
 
-        <ListComponent id="cellArgs" realType="dict" floatingLabelText="Cell Template Parameters (key:value pair)" ref="cellArgs" />
+        <ListComponent id="cellArgs" realType="dict" label="argument as key:value" floatingLabelText="Cell Template Parameters (key:value pair)" ref="cellArgs" />
 
         <Grid container spacing={1}>
           <Grid item>

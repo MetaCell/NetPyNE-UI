@@ -11,7 +11,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { NetPyNESelectField, NetPyNEField, NetPyNECoordsRange } from 'netpyne/components';
+import { NetPyNESelectField, NetPyNETextField, NetPyNEField, NetPyNECoordsRange } from 'netpyne/components';
 import Utils from '../../../Utils';
 import ExpansionPanel from '../../general/ExpansionPanel'
 import { withStyles } from "@material-ui/core/styles"
@@ -108,15 +108,18 @@ class NetPyNECellRule extends React.Component {
           
           <ExpansionPanel className={classes.expandable} elevation={0}>
             <Box mb={1}>
-              <b>Conditions (optional):</b>
+              <span>Conditions (optional):</span>
             </Box>
 
             <NetPyNEField id={"netParams.cellParams.conds.cellModel"} >
-              <NetPyNESelectField
+              <NetPyNETextField
+                variant="filled"
+                fullWidth
                 model={"netParams.cellParams['" + this.state.currentName + "']['conds']['cellModel']"}
-                method={"netpyne_geppetto.getAvailableCellModels"}
-                postProcessItems={this.postProcessMenuItems}
-                multiple={true}
+                callback={(newValue, oldValue) => {
+                  Utils.evalPythonMessage("netpyne_geppetto.propagate_field_rename", ['cellType', newValue, oldValue])
+                  this.props.updateCards()
+                }}
               />
             </NetPyNEField>
 

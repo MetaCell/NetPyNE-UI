@@ -6,6 +6,9 @@ import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import Paper from '@material-ui/core/Paper'
 import Utils from '../../../../Utils';
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
+
 
 import {
   NetPyNEField,
@@ -100,6 +103,12 @@ export default class NetPyNESection extends React.Component {
             value = {this.state.currentName}
             label="The name of the section"
           />
+          <Box m={1}>
+            <Button 
+              variant="contained" color="secondary"
+              onClick={() => this.props.openTopbarDialog()}
+            >Import cell template</Button>
+          </Box>
         </div>
       )
     } else if (this.state.sectionId == "Geometry") {

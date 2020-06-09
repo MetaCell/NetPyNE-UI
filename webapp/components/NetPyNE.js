@@ -3,7 +3,8 @@ import React from "react";
 import {
   Topbar,
   LayoutManager,
-  Drawer
+  Drawer,
+  Dialog
 } from "netpyne/components";
 import Splash from './general/Splash'
 import { withStyles } from '@material-ui/core/styles'
@@ -82,6 +83,7 @@ class NetPyNE extends React.Component {
             <Layout />
           </div>
         </div>
+        <Dialog/>
       </div>
     );
   }

@@ -66,6 +66,7 @@ export default class NetPyNEInstantiated extends React.Component {
     if (Instances.network) {
       // update canvas only if there are instances to show
       this.canvasRef.current.engine.updateSceneWithNewInstances(window.Instances);
+      this.canvasRef.current.resetCamera()
     }
   }
 

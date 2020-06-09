@@ -38,8 +38,10 @@ body {
 }
 #controlpanel {
   margin-top: @flexlayout-widget-border;
-  top: 0%!important;
-  width: 97%!important;
+  // top: 0%!important;
+  // width: 97%!important;
+  height: calc(100% - 24px)!important;
+  width: calc(100% - 16px)!important;
 }
 button.actionButton {
   font-size: 15px;
@@ -465,4 +467,8 @@ div.flexlayout__layout{
   position: unset;
   top: unset;
   left: unset;
+}
+
+#plot > div>div>svg{
+  fill: white;
 }

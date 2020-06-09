@@ -427,11 +427,8 @@ class NetPyNEGeppetto():
     
     def getAvailableCellTypes(self):
         cellTypes = set([])
-        for p in self.netParams.popParams:
-            if 'cellType' in self.netParams.popParams[p]:
-                ct = self.netParams.popParams[p]['cellType']
-                if ct not in cellTypes:
-                    cellTypes.add(ct)
+        for p in self.netParams.cellParams:
+            cellTypes.add(p)
         return list(cellTypes)
     
     def getAvailableSections(self):

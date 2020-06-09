@@ -310,7 +310,7 @@ export const DEFAULT_NETWORK_WIDGETS = {
   PYTHON_CONSOLE_WIDGET,
   D3Canvas: {
     id: 'D3Canvas', 
-    name: 'Morphology', 
+    name: '3D Representation', 
     status: WidgetStatus.ACTIVE, 
     component: 'D3Canvas', 
     panelName: "morphoPanel",
@@ -387,7 +387,7 @@ export const EDIT_WIDGETS = {
   },
   'simConfig': { 
     id: 'simConfig', 
-    name: 'Settings', 
+    name: 'Simulation Configuration', 
     status: WidgetStatus.HIDDEN,
     hideOnClose: true, 
     component: 'simConfig', 

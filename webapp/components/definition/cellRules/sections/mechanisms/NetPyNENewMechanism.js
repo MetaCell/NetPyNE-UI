@@ -67,7 +67,7 @@ class NetPyNENewMechanism extends React.Component {
       if (blockButton) {
         return "Explore mechanisms" 
       } else {
-        return "Add new mechanism"
+        return "Create new mechanism"
       }
     }
   }

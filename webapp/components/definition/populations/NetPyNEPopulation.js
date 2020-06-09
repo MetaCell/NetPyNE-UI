@@ -6,6 +6,7 @@ import Utils from '../../../Utils';
 import Box from '@material-ui/core/Box'
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -18,7 +19,8 @@ import {
   Dimensions,
   NetPyNEField,
   NetPyNETextField,
-  NetPyNECoordsRange
+  NetPyNECoordsRange,
+  NetPyNESelectField
 } from 'netpyne/components';
 
 const styles = ({ spacing }) => ({
@@ -121,6 +123,19 @@ class NetPyNEPopulation extends React.Component {
     this.updateTimer = setTimeout(updateMethod, 1000);
   }
 
+  postProcessMenuItems (pythonData, selected) {
+    return pythonData.map(name => (
+      <MenuItem
+        id={name + "MenuItem"}
+        key={name}
+        checked={selected.indexOf(name) > -1}
+        value={name}
+      >
+        {name}
+      </MenuItem>
+    ));
+  }
+
   render () {
     const { classes } = this.props
     
@@ -160,14 +175,10 @@ class NetPyNEPopulation extends React.Component {
           
 
           <NetPyNEField id="netParams.popParams.cellType" >
-            <NetPyNETextField
-              variant="filled" 
-              fullWidth
-              callback={(newValue, oldValue) => {
-                Utils.evalPythonMessage("netpyne_geppetto.propagate_field_rename", ['cellType', newValue, oldValue])
-                this.props.updateCards()
-              }}
+            <NetPyNESelectField
+              method={"netpyne_geppetto.getAvailableCellTypes"}
               model={"netParams.popParams['" + this.props.name + "']['cellType']"}
+              postProcessItems={this.postProcessMenuItems}
             />
           </NetPyNEField>
 

@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from "react-redux";
 import PythonControlledCapability from "@geppettoengine/geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability";
+import { TOPBAR_CONSTANTS } from '../constants'
 
 import {
   activateWidget,
@@ -10,15 +11,13 @@ import {
 } from "../redux/actions/layout";
 import { openBackendErrorDialog, closeBackendErrorDialog } from '../redux/actions/errors';
 import {
-  updateCards, editModel, simulateNetwork, createNetwork, 
+  updateCards, editModel, simulateNetwork, createNetwork, closeDialog,
   createAndSimulateNetwork, showNetwork, pythonCall, modelLoaded, deleteNetParamsObj
 } from "../redux/actions/general";
-import { closeDrawerDialogBox, openDrawerDialogBox } from '../redux/actions/drawer';
 
 import { openTopbarDialog, closeTopbarDialog, changePageTransitionMode } from '../redux/actions/topbar'
 
 const updateCardsDispatch = dispatch => ({ updateCards: () => dispatch(updateCards) });
-const pythonCallErrorDispatch = dispatch => ({ pythonCallErrorDialogBox: payload => dispatch(openBackendErrorDialog(payload)) });
 
 /** **** COMPONENT PROXIES ******/
 
@@ -30,8 +29,13 @@ export const NetPyNETextField = PythonControlledCapability.createPythonControlle
 );
 
 import _NetPyNECellRules from "./definition/cellRules/NetPyNECellRules";
-export const NetPyNECellRules = PythonControlledCapability.createPythonControlledComponent(
-  _NetPyNECellRules
+export const NetPyNECellRules = connect(
+  null,
+  updateCardsDispatch
+)(
+  PythonControlledCapability.createPythonControlledComponent(
+    _NetPyNECellRules
+  )
 );
 
 import _NetPyNEConnectivityRules from "./definition/connectivity/NetPyNEConnectivityRules";
@@ -90,11 +94,20 @@ export const NetPyNE = connect(
 )(_NetPyNE);
 
 import _NetPyNECellRule from "./definition/cellRules/NetPyNECellRule";
-export const NetPyNECellRule = connect((state, ownProps) => ({
-  ...ownProps,
-  updates: state.general.updates
-}))(_NetPyNECellRule);
+export const NetPyNECellRule = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    updates: state.general.updates
+  }),
+  updateCardsDispatch
+)(_NetPyNECellRule);
 
+
+import _NetPyNESection from './definition/cellRules/sections/NetPyNESection';
+export const NetPyNESection = connect(
+  null,
+  dispatch => ({ openTopbarDialog: () => dispatch(openTopbarDialog(TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE)) })
+)(_NetPyNESection);
 
 import { getInstance as getLayoutManagerInstance } from "./layout/LayoutManager";
 export const LayoutManager = () => connect(state => ({ layout: state.layout, }))(getLayoutManagerInstance().getComponent());
@@ -102,7 +115,7 @@ export const LayoutManager = () => connect(state => ({ layout: state.layout, }))
 
 import _NetPyNEPopulation from "./definition/populations/NetPyNEPopulation";
 export const NetPyNEPopulation = connect(
-  null,
+  state => ({ updates: state.general.updates }),
   updateCardsDispatch
 )(_NetPyNEPopulation);
 
@@ -189,7 +202,7 @@ export const ActionDialog = connect(
   state => ({ ...state.errors, openErrorDialogBox: state.errors.openDialog }),
   dispatch => ({ 
     pythonCall: (cmd, args) => dispatch(pythonCall(cmd, args)),
-    closeBackendErrorDialog: () => dispatch(closeBackendErrorDialog)
+    closeBackendErrorDialog: () => dispatch(closeBackendErrorDialog),
   })
 )(_ActionDialog)
 
@@ -242,6 +255,13 @@ export const NetPyNEThumbnail = connect(
   state => ({}),
   dispatch => ({ deleteNetParamsObj: payload => dispatch(deleteNetParamsObj(payload)), })
 )(_NetPyNEThumbnail)
+
+
+import _Dialog from "./general/Dialog";
+export const Dialog = connect(
+  state => ({ open: state.general.dialogOpen, title: state.general.dialogTitle, message: state.general.dialogMessage }),
+  dispatch => ({ handleClose: () => dispatch(closeDialog), })
+)(_Dialog)
 
 // ---------------------------------------------------------------------------------------- //
 

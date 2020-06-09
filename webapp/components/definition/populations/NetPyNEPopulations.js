@@ -90,7 +90,7 @@ export default class NetPyNEPopulations extends React.Component {
                                           + m + " has been renamed " + newValue
             },
             () => Utils.renameKey('netParams.popParams', m, newValue, (response, newValue) => {
-              this.updateCards()
+              this.props.updateCards()
             }));
           }
         }
@@ -208,6 +208,7 @@ export default class NetPyNEPopulations extends React.Component {
               />
               <NetPyNEAddNew 
                 id={"newPopulationButton"} 
+                title="Create new population"
                 handleClick={this.handleNewPopulation}
               />
             </div>

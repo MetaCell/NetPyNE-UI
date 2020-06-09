@@ -25,9 +25,9 @@ class NetPyNEAddNew extends React.Component {
   }
 
   render () {
-    const { classes } = this.props
+    const { classes, title } = this.props
     return (
-      <Tooltip title="Create rule" placement="top">
+      <Tooltip title={title ? title : "Create rule"} placement="top">
         <Fab 
           size="small"
           color='primary'

@@ -182,7 +182,7 @@ export default class NetPyNEStimulationTargets extends Component {
                 handleClick={() => this.setState({ selectedStimulationTarget: undefined })}
               />
             
-              <NetPyNEAddNew id={"newStimulationTargetButton"} handleClick={this.handleNewStimulationTarget} />
+              <NetPyNEAddNew title="Create new stimulation target" id={"newStimulationTargetButton"} handleClick={this.handleNewStimulationTarget} />
 
             </div>
             <Divider />

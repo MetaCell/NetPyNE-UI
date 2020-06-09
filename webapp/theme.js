@@ -12,7 +12,7 @@ require('./css/flexlayout.less');
 require('./css/tree.less');
 
 export const {
-  primaryColor, secondaryColor, font, fontColor, 
+  primaryColor, secondaryColor, font, fontColor,
   bgLight, bgRegular, bgDark, bgDarker, bgDarkest, bgInputs, gutter, radius
 } = vars;
 

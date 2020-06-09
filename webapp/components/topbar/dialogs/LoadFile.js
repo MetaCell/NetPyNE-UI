@@ -41,7 +41,7 @@ class LoadFile extends React.Component {
       explorerDialogOpen: false,
       explorerParameter: "",
       exploreOnlyDirs: false,
-      areModFieldsRequired: '',
+      areModFieldsRequired: false,
       jsonPath: '',
       modPath: '',
       loadNetParams: true,
@@ -96,7 +96,7 @@ class LoadFile extends React.Component {
     let freezeInstance = !!this.state.loadNet
     let freezeSimulation = !!(freezeInstance && this.state.loadSimData)
     let tab = this.state.loadSimData || this.state.loadNet ? 'simulate' : 'define'
-    const disableLoadMod = this.state.areModFieldsRequired === '' ? true : !this.state.areModFieldsRequired
+    const disableLoadMod = !this.state.areModFieldsRequired
 
     return (
       
@@ -133,7 +133,7 @@ class LoadFile extends React.Component {
             </Grid>
           </Grid>
           
-          
+
           <div>
             <List style={{ display: 'flex', flexWrap: 'wrap' }}> 
               {loadOptions.map((loadOption, index) => (
@@ -158,67 +158,44 @@ class LoadFile extends React.Component {
           </div>
 
 
-          <div>
-            <FormControl fullWidth>
-              <InputLabel >Are custom mod files required for this model?</InputLabel>
-              <Select
-                value={this.state.areModFieldsRequired}
-                onChange={event => this.setState({ areModFieldsRequired: event.target.value })}
-              >
-                <MenuItem value={true} >Yes, this model requires custom mod files</MenuItem>
-                <MenuItem value={false} >No, this model only requires NEURON built-in mod files</MenuItem>
-              </Select>
-              <FormHelperText>{this.state.areModFieldsRequired === undefined ? "This field is required." : ''}</FormHelperText>
-            </FormControl>
-            
-
-            <Box mt={1} width="100%">
-              <Grid container alignItems="center" spacing={1}>
-                <Tooltip title="File explorer" placement="top">
-                  <div>
-                    <IconButton
-                      onClick={() => this.showExplorerDialog('modFolder', true)} 
-                      disabled={disableLoadMod} 
-                    >
-                      <Icon className={`fa fa-folder-o`} />
-                    </IconButton>
-                  </div>
+          <Grid container alignItems="center" spacing={1}>
+            <Tooltip title="File explorer" placement="top">
+              <div>
+                <IconButton
+                  onClick={() => this.showExplorerDialog('modFolder', true)} 
+                >
+                  <Icon className={`fa fa-folder-o`} />
+                </IconButton>
+              </div>
                 
-                </Tooltip>
-                <Grid item container alignItems="center">
-                  <Grid item >
-                    <TextField
-                      variant="filled" 
-                      fullWidth
-                      label="Mod folder:"
-                      disabled={disableLoadMod} 
-                      value={this.state.modFolder} 
-                      onChange={event => this.setState({ modFolder: event.target.value })} 
-                      helperText={this.state.modPath != '' ? 'path: ' + this.state.modPath : ''} 
-                    />
-                  </Grid>
+            </Tooltip>
+
+            <Grid item >
+              <TextField
+                variant="filled" 
+                fullWidth
+                label="Mod folder:"
+                value={this.state.modFolder} 
+                onChange={event => this.setState({ modFolder: event.target.value })} 
+                helperText={"Important: if external mod files are required please select the mod folder path"} 
+              />
+            </Grid>
                 
               
-                  <Grid item>
-                    <Box ml={1} width="100%">
-                      <Checkbox
-                        fullWidth
-                        noBackground
-                        label="Compile mod files"
-                        checked={this.state.compileMod}
-                        disabled={this.state.areModFieldsRequired === '' ? true : !this.state.areModFieldsRequired}
-                        onChange={() => this.setState(oldState => ({ compileMod: this.state.areModFieldsRequired ? !oldState.compileMod : false }))}
-                      />
-                    </Box>
-                  
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Box>
-            
+          </Grid>
 
-            <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} filterFiles={'.json'} onRequestClose={selection => this.closeExplorerDialog(selection)} />
-          </div>
+          <Box ml={1} width="100%">
+            <Checkbox
+              fullWidth
+              noBackground
+              label="Compile mod files"
+              checked={this.state.compileMod}
+              onChange={() => this.setState({ compileMod: !this.state.compileMod })}
+            />
+          </Box>
+                  
+
+          <FileBrowser open={this.state.explorerDialogOpen} exploreOnlyDirs={this.state.exploreOnlyDirs} filterFiles={'.json'} onRequestClose={selection => this.closeExplorerDialog(selection)} />
         </div>
       </ActionDialog>
     )

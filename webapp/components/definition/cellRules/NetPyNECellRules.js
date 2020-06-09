@@ -9,11 +9,10 @@ import {
   NetPyNECellRule, 
   NetPyNEThumbnail,
   GridLayout,
-  Filter
+  Filter,
+  NetPyNESection
 } from 'netpyne/components';
 
-
-import NetPyNESection from './sections/NetPyNESection';
 
 import NetPyNEMechanism from './sections/mechanisms/NetPyNEMechanism';
 import NetPyNENewMechanism from './sections/mechanisms/NetPyNENewMechanism';
@@ -99,7 +98,7 @@ export default class NetPyNECellRules extends React.Component {
       selectedCellRule: cellRuleId,
       selectedSection: undefined,
       selectedMechanism: undefined
-    });
+    }, this.props.updateCards());
   }
 
   selectSection (section) {
@@ -436,10 +435,10 @@ export default class NetPyNECellRules extends React.Component {
         if (selectedCellRule && selectedCellRule.length > 8 ) {
           return selectedCellRule
         } else {
-          return 'Go back to rule'
+          return 'Go back to cell type'
         }
       } else {
-        return 'Create rule'
+        return 'Create new cell type'
       }
 
     case 'section':
@@ -451,7 +450,7 @@ export default class NetPyNECellRules extends React.Component {
         }
       } else {
         if (page == "sections") {
-          return 'Create a section'
+          return 'Create new section'
         } else {
           if (selectedCellRule){
             if (!!model && !!model[selectedCellRule] && Object.keys(model[selectedCellRule]['secs']).length > 0) {
@@ -460,7 +459,7 @@ export default class NetPyNECellRules extends React.Component {
               return "Create first section"
             }
           } else {
-            return "No rule selected" 
+            return "No cell type selected" 
           }
         }
       }

@@ -207,7 +207,7 @@ export default class NetPyNEConnectivityRules extends Component {
                 selection={this.state.selectedConnectivityRule}
                 handleClick={() => this.setState({ selectedConnectivityRule: undefined })}
               />
-              <NetPyNEAddNew id={"newConnectivityRuleButton"} handleClick={this.handleNewConnectivityRule} />
+              <NetPyNEAddNew title="Create new connectivity rule" id={"newConnectivityRuleButton"} handleClick={this.handleNewConnectivityRule} />
             </div>
             <Divider />
             <RulePath text={`netParams.connParams["${this.state.selectedConnectivityRule}"]`}/>

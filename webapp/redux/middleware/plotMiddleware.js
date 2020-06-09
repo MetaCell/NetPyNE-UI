@@ -3,6 +3,7 @@ import Utils from '../../Utils';
 import { NETPYNE_COMMANDS, PLOT_WIDGETS } from '../../constants';
 
 import { processError } from './middleware';
+import { SIMULATE_NETWORK } from '../actions/general';
 
 // Cache for plots coming from the backend
 window.plotSvgImages = {};
@@ -32,13 +33,18 @@ export default store => next => action => {
   case SET_WIDGETS: {
     for (let widget of Object.values(action.data)) {
       if ((widget.id in PLOT_WIDGETS) && widget.method) {
-        // delete action.data[widget.id];
-        action.data[widget.id].disabled;
         setWidget(widget).then(widget => widget ? next(addWidget(widget)) : null);
       }
     }
     next(action);
     break;
+  }
+  case SIMULATE_NETWORK: {
+    for (let widget of Object.values(PLOT_WIDGETS)) {
+      setWidget(widget).then(widget => widget ? next(addWidget(widget)) : null);
+    }
+    next(action);
+    break
   }
   default: {
     next(action);
