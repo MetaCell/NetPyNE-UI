@@ -6,6 +6,9 @@ import { openDialog } from '../../redux/actions/general'
 import { TOPBAR_CONSTANTS } from '../../constants'
 
 
+const checkedIcon = "fa fa-check secondary";
+const unCheckedIcon = "fa fa-check color-dark";
+
 const style = {
   standard: {
     background: bgRegular,
@@ -102,7 +105,7 @@ export default {
       icon: "",
       list: [
         {
-          label: "About...",
+          label: "About",
           icon: "",
           action: {
             handlerAction: "redux",
@@ -141,7 +144,7 @@ export default {
           ]
         },
         {
-          label: "Open",
+          label: "Open...",
           icon: "",
           action: {
             handlerAction: 'redux',
@@ -149,7 +152,7 @@ export default {
           }
         },
         {
-          label: "Save",
+          label: "Save...",
           icon: "",
           action: {
             handlerAction: 'redux',
@@ -157,7 +160,7 @@ export default {
           }
         },
         {
-          label: "Import...",
+          label: "Import",
           icon: "",
           list: [
             {
@@ -179,7 +182,7 @@ export default {
           ]
         },
         {
-          label: "Export...",
+          label: "Export",
           icon: "",
           list: [
             {
@@ -193,7 +196,7 @@ export default {
           ]
         },
         {
-          label: "Resources...",
+          label: "Workspace",
           icon: "",
           list: [
             {
@@ -221,41 +224,57 @@ export default {
       icon: "",
       position: "bottom-start",
       styles: topLevelMenuItemStyle,
-      list: [
-        {
-          label: TOPBAR_CONSTANTS.CREATE_NETWORK,
-          icon: "",
-          action: {
-            handlerAction: "redux",
-            parameters: [changePageTransitionMode, TOPBAR_CONSTANTS.CREATE_NETWORK]
-          }
-        },
-        {
-          label: TOPBAR_CONSTANTS.CREATE_AND_SIMULATE_NETWORK,
-          icon: "",
-          action: {
-            handlerAction: "redux",
-            parameters: [changePageTransitionMode, TOPBAR_CONSTANTS.CREATE_AND_SIMULATE_NETWORK]
-          }
-        },
-        {
-          label: TOPBAR_CONSTANTS.EXPLORE_EXISTING_NETWORK,
-          icon: "",
-          action: {
-            handlerAction: "redux",
-            parameters: [changePageTransitionMode, TOPBAR_CONSTANTS.EXPLORE_EXISTING_NETWORK]
-          }
-        },
-      ]
+      dynamicListInjector: {
+        handlerAction: "menuInjector",
+        parameters: ["Model"]
+      }
     },
     {
       label: "Help",
       icon: "",
+      position: "bottom-start",
       styles: topLevelMenuItemStyle,
-      action: {
-        handlerAction: '',
-        parameters: []
-      }
+      list: [
+        {
+          label: "Documentation",
+          icon: "",
+          action: {
+            handlerAction: TOPBAR_CONSTANTS.NEW_PAGE,
+            parameters: ["http://netpyne.org/"]
+          }
+        }
+      ]
     },
   ]
 }
+
+
+export const getModelMenu = props => (
+  [
+    {
+      label: TOPBAR_CONSTANTS.CREATE_NETWORK,
+      icon: props.pageTransitionMode === TOPBAR_CONSTANTS.CREATE_NETWORK ? checkedIcon : 'fa',
+      className: "topbar-menu-item",
+      action: {
+        handlerAction: "redux",
+        parameters: [changePageTransitionMode, TOPBAR_CONSTANTS.CREATE_NETWORK]
+      }
+    },
+    {
+      label: TOPBAR_CONSTANTS.CREATE_AND_SIMULATE_NETWORK,
+      icon: props.pageTransitionMode === TOPBAR_CONSTANTS.CREATE_AND_SIMULATE_NETWORK ? checkedIcon : 'fa',
+      action: {
+        handlerAction: "redux",
+        parameters: [changePageTransitionMode, TOPBAR_CONSTANTS.CREATE_AND_SIMULATE_NETWORK]
+      }
+    },
+    {
+      label: TOPBAR_CONSTANTS.EXPLORE_EXISTING_NETWORK,
+      icon: props.pageTransitionMode === TOPBAR_CONSTANTS.EXPLORE_EXISTING_NETWORK ? checkedIcon : 'fa',
+      action: {
+        handlerAction: "redux",
+        parameters: [changePageTransitionMode, TOPBAR_CONSTANTS.EXPLORE_EXISTING_NETWORK]
+      }
+    },
+  ]
+)

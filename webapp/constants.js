@@ -51,7 +51,8 @@ export const TOPBAR_CONSTANTS = {
   CREATE_NETWORK: 'Create Network',
   CREATE_AND_SIMULATE_NETWORK:'Create and Simulate Network',
   EXPLORE_EXISTING_NETWORK:'Explore Existing Network',
-  BACK_TO_EDITION: 'Back to edit'
+  BACK_TO_EDITION: 'Back to edit',
+  NEW_PAGE: 'NEW_PAGE'
 
 }
 
