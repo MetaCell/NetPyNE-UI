@@ -23,6 +23,7 @@ hub:
       c.Spawner.notebook_dir = '/home/jovyan/work/NetPyNE-UI'
       c.Spawner.default_url = '/geppetto'
       c.Spawner.debug = True
+      c.Spawner.disable_check_xsrf=True
     spawner: >-
       c.Spawner.args = ["--library=netpyne_ui", "--NotebookApp.disable_check_xsrf=True"]
 
