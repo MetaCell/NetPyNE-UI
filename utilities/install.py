@@ -63,7 +63,7 @@ subprocess.call(['python3', '-m', 'pip', 'install', '-r', 'requirements.txt'])
 clone_repo(project='Neurosim-lab',
            repo_name='netpyne',
            folder='netpyne',
-           default_branch='v0.9.6_gui'
+           default_branch='gui_cns'
 )
 subprocess.call(['python3', '-m', 'pip', 'install', '-e', '.'], cwd='./netpyne/')
 

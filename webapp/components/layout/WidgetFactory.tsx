@@ -53,6 +53,15 @@ export default class WidgetFactory{
       return <NetPyNEInstantiated/>
     case "Plot": {
       const data = window['plotSvgImages'][widgetConfig.id]
+      if (widgetConfig.method.plotMethod.startsWith("iplot")) {
+        return (
+          <div style={{ width: '100%', height: '100%', textAlign: "center" }}>
+            <iframe name='dipole' srcDoc={data}
+              // onLoad={() => this.centerIframe('dipole')}
+              style={{ border: 0, width: '100%', height: '100%' }}/>
+          </div>
+        )
+      }
       return (
         <HTMLViewer 
           content={data}

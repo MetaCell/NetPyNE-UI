@@ -105,7 +105,7 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     method: {
-      plotMethod: 'plotConn', 
+      plotMethod: 'iplotConn', 
       plotType: false
     },
     pos: 1
@@ -150,7 +150,7 @@ export const PLOT_WIDGETS = {
     hideOnClose: true,
     enableRename: false,
     method: {
-      plotMethod: 'plotTraces', 
+      plotMethod: 'iplotTraces', 
       plotType: false
     },
     pos: 4
@@ -165,7 +165,7 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     method: {
-      plotMethod: 'plotRaster', 
+      plotMethod: 'iplotRaster', 
       plotType: false
     },
     pos: 5
@@ -180,7 +180,7 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     method: {
-      plotMethod: 'plotSpikeHist', 
+      plotMethod: 'iplotSpikeHist', 
       plotType: false
     },
     pos: 6
@@ -210,7 +210,7 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     method: {
-      plotMethod: 'plotRatePSD', 
+      plotMethod: 'iplotRatePSD', 
       plotType: false
     },
     pos: 8
@@ -225,7 +225,7 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     method: {
-      plotMethod: 'plotLFP',
+      plotMethod: 'iplotLFP',
       plotType: 'timeSeries'
     },
     pos: 9
@@ -240,7 +240,7 @@ export const PLOT_WIDGETS = {
     hideOnClose: true,
     enableRename: false,
     method: {
-      plotMethod: 'plotLFP',
+      plotMethod: 'iplotLFP',
       plotType: 'PSD'
     },
     pos: 10
@@ -255,7 +255,7 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     method: {
-      plotMethod: 'plotLFP',
+      plotMethod: 'iplotLFP',
       plotType: 'spectrogram'
     },
     pos: 11
@@ -270,7 +270,7 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     method: {
-      plotMethod: 'plotLFP',
+      plotMethod: 'iplotLFP',
       plotType: 'locations'
     },
     pos: 12

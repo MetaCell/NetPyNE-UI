@@ -391,26 +391,42 @@ class NetPyNEGeppetto():
                 args = self.getPlotSettings(plotName)
                 if LFPflavour:
                     args['plots'] = [LFPflavour]
-                figData = getattr(analysis, plotName)(showFig=False, **args)
                 
-                if isinstance(figData, tuple):
-                    fig = figData[0]
-                    if fig==-1:
-                        return fig
-                    elif isinstance(fig, list):
-                        return [ui.getSVG(fig[0])]
-                    elif isinstance(fig, dict):
-                        svgs = []
-                        for key, value in fig.items():
-                            svgs.append(ui.getSVG(value))
-                        return svgs
-                    else:
-                        return [ui.getSVG(fig)]
+                args['showFig'] = False
+                
+                if plotName.startswith('iplot'):
+                    html = getattr(analysis, plotName)(**args)
+                    if not html:
+                        return ""
+                    if (plotName == 'iplotRaster'):
+                        html = html[0]
+                    return html
+
                 else:
-                    return figData
+                    
+                    figData = getattr(analysis, plotName)(**args)
+                    
+                    if isinstance(figData, tuple):
+                        fig = figData[0]
+                        if fig==-1:
+                            return fig
+                        elif isinstance(fig, list):
+                            return [ui.getSVG(fig[0])]
+                        elif isinstance(fig, dict):
+                            svgs = []
+                            for key, value in fig.items():
+                                svgs.append(ui.getSVG(value))
+                            return svgs
+                        else:
+                            return [ui.getSVG(fig)]
+                    else:
+                        return figData
+
+
+
         except Exception as e:
             # TODO: Extract these two lines as a function and call it in every catch clause
-            err = "There was an exception in %s():"%(function.__name__)
+            err = "There was an exception in %s():"%(e.plotName)
             logging.exception(("%s \n %s \n%s"%(err,e,sys.exc_info())))
 
     def getAvailablePops(self):
@@ -455,7 +471,7 @@ class NetPyNEGeppetto():
         return [value[:-(len(mechanism) + 1)] for value in params]
         
     def getAvailablePlots(self):
-        plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats","plotRatePSD", "plotTraces", "plotLFP", "plotShape", "plot2Dnet", "plotConn", "granger"]
+        plots  = ["iplotRaster", "iplotSpikeHist", "plotSpikeStats","iplotRatePSD", "iplotTraces", "iplotLFP", "plotShape", "plot2Dnet", "iplotConn", "granger"]
 
         return [plot for plot in plots if plot not in list(self.simConfig.analysis.keys())]
 

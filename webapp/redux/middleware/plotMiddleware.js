@@ -78,7 +78,11 @@ const plotFigure = async (plotId, plotMethod, plotType = false) => {
         response = eval(response);
       }
     }
-    if (response?.length !== undefined) {
+    if (plotMethod.startsWith("iplot")) {
+      let html_text = response.replace ? response.replace(/\\n/g, '').replace(/\\/g, '') : ''
+
+      setPlotToWindow(plotId, html_text)
+    } else if (response?.length !== undefined) {
       setPlotToWindow(plotId, response[0]);
     } else if (response == -1) {
       return null;
