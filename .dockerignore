@@ -14,3 +14,4 @@ netpyne_workspace
 webapp/node_modules
 webapp/build
 webapp/geppetto-client
+k8s
