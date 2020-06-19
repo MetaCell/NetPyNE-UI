@@ -24,7 +24,7 @@ steps:
     build_arguments:
       - branch=${{CF_BRANCH}}
     dockerfile: Dockerfile_dev
-    registry: {{REGISTRY}}
+    registry: ${{REGISTRY}}
     when:
       branch:
         only:
@@ -37,7 +37,7 @@ steps:
     working_directory: k8s
     tag: '${{CF_SHORT_REVISION}}'
     dockerfile: Dockerfile
-    registry: {{REGISTRY}}
+    registry: ${{REGISTRY}}
     when:
       branch:
         only:
