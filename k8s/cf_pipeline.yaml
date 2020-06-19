@@ -42,13 +42,6 @@ steps:
       branch:
         only:
           - "${{CF_BRANCH}}"
-  WhereWeAre:
-    title: Check where we are
-    image: alpine
-    stage: "build"
-    working_directory: k8s
-    commands:
-      - ls
   installing_chart:
     type: helm
     stage: deploy

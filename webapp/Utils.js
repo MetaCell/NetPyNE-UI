@@ -1,6 +1,7 @@
 import { execPythonMessage, evalPythonMessage } from '@geppettoengine/geppetto-client/js/communication/geppettoJupyter/GeppettoJupyterUtils';
 import React from 'react';
 
+
 const Utils = {
 
   getAvailableKey: function (model, prefix) {
