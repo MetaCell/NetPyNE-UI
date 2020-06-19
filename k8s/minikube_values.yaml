@@ -1,9 +1,9 @@
 # Use with minikubes
 hub:
   image: 
-    name: netpyne-hub
-    tag: latest
-    pullPolicy: Never
+    name: us.gcr.io/metacellllc/netpyne-hub
+    tag: adf2cea
+    pullPolicy: IfNotPresent
 
   resources:
     requests:
@@ -43,9 +43,9 @@ singleuser:
   memory:
     guarantee: 0.2G
   image:
-    name:  netpyne-ui
-    tag: 'latest'
-    pullPolicy: Never
+    name: us.gcr.io/metacellllc/netpyne-ui
+    tag: 'adf2cea'
+    pullPolicy: IfNotPresent
 
 cull:
   enabled: true
