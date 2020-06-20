@@ -170,14 +170,6 @@ export default {
                 handlerAction: "redux",
                 parameters: [openTopbarDialog, TOPBAR_CONSTANTS.IMPORT_HLS]
               }
-            },
-            {
-              label: "From cell template...",
-              icon: "",
-              action: {
-                handlerAction: "redux",
-                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE]
-              }
             }
           ]
         },
