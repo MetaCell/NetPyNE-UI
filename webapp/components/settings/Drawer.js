@@ -25,7 +25,7 @@ const drawerOpenWidth = 160;
 const drawerCloseWidth = 44;
 
 
-const DrawerItem = ({ id, name, widget, expanded, createOrFocusWidget, disabled, classes }) => (
+const DrawerItem = ({ id, name, widget, expanded, createOrFocusWidget, disabled, status, classes }) => (
   <Tooltip title={expanded ? "" : name} placement="right" >
     <div>
       <ListItem
@@ -38,7 +38,7 @@ const DrawerItem = ({ id, name, widget, expanded, createOrFocusWidget, disabled,
         onClick={() => createOrFocusWidget(id)}
       >
         <ListItemIcon className={classes.icon}>
-          <DrawerIcon name={id} selected={widget && widget.status !== WidgetStatus.MINIMIZED} />
+          <DrawerIcon name={id} selected={status === "ACTIVE"} disabled={status === "MINIMIZED"}/>
         </ListItemIcon>
         <ListItemText className={classes.text}>
           <Typography noWrap>{name}</Typography>
@@ -94,6 +94,9 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
   
   const mapItem = ({ name, id }) => {
     const widget = layoutManager.getWidget(id);
+    let visible = false
+    const status = layoutManager.getWidgetStatus(id)
+    
     return (
       <DrawerItem 
         key={id}
@@ -104,6 +107,7 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
         expanded={expand}
         classes={classes}
         createOrFocusWidget={createOrFocusWidget}
+        status={status}
       />
       
     )

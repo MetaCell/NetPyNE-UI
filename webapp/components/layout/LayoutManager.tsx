@@ -417,6 +417,21 @@ class LayoutManager {
     // Resize of canvas and SVG images
     window.dispatchEvent(new Event("resize"));
   }
+
+  getWidgetStatus (widgetId) {
+    const { model } = this
+    const parent = model.getNodeById(widgetId).getParent()
+    if (parent.getId() === "border_bottom") {
+      return WidgetStatus.MINIMIZED
+    }
+    else {
+      const selectedIndex = parent.getSelected()
+      if (parent.getChildren()[selectedIndex].getId() === widgetId) {
+        return WidgetStatus.ACTIVE
+      }
+      return WidgetStatus.HIDDEN
+    }
+  }
 }
 
 export function initLayoutManager(model, factory: WidgetFactory, iconFactory: TabsetIconFactory) {

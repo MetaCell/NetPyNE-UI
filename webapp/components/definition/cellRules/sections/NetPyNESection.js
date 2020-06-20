@@ -103,12 +103,6 @@ export default class NetPyNESection extends React.Component {
             value = {this.state.currentName}
             label="The name of the section"
           />
-          <Box m={1}>
-            <Button 
-              variant="contained" color="secondary"
-              onClick={() => this.props.openTopbarDialog()}
-            >Import cell template</Button>
-          </Box>
         </div>
       )
     } else if (this.state.sectionId == "Geometry") {

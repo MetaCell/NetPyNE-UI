@@ -106,6 +106,7 @@ class ImportExportHLS extends React.Component {
         break;
       case "modFolder":
         newState["modFolder"] = fieldValue.path;
+        newState["loadMod"] = true
         break;
       default:
         throw ("Not a valid parameter!");
@@ -143,7 +144,12 @@ class ImportExportHLS extends React.Component {
   }
 
   onModFolderPathChange (fullpath) {
-    this.setState({ modFolder: fullpath })
+    if (fullpath !== '') {
+      this.setState({ modFolder: fullpath, loadMod: true })
+    } else {
+      this.setState({ modFolder: fullpath, loadMod: false })
+    }
+    
   }
 
   render () {
@@ -223,7 +229,7 @@ class ImportExportHLS extends React.Component {
             fullWidth
             label="Path to mod files"
             value={this.state.modFolder} 
-            onClick={event => this.onModFolderPathChange(event.target.value)} 
+            onChange={event => this.onModFolderPathChange(event.target.value)} 
             helperText="Important: if external mod files are required please select the mod folder path"
             InputProps={{
               startAdornment: (

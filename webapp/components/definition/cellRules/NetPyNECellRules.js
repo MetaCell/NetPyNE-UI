@@ -129,6 +129,11 @@ export default class NetPyNECellRules extends React.Component {
       selectedSection: sectionId,
       selectedMechanism: undefined
     });
+
+    // Move to section page if not already there
+    if (this.state.page !== 'sections') {
+      this.setState({ page: 'sections' })
+    }
   }
 
   selectMechanism (mechanism) {
@@ -333,7 +338,7 @@ export default class NetPyNECellRules extends React.Component {
   }
 
   handleHierarchyClick = nextPage => {
-    const { page, selectedCellRule, value } = this.state;
+    const { value: model, page, selectedCellRule, selectedSection, selectedMechanism } = this.state;
     /*
      * with this herarchy navigation, the tree buttons in the breadclumb can behave  in 2 different ways
      * they can move the view to a different level (cellRule -> section) (seccions --> mechanisms) 
@@ -347,9 +352,20 @@ export default class NetPyNECellRules extends React.Component {
         this.handleNewSection({ 'Section': { 'geom': {}, 'topol': {}, 'mechs': {} } });
       }
     } else {
-      this.setState({ page: nextPage, filterValue: null });
+      const selection = {}
+      if (nextPage === 'sections' && !selectedSection) {
+        if (Object.keys(model[selectedCellRule]['secs']).length > 0) {
+          selection.selectedSection = Object.keys(model[selectedCellRule]['secs'])[0]
+        }
+      }
+      if (nextPage === 'mechanisms' && !selectedMechanism) {
+        if (Object.keys(model[selectedCellRule]['secs'][selectedSection]['mechs']).length > 0) {
+          selection.selectedMechanism = Object.keys(model[selectedCellRule]['secs'][selectedSection]['mechs'])[0]
+        }
+      }
+      this.setState({ page: nextPage, filterValue: null, ...selection });
       if (nextPage == 'sections') { // saves one click if there are no sections
-        if (Object.keys(value[selectedCellRule]['secs']).length == 0) {
+        if (Object.keys(model[selectedCellRule]['secs']).length == 0) {
           this.handleNewSection({ 'Section': { 'geom': {}, 'topol': {}, 'mechs': {} } });
         }
       }
@@ -572,7 +588,8 @@ export default class NetPyNECellRules extends React.Component {
             name={selectedCellRule}
             selectPage={this.selectPage}
             model={model[selectedCellRule]}
-            renameHandler={this.handleRenameChildren} 
+            renameHandler={this.handleRenameChildren}
+            HandleAddNewSection={ () => this.handleNewSection({ 'Section': { 'geom': {}, 'topol': {}, 'mechs': {} } })}
           />
         )
       }

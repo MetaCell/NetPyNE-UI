@@ -99,6 +99,7 @@ class Topbar extends Component {
       case TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE:
         content = <ImportCellParamsDialog
           open={this.props.openDialog}
+          cellRuleName={this.props.dialogMetadata.cellRuleName}
           onRequestClose={() => this.handleClose()}
         />
         break;

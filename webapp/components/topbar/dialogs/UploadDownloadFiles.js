@@ -237,7 +237,7 @@ class UploadDownloadFile extends React.Component {
                   <Tooltip title="File explorer" placement="top">
                     <Icon 
                       className='fa fa-folder hovered' 
-                      onClick={() => this.showExplorerDialog('.py')}
+                      onClick={() => this.showExplorerDialog()}
                       style={{ cursor: 'pointer' }}
                     />
                   </Tooltip>

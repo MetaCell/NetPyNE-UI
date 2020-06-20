@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box'
+import Grid from '@material-ui/core/Grid'
 import Dialog from '@material-ui/core/Dialog/Dialog';
 
 import DialogActions from '@material-ui/core/DialogActions';
@@ -166,6 +167,24 @@ class NetPyNECellRule extends React.Component {
             />
               
           </ExpansionPanel>
+
+          <Box m={1}>
+            <Button 
+              variant="contained" 
+              color="secondary"
+              onClick={() => this.props.HandleAddNewSection()}
+            >Add new section</Button>
+          </Box>
+          
+          <Box m={1}>
+            <Button 
+              variant="contained"
+              color="secondary"
+              onClick={() => this.props.openTopbarDialog(this.state.currentName)}
+            >Import cell template</Button>  
+          </Box>
+
+          
         </div>
         {dialogPop}
       </div>

@@ -36,5 +36,6 @@ export default makeStyles(({ transitions, palette, spacing }) => ({
   
   selected: { color: palette.primary.main, paddingLeft: spacing(1) },
   unselected: { color: palette.common.white, paddingLeft: spacing(1) },
+  disabled: { color: palette.common.black, paddingLeft: spacing(1) },
   icon: { color: 'inherit', minWidth: 'unset' }
 }))

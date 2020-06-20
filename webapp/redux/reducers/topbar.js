@@ -22,7 +22,7 @@ export default ( state = { ...TOPBAR_DEFAULT_STATE }, action ) => ({
 function reduceTopbar (state, action) {
   switch (action.type) {
   case OPEN_TOPBAR_DIALOG:
-    return { dialogOpen: true, dialogName: action.payload }
+    return { dialogOpen: true, dialogName: action.payload, dialogMetadata: action.metadata }
   case CLOSE_TOPBAR_DIALOG:
   case CLOSE_BACKEND_ERROR_DIALOG:
   case CLOSE_DRAWER_DIALOG_BOX:

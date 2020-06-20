@@ -3,7 +3,7 @@ import os
 UPLOAD_FOLDER_NAME = 'uploads'
 NETPYNE_WORKDIR = 'netpyne_workspace'
 
-ALLOWED_EXTENSIONS = ["py", "zip", "gz", ".tar.gz", "pdf", "txt", "xls", "png", "jpeg"]
+ALLOWED_EXTENSIONS = ["py", "zip", "gz", ".tar.gz", "pdf", "txt", "xls", "png", "jpeg", "hoc"]
 
 UPLOAD_FOLDER_PATH = os.path.join(os.getcwd(), NETPYNE_WORKDIR, UPLOAD_FOLDER_NAME)
 NETPYNE_WORKDIR_PATH = os.path.join(os.getcwd(), NETPYNE_WORKDIR)

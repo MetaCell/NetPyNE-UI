@@ -116,3 +116,6 @@ subprocess.call(['jupyter', 'serverextension', 'enable', '--sys-prefix', '--py',
 
 print("Installing NetPyNE UI python package ...")
 subprocess.call(['python3', '-m', 'pip', 'install', '-e', '.'], cwd='.')
+
+# set python console theme
+subprocess.call(['jt', '-t', 'monokai'])

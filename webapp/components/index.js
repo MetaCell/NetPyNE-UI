@@ -99,7 +99,10 @@ export const NetPyNECellRule = connect(
     ...ownProps,
     updates: state.general.updates
   }),
-  updateCardsDispatch
+  dispatch => ({ 
+    openTopbarDialog: cellTemplateName => dispatch(openTopbarDialog(TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE, { cellRuleName: cellTemplateName })),
+    updateCards: () => dispatch(updateCards)
+  })
 )(_NetPyNECellRule);
 
 
@@ -225,6 +228,7 @@ export const Topbar = connect(
     dialogOpen: state.topbar.dialogOpen,
     editMode: state.general.editMode,
     topbarDialogName: state.topbar.dialogName,
+    topbarDialogMetadata: state.topbar.dialogMetadata,
     pageTransitionMode: state.topbar.pageTransitionMode,
     modelLoaded: state.general.modelLoaded 
   }),
