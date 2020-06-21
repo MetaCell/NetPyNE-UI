@@ -139,7 +139,10 @@ export default class NetPyNEField extends Component {
         var hintText = Utils.getMetadataField(this.props.id, "hintText");
         
         var default_value = Utils.getMetadataField(this.props.id, "default");
-        if (default_value != '') {
+        if (default_value) {
+          if (realType === 'dict' || realType === 'dict(dict)') {
+            default_value = JSON.parse(default_value);
+          }
           extraProps['default'] = default_value;
         }
 

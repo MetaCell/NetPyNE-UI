@@ -42,6 +42,7 @@ class NetPyNE extends React.Component {
     window.currentFolder = data.currentFolder;
     window.isDocker = data.isDocker;
     window.pythonConsoleLoaded = true
+    window.tuts = data.tuts
   }
 
   componentDidMount () {

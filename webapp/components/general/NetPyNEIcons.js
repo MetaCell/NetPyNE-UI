@@ -5,12 +5,12 @@ import Icon from '@material-ui/core/Icon';
 
 const BASE_PATH = 'geppetto/build/static/icons/'
 
-export default ({ name, selected, disabled = false }) => {
-  const className = `image-icon ${selected ? 'selected' : ''}`
+export default ({ name, selected, highlight = false, disabled = false }) => {
+  const className = `image-icon ${selected ? 'selected' : ''} ${highlight ? ' highlight' : ''}`
   return (
     <Icon 
       fontSize="large" 
-      style={{ opacity: disabled ? 0.5 : 1 }}
+      style={{ opacity: disabled ? 0.9 : 1 }}
     >
       <img className={className} src={BASE_PATH + name + '.svg' }/>
     </Icon>

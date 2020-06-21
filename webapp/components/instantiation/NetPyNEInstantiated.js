@@ -67,6 +67,12 @@ export default class NetPyNEInstantiated extends React.Component {
       // update canvas only if there are instances to show
       this.canvasRef.current.engine.updateSceneWithNewInstances(window.Instances);
       this.canvasRef.current.resetCamera()
+      const spotLight = this.canvasRef.current.engine.scene.children.find(child => child.type === "SpotLight")
+      if (spotLight) {
+        this.canvasRef.current.engine.scene.remove(spotLight)
+      }
+      
+
     }
   }
 

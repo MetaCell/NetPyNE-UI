@@ -17,11 +17,23 @@ class ListComponent extends Component {
     super(props);
     this.state = {
       model: props.model,
-      children: (props.realType == 'dict' || props.realType == 'dict(dict())') ? {} : [],
+      children: (props.realType == 'dict' || props.realType == 'dict(dict)') ? {} : [],
       newItemValue: ''
     };
     this.addChild = this.addChild.bind(this);
     this.handleNewItemChange = this.handleNewItemChange.bind(this);
+  }
+
+  componentDidMount () {
+    // this.props.value is populated from pythonControlledCapability
+    if (this.props.default && this.isDict() && this.props.value === '') {
+      // this.props.onChange(null, null, this.props.default);
+    }
+    
+  }
+
+  isDict () {
+    return this.props.realType == 'dict' || this.props.realType == 'dict(dict)'
   }
 
   isValid (value) {
@@ -43,7 +55,7 @@ class ListComponent extends Component {
     case 'dict':
       var valid = (value.match(/:/g) || []).length == 1 && !value.startsWith(':') && !value.endsWith(':');
       break;
-    case 'dict(dict())':
+    case 'dict(dict)':
       var valid = true;
       var value = this.state.newItemValue.replace(/[ "']/g, '');
 
@@ -92,7 +104,7 @@ class ListComponent extends Component {
     case 'dict':
       var message = 'Key:Value pairs must be separated by colon : ';
       break;
-    case 'dict(dict())':
+    case 'dict(dict)':
       var message = 'Incorrect format. Example -> v_soma : { sec: soma, loc: 0.5, var: v}';
       break
     default:
@@ -121,7 +133,7 @@ class ListComponent extends Component {
         }
         children[newValue[0]] = newValue[1];
         break;
-      case 'dict(dict())':
+      case 'dict(dict)':
         var key = this.state.newItemValue.split(':')[0].replace(/[ "']/g, '');
         children[key] = {}
         var newValue = this.state.newItemValue.match(/\{(.*?)\}/)[1].replace(/[ "']/g, '').split(',').map(entry => entry.split(':'));
@@ -146,7 +158,7 @@ class ListComponent extends Component {
 
   removeChild (childIndex) {
     var children = this.state.children;
-    if (this.props.realType == 'dict' || this.props.realType == 'dict(dict())') {
+    if (this.props.realType == 'dict' || this.props.realType == 'dict(dict)') {
 
       delete children[childIndex];
     } else {
@@ -160,7 +172,7 @@ class ListComponent extends Component {
     // Update State
     this.setState({ children: children, newItemValue: '' });
 
-    if (this.props.realType == 'dict' || this.props.realType == 'dict(dict())') {
+    if (this.props.realType == 'dict' || this.props.realType == 'dict(dict)') {
       var newValue = children;
     } else {
       var newValue = this.state.children.map((child, i) => {
@@ -186,7 +198,7 @@ class ListComponent extends Component {
 
   convertFromPython (prevProps, prevState, value) {
     if (value != undefined && prevProps.value != value && value != '') {
-      if (this.props.realType == 'dict' || this.props.realType == 'dict(dict())') {
+      if (this.props.realType == 'dict' || this.props.realType == 'dict(dict)') {
         return (typeof value == 'string') ? JSON.parse(value) : value;
       } else {
         if (!Array.isArray(value)) {
@@ -210,7 +222,7 @@ class ListComponent extends Component {
       key = key.toString();
       if (this.props.realType == 'dict') {
         var value = key + ' : ' + JSON.stringify(this.state.children[key]);
-      } else if (this.props.realType == 'dict(dict())') {
+      } else if (this.props.realType == 'dict(dict)') {
         var value = key + ':   ' + JSON.stringify(this.state.children[key]).replace(/["']/g, '').replace(/[:]/g, ': ').replace(/[,]/g, ', ');
       } else {
         var value = this.state.children[key];

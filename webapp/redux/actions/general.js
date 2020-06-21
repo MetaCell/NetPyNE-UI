@@ -10,6 +10,7 @@ export const PYTHON_CALL = 'PYTHON_CALL'
 export const DELETE_NETPARAMS_OBJ = 'DELETE_NETPARAMS_OBJ'
 export const CLOSE_DIALOG = 'CLOSE_DIALOG';
 export const OPEN_DIALOG = 'OPEN_DIALOG';
+export const LOAD_TUTORIAL = 'LOAD_TUTORIAL';
 
 // Actions
 export const updateCards = { type: UPDATE_CARDS };
@@ -29,3 +30,6 @@ export const deleteNetParamsObj = payload => ({ type: DELETE_NETPARAMS_OBJ, payl
 
 export const closeDialog = { type: CLOSE_DIALOG }
 export const openDialog = payload => ({ type: OPEN_DIALOG, payload });
+
+
+export const loadTutorial = tutFile => ({ type: LOAD_TUTORIAL, payload: tutFile })

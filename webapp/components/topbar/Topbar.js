@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Snackbar from '@material-ui/core/Snackbar';
 import Menu from '@geppettoengine/geppetto-client/js/components/interface/menu/Menu';
 
-import toolbarConfig, { getModelMenu } from './configuration'
+import toolbarConfig, { getModelMenu, getTutorials } from './configuration'
 import { bgRegular, bgLight, font } from '../../theme'
 import Splash from '../general/Splash'
 
@@ -49,6 +49,9 @@ class Topbar extends Component {
       const [ menuName ] = click.parameters
       if (menuName === "Model") {
         return getModelMenu(this.props)
+      }
+      if (menuName === "Tutorials") {
+        return getTutorials()
       }
       break
     }

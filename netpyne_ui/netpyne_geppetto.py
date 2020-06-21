@@ -50,8 +50,21 @@ class NetPyNEGeppetto():
                 "netParams": self.netParams.todict(),
                 "simConfig": self.simConfig.todict(),
                 "isDocker": os.path.isfile('/.dockerenv'),
-                "currentFolder": os.getcwd()
+                "currentFolder": os.getcwd(),
+                "tuts": self.find_tutorials()
         }
+
+    def find_tutorials(self):
+        from os import listdir
+        from os.path import isfile, join
+        onlyfiles = [f for f in listdir(NETPYNE_WORKDIR_PATH) if isfile(join(NETPYNE_WORKDIR_PATH, f))]
+        
+        def _filter(_file):
+            return '.py' in _file and 'tut' in _file and 'gui' in _file
+        
+        return list(filter(_filter, onlyfiles))
+
+
 
     def instantiateNetPyNEModelInGeppetto(self, args):
         try:
@@ -112,6 +125,7 @@ class NetPyNEGeppetto():
             
             os.chdir(modFolder)
             subprocess.call(["nrnivmodl"])
+            os.chdir('..')
             
         # Load mechanism if mod path is passed
         if modFolder:

@@ -38,7 +38,12 @@ const DrawerItem = ({ id, name, widget, expanded, createOrFocusWidget, disabled,
         onClick={() => createOrFocusWidget(id)}
       >
         <ListItemIcon className={classes.icon}>
-          <DrawerIcon name={id} selected={status === "ACTIVE"} disabled={status === "MINIMIZED"}/>
+          <DrawerIcon 
+            name={id} 
+            selected={status !== WidgetStatus.MINIMIZED} 
+            disabled={status !== WidgetStatus.ACTIVE}
+            highlight={status === WidgetStatus.ACTIVE}
+          />
         </ListItemIcon>
         <ListItemText className={classes.text}>
           <Typography noWrap>{name}</Typography>

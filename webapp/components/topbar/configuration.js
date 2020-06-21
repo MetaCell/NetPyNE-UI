@@ -2,7 +2,7 @@ import React from 'react';
 import { bgRegular, bgDark, font, primaryColor, gutter, radius } from '../../theme'
 
 import { openTopbarDialog, changePageTransitionMode } from '../../redux/actions/topbar'
-import { openDialog } from '../../redux/actions/general'
+import { openDialog, loadTutorial } from '../../redux/actions/general'
 import { TOPBAR_CONSTANTS } from '../../constants'
 
 
@@ -55,6 +55,23 @@ const topLevelMenuItemStyle = {
   },
 };
 
+export const getTutorials = () => {
+  const { tuts } = window
+  if (!tuts) {
+    return []
+  }
+  return tuts.sort().map(tutFile => (
+    {
+      label: tutFile.replace(".py", "").replace("gui", '').replace("_", " "),
+      icon: "",
+      action: {
+        handlerAction: "redux",
+        parameters: [loadTutorial, tutFile]
+      }
+    }
+  ))
+  
+}
 
 export default {
   global: {
@@ -219,6 +236,16 @@ export default {
       dynamicListInjector: {
         handlerAction: "menuInjector",
         parameters: ["Model"]
+      }
+    },
+    {
+      label: "Tutorials",
+      icon: "",
+      position: "bottom-start",
+      styles: topLevelMenuItemStyle,
+      dynamicListInjector: {
+        handlerAction: "menuInjector",
+        parameters: ["Tutorials"]
       }
     },
     {

@@ -1,6 +1,6 @@
 import { 
   UPDATE_CARDS, CREATE_NETWORK, CREATE_SIMULATE_NETWORK, PYTHON_CALL, SIMULATE_NETWORK, SHOW_NETWORK, 
-  editModel, EDIT_MODEL
+  editModel, EDIT_MODEL, LOAD_TUTORIAL
 } from '../actions/general';
 
 import { openBackendErrorDialog } from '../actions/errors';
@@ -82,6 +82,33 @@ export default store => next => action => {
     }
     pythonCall(action).then(callback, errorCallback);
     break;
+  }
+  case LOAD_TUTORIAL: {
+    const tutName = action.payload.replace('.py', '')
+    GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading tutorial ${tutName}`);
+    
+    const params = {
+      modFolder: 'mod',
+      loadMod: false,
+      compileMod: false,
+
+      netParamsPath:".",
+      netParamsModuleName: tutName,
+      netParamsVariable: "netParams",
+
+      simConfigPath:".",
+      simConfigModuleName: tutName,
+      simConfigVariable: "simConfig",
+
+    }
+
+    if (action.payload.includes("2")) {
+      params.loadMod = true
+      params.compileMod = true
+    }
+    pythonCall({ cmd: 'netpyne_geppetto.importModel', args:params })
+      .then(response => console.log(response))
+    break
   }
   default: {
     next(action);

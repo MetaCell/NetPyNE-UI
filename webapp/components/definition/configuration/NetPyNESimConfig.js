@@ -203,14 +203,14 @@ class NetPyNESimConfig extends React.Component {
             <ListComponent model={"simConfig.recordCells"} />
           </NetPyNEField>
 
-          <NetPyNEField id="simConfig.recordLFP" className={"listStyle"}>
-            <ListComponent model={"simConfig.recordLFP"} />
-          </NetPyNEField>
-            
           <NetPyNEField id="simConfig.recordTraces" className={"listStyle"} >
             <ListComponent model={"simConfig.recordTraces"} />
           </NetPyNEField>
-            
+
+          <NetPyNEField id="simConfig.recordLFP" className={"listStyle"}>
+            <ListComponent model={"simConfig.recordLFP"} />
+          </NetPyNEField>
+
           <NetPyNEField id="simConfig.recordStep" >
             <NetPyNETextField fullWidth variant="filled" model={"simConfig.recordStep"} />
           </NetPyNEField>
