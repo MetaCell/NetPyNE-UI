@@ -1,6 +1,6 @@
 hub:
   image: 
-    name: us.gcr.io/metacellllc/netpyne-hub
+    name: gcr.io/metacellllc/netpyne-hub
     pullPolicy: IfNotPresent
 
   resources:
@@ -28,9 +28,6 @@ scheduling:
   userScheduler:
     replicas: 1
 
-proxy:
-  secretToken: ${{SECRET_TOKEN}}
-
 auth:
   type: tmp
 
@@ -40,7 +37,7 @@ singleuser:
   memory:
     guarantee: 0.2G
   image:
-    name:  us.gcr.io/metacellllc/netpyne-ui
+    name:  gcr.io/metacellllc/netpyne-ui
     pullPolicy: IfNotPresent
 
 cull:
