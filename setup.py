@@ -38,6 +38,6 @@ setuptools.setup(
     ],
     install_requires=[
         'jupyter-geppetto>=1.0.0',
-        'netpyne==0.9.7'
+        'netpyne==0.9.6'
     ],
 )
