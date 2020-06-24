@@ -1,5 +1,6 @@
 [![Docker Automated buil](https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg)](https://hub.docker.com/r/metacell/netpyne-ui/)
-
+[![Build Status](https://travis-ci.org/MetaCell/NetPyNE-UI.svg?branch=master)](https://travis-ci.org/MetaCell/NetPyNE-UI)
+[![Codefresh build status]( https://g.codefresh.io/api/badges/pipeline/tarelli/NetPyNE-UI%2Ftest?branch=master&key=eyJhbGciOiJIUzI1NiJ9.NWFkNzMyNDIzNjQ1YWMwMDAxMTJkN2Rl.-gUEkJxH6NCCIRgSIgEikVDte-Q0BsGZKEs4uahgpzs&type=cf-1)]( https%3A%2F%2Fg.codefresh.io%2Fpipelines%2Ftest%2Fbuilds%3FrepoOwner%3DMetaCell%26repoName%3DNetPyNE-UI%26serviceName%3DMetaCell%252FNetPyNE-UI%26filter%3Dtrigger%3Abuild~Build%3Bbranch%3Amaster%3Bpipeline%3A5e5bbecc6c98a1209fc7bca3~test)
 <p align="center">
     <img src="https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/updated_documentation/docs/netpyne.png" width="350px"/>
 </p>
