@@ -56,7 +56,6 @@ steps:
       chart_version: '0.9.0'
       kube_context: ${{CLUSTER_NAME}}
       namespace: ${{NAMESPACE}}
-      timeout: 600
       custom_value_files: 
         - 'cf_values.yaml'
       custom_values:
