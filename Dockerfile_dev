@@ -1,5 +1,4 @@
-# FROM metacell/jupyter-neuron:latest
-FROM frodriguez4600/jupyter-neuron:latest
+FROM metacell/jupyter-neuron:nrn-v7.8.0
 USER $NB_USER
 
 ARG branch=development 
@@ -16,6 +15,8 @@ RUN python install.py branch $branch
 WORKDIR ${INSTALATION_FOLDER}
 
 RUN git clone https://github.com/Neurosim-lab/netpyne_workspace && rm -rf netpyne_workspace/.git
+
+RUN nrnivmodl netpyne_workspace/mod
 
 RUN ln -sfn ${INSTALATION_FOLDER}/netpyne_ui/tests ${INSTALATION_FOLDER}/tests
 CMD /bin/bash -c "jupyter notebook --NotebookApp.default_url=/geppetto --NotebookApp.token='' --library=netpyne_ui --NotebookApp.disable_check_xsrf=True"

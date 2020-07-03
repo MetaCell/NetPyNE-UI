@@ -54,10 +54,6 @@ if __name__ == "__main__":
 
 os.chdir(os.getcwd()+"/../")
 
-# Fix terminado installation error
-terminado_path = '/opt/conda/lib/python3.7/site-packages/'
-subprocess.call(['rm', '-rf', terminado_path+'terminado', terminado_path+'terminado-0.8.3.dist-info', terminado_path+'terminado-0.8.3-py3.7.egg-info'])
-
 subprocess.call(['python3', '-m', 'pip', 'install', '-r', 'requirements.txt'])
 
 clone_repo(project='Neurosim-lab',
@@ -72,7 +68,7 @@ subprocess.call(['python3', '-m', 'pip', 'install', '-e', '.'], cwd='./netpyne/'
 clone_repo(project='openworm',
            repo_name='geppetto-client',
            folder='geppetto-client',
-           default_branch='feature/294',
+           default_branch='v2.4.0',
            cwdp='webapp/',
            recursive=False,
 )

@@ -106,68 +106,6 @@ class NetPyNECellRule extends React.Component {
             id={"cellRuleName"}
           />
 
-          
-          <ExpansionPanel className={classes.expandable} elevation={0}>
-            <Box mb={1}>
-              <span>Conditions (optional):</span>
-            </Box>
-
-            <NetPyNEField id={"netParams.cellParams.conds.cellModel"} >
-              <NetPyNETextField
-                variant="filled"
-                fullWidth
-                model={"netParams.cellParams['" + this.state.currentName + "']['conds']['cellModel']"}
-                callback={(newValue, oldValue) => {
-                  Utils.evalPythonMessage("netpyne_geppetto.propagate_field_rename", ['cellType', newValue, oldValue])
-                  this.props.updateCards()
-                }}
-              />
-            </NetPyNEField>
-
-            <NetPyNEField id={"netParams.cellParams.conds.pop"} >
-              <NetPyNESelectField
-                model={"netParams.cellParams['" + this.state.currentName + "']['conds']['pop']"}
-                method={"netpyne_geppetto.getAvailablePops"}
-                postProcessItems={this.postProcessMenuItems}
-                multiple={true}
-              />
-            </NetPyNEField>
-
-            <NetPyNECoordsRange
-              id="xRangeCellParams"
-              name={this.state.currentName}
-              model={'netParams.cellParams'}
-              conds={'conds'}
-              items={[
-                { value: 'x', label: 'Absolute' },
-                { value: 'xnorm', label: 'Normalized' }
-              ]}
-            />
-
-            <NetPyNECoordsRange
-              id="yRangeCellParams"
-              name={this.state.currentName}
-              model={'netParams.cellParams'}
-              conds={'conds'}
-              items={[
-                { value: 'y', label: 'Absolute' },
-                { value: 'ynorm', label: 'Normalized' }
-              ]}
-            />
-
-            <NetPyNECoordsRange
-              id="zRangeCellParams"
-              name={this.state.currentName}
-              model={'netParams.cellParams'}
-              conds={'conds'}
-              items={[
-                { value: 'z', label: 'Absolute' },
-                { value: 'znorm', label: 'Normalized' }
-              ]}
-            />
-              
-          </ExpansionPanel>
-
           <Box m={1}>
             <Button 
               variant="contained" 
