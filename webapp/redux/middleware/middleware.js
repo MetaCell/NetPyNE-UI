@@ -102,10 +102,6 @@ export default store => next => action => {
 
     }
 
-    if (action.payload.includes("2")) {
-      params.loadMod = true
-      params.compileMod = true
-    }
     pythonCall({ cmd: 'netpyne_geppetto.importModel', args:params })
       .then(response => console.log(response))
     break
