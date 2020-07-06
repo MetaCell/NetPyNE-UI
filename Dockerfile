@@ -1,4 +1,4 @@
-FROM metacell/jupyter-neuron:v7.8.0
+FROM frodriguez4600/jupyter-neuron:v7.8.0
 USER $NB_USER
 
 ARG branch=development 
