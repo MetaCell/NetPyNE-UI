@@ -39,7 +39,7 @@ class NetWorkControlButtons extends React.Component {
               />
             </div>
           </Tooltip>
-
+          {/* 
           <Tooltip 
             title={disableRefreshInstance ? "Your network is in sync" : "Synchronise network"}
             placement="left"
@@ -75,7 +75,7 @@ class NetWorkControlButtons extends React.Component {
             </div>
           
           </Tooltip>
-          
+           */}
         </div>
       </div>
 
