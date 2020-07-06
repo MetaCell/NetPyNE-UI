@@ -13,35 +13,55 @@ import {
   NetPyNEPlots,
   NetPyNEPythonConsole
 } from "../";
-import { Widget } from './model';
+
+import { WidgetComponent } from './model';
 
 export default class WidgetFactory{
 
-  widgets: Map<string, Widget>;
+  
+  widgets = {};
+
+  // FIXME didn't found a way to make standard refs work here, so using a custom callback
+  refs: {[id: string]: WidgetComponent} = {};
 
   constructor () {
-    this.widgets = new Map();
+    this.widgets = {};
   }
-
+  counter = 0
   /**
    * Widget configuration is the same we are using in the flexlayout actions
    *
    * @param { id, name, component, panelName, [instancePath], * } widgetConfig 
    */
   factory (widgetConfig) {
-
-    // With this lazy construction we avoidto trigger an update on every layout event.
-    if (!this.widgets[widgetConfig.id]) {
+    if(!this.widgets[widgetConfig.id]) {
       this.widgets[widgetConfig.id] = this.newWidget(widgetConfig);
     }
     
     return this.widgets[widgetConfig.id];
+  }
+
+  getComponents(): {[id: string]: WidgetComponent} {
+    const confs: {[id: string]: WidgetComponent} = {};
+    for(const wid in this.refs) {
+      const component = this.refs[wid];
+      if(component.exportSession) {
+        confs[wid] = component;
+      }
+    }
+    return confs;
+  }
+
+  getComponent(widgetId: string) {
+    return this.refs[widgetId];
   }
   
   updateWidget (widgetConfig) {
     this.widgets[widgetConfig.id] = this.newWidget(widgetConfig);
     return this.widgets[widgetConfig.id];
   }
+
+  
   
   newWidget (widgetConfig) {
     const component = widgetConfig.component;

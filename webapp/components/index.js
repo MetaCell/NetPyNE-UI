@@ -112,7 +112,7 @@ export const NetPyNESection = connect(
   dispatch => ({ openTopbarDialog: () => dispatch(openTopbarDialog(TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE)) })
 )(_NetPyNESection);
 
-import { getInstance as getLayoutManagerInstance } from "./layout/LayoutManager";
+import { getLayoutManagerInstance } from "./layout/LayoutManager";
 export const LayoutManager = () => connect(state => ({ layout: state.layout, }))(getLayoutManagerInstance().getComponent());
 
 

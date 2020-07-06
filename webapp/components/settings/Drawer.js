@@ -58,7 +58,7 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
   const [expand, setExpand] = useState(false)
   
   const classes = useStyles({ width: expand ? drawerOpenWidth : drawerCloseWidth, expand });
-  const layoutManager = require('../layout/LayoutManager').getInstance();
+  const layoutManager = require('../layout/LayoutManager').getLayoutManagerInstance();
 
   function createOrFocusWidget (widgetId) {
     const widget = { ...layoutManager.getWidget(widgetId) };
