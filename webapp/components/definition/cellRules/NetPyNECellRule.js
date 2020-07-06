@@ -14,7 +14,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { NetPyNESelectField, NetPyNETextField, NetPyNEField, NetPyNECoordsRange } from 'netpyne/components';
 import Utils from '../../../Utils';
-import ExpansionPanel from '../../general/ExpansionPanel'
+import Accordion from '../../general/ExpansionPanel'
 import { withStyles } from "@material-ui/core/styles"
 
 class NetPyNECellRule extends React.Component {

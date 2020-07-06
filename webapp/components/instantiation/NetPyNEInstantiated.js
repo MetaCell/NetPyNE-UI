@@ -4,27 +4,11 @@ import Canvas from '@geppettoengine/geppetto-client/js/components/interface/3dCa
 import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
 
 import { NetWorkControlButtons } from 'netpyne/components'
+import { useTheme } from '@material-ui/core/styles';
 
-
-const styles = {
-  modal: {
-    position: 'absolute !important',
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    zIndex: '999',
-    height: '100%',
-    width: '98%',
-    overflow: 'hidden'
-  },
-
-  instantiatedContainer: {
-    height: '100%', 
-    width: '100%', 
-    paddingBottom: '8px'
-  },
-};
 
 export default class NetPyNEInstantiated extends React.Component {
-
+  
   constructor (props) {
     super(props);
     this.state = {
@@ -45,7 +29,7 @@ export default class NetPyNEInstantiated extends React.Component {
   componentDidMount () {
     this.canvasRef.current.engine.setLinesThreshold(10000);
     this.canvasRef.current.displayAllInstances();
-    this.canvasRef.current.setBackgroundColor('#191919')
+    this.canvasRef.current.setBackgroundColor('transparent')
 
     window.addEventListener('resize', this.delayedResize.bind(this))
     this.resizeIfNeeded()
@@ -105,28 +89,29 @@ export default class NetPyNEInstantiated extends React.Component {
   }
 
   render () {
-    const { update } = this.state
+    const { update } = this.state;
+
+    
     return (
-      <div id="instantiatedContainer" style={{ ...styles.instantiatedContainer }}>
+      <div className="instantiatedContainer" >
           
         <Canvas
           id="CanvasContainer"
           name="Canvas"
           componentType='Canvas'
           ref={this.canvasRef}
-          style={{ height: '100%', width: '100%' }}
+          style={{ height: '100%', width: '100%', backgroundColor: 'transparent' }}
           update={update}
         />
         <div id="controlpanel" style={{ top: 0 }}>
           <ControlPanel
-            icon={styles.Modal}
+            icon={null}
             useBuiltInFilters={false}
           >
           </ControlPanel>
         </div>
 
         <NetWorkControlButtons/>
-
       </div>
 
     );

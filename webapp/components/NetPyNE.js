@@ -1,5 +1,8 @@
 import React from "react";
 
+import { Box, Grid } from '@material-ui/core'
+import { withStyles } from '@material-ui/core/styles'
+
 import {
   Topbar,
   LayoutManager,
@@ -7,14 +10,14 @@ import {
   Dialog
 } from "netpyne/components";
 import Splash from './general/Splash'
-import { withStyles } from '@material-ui/core/styles'
+
 import Utils from '../Utils';
 const styles = ({ zIndex }) => ({
-  root: { height: '100%', overflow: 'hidden' },
+  root: { height: '100%', overflow: 'hidden', display: 'flex', flex: 1 },
   container: {
-    height: "100%",
-    width: "100%",
     display: "flex",
+    flex: 1,
+    alignItems: "stretch",
     flexDirection: "column"
   },
   topbar: { position: "relative", zIndex: zIndex.drawer + 1 },
@@ -23,7 +26,8 @@ const styles = ({ zIndex }) => ({
     display: 'flex', 
     flexDirection: 'row',
     position: 'relative' 
-  }
+  },
+  noGrow: { flexGrow: 0 }
 });
 
 import { EDIT_WIDGETS, PYTHON_CONSOLE_WIDGET, WidgetStatus } from '../constants'
@@ -79,10 +83,16 @@ class NetPyNE extends React.Component {
           <div className={classes.topbar}>
             <Topbar/>
           </div>
-          <div className={classes.content}>
-            <Drawer/>
-            <Layout />
-          </div>
+          <Box p={1} flex={1} display="flex" alignItems="stretch">
+            <Grid container spacing={1} className={classes.content} alignItems="stretch">
+              <Grid item className={classes.noGrow}>
+                <Drawer/>
+              </Grid>
+              <Grid item >
+                <Layout />
+              </Grid>
+            </Grid>
+          </Box>
         </div>
         <Dialog/>
       </div>

@@ -29,7 +29,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import RulePath from '../../general/RulePath'
-import ExpansionPanel from '../../general/ExpansionPanel'
+import Accordion from '../../general/ExpansionPanel'
 import Divider from '@material-ui/core/Divider';
 import Tooltip from '../../general/Tooltip';
 
@@ -668,7 +668,7 @@ export default class NetPyNECellRules extends React.Component {
       <GridLayout>
           
         <div>
-          <ExpansionPanel>
+          <Accordion>
             <div className="breadcrumb">
               <NetPyNEHome
                 selection={selectedCellRule}
@@ -730,7 +730,7 @@ export default class NetPyNECellRules extends React.Component {
               handleFilterChange={newValue => this.setState({ filterValue: newValue })}
               options={this.getFilterOptions()}
             />
-          </ExpansionPanel>
+          </Accordion>
         </div>
         
 
