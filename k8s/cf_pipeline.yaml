@@ -23,7 +23,6 @@ steps:
     tag: '${{CF_SHORT_REVISION}}'
     build_arguments:
       - branch=${{CF_BRANCH}}
-    dockerfile: Dockerfile_dev
     registry: ${{REGISTRY}}
     when:
       branch:
@@ -36,7 +35,6 @@ steps:
     image_name: netpyne-hub
     working_directory: k8s
     tag: '${{CF_SHORT_REVISION}}'
-    dockerfile: Dockerfile
     registry: ${{REGISTRY}}
     when:
       branch:
