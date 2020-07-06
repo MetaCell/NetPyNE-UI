@@ -3,6 +3,7 @@ numpy==1.18.5
 scipy==1.4.1
 matplotlib===2.2.4
 matplotlib-scalebar==0.6.2
+NEURON==7.8.0.127
 pandas==0.23.4
 pyneuroml==0.3.15
 bokeh===2.1.0
