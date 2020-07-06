@@ -43,6 +43,9 @@ def clone_repo(project, repo_name, **kwargs):
     url = f'https://github.com/{project}/{repo_name}.git'
     clone(url, **kwargs)
 
+def compile_mod():
+    subprocess.call(['nrnivmodl', 'netpyne_workspace/mod'])
+
 def main(argv):
     global branch
     if(len(argv) > 0):
@@ -63,16 +66,22 @@ clone_repo(project='Neurosim-lab',
 )
 subprocess.call(['python3', '-m', 'pip', 'install', '-e', '.'], cwd='./netpyne/')
 
-# We can't clone org.geppetto.frontend as a regular submodule because Travis doesn't have .gitmodules in the zip
-# subprocess.call(['git', 'submodule', 'update', '--init'], cwd='./')
-clone_repo(project='openworm',
-           repo_name='geppetto-client',
-           folder='geppetto-client',
-           default_branch='v2.4.0',
-           cwdp='webapp/',
-           recursive=False,
-)
+# clone_repo(project='openworm',
+#            repo_name='geppetto-client',
+#            folder='geppetto-client',
+#            default_branch='v2.4.0',
+#            cwdp='webapp/',
+#            recursive=False,
+# )
 
+clone_repo(project='Neurosim-lab',
+           repo_name='netpyne_workspace',
+           folder='netpyne_workspace',
+           default_branch="cns2020"
+)
+compile_mod()
+
+subprocess.call(['python3', '-m', 'pip', 'install', '-e', '.'], cwd='./netpyne/')
 branch = None
 # Cloning Repos
 
