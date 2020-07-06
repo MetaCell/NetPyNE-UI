@@ -11,7 +11,7 @@ import {
 } from 'netpyne/components';
 
 import RulePath from '../../general/RulePath'
-import ExpansionPanel from '../../general/ExpansionPanel'
+import Accordion from '../../general/ExpansionPanel'
 
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
@@ -200,7 +200,7 @@ export default class NetPyNEPopulations extends React.Component {
       <GridLayout>
         <div>
 
-          <ExpansionPanel>
+          <Accordion>
             <div className="breadcrumb">
               <NetPyNEHome
                 selection={this.state.selectedPopulation}
@@ -221,7 +221,7 @@ export default class NetPyNEPopulations extends React.Component {
               handleFilterChange={newValue => this.setState({ filterPopValue: newValue })}
               options={model === undefined ? [] : Object.keys(model)}
             />
-          </ExpansionPanel>
+          </Accordion>
           
           
         </div>

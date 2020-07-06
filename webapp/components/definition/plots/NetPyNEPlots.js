@@ -17,7 +17,7 @@ import NetPyNEPlotThumbnail from './NetPyNEPlotThumbnail';
 import { GridLayout } from 'netpyne/components';
 
 import RulePath from '../../general/RulePath'
-import ExpansionPanel from '../../general/ExpansionPanel'
+import Accordion from '../../general/ExpansionPanel'
 export default class NetPyNEPlots extends React.Component {
 
   constructor (props) {
@@ -122,12 +122,12 @@ export default class NetPyNEPlots extends React.Component {
     return (
       <GridLayout>
         <div>
-          <ExpansionPanel>
+          <Accordion>
             <div className="breadcrumb">
               <NetPyNENewPlot handleClick={this.handleNewPlot} />
             </div>
             <RulePath style={{ paddingBottom: 8 }} text={`simConfig.analysis["${this.state.selectedPlot}"]`}/>
-          </ExpansionPanel>
+          </Accordion>
           
         </div>
         

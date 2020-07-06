@@ -105,13 +105,13 @@ const rawTheme = {
       wrapper: { padding: "0px!important" }
     },
     MuiIcon: { fontSizeLarge: { fontSize: '1.75rem' } },
-    MuiExpansionPanelSummary: { 
+    MuiAccordionSummary: { 
       root: { padding: '0px!important', margin: 0, minHeight: 'unset!important' },
       content: { margin: '0px!important', cursor: 'auto' },
       expandIcon: { marginRight: 0 }
     },
-    MuiExpansionPanelDetails: { root: { padding: 0, margin: 0, minHeight: 'unset!important', flexDirection: 'column' } },
-    MuiExpansionPanel: { root: { padding: 0, margin: '0px!important', minHeight: 'unset' } },
+    MuiAccordionDetails: { root: { padding: 0, margin: 0, minHeight: 'unset!important', flexDirection: 'column' } },
+    MuiAccordion: { root: { padding: 0, margin: '0px!important', minHeight: 'unset' } },
     MuiAutocomplete: { popupIndicator: { marginRight: 0 } },
     MuiCardContent: { root: { padding: 8 } }
   }

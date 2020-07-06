@@ -10,7 +10,7 @@ import NetPyNEConnectivityRule from './NetPyNEConnectivityRule';
 import { NetPyNEThumbnail, GridLayout, Filter } from 'netpyne/components'
 
 import RulePath from '../../general/RulePath'
-import ExpansionPanel from '../../general/ExpansionPanel'
+import Accordion from '../../general/ExpansionPanel'
 import Divider from '@material-ui/core/Divider';
 export default class NetPyNEConnectivityRules extends Component {
 
@@ -201,7 +201,7 @@ export default class NetPyNEConnectivityRules extends Component {
     return (
       <GridLayout>
         <div>
-          <ExpansionPanel>
+          <Accordion>
             <div className="breadcrumb">
               <NetPyNEHome
                 selection={this.state.selectedConnectivityRule}
@@ -218,7 +218,7 @@ export default class NetPyNEConnectivityRules extends Component {
               handleFilterChange={newValue => this.setState({ filterValue: newValue })}
               options={model === undefined ? [] : Object.keys(model)}
             />
-          </ExpansionPanel>
+          </Accordion>
           
           
         </div>
