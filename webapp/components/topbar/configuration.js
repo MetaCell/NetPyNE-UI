@@ -16,8 +16,8 @@ const style = {
     border: 0,
     boxShadow: '0px 0px',
     color: '#ffffff',
-    paddingLeft: 30,
-    paddingRight: 30,
+    paddingLeft: `calc(${gutter} * 2)`,
+    paddingRight: `calc(${gutter} * 2)`,
     fontSize: 16,
     fontWeight: 400,
     fontFamily: font,
@@ -43,17 +43,13 @@ const style = {
 }
 
 const topLevelMenuItemStyle = {
-  standard: {
-    paddingLeft: `calc(${gutter} / 2)`,
-    paddingRight: `calc(${gutter} / 2)`,
-    background: bgDark,
-  },
-  hover: {
-    paddingLeft: `calc(${gutter} / 2)`,
-    paddingRight: `calc(${gutter} / 2)`,
-    background: '#202020',
-  },
+  standard: { background: 'transparent', },
+  hover: {},
 };
+
+const firstItemCustom = { fontWeight: 'bold', paddingLeft: `calc(${gutter} / 2)` }
+
+const firstItemStyle = { standard: { ...topLevelMenuItemStyle.standard, ...firstItemCustom }, hover: { ...topLevelMenuItemStyle.hover, ...firstItemCustom } }
 
 export const getTutorials = () => {
   const { tuts } = window
@@ -138,13 +134,13 @@ export default {
           }
         },
       ],
-      styles: topLevelMenuItemStyle
+      style: firstItemStyle
     },
     {
       label: "File",
       position: "bottom-start",
       icon: "",
-      styles: topLevelMenuItemStyle,
+      style: topLevelMenuItemStyle,
       list: [
         {
           label: "New",
@@ -232,7 +228,7 @@ export default {
       label: "Model",
       icon: "",
       position: "bottom-start",
-      styles: topLevelMenuItemStyle,
+      style: topLevelMenuItemStyle,
       dynamicListInjector: {
         handlerAction: "menuInjector",
         parameters: ["Model"]
@@ -242,7 +238,7 @@ export default {
       label: "Tutorials",
       icon: "",
       position: "bottom-start",
-      styles: topLevelMenuItemStyle,
+      style: topLevelMenuItemStyle,
       dynamicListInjector: {
         handlerAction: "menuInjector",
         parameters: ["Tutorials"]
@@ -252,7 +248,7 @@ export default {
       label: "Help",
       icon: "",
       position: "bottom-start",
-      styles: topLevelMenuItemStyle,
+      style: topLevelMenuItemStyle,
       list: [
         {
           label: "Documentation",

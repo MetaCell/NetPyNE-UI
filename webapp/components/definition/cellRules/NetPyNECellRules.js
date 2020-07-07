@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import ContentAdd from '@material-ui/icons/Add';
 import NavigationMoreHoriz from '@material-ui/icons/MoreHoriz';
 import Fab from '@material-ui/core/Fab';
-import Icon from '@material-ui/core/Icon';
+import Box from '@material-ui/core/Box';
 
 import {
   NetPyNECellRule, 
@@ -32,6 +32,9 @@ import RulePath from '../../general/RulePath'
 import Accordion from '../../general/ExpansionPanel'
 import Divider from '@material-ui/core/Divider';
 import Tooltip from '../../general/Tooltip';
+
+
+import { ArrowRightIcon } from '../../general/NetPyNEIcons';
 
 const styles = ({ spacing }) => ({
   arrowRight : { marginLeft: spacing(1) },
@@ -674,62 +677,60 @@ export default class NetPyNECellRules extends React.Component {
                 selection={selectedCellRule}
                 handleClick={() => this.setState({ page: 'main', selectedCellRule: undefined, selectedSection: undefined, selectedMechanism: undefined })}
               />
-              <div className='ml-2'>
-                <Tooltip title={this.createTooltip('cellRule')} placement="top">
+              
+              <Tooltip title={this.createTooltip('cellRule')} placement="top">
+                <Fab
+                  id="newCellRuleButton"
+                  style={{ width: 40, height: 40 }}
+                  color={ page == 'main' ? 'primary' : 'secondary'}
+                  onClick={() => this.handleHierarchyClick('main')}
+                >
+                  {this.createLabel('cellRule')}
+                </Fab>
+              </Tooltip>
+              
+             
+              <ArrowRightIcon fontSize="inherit" className="breadcrumb-spacer" color="inherit" />
+              
+              
+              <Tooltip title={this.createTooltip('section')} placement="top">
+                <div>
                   <Fab
-                    id="newCellRuleButton"
-                    style={{ width: 40, height: 40 }}
-                    color={ page == 'main' ? 'primary' : 'secondary'}
-                    onClick={() => this.handleHierarchyClick('main')}
+                    id="newSectionButton"
+                    variant="extended"
+                    style={{ minWidth: 100, height: 40 }}
+                    color={ page === 'mechanisms' ? 'secondary' : 'primary'}
+                    disabled={ selectedCellRule == undefined }
+                    onClick={ () => this.handleHierarchyClick('sections') }
                   >
-                    {this.createLabel('cellRule')}
+                    {this.createLabel('sections')}
                   </Fab>
-                </Tooltip>
-              </div>
-              <Icon
-                color="disabled"
-                className="fa fa-angle-right breadcrumb-spacer"
-              />
-              <div className='ml-2'>
-                <Tooltip title={this.createTooltip('section')} placement="top">
-                  <div>
-                    <Fab
-                      id="newSectionButton"
-                      variant="extended"
-                      style={{ minWidth: 100, height: 40 }}
-                      color={ page === 'mechanisms' ? 'secondary' : 'primary'}
-                      disabled={ selectedCellRule == undefined }
-                      onClick={ () => this.handleHierarchyClick('sections') }
-                    >
-                      {this.createLabel('sections')}
-                    </Fab>
-                  </div>
-                  
-                </Tooltip>
+                </div>
                 
-              </div>
-            
-              <Icon
-                color="disabled"
-                className="fa fa-angle-right breadcrumb-spacer"
-              />
+              </Tooltip>
+              
+              
+              <ArrowRightIcon fontSize="inherit" className="breadcrumb-spacer" color="inherit"/>
+             
+       
               <NetPyNENewMechanism
-                className="ml-2"
                 handleClick={this.handleNewMechanism}
                 disabled={selectedSection == undefined || page == 'main'}
                 handleHierarchyClick={ () => this.handleHierarchyClick('mechanisms')}
                 blockButton={page != 'mechanisms' && !!model && !!model[selectedCellRule] && !!model[selectedCellRule]['secs'][selectedSection] && Object.keys(model[selectedCellRule]['secs'][selectedSection]['mechs']).length > 0}
               /> 
             </div>
-            <Divider />
-            <RulePath text={this.getCopyPath()}/>
-            <Divider />
-            <Filter
-              value={this.state.filterValue}
-              label={`Filter ${page === 'main' ? 'cell rule' : page === 'sections' ? 'section' : 'mechanism'} by name...`}
-              handleFilterChange={newValue => this.setState({ filterValue: newValue })}
-              options={this.getFilterOptions()}
-            />
+       
+            <Box p={1}>
+              <RulePath text={this.getCopyPath()}/>
+              <Box mb={1} />
+              <Filter
+                value={this.state.filterValue}
+                label={`Filter ${page === 'main' ? 'cell rule' : page === 'sections' ? 'section' : 'mechanism'} by name...`}
+                handleFilterChange={newValue => this.setState({ filterValue: newValue })}
+                options={this.getFilterOptions()}
+              />
+            </Box>
           </Accordion>
         </div>
         

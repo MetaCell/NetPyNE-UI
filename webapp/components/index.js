@@ -211,7 +211,7 @@ export const ActionDialog = connect(
 
 export { NetPyNEPythonConsole } from './general/NetPyNEPythonConsole';
 
-import _Drawer from './settings/Drawer'
+import _Drawer from './drawer/Drawer'
 export const Drawer = connect(
   state => ({ editMode: state.general.editMode, layout: state.layout }),
   dispatch => ({ 

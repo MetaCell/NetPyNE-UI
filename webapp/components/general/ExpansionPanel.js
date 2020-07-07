@@ -8,7 +8,7 @@ import Tooltip from './Tooltip'
 
 import { withStyles } from '@material-ui/core/styles'
 
-const styles = ({ spacing }) => ({ button: { marginRight: `${spacing(1)}px!important` } })
+const styles = ({ spacing }) => ({ button: { marginRight: 0 } })
 
 class NetPyNEAccordion extends Component {
   state = { expanded: false }
@@ -23,13 +23,12 @@ class NetPyNEAccordion extends Component {
           IconButtonProps={{ 
             onClick: () => this.setState({ expanded: !this.state.expanded }),
             className: classes.button,
-            size: 'small'
           }}
           expandIcon={
             <Tooltip
               title={this.state.expanded ? "Collapse" : "Expand"} placement="top"
             >
-              {this.state.expanded ? <ExpandLessIcon fontSize="inherit"/> : <ExpandMoreIcon fontSize="inherit"/>}
+              {this.state.expanded ? <ExpandLessIcon color="inherit" /> : <ExpandMoreIcon color="inherit"/>}
             </Tooltip>
             
           }

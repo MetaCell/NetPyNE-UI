@@ -89,8 +89,7 @@ const rawTheme = {
       root:{
         color: fontColor,
         paddingTop: `calc(${gutter} / 2)`, 
-        fontSize: '1.0rem', 
-        fontWeight: 200
+        fontSize: '0.9rem', 
       },
       gutters: {
         paddingLeft: `calc(${gutter} * 2)`,

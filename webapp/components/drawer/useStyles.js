@@ -20,13 +20,9 @@ export default makeStyles(({ transitions, palette, spacing }) => ({
 
   closeDrawer: drawerCss(false, transitions, palette, spacing),
 
-  buttonContainer: { textAlign: 'end' },
-  button: {
-    color: 'white',
-    marginBottom: spacing(1),
-    marginRight: spacing(1),
-  },
-  text: { paddingLeft: spacing(1) },
+  buttonContainerOpen: { textAlign: 'end' },
+  button: { color: 'white', },
+  text: { marginLeft: spacing(1) },
   container: { 
     display: 'flex',
     justifyContent: 'space-between',
@@ -35,8 +31,8 @@ export default makeStyles(({ transitions, palette, spacing }) => ({
     width: '100%'
   },
   
-  selected: { color: palette.primary.main, paddingLeft: spacing(1) },
-  unselected: { color: palette.common.white, paddingLeft: spacing(1) },
-  disabled: { color: palette.common.black, paddingLeft: spacing(1) },
+  selected: { color: palette.primary.main },
+  unselected: { color: palette.common.white },
+  disabled: { color: palette.common.black },
   icon: { color: 'inherit', minWidth: 'unset' }
 }))

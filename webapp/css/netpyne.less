@@ -167,15 +167,18 @@ button.actionButton {
   padding: @gutter/2;
   border-radius: @radius;
   flex-wrap: wrap;
+  font-size: 0.8rem;
   .MuiIcon-colorDisabled {
     color: black
   }
+  .breadcrumb-spacer {
+    text-align: center;
+    color: black;
+    margin-right: @gutter / 2;
+    margin-left: @gutter / 2;
+  }
 }
-.breadcrumb-spacer {
-  margin-left: var(--m2);
-  width: 40px;
-  text-align: center;
-}
+
 
 .hiddenModal {
   position: absolute !important;

@@ -2,18 +2,17 @@ import React, { useState } from 'react'
 
 
 import Paper from '@material-ui/core/Paper'
-import IconButton from '@material-ui/core/IconButton'
+import IconButton from '@material-ui/core/IconButton';
+import Box from '@material-ui/core/Box';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Typography from '@material-ui/core/Typography';
 
 import { WidgetStatus } from '../layout/model';
 import {
-  EDIT_WIDGETS, getPythonDefaultConsoleWidget, 
+  EDIT_WIDGETS, 
   DEFAULT_NETWORK_WIDGETS, TOP_PANEL
 } from '../../constants';
 
@@ -27,30 +26,28 @@ const drawerCloseWidth = 44;
 
 const DrawerItem = ({ id, name, widget, expanded, createOrFocusWidget, disabled, status, classes }) => (
   <Tooltip title={expanded ? "" : name} placement="right" >
-    <div>
-      <ListItem
-        button
-        key={id}
-        dense
-        disableGutters
-        disabled={disabled}
-        className={widget ? classes.selected : classes.unselected}
-        onClick={() => createOrFocusWidget(id)}
-      >
-        <ListItemIcon className={classes.icon}>
-          <DrawerIcon 
-            name={id} 
-            selected={status !== WidgetStatus.MINIMIZED} 
-            disabled={status !== WidgetStatus.ACTIVE}
-            highlight={status === WidgetStatus.ACTIVE}
-          />
-        </ListItemIcon>
-        <ListItemText className={classes.text}>
-          <Typography noWrap>{name}</Typography>
-        </ListItemText>
-      </ListItem>
-    </div>
-    
+    <ListItem
+      button
+      key={id}
+      dense
+
+      disableGutters
+      disabled={disabled}
+      className={widget ? classes.selected : classes.unselected}
+      onClick={() => createOrFocusWidget(id)}
+    >
+      <ListItemIcon className={classes.icon}>
+        <DrawerIcon 
+          name={id} 
+          selected={status !== WidgetStatus.MINIMIZED} 
+          disabled={status !== WidgetStatus.ACTIVE}
+          highlight={status === WidgetStatus.ACTIVE}
+        />
+      </ListItemIcon>
+      <ListItemText className={classes.text}>
+        <Typography noWrap>{name}</Typography>
+      </ListItemText>
+    </ListItem>    
   </Tooltip>
 )
 
@@ -122,25 +119,23 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
   return (
     <Paper elevation={0} className={expand ? classes.openDrawer : classes.closeDrawer}>
       <div className={classes.container}>
-        <div >
-          <List dense>
+        <Box p={1}>
+          <List dense disablePadding>
             {getMenu().map(mapItem)}
           </List>
-        </div>
+        </Box>
 
-        <div/>
-
-        <div className={classes.buttonContainer}>
+        <div className={expand ? classes.buttonContainerOpen : null}>
           <Tooltip title={expand ? "Collapse" : "Expand"}>  
             <IconButton
               className={classes.button}
-              size="small"
+              size="medium"
               onClick={() => {
                 setExpand(!expand)
                 setTimeout(() => window.dispatchEvent(new Event('resize')), 400)
               }}
             >
-              {expand ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
+              {expand ? <DrawerIcon name="arrow-left" fontSize="small" /> : <DrawerIcon name="arrow-right" fontSize="small" /> }
             </IconButton>
           </Tooltip>  
         </div>

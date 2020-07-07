@@ -47,14 +47,17 @@ class RulePath extends Component {
 
   render () {
     const { text, style, classes, ...others } = this.props
+    if (!text || text.includes("undefined")) {
+      return null;
+    }
     return (
       <div className={classes.root} style={style} {...others}>
-        <Typography variant="caption" className={classes.text} ref={this.textAreaRef}>{text.includes('undefined') ? 'Select a rule' : text}</Typography>
+        <Typography variant="caption" className={classes.text} ref={this.textAreaRef}>{text}</Typography>
         
         <div className={classes.icon}>
           <Tooltip title="Copy" placement="top">
             <div>
-              <IconButton aria-label="delete" size="small" disabled={text.includes('undefined')} onClick={() => this.copyCodeToClipboard()}>
+              <IconButton aria-label="delete" size="small" onClick={() => this.copyCodeToClipboard()}>
                 <FileCopyIcon fontSize="inherit"/>
               </IconButton>
             </div>
