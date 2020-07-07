@@ -20,7 +20,7 @@ const AboutContent = () => (
     
     <Box m={1} >
       <Typography variant="body2" style={{ color: secondaryColor }}>
-          NetPyNE is a Python package to facilitate the development, simulation, parallelization, and analysis of biological neuronal networks using the NEURON simulator. 
+          NetPyNE is a Python package to facilitate the development, simulation, parallelization, and analysis of biological neuronal networks using the NEURON simulator.
           Checkout our <Link href="https://elifesciences.org/articles/44494" target="_blank">eLife paper.</Link>
       </Typography>
     </Box>
@@ -30,6 +30,17 @@ const AboutContent = () => (
         Want to know more? Go to our <Link href="http://netpyne.org/about.html#what-is-netpyne" target="_blank">website</Link>.
       </Typography>
     </Box>
+
+    <Box m={1}>
+      <Typography variant="body2" style={{ color: secondaryColor }}>
+        NetPyNE-UI is being developed in collaboration with:
+      </Typography>
+      <Link href="http://www.metacell.us" target="_blank">
+        <img style={{ width: 150, padding: "10px" }} src="https://raw.githubusercontent.com/ddelpiano/bucket/master/MetaCellLogoHorizontal300ppi.png"></img>
+      </Link>
+    </Box>
+
+
   </Paper>
     
 )
@@ -75,11 +86,8 @@ export default function Dialog ({ open, title, message, handleClose }) {
           {title === "Contribute" ? <ContributeContent/> : <AboutContent/>}
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose}>
-            Cancel
-          </Button>
           <Button onClick={handleClose} color="primary" autoFocus>
-            Got it
+            Close
           </Button>
         </DialogActions>
       </MuiDialog>
