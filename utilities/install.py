@@ -7,6 +7,9 @@ from shutil import copyfile
 
 branch = None
 
+HERE = os.path.dirname(os.path.abspath(__file__))
+
+
 #by default clones branch (which can be passed as a parameter python install.py branch test_branch)
 #if branch doesnt exist clones the default_branch
 def clone(repository, folder, default_branch, cwdp='', recursive = False, destination_folder = None):
@@ -45,6 +48,11 @@ def clone_repo(project, repo_name, **kwargs):
 
 def compile_mod():
     subprocess.call(['nrnivmodl', 'netpyne_workspace/mod'])
+
+def execute(cmd, cwd='.'):
+    exit_code = subprocess.call(cmd, cwd=cwd)
+    if exit_code != 0:
+        raise SystemExit('Error installing NetPyNe-UI')
 
 def main(argv):
     global branch
@@ -124,3 +132,12 @@ subprocess.call(['python3', '-m', 'pip', 'install', '-e', '.'], cwd='.')
 
 # set python console theme
 subprocess.call(['jt', '-t', 'monokai'])
+
+print("Installing notebook theme")
+from jupyter_core import paths
+config_dir = paths.jupyter_config_dir()
+print('Jupyter configuration dir is {}'.format(config_dir))
+css_path = os.path.join(config_dir, 'custom')
+if not os.path.exists(css_path):
+    os.makedirs(css_path)
+execute(cmd=['cp', 'custom.css', css_path], cwd=HERE)
