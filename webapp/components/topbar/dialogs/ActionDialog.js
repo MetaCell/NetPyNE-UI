@@ -11,7 +11,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 const styles = { cancel: { marginRight: 10 } }
 export default class ActionDialog extends React.Component {
 
-  state = { hide: false }
+  state = { hide: !this.props.openErrorDialogBox && !this.props.openDialog }
 
   performAction = () => {
     if (this.props.isFormValid === undefined || this.props.isFormValid()){
@@ -31,16 +31,21 @@ export default class ActionDialog extends React.Component {
    */
 
   clearErrorDialogBox () {
-    this.props.closeBackendErrorDialog()
+    if (this.props.closeBackendErrorDialog) {
+      this.props.closeBackendErrorDialog()
+    }
   }
   
   cancelDialog = () => {
     this.clearErrorDialogBox()
-    this.props.onRequestClose();
+    this.setState({ hide: true })
+    if (this.props.onRequestClose) {
+      this.props.onRequestClose();
+    }
   }
 
   handleClickGoBack () {
-    this.setState({ hide: false })
+    this.setState({ hide: true })
     this.clearErrorDialogBox()
   }
   render () {
@@ -69,7 +74,7 @@ export default class ActionDialog extends React.Component {
       )
           
       var title = this.props.errorMessage;
-      var content = Utils.parsePythonException(this.props.errorDetails);
+      var content = this.props.errorDetails ? Utils.parsePythonException(this.props.errorDetails) : '';
     }
     return (
 

@@ -66,11 +66,11 @@ const rawTheme = {
       }
     },
     MuiCard: { root: { backgroundColor: bgDarker, overflowY: 'auto', flex: 1 } },
-    MuiBottomNavigation: { root: { backgroundColor: bgRegular, marginBottom: 8, borderRadius: 4 } },
+    MuiBottomNavigation: { root: { margin: gutter, backgroundColor: "transparent" } },
     MuiPaper: { root: { color: 'inherit', backgroundColor: bgRegular } },
     MuiBottomNavigationAction: { 
-      root: { color: fontColor, textTransform: 'uppercase' },
-      label: { fontSize: "0.65rem", "&.Mui-selected": { fontSize: "0.65rem" } },
+      root: { color: fontColor, textTransform: 'uppercase', maxwidth: 'auto' },
+      label: { fontSize: "1rem", "&.Mui-selected": { fontSize: "1rem" } },
     },
     MuiFormControl: { root: { overflow: 'visible' } },
     MuiFab:{ 

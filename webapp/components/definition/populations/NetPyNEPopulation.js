@@ -228,7 +228,7 @@ class NetPyNEPopulation extends React.Component {
 
     return (
       <div>
-        <BottomNavigation component={Paper} showLabels value={this.state.selectedIndex}>
+        <BottomNavigation showLabels value={this.state.selectedIndex}>
           {this.getModelParameters()}
         </BottomNavigation>
         {content}

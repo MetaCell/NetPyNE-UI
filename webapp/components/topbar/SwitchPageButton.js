@@ -1,12 +1,9 @@
 import React, { Component } from 'react'
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
-
 
 import { withStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import Icon from '../general/NetPyNEIcons'
-import { TOPBAR_CONSTANTS } from '../../constants'
+import { TOPBAR_CONSTANTS, MODEL_STATE } from '../../constants'
 
 
 const styles = ({ palette, shape, spacing, typography }) => ({ 
@@ -24,24 +21,16 @@ const styles = ({ palette, shape, spacing, typography }) => ({
 class SwitchPageButton extends Component {
 
   handleClick = event => {
+    const instantiate = this.props.automaticInstantiation && this.props.modelState != MODEL_STATE.INSTANTIATED;
     if (!this.props.editModelPage) {
       this.props.switchToEditModelPage();
     } else {
-      switch (this.props.pageTransitionMode) {
-      case TOPBAR_CONSTANTS.CREATE_AND_SIMULATE_NETWORK:{
+      if (instantiate && this.props.automaticSimulation) {
         this.props.createAndSimulateNetwork();
-        break;
-      }
-      case TOPBAR_CONSTANTS.CREATE_NETWORK:{
+      } else if (instantiate) {
         this.props.createNetwork();
-        break;
-      }
-      case TOPBAR_CONSTANTS.EXPLORE_EXISTING_NETWORK:{
+      } else {
         this.props.showNetwork();
-        break
-      }
-      default:
-        break
       }
     }
   };
@@ -57,11 +46,27 @@ class SwitchPageButton extends Component {
           onClick={this.handleClick.bind(this)}
           endIcon={<Icon name={this.props.editModelPage ? "rocket" : "pencil"} selected={false}/>}
         >
-          {this.props.editModelPage ? this.props.pageTransitionMode : TOPBAR_CONSTANTS.BACK_TO_EDITION}
+          {this.props.editModelPage ? this.getExploreLabel() : TOPBAR_CONSTANTS.BACK_TO_EDITION}
         </Button>
       
       </div>
     )
+  }
+
+  getExploreLabel () {
+   
+    const { automaticInstantiation, automaticSimulation } = this.props;
+    const instantiate = automaticInstantiation || this.props.modelState == MODEL_STATE.NOT_INSTANTIATED;
+    if (instantiate && automaticSimulation) {
+      return TOPBAR_CONSTANTS.CREATE_AND_SIMULATE_NETWORK
+    } 
+    if (instantiate) {
+      return TOPBAR_CONSTANTS.CREATE_NETWORK;
+    } 
+    if (automaticSimulation) {
+      console.debug("Bad option combination: can't auto simulate without auto instantiate")
+    }
+    return TOPBAR_CONSTANTS.EXPLORE_EXISTING_NETWORK;
   }
 }
 export default withStyles(styles)(SwitchPageButton)

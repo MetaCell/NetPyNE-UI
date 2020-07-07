@@ -289,7 +289,7 @@ class NetPyNESimConfig extends React.Component {
     const { classes } = this.props
     return (
       <div className={ classes.root }>
-        <BottomNavigation component={Paper} showLabels className={classes.bottomNav} value={this.state.selectedIndex}>
+        <BottomNavigation showLabels className={classes.bottomNav} value={this.state.selectedIndex}>
           <BottomNavigationAction id={"configGeneral"} key={'General'} label={'General'} icon={<FontIcon className={"fa fa-bars"} />} onClick={() => this.select(0, 'General')} />
           <BottomNavigationAction id={"configRecord"} key={'Record'} label={'Record'} icon={<FontIcon className={"fa fa-circle"} />} onClick={() => this.select(1, 'Record')} />
           <BottomNavigationAction id={"configSaveConfiguration"} key={'SaveConfiguration'} label={'Save Configuration'} icon={<FontIcon className={"fa fa-floppy-o"} />} onClick={() => this.select(2, 'SaveConfiguration')} />

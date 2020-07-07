@@ -2,6 +2,7 @@ import React from "react";
 
 import { Box, Grid } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
+import { ErrorDialog } from 'netpyne/components'
 
 import {
   Topbar,
@@ -95,6 +96,7 @@ class NetPyNE extends React.Component {
           </Box>
         </div>
         <Dialog/>
+        <ErrorDialog/>
       </div>
     );
   }

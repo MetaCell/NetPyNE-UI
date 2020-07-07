@@ -2,15 +2,15 @@ import React, { Component, createRef } from 'react'
 import MuiAlert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton'
-import FileCopyIcon from '@material-ui/icons/FileCopy';
+import FileCopyIcon from '@material-ui/icons/FileCopyOutlined';
 import Tooltip from './Tooltip';
 import { withStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 
 const styles = ({ spacing, palette }) => ({ 
-  root: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: `0px ${spacing(1)}px 0px ${spacing(1)}px` },
-  text: { color: palette.text.secondary },
-  icon: { marginRight: 2 }
+  root: { },
+  text: { color: palette.text.secondary, fontFamily: 'Menlo, Monaco, Consolas, "Courier New", monospace' },
+  icon: { padding: 0, opacity: 0.7, fontSize: "1.2em", marginLeft: "0.3em" }
 })
 
 class RulePath extends Component {
@@ -52,19 +52,18 @@ class RulePath extends Component {
     }
     return (
       <div className={classes.root} style={style} {...others}>
-        <Typography variant="caption" className={classes.text} ref={this.textAreaRef}>{text}</Typography>
-        
-        <div className={classes.icon}>
-          <Tooltip title="Copy" placement="top">
-            <div>
-              <IconButton aria-label="delete" size="small" onClick={() => this.copyCodeToClipboard()}>
+        <Typography variant="caption" className={classes.text} ref={this.textAreaRef}>
+          {text} 
+          <span >
+            <Tooltip title="Copy" placement="top">
+              <IconButton aria-label="delete" padding="" size="inherit" className={classes.icon} onClick={() => this.copyCodeToClipboard()}>
                 <FileCopyIcon fontSize="inherit"/>
               </IconButton>
-            </div>
-            
-          </Tooltip>
+            </Tooltip>
           
-        </div>
+          </span>
+        </Typography>
+        
         
         <Snackbar open={this.state.open} autoHideDuration={3000} onClose={() => this.setState({ open: false })}>
           <MuiAlert elevation={6} variant="filled" severity="success">Copied to clipboard</MuiAlert>

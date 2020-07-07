@@ -11,6 +11,9 @@ export const DELETE_NETPARAMS_OBJ = 'DELETE_NETPARAMS_OBJ'
 export const CLOSE_DIALOG = 'CLOSE_DIALOG';
 export const OPEN_DIALOG = 'OPEN_DIALOG';
 export const LOAD_TUTORIAL = 'LOAD_TUTORIAL';
+export const AUTOMATIC_INSTANTIATION = 'AUTOMATIC_INSTANTIATION';
+export const AUTOMATIC_SIMULATION = 'AUTOMATIC_SIMULATION';
+export const IMPORT_APPLICATION_STATE = 'IMPORT_APPLICATION_STATE';
 
 // Actions
 export const updateCards = { type: UPDATE_CARDS };
@@ -33,3 +36,6 @@ export const openDialog = payload => ({ type: OPEN_DIALOG, payload });
 
 
 export const loadTutorial = tutFile => ({ type: LOAD_TUTORIAL, payload: tutFile })
+
+export const changeAutomaticInstantiation = payload => ({ type: AUTOMATIC_INSTANTIATION, payload });
+export const changeAutomaticSimulation = payload => ({ type: AUTOMATIC_SIMULATION, payload });

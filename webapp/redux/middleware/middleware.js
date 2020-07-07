@@ -16,7 +16,7 @@ let previousLayout = { edit: undefined, network: undefined };
 
 
 export default store => next => action => {
-  const errorCallback = errorPayload => next(openBackendErrorDialog(errorPayload));
+ 
 
   const switchLayoutAction = (edit = true, reset = true) => {
     previousLayout[store.getState().general.editMode ? 'edit' : 'network'] = store.layout;
@@ -28,11 +28,12 @@ export default store => next => action => {
       : previousLayout.network ? setLayout(previousLayout.network) : setWidgets({ ...Constants.DEFAULT_NETWORK_WIDGETS }));
   }
   const toNetworkCallback = reset => () => {
-    
+    next(action);
     if (store.getState().general.editMode) {
       switchLayoutAction(false, reset);
     }
-    next(action);
+    
+    
   };
   switch (action.type) {
 
@@ -41,6 +42,7 @@ export default store => next => action => {
     next(action);
     break;
   case SHOW_NETWORK:
+    next(action);
     switchLayoutAction(false, false);
     break;
   case EDIT_MODEL:{
@@ -48,18 +50,17 @@ export default store => next => action => {
     switchLayoutAction(true);
     break
   }
-  case CREATE_NETWORK:{
-      
-    instantiateNetwork({}).then(toNetworkCallback(true), errorCallback);
+  case CREATE_NETWORK:{  
+    instantiateNetwork({}).then(toNetworkCallback(true), errorPayload => next(openBackendErrorDialog("An error occurred while creating the network")));
     break;
   }
   case CREATE_SIMULATE_NETWORK:{
-    simulateNetwork({ parallelSimulation: false }).then(toNetworkCallback(true), errorCallback);
+    simulateNetwork({ parallelSimulation: false }).then(toNetworkCallback(true), errorPayload => next(openBackendErrorDialog("An error occurred while creating the network")));
     break;
   }
     
   case SIMULATE_NETWORK:
-    simulateNetwork({ parallelSimulation: false, usePrevInst: true }).then(toNetworkCallback(true), errorCallback);
+    simulateNetwork({ parallelSimulation: false, usePrevInst: true }).then(toNetworkCallback(true), errorPayload => next(openBackendErrorDialog("An error occurred while simulating the network")));
     break
   case PYTHON_CALL: {
     const callback = response => {

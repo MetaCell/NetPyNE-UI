@@ -168,7 +168,7 @@ export default class NetPyNESection extends React.Component {
     
     return (
       <div>
-        <BottomNavigation component={Paper} showLabels style={{ borderRadius: '4px' }} value={this.state.selectedIndex} showLabels>
+        <BottomNavigation showLabels style={{ borderRadius: '4px' }} value={this.state.selectedIndex} showLabels>
           {bottomNavigationItems}
         </BottomNavigation>
         {content}

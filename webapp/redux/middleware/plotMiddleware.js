@@ -3,7 +3,7 @@ import Utils from '../../Utils';
 import { NETPYNE_COMMANDS, PLOT_WIDGETS } from '../../constants';
 
 import { processError } from './middleware';
-import { SIMULATE_NETWORK } from '../actions/general';
+import { SIMULATE_NETWORK, CREATE_SIMULATE_NETWORK } from '../actions/general';
 
 // Cache for plots coming from the backend
 window.plotSvgImages = {};
@@ -39,7 +39,8 @@ export default store => next => action => {
     next(action);
     break;
   }
-  case SIMULATE_NETWORK: {
+  case SIMULATE_NETWORK:
+  case CREATE_SIMULATE_NETWORK: {
     for (let widget of Object.values(PLOT_WIDGETS)) {
       setWidget(widget).then(widget => widget ? next(addWidget(widget)) : null);
     }

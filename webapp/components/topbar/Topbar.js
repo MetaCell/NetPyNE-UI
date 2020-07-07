@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Snackbar from '@material-ui/core/Snackbar';
 import Menu from '@geppettoengine/geppetto-client/js/components/interface/menu/Menu';
 
-import toolbarConfig, { getModelMenu, getTutorials } from './configuration'
+import toolbarConfig, { getModelMenu, getTutorials, getViewMenu } from './menuConfiguration'
 import { bgRegular, bgLight, font } from '../../theme'
 import Splash from '../general/Splash'
 
@@ -37,7 +37,12 @@ class Topbar extends Component {
     switch (click.handlerAction) {
     case 'redux':{
       const [action, payload] = click.parameters
-      this.props.dispatchAction(action(payload))
+      if (payload !== undefined) {
+        this.props.dispatchAction(action(payload))
+      } else {
+        this.props.dispatchAction(action)
+      }
+      
       break;
     }
     case TOPBAR_CONSTANTS.NEW_PAGE:{
@@ -52,6 +57,9 @@ class Topbar extends Component {
       }
       if (menuName === "Tutorials") {
         return getTutorials()
+      }
+      if (menuName === "View") {
+        return getViewMenu(this.props)
       }
       break
     }

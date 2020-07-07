@@ -1,10 +1,20 @@
 import React from 'react';
+
+import Divider from '@material-ui/core/Divider';
 import { bgRegular, bgDark, font, primaryColor, gutter, radius } from '../../theme'
 
 import { openTopbarDialog, changePageTransitionMode } from '../../redux/actions/topbar'
-import { openDialog, loadTutorial } from '../../redux/actions/general'
-import { TOPBAR_CONSTANTS } from '../../constants'
-
+import {
+  openDialog, loadTutorial, 
+  changeAutomaticInstantiation, 
+  changeAutomaticSimulation, 
+  createAndSimulateNetwork, 
+  createNetwork, 
+  simulateNetwork, 
+  editModel, 
+  showNetwork 
+} from '../../redux/actions/general'
+import { TOPBAR_CONSTANTS, MODEL_STATE } from '../../constants'
 
 const checkedIcon = "fa fa-check secondary";
 const unCheckedIcon = "fa fa-check color-dark";
@@ -225,6 +235,17 @@ export default {
       ]
     },
     {
+      label: "View",
+      icon: "",
+      position: "bottom-start",
+      style: topLevelMenuItemStyle,
+      dynamicListInjector: {
+        handlerAction: "menuInjector",
+        parameters: ["View"]
+      }
+    },
+    
+    {
       label: "Model",
       icon: "",
       position: "bottom-start",
@@ -263,33 +284,94 @@ export default {
   ]
 }
 
+export const getViewMenu = props => {
+  const instantiate = props.automaticInstantiation || props.modelState == MODEL_STATE.NOT_INSTANTIATED;
+  const networkAction = () => {
+    if (instantiate && props.automaticSimulation) {
+      return createAndSimulateNetwork;
+    } else if (instantiate) {
+      return createNetwork;
+    } else {
+      return showNetwork;
+    }
+  }
+  
+  return [
+    {
+      label: "Edit",
+      icon: props.editMode ? checkedIcon : 'fa',
+      action: {
+        handlerAction: "redux",
+        parameters: [editModel]
+      }
+      
+    },
+    {
+      label: "Explore",
+      icon: !props.editMode ? checkedIcon : 'fa',
+      action: {
+        handlerAction: "redux",
+        parameters: [networkAction()]
+      }
+    },
+  ];
+}
 
 export const getModelMenu = props => (
   [
     {
       label: TOPBAR_CONSTANTS.CREATE_NETWORK,
-      icon: props.pageTransitionMode === TOPBAR_CONSTANTS.CREATE_NETWORK ? checkedIcon : 'fa',
       className: "topbar-menu-item",
       action: {
         handlerAction: "redux",
-        parameters: [changePageTransitionMode, TOPBAR_CONSTANTS.CREATE_NETWORK]
+        parameters: [createNetwork]
       }
     },
     {
-      label: TOPBAR_CONSTANTS.CREATE_AND_SIMULATE_NETWORK,
-      icon: props.pageTransitionMode === TOPBAR_CONSTANTS.CREATE_AND_SIMULATE_NETWORK ? checkedIcon : 'fa',
+      label: TOPBAR_CONSTANTS.SIMULATE,
       action: {
         handlerAction: "redux",
-        parameters: [changePageTransitionMode, TOPBAR_CONSTANTS.CREATE_AND_SIMULATE_NETWORK]
+        parameters: [props.modelState == MODEL_STATE.NOT_INSTANTIATED ? createAndSimulateNetwork : simulateNetwork]
       }
     },
     {
-      label: TOPBAR_CONSTANTS.EXPLORE_EXISTING_NETWORK,
-      icon: props.pageTransitionMode === TOPBAR_CONSTANTS.EXPLORE_EXISTING_NETWORK ? checkedIcon : 'fa',
-      action: {
-        handlerAction: "redux",
-        parameters: [changePageTransitionMode, TOPBAR_CONSTANTS.EXPLORE_EXISTING_NETWORK]
-      }
+      label: "Explore view options",
+      list: [
+        {
+          label: "Automatic instantiation",
+          icon: props.automaticInstantiation ? checkedIcon : 'fa',
+          action: {
+            handlerAction: "redux",
+            parameters: [changeAutomaticInstantiation, true]
+          }
+        },
+        {
+          label: "Manual instantiation",
+          icon: !props.automaticInstantiation ? checkedIcon : 'fa',
+          action: {
+            handlerAction: "redux",
+            parameters: [changeAutomaticInstantiation, false]
+          }
+        },
+        <Divider />,
+        {
+          label: "Automatic simulation",
+          icon: props.automaticSimulation ? checkedIcon : 'fa',
+          action: {
+            handlerAction: "redux",
+            parameters: [changeAutomaticSimulation, true]
+          }
+        },
+        {
+          label: "Manual simulation",
+          icon: !props.automaticSimulation ? checkedIcon : 'fa',
+          action: {
+            handlerAction: "redux",
+            parameters: [changeAutomaticSimulation, false]
+          }
+        },
+      ]
     },
+    
   ]
 )

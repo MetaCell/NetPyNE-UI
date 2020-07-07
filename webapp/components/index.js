@@ -202,6 +202,15 @@ export const NetWorkControlButtons = connect(
 
 import _ActionDialog from './topbar/dialogs/ActionDialog'
 export const ActionDialog = connect(
+  state => ({ ...state.errors, openDialog: true }),
+  dispatch => ({ 
+    pythonCall: (cmd, args) => dispatch(pythonCall(cmd, args)),
+    closeBackendErrorDialog: () => dispatch(closeBackendErrorDialog),
+  })
+)(_ActionDialog)
+
+
+export const ErrorDialog = connect(
   state => ({ ...state.errors, openErrorDialogBox: state.errors.openDialog }),
   dispatch => ({ 
     pythonCall: (cmd, args) => dispatch(pythonCall(cmd, args)),
@@ -227,15 +236,17 @@ export const Topbar = connect(
   state => ({ 
     dialogOpen: state.topbar.dialogOpen,
     editMode: state.general.editMode,
+    modelState: state.general.modelState,
     topbarDialogName: state.topbar.dialogName,
     topbarDialogMetadata: state.topbar.dialogMetadata,
     pageTransitionMode: state.topbar.pageTransitionMode,
-    modelLoaded: state.general.modelLoaded 
+    modelLoaded: state.general.modelLoaded ,
+    automaticInstantiation: state.general.automaticInstantiation,
+    automaticSimulation: state.general.automaticSimulation,
   }),
   dispatch => ({ 
     dispatchAction: action => dispatch(action),
     closeDialog: () => dispatch(closeTopbarDialog),
-    changePageTransitionMode: mode => dispatch(changePageTransitionMode(mode))
   })
 )(_Topbar)
 
@@ -243,11 +254,12 @@ import _SwitchPageButton from "./topbar/SwitchPageButton";
 export const SwitchPageButton = connect(
   state => ({ 
     editModelPage: state.general.editMode,
-    pageTransitionMode: state.topbar.pageTransitionMode,
+    modelState: state.general.modelState,
+    automaticInstantiation: state.general.automaticInstantiation,
+    automaticSimulation: state.general.automaticSimulation,
   }),
   dispatch => ({ 
     switchToEditModelPage: () => dispatch(editModel),
-    changePageTransitionMode: mode => dispatch(changePageTransitionMode(mode)),
     createNetwork: () => dispatch(createNetwork),
     createAndSimulateNetwork: () => dispatch(createAndSimulateNetwork),
     showNetwork: () => dispatch(showNetwork)

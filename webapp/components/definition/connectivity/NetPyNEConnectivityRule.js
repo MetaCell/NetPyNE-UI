@@ -394,7 +394,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
 
     return (
       <div>
-        <BottomNavigation component={Paper} showLabels value={this.state.selectedIndex}>
+        <BottomNavigation showLabels value={this.state.selectedIndex}>
           {bottomNavigationItems}
         </BottomNavigation>
         {content}
