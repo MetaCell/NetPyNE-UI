@@ -14,5 +14,6 @@ netpyne_workspace
 webapp/node_modules
 webapp/build
 webapp/geppetto-client
-webapp/package-lock.json
 k8s
+src
+x86_64
