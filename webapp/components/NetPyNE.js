@@ -60,7 +60,7 @@ class NetPyNE extends React.Component {
       GEPPETTO.Manager.loadExperiment(1, [], []);
       Utils.execPythonMessage('from netpyne_ui.netpyne_geppetto import netpyne_geppetto');
       Utils.evalPythonMessage('netpyne_geppetto.getData',[]).then(response => {
-        GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "LOADING NETPYNE-UI");
+        GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading NetPyNE-UI");
         const data = Utils.convertToJSON(response);
         this.addMetadataToWindow(data);
         this.props.setWidgets(EDIT_WIDGETS);

@@ -51,6 +51,7 @@ export default store => next => action => {
     break
   }
   case RESET_MODEL:{
+    GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Reloading Python Kernel");
     IPython.notebook.restart_kernel({ confirm: false }).then(
       () => {
         window.location.reload();

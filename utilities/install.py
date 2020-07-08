@@ -9,7 +9,6 @@ branch = None
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
-
 def execute(cmd, cwd='.'):
     exit_code = subprocess.call(cmd, cwd=cwd)
     if exit_code != 0:
@@ -54,10 +53,8 @@ def clone_repo(project, repo_name, **kwargs):
 def compile_mod():
     execute(['nrnivmodl', 'netpyne_workspace/mod'])
 
-def execute(cmd, cwd='.'):
-    exit_code = execute(cmd, cwd=cwd)
-    if exit_code != 0:
-        raise SystemExit('Error installing NetPyNe-UI')
+
+
 
 def main(argv):
     global branch
