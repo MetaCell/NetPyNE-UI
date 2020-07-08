@@ -178,15 +178,28 @@ export default class NetPyNEStimulationSources extends Component {
         <div>
           <Accordion>
             <div className="breadcrumb">
-              <NetPyNEHome
-                selection={this.state.selectedStimulationSource}
-                handleClick={() => this.setState({ selectedStimulationSource: undefined })}
-              />
-              <NetPyNEAddNew 
-                id={"newStimulationSourceButton"} 
-                title="Create new stimulation source"
-                handleClick={this.handleNewStimulationSource}
-              />
+              <div>
+                <NetPyNEHome
+                  selection={this.state.selectedStimulationSource}
+                  handleClick={() => this.setState({ selectedStimulationSource: undefined })}
+                />
+                <div style={{ opacity: 0 }}>H</div>
+              </div>
+              <div >
+                <NetPyNEAddNew 
+                  id={"newStimulationSourceButton"} 
+                  title="Create new stimulation source"
+                  handleClick={this.handleNewStimulationSource}
+                />
+                <div style={{ 
+                  textAlign: 'center', 
+                  fontFamily: 'Source Sans Pro', 
+                  maxWidth: 40, 
+                  overflow: 'visible',
+                  display: 'flex', 
+                  justifyContent: 'center' 
+                }}>Source</div>
+              </div>
             </div>
             <Divider />
             <RulePath text={`netParams.stimSourceParams["${this.state.selectedStimulationSource}"]`}/>

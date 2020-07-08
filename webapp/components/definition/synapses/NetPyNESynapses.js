@@ -176,11 +176,26 @@ export default class NetPyNESynapses extends Component {
         <div>
           <Accordion>
             <div className="breadcrumb">
-              <NetPyNEHome
-                selection={this.state.selectedSynapse}
-                handleClick={() => this.setState({ selectedSynapse: undefined })}
-              />
-              <NetPyNEAddNew title="Create new synapse" id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
+              <div>
+                <NetPyNEHome
+                  selection={this.state.selectedSynapse}
+                  handleClick={() => this.setState({ selectedSynapse: undefined })}
+                />
+                <div style={{ opacity: 0 }}>H</div>
+              </div>
+              <div >
+                <NetPyNEAddNew title="Create new synapse" id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
+                <div style={{ 
+                  textAlign: 'center', 
+                  fontFamily: 'Source Sans Pro', 
+                  maxWidth: 40, 
+                  overflow: 'visible',
+                  display: 'flex', 
+                  justifyContent: 'center' 
+                }}>Synapse</div>
+              </div>
+              
+              
             </div>
             <Divider />
             <RulePath text={`netParams.synMechParams["${this.state.selectedSynapse}"]`}/>
