@@ -4,7 +4,6 @@ div#notebook {
     line-height: 170%;
     color: #f8f8f0;
     -webkit-font-smoothing: antialiased !important;
-    padding-top: 25px !important;
    }
    body,
    div.body {
