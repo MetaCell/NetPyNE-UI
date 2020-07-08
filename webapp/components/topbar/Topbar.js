@@ -73,6 +73,11 @@ class Topbar extends Component {
     this.props.closeDialog()
   }
 
+  resetModel () {
+    this.props.closeDialog()
+    this.props.resetModel()
+  }
+
   handleOpenSnackBar (message) {
     this.snackBarMessage = message
     this.setState({ openSnackBar: true }) 
@@ -118,6 +123,7 @@ class Topbar extends Component {
         content = <NewModelDialog
           open={this.props.openDialog}
           onRequestClose={() => this.handleClose()}
+          onAction={() => this.resetModel()}
         />
         break;
       case TOPBAR_CONSTANTS.UPLOAD_FILES:

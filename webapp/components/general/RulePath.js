@@ -56,7 +56,7 @@ class RulePath extends Component {
           {text} 
           <span >
             <Tooltip title="Copy" placement="top">
-              <IconButton aria-label="delete" padding="" size="inherit" className={classes.icon} onClick={() => this.copyCodeToClipboard()}>
+              <IconButton aria-label="delete" padding="" size="small" className={classes.icon} onClick={() => this.copyCodeToClipboard()}>
                 <FileCopyIcon fontSize="inherit"/>
               </IconButton>
             </Tooltip>

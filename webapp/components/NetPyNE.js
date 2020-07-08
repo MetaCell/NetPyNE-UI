@@ -52,7 +52,8 @@ class NetPyNE extends React.Component {
 
   componentDidMount () {
     GEPPETTO.on(GEPPETTO.Events.Error_while_exec_python_command, this.openPythonCallDialog, this);
-    this.props.setWidgets({ [PYTHON_CONSOLE_WIDGET.id]: { ...PYTHON_CONSOLE_WIDGET, panelName: PYTHON_CONSOLE_WIDGET.defaultPanel, status: WidgetStatus.ACTIVE } });
+    this.props.setDefaultWidgets();
+    
     GEPPETTO.on('jupyter_geppetto_extension_ready', data => {
       let project = { id: 1, name: 'Project', experiments: [{ "id": 1, "name": 'Experiment', "status": 'DESIGN' }] }
       GEPPETTO.Manager.loadProject(project, false);
@@ -77,6 +78,9 @@ class NetPyNE extends React.Component {
 
   render () {
     const { classes } = this.props
+    if (!this.props.modelLoaded) {
+      return '';
+    }
     const Layout = LayoutManager();
     return (
       <div className={classes.root}>

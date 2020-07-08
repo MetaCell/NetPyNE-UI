@@ -31,7 +31,9 @@ export default function reduceGeneral (state = GENERAL_DEFAULT_STATE, action) {
   case Actions.SIMULATE_NETWORK:
     return { ...state,editMode: false, modelState: MODEL_STATE.SIMULATED }
   case Actions.EDIT_MODEL:
-    return { ...state,editMode: true, updates: state.updates + 1 }
+    return { ...state, editMode: true, updates: state.updates + 1 }
+  case Actions.RESET_MODEL:
+    return GENERAL_DEFAULT_STATE;
   case Actions.OPEN_DIALOG:
     return { ...state, dialogOpen: true, dialogTitle: action.payload.title, dialogMessage: action.payload.message }
   case Actions.CLOSE_DIALOG:

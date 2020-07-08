@@ -21,7 +21,7 @@ const styles = ({ palette, shape, spacing, typography }) => ({
 class SwitchPageButton extends Component {
 
   handleClick = event => {
-    const instantiate = this.props.automaticInstantiation && this.props.modelState != MODEL_STATE.INSTANTIATED;
+    const instantiate = this.props.automaticInstantiation || this.props.modelState == MODEL_STATE.NOT_INSTANTIATED;
     if (!this.props.editModelPage) {
       this.props.switchToEditModelPage();
     } else {

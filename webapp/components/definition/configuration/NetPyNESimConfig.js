@@ -308,11 +308,7 @@ class NetPyNESimConfig extends React.Component {
 
 const styles = ({ shape, spacing }) => ({ 
   root: { height: `calc(100% - 56px - ${spacing(1)}px)`, flexDirection: 'column' },
-  bottomNav: {
-    borderRadius: shape.borderRadius, 
-    backgroundColor: bgDark,
-    overflow: 'hidden'
-  },
+  bottomNav: { margin: spacing(2) },
   layout: { height: "100%", display: 'flex' }
   
 })
