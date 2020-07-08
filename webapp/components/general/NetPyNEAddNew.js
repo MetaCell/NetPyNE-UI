@@ -4,10 +4,7 @@ import Fab from '@material-ui/core/Fab';
 import { withStyles } from '@material-ui/core/styles';
 import Tooltip from './Tooltip'
 
-const styles = ({ spacing, palette }) => ({
-  root : { marginLeft: spacing(1), },
-  plus:{ color: palette.common.white }
-})
+const styles = ({ spacing, palette }) => ({ plus:{ color: palette.common.white } })
 
 class NetPyNEAddNew extends React.Component {
 

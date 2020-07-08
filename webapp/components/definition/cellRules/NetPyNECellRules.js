@@ -13,7 +13,7 @@ import {
   NetPyNESection
 } from 'netpyne/components';
 
-
+import SelectCellTemplate from './SelectCellTemplate'
 import NetPyNEMechanism from './sections/mechanisms/NetPyNEMechanism';
 import NetPyNENewMechanism from './sections/mechanisms/NetPyNENewMechanism';
 
@@ -57,6 +57,7 @@ export default class NetPyNECellRules extends React.Component {
       errorDetails: undefined,
       page: "main",
       filterValue: null,
+      anchorEl: null
     };
 
     this.selectPage = this.selectPage.bind(this);
@@ -340,7 +341,7 @@ export default class NetPyNECellRules extends React.Component {
     }
   }
 
-  handleHierarchyClick = nextPage => {
+  handleHierarchyClick = (nextPage, event) => {
     const { value: model, page, selectedCellRule, selectedSection, selectedMechanism } = this.state;
     /*
      * with this herarchy navigation, the tree buttons in the breadclumb can behave  in 2 different ways
@@ -350,7 +351,9 @@ export default class NetPyNECellRules extends React.Component {
      */
     if (nextPage === page) { 
       if (page === "main") {
-        this.handleNewCellRule({ 'CellType': { 'conds':{}, 'secs':{} } });
+        event.preventDefault();
+        this.setState({ anchorEl: event.currentTarget, });
+        // this.handleNewCellRule({ 'CellType': { 'conds':{}, 'secs':{} } });
       } else if (page === "sections") {
         this.handleNewSection({ 'Section': { 'geom': {}, 'topol': {}, 'mechs': {} } });
       }
@@ -553,6 +556,11 @@ export default class NetPyNECellRules extends React.Component {
     }
   }
 
+  callbackForNewCellTypeCreated (newCellTypeName) {
+    this.props.updateCards()
+    this.setState({ anchorEl: null })
+  }
+
   render () {
 
     const { value: model, page, selectedCellRule, selectedSection, selectedMechanism, errorMessage, errorDetails } = this.state;
@@ -673,52 +681,65 @@ export default class NetPyNECellRules extends React.Component {
         <div>
           <Accordion>
             <div className="breadcrumb">
-              <NetPyNEHome
-                selection={selectedCellRule}
-                handleClick={() => this.setState({ page: 'main', selectedCellRule: undefined, selectedSection: undefined, selectedMechanism: undefined })}
+              <div>
+                <NetPyNEHome
+                  selection={selectedCellRule}
+                  handleClick={() => this.setState({ page: 'main', selectedCellRule: undefined, selectedSection: undefined, selectedMechanism: undefined })}
+                />
+                <div style={{ opacity: 0 }}>H</div>
+              </div>
+              
+              <SelectCellTemplate 
+                page={this.state.page}
+                label={this.createLabel('cellRule')}
+                tooltip={this.createTooltip('cellRule')}
+                anchorEl={this.state.anchorEl}
+                model={this.state.value}
+                clearAnchorEl={() => this.setState({ anchorEl: null })}
+                handleButtonClick={event => this.handleHierarchyClick('main', event)}
+                callback={cellTypeName => this.callbackForNewCellTypeCreated(cellTypeName)}
+
               />
               
-              <Tooltip title={this.createTooltip('cellRule')} placement="top">
-                <Fab
-                  id="newCellRuleButton"
-                  style={{ width: 40, height: 40 }}
-                  color={ page == 'main' ? 'primary' : 'secondary'}
-                  onClick={() => this.handleHierarchyClick('main')}
-                >
-                  {this.createLabel('cellRule')}
-                </Fab>
-              </Tooltip>
-              
-             
-              <ArrowRightIcon fontSize="inherit" className="breadcrumb-spacer" color="inherit" />
-              
+              <div>
+                <ArrowRightIcon fontSize="inherit" className="breadcrumb-spacer" color="inherit" />
+                <div style={{ opacity: 0 }}>S</div>
+              </div>
               
               <Tooltip title={this.createTooltip('section')} placement="top">
                 <div>
                   <Fab
                     id="newSectionButton"
                     variant="extended"
-                    style={{ minWidth: 100, height: 40 }}
+                    size="small"
+                    style={{ minWidth: 60, height: 25, marginTop: 6, marginBottom: 7 }}
                     color={ page === 'mechanisms' ? 'secondary' : 'primary'}
                     disabled={ selectedCellRule == undefined }
                     onClick={ () => this.handleHierarchyClick('sections') }
                   >
                     {this.createLabel('sections')}
                   </Fab>
+                  <div style={{ textAlign: 'center', fontFamily: 'Source Sans Pro' }}>Sections</div>
                 </div>
                 
               </Tooltip>
               
               
-              <ArrowRightIcon fontSize="inherit" className="breadcrumb-spacer" color="inherit"/>
+              <div>
+                <ArrowRightIcon fontSize="inherit" className="breadcrumb-spacer" color="inherit" />
+                <div style={{ opacity: 0 }}>S</div>
+              </div>
              
-       
-              <NetPyNENewMechanism
-                handleClick={this.handleNewMechanism}
-                disabled={selectedSection == undefined || page == 'main'}
-                handleHierarchyClick={ () => this.handleHierarchyClick('mechanisms')}
-                blockButton={page != 'mechanisms' && !!model && !!model[selectedCellRule] && !!model[selectedCellRule]['secs'][selectedSection] && Object.keys(model[selectedCellRule]['secs'][selectedSection]['mechs']).length > 0}
-              /> 
+              <div>
+                <NetPyNENewMechanism
+                  handleClick={this.handleNewMechanism}
+                  disabled={selectedSection == undefined || page == 'main'}
+                  handleHierarchyClick={ () => this.handleHierarchyClick('mechanisms')}
+                  blockButton={page != 'mechanisms' && !!model && !!model[selectedCellRule] && !!model[selectedCellRule]['secs'][selectedSection] && Object.keys(model[selectedCellRule]['secs'][selectedSection]['mechs']).length > 0}
+                /> 
+                <div style={{ textAlign: 'center', fontFamily: 'Source Sans Pro' }}>Mech</div>
+              </div>
+              
             </div>
        
             <Box p={1}>

@@ -744,6 +744,15 @@ class NetPyNEGeppetto():
 
         import gc; gc.collect()
 
+    def create_celltype_from_template(self, label="CellType", conds={}, cell_template_name="Blank"):
+        try:
+            with redirect_stdout(sys.__stdout__):
+                self.netParams.addCellParamsTemplate(label=label, template=cell_template_name)
+            return True
+        except:
+            return utils.getJSONError(f"Error while creating cellType from template {cell_template_name}",
+                sys.exc_info())
+        
 
 logging.info("Initialising NetPyNE UI")
 netpyne_geppetto = NetPyNEGeppetto()

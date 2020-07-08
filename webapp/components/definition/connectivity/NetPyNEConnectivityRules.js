@@ -203,11 +203,27 @@ export default class NetPyNEConnectivityRules extends Component {
         <div>
           <Accordion>
             <div className="breadcrumb">
-              <NetPyNEHome
-                selection={this.state.selectedConnectivityRule}
-                handleClick={() => this.setState({ selectedConnectivityRule: undefined })}
-              />
-              <NetPyNEAddNew title="Create new connectivity rule" id={"newConnectivityRuleButton"} handleClick={this.handleNewConnectivityRule} />
+
+              <div>
+                <NetPyNEHome
+                  selection={this.state.selectedConnectivityRule}
+                  handleClick={() => this.setState({ selectedConnectivityRule: undefined })}
+                />
+                
+                <div style={{ opacity: 0 }}>H</div>
+              </div>
+              <div >
+                <NetPyNEAddNew title="Create new connectivity rule" id={"newConnectivityRuleButton"} handleClick={this.handleNewConnectivityRule} />
+                <div style={{ 
+                  textAlign: 'center', 
+                  fontFamily: 'Source Sans Pro', 
+                  maxWidth: 40, 
+                  overflow: 'visible',
+                  display: 'flex', 
+                  justifyContent: 'center' 
+                }}>Connectivity</div>
+              </div>
+
             </div>
             <Divider />
             <RulePath text={`netParams.connParams["${this.state.selectedConnectivityRule}"]`}/>
