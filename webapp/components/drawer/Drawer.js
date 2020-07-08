@@ -21,7 +21,7 @@ import useStyles from './useStyles';
 import Tooltip from '../general/Tooltip'
 
 const drawerOpenWidth = 160;
-const drawerCloseWidth = 44;
+const drawerCloseWidth = 39;
 
 
 const DrawerItem = ({ id, name, widget, expanded, createOrFocusWidget, disabled, status, classes }) => (
