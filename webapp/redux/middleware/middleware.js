@@ -81,7 +81,7 @@ export default store => next => action => {
       }
       next(closeDrawerDialogBox)
     }
-    pythonCall(action).then(callback, errorCallback);
+    pythonCall(action).then(callback);
     break;
   }
   case LOAD_TUTORIAL: {
