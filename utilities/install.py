@@ -9,46 +9,64 @@ branch = None
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
+
+# repos
+JUPYTER = 'https://github.com/openworm/org.geppetto.frontend.jupyter.git'
+PYGEPPETTO = 'https://github.com/openworm/pygeppetto.git'
+NETPYNE = 'https://github.com/Neurosim-lab/netpyne.git'
+WORKSPACE = 'https://github.com/Neurosim-lab/netpyne_workspace'
+
+ROOT_DIR = os.path.join(HERE, os.pardir)
+DEPS_DIR = os.path.join(ROOT_DIR, 'src')
+
+WEBAPP_DIR = os.path.join(ROOT_DIR, 'webapp')
+JUPYTER_DIR = 'jupyter-geppetto'
+
+def cprint(string):
+    print(f"\033[35;4m\U0001f560 {string} \033[0m \n")
+    sys.stdout.flush()
+
+
+
 def execute(cmd, cwd='.', *args, **kwargs):
     exit_code = subprocess.call(cmd, cwd=cwd, *args, **kwargs)
     if exit_code != 0:
         raise SystemExit('Error installing NetPyNE-UI')
 
-#by default clones branch (which can be passed as a parameter python install.py branch test_branch)
-#if branch doesnt exist clones the default_branch
-def clone(repository, folder, default_branch, cwdp='', recursive = False, destination_folder = None):
-    global branch
-    print("Cloning "+repository)
-    if recursive:
-        execute(['git', 'clone', '--recursive', repository], cwd='./'+cwdp)
-    else:
-        if destination_folder:
-            execute(['git', 'clone', repository, destination_folder], cwd='./'+cwdp)
-        else:
-            execute(['git', 'clone', repository], cwd='./'+cwdp)
-    checkout(folder, default_branch, cwdp)
 
-def checkout(folder, default_branch, cwdp):
+
+# by default clones branch (which can be passed as a parameter python install.py branch test_branch)
+# if branch doesnt exist clones the default_branch_or_tag
+def clone(repository, folder=None, default_branch_or_tag=None, cwdp='', recursive=False):
+    global branch
+    print("Cloning " + repository)
+    default_branch_or_tag = default_branch_or_tag or branch or 'master'
+    folder = folder or os.path.basename(repository).replace('.git', '')
+    if folder and os.path.exists(os.path.join(cwdp, folder)):
+        print(f'Skipping clone of {repository}: folder exists')
+    else:
+        if recursive:
+            subprocess.call(['git', 'clone', '--recursive', repository], cwd='./' + cwdp)
+        else:
+            if folder:
+                subprocess.call(['git', 'clone', repository, folder], cwd='./' + cwdp)
+            else:
+                subprocess.call(['git', 'clone', repository], cwd='./' + cwdp)
+    checkout(folder, default_branch_or_tag, cwdp)
+
+def checkout(folder, default_branch_or_tag, cwdp):
     currentPath = os.getcwd()
     print(currentPath)
-    newPath = currentPath+"/"+cwdp+folder
+    newPath = os.path.join(currentPath, cwdp, folder)
     print(newPath)
     os.chdir(newPath)
-    python_git = subprocess.Popen("git branch -a && git tag", shell=True, stdout=subprocess.PIPE,
-                                  stderr=subprocess.PIPE)
-    outstd,errstd=python_git.communicate()
-    if branch and branch in str(outstd) and branch != 'development': # don't ckeckout development for netpyne
-        execute(['git', 'checkout', branch], cwd='./')
+    python_git = subprocess.Popen("git branch -a", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    outstd, errstd = python_git.communicate()
+    if branch and branch in str(outstd):
+        subprocess.call(['git', 'checkout', branch], cwd='./')
     else:
-        execute(['git', 'checkout', default_branch], cwd='./')
+        subprocess.call(['git', 'checkout', default_branch_or_tag], cwd='./')
     os.chdir(currentPath)
-
-def clone_repo(project, repo_name, **kwargs):
-    normal = "\033[0;37;40m"
-    stroke = "\033[1;32;40m\n"
-    subprocess.run(["echo", f'{stroke}Cloning {repo_name} from {project}{stroke}'])
-    url = f'https://github.com/{project}/{repo_name}.git'
-    clone(url, **kwargs)
 
 def compile_mod():
     execute(['nrnivmodl', 'netpyne_workspace/mod'])
@@ -56,90 +74,153 @@ def compile_mod():
 
 
 
-def main(argv):
-    global branch
-    if(len(argv) > 0):
-        if(argv[0] == 'branch'):
-            branch = argv[1]
+def main(branch=branch, skipNpm=False, skipTest=False, development=False):
+ 
+
+
+    # install pytest if needed
+    if not skipTest:
+        cprint("Installing test libraries")
+        execute(cmd=['pip', 'install', '-r', 'requirements-test.txt'], cwd=ROOT_DIR)
+
+
+
+    # clone_repo(project='openworm',
+    #            repo_name='geppetto-client',
+    #            folder='geppetto-client',
+    #            default_branch='v2.4.0',
+    #            cwdp='webapp/',
+    #            recursive=False,
+    # )
+
+    
+    clone(repository=NETPYNE, default_branch_or_tag='gui_cns')
+    if development:
+        execute(cmd=['pip', 'install', '-e', '.'], cwd=ROOT_DIR)
+
+        if not os.path.exists(DEPS_DIR):
+            os.mkdir(DEPS_DIR)
+        os.chdir(DEPS_DIR)
+        # install pygeppetto
+        cprint("Installing pygeppetto")
+        clone(repository=PYGEPPETTO,
+              folder='pygeppetto',
+              default_branch_or_tag='development'
+              )
+        execute(cmd=['pip', 'install', '-e', '.'], cwd='pygeppetto')
+
+        # install jupyter geppetto
+        cprint("Installing org.geppetto.frontend.jupyter")
+        clone(repository=JUPYTER,
+              folder=JUPYTER_DIR,
+              default_branch_or_tag='development'
+              )
+        os.chdir(ROOT_DIR)
+        execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, JUPYTER_DIR))
+        execute(['pip3', 'install', '-e', '.'], cwd='./netpyne/')
+    else:
+        # install requirements
+        cprint("Installing requirements")
+        
+        execute(cmd=['pip', 'install', '-r', 'requirements.txt'], cwd=ROOT_DIR)
+        execute(['pip', 'install', '.'], cwd='./netpyne/')
+
+        cprint("Installing UI python package...")
+        execute(cmd=['pip', 'install', '.', '--no-deps'], cwd=ROOT_DIR)
+
+
+    cprint("Cloning workspace")
+    clone(repository=WORKSPACE, default_branch_or_tag='gui_cns')
+    cprint("Compiling workspace modules")
+    compile_mod()
+
+    if not skipNpm and os.path.exists(os.path.join(DEPS_DIR, JUPYTER_DIR)):
+        cprint("Building Jupyter Geppetto extension...")
+        execute(cmd=['npm', 'ci'], cwd=os.path.join(DEPS_DIR,JUPYTER_DIR, 'js'))
+        execute(cmd=['npm', 'run', 'build-dev' if development else 'build'], cwd=os.path.join(DEPS_DIR, JUPYTER_DIR, 'js'))
+
+
+    execute(cmd=['jupyter', 'nbextension', 'install', '--py', '--symlink', '--sys-prefix', 'jupyter_geppetto'])
+    execute(cmd=['jupyter', 'nbextension', 'enable', '--py', '--sys-prefix', 'jupyter_geppetto'])
+    execute(cmd=['jupyter', 'nbextension', 'enable', '--py', '--sys-prefix', 'widgetsnbextension'])
+    execute(cmd=['jupyter', 'serverextension', 'enable', '--py', '--sys-prefix', 'jupyter_geppetto'])
+
+
+
+    # set python console theme
+    execute(['jt', '-t', 'monokai'])
+
+    print("Installing notebook theme")
+    from jupyter_core import paths
+    config_dir = paths.jupyter_config_dir()
+    print('Jupyter configuration dir is {}'.format(config_dir))
+    css_path = os.path.join(config_dir, 'custom')
+    if not os.path.exists(css_path):
+        os.makedirs(css_path)
+    execute(cmd=['cp', 'custom.css', css_path], cwd=HERE)
+
+
+     # Enables Compression
+    json_config_path = "{}/jupyter_notebook_config.json".format(config_dir)
+    config = {}
+    if os.path.exists(json_config_path):
+        with open(json_config_path, 'r') as f:
+            try:
+                config = json.load(f)
+            except Exception as e:
+                print("Something went wrong reading the jupyter configuration file.\n{}"
+                      "\nNew configuration will be created".format(str(e)))
+                f.close()
+    with open(json_config_path, 'w+') as f:
+        try:
+            _ = config['NotebookApp']
+        except KeyError:
+            config['NotebookApp'] = {'tornado_settings': {}}
+        try:
+            _ = config['NotebookApp']['tornado_settings']
+        except KeyError:
+            config['NotebookApp']['tornado_settings'] = {}
+        config['NotebookApp']['tornado_settings']['gzip'] = True
+        f.seek(0)
+        json.dump(config, f, indent=4, sort_keys=True)
+        f.truncate()
+
+   
+
+
+    cprint("Installing client packages")
+    if not skipNpm:
+        execute(cmd=['npm', 'install' if development else 'ci'], cwd=WEBAPP_DIR)
+        execute(cmd=['npm', 'run', 'build-dev' if development else 'build'], cwd=WEBAPP_DIR)
+
+ # test
+    if skipTest:
+        cprint("Skipping tests")
+    else:
+        cprint("Testing NetPyNE")
+        execute("python -m unittest netpyne_ui.tests.netpyne_model_interpreter_test".split())
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    import argparse
 
-os.chdir(os.getcwd()+"/../")
+    parser = argparse.ArgumentParser(description='Install NetPyNE-UI and related dev libraries.')
+    parser.add_argument('--branch', '-b', dest='branch', type=str, action="store", nargs='?',
+                        help='the branch to checkout for all projects. '
+                             'The branch is checked out if exists, otherwise the default for the project will be used')
+    parser.add_argument('--npm-skip', dest='skipNpm', action='store_true', default=False,
+                        help='Skips the long npm install and build processes')
 
-execute(['python3', '-m', 'pip', 'install', '-r', 'requirements.txt'])
+    parser.add_argument('--no-test', dest='skipTest', action="store_true", default=False,
+                        help='Skip python tests.')
 
-clone_repo(project='Neurosim-lab',
-           repo_name='netpyne',
-           folder='netpyne',
-           default_branch='gui_cns'
-)
-execute(['python3', '-m', 'pip', 'install', '-e', '.'], cwd='./netpyne/')
+    parser.add_argument('--dev', dest='development', action="store_true", default=False,
+                        help='Install for development.')
 
-# clone_repo(project='openworm',
-#            repo_name='geppetto-client',
-#            folder='geppetto-client',
-#            default_branch='v2.4.0',
-#            cwdp='webapp/',
-#            recursive=False,
-# )
+    args = parser.parse_args([arg if arg != 'branch' else '-b' for arg in sys.argv[1:]])
+    print(args)
+    branch = args.branch
 
-clone_repo(project='Neurosim-lab',
-           repo_name='netpyne_workspace',
-           folder='netpyne_workspace',
-           default_branch="cns2020"
-)
-compile_mod()
-
-execute(['python3', '-m', 'pip', 'install', '-e', '.'], cwd='./netpyne/')
-branch = None
-# Cloning Repos
-
-clone_repo(project='openworm',
-           repo_name='pygeppetto',
-           folder='pygeppetto',
-           default_branch='master'
-)
-execute(['python3', '-m', 'pip', 'install', '-e', '.'], cwd='./pygeppetto/')
-
-
-clone_repo(project='openworm',
-           repo_name='org.geppetto.frontend.jupyter',
-           folder='org.geppetto.frontend.jupyter',
-           default_branch='master'
-)
-
-
-with open('npm_frontend_jupyter_log', 'a') as stdout:
-    execute(['npm', 'install'], cwd='./org.geppetto.frontend.jupyter/js', stdout=stdout)
-execute(['npm', 'run', 'build-dev'], cwd='./org.geppetto.frontend.jupyter/js')
-
-
-# Installing and building
-print("NPM Install and build for Geppetto Frontend  ...")
-with open('npm_frontend_log', 'a') as stdout:
-    execute(['npm', 'install'], cwd='webapp/', stdout=stdout)
-execute(['npm', 'run', 'build-dev-noTest'], cwd='webapp/')
-
-print("Installing jupyter_geppetto python package ...")
-execute(['python3', '-m', 'pip', 'install', '-e', '.'], cwd='./org.geppetto.frontend.jupyter')
-print("Installing jupyter_geppetto Jupyter Extension ...")
-execute(['jupyter', 'nbextension', 'install', '--py', '--symlink', '--sys-prefix', 'jupyter_geppetto'], cwd='./org.geppetto.frontend.jupyter')
-execute(['jupyter', 'nbextension', 'enable', '--py', '--sys-prefix', 'jupyter_geppetto'], cwd='./org.geppetto.frontend.jupyter')
-execute(['jupyter', 'nbextension', 'enable', '--py', '--sys-prefix', 'widgetsnbextension'], cwd='./org.geppetto.frontend.jupyter')
-execute(['jupyter', 'serverextension', 'enable', '--sys-prefix', '--py', 'jupyter_geppetto'], cwd='./org.geppetto.frontend.jupyter')
-
-print("Installing NetPyNE UI python package ...")
-execute(['python3', '-m', 'pip', 'install', '-e', '.'], cwd='.')
-
-# set python console theme
-execute(['jt', '-t', 'monokai'])
-
-print("Installing notebook theme")
-from jupyter_core import paths
-config_dir = paths.jupyter_config_dir()
-print('Jupyter configuration dir is {}'.format(config_dir))
-css_path = os.path.join(config_dir, 'custom')
-if not os.path.exists(css_path):
-    os.makedirs(css_path)
-execute(cmd=['cp', 'custom.css', css_path], cwd=HERE)
+    skipNpm = args.skipNpm
+    skipTest = args.skipTest
+    development = args.development
+    main(branch, skipNpm, skipTest, development)
