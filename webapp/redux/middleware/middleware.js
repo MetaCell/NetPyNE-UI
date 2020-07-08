@@ -1,8 +1,8 @@
 import { 
   UPDATE_CARDS, CREATE_NETWORK, CREATE_SIMULATE_NETWORK, PYTHON_CALL, SIMULATE_NETWORK, SHOW_NETWORK, 
-  editModel, EDIT_MODEL, LOAD_TUTORIAL
+  editModel, EDIT_MODEL, LOAD_TUTORIAL, RESET_MODEL, setDefaultWidgets
 } from '../actions/general';
-
+import FLEXLAYOUT_DEFAULT_STATE from '../../components/layout/defaultLayout';
 import { openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
 import Utils from '../../Utils';
@@ -19,7 +19,7 @@ export default store => next => action => {
  
 
   const switchLayoutAction = (edit = true, reset = true) => {
-    previousLayout[store.getState().general.editMode ? 'edit' : 'network'] = store.layout;
+    previousLayout[store.getState().general.editMode ? 'edit' : 'network'] = store.getState().layout;
     if (reset) {
       previousLayout = { edit: undefined, network: undefined };
     }
@@ -28,13 +28,12 @@ export default store => next => action => {
       : previousLayout.network ? setLayout(previousLayout.network) : setWidgets({ ...Constants.DEFAULT_NETWORK_WIDGETS }));
   }
   const toNetworkCallback = reset => () => {
+    
+    switchLayoutAction(false, reset);
     next(action);
-    if (store.getState().general.editMode) {
-      switchLayoutAction(false, reset);
-    }
-    
-    
   };
+
+  const pythonErrorCallback = errorPayload => next(openBackendErrorDialog(errorPayload.message));
   switch (action.type) {
 
   case UPDATE_CARDS:
@@ -42,25 +41,34 @@ export default store => next => action => {
     next(action);
     break;
   case SHOW_NETWORK:
-    next(action);
+    
     switchLayoutAction(false, false);
+    next(action);
     break;
   case EDIT_MODEL:{
+    switchLayoutAction(true, false);
     next(action);
-    switchLayoutAction(true);
+    break
+  }
+  case RESET_MODEL:{
+    GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Reloading Python Kernel");
+    IPython.notebook.restart_kernel({ confirm: false }).then(
+      () => {
+        window.location.reload();
+      }
+    );
     break
   }
   case CREATE_NETWORK:{  
-    instantiateNetwork({}).then(toNetworkCallback(true), errorPayload => next(openBackendErrorDialog("An error occurred while creating the network")));
+    instantiateNetwork({}).then(toNetworkCallback(false), pythonErrorCallback);
     break;
   }
   case CREATE_SIMULATE_NETWORK:{
-    simulateNetwork({ parallelSimulation: false }).then(toNetworkCallback(true), errorPayload => next(openBackendErrorDialog("An error occurred while creating the network")));
+    simulateNetwork({ parallelSimulation: false }).then(toNetworkCallback(false), pythonErrorCallback);
     break;
   }
-    
   case SIMULATE_NETWORK:
-    simulateNetwork({ parallelSimulation: false, usePrevInst: true }).then(toNetworkCallback(true), errorPayload => next(openBackendErrorDialog("An error occurred while simulating the network")));
+    simulateNetwork({ parallelSimulation: false, usePrevInst: true }).then(toNetworkCallback(false), pythonErrorCallback);
     break
   case PYTHON_CALL: {
     const callback = response => {
@@ -81,7 +89,7 @@ export default store => next => action => {
       }
       next(closeDrawerDialogBox)
     }
-    pythonCall(action).then(callback);
+    pythonCall(action).then(callback, pythonErrorCallback);
     break;
   }
   case LOAD_TUTORIAL: {
@@ -143,7 +151,7 @@ const createSimulateBackendCall = async (cmd, payload, consoleMessage, spinnerTy
   const responsePayload = processError(response);
   console.log('Python payload', responsePayload);
   if (responsePayload) {
-    throw new Error(responsePayload);
+    throw new Error(responsePayload.errorMessage);
   } else {
     GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
     GEPPETTO.Manager.loadModel(response);

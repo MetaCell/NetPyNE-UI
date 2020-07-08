@@ -12,7 +12,8 @@ import {
 import { openBackendErrorDialog, closeBackendErrorDialog } from '../redux/actions/errors';
 import {
   updateCards, editModel, simulateNetwork, createNetwork, closeDialog,
-  createAndSimulateNetwork, showNetwork, pythonCall, modelLoaded, deleteNetParamsObj
+  createAndSimulateNetwork, showNetwork, pythonCall, modelLoaded, deleteNetParamsObj, resetModel,
+  setDefaultWidgets
 } from "../redux/actions/general";
 
 import { openTopbarDialog, closeTopbarDialog, changePageTransitionMode } from '../redux/actions/topbar'
@@ -89,6 +90,7 @@ export const NetPyNE = connect(
   dispatch => ({ 
     pythonCallErrorDialogBox: payload => dispatch(openBackendErrorDialog(payload)),
     setWidgets: payload => dispatch(setWidgets(payload)),
+    setDefaultWidgets: () => dispatch(setDefaultWidgets),
     modelLoaded: () => dispatch(modelLoaded)
   })
 )(_NetPyNE);
@@ -247,6 +249,7 @@ export const Topbar = connect(
   dispatch => ({ 
     dispatchAction: action => dispatch(action),
     closeDialog: () => dispatch(closeTopbarDialog),
+    resetModel: () => dispatch(resetModel),
   })
 )(_Topbar)
 

@@ -14,11 +14,17 @@ export default class ActionDialog extends React.Component {
   state = { hide: !this.props.openErrorDialogBox && !this.props.openDialog }
 
   performAction = () => {
-    if (this.props.isFormValid === undefined || this.props.isFormValid()){
-      GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, this.props.message);
-      
-      this.props.pythonCall(this.props.command, this.props.args)
-      this.setState({ hide: true })
+    if (this.props.command) {
+      if (this.props.isFormValid === undefined || this.props.isFormValid()){
+        GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, this.props.message);
+        
+        this.props.pythonCall(this.props.command, this.props.args)
+        
+      }
+    }
+    this.setState({ hide: true })
+    if (this.props.onAction) {
+      this.props.onAction();
     }
   }
 
@@ -81,7 +87,7 @@ export default class ActionDialog extends React.Component {
       <Dialog
         fullWidth
         maxWidth={this.props.openErrorDialogBox ? 'md' : 'sm'}
-        open={!this.state.hide || this.props.openErrorDialogBox}
+        open={Boolean(!this.state.hide || this.props.openErrorDialogBox)}
         onClose={() => this.cancelDialog()}
       >
         <DialogTitle>{title}</DialogTitle>
