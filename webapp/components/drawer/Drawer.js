@@ -20,8 +20,8 @@ import DrawerIcon from '../general/NetPyNEIcons';
 import useStyles from './useStyles';
 import Tooltip from '../general/Tooltip'
 
-const drawerOpenWidth = 160;
-const drawerCloseWidth = 39;
+const drawerOpenWidth = 'auto';
+const drawerCloseWidth = 55;
 
 
 const DrawerItem = ({ id, name, widget, expanded, createOrFocusWidget, disabled, status, classes }) => (
@@ -119,13 +119,13 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
   return (
     <Paper elevation={0} className={expand ? classes.openDrawer : classes.closeDrawer}>
       <div className={classes.container}>
-        <Box p={1}>
+        <Box p={2}>
           <List dense disablePadding>
             {getMenu().map(mapItem)}
           </List>
         </Box>
 
-        <div className={expand ? classes.buttonContainerOpen : null}>
+        <div className={expand ? classes.buttonContainerOpen : classes.buttonContainerClosed}>
           <Tooltip title={expand ? "Collapse" : "Expand"}>  
             <IconButton
               className={classes.button}
@@ -135,7 +135,7 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
                 setTimeout(() => window.dispatchEvent(new Event('resize')), 400)
               }}
             >
-              {expand ? <DrawerIcon name="arrow-left" fontSize="small" /> : <DrawerIcon name="arrow-right" fontSize="small" /> }
+              {expand ? <DrawerIcon name="arrow-left" fontSize="inherit" /> : <DrawerIcon name="arrow-right" fontSize="inherit" /> }
             </IconButton>
           </Tooltip>  
         </div>

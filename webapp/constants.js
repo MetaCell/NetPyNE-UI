@@ -329,7 +329,7 @@ export const EDIT_WIDGETS = {
   [PYTHON_CONSOLE_WIDGET.id]: PYTHON_CONSOLE_WIDGET,
   'cellParams': { 
     id: 'cellParams', 
-    name: 'Cell types', 
+    name: 'Cell Types', 
     status: WidgetStatus.ACTIVE, 
     component: 'cellParams', 
     panelName: TOP_PANEL,
@@ -349,7 +349,7 @@ export const EDIT_WIDGETS = {
   },
   'synMechParams': { 
     id: 'synMechParams', 
-    name: 'Synapses', 
+    name: 'Synaptic Mechanisms', 
     status: WidgetStatus.HIDDEN, 
     component: 'synMechParams', 
     panelName: TOP_PANEL,
@@ -359,7 +359,7 @@ export const EDIT_WIDGETS = {
   },
   'connParams': { 
     id: 'connParams', 
-    name: 'Connections', 
+    name: 'Connectivity Rules', 
     status: WidgetStatus.HIDDEN, 
     component: 'connParams', 
     panelName: TOP_PANEL,
@@ -389,7 +389,7 @@ export const EDIT_WIDGETS = {
   },
   'simConfig': { 
     id: 'simConfig', 
-    name: 'Simulation Configuration', 
+    name: 'Configuration', 
     status: WidgetStatus.HIDDEN,
     hideOnClose: true, 
     component: 'simConfig', 
@@ -399,7 +399,7 @@ export const EDIT_WIDGETS = {
   },
   'analysis': { 
     id: 'analysis', 
-    name: 'Analysis', 
+    name: 'Plot Settings', 
     status: WidgetStatus.HIDDEN,
     hideOnClose: true, 
     component: 'analysis', 
