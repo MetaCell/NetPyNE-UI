@@ -185,7 +185,12 @@ def main(branch=branch, skipNpm=False, skipTest=False, development=False):
         json.dump(config, f, indent=4, sort_keys=True)
         f.truncate()
 
-   
+    # test
+    if skipTest:
+        cprint("Skipping tests")
+    else:
+        cprint("Testing NetPyNE")
+        # execute("python -m unittest netpyne_ui.tests.netpyne_model_interpreter_test".split())
 
 
     cprint("Installing client packages")
@@ -193,12 +198,7 @@ def main(branch=branch, skipNpm=False, skipTest=False, development=False):
         execute(cmd=['npm', 'install' if development else 'ci'], cwd=WEBAPP_DIR)
         execute(cmd=['npm', 'run', 'build-dev' if development else 'build'], cwd=WEBAPP_DIR)
 
- # test
-    if skipTest:
-        cprint("Skipping tests")
-    else:
-        cprint("Testing NetPyNE")
-        execute("python -m unittest netpyne_ui.tests.netpyne_model_interpreter_test".split())
+
 
 if __name__ == "__main__":
     import argparse
