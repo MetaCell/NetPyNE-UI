@@ -9,8 +9,8 @@ branch = None
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
-def execute(cmd, cwd='.'):
-    exit_code = subprocess.call(cmd, cwd=cwd)
+def execute(cmd, cwd='.', *args, **kwargs):
+    exit_code = subprocess.call(cmd, cwd=cwd, *args, **kwargs)
     if exit_code != 0:
         raise SystemExit('Error installing NetPyNE-UI')
 
