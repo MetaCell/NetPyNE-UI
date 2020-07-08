@@ -7,7 +7,7 @@
   "scripts": {
     "test": "jest --verbose",
     "prebuild": "eslint . --color",
-    "build": "webpack --mode none -p --progress",
+    "build": "webpack --mode none -p --progress --devtool source-map",
     "prebuild-dev": "eslint . --color --fix",
     "build-dev": "webpack --mode none --devtool eval",
     "prebuild-dev-noTest": "eslint . --color --fix",
