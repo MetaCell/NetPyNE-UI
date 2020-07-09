@@ -11,7 +11,7 @@ export const GENERAL_DEFAULT_STATE = {
   dialogOpen: false,
   dialogTitle: '',
   dialogMessage: '',
-  automaticSimulation: true,
+  automaticSimulation: false,
   automaticInstantiation: true
 };
 
