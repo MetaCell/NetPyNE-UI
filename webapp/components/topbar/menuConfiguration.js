@@ -348,7 +348,7 @@ export const getModelMenu = props => (
       label: "Explore view options",
       list: [
         {
-          label: "Automatic instantiation",
+          label: "Automatic creation",
           icon: props.automaticInstantiation ? checkedIcon : 'fa',
           action: {
             handlerAction: "redux",
@@ -356,7 +356,7 @@ export const getModelMenu = props => (
           }
         },
         {
-          label: "Manual instantiation",
+          label: "Manual creation",
           icon: !props.automaticInstantiation ? checkedIcon : 'fa',
           action: {
             handlerAction: "redux",
