@@ -128,7 +128,7 @@ def main(branch=branch, skipNpm=False, skipTest=False, development=False):
         cprint("Installing UI python package...")
         execute(cmd=['pip', 'install', '.', '--no-deps'], cwd=ROOT_DIR)
 
-
+    os.chdir(ROOT_DIR)
     cprint("Cloning workspace")
     clone(repository=WORKSPACE, default_branch_or_tag='gui_cns')
     cprint("Compiling workspace modules")
