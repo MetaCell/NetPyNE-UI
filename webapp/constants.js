@@ -48,9 +48,9 @@ export const TOPBAR_CONSTANTS = {
   NEW_MODEL: 'NEW_MODEL',
   UPLOAD_FILES: 'UPLOAD_FILES',
   DOWNLOAD_FILES: 'DOWNLOAD_FILES',
-  CREATE_NETWORK: 'Instantiate',
-  CREATE_AND_SIMULATE_NETWORK:'Instantiate and simulate',
-  SIMULATE: 'Simulate',
+  CREATE_NETWORK: 'Create network',
+  CREATE_AND_SIMULATE_NETWORK:'Create and simulate network',
+  SIMULATE: 'Simulate network',
   EXPLORE_EXISTING_NETWORK:'Explore model',
   BACK_TO_EDITION: 'Back to edit',
   NEW_PAGE: 'NEW_PAGE'
