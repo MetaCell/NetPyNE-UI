@@ -38,7 +38,7 @@ class ImportCellParams extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      label: props.dialogMetadata.cellRuleName,
+      label: props.cellRuleName,
       fileName: '',
       cellName: '',
       modFolder: '',

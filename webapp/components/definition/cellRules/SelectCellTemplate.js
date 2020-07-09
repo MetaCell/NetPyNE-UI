@@ -28,6 +28,12 @@ export default class NetPyNENewPlot extends React.Component {
         this.props.callback()
       })
   }
+
+  handleOpenTopbarDialog () {
+    var cellRuleId = Utils.getAvailableKey(this.props.model, "CellType");
+    this.props.openTopbarDialog(cellRuleId)
+    this.props.callback()
+  }
   
   render () {
     const { page, label, tooltip, handleButtonClick, anchorEl, clearAnchorEl } = this.props
@@ -75,6 +81,15 @@ export default class NetPyNENewPlot extends React.Component {
             onClick={() => this.handleSelection("BallStick_HH")} 
           >
             Ball and stick HH
+          </MenuItem>
+
+
+          <MenuItem 
+            key={"fromTemplate"} 
+            value={"fromTemplate"}
+            onClick={() => this.handleOpenTopbarDialog()} 
+          >
+            Import cell template
           </MenuItem>
         
         </Menu>

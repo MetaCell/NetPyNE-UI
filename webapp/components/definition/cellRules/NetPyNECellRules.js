@@ -10,10 +10,10 @@ import {
   NetPyNEThumbnail,
   GridLayout,
   Filter,
-  NetPyNESection
+  NetPyNESection,
+  SelectCellTemplate
 } from 'netpyne/components';
 
-import SelectCellTemplate from './SelectCellTemplate'
 import NetPyNEMechanism from './sections/mechanisms/NetPyNEMechanism';
 import NetPyNENewMechanism from './sections/mechanisms/NetPyNENewMechanism';
 

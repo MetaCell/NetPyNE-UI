@@ -282,6 +282,12 @@ export const Dialog = connect(
   dispatch => ({ handleClose: () => dispatch(closeDialog), })
 )(_Dialog)
 
+
+import _SelectCellTemplate from './definition/cellRules/SelectCellTemplate'
+export const SelectCellTemplate = connect(
+  null,
+  dispatch => ({ openTopbarDialog: cellTemplateName => dispatch(openTopbarDialog(TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE, { cellRuleName: cellTemplateName })), })
+)(_SelectCellTemplate)
 // ---------------------------------------------------------------------------------------- //
 
 // DEFAULTS

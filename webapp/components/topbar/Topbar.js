@@ -89,46 +89,46 @@ class Topbar extends Component {
       switch (this.props.topbarDialogName){
       case TOPBAR_CONSTANTS.LOAD:
         content = <LoadFileDialog
-          open={this.props.openDialog}
+          open={this.props.dialogOpen}
           onRequestClose={() => this.handleClose()}
         />
         break;
       case TOPBAR_CONSTANTS.SAVE:
         content = <SaveFileDialog
-          open={this.props.openDialog}
+          open={this.props.dialogOpen}
           onRequestClose={() => this.handleClose()}
         />
         break;
       case TOPBAR_CONSTANTS.IMPORT_HLS:
         content = <ImportExportHLSDialog 
-          open={this.props.openDialog}
+          open={this.props.dialogOpen}
           onRequestClose={() => this.handleClose()}
           mode ={"IMPORT"}/>
         break;
       case TOPBAR_CONSTANTS.EXPORT_HLS:
         content = <ImportExportHLSDialog 
-          open={this.props.openDialog}
+          open={this.props.dialogOpen}
           onRequestClose={() => this.handleClose()}
           mode ={"EXPORT"}
         />
         break;
       case TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE:
         content = <ImportCellParamsDialog
-          open={this.props.openDialog}
-          cellRuleName={this.props.dialogMetadata.cellRuleName}
+          open={this.props.dialogOpen}
+          cellRuleName={this.props.topbarDialogMetadata.cellRuleName}
           onRequestClose={() => this.handleClose()}
         />
         break;
       case TOPBAR_CONSTANTS.NEW_MODEL:
         content = <NewModelDialog
-          open={this.props.openDialog}
+          open={this.props.dialogOpen}
           onRequestClose={() => this.handleClose()}
           onAction={() => this.resetModel()}
         />
         break;
       case TOPBAR_CONSTANTS.UPLOAD_FILES:
         content = <UploadDownloadFilesDialog
-          open={this.props.openDialog}
+          open={this.props.dialogOpen}
           onRequestClose={() => this.handleClose()}
           openSnackBar={message => {
             this.handleOpenSnackBar(message)
@@ -137,7 +137,7 @@ class Topbar extends Component {
         break;
       case TOPBAR_CONSTANTS.DOWNLOAD_FILES:
         content = <UploadDownloadFilesDialog 
-          open={this.props.openDialog}
+          open={this.props.dialogOpen}
           onRequestClose={() => this.handleClose()}
           openSnackBar={message => {
             this.handleOpenSnackBar(message)

@@ -114,15 +114,6 @@ class NetPyNECellRule extends React.Component {
             >Add new section</Button>
           </Box>
           
-          <Box m={1}>
-            <Button 
-              variant="contained"
-              color="secondary"
-              onClick={() => this.props.openTopbarDialog(this.state.currentName)}
-            >Import cell template</Button>  
-          </Box>
-
-          
         </div>
         {dialogPop}
       </div>
