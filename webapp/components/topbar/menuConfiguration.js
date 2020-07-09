@@ -61,21 +61,31 @@ const firstItemCustom = { fontWeight: 'bold', paddingLeft: `calc(${gutter} / 2)`
 
 const firstItemStyle = { standard: { ...topLevelMenuItemStyle.standard, ...firstItemCustom }, hover: { ...topLevelMenuItemStyle.hover, ...firstItemCustom } }
 
+
+const tutorialsList = {
+  "tut1": "Tut 1: Simple cell network",
+  "tut2": "Tut 2: Detailed cell network",
+  "tut3": "Tut 3: Multiscale network",
+  "tut3_ip3high": "Tut 3: Multiscale network (high IP3)"
+}
+
 export const getTutorials = () => {
   const { tuts } = window
   if (!tuts) {
     return []
   }
-  return tuts.sort().map(tutFile => (
-    {
-      label: tutFile.replace(".py", "").replace("gui", '').replace("_", " "),
+  return tuts.sort().map(tutFile => {
+    let tutName = tutFile.replace(".py", "").replace("gui", '').replace("_", "");
+    let tutLabel = tutorialsList[tutName] !== undefined ? tutorialsList[tutName] : tutName;
+    return {
+      label: tutLabel,
       icon: "",
       action: {
         handlerAction: "redux",
         parameters: [loadTutorial, tutFile]
       }
     }
-  ))
+  })
   
 }
 
