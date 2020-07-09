@@ -719,7 +719,7 @@ export default class NetPyNECellRules extends React.Component {
                   >
                     {this.createLabel('sections')}
                   </Fab>
-                  <div style={{ textAlign: 'center', fontFamily: 'Source Sans Pro' }}>Sections</div>
+                  <div style={{ textAlign: 'center', fontFamily: 'Source Sans Pro' }}>Section</div>
                 </div>
                 
               </Tooltip>

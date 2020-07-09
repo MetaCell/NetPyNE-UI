@@ -64,7 +64,7 @@ export default class NetPyNENewPlot extends React.Component {
             value={"Empty"}
             onClick={() => this.handleSelection("Empty")} 
           >
-            Empty
+            Empty cell
           </MenuItem>
 
           <MenuItem 
@@ -72,7 +72,7 @@ export default class NetPyNENewPlot extends React.Component {
             value={"Simple_HH"}
             onClick={() => this.handleSelection("Simple_HH")} 
           >
-            Simple HH
+            Simple HH cell
           </MenuItem>
 
           <MenuItem 
@@ -80,7 +80,7 @@ export default class NetPyNENewPlot extends React.Component {
             value={"BallStick_HH"}
             onClick={() => this.handleSelection("BallStick_HH")} 
           >
-            Ball and stick HH
+            Ball and stick HH cell
           </MenuItem>
 
 
@@ -89,7 +89,7 @@ export default class NetPyNENewPlot extends React.Component {
             value={"fromTemplate"}
             onClick={() => this.handleOpenTopbarDialog()} 
           >
-            Import cell template
+            Import cell template from file ...
           </MenuItem>
         
         </Menu>
