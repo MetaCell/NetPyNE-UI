@@ -409,6 +409,8 @@ class NetPyNEGeppetto():
                 args['showFig'] = False
                 
                 if plotName.startswith('iplot'):
+                    ## This arg brings dark theme. But some plots are broken by it
+                    # args['theme'] = 'gui'
                     html = getattr(analysis, plotName)(**args)
                     if not html or html == -1:
                         return ""

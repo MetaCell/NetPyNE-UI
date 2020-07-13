@@ -87,7 +87,6 @@ export const WIDGETS_IDS = {
     LFP_TIMESERIES_PLOT: 'LFPTimeSeriesPlot',
     LFP_PSD_PLOT: 'LFPPSDPlot',
     LFP_SPECTROGRAM_PLOT: 'LFPSpectrogramPlot',
-    LFP_LOCATION_PLOT: 'LFPLocationsPlot',
     GRAGER_PLOT: 'grangerPlot',
     RXD_CONCENTRATION_PLOT: 'rxdConcentrationPlot',
   },
@@ -246,21 +245,6 @@ export const PLOT_WIDGETS = {
     },
     pos: 10
   },
-  LFPLocationsPlot: {
-    id: 'LFPLocationsPlot',
-    name: 'LFP Locations Plot',
-    status: WidgetStatus.MINIMIZED, 
-    component: 'Plot', 
-    panelName: MINIMIZED_PANEL,
-    defaultPanel: "plotPanel",
-    enableRename: false,
-    hideOnClose: true,
-    method: {
-      plotMethod: 'iplotLFP',
-      plotType: 'locations'
-    },
-    pos: 11
-  },
   grangerPlot: {
     id: 'grangerPlot', 
     name: 'Granger Plot', 
@@ -274,7 +258,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'granger',
       plotType: false
     },
-    pos: 12
+    pos: 11
   },
   rxdConcentrationPlot: {
     id: 'rxdConcentrationPlot',
@@ -289,7 +273,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'iplotRxDConcentration',
       plotType: false
     },
-    pos: 13
+    pos: 12
   }
 }
 
