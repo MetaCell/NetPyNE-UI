@@ -42,6 +42,7 @@ export default class NetPyNEThumbnail extends React.Component {
     if (this.props.handleClick && actionConfirmed) {
       // this.props.deleteMethod(this.props.name);
       this.props.deleteNetParamsObj({ paramPath: this.props.paramPath, paramName: this.props.name })
+      this.props.onDelete && this.props.onDelete()
     }
     this.setState({ dialogOpen: false });
   }

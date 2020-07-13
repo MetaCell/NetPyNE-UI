@@ -643,6 +643,7 @@ export default class NetPyNECellRules extends React.Component {
             selected={sectionName == selectedSection}
             paramPath={[selectedCellRule]}
             handleClick={this.selectSection} 
+            onDelete={() => this.setState({ selectedSection: undefined })}
           />)
 
     } else if (page == "mechanisms" && Object.keys(model).length > 0 && model[selectedCellRule] && model[selectedCellRule].secs[selectedSection]) {
