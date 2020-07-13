@@ -16,7 +16,7 @@ export default class PlotTraces extends React.Component {
   }
     
   render () {
-    var tag = "simConfig.analysis['plotTraces']"
+    var tag = "simConfig.analysis['iplotTraces']"
     return <div>
       <NetPyNEInclude
         id={"simConfig.analysis.plotTraces.include"}

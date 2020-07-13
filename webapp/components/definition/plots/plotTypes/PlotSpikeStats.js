@@ -16,7 +16,7 @@ export default class PlotSpikeStats extends React.Component {
   }
     
   render () {
-    var tag = "simConfig.analysis['plotSpikeStats']"
+    var tag = "simConfig.analysis['iplotSpikeStats']"
     return <div>
       <NetPyNEInclude
         id={"simConfig.analysis.plotSpikeStats.include"}

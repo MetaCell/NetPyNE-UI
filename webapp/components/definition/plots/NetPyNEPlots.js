@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import Utils from '../../../Utils';
 import PlotLFP from './plotTypes/PlotLFP';
 import PlotConn from './plotTypes/PlotConn';
-import PlotShape from './plotTypes/PlotShape';
 import Plot2Dnet from './plotTypes/Plot2Dnet';
 import PlotRaster from './plotTypes/PlotRaster';
 import PlotTraces from './plotTypes/PlotTraces';
@@ -47,11 +46,6 @@ export default class NetPyNEPlots extends React.Component {
         if (response.includes(plot)) {
           if (plot == "plotLFP") {
             var include = { 'electrodes': ['all'] }
-          } else if (plot == "plotShape") {
-            var include = {
-              'includePre': ['all'],
-              'includePost': ['all']
-            }
           } else if (plot == "granger") {
             var include = {
               'cells1': ['allCells'],
@@ -87,31 +81,28 @@ export default class NetPyNEPlots extends React.Component {
     }
 
     switch (this.state.selectedPlot) {
-    case "plotRaster":
+    case "iplotRaster":
       var selectedPlot = <PlotRaster />
       break;
-    case "plotSpikeHist":
+    case "iplotSpikeHist":
       var selectedPlot = <PlotSpikeHist />
       break;
-    case "plotSpikeStats":
+    case "iplotSpikeStats":
       var selectedPlot = <PlotSpikeStats />
       break;
-    case "plotRatePSD":
+    case "iplotRatePSD":
       var selectedPlot = <PlotRatePSD />
       break;
-    case "plotTraces":
+    case "iplotTraces":
       var selectedPlot = <PlotTraces />
       break;
-    case "plotLFP":
+    case "iplotLFP":
       var selectedPlot = <PlotLFP />
       break;
-    case "plotShape":
-      var selectedPlot = <PlotShape />
-      break;
-    case "plotConn":
+    case "iplotConn":
       var selectedPlot = <PlotConn />
       break;
-    case "plot2Dnet":
+    case "iplot2Dnet":
       var selectedPlot = <Plot2Dnet />
       break;
     case "granger":

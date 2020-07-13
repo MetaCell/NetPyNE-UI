@@ -121,25 +121,10 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     method: {
-      plotMethod: 'plot2Dnet', 
+      plotMethod: 'iplot2Dnet', 
       plotType: false
     },
     pos: 2
-  },
-  shapePlot: {
-    id: 'shapePlot', 
-    name: 'Shape Plot', 
-    status: WidgetStatus.MINIMIZED, 
-    component: 'Plot', 
-    panelName: MINIMIZED_PANEL,
-    defaultPanel: "plotPanel",
-    enableRename: false,
-    hideOnClose: true,
-    method: {
-      plotMethod: 'plotShape', 
-      plotType: false
-    },
-    pos: 3
   },
   tracesPlot: {
     id: 'tracesPlot', 
@@ -154,7 +139,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'iplotTraces', 
       plotType: false
     },
-    pos: 4
+    pos: 3
   },
   rasterPlot: {
     id: 'rasterPlot', 
@@ -169,7 +154,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'iplotRaster', 
       plotType: false
     },
-    pos: 5
+    pos: 4
   },
   spikePlot: {
     id: 'spikePlot', 
@@ -184,7 +169,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'iplotSpikeHist', 
       plotType: false
     },
-    pos: 6
+    pos: 5
   },
   spikeStatsPlot: {
     id: 'spikeStatsPlot', 
@@ -196,10 +181,10 @@ export const PLOT_WIDGETS = {
     hideOnClose: true,
     enableRename: false,
     method: {
-      plotMethod: 'plotSpikeStats', 
+      plotMethod: 'iplotSpikeStats', 
       plotType: false
     },
-    pos: 7
+    pos: 6
   },
   ratePSDPlot: {
     id: 'ratePSDPlot', 
@@ -214,7 +199,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'iplotRatePSD', 
       plotType: false
     },
-    pos: 8
+    pos: 7
   },
   LFPTimeSeriesPlot: {
     id: 'LFPTimeSeriesPlot', 
@@ -229,7 +214,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'iplotLFP',
       plotType: 'timeSeries'
     },
-    pos: 9
+    pos: 8
   },
   LFPPSDPlot: {
     id: 'LFPPSDPlot', 
@@ -244,7 +229,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'iplotLFP',
       plotType: 'PSD'
     },
-    pos: 10
+    pos: 9
   },
   LFPSpectrogramPlot: {
     id: 'LFPSpectrogramPlot', 
@@ -259,7 +244,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'iplotLFP',
       plotType: 'spectrogram'
     },
-    pos: 11
+    pos: 10
   },
   LFPLocationsPlot: {
     id: 'LFPLocationsPlot',
@@ -274,7 +259,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'iplotLFP',
       plotType: 'locations'
     },
-    pos: 12
+    pos: 11
   },
   grangerPlot: {
     id: 'grangerPlot', 
@@ -289,7 +274,7 @@ export const PLOT_WIDGETS = {
       plotMethod: 'granger',
       plotType: false
     },
-    pos: 13
+    pos: 12
   },
   rxdConcentrationPlot: {
     id: 'rxdConcentrationPlot',
@@ -301,10 +286,10 @@ export const PLOT_WIDGETS = {
     hideOnClose: true,
     enableRename: false,
     method: {
-      plotMethod: 'plotRxDConcentration',
+      plotMethod: 'iplotRxDConcentration',
       plotType: false
     },
-    pos: 14
+    pos: 13
   }
 }
 

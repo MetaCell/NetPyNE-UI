@@ -16,7 +16,7 @@ export default class PlotLFP extends React.Component {
   }
     
   render () {
-    var tag = "simConfig.analysis['plotLFP']"
+    var tag = "simConfig.analysis['iplotLFP']"
     return <div>
       <NetPyNEField id="simConfig.analysis.plotLFP.electrodes" className="listStyle" >
         <ListComponent model={tag + "['electrodes']"} />

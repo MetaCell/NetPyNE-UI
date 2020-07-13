@@ -15,7 +15,7 @@ export default class plotConn extends React.Component {
   }
   
   render () {
-    var tag = "simConfig.analysis['plotConn']"
+    var tag = "simConfig.analysis['iplotConn']"
     return <div>
       <NetPyNEInclude
         id={"simConfig.analysis.plotConn.include"}

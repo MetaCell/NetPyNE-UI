@@ -16,7 +16,7 @@ export default class Plot2Dnet extends React.Component {
   }
   
   render () {
-    var tag = "simConfig.analysis['plot2Dnet']"
+    const tag = "simConfig.analysis['iplot2Dnet']"
     return <div>
       <NetPyNEInclude
         id={"simConfig.analysis.plot2Dnet.include"}

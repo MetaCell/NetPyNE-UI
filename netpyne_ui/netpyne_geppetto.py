@@ -379,9 +379,9 @@ class NetPyNEGeppetto():
         
         return 1
 
-    def getPlotSettings(self, plot):
-        if self.simConfig.analysis and plot in self.simConfig.analysis:
-            return self.simConfig.analysis[plot]
+    def getPlotSettings(self, plot_name):
+        if self.simConfig.analysis and plot_name in self.simConfig.analysis:
+            return self.simConfig.analysis[plot_name]
         return {}
 
     def getDirList(self, dir=None, onlyDirs = False, filterFiles=False):
@@ -410,9 +410,15 @@ class NetPyNEGeppetto():
                 
                 if plotName.startswith('iplot'):
                     html = getattr(analysis, plotName)(**args)
-                    if not html:
+                    if not html or html == -1:
                         return ""
-                    if (plotName == 'iplotRaster'):
+
+                    # some plots return "fig", some return "(fig, data)"
+                    if plotName == 'iplotRaster':
+                        html = html[0]
+                    elif plotName == 'iplotRxDConcentration':
+                        html = html[0]
+                    elif plotName == 'iplot2Dnet':
                         html = html[0]
                     return html
 

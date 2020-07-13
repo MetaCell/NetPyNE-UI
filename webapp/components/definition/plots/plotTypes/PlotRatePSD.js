@@ -16,7 +16,7 @@ export default class PlotRatePSD extends React.Component {
   }
   
   render () {
-    var tag = "simConfig.analysis['plotRatePSD']"
+    var tag = "simConfig.analysis['iplotRatePSD']"
     return <div>
       <NetPyNEInclude
         id={"simConfig.analysis.plotRatePSD.include"}
