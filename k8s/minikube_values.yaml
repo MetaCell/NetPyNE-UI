@@ -1,9 +1,9 @@
 # Use with minikubes
 hub:
   image: 
-    name: netpyne-hub
-    tag: latest
-    pullPolicy: Never
+    name: netpy-hub
+    tag: 'latest'
+    pullPolicy: IfNotPresent
 
   resources:
     requests:
@@ -23,6 +23,7 @@ hub:
       c.Spawner.notebook_dir = '/home/jovyan/work/NetPyNE-UI'
       c.Spawner.default_url = '/geppetto'
       c.Spawner.debug = True
+      c.Spawner.disable_check_xsrf=True
     spawner: >-
       c.Spawner.args = ["--library=netpyne_ui", "--NotebookApp.disable_check_xsrf=True"]
 
@@ -42,9 +43,9 @@ singleuser:
   memory:
     guarantee: 0.2G
   image:
-    name:  netpyne-ui
+    name: netpy
     tag: 'latest'
-    pullPolicy: Never
+    pullPolicy: IfNotPresent
 
 cull:
   enabled: true

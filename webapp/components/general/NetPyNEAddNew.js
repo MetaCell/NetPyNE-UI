@@ -4,10 +4,7 @@ import Fab from '@material-ui/core/Fab';
 import { withStyles } from '@material-ui/core/styles';
 import Tooltip from './Tooltip'
 
-const styles = ({ spacing, palette }) => ({
-  root : { marginLeft: spacing(1), },
-  plus:{ color: palette.common.white }
-})
+const styles = ({ spacing, palette }) => ({ plus:{ color: palette.common.white } })
 
 class NetPyNEAddNew extends React.Component {
 
@@ -25,9 +22,9 @@ class NetPyNEAddNew extends React.Component {
   }
 
   render () {
-    const { classes } = this.props
+    const { classes, title } = this.props
     return (
-      <Tooltip title="Create rule" placement="top">
+      <Tooltip title={title ? title : "Create rule"} placement="top">
         <Fab 
           size="small"
           color='primary'

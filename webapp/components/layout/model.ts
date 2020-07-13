@@ -31,3 +31,8 @@ export interface Widget {
   enableRename?: boolean;
   pos?: number;
 }
+
+export interface WidgetComponent {
+  exportSession: () => any;
+  importSession: (any) => void;
+}

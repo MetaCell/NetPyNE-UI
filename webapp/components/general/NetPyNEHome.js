@@ -2,13 +2,16 @@ import React from 'react';
 import Icon from '@material-ui/core/Icon';
 import { makeStyles } from '@material-ui/core/styles'
 import Tooltip from '../general/Tooltip'
+
+import { ArrowRightIcon } from '../general/NetPyNEIcons';
+
+
 const useStyles = makeStyles(({ spacing, palette }) => ({
   home: { },
   root: {
     display: 'flex',
     alignItems: 'center'
-  },
-  icon: { fontSize: 40, fontWeight: 'bold', textAlign: 'center' }
+  }
 }))
 
 
@@ -24,17 +27,10 @@ export default ({ handleClick, selection }) => {
             handleClick()
           }}
         >
-          <Icon
-            color="primary"
-            classes={{ root: classes.icon }}
-            className="fa fa-angle-right"
-          />
+          <ArrowRightIcon color="primary"/>
         </div>
       </Tooltip>
-      <Icon
-        color="disabled"
-        className="fa fa-angle-right breadcrumb-spacer"
-      />
+      <ArrowRightIcon fontSize="inherit" className="breadcrumb-spacer" color="inherit"/>
      
     </div>
   )

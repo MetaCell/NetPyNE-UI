@@ -11,14 +11,20 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 const styles = { cancel: { marginRight: 10 } }
 export default class ActionDialog extends React.Component {
 
-  state = { hide: false }
+  state = { hide: !this.props.openErrorDialogBox && !this.props.openDialog }
 
   performAction = () => {
-    if (this.props.isFormValid === undefined || this.props.isFormValid()){
-      GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, this.props.message);
-      
-      this.props.pythonCall(this.props.command, this.props.args)
-      this.setState({ hide: true })
+    if (this.props.command) {
+      if (this.props.isFormValid === undefined || this.props.isFormValid()){
+        GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, this.props.message);
+        
+        this.props.pythonCall(this.props.command, this.props.args)
+        
+      }
+    }
+    this.setState({ hide: true })
+    if (this.props.onAction) {
+      this.props.onAction();
     }
   }
 
@@ -31,16 +37,21 @@ export default class ActionDialog extends React.Component {
    */
 
   clearErrorDialogBox () {
-    this.props.closeBackendErrorDialog()
+    if (this.props.closeBackendErrorDialog) {
+      this.props.closeBackendErrorDialog()
+    }
   }
   
   cancelDialog = () => {
     this.clearErrorDialogBox()
-    this.props.onRequestClose();
+    this.setState({ hide: true })
+    if (this.props.onRequestClose) {
+      this.props.onRequestClose();
+    }
   }
 
   handleClickGoBack () {
-    this.setState({ hide: false })
+    this.setState({ hide: true })
     this.clearErrorDialogBox()
   }
   render () {
@@ -69,14 +80,14 @@ export default class ActionDialog extends React.Component {
       )
           
       var title = this.props.errorMessage;
-      var content = Utils.parsePythonException(this.props.errorDetails);
+      var content = this.props.errorDetails ? Utils.parsePythonException(this.props.errorDetails) : '';
     }
     return (
 
       <Dialog
         fullWidth
         maxWidth={this.props.openErrorDialogBox ? 'md' : 'sm'}
-        open={!this.state.hide || this.props.openErrorDialogBox}
+        open={Boolean(!this.state.hide || this.props.openErrorDialogBox)}
         onClose={() => this.cancelDialog()}
       >
         <DialogTitle>{title}</DialogTitle>

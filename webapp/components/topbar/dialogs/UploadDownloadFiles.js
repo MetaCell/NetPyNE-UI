@@ -1,6 +1,6 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
-import IconButton from '@material-ui/core/IconButton';
+
 import Icon from '@material-ui/core/Icon';
 
 import Button from '@material-ui/core/Button'
@@ -9,12 +9,11 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
 
 import FileBrowser from '../../general/FileBrowser';
 import { Tooltip } from 'netpyne/components'
 import { withStyles } from '@material-ui/core/styles';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 const styles = ({ spacing, typography, zIndex, palette }) => ({ 
   root: { color: palette.common.white },
@@ -78,7 +77,7 @@ class UploadDownloadFile extends React.Component {
       }
 
       try {
-        const response = await fetch('/uploads', { method: "POST", body: formData })
+        const response = await fetch('uploads', { method: "POST", body: formData })
         if (response.status === 200) {
           this.message = response.statusText
         } else {
@@ -99,7 +98,7 @@ class UploadDownloadFile extends React.Component {
   generateUrl () {
     const { downloadPaths, downloadPathsDisplayText } = this.state
 
-    var url = "/downloads"
+    var url = "downloads"
     var downloadFileName = "download.tar.gz"
 
     if (downloadPaths.length > 0) {
@@ -224,25 +223,28 @@ class UploadDownloadFile extends React.Component {
         break;
       case 'DOWNLOAD':
         var content = (
-          <Grid container alignItems="center" spacing={1}>
-            <Tooltip title="File explorer">
-              <IconButton onClick={() => this.showExplorerDialog('.py')} >
-                <Icon className={'fa fa-folder-o'} />
-              </IconButton>
-            </Tooltip>
 
-
-            <Grid item>
-              <TextField 
-                fullWidth
-                variant="filled" 
-                value={this.state.downloadPathsDisplayText}
-                onChange={event => this.changeDownloadFilePathsDisplayText(event.target.value)}
-                label="Files:"
-                helperText="Select files to download"
-              />
-            </Grid>
-          </Grid>
+          <TextField 
+            fullWidth
+            variant="filled" 
+            value={this.state.downloadPathsDisplayText}
+            onChange={event => this.changeDownloadFilePathsDisplayText(event.target.value)}
+            label="Files:"
+            helperText="Select files to download"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Tooltip title="File explorer" placement="top">
+                    <Icon 
+                      className='fa fa-folder hovered' 
+                      onClick={() => this.showExplorerDialog()}
+                      style={{ cursor: 'pointer' }}
+                    />
+                  </Tooltip>
+                </InputAdornment>
+              )
+            }}
+          />
         )
 
         var buttonLabel = 'DOWNLOAD'

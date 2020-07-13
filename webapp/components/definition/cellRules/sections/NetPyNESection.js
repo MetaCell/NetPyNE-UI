@@ -6,6 +6,9 @@ import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import Paper from '@material-ui/core/Paper'
 import Utils from '../../../../Utils';
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
+
 
 import {
   NetPyNEField,
@@ -165,7 +168,7 @@ export default class NetPyNESection extends React.Component {
     
     return (
       <div>
-        <BottomNavigation component={Paper} showLabels style={{ borderRadius: '4px' }} value={this.state.selectedIndex} showLabels>
+        <BottomNavigation showLabels style={{ borderRadius: '4px' }} value={this.state.selectedIndex} showLabels>
           {bottomNavigationItems}
         </BottomNavigation>
         {content}

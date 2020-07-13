@@ -15,7 +15,7 @@ import {
 } from 'netpyne/components';
 
 import RulePath from '../../general/RulePath'
-import ExpansionPanel from '../../general/ExpansionPanel'
+import Accordion from '../../general/ExpansionPanel'
 import Divider from '@material-ui/core/Divider';
 export default class NetPyNESynapses extends Component {
 
@@ -174,13 +174,28 @@ export default class NetPyNESynapses extends Component {
     return (
       <GridLayout>
         <div>
-          <ExpansionPanel>
+          <Accordion>
             <div className="breadcrumb">
-              <NetPyNEHome
-                selection={this.state.selectedSynapse}
-                handleClick={() => this.setState({ selectedSynapse: undefined })}
-              />
-              <NetPyNEAddNew id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
+              <div>
+                <NetPyNEHome
+                  selection={this.state.selectedSynapse}
+                  handleClick={() => this.setState({ selectedSynapse: undefined })}
+                />
+                <div style={{ opacity: 0 }}>H</div>
+              </div>
+              <div >
+                <NetPyNEAddNew title="Create new synapse" id={"newSynapseButton"} handleClick={this.handleNewSynapse} />
+                <div style={{ 
+                  textAlign: 'center', 
+                  fontFamily: 'Source Sans Pro', 
+                  maxWidth: 40, 
+                  overflow: 'visible',
+                  display: 'flex', 
+                  justifyContent: 'center' 
+                }}>Synapse</div>
+              </div>
+              
+              
             </div>
             <Divider />
             <RulePath text={`netParams.synMechParams["${this.state.selectedSynapse}"]`}/>
@@ -191,7 +206,7 @@ export default class NetPyNESynapses extends Component {
               handleFilterChange={newValue => this.setState({ filterValue: newValue })}
               options={model === undefined ? [] : Object.keys(model)}
             />
-          </ExpansionPanel>
+          </Accordion>
           
           
         </div>

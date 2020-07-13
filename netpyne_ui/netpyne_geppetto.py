@@ -50,8 +50,21 @@ class NetPyNEGeppetto():
                 "netParams": self.netParams.todict(),
                 "simConfig": self.simConfig.todict(),
                 "isDocker": os.path.isfile('/.dockerenv'),
-                "currentFolder": os.getcwd()
+                "currentFolder": os.getcwd(),
+                "tuts": self.find_tutorials()
         }
+
+    def find_tutorials(self):
+        from os import listdir
+        from os.path import isfile, join
+        onlyfiles = [f for f in listdir(NETPYNE_WORKDIR_PATH) if isfile(join(NETPYNE_WORKDIR_PATH, f))]
+        
+        def _filter(_file):
+            return '.py' in _file and 'tut' in _file and 'gui' in _file
+        
+        return list(filter(_filter, onlyfiles))
+
+
 
     def instantiateNetPyNEModelInGeppetto(self, args):
         try:
@@ -112,6 +125,7 @@ class NetPyNEGeppetto():
             
             os.chdir(modFolder)
             subprocess.call(["nrnivmodl"])
+            os.chdir('..')
             
         # Load mechanism if mod path is passed
         if modFolder:
@@ -391,26 +405,42 @@ class NetPyNEGeppetto():
                 args = self.getPlotSettings(plotName)
                 if LFPflavour:
                     args['plots'] = [LFPflavour]
-                figData = getattr(analysis, plotName)(showFig=False, **args)
                 
-                if isinstance(figData, tuple):
-                    fig = figData[0]
-                    if fig==-1:
-                        return fig
-                    elif isinstance(fig, list):
-                        return [ui.getSVG(fig[0])]
-                    elif isinstance(fig, dict):
-                        svgs = []
-                        for key, value in fig.items():
-                            svgs.append(ui.getSVG(value))
-                        return svgs
-                    else:
-                        return [ui.getSVG(fig)]
+                args['showFig'] = False
+                
+                if plotName.startswith('iplot'):
+                    html = getattr(analysis, plotName)(**args)
+                    if not html:
+                        return ""
+                    if (plotName == 'iplotRaster'):
+                        html = html[0]
+                    return html
+
                 else:
-                    return figData
+                    
+                    figData = getattr(analysis, plotName)(**args)
+                    
+                    if isinstance(figData, tuple):
+                        fig = figData[0]
+                        if fig==-1:
+                            return fig
+                        elif isinstance(fig, list):
+                            return [ui.getSVG(fig[0])]
+                        elif isinstance(fig, dict):
+                            svgs = []
+                            for key, value in fig.items():
+                                svgs.append(ui.getSVG(value))
+                            return svgs
+                        else:
+                            return [ui.getSVG(fig)]
+                    else:
+                        return figData
+
+
+
         except Exception as e:
             # TODO: Extract these two lines as a function and call it in every catch clause
-            err = "There was an exception in %s():"%(function.__name__)
+            err = "There was an exception in %s():"%(e.plotName)
             logging.exception(("%s \n %s \n%s"%(err,e,sys.exc_info())))
 
     def getAvailablePops(self):
@@ -427,11 +457,8 @@ class NetPyNEGeppetto():
     
     def getAvailableCellTypes(self):
         cellTypes = set([])
-        for p in self.netParams.popParams:
-            if 'cellType' in self.netParams.popParams[p]:
-                ct = self.netParams.popParams[p]['cellType']
-                if ct not in cellTypes:
-                    cellTypes.add(ct)
+        for p in self.netParams.cellParams:
+            cellTypes.add(p)
         return list(cellTypes)
     
     def getAvailableSections(self):
@@ -458,7 +485,7 @@ class NetPyNEGeppetto():
         return [value[:-(len(mechanism) + 1)] for value in params]
         
     def getAvailablePlots(self):
-        plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats","plotRatePSD", "plotTraces", "plotLFP", "plotShape", "plot2Dnet", "plotConn", "granger"]
+        plots  = ["iplotRaster", "iplotSpikeHist", "plotSpikeStats","iplotRatePSD", "iplotTraces", "iplotLFP", "plotShape", "plot2Dnet", "iplotConn", "granger"]
 
         return [plot for plot in plots if plot not in list(self.simConfig.analysis.keys())]
 
@@ -717,6 +744,15 @@ class NetPyNEGeppetto():
 
         import gc; gc.collect()
 
+    def create_celltype_from_template(self, label="CellType", conds={}, cell_template_name="Blank"):
+        try:
+            with redirect_stdout(sys.__stdout__):
+                self.netParams.addCellParamsTemplate(label=label, template=cell_template_name)
+            return True
+        except:
+            return utils.getJSONError(f"Error while creating cellType from template {cell_template_name}",
+                sys.exc_info())
+        
 
 logging.info("Initialising NetPyNE UI")
 netpyne_geppetto = NetPyNEGeppetto()

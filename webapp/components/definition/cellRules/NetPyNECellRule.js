@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box'
+import Grid from '@material-ui/core/Grid'
 import Dialog from '@material-ui/core/Dialog/Dialog';
 
 import DialogActions from '@material-ui/core/DialogActions';
@@ -11,9 +12,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { NetPyNESelectField, NetPyNEField, NetPyNECoordsRange } from 'netpyne/components';
+import { NetPyNESelectField, NetPyNETextField, NetPyNEField, NetPyNECoordsRange } from 'netpyne/components';
 import Utils from '../../../Utils';
-import ExpansionPanel from '../../general/ExpansionPanel'
+import Accordion from '../../general/ExpansionPanel'
 import { withStyles } from "@material-ui/core/styles"
 
 class NetPyNECellRule extends React.Component {
@@ -105,64 +106,14 @@ class NetPyNECellRule extends React.Component {
             id={"cellRuleName"}
           />
 
+          <Box m={1}>
+            <Button 
+              variant="contained" 
+              color="secondary"
+              onClick={() => this.props.HandleAddNewSection()}
+            >Add new section</Button>
+          </Box>
           
-          <ExpansionPanel className={classes.expandable} elevation={0}>
-            <Box mb={1}>
-              <b>Conditions (optional):</b>
-            </Box>
-
-            <NetPyNEField id={"netParams.cellParams.conds.cellModel"} >
-              <NetPyNESelectField
-                model={"netParams.cellParams['" + this.state.currentName + "']['conds']['cellModel']"}
-                method={"netpyne_geppetto.getAvailableCellModels"}
-                postProcessItems={this.postProcessMenuItems}
-                multiple={true}
-              />
-            </NetPyNEField>
-
-            <NetPyNEField id={"netParams.cellParams.conds.pop"} >
-              <NetPyNESelectField
-                model={"netParams.cellParams['" + this.state.currentName + "']['conds']['pop']"}
-                method={"netpyne_geppetto.getAvailablePops"}
-                postProcessItems={this.postProcessMenuItems}
-                multiple={true}
-              />
-            </NetPyNEField>
-
-            <NetPyNECoordsRange
-              id="xRangeCellParams"
-              name={this.state.currentName}
-              model={'netParams.cellParams'}
-              conds={'conds'}
-              items={[
-                { value: 'x', label: 'Absolute' },
-                { value: 'xnorm', label: 'Normalized' }
-              ]}
-            />
-
-            <NetPyNECoordsRange
-              id="yRangeCellParams"
-              name={this.state.currentName}
-              model={'netParams.cellParams'}
-              conds={'conds'}
-              items={[
-                { value: 'y', label: 'Absolute' },
-                { value: 'ynorm', label: 'Normalized' }
-              ]}
-            />
-
-            <NetPyNECoordsRange
-              id="zRangeCellParams"
-              name={this.state.currentName}
-              model={'netParams.cellParams'}
-              conds={'conds'}
-              items={[
-                { value: 'z', label: 'Absolute' },
-                { value: 'znorm', label: 'Normalized' }
-              ]}
-            />
-              
-          </ExpansionPanel>
         </div>
         {dialogPop}
       </div>

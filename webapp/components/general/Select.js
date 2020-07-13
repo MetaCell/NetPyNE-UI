@@ -5,11 +5,11 @@ import MuiSelect from '@material-ui/core/Select';
 
 export default class Select extends Component {
   render () {
-    var value = this.props.value
-    if (this.props.multiple && this.props.value.constructor.name != 'Array') {
+    var value = this.props.value || ''
+    if (this.props.multiple && value.constructor.name != 'Array') {
       // when loading values from a script, we can't allow strings if *multiple* is enabled
-      value = [this.props.value]
-    } else if (!this.props.multiple && this.props.value.length === 0 && this.props.value.constructor.name === 'Array' ) {
+      value = [value]
+    } else if (!this.props.multiple && value.constructor.name === 'Array' && value.length === 0) {
       // when *multiple* is disabled, we can't allow arrays
       value = ''
     }

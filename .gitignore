@@ -1,6 +1,7 @@
 .ipynb_checkpoints/
 netpyne-ui.log
 log.file
+src
 *.pyc
 *.egg-info
 .DS_Store
@@ -20,3 +21,4 @@ npm*
 app.log
 utilities/x86_64
 .idea
+x86_64

@@ -10,7 +10,7 @@ import NetPyNEConnectivityRule from './NetPyNEConnectivityRule';
 import { NetPyNEThumbnail, GridLayout, Filter } from 'netpyne/components'
 
 import RulePath from '../../general/RulePath'
-import ExpansionPanel from '../../general/ExpansionPanel'
+import Accordion from '../../general/ExpansionPanel'
 import Divider from '@material-ui/core/Divider';
 export default class NetPyNEConnectivityRules extends Component {
 
@@ -201,13 +201,29 @@ export default class NetPyNEConnectivityRules extends Component {
     return (
       <GridLayout>
         <div>
-          <ExpansionPanel>
+          <Accordion>
             <div className="breadcrumb">
-              <NetPyNEHome
-                selection={this.state.selectedConnectivityRule}
-                handleClick={() => this.setState({ selectedConnectivityRule: undefined })}
-              />
-              <NetPyNEAddNew id={"newConnectivityRuleButton"} handleClick={this.handleNewConnectivityRule} />
+
+              <div>
+                <NetPyNEHome
+                  selection={this.state.selectedConnectivityRule}
+                  handleClick={() => this.setState({ selectedConnectivityRule: undefined })}
+                />
+                
+                <div style={{ opacity: 0 }}>H</div>
+              </div>
+              <div >
+                <NetPyNEAddNew title="Create new connectivity rule" id={"newConnectivityRuleButton"} handleClick={this.handleNewConnectivityRule} />
+                <div style={{ 
+                  textAlign: 'center', 
+                  fontFamily: 'Source Sans Pro', 
+                  maxWidth: 40, 
+                  overflow: 'visible',
+                  display: 'flex', 
+                  justifyContent: 'center' 
+                }}>Connectivity</div>
+              </div>
+
             </div>
             <Divider />
             <RulePath text={`netParams.connParams["${this.state.selectedConnectivityRule}"]`}/>
@@ -218,7 +234,7 @@ export default class NetPyNEConnectivityRules extends Component {
               handleFilterChange={newValue => this.setState({ filterValue: newValue })}
               options={model === undefined ? [] : Object.keys(model)}
             />
-          </ExpansionPanel>
+          </Accordion>
           
           
         </div>

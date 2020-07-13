@@ -1,6 +1,7 @@
 import { execPythonMessage, evalPythonMessage } from '@geppettoengine/geppetto-client/js/communication/geppettoJupyter/GeppettoJupyterUtils';
 import React from 'react';
 
+
 const Utils = {
 
   getAvailableKey: function (model, prefix) {
@@ -9,7 +10,11 @@ const Utils = {
     }
     // Get New Available ID
     var id = prefix;
-    var i = 2;
+    if (model[id + 0] == undefined) {
+      return id + 0
+    }
+    var i = 0;
+    id = prefix + i++
     while (model[id] != undefined) {
       id = prefix + i++;
     }

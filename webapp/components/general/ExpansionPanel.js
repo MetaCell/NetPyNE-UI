@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import Tooltip from './Tooltip'
 
 import { withStyles } from '@material-ui/core/styles'
 
-const styles = ({ spacing }) => ({ button: { marginRight: `${spacing(1)}px!important` } })
+const styles = ({ spacing }) => ({ button: { marginRight: 0 } })
 
-class NetPyNEExpansionPanel extends Component {
+class NetPyNEAccordion extends Component {
   state = { expanded: false }
   render () {
 
@@ -18,30 +18,29 @@ class NetPyNEExpansionPanel extends Component {
     const [summary, ...details] = children
 
     return (
-      <ExpansionPanel expanded={this.state.expanded} {...others}>
-        <ExpansionPanelSummary
+      <Accordion expanded={this.state.expanded} {...others}>
+        <AccordionSummary
           IconButtonProps={{ 
             onClick: () => this.setState({ expanded: !this.state.expanded }),
             className: classes.button,
-            size: 'small'
           }}
           expandIcon={
             <Tooltip
               title={this.state.expanded ? "Collapse" : "Expand"} placement="top"
             >
-              {this.state.expanded ? <ExpandLessIcon fontSize="inherit"/> : <ExpandMoreIcon fontSize="inherit"/>}
+              {this.state.expanded ? <ExpandLessIcon color="inherit" /> : <ExpandMoreIcon color="inherit"/>}
             </Tooltip>
             
           }
         >
           {summary}
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
+        </AccordionSummary>
+        <AccordionDetails>
           {details}
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
+        </AccordionDetails>
+      </Accordion>
     )
   }
 }
 
-export default withStyles(styles)(NetPyNEExpansionPanel)
+export default withStyles(styles)(NetPyNEAccordion)

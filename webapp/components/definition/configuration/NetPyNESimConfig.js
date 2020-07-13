@@ -203,14 +203,14 @@ class NetPyNESimConfig extends React.Component {
             <ListComponent model={"simConfig.recordCells"} />
           </NetPyNEField>
 
-          <NetPyNEField id="simConfig.recordLFP" className={"listStyle"}>
-            <ListComponent model={"simConfig.recordLFP"} />
-          </NetPyNEField>
-            
           <NetPyNEField id="simConfig.recordTraces" className={"listStyle"} >
             <ListComponent model={"simConfig.recordTraces"} />
           </NetPyNEField>
-            
+
+          <NetPyNEField id="simConfig.recordLFP" className={"listStyle"}>
+            <ListComponent model={"simConfig.recordLFP"} />
+          </NetPyNEField>
+
           <NetPyNEField id="simConfig.recordStep" >
             <NetPyNETextField fullWidth variant="filled" model={"simConfig.recordStep"} />
           </NetPyNEField>
@@ -289,7 +289,7 @@ class NetPyNESimConfig extends React.Component {
     const { classes } = this.props
     return (
       <div className={ classes.root }>
-        <BottomNavigation component={Paper} showLabels className={classes.bottomNav} value={this.state.selectedIndex}>
+        <BottomNavigation showLabels className={classes.bottomNav} value={this.state.selectedIndex}>
           <BottomNavigationAction id={"configGeneral"} key={'General'} label={'General'} icon={<FontIcon className={"fa fa-bars"} />} onClick={() => this.select(0, 'General')} />
           <BottomNavigationAction id={"configRecord"} key={'Record'} label={'Record'} icon={<FontIcon className={"fa fa-circle"} />} onClick={() => this.select(1, 'Record')} />
           <BottomNavigationAction id={"configSaveConfiguration"} key={'SaveConfiguration'} label={'Save Configuration'} icon={<FontIcon className={"fa fa-floppy-o"} />} onClick={() => this.select(2, 'SaveConfiguration')} />
@@ -308,11 +308,7 @@ class NetPyNESimConfig extends React.Component {
 
 const styles = ({ shape, spacing }) => ({ 
   root: { height: `calc(100% - 56px - ${spacing(1)}px)`, flexDirection: 'column' },
-  bottomNav: {
-    borderRadius: shape.borderRadius, 
-    backgroundColor: bgDark,
-    overflow: 'hidden'
-  },
+  bottomNav: { margin: spacing(2) },
   layout: { height: "100%", display: 'flex' }
   
 })

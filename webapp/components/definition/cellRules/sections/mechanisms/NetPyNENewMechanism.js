@@ -22,8 +22,8 @@ const styles = ({ spacing, palette }) => ({
   },
   container: {
     position: 'relative',
-    width: fontSize,
-    height: fontSize
+    width: fontSize - 2,
+    height: fontSize - 2
   },
   cogIcon: { width: fontSize, height:fontSize, position: 'absolute' }
 
@@ -67,7 +67,7 @@ class NetPyNENewMechanism extends React.Component {
       if (blockButton) {
         return "Explore mechanisms" 
       } else {
-        return "Add new mechanism"
+        return "Create new mechanism"
       }
     }
   }

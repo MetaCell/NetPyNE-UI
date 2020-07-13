@@ -4,12 +4,13 @@ import TextField from '@material-ui/core/TextField';
 import ListComponent from '../../general/List';
 import FileBrowser from '../../general/FileBrowser';
 import NetPyNEField from '../../general/NetPyNEField';
-import IconButton from '@material-ui/core/IconButton';
+
 import Icon from '@material-ui/core/Icon';
 import { withStyles } from '@material-ui/core/styles';
 import { ActionDialog, Tooltip } from 'netpyne/components'
 import Box from '@material-ui/core/Box'
 import Grid from '@material-ui/core/Grid'
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 const styles = ({ spacing, typography, zIndex }) => ({ 
   container: { 
@@ -37,7 +38,7 @@ class ImportCellParams extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      label: 'NewCellRule',
+      label: props.cellRuleName,
       fileName: '',
       cellName: '',
       modFolder: '',
@@ -107,50 +108,55 @@ class ImportCellParams extends React.Component {
           />
         </NetPyNEField>
 
-        <Grid container alignItems="center" spacing={1}>
-          <Tooltip title="File explorer" placement="top">
-            <IconButton
-              onClick={() => this.showExplorerDialog('fileName', false)} 
-            >
-              <Icon className='fa fa-folder-o' />
-            </IconButton>
-          </Tooltip>
 
-          <Grid item>
-            <NetPyNEField id="netParams.importCellParams.fileName">
-              <TextField 
-                variant="filled" 
-                fullWidth
-                value={fileName}
-                onChange={event => this.setState({ fileName: event.target.value })}
-              />
-            </NetPyNEField>
-          </Grid>
-        </Grid>
+        <NetPyNEField id="netParams.importCellParams.fileName">
+          <TextField 
+            variant="filled" 
+            fullWidth
+            value={fileName}
+            onChange={event => this.setState({ fileName: event.target.value })}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Tooltip title="File explorer" placement="top">
+                    <Icon 
+                      className='fa fa-folder hovered' 
+                      onClick={() => this.showExplorerDialog('fileName', false)}
+                      style={{ cursor: 'pointer' }}
+                    />
+                  </Tooltip>
+                </InputAdornment>
+              )
+            }}
+          />
+        </NetPyNEField>
 
 
-        <Grid container alignItems="center" spacing={1}>
-          <Tooltip title="File explorer" placement="top">
-            <IconButton
-              onClick={() => this.showExplorerDialog('modFolder', true)} 
-            >
-              <Icon className="fa fa-folder-o" />
-            </IconButton>
-          </Tooltip>
+        <NetPyNEField id="netParams.importCellParams.modFolder">
+          <TextField 
+            fullWidth
+            variant="filled"
+            value={modFolder}
+            onChange={event => this.setState({ modFolder: event.target.value })} 
+            helperText="Important: if external mod files are required please select the mod folder path"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Tooltip title="File explorer" placement="top">
+                    <Icon 
+                      className="fa fa-folder hovered" 
+                      onClick={() => this.showExplorerDialog('modFolder', true)} 
+                      style={{ cursor: 'pointer' }}
+                    />
+                  </Tooltip>
+                </InputAdornment>
+              )
+            }}
+          />
+        </NetPyNEField>
 
-          <Grid item>
-            <NetPyNEField id="netParams.importCellParams.modFolder">
-              <TextField 
-                fullWidth
-                variant="filled"
-                value={modFolder}
-                onChange={event => this.setState({ modFolder: event.target.value })} 
-              />
-            </NetPyNEField>
-          </Grid>
-        </Grid>
 
-        <ListComponent id="cellArgs" realType="dict" floatingLabelText="Cell Template Parameters (key:value pair)" ref="cellArgs" />
+        <ListComponent id="cellArgs" realType="dict" label="argument as key:value" floatingLabelText="Cell Template Parameters (key:value pair)" ref="cellArgs" />
 
         <Grid container spacing={1}>
           <Grid item>

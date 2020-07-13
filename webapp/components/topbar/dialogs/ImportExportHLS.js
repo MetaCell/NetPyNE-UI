@@ -1,19 +1,9 @@
 import React from 'react';
 import Checkbox from '../../general/Checkbox';
-import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
-import { orange , grey } from '@material-ui/core/colors';
 import FileBrowser from '../../general/FileBrowser';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText'
-const orange500 = orange[500];
-const grey400 = grey[400];
-
-import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import Icon from '@material-ui/core/Icon';
-import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -63,7 +53,7 @@ class ImportExportHLS extends React.Component {
       simConfigModuleName: "",
       simConfigVariable: "simConfig",
       modFolder: "",
-      loadMod: '',
+      loadMod: false,
       compileMod: false,
       explorerDialogOpen: false,
       explorerParameter: "",
@@ -116,6 +106,7 @@ class ImportExportHLS extends React.Component {
         break;
       case "modFolder":
         newState["modFolder"] = fieldValue.path;
+        newState["loadMod"] = true
         break;
       default:
         throw ("Not a valid parameter!");
@@ -153,123 +144,110 @@ class ImportExportHLS extends React.Component {
   }
 
   onModFolderPathChange (fullpath) {
-    this.setState({ modFolder: fullpath })
+    if (fullpath !== '') {
+      this.setState({ modFolder: fullpath, loadMod: true })
+    } else {
+      this.setState({ modFolder: fullpath, loadMod: false })
+    }
+    
   }
 
   render () {
     const { classes } = this.props
-    const disableLoadMod = this.state.loadMod === '' ? true : !this.state.loadMod
     switch (this.props.mode) {
     case 'IMPORT':
       var content = (
         <div>
-          <Grid container alignItems="center" spacing={1}>
-            <Tooltip title="File explorer" placement="top">
-              <IconButton
-                onClick={() => this.showExplorerDialog('netParamsPath', false, '.py')} 
-              >
-                <Icon className={'fa fa-folder-o'} />
-              </IconButton>
-            </Tooltip>
-            <Grid item>
-              <TextField 
-                variant="filled" 
-                fullWidth
-                value={this.state.netParamsFullPath}
-                onChange={event => this.onNetParamsPathChange(event.target.value)}
-                label="NetParams file"
-                helperText='Only .py files'
-              />
-            </Grid>
-          </Grid>
+          <TextField 
+            variant="filled" 
+            fullWidth
+            value={this.state.netParamsFullPath}
+            onChange={event => this.onNetParamsPathChange(event.target.value)}
+            label="NetParams file"
+            helperText='Only .py files'
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Tooltip title="File explorer" placement="top">
+                    <Icon 
+                      className={'fa fa-folder hovered'}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => this.showExplorerDialog('netParamsPath', false, '.py')}
+                    />
+                  </Tooltip>
+                </InputAdornment>
+              ),
+            }}
+          />
           
-          <Grid container alignItems="center" spacing={1}>
-            <Tooltip title="File explorer" placement="top">
-              <IconButton
-                onClick={() => this.showExplorerDialog('simConfigPath', false, '.py')} 
-              >
-                <Icon className={'fa fa-folder-o'} />
-              </IconButton>
-            </Tooltip>
+          <Box mt={1} mb={2}>
+            <TextField 
+              variant="filled" 
+              fullWidth
+              label="NetParams variable" 
+              value={this.state.netParamsVariable}
+              onChange={event => this.setState({ netParamsVariable: event.target.value })}
+            />
+          </Box>
+          
             
-            <Grid item>
-              <TextField 
-                variant="filled" 
-                fullWidth
-                value={this.state.simConfigFullPath} 
-                onChange={event => this.onSimConfigPathChange(event.target.value)} 
-                label="SimConfig file:"
-                helperText='Only .py files' 
-              />
+          <TextField 
+            variant="filled" 
+            fullWidth
+            value={this.state.simConfigFullPath} 
+            onChange={event => this.onSimConfigPathChange(event.target.value)} 
+            label="SimConfig file:"
+            helperText='Only .py files'
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Tooltip title="File explorer" placement="top">
+                    <Icon 
+                      className={'fa fa-folder hovered'}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => this.showExplorerDialog('simConfigPath', false, '.py')} 
+                    />
+                  </Tooltip>
+                </InputAdornment>
+              )
+            }}
+          />
               
-            </Grid>
-          </Grid>
 
-          <Grid container alignItems="center" spacing={1}>
-            <Tooltip title="File explorer" placement="top">
-              <div>
-                <IconButton
-                  onClick={() => this.showExplorerDialog('modFolder', true, false)} 
-                  disabled={disableLoadMod}
-                >
-                  <Icon className="fa fa-folder-o" />
-                </IconButton>
-              </div>
-              
-            </Tooltip>
-
-            <Grid item>
-              <TextField 
-                variant="filled" 
-                fullWidth
-                label="Path to mod files"
-                disabled={disableLoadMod} 
-                value={this.state.modFolder} 
-                onClick={event => this.onModFolderPathChange(event.target.value)} 
-                helperText={"Only mod folders"}
-              />
-            </Grid>
-          </Grid>
-
-
-          <Grid container spacing={1}>
-            <Grid item>
-              <TextField 
-                variant="filled" 
-                fullWidth
-                label="NetParams variable" 
-                value={this.state.netParamsVariable}
-                onChange={event => this.setState({ netParamsVariable: event.target.value })}
-              />
-            </Grid>
-            <Grid item>
-              <TextField
-                variant="filled" 
-                fullWidth
-                label="SimConfig variable"
-                value={this.state.simConfigVariable}
-                onChange={event => this.setState({ simConfigVariable: event.target.value })}
-              />
-            </Grid>
-          </Grid>
+          <Box mt={1} mb={2}>
+            <TextField
+              variant="filled" 
+              fullWidth
+              label="SimConfig variable"
+              value={this.state.simConfigVariable}
+              onChange={event => this.setState({ simConfigVariable: event.target.value })}
+            />
+          </Box>
           
+          <TextField 
+            variant="filled" 
+            fullWidth
+            label="Path to mod files"
+            value={this.state.modFolder} 
+            onChange={event => this.onModFolderPathChange(event.target.value)} 
+            helperText="Important: if external mod files are required please select the mod folder path"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Tooltip title="File explorer" placement="top">
+                    <Icon 
+                      onClick={() => this.showExplorerDialog('modFolder', true, false)}
+                      className={'fa fa-folder hovered'}
+                      style={{ cursor: 'pointer' }}
+                    />
+                  </Tooltip>
+                </InputAdornment>
+              )
+            }}
+          />
           
-          <FormControl fullWidth>
-            <InputLabel >Are custom mod files required for this model?</InputLabel>
-            <Select
-
-              value={this.state.loadMod === undefined ? '' : this.state.loadMod}
-              onChange={event => this.setState({ loadMod: event.target.value })}
-            >
-              <MenuItem value={true}>Yes, this model requires custom mod files</MenuItem>
-              <MenuItem id="appBarImportRequiresModNo" value={false} >No, this model only requires NEURON built-in mod files</MenuItem>
-            </Select>
-            <FormHelperText error={!this.state.loadMod}>{this.state.loadMod === undefined ? "This field is required." : ''}</FormHelperText>
-          </FormControl>
-            
             
           <Checkbox
-            disabled={this.state.loadMod === '' ? true : !this.state.loadMod}
             fullWidth
             noBackground
             label="Compile mod files"

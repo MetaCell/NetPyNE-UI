@@ -6,8 +6,6 @@
     border-right: none!important;
     background-color: transparent;
     top: 0px;
-    margin-top: @gutter / 2;
-    margin-bottom: @gutter / 2;
     border-top: none;
   
     a {
@@ -56,11 +54,11 @@
         border-radius: 0px @radius @radius @radius;
     }
     .flexlayout__tabset-selected {
-        background-color: transparent;//color-light
+        background-color: @bgDarker;//color-light
     }
     .flexlayout__border_inner_bottom {
         position: fixed;
-        bottom: 0;
+        bottom: -100px; 
         left: 0;
         padding-left: @gutter / 2;
         border-top-right-radius: @radius;

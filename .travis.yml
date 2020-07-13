@@ -11,4 +11,4 @@ notifications:
 services:
   - docker  
 script:
-  - travis_retry docker build -t="netpyne-ui" --build-arg branch=$TRAVIS_BRANCH -f="./Dockerfile_dev" .
+  - travis_retry docker build -t="netpyne-ui" --build-arg branch=$TRAVIS_BRANCH .

@@ -32,13 +32,14 @@ export default class NetPyNEField extends Component {
       return new Promise((resolve, reject) => {
         if (this.realType == 'func') {
           if (value != "" && value != undefined) {
-            Utils.evalPythonMessage('netpyne_geppetto.validateFunction', [value]).then(response => {
-              if (!response) {
-                resolve({ errorMsg: 'Not a valid function' })
-              } else {
-                resolve({ errorMsg: '' })
-              }
-            });
+            Utils.evalPythonMessage('netpyne_geppetto.validateFunction', [value])
+              .then(response => {
+                if (!response) {
+                  resolve({ errorMsg: 'Not a valid function' })
+                } else {
+                  resolve({ errorMsg: '' })
+                }
+              });
           } else {
             resolve({ errorMsg: '' })
           }
@@ -138,7 +139,10 @@ export default class NetPyNEField extends Component {
         var hintText = Utils.getMetadataField(this.props.id, "hintText");
         
         var default_value = Utils.getMetadataField(this.props.id, "default");
-        if (default_value != '') {
+        if (default_value) {
+          if (realType === 'dict' || realType === 'dict(dict)') {
+            default_value = JSON.parse(default_value);
+          }
           extraProps['default'] = default_value;
         }
 

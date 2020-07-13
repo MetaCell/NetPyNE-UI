@@ -1,44 +1,55 @@
-import { ADD_WIDGET, addWidget, SET_WIDGETS } from '../actions/layout';
+import { ADD_WIDGET, addWidget, SET_WIDGETS, UPDATE_WIDGET } from '../actions/layout';
 import Utils from '../../Utils';
 import { NETPYNE_COMMANDS, PLOT_WIDGETS } from '../../constants';
 
 import { processError } from './middleware';
-
+import { SIMULATE_NETWORK, CREATE_SIMULATE_NETWORK } from '../actions/general';
+import { WidgetStatus } from '../../components/layout/model';
 // Cache for plots coming from the backend
 window.plotSvgImages = {};
 
 async function setWidget (widget) {
   
   const { plotMethod, plotType } = widget.method;
-  const result = await plotFigure(widget.id, plotMethod, plotType);
+  return plotFigure(widget.id, plotMethod, plotType).then(result => {
+    if (!result) {
+      console.warn('Plot not retrieved:', widget.id);
+      widget.disabled = true;
+      return widget;
+      // return null;
+    } else {
+      console.debug('Plot retrieved:', widget.id);
+      widget.disabled = false;
+      return widget;
+    }
+  });
 
-  if (!result) {
-    console.warn('Plot not retrieved:', widget.id);
-    widget.disabled = true;
-    return widget;
-    // return null;
-
-  } else {
-    console.log('Plot retrieved:', widget.id);
-    widget.disabled = false;
-    return widget;
-  }
-  
 }
 
 export default store => next => action => {
   switch (action.type) {
-
+  case UPDATE_WIDGET: {
+    const widget = action.data;
+    next(action)
+    break;
+  }
   case SET_WIDGETS: {
     for (let widget of Object.values(action.data)) {
       if ((widget.id in PLOT_WIDGETS) && widget.method) {
-        // delete action.data[widget.id];
-        action.data[widget.id].disabled;
         setWidget(widget).then(widget => widget ? next(addWidget(widget)) : null);
       }
     }
     next(action);
     break;
+  }
+  case SIMULATE_NETWORK:
+  case CREATE_SIMULATE_NETWORK: {
+    next(action);
+    for (let widget of Object.values(PLOT_WIDGETS)) {
+      setWidget(widget).then(widget => widget ? next(addWidget(widget)) : null);
+    }
+    
+    break
   }
   default: {
     next(action);
@@ -54,7 +65,7 @@ const plotFigure = async (plotId, plotMethod, plotType = false) => {
       new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve(null)
-        }, 10000)
+        }, 30000)
       })]);
     console.log('Plot response received for', plotId);
     if (!response) {
@@ -72,7 +83,11 @@ const plotFigure = async (plotId, plotMethod, plotType = false) => {
         response = eval(response);
       }
     }
-    if (response?.length !== undefined) {
+    if (plotMethod.startsWith("iplot")) {
+      let html_text = response.replace ? response.replace(/\\n/g, '').replace(/\\/g, '') : ''
+
+      setPlotToWindow(plotId, html_text)
+    } else if (response?.length !== undefined) {
       setPlotToWindow(plotId, response[0]);
     } else if (response == -1) {
       return null;

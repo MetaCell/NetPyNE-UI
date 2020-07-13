@@ -267,7 +267,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
     
     return (
       <div>
-        <BottomNavigation component={Paper} showLabels style={{ borderRadius: '4px' }} value={this.state.selectedIndex}>
+        <BottomNavigation showLabels style={{ borderRadius: '4px' }} value={this.state.selectedIndex}>
           {bottomNavigationItems}
         </BottomNavigation>
         {content}

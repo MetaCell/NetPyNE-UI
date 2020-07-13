@@ -48,10 +48,12 @@ export const TOPBAR_CONSTANTS = {
   NEW_MODEL: 'NEW_MODEL',
   UPLOAD_FILES: 'UPLOAD_FILES',
   DOWNLOAD_FILES: 'DOWNLOAD_FILES',
-  CREATE_NETWORK: 'Create Network',
-  CREATE_AND_SIMULATE_NETWORK:'Create and Simulate Network',
-  EXPLORE_EXISTING_NETWORK:'Explore Existing Network',
-  BACK_TO_EDITION: 'Back to edit'
+  CREATE_NETWORK: 'Create network',
+  CREATE_AND_SIMULATE_NETWORK:'Create and simulate network',
+  SIMULATE: 'Simulate network',
+  EXPLORE_EXISTING_NETWORK:'Explore model',
+  BACK_TO_EDITION: 'Back to edit',
+  NEW_PAGE: 'NEW_PAGE'
 
 }
 
@@ -104,7 +106,7 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     method: {
-      plotMethod: 'plotConn', 
+      plotMethod: 'iplotConn', 
       plotType: false
     },
     pos: 1
@@ -149,7 +151,7 @@ export const PLOT_WIDGETS = {
     hideOnClose: true,
     enableRename: false,
     method: {
-      plotMethod: 'plotTraces', 
+      plotMethod: 'iplotTraces', 
       plotType: false
     },
     pos: 4
@@ -164,7 +166,7 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     method: {
-      plotMethod: 'plotRaster', 
+      plotMethod: 'iplotRaster', 
       plotType: false
     },
     pos: 5
@@ -179,7 +181,7 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     method: {
-      plotMethod: 'plotSpikeHist', 
+      plotMethod: 'iplotSpikeHist', 
       plotType: false
     },
     pos: 6
@@ -209,7 +211,7 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     method: {
-      plotMethod: 'plotRatePSD', 
+      plotMethod: 'iplotRatePSD', 
       plotType: false
     },
     pos: 8
@@ -224,7 +226,7 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     method: {
-      plotMethod: 'plotLFP',
+      plotMethod: 'iplotLFP',
       plotType: 'timeSeries'
     },
     pos: 9
@@ -239,7 +241,7 @@ export const PLOT_WIDGETS = {
     hideOnClose: true,
     enableRename: false,
     method: {
-      plotMethod: 'plotLFP',
+      plotMethod: 'iplotLFP',
       plotType: 'PSD'
     },
     pos: 10
@@ -254,7 +256,7 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     method: {
-      plotMethod: 'plotLFP',
+      plotMethod: 'iplotLFP',
       plotType: 'spectrogram'
     },
     pos: 11
@@ -269,7 +271,7 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     method: {
-      plotMethod: 'plotLFP',
+      plotMethod: 'iplotLFP',
       plotType: 'locations'
     },
     pos: 12
@@ -310,7 +312,7 @@ export const DEFAULT_NETWORK_WIDGETS = {
   PYTHON_CONSOLE_WIDGET,
   D3Canvas: {
     id: 'D3Canvas', 
-    name: 'Morphology', 
+    name: '3D Representation', 
     status: WidgetStatus.ACTIVE, 
     component: 'D3Canvas', 
     panelName: "morphoPanel",
@@ -327,7 +329,7 @@ export const EDIT_WIDGETS = {
   [PYTHON_CONSOLE_WIDGET.id]: PYTHON_CONSOLE_WIDGET,
   'cellParams': { 
     id: 'cellParams', 
-    name: 'Cell types', 
+    name: 'Cell Types', 
     status: WidgetStatus.ACTIVE, 
     component: 'cellParams', 
     panelName: TOP_PANEL,
@@ -347,7 +349,7 @@ export const EDIT_WIDGETS = {
   },
   'synMechParams': { 
     id: 'synMechParams', 
-    name: 'Synapses', 
+    name: 'Synaptic Mechanisms', 
     status: WidgetStatus.HIDDEN, 
     component: 'synMechParams', 
     panelName: TOP_PANEL,
@@ -357,7 +359,7 @@ export const EDIT_WIDGETS = {
   },
   'connParams': { 
     id: 'connParams', 
-    name: 'Connections', 
+    name: 'Connectivity Rules', 
     status: WidgetStatus.HIDDEN, 
     component: 'connParams', 
     panelName: TOP_PANEL,
@@ -387,7 +389,7 @@ export const EDIT_WIDGETS = {
   },
   'simConfig': { 
     id: 'simConfig', 
-    name: 'Settings', 
+    name: 'Configuration', 
     status: WidgetStatus.HIDDEN,
     hideOnClose: true, 
     component: 'simConfig', 
@@ -397,7 +399,7 @@ export const EDIT_WIDGETS = {
   },
   'analysis': { 
     id: 'analysis', 
-    name: 'Analysis', 
+    name: 'Plot Settings', 
     status: WidgetStatus.HIDDEN,
     hideOnClose: true, 
     component: 'analysis', 

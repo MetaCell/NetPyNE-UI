@@ -1,4 +1,4 @@
-FROM jupyterhub/k8s-hub:0.9.0-beta.4
+FROM jupyterhub/k8s-hub:0.9.0
     
 COPY --chown=1000:1000 templates/page.html /usr/local/share/jupyterhub/templates/page.html
 COPY --chown=1000:1000 templates/404.html /usr/local/share/jupyterhub/templates/404.html

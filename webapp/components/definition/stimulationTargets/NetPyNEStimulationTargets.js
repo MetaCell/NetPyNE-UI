@@ -15,7 +15,7 @@ import {
 } from 'netpyne/components';
 
 import RulePath from '../../general/RulePath'
-import ExpansionPanel from '../../general/ExpansionPanel'
+import Accordion from '../../general/ExpansionPanel'
 import Divider from '@material-ui/core/Divider';
 export default class NetPyNEStimulationTargets extends Component {
 
@@ -175,14 +175,26 @@ export default class NetPyNEStimulationTargets extends Component {
     return (
       <GridLayout>
         <div>
-          <ExpansionPanel>
+          <Accordion>
             <div className="breadcrumb">
-              <NetPyNEHome
-                selection={this.state.selectedStimulationTarget}
-                handleClick={() => this.setState({ selectedStimulationTarget: undefined })}
-              />
-            
-              <NetPyNEAddNew id={"newStimulationTargetButton"} handleClick={this.handleNewStimulationTarget} />
+              <div>
+                <NetPyNEHome
+                  selection={this.state.selectedStimulationTarget}
+                  handleClick={() => this.setState({ selectedStimulationTarget: undefined })}
+                />
+                <div style={{ opacity: 0 }}>H</div>
+              </div>
+              <div >
+                <NetPyNEAddNew title="Create new stimulation target" id={"newStimulationTargetButton"} handleClick={this.handleNewStimulationTarget} />
+                <div style={{ 
+                  textAlign: 'center', 
+                  fontFamily: 'Source Sans Pro', 
+                  maxWidth: 40, 
+                  overflow: 'visible',
+                  display: 'flex', 
+                  justifyContent: 'center' 
+                }}>Target</div>
+              </div>
 
             </div>
             <Divider />
@@ -194,7 +206,7 @@ export default class NetPyNEStimulationTargets extends Component {
               handleFilterChange={newValue => this.setState({ filterValue: newValue })}
               options={model === undefined ? [] : Object.keys(model)}
             />
-          </ExpansionPanel>
+          </Accordion>
           
           
         </div>
