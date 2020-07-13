@@ -23,7 +23,6 @@ If you are familiar with NEURON and have already NEURON installed in your machin
 
 ## Install NetPyNE User Interface from sources (for developers)
 
-
 ### Python Dependencies
 
 We recommend the use of a new python 3 virtual environment:
@@ -39,19 +38,22 @@ Or, with conda
 conda create -n netpyne python=3.7
 conda activate netpyne
 ```
+
 ### Run install script
-```
+
+```bash
 git clone https://github.com/MetaCell/NetPyNE-UI.git
 cd utilities
 python install.py
 cd ..
 ./NetPyNE-UI
 ```
-### To update sources:
-```
+
+### To update sources
+
+```bash
 python update.py
 ```
 
 NetPyNE-UI is being developed in collaboration with the [Neurosim Lab](http://neurosimlab.org/).
 See the [Wiki](https://github.com/MetaCell/NetPyNE-UI/wiki) for more info!
-
