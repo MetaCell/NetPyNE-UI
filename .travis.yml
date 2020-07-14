@@ -5,10 +5,24 @@ node_js:
   - "7"
 env:
   global:
-    secure: dn0FPQ5IG4M/3kdwnyI78ElQ308Vc3QnKAvkWfwMFb8QxDqxQdnTo7AV1qTMtbLrDNkeEWIgi4nc7jmXNtvGTwOfhAULVh6606Qs5B+ezTdwzajbbFMI8SKQx/pnTojOMu8dx7V4lMoR/YWcojR0VC1IWVC62TGbSB1k5BDGgH0=
+    - secure: dn0FPQ5IG4M/3kdwnyI78ElQ308Vc3QnKAvkWfwMFb8QxDqxQdnTo7AV1qTMtbLrDNkeEWIgi4nc7jmXNtvGTwOfhAULVh6606Qs5B+ezTdwzajbbFMI8SKQx/pnTojOMu8dx7V4lMoR/YWcojR0VC1IWVC62TGbSB1k5BDGgH0=
+    - IMAGE_NAME: netpyne-ui
+    - CONTAINER_NAME: geppetto_container
+    - DEFAULT_BRANCH: development
+    - LANDING_PAGE: "http://localhost:8888/geppetto"
 notifications:
   slack: metacell:5ALSeoP88DqIhORUJvxE56sq
 services:
   - docker  
 script:
-  - travis_retry docker build -t="netpyne-ui" --build-arg branch=$TRAVIS_BRANCH .
+  - travis_retry docker build -t=$IMAGE_NAME --build-arg targetBranch=$TRAVIS_BRANCH --build-arg originBranch=$TRAVIS_PULL_REQUEST_BRANCH --build-arg defaultBranch=$DEFAULT_BRANCH $DOCKER_FOLDER
+  - travis_retry docker run  -t -dit --name=$CONTAINER_NAME -p 8888:8888 $IMAGE_NAME
+  - bash $TRAVIS_BUILD_DIR/tests/casperjs/utilities/test_geppetto_server.sh
+  - sleep 30
+  - http_status=$(curl -s -I $1 $LANDING_PAGE | grep HTTP/1.1 | awk {'print $2'})
+  - echo "$http_status"
+  - cd webapp
+  - travis_wait 35 travis_retry npm run test -- --verbose --colors
+  - docker ps -a;
+  - docker stop $(docker ps -a -q)
+  - docker rm $(docker ps -a -q)
