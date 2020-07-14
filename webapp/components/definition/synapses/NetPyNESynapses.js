@@ -41,7 +41,7 @@ export default class NetPyNESynapses extends Component {
   }
 
   handleNewSynapse () {
-    var defaultSynapses = { 'Synapse': { 'mod': '' } };
+    var defaultSynapses = { 'Synapse': { 'mod': 'Exp2Syn' } };
     var key = Object.keys(defaultSynapses)[0];
     var value = defaultSynapses[key];
     var model = { ...this.state.value };
