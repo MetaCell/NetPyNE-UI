@@ -10,6 +10,7 @@ env:
     - CONTAINER_NAME: geppetto_container
     - DEFAULT_BRANCH: development
     - LANDING_PAGE: "http://localhost:8888/geppetto"
+    - DOCKER_FOLDER: "."
 notifications:
   slack: metacell:5ALSeoP88DqIhORUJvxE56sq
 services:
@@ -24,5 +25,6 @@ script:
   - cd webapp
   - travis_wait 35 travis_retry npm run test -- --verbose --colors
   - docker ps -a;
+
   - docker stop $(docker ps -a -q)
   - docker rm $(docker ps -a -q)
