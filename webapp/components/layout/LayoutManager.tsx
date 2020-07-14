@@ -121,7 +121,7 @@ class LayoutManager {
   getComponent = () => withStyles(styles)(this.Component(this));
 
 
-  private createTabSet(tabsetID, position = TabsetPosition.BOTTOM, weight = 20) {
+  private createTabSet(tabsetID, position = TabsetPosition.BOTTOM, weight = 30) {
     // In case the tabset doesn't exist
     const { model } = this;
     const rootNode = model.getNodeById("root");
