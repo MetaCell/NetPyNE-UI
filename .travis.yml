@@ -1,16 +1,14 @@
 language: python
 os: linux
-dist: trusty
-node_js:
-  - "7"
 python:
   - "3.7"
+node_js:
+  - "7"
 env:
   global:
     - secure: dn0FPQ5IG4M/3kdwnyI78ElQ308Vc3QnKAvkWfwMFb8QxDqxQdnTo7AV1qTMtbLrDNkeEWIgi4nc7jmXNtvGTwOfhAULVh6606Qs5B+ezTdwzajbbFMI8SKQx/pnTojOMu8dx7V4lMoR/YWcojR0VC1IWVC62TGbSB1k5BDGgH0=
     - DEFAULT_BRANCH: development
     - LANDING_PAGE: "http://localhost:8888/geppetto"
-    - DOCKER_FOLDER: "."
 notifications:
   slack: metacell:5ALSeoP88DqIhORUJvxE56sq
 services:
