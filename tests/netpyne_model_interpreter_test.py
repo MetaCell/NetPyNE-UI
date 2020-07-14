@@ -12,8 +12,9 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        path, filename = os.path.split(os.path.realpath(__file__))
-        cls.path = path
+        HERE = os.path.dirname(os.path.realpath(__file__))
+        ROOT = os.path.dirname(HERE)
+        cls.path = os.path.join(ROOT, 'netpyne_ui/examples')
 
     def getGeppettoModel(self, netParams, simConfig):
         sim.create(netParams, simConfig, True)
@@ -62,21 +63,21 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         print("------------------------------------")
         print("Tutorial 1 Instantiation:")
         print("------------------------------------")
-        from netpyne_ui.tests.tut1 import netParams, simConfig
+        from netpyne_ui.examples.tut1 import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
 
     def test_tut2(self):
         print("------------------------------------")
         print("Tutorial 2 Instantiation:")
         print("------------------------------------")
-        from netpyne_ui.tests.tut2 import netParams, simConfig
+        from netpyne_ui.examples.tut2 import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
 
     def test_tut3(self):
         print("------------------------------------")
         print("Tutorial 3 Instantiation:")
         print("------------------------------------")
-        from netpyne_ui.tests.tut3 import netParams, simConfig
+        from netpyne_ui.examples.tut3 import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
 
     def test_tut4(self):
@@ -91,21 +92,21 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         os.chdir(owd)
         neuron.load_mechanisms(modelpath)
 
-        from netpyne_ui.tests.tut4.tut4 import netParams, simConfig
+        from netpyne_ui.examples.tut4.tut4 import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
 
     def test_tut5(self):
         print("------------------------------------")
         print("Tutorial 5 Instantiation:")
         print("------------------------------------")
-        from netpyne_ui.tests.tut5 import netParams, simConfig
+        from netpyne_ui.examples.tut5 import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
 
     def test_tut6(self):
         print("------------------------------------")
         print("Tutorial 6 Instantiation:")
         print("------------------------------------")
-        from netpyne_ui.tests.tut6 import netParams, simConfig
+        from netpyne_ui.examples.tut6 import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
 
     def test_M1detailed(self):
@@ -121,7 +122,7 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         neuron.load_mechanisms(modpath)
         os.chdir(modelpath)
 
-        from netpyne_ui.tests.M1detailed.init import netParams, cfg
+        from netpyne_ui.examples.M1detailed.init import netParams, cfg
         self.getGeppettoModel(netParams, cfg)
 
         os.chdir(owd)

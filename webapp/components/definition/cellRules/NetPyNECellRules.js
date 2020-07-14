@@ -691,6 +691,7 @@ export default class NetPyNECellRules extends React.Component {
               </div>
               
               <SelectCellTemplate 
+                
                 page={this.state.page}
                 label={this.createLabel('cellRule')}
                 tooltip={this.createTooltip('cellRule')}
@@ -733,6 +734,7 @@ export default class NetPyNECellRules extends React.Component {
              
               <div>
                 <NetPyNENewMechanism
+                  id="mechanismButton"
                   handleClick={this.handleNewMechanism}
                   disabled={selectedSection == undefined || page == 'main'}
                   handleHierarchyClick={ () => this.handleHierarchyClick('mechanisms')}
