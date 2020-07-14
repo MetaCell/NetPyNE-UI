@@ -11,7 +11,7 @@ env:
     - LANDING_PAGE: "http://localhost:8888/geppetto"
 notifications:
   slack: metacell:5ALSeoP88DqIhORUJvxE56sq
-before_install:
+install:
   - sudo apt-get install python3-dev  
 script:
 
