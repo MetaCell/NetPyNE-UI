@@ -544,16 +544,34 @@ export default class NetPyNECellRules extends React.Component {
 
   getCopyPath () {
     const basePath = "netParams.cellParams"
-    switch (this.state.page) {
-    case "main":
-      return `${basePath}["${this.state.selectedCellRule}"]`
-    case "sections":
-      return `${basePath}["${this.state.selectedCellRule}"].secs["${this.state.selectedSection}"]`
-    case "mechanisms":
-      return `${basePath}["${this.state.selectedCellRule}"].secs["${this.state.selectedSection}"].mechs["${this.state.selectedMechanism}"]`
-    default:
-      return "undefined"
+    const { value:model } = this.state
+    const { selectedCellRule, selectedSection, selectedMechanism } = this.state
+    if (!model) {
+      return 'undefined'
     }
+    switch (this.state.page) {
+    case "main": {
+      if (model[selectedCellRule]) {
+        return `${basePath}["${selectedCellRule}"]`
+      }
+      break
+    }
+    case "sections": {
+      if (model[selectedCellRule].secs[selectedSection]) {
+        return `${basePath}["${selectedCellRule}"].secs["${selectedSection}"]`
+      }
+      break
+    }
+    case "mechanisms":{
+      if (model[selectedCellRule].secs[selectedSection].mechs[selectedMechanism]) {
+        return `${basePath}["${selectedCellRule}"].secs["${selectedSection}"].mechs["${selectedMechanism}"]`
+      }
+      break
+    }
+    default: {
+    }
+    }
+    return "undefined"
   }
 
   callbackForNewCellTypeCreated (newCellTypeName) {
