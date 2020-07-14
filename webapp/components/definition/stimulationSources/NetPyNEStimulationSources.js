@@ -42,7 +42,7 @@ export default class NetPyNEStimulationSources extends Component {
   }
 
   handleNewStimulationSource () {
-    var defaultStimulationSources = { 'stim_source': { 'type': '' } };
+    var defaultStimulationSources = { 'stim_source': { 'type': 'IClamp' } };
     var key = Object.keys(defaultStimulationSources)[0];
     var value = defaultStimulationSources[key];
     var model = { ...this.state.value };
