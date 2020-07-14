@@ -12,6 +12,7 @@ env:
 notifications:
   slack: metacell:5ALSeoP88DqIhORUJvxE56sq
 install:
+  - sudo apt-get install libgnutls28-dev
   - sudo apt install libcurl4-openssl-dev libssl-dev
   - sudo apt-get install python3-dev  
 script:
