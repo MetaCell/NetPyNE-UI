@@ -41,7 +41,7 @@ export default class NetPyNENewPlot extends React.Component {
     return (
       <div>
         <Tooltip title={tooltip} placement="top">
-          <div >
+          <div id="selectCellButton">
             <Fab
               style={{ width: 40, height: 40 }}
               color={ page == 'main' ? 'primary' : 'secondary'}
@@ -56,18 +56,22 @@ export default class NetPyNENewPlot extends React.Component {
       
         <Menu 
           open={Boolean(anchorEl)}
+          id="selectCellMenu"
           anchorEl={anchorEl}
           onClose={() => clearAnchorEl()}
         >
           <MenuItem 
+            id="emptyCellTemplate"
             key={"Empty"}
             value={"Empty"}
+
             onClick={() => this.handleSelection("Empty")} 
           >
             Empty cell
           </MenuItem>
 
           <MenuItem 
+            id="Simple_HHCellTemplate"
             key={"Simple_HH"} 
             value={"Simple_HH"}
             onClick={() => this.handleSelection("Simple_HH")} 
@@ -76,6 +80,7 @@ export default class NetPyNENewPlot extends React.Component {
           </MenuItem>
 
           <MenuItem 
+            id="BallStick_HHCellTemplate"
             key={"BallStick_HH"} 
             value={"BallStick_HH"}
             onClick={() => this.handleSelection("BallStick_HH")} 
@@ -85,6 +90,7 @@ export default class NetPyNENewPlot extends React.Component {
 
 
           <MenuItem 
+            id="fromTemplateCellTemplate"
             key={"fromTemplate"} 
             value={"fromTemplate"}
             onClick={() => this.handleOpenTopbarDialog()} 

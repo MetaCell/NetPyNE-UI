@@ -173,15 +173,15 @@ class NetPyNEPopulation extends React.Component {
             />
           </Box>
           
-
-          <NetPyNEField id="netParams.popParams.cellType" >
-            <NetPyNESelectField
-              method={"netpyne_geppetto.getAvailableCellTypes"}
-              model={"netParams.popParams['" + this.props.name + "']['cellType']"}
-              postProcessItems={this.postProcessMenuItems}
-            />
-          </NetPyNEField>
-
+          <div id="netParams_popParams_cellType">
+            <NetPyNEField id="netParams.popParams.cellType" >
+              <NetPyNESelectField
+                method={"netpyne_geppetto.getAvailableCellTypes"}
+                model={"netParams.popParams['" + this.props.name + "']['cellType']"}
+                postProcessItems={this.postProcessMenuItems}
+              />
+            </NetPyNEField>
+          </div>
           <Dimensions modelName={this.props.name} />
           {dialogPop}
         </div>
