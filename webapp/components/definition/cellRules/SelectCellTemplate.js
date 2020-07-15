@@ -76,7 +76,7 @@ export default class NetPyNENewPlot extends React.Component {
             value={"Simple_HH"}
             onClick={() => this.handleSelection("Simple_HH")} 
           >
-            Simple HH cell
+            Basic HH cell
           </MenuItem>
 
           <MenuItem 
