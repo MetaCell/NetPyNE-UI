@@ -121,7 +121,7 @@ class LayoutManager {
   getComponent = () => withStyles(styles)(this.Component(this));
 
 
-  private createTabSet(tabsetID, position = TabsetPosition.BOTTOM, weight = 30) {
+  private createTabSet(tabsetID, position = TabsetPosition.RIGHT, weight = 50) {
     // In case the tabset doesn't exist
     const { model } = this;
     const rootNode = model.getNodeById("root");
@@ -134,9 +134,11 @@ class LayoutManager {
     let hrowRowRow = null;
     switch (position) {
       case TabsetPosition.RIGHT:
+        rootNode.getChildren().forEach(node => node._setWeight(100 - weight));
         rootNode._addChild(tabset);
         break;
       case TabsetPosition.LEFT:
+        rootNode.getChildren().forEach(node => node._setWeight(100 - weight));
         rootNode._addChild(tabset, 0);
         break;
       case TabsetPosition.BOTTOM:
