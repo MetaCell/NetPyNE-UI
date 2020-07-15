@@ -11,7 +11,7 @@ describe('Tutorial #1', () => {
     
     await (async () => {
       const puppeteer = require('puppeteer');
-      const browser = await puppeteer.launch({ headless: false })
+      const browser = await puppeteer.launch({ headless: true })
       const page = await browser.newPage() 
 
       await page.goto('http://localhost:8888')
