@@ -62,9 +62,13 @@ export default class NetPyNEStimulationTarget extends React.Component {
 
   async isStimSourceTypeNetStim (stimSourceName) {
     var isNetStim = false
+    const { name: stimName } = this.props
     if (stimSourceName === undefined) {
       try {
-        stimSourceName = await Utils.evalPythonMessage("netpyne_geppetto.netParams.stimTargetParams['" + this.props.name + "']['source']")
+        const NETPYNE_OBJ = "netpyne_geppetto.netParams.stimTargetParams"
+        const STIM_TARGET_OBJ = `${NETPYNE_OBJ}['${stimName}']`
+        const SAFE_QUERY = `${STIM_TARGET_OBJ}['source'] if "${stimName}" in ${NETPYNE_OBJ} and "source" in ${STIM_TARGET_OBJ} else ''`
+        stimSourceName = await Utils.evalPythonMessage(SAFE_QUERY)
       } catch (error){
         console.log(error)
       }
