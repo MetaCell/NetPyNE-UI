@@ -57,3 +57,4 @@ python update.py
 
 NetPyNE-UI is being developed in collaboration with the [Neurosim Lab](http://neurosimlab.org/).
 See the [Wiki](https://github.com/MetaCell/NetPyNE-UI/wiki) for more info!
+
