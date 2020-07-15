@@ -155,7 +155,10 @@ class Topbar extends Component {
             configuration={toolbarConfig}
             menuHandler={this.menuHandler.bind(this)}
           />
-          <SwitchPageButton/>
+          <div>
+            
+            <SwitchPageButton/>
+          </div>
 
         </div>
         { this.props.modelLoaded ? null : <Splash/> }

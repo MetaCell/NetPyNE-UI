@@ -31,7 +31,7 @@ describe('Tutorial #1', () => {
     
     
       await page.waitForSelector('#CellType0')
-      await  page.waitFor(2000);
+      await page.waitFor(2000);
       await page.click('#CellType0')
       
       await page.waitForSelector('#cellRuleName')
@@ -40,7 +40,6 @@ describe('Tutorial #1', () => {
       
       await page.waitForSelector('#newSectionButton')
       await page.click('#newSectionButton')
-      
 
 
       await page.waitForSelector('input\[value="soma"\]')
@@ -64,13 +63,11 @@ describe('Tutorial #1', () => {
       await page.waitForSelector('input\[type="number"\]') // num cells, the default id #netParams\.popParams\[\'Population0\'\]\[\'numCells\'\] cannot be targeted
       await page.waitFor(1000);
       page.$eval('input\[type="number"\]', el => el.value = 30);
-    
       
 
       // await page.waitForSelector('#netParams\.popParams\[\'Population0\'\]\[\'cellType\'\]')
       // await page.waitFor(1000);
       // await page.click('#netParams\.popParams\[\'Population0\'\]\[\'cellType\'\]')
-     
 
       
       // await page.waitForSelector('.MuiSelect-nativeInput')

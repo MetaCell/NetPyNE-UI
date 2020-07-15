@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 
-import { withStyles } from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
-import Icon from '../general/NetPyNEIcons'
-import { TOPBAR_CONSTANTS, MODEL_STATE } from '../../constants'
-
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import Icon from '../general/NetPyNEIcons';
+import { TOPBAR_CONSTANTS, MODEL_STATE } from '../../constants';
+import { Tooltip } from 'netpyne/components';
 
 const styles = ({ palette, shape, spacing, typography }) => ({ 
   container: {},
@@ -14,6 +15,7 @@ const styles = ({ palette, shape, spacing, typography }) => ({
     fontSize: '1rem',
     borderRadius: 0
   },
+  rocket: { marginRight: spacing(1) },
   icon: { color: palette.common.white },
 })
 
@@ -36,9 +38,32 @@ class SwitchPageButton extends Component {
   };
 
   render () {
-    const { classes } = this.props
+    const { classes, modelState, editModelPage } = this.props;
+    const disableSimulate = modelState === MODEL_STATE.SIMULATED;
     return (
       <div className={classes.container}>
+        {
+          editModelPage ? null
+        
+            : <Tooltip 
+              title={disableSimulate ? "You have already simulated the network" : "Simulate the network"} 
+              placement="left"
+            ><span>
+                <IconButton 
+                  color={'default'}
+                  id={"launchSimulationButton"}
+                  className={classes.rocket}
+                  size="small"
+                  onClick={() => this.props.simulateNetwork() } 
+                  disabled={disableSimulate}
+                  style={{ opacity: disableSimulate ? 0.5 : 1 }}
+                >
+                  <Icon name={"rocket"} />
+              
+                </IconButton>
+              </span>
+            </Tooltip>
+        }
         <Button
           variant="contained"
           size="small"

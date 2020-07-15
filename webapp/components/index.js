@@ -265,7 +265,8 @@ export const SwitchPageButton = connect(
     switchToEditModelPage: () => dispatch(editModel),
     createNetwork: () => dispatch(createNetwork),
     createAndSimulateNetwork: () => dispatch(createAndSimulateNetwork),
-    showNetwork: () => dispatch(showNetwork)
+    showNetwork: () => dispatch(showNetwork),
+    simulateNetwork: () => dispatch(simulateNetwork)
   })
 )(_SwitchPageButton)
 
