@@ -1,0 +1,208 @@
+@import "variables";
+
+
+.flexlayout__layout {
+    border-left: none!important;
+    border-right: none!important;
+    background-color: transparent;
+    top: 0px;
+    border-top: none;
+  
+    a {
+        color: @colorLink;
+    }
+
+    .flexlayout__tab {
+        padding: @tabSpacing;
+        background-color: @bgRegular;
+        border-top-right-radius: @radius;
+        border-bottom-right-radius: @radius;
+        border-bottom-left-radius: @radius;
+
+        > div {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: stretch;
+        }
+  
+        .svg-container,
+        .main-svg,
+        .plot-container {
+            width: 100% !important;
+            height: 100% !important;
+            // position: static;
+        }
+  
+        .scrollbar;
+        * {
+            .scrollbar;
+        }
+  
+        input {
+            width: 100%;
+        }
+        #pythonConsoleOutput {
+            padding: 0;
+            display: flex;
+        }
+    }
+  
+    .flexlayout__tabset {
+        background-color: transparent;//color-light
+        overflow: visible;
+        border-radius: 0px @radius @radius @radius;
+    }
+    .flexlayout__tabset-selected {
+        background-color: @bgDarker;//color-light
+    }
+    .flexlayout__border_inner_bottom {
+        position: fixed;
+        bottom: -100px; 
+        left: 0;
+        padding-left: @gutter / 2;
+        border-top-right-radius: @radius;
+        border-top-left-radius: @radius;
+    }
+  
+    .flexlayout__tab_button {
+        border-top-right-radius: @radius;
+        border-top-left-radius: @radius;
+        color: @textColor;
+        display: flex;
+        align-items: flex-start;
+        margin-right: 3px;
+        margin-top: 0px;
+        &.flexlayout__tab_button--selected {
+            background-color: @bgRegular;//was bgDark
+            
+            .flexlayout__tab_button_content {
+                color: @primaryColor;
+            }
+        }
+      
+        &.flexlayout__tab_button--unselected {
+            background-color: @bgDarkest;
+            .flexlayout__tab_button_content {
+                color: @textColor;
+            }
+        }
+    }
+
+    
+  
+    .flexlayout__border_bottom {
+        overflow: visible;
+        background-color: @bgLight;
+        border: none;
+        border-top-right-radius: @radius;
+        border-top-left-radius: @radius;
+    }
+  
+    .flexlayout__border_button {
+        .flexlayout__border_button_content {
+            font-family: @font;
+            // font-weight: bold;
+            color: @secondaryColor;
+    
+            font-size: @fontSizePanels;
+        }
+        visibility: hidden;
+        border: none;
+        margin: 0;
+        margin-right: @tabSpacing;
+        border-top-right-radius: @radius;
+        border-top-left-radius: @radius;
+        background-color: @bgRegular;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+    }
+  
+    .flexlayout__tab_button_content {
+        margin-top: unset;
+        font-family: @font;
+        font-size: @fontSizePanels;
+        padding: 0;
+        font-weight: normal;
+    }
+  
+    .flexlayout__tab_button_trailing {
+        margin-left: @tabSpacing;
+        margin-top: unset;
+    }
+    
+    // Thin white tab icons
+    .flexlayout__border_button_trailing,
+    .flexlayout__tab_button_trailing,
+    .flexlayout__tab_toolbar_button-max,
+    .customIconFlexLayout,
+    .flexlayout__tab_toolbar_button-min,
+    .flexlayout__tab_button_overflow {
+        color: @textColor;
+  
+        &:hover {
+            color: @textColor;
+        }
+    }
+  
+    .flexlayout__border_button_trailing,
+    .flexlayout__tab_button_trailing {
+        &:before {
+            content: "\00d7";
+        }
+        height: inherit;
+    }
+    .flexlayout__splitter {
+        background-color: inherit;
+    }
+    .flexlayout__splitter:hover {
+        background-color: @secondaryColor;
+    }
+    
+    .flexlayout__splitter {
+        border-radius: @radius;
+    }
+    
+    .flexlayout__splitter_drag {
+        border: 1px solid @textColor;
+    }
+    
+    .flexlayout__popup_menu_item {
+        color: @textColor;
+        background-color: @bgRegular;
+    }
+
+}
+
+.flexlayout__tab_header_outer {
+    background-color: @bgDark;//color-light
+}
+  
+.scrollbar {
+    &::-webkit-scrollbar-thumb {
+        background: @secondaryColor;
+        border-radius: @radius;
+    }
+    &::-webkit-scrollbar {
+        width: @gutter / 2;
+    }
+}
+
+
+.flexlayout__tab:hover {
+    .node-legend {
+      visibility: visible; 
+    }
+}
+
+
+.MuiAutocomplete-listbox {
+    &::-webkit-scrollbar-thumb {
+        background: @secondaryColor;
+        border-radius: @radius;
+    }
+    &::-webkit-scrollbar {
+        width: @gutter / 2;
+    }
+}

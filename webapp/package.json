@@ -1,0 +1,80 @@
+{
+  "name": "geppetto-netpyne",
+  "version": "1.0.0",
+  "description": "Geppetto NetPyNE-UI frontend.",
+  "repository": "https://github.com/MetaCell/NetPyNE-UI",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest --verbose",
+    "prebuild": "eslint . --color",
+    "build": "webpack --mode development -p --progress --devtool source-map",
+    "prebuild-dev": "eslint . --color --fix",
+    "build-dev": "webpack --mode development --devtool source-map",
+    "prebuild-dev-noTest": "eslint . --color --fix",
+    "build-dev-noTest": "webpack --mode development --devtool source-map --env.noTest=true",
+    "prebuild-dev-noTest:watch": "eslint . --color --fix",
+    "build-dev-noTest:watch": "webpack --mode development --devtool source-map --env.noTest=true --progress --watch",
+    "prestart": "eslint . --color --fix",
+    "start": "node --max_old_space_size=2048 node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress  --config webpack.config.dev.js"
+  },
+  "dependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@geppettoengine/geppetto-client": "openworm/geppetto-client#v2.4.0",
+    "@material-ui/icons": "^4.9.1",
+    "less-vars-to-js": "^1.3.0",
+    "@material-ui/lab": "^4.0.0-alpha.51",
+    "react-redux": "^7.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-stage-2": "^7.0.0",
+    "@types/jasmine": "^2.8.8",
+    "@types/material-ui": "^0.21.5",
+    "@types/react": "^16.4.9",
+    "@types/react-dom": "^16.0.7",
+    "awesome-typescript-loader": "^5.2.1",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-transform-decorators-legacy": "^1.3.5",
+    "babel-plugin-transform-object-assign": "^6.8.0",
+    "babel-plugin-transform-runtime": "^6.15.0",
+    "casperjs": "^1.1.4",
+    "copy-webpack-plugin": "^4.6.0",
+    "css-loader": "^3.0.0",
+    "eslint": "^6.0.1",
+    "eslint-plugin-jest": "^22.21.0",
+    "exports-loader": "^0.6.3",
+    "html-webpack-plugin": "^3.2.0",
+    "ignore-loader": "^0.1.2",
+    "imports-loader": "^0.7.1",
+    "jasmine": "^3.2.0",
+    "jest": "^24.8.0",
+    "jest-puppeteer": "^4.3.0",
+    "json-loader": "^0.5.4",
+    "less-loader": "^5.0.0",
+    "mini-css-extract-plugin": "^0.7.0",
+    "phantomjs": "^2.1.7",
+    "puppeteer": "^1.17.0",
+    "raw-loader": "^0.5.1",
+    "slimerjs": "^1.0.0",
+    "source-map-loader": "^0.2.3",
+    "style-loader": "^0.13.2",
+    "typedoc": "^0.11.1",
+    "typescript": "^2.0.0",
+    "url-join": "^4.0.0",
+    "url-loader": "^0.5.8",
+    "webpack": "^4.35.0",
+    "webpack-cli": "^3.3.5",
+    "webpack-dev-server": "^3.7.2"
+  },
+  "buildOptions": {
+    "emitEntryPoint": true,
+    "compile": {
+      "exclude": [
+        "node_modules"
+      ]
+    }
+  }
+}

@@ -30,8 +30,9 @@ from shutil import copyfile
 from jupyter_geppetto import jupyter_geppetto, synchronization, utils
 import imp
 from contextlib import redirect_stdout, redirect_stderr
+from netpyne_ui.constants import NETPYNE_WORKDIR_PATH
 
-
+os.chdir(NETPYNE_WORKDIR_PATH)
 class NetPyNEGeppetto():
 
     def __init__(self):
@@ -49,8 +50,21 @@ class NetPyNEGeppetto():
                 "netParams": self.netParams.todict(),
                 "simConfig": self.simConfig.todict(),
                 "isDocker": os.path.isfile('/.dockerenv'),
-                "currentFolder": os.getcwd()
+                "currentFolder": os.getcwd(),
+                "tuts": self.find_tutorials()
         }
+
+    def find_tutorials(self):
+        from os import listdir
+        from os.path import isfile, join
+        onlyfiles = [f for f in listdir(NETPYNE_WORKDIR_PATH) if isfile(join(NETPYNE_WORKDIR_PATH, f))]
+        
+        def _filter(_file):
+            return '.py' in _file and 'tut' in _file and 'gui' in _file
+        
+        return list(filter(_filter, onlyfiles))
+
+
 
     def instantiateNetPyNEModelInGeppetto(self, args):
         try:
@@ -59,7 +73,7 @@ class NetPyNEGeppetto():
                     netpyne_model = self.instantiateNetPyNEModel()
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
                 
-                return json.loads(GeppettoModelSerializer().serialize(self.geppetto_model))
+                return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
         except:
             return utils.getJSONError("Error while instantiating the NetPyNE model", sys.exc_info())
         
@@ -98,7 +112,7 @@ class NetPyNEGeppetto():
                     logging.debug('Running single thread simulation')
                     netpyne_model = self.simulateNetPyNEModel()
                     
-                return json.loads(GeppettoModelSerializer().serialize(self.geppetto_model))
+                return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
         except:
             return utils.getJSONError("Error while simulating the NetPyNE model", sys.exc_info())
 
@@ -111,6 +125,7 @@ class NetPyNEGeppetto():
             
             os.chdir(modFolder)
             subprocess.call(["nrnivmodl"])
+            os.chdir('..')
             
         # Load mechanism if mod path is passed
         if modFolder:
@@ -185,7 +200,7 @@ class NetPyNEGeppetto():
                         sim.loadSimData(args['jsonModelFolder'])
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
 
-                    return json.loads(GeppettoModelSerializer().serialize(self.geppetto_model))
+                    return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
                 else:
                     return utils.getJSONReply()
         except:
@@ -263,6 +278,11 @@ class NetPyNEGeppetto():
                 sim.cfg.saveJson = True
                 sim.saveData(include)
                 sim.cfg.saveJson = False
+
+                with open(f"{sim.cfg.filename}.json") as json_file:
+                    data = json.load(json_file)
+                    return data
+
             return utils.getJSONReply()
         except:
             return utils.getJSONError("Error while exporting the NetPyNE model", sys.exc_info())
@@ -281,24 +301,31 @@ class NetPyNEGeppetto():
                 sim.initialize()
                 sim.importNeuroML2(modelParams['neuroMLFolder'], simConfig=specs.SimConfig(), simulate=False, analyze=False)
                 self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
-            return json.loads(GeppettoModelSerializer().serialize(self.geppetto_model))
+            return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
 
         except:
             return utils.getJSONError("Error while exporting the NetPyNE model", sys.exc_info())
 
     def deleteModel(self, modelParams):
+        
         try:
             with redirect_stdout(sys.__stdout__):       
                 self.netParams = specs.NetParams()
                 self.simConfig = specs.SimConfig()
-                self.netParams.todict()
-                self.netParams.todict()
-                if self.doIhaveInstOrSimData()['haveInstance']: sim.clearAll()
+                sim.initialize(specs.NetParams(), specs.SimConfig())
                 self.geppetto_model = None
-            return utils.getJSONReply()
-
         except:
             return utils.getJSONError("Error while exporting the NetPyNE model", sys.exc_info())
+
+        try:
+            # This function fails is some keys don't exists
+            # sim.clearAll()
+            self.clearSim()
+            
+        except:
+            pass
+
+        return utils.getJSONReply()
         
     def instantiateNetPyNEModel(self):
         with redirect_stdout(sys.__stdout__):
@@ -352,24 +379,25 @@ class NetPyNEGeppetto():
         
         return 1
 
-    def getPlotSettings(self, plot):
-        if self.simConfig.analysis and plot in self.simConfig.analysis:
-            return self.simConfig.analysis[plot]
+    def getPlotSettings(self, plot_name):
+        if self.simConfig.analysis and plot_name in self.simConfig.analysis:
+            return self.simConfig.analysis[plot_name]
         return {}
 
     def getDirList(self, dir=None, onlyDirs = False, filterFiles=False):
         # Get Current dir
         if dir == None or dir == '':
-            dir = os.getcwd()
+            dir = os.path.join(os.getcwd(), NETPYNE_WORKDIR_PATH)
         dir_list = []
+        file_list = []
         for f in sorted(os.listdir(str(dir)), key=str.lower):
             ff=os.path.join(dir,f)
             if os.path.isdir(ff):
-                dir_list.insert(0, {'title': f, 'path': ff, 'load': False, 'children': [{'title': 'Loading...'}]})
+                dir_list.append({'title': f, 'path': ff, 'load': False, 'children': [{'title': 'Loading...'}]})
             elif not onlyDirs:
                 if not filterFiles or os.path.isfile(ff) and ff.endswith(filterFiles):
-                    dir_list.append({'title': f, 'path': ff})
-        return dir_list
+                    file_list.append({'title': f, 'path': ff})
+        return dir_list + file_list
 
     def getPlot(self, plotName, LFPflavour):
         try:
@@ -377,26 +405,50 @@ class NetPyNEGeppetto():
                 args = self.getPlotSettings(plotName)
                 if LFPflavour:
                     args['plots'] = [LFPflavour]
-                figData = getattr(analysis, plotName)(showFig=False, **args)
                 
-                if isinstance(figData, tuple):
-                    fig = figData[0]
-                    if fig==-1:
-                        return fig
-                    elif isinstance(fig, list):
-                        return [ui.getSVG(fig[0])]
-                    elif isinstance(fig, dict):
-                        svgs = []
-                        for key, value in fig.items():
-                            svgs.append(ui.getSVG(value))
-                        return svgs
-                    else:
-                        return [ui.getSVG(fig)]
+                args['showFig'] = False
+                
+                if plotName.startswith('iplot'):
+                    # This arg brings dark theme. But some plots are broken by it
+                    args['theme'] = 'gui'
+                    html = getattr(analysis, plotName)(**args)
+                    if not html or html == -1:
+                        return ""
+
+                    # some plots return "fig", some return "(fig, data)"
+                    if plotName == 'iplotRaster':
+                        html = html[0]
+                    elif plotName == 'iplotRxDConcentration':
+                        html = html[0]
+                    elif plotName == 'iplot2Dnet':
+                        html = html[0]
+                    return html
+
                 else:
-                    return figData
+                    
+                    figData = getattr(analysis, plotName)(**args)
+                    
+                    if isinstance(figData, tuple):
+                        fig = figData[0]
+                        if fig==-1:
+                            return fig
+                        elif isinstance(fig, list):
+                            return [ui.getSVG(fig[0])]
+                        elif isinstance(fig, dict):
+                            svgs = []
+                            for key, value in fig.items():
+                                svgs.append(ui.getSVG(value))
+                            return svgs
+                        else:
+                            return [ui.getSVG(fig)]
+                    else:
+                        return figData
+
+
+
         except Exception as e:
             # TODO: Extract these two lines as a function and call it in every catch clause
-            err = "There was an exception in %s():"%(function.__name__)
+            err = "There was an exception in %s():"%(e.plotName)
             logging.exception(("%s \n %s \n%s"%(err,e,sys.exc_info())))
 
     def getAvailablePops(self):
@@ -413,11 +465,8 @@ class NetPyNEGeppetto():
     
     def getAvailableCellTypes(self):
         cellTypes = set([])
-        for p in self.netParams.popParams:
-            if 'cellType' in self.netParams.popParams[p]:
-                ct = self.netParams.popParams[p]['cellType']
-                if ct not in cellTypes:
-                    cellTypes.add(ct)
+        for p in self.netParams.cellParams:
+            cellTypes.add(p)
         return list(cellTypes)
     
     def getAvailableSections(self):
@@ -444,7 +493,7 @@ class NetPyNEGeppetto():
         return [value[:-(len(mechanism) + 1)] for value in params]
         
     def getAvailablePlots(self):
-        plots  = ["plotRaster", "plotSpikeHist", "plotSpikeStats","plotRatePSD", "plotTraces", "plotLFP", "plotShape", "plot2Dnet", "plotConn", "granger"]
+        plots  = ["iplotRaster", "iplotSpikeHist", "plotSpikeStats","iplotRatePSD", "iplotTraces", "iplotLFP", "plotShape", "plot2Dnet", "iplotConn", "granger"]
 
         return [plot for plot in plots if plot not in list(self.simConfig.analysis.keys())]
 
@@ -482,10 +531,17 @@ class NetPyNEGeppetto():
                 else:
                     pass
             else:
-                getattr(self.netParams, model).pop(label)
+                # remove rule
+                rule = getattr(self.netParams, model).pop(label)
+
+                # side effect on other rules
                 if "popParams" in model:
                     self.propagate_field_rename("pop", None, label)
+                    self.propagate_field_rename("cellModel", None, rule['cellModel'])
+                    self.propagate_field_rename("cellType", None, rule['cellType'])
+
                 elif "stimSourceParams" in model:
+
                     self.propagate_field_rename("source", None, label)
                 elif "synMechParams" in model:
                     self.propagate_field_rename("synMech", None, label)
@@ -494,6 +550,8 @@ class NetPyNEGeppetto():
             return False
 
     def validateFunction(self, functionString):
+        if isinstance(functionString, (float, int)): 
+            return True
         return validateFunction(functionString, self.netParams.__dict__)
 
     def exportHLS(self, args):
@@ -541,7 +599,8 @@ class NetPyNEGeppetto():
                 
                 script.write(header('end script', spacer='='))
             
-            return utils.getJSONReply()
+            with open(fname) as f: 
+                return f.read()
         
         except:
             return utils.getJSONError("Error while importing the NetPyNE model", sys.exc_info())
@@ -596,7 +655,7 @@ class NetPyNEGeppetto():
             for p in self.netParams.popParams:
                 if label in self.netParams.popParams[p]:
                     classes.append(self.netParams.popParams[p][label])
-            if classes.count(old)>1:
+            if classes.count(old) > 0:
                 return False
             else:
                 return True
@@ -608,7 +667,7 @@ class NetPyNEGeppetto():
             self.propagate_syn_mech_rename(new, old)
             return True
         else:
-            if unique():    
+            if unique():
                 for (model, cond) in [['cellParams','conds'], ['connParams', 'preConds'], ['connParams', 'postConds'], ['stimTargetParams', 'conds'], ['analysis', 'include'] ]: 
                     self.propagate(model, label, cond, new, old)
                 return True
@@ -647,6 +706,61 @@ class NetPyNEGeppetto():
                                 else:
                                     self.netParams.stimTargetParams[label]['synMech'] = new
 
+
+    def clearSim(self):
+        # clean up
+        sim.pc.barrier()
+        sim.pc.gid_clear()                    # clear previous gid settings
+
+        # clean cells and simData in all nodes
+        sim.clearObj([cell.__dict__ if hasattr(cell, '__dict__') else cell for cell in sim.net.cells])
+        if 'stims' in list(sim.simData.keys()):
+            sim.clearObj([stim for stim in sim.simData['stims']])
+
+        for key in list(sim.simData.keys()): del sim.simData[key]
+
+        if hasattr(sim, 'net'):
+            for c in sim.net.cells: del c
+            for p in sim.net.pops: del p
+            if hasattr(sim.net, 'params'):
+                del sim.net.params
+
+
+        # clean cells and simData gathered in master node
+        if sim.rank == 0:
+            if hasattr(sim.net, 'allCells'):
+                sim.clearObj([cell.__dict__ if hasattr(cell, '__dict__') else cell for cell in sim.net.allCells])
+            if hasattr(sim, 'allSimData'):
+                if 'stims' in list(sim.allSimData.keys()):
+                    sim.clearObj([stim for stim in sim.allSimData['stims']])
+                for key in list(sim.allSimData.keys()): del sim.allSimData[key]
+                del sim.allSimData
+            
+            
+            import matplotlib
+            matplotlib.pyplot.clf()
+            matplotlib.pyplot.close('all')
+
+        if hasattr(sim, 'net'):
+            if hasattr(sim.net, 'allCells'):
+                for c in sim.net.allCells: del c
+                del sim.net.allCells
+            if hasattr(sim.net, 'allPops'):
+                for p in sim.net.allPops: del p
+
+            del sim.net
+
+        import gc; gc.collect()
+
+    def create_celltype_from_template(self, label="CellType", conds={}, cell_template_name="Blank"):
+        try:
+            with redirect_stdout(sys.__stdout__):
+                self.netParams.addCellParamsTemplate(label=label, template=cell_template_name)
+            return True
+        except:
+            return utils.getJSONError(f"Error while creating cellType from template {cell_template_name}",
+                sys.exc_info())
+        
 
 logging.info("Initialising NetPyNE UI")
 netpyne_geppetto = NetPyNEGeppetto()
