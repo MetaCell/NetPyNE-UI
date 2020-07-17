@@ -15,7 +15,7 @@ const AboutContent = () => (
   <Paper style={{ backgroundColor: "white", textAlign: 'center' }}>
     <img style={{ width: 250 }} src="geppetto/build/static/splash.png"></img>
     <Box m={1}>
-      <Typography variant="h5" style={{ color: secondaryColor }}>NetPyNE-UI v0.5.2</Typography>
+      <Typography variant="h5" style={{ color: secondaryColor }}>NetPyNE-UI v0.6.0</Typography>
     </Box>
     
     <Box m={1} >
