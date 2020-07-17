@@ -75,13 +75,13 @@ describe('Tutorial #1', () => {
       await page.click('.modal-open')
       
       
-      await page.waitForSelector('div > .Topbar-topbar-6 > .SwitchPageButton-container-7 button')
+      await page.waitForSelector('div > .Topbar-topbar-6 .SwitchPageButton-container-7 button')
       await page.waitFor(1000);
-      await page.click('div > .Topbar-topbar-6 > .SwitchPageButton-container-7 button')
+      await page.click('div > .Topbar-topbar-6 .SwitchPageButton-container-7 button')
 
-      await page.waitForSelector('.MuiList-root > .MuiButtonBase-root:nth-child(12) > .MuiListItemIcon-root > .material-icons > .image-icon')
+      await page.waitForSelector('.MuiList-root > .MuiButtonBase-root:nth-child(11) > .MuiListItemIcon-root > .material-icons > .image-icon')
       await page.waitFor(1000);
-      await page.click('.MuiList-root > .MuiButtonBase-root:nth-child(12) > .MuiListItemIcon-root > .material-icons > .image-icon')
+      await page.click('.MuiList-root > .MuiButtonBase-root:nth-child(11) > .MuiListItemIcon-root > .material-icons > .image-icon')
   
       await browser.close()
       expect(1).toBe(1);
