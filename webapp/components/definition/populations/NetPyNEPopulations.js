@@ -154,6 +154,11 @@ export default class NetPyNEPopulations extends React.Component {
     return true;
   }
 
+  getPath () {
+    const { value: model, selectedPopulation } = this.state
+    return model && model[selectedPopulation] && `netParams.popParams["${selectedPopulation}"]`
+  }
+
   render () {
     var actions = [
       <Button
@@ -229,7 +234,7 @@ export default class NetPyNEPopulations extends React.Component {
               
             </div>
             <Divider />
-            <RulePath text={`netParams.popParams["${this.state.selectedPopulation}"]`}/>
+            <RulePath text={this.getPath()}/>
             <Divider />
             <Filter
               value={this.state.filterPopValue}

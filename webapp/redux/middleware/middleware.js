@@ -154,6 +154,9 @@ const createSimulateBackendCall = async (cmd, payload, consoleMessage, spinnerTy
     throw new Error(responsePayload.errorMessage);
   } else {
     GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
+    
+    dehydrateCanvas()
+
     GEPPETTO.Manager.loadModel(response);
     GEPPETTO.CommandController.log('Instantiation / Simulation completed.');
       
@@ -177,4 +180,14 @@ const pythonCall = async ({ cmd, args }) => {
     throw new Error(errorPayload);
   } 
   return response;
+}
+
+
+const dehydrateCanvas = () => {
+  if ('CanvasContainer' in window) {
+    CanvasContainer.engine.reset()
+    Object.values(CanvasContainer.engine.meshes).forEach(mesh => {
+      CanvasContainer.engine.removeObject(mesh)
+    })
+  }
 }

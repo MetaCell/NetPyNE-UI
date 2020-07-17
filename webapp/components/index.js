@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from "react-redux";
-import PythonControlledCapability from "@geppettoengine/geppetto-client/js/communication/geppettoJupyter/PythonControlledCapability";
+import PythonControlledCapability from "./general/PythonControlledCapability";
 import { TOPBAR_CONSTANTS } from '../constants'
 
 import {
@@ -265,7 +265,8 @@ export const SwitchPageButton = connect(
     switchToEditModelPage: () => dispatch(editModel),
     createNetwork: () => dispatch(createNetwork),
     createAndSimulateNetwork: () => dispatch(createAndSimulateNetwork),
-    showNetwork: () => dispatch(showNetwork)
+    showNetwork: () => dispatch(showNetwork),
+    simulateNetwork: () => dispatch(simulateNetwork)
   })
 )(_SwitchPageButton)
 

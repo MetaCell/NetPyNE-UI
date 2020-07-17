@@ -44,7 +44,7 @@ export default class NetPyNEStimulationTargets extends Component {
     var defaultStimulationTargets = { 'stim_target': { 'source': '', 'conds': {} } };
     var key = Object.keys(defaultStimulationTargets)[0];
     var value = defaultStimulationTargets[key];
-    var model = this.state.value;
+    var model = { ...this.state.value };
     var StimulationTargetId = Utils.getAvailableKey(model, key);
     var newStimulationTarget = Object.assign({ name: StimulationTargetId }, value);
     Utils.execPythonMessage('netpyne_geppetto.netParams.stimTargetParams["' + StimulationTargetId + '"] = ' + JSON.stringify(value));
@@ -133,6 +133,11 @@ export default class NetPyNEStimulationTargets extends Component {
     return true;
   }
 
+  getPath () {
+    const { value: model, selectedStimulationTarget } = this.state
+    return model && model[selectedStimulationTarget] && `netParams.stimTargetParams["${selectedStimulationTarget}"]`
+  }
+
   render () {
     var actions = [
       <Button
@@ -198,7 +203,7 @@ export default class NetPyNEStimulationTargets extends Component {
 
             </div>
             <Divider />
-            <RulePath text={`netParams.stimTargetParams["${this.state.selectedStimulationTarget}"]`}/>
+            <RulePath text={this.getPath()}/>
             <Divider />
             <Filter
               value={this.state.filterValue}

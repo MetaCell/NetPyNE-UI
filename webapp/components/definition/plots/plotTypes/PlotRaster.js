@@ -23,7 +23,7 @@ export default class PlotRaster extends React.Component {
   };
   
   render () {
-    var tag = "simConfig.analysis['plotRaster']"
+    var tag = "simConfig.analysis['iplotRaster']"
     return <div>
       <NetPyNEInclude
         id={"simConfig.analysis.plotRaster.include"}

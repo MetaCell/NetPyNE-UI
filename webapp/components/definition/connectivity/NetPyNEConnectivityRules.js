@@ -154,6 +154,11 @@ export default class NetPyNEConnectivityRules extends Component {
     return true;
   }
 
+  getCopyPath (){
+    const { value: model, selectedConnectivityRule } = this.state
+    return model && model[selectedConnectivityRule] && `netParams.connParams["${selectedConnectivityRule}"]`
+  }
+
   render () {
     var actions = [
       <Button
@@ -226,7 +231,7 @@ export default class NetPyNEConnectivityRules extends Component {
 
             </div>
             <Divider />
-            <RulePath text={`netParams.connParams["${this.state.selectedConnectivityRule}"]`}/>
+            <RulePath text={this.getCopyPath()}/>
             <Divider />
             <Filter
               value={this.state.filterValue}

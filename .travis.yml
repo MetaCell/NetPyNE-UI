@@ -1,14 +1,26 @@
 language: python
 os: linux
-dist: trusty
+python:
+  - "3.7"
 node_js:
-  - "7"
+  - "12"
 env:
   global:
-    secure: dn0FPQ5IG4M/3kdwnyI78ElQ308Vc3QnKAvkWfwMFb8QxDqxQdnTo7AV1qTMtbLrDNkeEWIgi4nc7jmXNtvGTwOfhAULVh6606Qs5B+ezTdwzajbbFMI8SKQx/pnTojOMu8dx7V4lMoR/YWcojR0VC1IWVC62TGbSB1k5BDGgH0=
+    - secure: dn0FPQ5IG4M/3kdwnyI78ElQ308Vc3QnKAvkWfwMFb8QxDqxQdnTo7AV1qTMtbLrDNkeEWIgi4nc7jmXNtvGTwOfhAULVh6606Qs5B+ezTdwzajbbFMI8SKQx/pnTojOMu8dx7V4lMoR/YWcojR0VC1IWVC62TGbSB1k5BDGgH0=
+    - DEFAULT_BRANCH: development
+    - LANDING_PAGE: "http://localhost:8888/geppetto"
 notifications:
   slack: metacell:5ALSeoP88DqIhORUJvxE56sq
-services:
-  - docker  
+install:
+  - sudo apt-get install libgnutls28-dev
+  - sudo apt install libcurl4-openssl-dev libssl-dev
+  - sudo apt-get install python3-dev  
 script:
-  - travis_retry docker build -t="netpyne-ui" --build-arg branch=$TRAVIS_BRANCH .
+
+  - python utilities/install.py 
+  - ./NetPyNE-UI &
+  - http_status=$(curl -s -I $1 $LANDING_PAGE | grep HTTP/1.1 | awk {'print $2'})
+  - echo "$http_status"
+  - cd webapp
+  - travis_retry npm run test -- --verbose --colors
+  - exit 0

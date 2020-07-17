@@ -17,7 +17,7 @@ export default class PlotSpikeHist extends React.Component {
   }
     
   render () {
-    var tag = "simConfig.analysis['plotSpikeHist']"
+    var tag = "simConfig.analysis['iplotSpikeHist']"
     return <div >
       <NetPyNEInclude
         id={"simConfig.analysis.plotSpikeHist.include"}

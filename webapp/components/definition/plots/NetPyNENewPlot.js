@@ -40,65 +40,58 @@ export default class NetPyNENewPlot extends React.Component {
         onClose={() => this.setState({ anchorEl: null })}
       >
         <MenuItem 
-          key={"plotTraces"} 
-          value={"plotTraces"}
-          onClick={() => this.handleClick("plotTraces")} 
+          key={"iplotTraces"} 
+          value={"iplotTraces"}
+          onClick={() => this.handleClick("iplotTraces")} 
         >
             Traces Plot
         </MenuItem>
         <MenuItem 
-          key={"plotRaster"} 
-          value={"plotRaster"}
-          onClick={() => this.handleClick("plotRaster")} 
+          key={"iplotRaster"} 
+          value={"iplotRaster"}
+          onClick={() => this.handleClick("iplotRaster")} 
         >
             Raster Plot
         </MenuItem>
         <MenuItem 
-          key={"plotSpikeHist"}
-          value={"plotSpikeHist"}
-          onClick={() => this.handleClick("plotSpikeHist")} 
+          key={"iplotSpikeHist"}
+          value={"iplotSpikeHist"}
+          onClick={() => this.handleClick("iplotSpikeHist")} 
         >
             Spike Histogram Plot
         </MenuItem>
         <MenuItem 
-          key={"plotSpikeStats"} 
-          value={"plotSpikeStats"}
-          onClick={() => this.handleClick("plotSpikeStats")} 
+          key={"iplotSpikeStats"} 
+          value={"iplotSpikeStats"}
+          onClick={() => this.handleClick("iplotSpikeStats")} 
         >
             Spike Stats Plot
         </MenuItem>
         <MenuItem 
-          key={"plotRatePSD"} 
-          value={"plotRatePSD"}
-          onClick={() => this.handleClick("plotRatePSD")} 
+          key={"iplotRatePSD"} 
+          value={"iplotRatePSD"}
+          onClick={() => this.handleClick("iplotRatePSD")} 
         >
             PSD Rate Plot
         </MenuItem>
         <MenuItem 
-          key={"plotLFP"} 
-          value={"plotLFP"}
-          onClick={() => this.handleClick("plotLFP")} 
+          key={"iplotLFP"} 
+          value={"iplotLFP"}
+          onClick={() => this.handleClick("iplotLFP")} 
         >
             LFP Plot
         </MenuItem>
         <MenuItem 
-          key={"plotShape"} 
-          value={"plotShape"}
-          onClick={() => this.handleClick("plotShape")} 
-        >
-            3D Cell Shape Plot
-        </MenuItem>
-        <MenuItem 
-          key={"plot2Dnet"} 
-          value={"plot2Dnet"}
-          onClick={() => this.handleClick("plot2Dnet")} 
+          key={"iplot2Dnet"} 
+          value={"iplot2Dnet"}
+          onClick={() => this.handleClick("iplot2Dnet")} 
         >
             2D Network Plot
         </MenuItem>
         <MenuItem 
-          key={"plotConn"} 
-          value={"plotConn"}
-          onClick={() => this.handleClick("plotConn")} 
+          key={"iplotConn"} 
+          value={"iplotConn"}
+          onClick={() => this.handleClick("iplotConn")} 
         >
             Network Connectivity Plot
         </MenuItem>

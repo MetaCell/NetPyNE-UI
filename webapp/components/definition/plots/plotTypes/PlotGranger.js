@@ -35,7 +35,7 @@ export default class PlotGranger extends React.Component {
         </NetPyNEField>
         
         <NetPyNEField id="simConfig.analysis.granger.label1" >
-          <NetPyNETextField vfullWidth ariant="filled" model={tags + "['label1']"}/>
+          <NetPyNETextField fullWidth ariant="filled" model={tags + "['label1']"}/>
         </NetPyNEField>
         
         <NetPyNEField id="simConfig.analysis.granger.label2" >

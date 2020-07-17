@@ -41,7 +41,7 @@ export default class NetPyNESynapses extends Component {
   }
 
   handleNewSynapse () {
-    var defaultSynapses = { 'Synapse': { 'mod': '' } };
+    var defaultSynapses = { 'Synapse': { 'mod': 'Exp2Syn' } };
     var key = Object.keys(defaultSynapses)[0];
     var value = defaultSynapses[key];
     var model = { ...this.state.value };
@@ -133,6 +133,12 @@ export default class NetPyNESynapses extends Component {
     return true;
   }
 
+
+  getPath () {
+    const { value: model, selectedSynapse } = this.state
+    return model && model[selectedSynapse] && `netParams.synMechParams["${selectedSynapse}"]`
+  }
+
   render () {
     var actions = [
       <Button
@@ -198,7 +204,7 @@ export default class NetPyNESynapses extends Component {
               
             </div>
             <Divider />
-            <RulePath text={`netParams.synMechParams["${this.state.selectedSynapse}"]`}/>
+            <RulePath text={this.getPath()}/>
             <Divider />
             <Filter
               value={this.state.filterValue}

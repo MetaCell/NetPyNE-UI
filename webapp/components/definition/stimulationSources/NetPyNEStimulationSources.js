@@ -42,7 +42,7 @@ export default class NetPyNEStimulationSources extends Component {
   }
 
   handleNewStimulationSource () {
-    var defaultStimulationSources = { 'stim_source': { 'type': '' } };
+    var defaultStimulationSources = { 'stim_source': { 'type': 'IClamp' } };
     var key = Object.keys(defaultStimulationSources)[0];
     var value = defaultStimulationSources[key];
     var model = { ...this.state.value };
@@ -134,6 +134,11 @@ export default class NetPyNEStimulationSources extends Component {
     return true;
   }
 
+  getPath () {
+    const { value: model, selectedStimulationSource } = this.state
+    return model && model[selectedStimulationSource] && `netParams.stimSourceParams["${selectedStimulationSource}"]`
+  }
+
   render () {
     var actions = [
       <Button
@@ -202,7 +207,7 @@ export default class NetPyNEStimulationSources extends Component {
               </div>
             </div>
             <Divider />
-            <RulePath text={`netParams.stimSourceParams["${this.state.selectedStimulationSource}"]`}/>
+            <RulePath text={this.getPath()}/>
             <Divider />
             <Filter
               value={this.state.filterValue}

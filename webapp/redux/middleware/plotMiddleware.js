@@ -86,6 +86,10 @@ const plotFigure = async (plotId, plotMethod, plotType = false) => {
     if (plotMethod.startsWith("iplot")) {
       let html_text = response.replace ? response.replace(/\\n/g, '').replace(/\\/g, '') : ''
 
+      if (plotId === "rxdConcentrationPlot") {
+        // FIXME: How can we center the bokeh plots when sizing_mode='scale_height'
+        html_text = html_text.replace("<head>", "<head><style>.bk {margin: 0 auto!important;}</style>")
+      }
       setPlotToWindow(plotId, html_text)
     } else if (response?.length !== undefined) {
       setPlotToWindow(plotId, response[0]);

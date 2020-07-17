@@ -4,7 +4,7 @@ import Canvas from '@geppettoengine/geppetto-client/js/components/interface/3dCa
 import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
 
 import { NetWorkControlButtons } from 'netpyne/components'
-import { useTheme } from '@material-ui/core/styles';
+import { primaryColor } from '../../theme'
 
 
 export default class NetPyNEInstantiated extends React.Component {
@@ -52,6 +52,8 @@ export default class NetPyNEInstantiated extends React.Component {
       this.canvasRef.current.engine.setLinesThreshold(25000)
       this.canvasRef.current.engine.updateSceneWithNewInstances(window.Instances);
       this.canvasRef.current.resetCamera()
+
+      this.canvasRef.current.setColor('network', primaryColor, true)
       const spotLight = this.canvasRef.current.engine.scene.children.find(child => child.type === "SpotLight")
       if (spotLight) {
         this.canvasRef.current.engine.scene.remove(spotLight)

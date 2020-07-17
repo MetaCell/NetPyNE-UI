@@ -7,13 +7,13 @@
   "scripts": {
     "test": "jest --verbose",
     "prebuild": "eslint . --color",
-    "build": "webpack --mode none -p --progress --devtool source-map",
+    "build": "webpack --mode development -p --progress --devtool source-map",
     "prebuild-dev": "eslint . --color --fix",
-    "build-dev": "webpack --mode none --devtool eval",
+    "build-dev": "webpack --mode development --devtool source-map",
     "prebuild-dev-noTest": "eslint . --color --fix",
-    "build-dev-noTest": "webpack --mode none --devtool source-map --env.noTest=true",
+    "build-dev-noTest": "webpack --mode development --devtool source-map --env.noTest=true",
     "prebuild-dev-noTest:watch": "eslint . --color --fix",
-    "build-dev-noTest:watch": "webpack --mode none --devtool source-map --env.noTest=true --progress --watch",
+    "build-dev-noTest:watch": "webpack --mode development --devtool source-map --env.noTest=true --progress --watch",
     "prestart": "eslint . --color --fix",
     "start": "node --max_old_space_size=2048 node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress  --config webpack.config.dev.js"
   },
