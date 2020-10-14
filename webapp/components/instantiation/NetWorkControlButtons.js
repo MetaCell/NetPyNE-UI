@@ -1,39 +1,36 @@
-import React from 'react';
-import IconButton from '@geppettoengine/geppetto-client/js/components/controls/iconButton/IconButton';
-import { Tooltip } from 'netpyne/components';
+import React from "react";
+import IconButton from "@geppettoengine/geppetto-client/js/components/controls/iconButton/IconButton";
+import { Tooltip } from "netpyne/components";
 
-import { MODEL_STATE } from '../../constants'
-import { withStyles } from '@material-ui/core/styles';
+import { MODEL_STATE } from "../../constants";
+import { withStyles } from "@material-ui/core/styles";
 
 const styles = ({ spacing }) => ({
   container: {
-    position: 'absolute',
-    top: spacing(2),
-    right: spacing(2)
+    position: "absolute",
+    top: spacing(35.5),
+    left: spacing(5.5),
   },
-  innerContainer: { position: 'relative' },
-  buttons: { marginBottom: spacing(1) }
-})
-
+  innerContainer: { position: "relative" },
+  buttons: { marginBottom: spacing(1) },
+});
 
 class NetWorkControlButtons extends React.Component {
-  render () {
-    const { classes, modelState } = this.props
-    const disableSimulate = modelState === MODEL_STATE.SIMULATED
-    const disableRefreshInstance = modelState === MODEL_STATE.INSTANTIATED || modelState === MODEL_STATE.SIMULATED
-    
+  render() {
+    const { classes, modelState } = this.props;
+    const disableSimulate = modelState === MODEL_STATE.SIMULATED;
+    const disableRefreshInstance =
+      modelState === MODEL_STATE.INSTANTIATED ||
+      modelState === MODEL_STATE.SIMULATED;
+
     return (
       <div className={classes.container}>
-        <div style={{ position: 'relative' }}>
-
-          <Tooltip 
-            title={"Control panel"}
-            placement="left"
-          >
+        <div style={{ position: "relative" }}>
+          <Tooltip title={"Control panel"} placement="left">
             <div>
-              <IconButton 
+              <IconButton
                 className={classes.buttons}
-                onClick={() => $('#controlpanel').show()}
+                onClick={() => $("#controlpanel").show()}
                 icon={"fa-list"}
                 id="ControlPanelButton"
               />
@@ -78,9 +75,8 @@ class NetWorkControlButtons extends React.Component {
            */}
         </div>
       </div>
-
     );
   }
 }
 
-export default withStyles(styles)(NetWorkControlButtons)
+export default withStyles(styles)(NetWorkControlButtons);
