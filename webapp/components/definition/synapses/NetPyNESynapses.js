@@ -18,7 +18,7 @@ import Accordion from "../../general/ExpansionPanel";
 import Box from "@material-ui/core/Box";
 
 export default class NetPyNESynapses extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       selectedSynapse: undefined,
@@ -35,11 +35,11 @@ export default class NetPyNESynapses extends Component {
   }
 
   /* Method that handles button click */
-  selectSynapse(Synapse) {
+  selectSynapse (Synapse) {
     this.setState({ selectedSynapse: Synapse });
   }
 
-  handleNewSynapse() {
+  handleNewSynapse () {
     var defaultSynapses = { Synapse: { mod: "Exp2Syn" } };
     var key = Object.keys(defaultSynapses)[0];
     var value = defaultSynapses[key];
@@ -47,10 +47,10 @@ export default class NetPyNESynapses extends Component {
     var SynapseId = Utils.getAvailableKey(model, key);
     var newSynapse = Object.assign({ name: SynapseId }, value);
     Utils.execPythonMessage(
-      'netpyne_geppetto.netParams.synMechParams["' +
-        SynapseId +
-        '"] = ' +
-        JSON.stringify(value)
+      'netpyne_geppetto.netParams.synMechParams["'
+        + SynapseId
+        + '"] = '
+        + JSON.stringify(value)
     );
     model[SynapseId] = newSynapse;
     this.setState(
@@ -62,7 +62,7 @@ export default class NetPyNESynapses extends Component {
     );
   }
 
-  hasSelectedSynapseBeenRenamed(prevState, currentState) {
+  hasSelectedSynapseBeenRenamed (prevState, currentState) {
     var currentModel = prevState.value;
     var model = currentState.value;
     // deal with rename
@@ -85,7 +85,7 @@ export default class NetPyNESynapses extends Component {
     return undefined;
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate (prevProps, prevState) {
     var newSynapseName = this.hasSelectedSynapseBeenRenamed(
       prevState,
       this.state
@@ -96,9 +96,9 @@ export default class NetPyNESynapses extends Component {
         deletedSynapse: undefined,
       });
     } else if (
-      prevState.value !== undefined &&
-      Object.keys(prevState.value).length !==
-        Object.keys(this.state.value).length
+      prevState.value !== undefined
+      && Object.keys(prevState.value).length
+        !== Object.keys(this.state.value).length
     ) {
       /*
        * logic into this if to check if the user added a new object from the python backend and
@@ -117,10 +117,10 @@ export default class NetPyNESynapses extends Component {
                 value: model,
                 errorMessage: "Error",
                 errorDetails:
-                  "Leading digits or whitespaces are not allowed in Synapses names.\n" +
-                  m +
-                  " has been renamed " +
-                  newValue,
+                  "Leading digits or whitespaces are not allowed in Synapses names.\n"
+                  + m
+                  + " has been renamed "
+                  + newValue,
               },
               () =>
                 Utils.renameKey(
@@ -136,33 +136,33 @@ export default class NetPyNESynapses extends Component {
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    var itemRenamed =
-      this.hasSelectedSynapseBeenRenamed(this.state, nextState) !== undefined;
+  shouldComponentUpdate (nextProps, nextState) {
+    var itemRenamed
+      = this.hasSelectedSynapseBeenRenamed(this.state, nextState) !== undefined;
     var newItemCreated = false;
-    var selectionChanged =
-      this.state.selectedSynapse != nextState.selectedSynapse;
+    var selectionChanged
+      = this.state.selectedSynapse != nextState.selectedSynapse;
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
     if (!newModel) {
-      newItemCreated =
-        Object.keys(this.state.value).length !=
-        Object.keys(nextState.value).length;
+      newItemCreated
+        = Object.keys(this.state.value).length
+        != Object.keys(nextState.value).length;
     }
     var errorDialogOpen = this.state.errorDetails !== nextState.errorDetails;
     const filterValueChanged = nextState.filterValue !== this.state.filterValue;
     return (
-      filterValueChanged ||
-      newModel ||
-      newItemCreated ||
-      itemRenamed ||
-      selectionChanged ||
-      pageChanged ||
-      errorDialogOpen
+      filterValueChanged
+      || newModel
+      || newItemCreated
+      || itemRenamed
+      || selectionChanged
+      || pageChanged
+      || errorDialogOpen
     );
   }
 
-  handleRenameChildren(childName) {
+  handleRenameChildren (childName) {
     childName = childName.replace(/\s*$/, "");
     var childrenList = Object.keys(this.state.value);
     for (var i = 0; childrenList.length > i; i++) {
@@ -173,16 +173,16 @@ export default class NetPyNESynapses extends Component {
     return true;
   }
 
-  getPath() {
+  getPath () {
     const { value: model, selectedSynapse } = this.state;
     return (
-      model &&
-      model[selectedSynapse] &&
-      `netParams.synMechParams["${selectedSynapse}"]`
+      model
+      && model[selectedSynapse]
+      && `netParams.synMechParams["${selectedSynapse}"]`
     );
   }
 
-  render() {
+  render () {
     var actions = [
       <Button
         variant="contained"
@@ -195,8 +195,8 @@ export default class NetPyNESynapses extends Component {
     ];
     var title = this.state.errorMessage;
     var children = this.state.errorDetails;
-    var dialogPop =
-      this.state.errorMessage != undefined ? (
+    var dialogPop
+      = this.state.errorMessage != undefined ? (
         <Dialog
           title={title}
           open={true}
@@ -211,13 +211,13 @@ export default class NetPyNESynapses extends Component {
       );
 
     var model = this.state.value;
-    const filterName =
-      this.state.filterValue === null ? "" : this.state.filterValue;
+    const filterName
+      = this.state.filterValue === null ? "" : this.state.filterValue;
     var Synapses = Object.keys(model || [])
-      .filter((synName) =>
+      .filter(synName =>
         synName.toLowerCase().includes(filterName.toLowerCase())
       )
-      .map((synName) => (
+      .map(synName => (
         <NetPyNEThumbnail
           name={synName}
           key={synName}
@@ -229,8 +229,8 @@ export default class NetPyNESynapses extends Component {
 
     var selectedSynapse = undefined;
     if (
-      this.state.selectedSynapse !== undefined &&
-      Object.keys(model).indexOf(this.state.selectedSynapse) > -1
+      this.state.selectedSynapse !== undefined
+      && Object.keys(model).indexOf(this.state.selectedSynapse) > -1
     ) {
       selectedSynapse = (
         <NetPyNESynapse
@@ -280,7 +280,7 @@ export default class NetPyNESynapses extends Component {
               <Filter
                 value={this.state.filterValue}
                 label="Filter synapse rule by name..."
-                handleFilterChange={(newValue) =>
+                handleFilterChange={newValue =>
                   this.setState({ filterValue: newValue })
                 }
                 options={model === undefined ? [] : Object.keys(model)}
@@ -288,8 +288,9 @@ export default class NetPyNESynapses extends Component {
             </Box>
           </Accordion>
         </div>
-
-        {Synapses}
+        <Box className={`scrollbar scroll-instances`} mt={1}>
+          {Synapses}
+        </Box>
         {selectedSynapse}
         {dialogPop}
       </GridLayout>

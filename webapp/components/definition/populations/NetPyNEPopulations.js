@@ -18,7 +18,7 @@ import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 
 export default class NetPyNEPopulations extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       drawerOpen: false,
@@ -36,7 +36,7 @@ export default class NetPyNEPopulations extends React.Component {
 
   handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
 
-  hasSelectedPopulationBeenRenamed(prevState, currentState) {
+  hasSelectedPopulationBeenRenamed (prevState, currentState) {
     var currentModel = prevState.value;
     var model = currentState.value;
     // deal with rename
@@ -59,7 +59,7 @@ export default class NetPyNEPopulations extends React.Component {
     return undefined;
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate (prevProps, prevState) {
     // we need to check if any of the three entities have been renamed and if that's the case change the state for the selection variable
     var newPopulationName = this.hasSelectedPopulationBeenRenamed(
       prevState,
@@ -71,9 +71,9 @@ export default class NetPyNEPopulations extends React.Component {
         populationDeleted: undefined,
       });
     } else if (
-      prevState.value !== undefined &&
-      Object.keys(prevState.value).length !==
-        Object.keys(this.state.value).length
+      prevState.value !== undefined
+      && Object.keys(prevState.value).length
+        !== Object.keys(this.state.value).length
     ) {
       /*
        * logic into this if to check if the user added a new object from the python backend and
@@ -93,10 +93,10 @@ export default class NetPyNEPopulations extends React.Component {
                 value: model,
                 errorMessage: "Error",
                 errorDetails:
-                  "Leading digits or whitespaces are not allowed in Population names.\n" +
-                  m +
-                  " has been renamed " +
-                  newValue,
+                  "Leading digits or whitespaces are not allowed in Population names.\n"
+                  + m
+                  + " has been renamed "
+                  + newValue,
               },
               () =>
                 Utils.renameKey(
@@ -114,36 +114,34 @@ export default class NetPyNEPopulations extends React.Component {
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    var itemRenamed =
-      this.hasSelectedPopulationBeenRenamed(this.state, nextState) !==
-      undefined;
+  shouldComponentUpdate (nextProps, nextState) {
+    var itemRenamed
+      = this.hasSelectedPopulationBeenRenamed(this.state, nextState)
+      !== undefined;
     var newItemCreated = false;
-    var selectionChanged =
-      this.state.selectedPopulation != nextState.selectedPopulation;
+    var selectionChanged
+      = this.state.selectedPopulation != nextState.selectedPopulation;
     var newModel = this.state.value == undefined;
     if (!newModel) {
-      newItemCreated =
-        Object.keys(this.state.value).length !=
-        Object.keys(nextState.value).length;
+      newItemCreated
+        = Object.keys(this.state.value).length
+        != Object.keys(nextState.value).length;
     }
     // check if the dialog has been triggered due name convention or name collision errors.
     var errorDialogOpen = this.state.errorDetails !== nextState.errorDetails;
     var filterChanged = nextState.filterPopValue !== this.state.filterPopValue;
     return (
-      filterChanged ||
-      newModel ||
-      newItemCreated ||
-      itemRenamed ||
-      selectionChanged ||
-      errorDialogOpen
+      filterChanged
+      || newModel
+      || newItemCreated
+      || itemRenamed
+      || selectionChanged
+      || errorDialogOpen
     );
   }
 
-  handleNewPopulation() {
-    var defaultPopulationValues = {
-      Population: { cellModel: "", cellType: "" },
-    };
+  handleNewPopulation () {
+    var defaultPopulationValues = { Population: { cellModel: "", cellType: "" }, };
     // Get Key and Value
     var key = Object.keys(defaultPopulationValues)[0];
     var value = defaultPopulationValues[key];
@@ -157,10 +155,10 @@ export default class NetPyNEPopulations extends React.Component {
 
     // Create Population Client side
     Utils.execPythonMessage(
-      'netpyne_geppetto.netParams.popParams["' +
-        populationId +
-        '"] = ' +
-        JSON.stringify(value)
+      'netpyne_geppetto.netParams.popParams["'
+        + populationId
+        + '"] = '
+        + JSON.stringify(value)
     );
 
     // Update state
@@ -175,11 +173,11 @@ export default class NetPyNEPopulations extends React.Component {
   }
 
   /* Method that handles button click */
-  selectPopulation(populationName) {
+  selectPopulation (populationName) {
     this.setState({ selectedPopulation: populationName });
   }
 
-  handleRenameChildren(childName) {
+  handleRenameChildren (childName) {
     childName = childName.replace(/\s*$/, "");
     var childrenList = Object.keys(this.state.value);
     for (var i = 0; childrenList.length > i; i++) {
@@ -190,16 +188,16 @@ export default class NetPyNEPopulations extends React.Component {
     return true;
   }
 
-  getPath() {
+  getPath () {
     const { value: model, selectedPopulation } = this.state;
     return (
-      model &&
-      model[selectedPopulation] &&
-      `netParams.popParams["${selectedPopulation}"]`
+      model
+      && model[selectedPopulation]
+      && `netParams.popParams["${selectedPopulation}"]`
     );
   }
 
-  render() {
+  render () {
     var actions = [
       <Button
         variant="contained"
@@ -212,8 +210,8 @@ export default class NetPyNEPopulations extends React.Component {
     ];
     var title = this.state.errorMessage;
     var children = this.state.errorDetails;
-    var dialogPop =
-      this.state.errorMessage != undefined ? (
+    var dialogPop
+      = this.state.errorMessage != undefined ? (
         <Dialog
           title={title}
           open={true}
@@ -232,13 +230,13 @@ export default class NetPyNEPopulations extends React.Component {
       for (var m in model) {
         model[m].name = m;
       }
-      const filterName =
-        this.state.filterPopValue === null ? "" : this.state.filterPopValue;
+      const filterName
+        = this.state.filterPopValue === null ? "" : this.state.filterPopValue;
       var populations = Object.keys(model)
-        .filter((popName) =>
+        .filter(popName =>
           popName.toLowerCase().includes(filterName.toLowerCase())
         )
-        .map((popName) => (
+        .map(popName => (
           <NetPyNEThumbnail
             name={popName}
             key={popName}
@@ -250,8 +248,8 @@ export default class NetPyNEPopulations extends React.Component {
 
       var selectedPopulation = undefined;
       if (
-        this.state.selectedPopulation !== undefined &&
-        Object.keys(model).indexOf(this.state.selectedPopulation) > -1
+        this.state.selectedPopulation !== undefined
+        && Object.keys(model).indexOf(this.state.selectedPopulation) > -1
       ) {
         selectedPopulation = (
           <NetPyNEPopulation
@@ -304,7 +302,7 @@ export default class NetPyNEPopulations extends React.Component {
               <Filter
                 value={this.state.filterPopValue}
                 label="Filter population by name..."
-                handleFilterChange={(newValue) =>
+                handleFilterChange={newValue =>
                   this.setState({ filterPopValue: newValue })
                 }
                 options={model === undefined ? [] : Object.keys(model)}
@@ -312,8 +310,9 @@ export default class NetPyNEPopulations extends React.Component {
             </Box>
           </Accordion>
         </div>
-
-        {populations}
+        <Box className={`scrollbar scroll-instances`} mt={1}>
+          {populations}
+        </Box>
         {selectedPopulation}
         {dialogPop}
       </GridLayout>

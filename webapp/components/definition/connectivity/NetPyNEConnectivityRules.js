@@ -14,7 +14,7 @@ import Accordion from "../../general/ExpansionPanel";
 import Box from "@material-ui/core/Box";
 
 export default class NetPyNEConnectivityRules extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       drawerOpen: false,
@@ -36,16 +36,16 @@ export default class NetPyNEConnectivityRules extends Component {
 
   handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
 
-  selectPage(page) {
+  selectPage (page) {
     this.setState({ page: page });
   }
 
   /* Method that handles button click */
-  selectConnectivityRule(connectivityRule) {
+  selectConnectivityRule (connectivityRule) {
     this.setState({ selectedConnectivityRule: connectivityRule });
   }
 
-  handleNewConnectivityRule() {
+  handleNewConnectivityRule () {
     var defaultConnectivityRules = {
       ConnectivityRule: {
         preConds: {},
@@ -65,10 +65,10 @@ export default class NetPyNEConnectivityRules extends Component {
     );
     // Create Cell Rule Client side
     Utils.execPythonMessage(
-      'netpyne_geppetto.netParams.connParams["' +
-        connectivityRuleId +
-        '"] = ' +
-        JSON.stringify(value)
+      'netpyne_geppetto.netParams.connParams["'
+        + connectivityRuleId
+        + '"] = '
+        + JSON.stringify(value)
     );
     model[connectivityRuleId] = newConnectivityRule;
     // Update state
@@ -78,7 +78,7 @@ export default class NetPyNEConnectivityRules extends Component {
     });
   }
 
-  hasSelectedConnectivityRuleBeenRenamed(prevState, currentState) {
+  hasSelectedConnectivityRuleBeenRenamed (prevState, currentState) {
     var currentModel = prevState.value;
     var model = currentState.value;
     // deal with rename
@@ -101,7 +101,7 @@ export default class NetPyNEConnectivityRules extends Component {
     return undefined;
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate (prevProps, prevState) {
     // we need to check if any of the three entities have been renamed and if that's the case change the state for the selection variable
     var newConnectivityRuleName = this.hasSelectedConnectivityRuleBeenRenamed(
       prevState,
@@ -113,9 +113,9 @@ export default class NetPyNEConnectivityRules extends Component {
         deletedConnectivityRule: undefined,
       });
     } else if (
-      prevState.value !== undefined &&
-      Object.keys(prevState.value).length !==
-        Object.keys(this.state.value).length
+      prevState.value !== undefined
+      && Object.keys(prevState.value).length
+        !== Object.keys(this.state.value).length
     ) {
       /*
        * logic into this if to check if the user added a new object from the python backend and
@@ -134,12 +134,12 @@ export default class NetPyNEConnectivityRules extends Component {
                 value: model,
                 errorMessage: "Error",
                 errorDetails:
-                  "Leading digits or whitespaces are not allowed in ConnectivityRule names.\n" +
-                  m +
-                  " has been renamed " +
-                  newValue,
+                  "Leading digits or whitespaces are not allowed in ConnectivityRule names.\n"
+                  + m
+                  + " has been renamed "
+                  + newValue,
               },
-              function() {
+              function () {
                 Utils.renameKey(
                   "netParams.connParams",
                   m,
@@ -154,34 +154,34 @@ export default class NetPyNEConnectivityRules extends Component {
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    var itemRenamed =
-      this.hasSelectedConnectivityRuleBeenRenamed(this.state, nextState) !==
-      undefined;
+  shouldComponentUpdate (nextProps, nextState) {
+    var itemRenamed
+      = this.hasSelectedConnectivityRuleBeenRenamed(this.state, nextState)
+      !== undefined;
     var newItemCreated = false;
-    var selectionChanged =
-      this.state.selectedConnectivityRule != nextState.selectedConnectivityRule;
+    var selectionChanged
+      = this.state.selectedConnectivityRule != nextState.selectedConnectivityRule;
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
     if (!newModel) {
-      newItemCreated =
-        Object.keys(this.state.value).length !=
-        Object.keys(nextState.value).length;
+      newItemCreated
+        = Object.keys(this.state.value).length
+        != Object.keys(nextState.value).length;
     }
     var errorDialogOpen = this.state.errorDetails !== nextState.errorDetails;
     const filterValueChanged = nextState.filterValue !== this.state.filterValue;
     return (
-      filterValueChanged ||
-      newModel ||
-      newItemCreated ||
-      itemRenamed ||
-      selectionChanged ||
-      pageChanged ||
-      errorDialogOpen
+      filterValueChanged
+      || newModel
+      || newItemCreated
+      || itemRenamed
+      || selectionChanged
+      || pageChanged
+      || errorDialogOpen
     );
   }
 
-  handleRenameChildren(childName) {
+  handleRenameChildren (childName) {
     childName = childName.replace(/\s*$/, "");
     var childrenList = Object.keys(this.state.value);
     for (var i = 0; childrenList.length > i; i++) {
@@ -192,16 +192,16 @@ export default class NetPyNEConnectivityRules extends Component {
     return true;
   }
 
-  getCopyPath() {
+  getCopyPath () {
     const { value: model, selectedConnectivityRule } = this.state;
     return (
-      model &&
-      model[selectedConnectivityRule] &&
-      `netParams.connParams["${selectedConnectivityRule}"]`
+      model
+      && model[selectedConnectivityRule]
+      && `netParams.connParams["${selectedConnectivityRule}"]`
     );
   }
 
-  render() {
+  render () {
     var actions = [
       <Button
         variant="contained"
@@ -214,8 +214,8 @@ export default class NetPyNEConnectivityRules extends Component {
     ];
     var title = this.state.errorMessage;
     var children = this.state.errorDetails;
-    var dialogPop =
-      this.state.errorMessage != undefined ? (
+    var dialogPop
+      = this.state.errorMessage != undefined ? (
         <Dialog
           title={title}
           open={true}
@@ -233,13 +233,13 @@ export default class NetPyNEConnectivityRules extends Component {
     var model = this.state.value;
     var content;
     if (this.state.page == "main") {
-      const filterName =
-        this.state.filterValue === null ? "" : this.state.filterValue;
+      const filterName
+        = this.state.filterValue === null ? "" : this.state.filterValue;
       var ConnectivityRules = Object.keys(model || [])
-        .filter((connName) =>
+        .filter(connName =>
           connName.toLowerCase().includes(filterName.toLowerCase())
         )
-        .map((connName) => (
+        .map(connName => (
           <NetPyNEThumbnail
             name={connName}
             key={connName}
@@ -251,8 +251,8 @@ export default class NetPyNEConnectivityRules extends Component {
 
       var selectedConnectivityRule = undefined;
       if (
-        this.state.selectedConnectivityRule !== undefined &&
-        Object.keys(model).indexOf(this.state.selectedConnectivityRule) > -1
+        this.state.selectedConnectivityRule !== undefined
+        && Object.keys(model).indexOf(this.state.selectedConnectivityRule) > -1
       ) {
         selectedConnectivityRule = (
           <NetPyNEConnectivityRule
@@ -306,7 +306,7 @@ export default class NetPyNEConnectivityRules extends Component {
               <Filter
                 value={this.state.filterValue}
                 label="Filter connectivity rule by name..."
-                handleFilterChange={(newValue) =>
+                handleFilterChange={newValue =>
                   this.setState({ filterValue: newValue })
                 }
                 options={model === undefined ? [] : Object.keys(model)}
@@ -314,7 +314,9 @@ export default class NetPyNEConnectivityRules extends Component {
             </Box>
           </Accordion>
         </div>
-        {ConnectivityRules}
+        <Box className={`scrollbar scroll-instances`} mt={1}>
+          {ConnectivityRules}
+        </Box>
         {selectedConnectivityRule}
         {dialogPop}
       </GridLayout>

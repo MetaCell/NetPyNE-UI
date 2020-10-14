@@ -20,7 +20,7 @@ import Accordion from "../../general/ExpansionPanel";
 import Box from "@material-ui/core/Box";
 
 export default class NetPyNEPlots extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       selectedPlot: undefined,
@@ -30,11 +30,11 @@ export default class NetPyNEPlots extends React.Component {
     this.handleNewPlot = this.handleNewPlot.bind(this);
   }
 
-  selectPlot(plot) {
+  selectPlot (plot) {
     this.setState({ selectedPlot: plot });
   }
 
-  handleNewPlot(plot) {
+  handleNewPlot (plot) {
     if (this.state.value != undefined) {
       var model = this.state.value;
       model[plot] = true;
@@ -42,7 +42,7 @@ export default class NetPyNEPlots extends React.Component {
       var model = { plot: true };
     }
     Utils.evalPythonMessage("netpyne_geppetto.getAvailablePlots", []).then(
-      (response) => {
+      response => {
         if (response.includes(plot)) {
           if (plot == "plotLFP") {
             var include = { electrodes: ["all"] };
@@ -55,10 +55,10 @@ export default class NetPyNEPlots extends React.Component {
             var include = { include: ["all"] };
           }
           Utils.execPythonMessage(
-            "netpyne_geppetto.simConfig.analysis['" +
-              plot +
-              "'] = " +
-              JSON.stringify(include)
+            "netpyne_geppetto.simConfig.analysis['"
+              + plot
+              + "'] = "
+              + JSON.stringify(include)
           );
         }
       }
@@ -69,20 +69,20 @@ export default class NetPyNEPlots extends React.Component {
     });
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate (nextProps, nextState) {
     var newItemCreated = false;
     var selectionChanged = this.state.selectedPlot != nextState.selectedPlot;
     var pageChanged = this.state.page != nextState.page;
     var newModel = this.state.value == undefined;
     if (!newModel) {
-      newItemCreated =
-        Object.keys(this.state.value).length !=
-        Object.keys(nextState.value).length;
+      newItemCreated
+        = Object.keys(this.state.value).length
+        != Object.keys(nextState.value).length;
     }
     return newModel || newItemCreated || selectionChanged || pageChanged;
   }
 
-  render() {
+  render () {
     var plots = [];
     for (var c in this.state.value) {
       plots.push(
@@ -96,33 +96,33 @@ export default class NetPyNEPlots extends React.Component {
     }
 
     switch (this.state.selectedPlot) {
-      case "iplotRaster":
-        var selectedPlot = <PlotRaster />;
-        break;
-      case "iplotSpikeHist":
-        var selectedPlot = <PlotSpikeHist />;
-        break;
-      case "iplotSpikeStats":
-        var selectedPlot = <PlotSpikeStats />;
-        break;
-      case "iplotRatePSD":
-        var selectedPlot = <PlotRatePSD />;
-        break;
-      case "iplotTraces":
-        var selectedPlot = <PlotTraces />;
-        break;
-      case "iplotLFP":
-        var selectedPlot = <PlotLFP />;
-        break;
-      case "iplotConn":
-        var selectedPlot = <PlotConn />;
-        break;
-      case "iplot2Dnet":
-        var selectedPlot = <Plot2Dnet />;
-        break;
-      case "granger":
-        var selectedPlot = <PlotGranger />;
-        break;
+    case "iplotRaster":
+      var selectedPlot = <PlotRaster />;
+      break;
+    case "iplotSpikeHist":
+      var selectedPlot = <PlotSpikeHist />;
+      break;
+    case "iplotSpikeStats":
+      var selectedPlot = <PlotSpikeStats />;
+      break;
+    case "iplotRatePSD":
+      var selectedPlot = <PlotRatePSD />;
+      break;
+    case "iplotTraces":
+      var selectedPlot = <PlotTraces />;
+      break;
+    case "iplotLFP":
+      var selectedPlot = <PlotLFP />;
+      break;
+    case "iplotConn":
+      var selectedPlot = <PlotConn />;
+      break;
+    case "iplot2Dnet":
+      var selectedPlot = <Plot2Dnet />;
+      break;
+    case "granger":
+      var selectedPlot = <PlotGranger />;
+      break;
     }
 
     return (
@@ -141,8 +141,9 @@ export default class NetPyNEPlots extends React.Component {
             </Box>
           </Accordion>
         </div>
-
-        {plots}
+        <Box className={`scrollbar scroll-instances`} mt={1}>
+          {plots}
+        </Box>
         {selectedPlot}
         {null}
       </GridLayout>
