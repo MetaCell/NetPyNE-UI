@@ -44,7 +44,7 @@ steps:
     type: helm
     stage: deploy
     title: "Deploy chart"
-    working_directory: NetPyNE-UI/k8s
+    working_directory: k8s
     arguments:
       action: install
       chart_name: jupyterhub
