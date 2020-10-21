@@ -16,7 +16,7 @@ export default class PlotGranger extends React.Component {
   render() {
     var tags = "simConfig.analysis['granger']";
     var content = (
-      <Box className={`scrollbar scroll-instances`} mt={1}>
+      <Box className={`scrollbar scroll-longer-instances`} mt={1}>
         <NetPyNEField
           id="simConfig.analysis.granger.cells1"
           className="listStyle"

@@ -16,7 +16,7 @@ export default class Plot2Dnet extends React.Component {
   render() {
     const tag = "simConfig.analysis['iplot2Dnet']";
     return (
-      <Box className={`scrollbar scroll-instances`} mt={1}>
+      <Box className={`scrollbar scroll-longer-instances`} mt={1}>
         <NetPyNEInclude
           id={"simConfig.analysis.plot2Dnet.include"}
           model={tag + "['include']"}

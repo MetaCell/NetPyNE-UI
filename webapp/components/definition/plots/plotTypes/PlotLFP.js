@@ -18,7 +18,7 @@ export default class PlotLFP extends React.Component {
   render() {
     var tag = "simConfig.analysis['iplotLFP']";
     return (
-      <Box className={`scrollbar scroll-instances`} mt={1}>
+      <Box className={`scrollbar scroll-longer-instances`} mt={1}>
         <NetPyNEField
           id="simConfig.analysis.plotLFP.electrodes"
           className="listStyle"

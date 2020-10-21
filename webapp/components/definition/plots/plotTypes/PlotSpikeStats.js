@@ -17,7 +17,7 @@ export default class PlotSpikeStats extends React.Component {
   render() {
     var tag = "simConfig.analysis['iplotSpikeStats']";
     return (
-      <Box className={`scrollbar scroll-instances`} mt={1}>
+      <Box className={`scrollbar scroll-longer-instances`} mt={1}>
         <NetPyNEInclude
           id={"simConfig.analysis.plotSpikeStats.include"}
           model={tag + "['include']"}

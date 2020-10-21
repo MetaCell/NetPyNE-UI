@@ -11,7 +11,7 @@ export default class plotConn extends React.Component {
   render() {
     var tag = "simConfig.analysis['iplotConn']";
     return (
-      <Box className={`scrollbar scroll-instances`} mt={1}>
+      <Box className={`scrollbar scroll-longer-instances`} mt={1}>
         <NetPyNEInclude
           id={"simConfig.analysis.plotConn.include"}
           model={tag + "['include']"}
