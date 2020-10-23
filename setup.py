@@ -15,7 +15,7 @@ for root, dirnames, filenames in os.walk('src/jupyter_geppetto/geppetto/src/main
 
 setuptools.setup(
     name="netpyne_ui",
-    version="0.5.2",
+    version="0.6.0",
     url="https://github.com/MetaCell/NetPyNE-UI",
     author="MetaCell",
     author_email="info@metacell.us",
