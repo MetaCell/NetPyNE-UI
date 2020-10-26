@@ -21,6 +21,9 @@ DEPS_DIR = os.path.join(ROOT_DIR, 'src')
 
 WEBAPP_DIR = os.path.join(ROOT_DIR, 'webapp')
 JUPYTER_DIR = 'jupyter-geppetto'
+NETPYNE_DIR = 'netpyne'
+
+WORKSPACE_DIR = 'netpyne_workspace'
 
 def cprint(string):
     print(f"\033[35;4m\U0001f560 {string} \033[0m \n")
@@ -37,7 +40,7 @@ def execute(cmd, cwd='.', *args, **kwargs):
 
 # by default clones branch (which can be passed as a parameter python install.py branch test_branch)
 # if branch doesnt exist clones the default_branch_or_tag
-def clone(repository, folder=None, default_branch_or_tag=None, cwdp='', recursive=False):
+def clone(repository, folder=None, default_branch_or_tag=None, cwdp=DEPS_DIR, recursive=False):
     global branch
     print("Cloning " + repository)
     default_branch_or_tag = default_branch_or_tag or branch or 'master'
@@ -46,13 +49,14 @@ def clone(repository, folder=None, default_branch_or_tag=None, cwdp='', recursiv
         print(f'Skipping clone of {repository}: folder exists')
     else:
         if recursive:
-            subprocess.call(['git', 'clone', '--recursive', repository], cwd='./' + cwdp)
+            subprocess.call(['git', 'clone', '--recursive', repository], cwd=cwdp)
         else:
             if folder:
-                subprocess.call(['git', 'clone', repository, folder], cwd='./' + cwdp)
+                subprocess.call(['git', 'clone', repository, folder], cwd=cwdp)
             else:
-                subprocess.call(['git', 'clone', repository], cwd='./' + cwdp)
+                subprocess.call(['git', 'clone', repository], cwd=cwdp)
     checkout(folder, default_branch_or_tag, cwdp)
+
 
 def checkout(folder, default_branch_or_tag, cwdp):
     currentPath = os.getcwd()
@@ -63,43 +67,28 @@ def checkout(folder, default_branch_or_tag, cwdp):
     python_git = subprocess.Popen("git branch -a", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     outstd, errstd = python_git.communicate()
     if branch and branch in str(outstd):
-        subprocess.call(['git', 'checkout', branch], cwd='./')
+        subprocess.call(['git', 'checkout', branch], cwd=DEPS_DIR)
     else:
-        subprocess.call(['git', 'checkout', default_branch_or_tag], cwd='./')
+        subprocess.call(['git', 'checkout', default_branch_or_tag], cwd=DEPS_DIR)
     os.chdir(currentPath)
 
+
 def compile_mod():
-    execute(['nrnivmodl', 'netpyne_workspace/mod'])
-
-
+    execute(['nrnivmodl', os.path.join(WORKSPACE_DIR, 'mod')], cwd=ROOT_DIR)
 
 
 def main(branch=branch, skipNpm=False, skipTest=False, development=False):
- 
 
-
-    # install pytest if needed
-    if not skipTest:
-        cprint("Installing test libraries")
-        execute(cmd=['pip', 'install', '-r', 'requirements-test.txt'], cwd=ROOT_DIR)
-
-
-
-    # clone_repo(project='openworm',
-    #            repo_name='geppetto-client',
-    #            folder='geppetto-client',
-    #            default_branch='v2.4.0',
-    #            cwdp='webapp/',
-    #            recursive=False,
-    # )
-
+    cprint("Installing requirements")
     
-    clone(repository=NETPYNE, default_branch_or_tag='gui_cns')
-    if development:
-        execute(cmd=['pip', 'install', '-e', '.'], cwd=ROOT_DIR)
 
-        if not os.path.exists(DEPS_DIR):
+    if not os.path.exists(DEPS_DIR):
             os.mkdir(DEPS_DIR)
+    clone(repository=NETPYNE, default_branch_or_tag='gui_cns')
+    execute(['pip3', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, NETPYNE_DIR))
+    
+    
+    if development:
         os.chdir(DEPS_DIR)
         # install pygeppetto
         cprint("Installing pygeppetto")
@@ -107,7 +96,7 @@ def main(branch=branch, skipNpm=False, skipTest=False, development=False):
               folder='pygeppetto',
               default_branch_or_tag='development'
               )
-        execute(cmd=['pip', 'install', '-e', '.'], cwd='pygeppetto')
+        execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, 'pygeppetto'))
 
         # install jupyter geppetto
         cprint("Installing org.geppetto.frontend.jupyter")
@@ -115,22 +104,19 @@ def main(branch=branch, skipNpm=False, skipTest=False, development=False):
               folder=JUPYTER_DIR,
               default_branch_or_tag='development'
               )
-        os.chdir(ROOT_DIR)
+
         execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, JUPYTER_DIR))
-        execute(['pip3', 'install', '-e', '.'], cwd='./netpyne/')
+        execute(cmd=['pip', 'install', '-e', '.'], cwd=ROOT_DIR)
+        
     else:
         # install requirements
-        cprint("Installing requirements")
-        
         execute(cmd=['pip', 'install', '-r', 'requirements.txt'], cwd=ROOT_DIR)
-        execute(['pip', 'install', '.'], cwd='./netpyne/')
-
         cprint("Installing UI python package...")
         execute(cmd=['pip', 'install', '.', '--no-deps'], cwd=ROOT_DIR)
 
     os.chdir(ROOT_DIR)
     cprint("Cloning workspace")
-    clone(repository=WORKSPACE, default_branch_or_tag='gui_cns')
+    clone(repository=WORKSPACE, default_branch_or_tag='gui_cns', cwdp=ROOT_DIR)
     cprint("Compiling workspace modules")
     compile_mod()
 
@@ -189,6 +175,9 @@ def main(branch=branch, skipNpm=False, skipTest=False, development=False):
     if skipTest:
         cprint("Skipping tests")
     else:
+            # install pytest if needed
+        cprint("Installing test libraries")
+        execute(cmd=['pip', 'install', '-r', 'requirements-test.txt'], cwd=ROOT_DIR)
         cprint("Testing NetPyNE")
         # execute("python -m unittest netpyne_ui.tests.netpyne_model_interpreter_test".split())
 
