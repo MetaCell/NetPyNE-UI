@@ -399,7 +399,7 @@ class NetPyNEGeppetto():
                     file_list.append({'title': f, 'path': ff})
         return dir_list + file_list
 
-    def getPlot(self, plotName, LFPflavour):
+    def getPlot(self, plotName, LFPflavour, theme='gui'):
         try:
             with redirect_stdout(sys.__stdout__):  
                 args = self.getPlotSettings(plotName)
@@ -410,7 +410,7 @@ class NetPyNEGeppetto():
                 
                 if plotName.startswith('iplot'):
                     # This arg brings dark theme. But some plots are broken by it
-                    args['theme'] = 'gui'
+                    args['theme'] = theme
                     html = getattr(analysis, plotName)(**args)
                     if not html or html == -1:
                         return ""

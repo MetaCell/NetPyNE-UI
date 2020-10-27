@@ -17,6 +17,7 @@ export const LOAD_TUTORIAL = 'LOAD_TUTORIAL';
 export const AUTOMATIC_INSTANTIATION = 'AUTOMATIC_INSTANTIATION';
 export const AUTOMATIC_SIMULATION = 'AUTOMATIC_SIMULATION';
 export const IMPORT_APPLICATION_STATE = 'IMPORT_APPLICATION_STATE';
+export const SET_THEME = 'SET_THEME';
 import { EDIT_WIDGETS, PYTHON_CONSOLE_WIDGET, WidgetStatus } from '../../constants';
 
 // Actions
@@ -40,6 +41,7 @@ export const deleteNetParamsObj = payload => ({ type: DELETE_NETPARAMS_OBJ, payl
 export const closeDialog = { type: CLOSE_DIALOG }
 export const openDialog = payload => ({ type: OPEN_DIALOG, payload });
 
+export const setTheme = themeName => ({ type: OPEN_DIALOG, payload: themeName });
 
 export const loadTutorial = tutFile => ({ type: LOAD_TUTORIAL, payload: tutFile })
 
