@@ -288,7 +288,7 @@ export default class NetPyNESynapses extends Component {
             </Box>
           </Accordion>
         </div>
-        <Box className={`scrollbar scroll-instances`} mt={1}>
+        <Box className={`scrollbar scrollchild`} mt={1}>
           {Synapses}
         </Box>
         {selectedSynapse}

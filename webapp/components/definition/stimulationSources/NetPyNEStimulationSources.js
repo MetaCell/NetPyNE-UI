@@ -295,7 +295,7 @@ export default class NetPyNEStimulationSources extends Component {
             </Box>
           </Accordion>
         </div>
-        <Box className={`scrollbar scroll-instances`} mt={1}>
+        <Box className={`scrollbar scrollchild`} mt={1}>
           {StimulationSources}
         </Box>
         {selectedStimulationSource}

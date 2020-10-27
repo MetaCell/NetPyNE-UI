@@ -116,7 +116,7 @@ export default class NetPyNESection extends React.Component {
       );
     } else if (this.state.sectionId == "Geometry") {
       content = (
-        <Box className={`scrollbar scroll-instances`} mt={1}>
+        <Box className={`scrollbar scrollchild`} mt={1}>
           <NetPyNEField id="netParams.cellParams.secs.geom.diam">
             <NetPyNETextField
               fullWidth
@@ -191,7 +191,7 @@ export default class NetPyNESection extends React.Component {
       );
     } else if (this.state.sectionId == "Topology") {
       content = (
-        <Box className={`scrollbar scroll-instances`} mt={1}>
+        <Box className={`scrollbar scrollchild`} mt={1}>
           <NetPyNEField id="netParams.cellParams.secs.topol.parentSec">
             <NetPyNESelectField
               model={

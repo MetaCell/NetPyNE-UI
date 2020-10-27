@@ -7,7 +7,7 @@ export default function GridLayout ({ children, className = '' }) {
   // left-hand-side-top   -   left-hand-side-bottom   -   right-hand-side   -   others
   const [lhst, lhsb, rhs, ...others] = children
   return (
-    <div className={className}>
+    <div className={`layoutVerticalFit`}>
       <Grid container elevation={0} spacing={1} alignItems="stretch">
 
         <Grid item>

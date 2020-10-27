@@ -134,7 +134,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
 
     if (this.state.sectionId == "General") {
       var content = (
-        <Box className={`scrollbar scroll-instances`} mt={1}>
+        <Box className={`scrollbar scrollchild`} mt={1}>
           <Box mb={1}>
             <TextField
               fullWidth
@@ -248,7 +248,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
       );
     } else if (this.state.sectionId == "Pre Conditions") {
       var content = (
-        <Box className={`scrollbar scroll-instances`} mt={1}>
+        <Box className={`scrollbar scrollchild`} mt={1}>
           <NetPyNEField id={"netParams.connParams.preConds.pop"}>
             <NetPyNESelectField
               model={
@@ -324,7 +324,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
       );
     } else if (this.state.sectionId == "Post Conditions") {
       var content = (
-        <Box className={`scrollbar scroll-instances`} mt={1}>
+        <Box className={`scrollbar scrollchild`} mt={1}>
           <NetPyNEField id={"netParams.connParams.postConds.pop"}>
             <NetPyNESelectField
               model={

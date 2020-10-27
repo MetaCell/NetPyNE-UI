@@ -310,7 +310,7 @@ export default class NetPyNEPopulations extends React.Component {
             </Box>
           </Accordion>
         </div>
-        <Box className={`scrollbar scroll-instances`} mt={1}>
+        <Box className={`scrollbar scrollchild`} mt={1}>
           {populations}
         </Box>
         {selectedPopulation}

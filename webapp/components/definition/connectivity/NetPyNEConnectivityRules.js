@@ -314,7 +314,7 @@ export default class NetPyNEConnectivityRules extends Component {
             </Box>
           </Accordion>
         </div>
-        <Box className={`scrollbar scroll-instances`} mt={1}>
+        <Box className={`scrollbar scrollchild`} mt={1}>
           {ConnectivityRules}
         </Box>
         {selectedConnectivityRule}

@@ -527,3 +527,18 @@ div.flexlayout__layout {
     border-top-left-radius: 0;
   }
 }
+.layoutVerticalFit {
+  > .MuiGrid-container,
+  > .MuiGrid-container > div,
+  > .MuiGrid-container > div > div,
+  > .MuiGrid-container > div > div > div {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+.scrollchild {
+  overflow: auto;
+  flex: 1;
+}

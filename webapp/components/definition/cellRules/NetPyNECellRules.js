@@ -1064,7 +1064,7 @@ export default class NetPyNECellRules extends React.Component {
           </Accordion>
         </div>
         <Box
-          className={`scrollbar scroll-instances`}
+          className={`scrollbar scrollchild`}
           mt={1}
           display="flex"
           flexWrap="wrap"

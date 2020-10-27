@@ -30,7 +30,7 @@ export default class StimulationConditions extends React.Component {
 
   render() {
     var content = (
-      <Box className={`scrollbar scroll-instances`} mt={1}>
+      <Box className={`scrollbar scrollchild`} mt={1}>
         <NetPyNEField id={"netParams.stimTargetParams.conds.pop"}>
           <NetPyNESelectField
             model={

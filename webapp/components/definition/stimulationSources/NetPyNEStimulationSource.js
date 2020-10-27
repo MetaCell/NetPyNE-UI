@@ -416,7 +416,7 @@ class NetPyNEStimulationSource extends React.Component {
     }
 
     return (
-      <Box className={`scrollbar scroll-instances`} mt={1}>
+      <Box className={`scrollbar scrollchild`} mt={1}>
         <div>
           <Box mb={1}>
             <TextField

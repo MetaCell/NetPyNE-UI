@@ -229,7 +229,7 @@ class NetPyNEPopulation extends React.Component {
       );
     if (this.state.sectionId == "General") {
       var content = (
-        <Box className={`scrollbar scroll-instances`} mt={1}>
+        <Box className={`scrollbar scrollchild`} mt={1}>
           <Box mb={1}>
             <TextField
               variant="filled"
@@ -258,7 +258,7 @@ class NetPyNEPopulation extends React.Component {
       );
     } else if (this.state.sectionId == "SpatialDistribution") {
       var content = (
-        <Box className={`scrollbar scroll-instances`} mt={1}>
+        <Box className={`scrollbar scrollchild`} mt={1}>
           <NetPyNECoordsRange
             id={"xRangePopParams"}
             name={this.props.name}

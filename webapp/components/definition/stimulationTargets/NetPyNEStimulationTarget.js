@@ -213,7 +213,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
 
     if (this.state.sectionId == "General") {
       var content = (
-        <Box className={`scrollbar scroll-instances`} mt={1}>
+        <Box className={`scrollbar scrollchild`} mt={1}>
           <Box mb={1}>
             <TextField
               fullWidth

@@ -54,7 +54,7 @@ export default class NetPyNEMechanism extends React.Component {
     }
 
     return (
-      <Box className={`scrollbar scroll-instances`} mt={1}>
+      <Box className={`scrollbar scrollchild`} mt={1}>
         <Box mb={1}>
           <TextField
             variant="filled"
