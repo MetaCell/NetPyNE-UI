@@ -12,7 +12,8 @@ export const GENERAL_DEFAULT_STATE = {
   dialogTitle: '',
   dialogMessage: '',
   automaticSimulation: false,
-  automaticInstantiation: true
+  automaticInstantiation: true,
+  theme: 'gui'
 };
 
 // reducer function
@@ -43,6 +44,9 @@ export default function reduceGeneral (state = GENERAL_DEFAULT_STATE, action) {
   }
   case Actions.AUTOMATIC_SIMULATION: {
     return { ...state, automaticSimulation: action.payload, automaticInstantiation: action.payload || state.automaticInstantiation }
+  }
+  case Actions.SET_THEME: {
+    return { ...state, theme: action.payload }
   }
   default: {
     return state ;

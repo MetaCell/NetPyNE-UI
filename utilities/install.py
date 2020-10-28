@@ -134,8 +134,6 @@ def main(branch=branch, skipNpm=False, skipTest=False, development=False):
 
 
     # set python console theme
-    execute(['jt', '-t', 'monokai'])
-
     print("Installing notebook theme")
     from jupyter_core import paths
     config_dir = paths.jupyter_config_dir()

@@ -8,25 +8,28 @@ import { WidgetStatus } from '../../components/layout/model';
 // Cache for plots coming from the backend
 window.plotSvgImages = {};
 
-async function setWidget (widget) {
-  
-  const { plotMethod, plotType } = widget.method;
-  return plotFigure(widget.id, plotMethod, plotType).then(result => {
-    if (!result) {
-      console.warn('Plot not retrieved:', widget.id);
-      widget.disabled = true;
-      return widget;
-      // return null;
-    } else {
-      console.debug('Plot retrieved:', widget.id);
-      widget.disabled = false;
-      return widget;
-    }
-  });
-
-}
 
 export default store => next => action => {
+
+  async function setWidget (widget) {
+  
+    const { plotMethod, plotType } = widget.method;
+    return plotFigure(widget.id, plotMethod, plotType, store.getState().general.theme).then(result => {
+      if (!result) {
+        console.warn('Plot not retrieved:', widget.id);
+        widget.disabled = true;
+        return widget;
+        // return null;
+      } else {
+        console.debug('Plot retrieved:', widget.id);
+        widget.disabled = false;
+        return widget;
+      }
+    });
+  
+  }
+
+
   switch (action.type) {
   case UPDATE_WIDGET: {
     const widget = action.data;
@@ -58,10 +61,10 @@ export default store => next => action => {
 }
 
 
-const plotFigure = async (plotId, plotMethod, plotType = false) => {
+const plotFigure = async (plotId, plotMethod, plotType = false, theme) => {
   try {
     let response = await Promise.race([
-      Utils.evalPythonMessage(NETPYNE_COMMANDS.plotFigure, [plotMethod, plotType], false),
+      Utils.evalPythonMessage(NETPYNE_COMMANDS.plotFigure, [plotMethod, plotType, theme], false),
       new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve(null)
