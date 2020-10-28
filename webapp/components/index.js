@@ -189,7 +189,7 @@ export const NetPyNEInclude = connect(
 
 import _NetPyNEInstantiated from "./instantiation/NetPyNEInstantiated"
 export const NetPyNEInstantiated = connect(
-  state => ({ modelState: state.general.modelState }),
+  state => ({ modelState: state.general.modelState, theme: state.general.theme }),
   null
 )(_NetPyNEInstantiated)
 

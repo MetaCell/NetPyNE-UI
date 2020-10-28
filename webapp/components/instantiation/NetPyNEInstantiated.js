@@ -4,33 +4,39 @@ import Canvas from '@geppettoengine/geppetto-client/js/components/interface/3dCa
 import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
 
 import { NetWorkControlButtons } from 'netpyne/components'
-import { primaryColor } from '../../theme'
+import { primaryColor, canvasBgDark, canvasBgLight } from '../../theme'
 
 
 export default class NetPyNEInstantiated extends React.Component {
-  
+
   constructor (props) {
     super(props);
     this.state = {
       model: props.model,
       controlPanelHidden: true,
       bringItToFront: 0,
-      update: 0
+      update: 0,
+      canvasBtnCls: 'canvas-toolbar-btns-dark'
     };
     this.dimensions = { width: 200, height: 200 }
-    this.canvasRef = createRef();    
+    this.canvasRef = createRef();
   }
 
-  componentDidUpdate (){
+  componentDidUpdate (prevProps, prevState){
     this.resizeIfNeeded()
+    const { theme } = this.props
+    if(prevProps.theme !== this.props.theme) {
+      theme === 'light' ? this.updateBtnsWithTheme('canvas-toolbar-btns-dark', 'canvas-toolbar-btns-light') :
+      this.updateBtnsWithTheme('canvas-toolbar-btns-light', 'canvas-toolbar-btns-dark')
+    }
+
   }
 
 
   componentDidMount () {
     this.canvasRef.current.engine.setLinesThreshold(10000);
     this.canvasRef.current.displayAllInstances();
-    this.canvasRef.current.setBackgroundColor('transparent')
-
+    this.updateBtnsWithTheme('', this.state.canvasBtnCls)
     window.addEventListener('resize', this.delayedResize.bind(this))
     this.resizeIfNeeded()
     this.updateInstances()
@@ -58,7 +64,7 @@ export default class NetPyNEInstantiated extends React.Component {
       if (spotLight) {
         this.canvasRef.current.engine.scene.remove(spotLight)
       }
-      
+
 
     }
   }
@@ -74,7 +80,7 @@ export default class NetPyNEInstantiated extends React.Component {
       this.resizeCanvas()
     }
   }
-  
+
   wasParentResized (dimensions) {
     return dimensions.width !== this.dimensions.width || dimensions.height !== this.dimensions.height
   }
@@ -91,19 +97,26 @@ export default class NetPyNEInstantiated extends React.Component {
     return node.parentNode.getBoundingClientRect()
   }
 
-  render () {
-    const { update } = this.state;
+  updateBtnsWithTheme = (removeClass, addClass) => {
+    const element = document.getElementById('CanvasContainer_component')
+    removeClass && element.classList.remove(removeClass)
+    element.classList.add(addClass)
+    this.setState({ canvasBtnCls: addClass })
+  }
 
-    
+  render () {
+    const { update, canvasBtnCls } = this.state;
+    const { theme } = this.props;
+    const bgColor = theme === 'light' ? canvasBgLight : theme === 'black' ? canvasBgDark : 'transparent';
     return (
       <div className="instantiatedContainer" >
-          
+
         <Canvas
           id="CanvasContainer"
           name="Canvas"
           componentType='Canvas'
           ref={this.canvasRef}
-          style={{ height: '100%', width: '100%', backgroundColor: 'transparent' }}
+          style={{ height: '100%', width: '100%', background: bgColor}}
           update={update}
         />
         <div id="controlpanel" style={{ top: 0 }}>
@@ -114,7 +127,7 @@ export default class NetPyNEInstantiated extends React.Component {
           </ControlPanel>
         </div>
 
-        <NetWorkControlButtons/>
+        <NetWorkControlButtons canvasBtnCls={canvasBtnCls}/>
       </div>
 
     );

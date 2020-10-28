@@ -18,7 +18,7 @@ const styles = ({ spacing }) => ({
 
 class NetWorkControlButtons extends React.Component {
   render () {
-    const { classes, modelState } = this.props
+    const { classes, modelState, canvasBtnCls } = this.props
     const disableSimulate = modelState === MODEL_STATE.SIMULATED
     const disableRefreshInstance = modelState === MODEL_STATE.INSTANTIATED || modelState === MODEL_STATE.SIMULATED
     
@@ -29,6 +29,7 @@ class NetWorkControlButtons extends React.Component {
           <Tooltip 
             title={"Control panel"}
             placement="left"
+            className={canvasBtnCls}
           >
             <div>
               <IconButton 

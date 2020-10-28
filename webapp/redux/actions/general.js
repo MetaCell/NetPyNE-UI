@@ -41,7 +41,7 @@ export const deleteNetParamsObj = payload => ({ type: DELETE_NETPARAMS_OBJ, payl
 export const closeDialog = { type: CLOSE_DIALOG }
 export const openDialog = payload => ({ type: OPEN_DIALOG, payload });
 
-export const setTheme = themeName => ({ type: OPEN_DIALOG, payload: themeName });
+export const setTheme = themeName => ({ type: SET_THEME, payload: themeName });
 
 export const loadTutorial = tutFile => ({ type: LOAD_TUTORIAL, payload: tutFile })
 

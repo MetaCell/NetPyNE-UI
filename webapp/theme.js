@@ -13,7 +13,7 @@ require('./css/tree.less');
 
 export const {
   primaryColor, secondaryColor, font, fontColor,
-  bgLight, bgRegular, bgDark, bgDarker, bgDarkest, bgInputs, gutter, radius
+  bgLight, bgRegular, bgDark, bgDarker, bgDarkest, bgInputs, gutter, radius, canvasBgDark, canvasBgLight
 } = vars;
 
 

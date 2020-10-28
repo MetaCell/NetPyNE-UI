@@ -5,14 +5,15 @@ import { bgRegular, bgDark, font, primaryColor, gutter, radius } from '../../the
 
 import { openTopbarDialog, changePageTransitionMode } from '../../redux/actions/topbar'
 import {
-  openDialog, loadTutorial, 
-  changeAutomaticInstantiation, 
-  changeAutomaticSimulation, 
-  createAndSimulateNetwork, 
-  createNetwork, 
-  simulateNetwork, 
-  editModel, 
-  showNetwork 
+  openDialog, loadTutorial,
+  changeAutomaticInstantiation,
+  changeAutomaticSimulation,
+  createAndSimulateNetwork,
+  createNetwork,
+  simulateNetwork,
+  editModel,
+  showNetwork,
+  setTheme
 } from '../../redux/actions/general'
 import { TOPBAR_CONSTANTS, MODEL_STATE } from '../../constants'
 
@@ -86,7 +87,7 @@ export const getTutorials = () => {
       }
     }
   })
-  
+
 }
 
 export default {
@@ -162,21 +163,21 @@ export default {
               icon: "",
               action: {
                 handlerAction: "redux",
-                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.IMPORT_HLS]
+                parameters: [setTheme, 'dark']
               }
             },{
               label: "Black Background",
               icon: "",
               action: {
                 handlerAction: "redux",
-                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.IMPORT_HLS]
+                parameters: [setTheme, 'black']
               }
             },{
               label: "Light Background",
               icon: "",
               action: {
                 handlerAction: "redux",
-                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.IMPORT_HLS]
+                parameters: [setTheme, 'light']
               }
             }
           ]
@@ -282,7 +283,7 @@ export default {
         parameters: ["View"]
       }
     },
-    
+
     {
       label: "Model",
       icon: "",
@@ -333,7 +334,7 @@ export const getViewMenu = props => {
       return showNetwork;
     }
   }
-  
+
   return [
     {
       label: "Edit",
@@ -342,7 +343,7 @@ export const getViewMenu = props => {
         handlerAction: "redux",
         parameters: [editModel]
       }
-      
+
     },
     {
       label: "Explore",
@@ -410,6 +411,6 @@ export const getModelMenu = props => (
         },
       ]
     },
-    
+
   ]
 )
