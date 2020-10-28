@@ -537,8 +537,24 @@ div.flexlayout__layout {
     flex-direction: column;
     align-items: stretch;
   }
+  > .MuiGrid-container{
+    &.MuiGrid-root {
+      flex-direction: row;
+      height: 100%;
+      .MuiGrid-root.MuiGrid-item{
+        height: 100%;
+      }
+    }
+  }
+}
+.layoutVerticalFitInner{
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 .scrollchild {
-  overflow: auto;
+  overflow: hidden;
+  overflow-y: auto;
   flex: 1;
 }

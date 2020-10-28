@@ -279,7 +279,7 @@ class ListComponent extends Component {
           <Chip
             key={key}
             label={value}
-            style={{ marginRight: 8 }}
+            style={{ margin: "0 8px 8px 0" }}
             onDelete={() => this.removeChild(key)}
             color="primary"
           />
@@ -319,7 +319,8 @@ const styles = () => ({
   addIcon: {
     backgroundColor: "rgba(255, 255, 255, 0.09)",
     borderTopLeftRadius: "4px",
-    height: '55.09px'
+    height: '55.09px',
+    borderBottom: "1px solid rgba(255, 255, 255, 0.7)",
   }
 });
 

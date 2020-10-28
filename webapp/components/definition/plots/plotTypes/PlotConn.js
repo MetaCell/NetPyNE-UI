@@ -3,15 +3,15 @@ import Box from "@material-ui/core/Box";
 import { NetPyNEInclude, NetPyNEField, SelectField } from "netpyne/components";
 
 export default class plotConn extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {};
   }
 
-  render() {
+  render () {
     var tag = "simConfig.analysis['iplotConn']";
     return (
-      <Box className={`scrollbar scroll-longer-instances`} mt={1}>
+      <Box className={`scrollbar scrollchild`} mt={1}>
         <NetPyNEInclude
           id={"simConfig.analysis.plotConn.include"}
           model={tag + "['include']"}

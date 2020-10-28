@@ -8,15 +8,15 @@ import {
 } from "netpyne/components";
 
 export default class Plot2Dnet extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {};
   }
 
-  render() {
+  render () {
     const tag = "simConfig.analysis['iplot2Dnet']";
     return (
-      <Box className={`scrollbar scroll-longer-instances`} mt={1}>
+      <Box className={`scrollbar scrollchild`} mt={1}>
         <NetPyNEInclude
           id={"simConfig.analysis.plot2Dnet.include"}
           model={tag + "['include']"}

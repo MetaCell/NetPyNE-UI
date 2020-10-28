@@ -10,15 +10,15 @@ import {
 import Box from "@material-ui/core/Box";
 
 export default class PlotLFP extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = { plots: "" };
   }
 
-  render() {
+  render () {
     var tag = "simConfig.analysis['iplotLFP']";
     return (
-      <Box className={`scrollbar scroll-longer-instances`} mt={1}>
+      <Box className={`scrollbar scrollchild`} mt={1}>
         <NetPyNEField
           id="simConfig.analysis.plotLFP.electrodes"
           className="listStyle"

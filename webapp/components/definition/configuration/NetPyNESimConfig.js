@@ -31,12 +31,12 @@ class NetPyNESimConfig extends React.Component {
     this.setState({ selectedIndex: index, sectionId: sectionId });
 
   render () {
-    var contentLeft = <div />;
-    var contentRight = <div />;
+    var contentLeft = <div className="layoutVerticalFitInner" />;
+    var contentRight = <div className="layoutVerticalFitInner" />;
     const { classes } = this.props;
     if (this.state.sectionId == "General") {
       contentLeft = (
-        <div className={`scrollbar ${classes.scrollContainer}`}>
+        <div className={`scrollbar scrollchild`}>
           <NetPyNEField id="simConfig.duration">
             <NetPyNETextField
               fullWidth
@@ -85,7 +85,7 @@ class NetPyNESimConfig extends React.Component {
         </div>
       );
       contentRight = (
-        <div className={`scrollbar ${classes.scrollContainer}`}>
+        <div className={`scrollbar scrollchild`}>
           <NetPyNEField
             id="simConfig.createNEURONObj"
             className={"netpyneCheckbox"}
@@ -464,7 +464,7 @@ const styles = ({ shape, spacing }) => ({
     flexDirection: "column",
   },
   bottomNav: { margin: spacing(2) },
-  layout: { height: "100%", display: "flex" },
+  layout: { height: "100%", display: "flex", overflow: "hidden", flexDirection: "column", alignItems: "stretch"  },
   scrollContainer: {
     maxHeight: `calc(100vh - ${spacing(27)}px)`,
     overflowY: "auto",

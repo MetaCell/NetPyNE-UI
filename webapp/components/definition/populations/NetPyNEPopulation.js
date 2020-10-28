@@ -31,7 +31,7 @@ const styles = ({ spacing }) => ({
 });
 
 class NetPyNEPopulation extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       currentName: props.name,
@@ -42,7 +42,7 @@ class NetPyNEPopulation extends React.Component {
     };
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     this.setState({
       currentName: nextProps.name,
       selectedIndex: 0,
@@ -50,12 +50,12 @@ class NetPyNEPopulation extends React.Component {
     });
   }
 
-  setPopulationDimension = (value) => {
+  setPopulationDimension = value => {
     // this.setState({ cellModel: value });
     this.triggerUpdate(() => {
       // Set Population Dimension Python Side
       Utils.evalPythonMessage("api.getParametersForCellModel", [value]).then(
-        (response) => {
+        response => {
           var cellModelFields = "";
           if (Object.keys(response).length != 0) {
             // Merge the new metadata with the current one
@@ -65,16 +65,16 @@ class NetPyNEPopulation extends React.Component {
             // Get Fields for new metadata
             cellModelFields = Utils.getFieldsFromMetadataTree(
               response,
-              (key) => (
+              key => (
                 <NetPyNEField id={key}>
                   <NetPyNETextField
                     variant="filled"
                     model={
-                      "netParams.popParams['" +
-                      this.state.currentName +
-                      "']['" +
-                      key.split(".").pop() +
-                      "']"
+                      "netParams.popParams['"
+                      + this.state.currentName
+                      + "']['"
+                      + key.split(".").pop()
+                      + "']"
                     }
                   />
                 </NetPyNEField>
@@ -111,8 +111,8 @@ class NetPyNEPopulation extends React.Component {
       />
     );
     if (
-      typeof this.state.cellModelFields != "undefined" &&
-      this.state.cellModelFields != ""
+      typeof this.state.cellModelFields != "undefined"
+      && this.state.cellModelFields != ""
     ) {
       modelParameters.push(
         <BottomNavigationAction
@@ -135,17 +135,17 @@ class NetPyNEPopulation extends React.Component {
     return modelParameters;
   };
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate (nextProps, nextState) {
     return (
-      this.state.model == undefined ||
-      this.state.currentName != nextState.currentName ||
-      this.state.cellModelFields != nextState.cellModelFields ||
-      this.state.sectionId != nextState.sectionId ||
-      this.state.selectedIndex != nextState.selectedIndex
+      this.state.model == undefined
+      || this.state.currentName != nextState.currentName
+      || this.state.cellModelFields != nextState.cellModelFields
+      || this.state.sectionId != nextState.sectionId
+      || this.state.selectedIndex != nextState.selectedIndex
     );
   }
 
-  handleRenameChange = (event) => {
+  handleRenameChange = event => {
     var storedValue = this.props.name;
     var newValue = Utils.nameValidation(event.target.value);
     var updateCondition = this.props.renameHandler(newValue);
@@ -174,7 +174,7 @@ class NetPyNEPopulation extends React.Component {
     }
   };
 
-  triggerUpdate(updateMethod) {
+  triggerUpdate (updateMethod) {
     // common strategy when triggering processing of a value change, delay it, every time there is a change we reset
     if (this.updateTimer != undefined) {
       clearTimeout(this.updateTimer);
@@ -182,8 +182,8 @@ class NetPyNEPopulation extends React.Component {
     this.updateTimer = setTimeout(updateMethod, 1000);
   }
 
-  postProcessMenuItems(pythonData, selected) {
-    return pythonData.map((name) => (
+  postProcessMenuItems (pythonData, selected) {
+    return pythonData.map(name => (
       <MenuItem
         id={name + "MenuItem"}
         key={name}
@@ -195,11 +195,11 @@ class NetPyNEPopulation extends React.Component {
     ));
   }
 
-  render() {
+  render () {
     const { classes } = this.props;
 
-    var dialogPop =
-      this.state.errorMessage != undefined ? (
+    var dialogPop
+      = this.state.errorMessage != undefined ? (
         <Dialog open={true} style={{ whiteSpace: "pre-wrap" }}>
           <DialogTitle id="alert-dialog-title">
             {this.state.errorMessage}
@@ -299,7 +299,7 @@ class NetPyNEPopulation extends React.Component {
     }
 
     return (
-      <div>
+      <div className="layoutVerticalFitInner">
         <BottomNavigation showLabels value={this.state.selectedIndex}>
           {this.getModelParameters()}
         </BottomNavigation>

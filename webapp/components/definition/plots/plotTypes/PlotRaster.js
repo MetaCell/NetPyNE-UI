@@ -10,7 +10,7 @@ import {
 } from "netpyne/components";
 
 export default class PlotRaster extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = { checked: false };
     this.handleCheckChange = this.handleCheckChange.bind(this);
@@ -20,10 +20,10 @@ export default class PlotRaster extends React.Component {
     this.setState({ Checked: isCheck });
   };
 
-  render() {
+  render () {
     var tag = "simConfig.analysis['iplotRaster']";
     return (
-      <Box className={`scrollbar scroll-longer-instances`} mt={1}>
+      <Box className={`scrollbar scrollchild`} mt={1}>
         <NetPyNEInclude
           id={"simConfig.analysis.plotRaster.include"}
           model={tag + "['include']"}

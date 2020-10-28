@@ -17,7 +17,7 @@ import {
 } from "netpyne/components";
 
 export default class NetPyNESection extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
@@ -31,14 +31,14 @@ export default class NetPyNESection extends React.Component {
     this.postProcessMenuItems = this.postProcessMenuItems.bind(this);
   }
 
-  setPage(page) {
+  setPage (page) {
     this.setState({ page: page });
   }
 
   select = (index, sectionId) =>
     this.setState({ selectedIndex: index, sectionId: sectionId });
 
-  handleRenameChange = (event) => {
+  handleRenameChange = event => {
     var storedValue = this.props.name;
     var newValue = Utils.nameValidation(event.target.value);
     var updateCondition = this.props.renameHandler(
@@ -66,7 +66,7 @@ export default class NetPyNESection extends React.Component {
     }
   };
 
-  triggerUpdate(updateMethod) {
+  triggerUpdate (updateMethod) {
     // common strategy when triggering processing of a value change, delay it, every time there is a change we reset
     if (this.updateTimer != undefined) {
       clearTimeout(this.updateTimer);
@@ -74,7 +74,7 @@ export default class NetPyNESection extends React.Component {
     this.updateTimer = setTimeout(updateMethod, 500);
   }
 
-  getBottomNavigationAction(index, sectionId, label, icon, id) {
+  getBottomNavigationAction (index, sectionId, label, icon, id) {
     return (
       <BottomNavigationAction
         id={id}
@@ -85,13 +85,13 @@ export default class NetPyNESection extends React.Component {
       />
     );
   }
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     this.setState({ currentName: nextProps.name });
   }
 
-  postProcessMenuItems(pythonData, selected) {
+  postProcessMenuItems (pythonData, selected) {
     if (pythonData[this.props.cellRule] != undefined) {
-      return pythonData[this.props.cellRule].map((name) => (
+      return pythonData[this.props.cellRule].map(name => (
         <MenuItem id={name + "MenuItem"} key={name} value={name}>
           {name}
         </MenuItem>
@@ -99,7 +99,7 @@ export default class NetPyNESection extends React.Component {
     }
   }
 
-  render() {
+  render () {
     var content = <div />;
     var that = this;
     if (this.state.sectionId == "General") {
@@ -122,11 +122,11 @@ export default class NetPyNESection extends React.Component {
               fullWidth
               variant="filled"
               model={
-                "netParams.cellParams['" +
-                this.props.cellRule +
-                "']['secs']['" +
-                this.props.name +
-                "']['geom']['diam']"
+                "netParams.cellParams['"
+                + this.props.cellRule
+                + "']['secs']['"
+                + this.props.name
+                + "']['geom']['diam']"
               }
             />
           </NetPyNEField>
@@ -136,11 +136,11 @@ export default class NetPyNESection extends React.Component {
               fullWidth
               variant="filled"
               model={
-                "netParams.cellParams['" +
-                this.props.cellRule +
-                "']['secs']['" +
-                this.props.name +
-                "']['geom']['L']"
+                "netParams.cellParams['"
+                + this.props.cellRule
+                + "']['secs']['"
+                + this.props.name
+                + "']['geom']['L']"
               }
             />
           </NetPyNEField>
@@ -150,11 +150,11 @@ export default class NetPyNESection extends React.Component {
               fullWidth
               variant="filled"
               model={
-                "netParams.cellParams['" +
-                this.props.cellRule +
-                "']['secs']['" +
-                this.props.name +
-                "']['geom']['Ra']"
+                "netParams.cellParams['"
+                + this.props.cellRule
+                + "']['secs']['"
+                + this.props.name
+                + "']['geom']['Ra']"
               }
             />
           </NetPyNEField>
@@ -164,11 +164,11 @@ export default class NetPyNESection extends React.Component {
               fullWidth
               variant="filled"
               model={
-                "netParams.cellParams['" +
-                this.props.cellRule +
-                "']['secs']['" +
-                this.props.name +
-                "']['geom']['cm']"
+                "netParams.cellParams['"
+                + this.props.cellRule
+                + "']['secs']['"
+                + this.props.name
+                + "']['geom']['cm']"
               }
             />
           </NetPyNEField>
@@ -179,11 +179,11 @@ export default class NetPyNESection extends React.Component {
           >
             <ListComponent
               model={
-                "netParams.cellParams['" +
-                this.props.cellRule +
-                "']['secs']['" +
-                this.props.name +
-                "']['geom']['pt3d']"
+                "netParams.cellParams['"
+                + this.props.cellRule
+                + "']['secs']['"
+                + this.props.name
+                + "']['geom']['pt3d']"
               }
             />
           </NetPyNEField>
@@ -195,11 +195,11 @@ export default class NetPyNESection extends React.Component {
           <NetPyNEField id="netParams.cellParams.secs.topol.parentSec">
             <NetPyNESelectField
               model={
-                "netParams.cellParams['" +
-                this.props.cellRule +
-                "']['secs']['" +
-                this.props.name +
-                "']['topol']['parentSec']"
+                "netParams.cellParams['"
+                + this.props.cellRule
+                + "']['secs']['"
+                + this.props.name
+                + "']['topol']['parentSec']"
               }
               method={"netpyne_geppetto.getAvailableSections"}
               postProcessItems={this.postProcessMenuItems}
@@ -211,11 +211,11 @@ export default class NetPyNESection extends React.Component {
               fullWidth
               variant="filled"
               model={
-                "netParams.cellParams['" +
-                this.props.cellRule +
-                "']['secs']['" +
-                this.props.name +
-                "']['topol']['parentX']"
+                "netParams.cellParams['"
+                + this.props.cellRule
+                + "']['secs']['"
+                + this.props.name
+                + "']['topol']['parentX']"
               }
             />
           </NetPyNEField>
@@ -225,11 +225,11 @@ export default class NetPyNESection extends React.Component {
               fullWidth
               variant="filled"
               model={
-                "netParams.cellParams['" +
-                this.props.cellRule +
-                "']['secs']['" +
-                this.props.name +
-                "']['topol']['childX']"
+                "netParams.cellParams['"
+                + this.props.cellRule
+                + "']['secs']['"
+                + this.props.name
+                + "']['topol']['childX']"
               }
             />
           </NetPyNEField>
@@ -269,7 +269,7 @@ export default class NetPyNESection extends React.Component {
     );
 
     return (
-      <div>
+      <div className="layoutVerticalFitInner">
         <BottomNavigation
           showLabels
           style={{ borderRadius: "4px" }}

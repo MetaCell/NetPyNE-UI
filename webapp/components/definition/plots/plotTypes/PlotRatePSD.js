@@ -9,15 +9,15 @@ import {
 } from "netpyne/components";
 
 export default class PlotRatePSD extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {};
   }
 
-  render() {
+  render () {
     var tag = "simConfig.analysis['iplotRatePSD']";
     return (
-      <Box className={`scrollbar scroll-longer-instances`} mt={1}>
+      <Box className={`scrollbar scrollchild`} mt={1}>
         <NetPyNEInclude
           id={"simConfig.analysis.plotRatePSD.include"}
           model={tag + "['include']"}

@@ -9,15 +9,15 @@ import {
 } from "netpyne/components";
 
 export default class PlotSpikeStats extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {};
   }
 
-  render() {
+  render () {
     var tag = "simConfig.analysis['iplotSpikeStats']";
     return (
-      <Box className={`scrollbar scroll-longer-instances`} mt={1}>
+      <Box className={`scrollbar scrollchild`} mt={1}>
         <NetPyNEInclude
           id={"simConfig.analysis.plotSpikeStats.include"}
           model={tag + "['include']"}

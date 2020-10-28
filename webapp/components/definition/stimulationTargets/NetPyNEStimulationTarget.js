@@ -24,7 +24,7 @@ import {
 } from "netpyne/components";
 
 export default class NetPyNEStimulationTarget extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       currentName: props.name,
@@ -42,14 +42,14 @@ export default class NetPyNEStimulationTarget extends React.Component {
     this.select = this.select.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.isStimSourceTypeNetStim();
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate (prevProps, prevState) {
     if (
-      this.props.name !== prevProps.name ||
-      this.props.updates !== prevProps.updates
+      this.props.name !== prevProps.name
+      || this.props.updates !== prevProps.updates
     ) {
       this.isStimSourceTypeNetStim();
     }
@@ -58,15 +58,15 @@ export default class NetPyNEStimulationTarget extends React.Component {
     }
   }
 
-  async handleStimSourceSelection(selectedStimSourceName) {
+  async handleStimSourceSelection (selectedStimSourceName) {
     return await Utils.evalPythonMessage(
-      "'NetStim' == netpyne_geppetto.netParams.stimSourceParams['" +
-        selectedStimSourceName +
-        "']['type']"
+      "'NetStim' == netpyne_geppetto.netParams.stimSourceParams['"
+        + selectedStimSourceName
+        + "']['type']"
     );
   }
 
-  async isStimSourceTypeNetStim(stimSourceName) {
+  async isStimSourceTypeNetStim (stimSourceName) {
     var isNetStim = false;
     const { name: stimName } = this.props;
     if (stimSourceName === undefined) {
@@ -82,9 +82,9 @@ export default class NetPyNEStimulationTarget extends React.Component {
 
     if (stimSourceName !== "") {
       isNetStim = await Utils.evalPythonMessage(
-        "'NetStim' == netpyne_geppetto.netParams.stimSourceParams['" +
-          stimSourceName +
-          "']['type']"
+        "'NetStim' == netpyne_geppetto.netParams.stimSourceParams['"
+          + stimSourceName
+          + "']['type']"
       );
     }
 
@@ -93,7 +93,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
     }
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     if (this.state.currentName != nextProps.name) {
       this.setState({
         currentName: nextProps.name,
@@ -103,7 +103,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
     }
   }
 
-  handleRenameChange = (event) => {
+  handleRenameChange = event => {
     var storedValue = this.props.name;
     var newValue = Utils.nameValidation(event.target.value);
     var updateCondition = this.props.renameHandler(newValue);
@@ -130,19 +130,19 @@ export default class NetPyNEStimulationTarget extends React.Component {
     }
   };
 
-  triggerUpdate(updateMethod) {
+  triggerUpdate (updateMethod) {
     if (this.updateTimer != undefined) {
       clearTimeout(this.updateTimer);
     }
     this.updateTimer = setTimeout(updateMethod, 1000);
   }
 
-  handleSelection = (selection) => {
+  handleSelection = selection => {
     Utils.evalPythonMessage(
-      "'NetStim' == netpyne_geppetto.netParams.stimSourceParams['" +
-        selection +
-        "']['type']"
-    ).then((response) => {
+      "'NetStim' == netpyne_geppetto.netParams.stimSourceParams['"
+        + selection
+        + "']['type']"
+    ).then(response => {
       this.setState({ sourceTypeNetStim: response });
     });
   };
@@ -151,7 +151,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
     if ((selectedStimSourceName != Object) & (selectedStimSourceName != "")) {
       this.isStimSourceTypeNetStim(selectedStimSourceName);
     }
-    return pythonData.map((name) => (
+    return pythonData.map(name => (
       <MenuItem id={name + "MenuItem"} key={name} value={name}>
         {name}
       </MenuItem>
@@ -159,7 +159,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
   };
 
   postProcessMenuItems4SynMech = (pythonData, selected) =>
-    pythonData.map((name) => (
+    pythonData.map(name => (
       <MenuItem id={name + "MenuItem"} key={name} value={name}>
         {name}
       </MenuItem>
@@ -168,7 +168,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
   select = (index, sectionId) =>
     this.setState({ selectedIndex: index, sectionId: sectionId });
 
-  getBottomNavigationAction(index, sectionId, label, icon, id) {
+  getBottomNavigationAction (index, sectionId, label, icon, id) {
     return (
       <BottomNavigationAction
         id={id}
@@ -180,9 +180,9 @@ export default class NetPyNEStimulationTarget extends React.Component {
     );
   }
 
-  render() {
-    var dialogPop =
-      this.state.errorMessage != undefined ? (
+  render () {
+    var dialogPop
+      = this.state.errorMessage != undefined ? (
         <Dialog open={true} style={{ whiteSpace: "pre-wrap" }}>
           <DialogTitle id="alert-dialog-title">
             {this.state.errorMessage}
@@ -229,9 +229,9 @@ export default class NetPyNEStimulationTarget extends React.Component {
             <NetPyNESelectField
               fullWidth
               model={
-                "netParams.stimTargetParams['" +
-                this.props.name +
-                "']['source']"
+                "netParams.stimTargetParams['"
+                + this.props.name
+                + "']['source']"
               }
               method={"netpyne_geppetto.getAvailableStimSources"}
               postProcessItems={this.postProcessMenuItems}
@@ -266,9 +266,9 @@ export default class NetPyNEStimulationTarget extends React.Component {
               <NetPyNESelectField
                 fullWidth
                 model={
-                  "netParams.stimTargetParams['" +
-                  this.props.name +
-                  "']['synMech']"
+                  "netParams.stimTargetParams['"
+                  + this.props.name
+                  + "']['synMech']"
                 }
                 method={"netpyne_geppetto.getAvailableSynMech"}
                 postProcessItems={this.postProcessMenuItems4SynMech}
@@ -280,9 +280,9 @@ export default class NetPyNEStimulationTarget extends React.Component {
                 fullWidth
                 variant="filled"
                 model={
-                  "netParams.stimTargetParams['" +
-                  this.props.name +
-                  "']['weight']"
+                  "netParams.stimTargetParams['"
+                  + this.props.name
+                  + "']['weight']"
                 }
               />
             </NetPyNEField>
@@ -292,9 +292,9 @@ export default class NetPyNEStimulationTarget extends React.Component {
                 fullWidth
                 variant="filled"
                 model={
-                  "netParams.stimTargetParams['" +
-                  this.props.name +
-                  "']['delay']"
+                  "netParams.stimTargetParams['"
+                  + this.props.name
+                  + "']['delay']"
                 }
               />
             </NetPyNEField>
@@ -304,9 +304,9 @@ export default class NetPyNEStimulationTarget extends React.Component {
                 fullWidth
                 variant="filled"
                 model={
-                  "netParams.stimTargetParams['" +
-                  this.props.name +
-                  "']['synsPerConn']"
+                  "netParams.stimTargetParams['"
+                  + this.props.name
+                  + "']['synsPerConn']"
                 }
               />
             </NetPyNEField>
@@ -341,7 +341,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
     );
 
     return (
-      <div>
+      <div className="layoutVerticalFitInner">
         <BottomNavigation
           showLabels
           style={{ borderRadius: "4px" }}

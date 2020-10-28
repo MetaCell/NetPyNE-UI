@@ -9,15 +9,15 @@ import {
 } from "netpyne/components";
 
 export default class PlotTraces extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {};
   }
 
-  render() {
+  render () {
     var tag = "simConfig.analysis['iplotTraces']";
     return (
-      <Box className={`scrollbar scroll-longer-instances`} mt={1}>
+      <Box className={`scrollbar scrollchild`} mt={1}>
         <NetPyNEInclude
           id={"simConfig.analysis.plotTraces.include"}
           model={tag + "['include']"}

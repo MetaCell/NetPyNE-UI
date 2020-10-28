@@ -8,15 +8,15 @@ import {
 } from "netpyne/components";
 
 export default class PlotGranger extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {};
   }
 
-  render() {
+  render () {
     var tags = "simConfig.analysis['granger']";
     var content = (
-      <Box className={`scrollbar scroll-longer-instances`} mt={1}>
+      <Box className={`scrollbar scrollchild`} mt={1}>
         <NetPyNEField
           id="simConfig.analysis.granger.cells1"
           className="listStyle"
