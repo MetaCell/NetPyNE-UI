@@ -153,6 +153,34 @@ export default {
             parameters: [openDialog, { title: "Contribute", message: "This is Contribute tab" }]
           }
         },
+        {
+          label: "Color preferences",
+          icon: "",
+          list: [
+            {
+              label: "Dark Background (default)",
+              icon: "",
+              action: {
+                handlerAction: "redux",
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.IMPORT_HLS]
+              }
+            },{
+              label: "Black Background",
+              icon: "",
+              action: {
+                handlerAction: "redux",
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.IMPORT_HLS]
+              }
+            },{
+              label: "Light Background",
+              icon: "",
+              action: {
+                handlerAction: "redux",
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.IMPORT_HLS]
+              }
+            }
+          ]
+        },
       ],
       style: firstItemStyle
     },
