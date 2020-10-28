@@ -15,7 +15,7 @@ import {
   showNetwork,
   setTheme
 } from '../../redux/actions/general'
-import { TOPBAR_CONSTANTS, MODEL_STATE } from '../../constants'
+import { TOPBAR_CONSTANTS, MODEL_STATE, THEMES } from '../../constants'
 
 const checkedIcon = "fa fa-check secondary";
 const unCheckedIcon = "fa fa-check color-dark";
@@ -163,21 +163,21 @@ export default {
               icon: "",
               action: {
                 handlerAction: "redux",
-                parameters: [setTheme, 'dark']
+                parameters: [setTheme, THEMES.DARK]
               }
             },{
               label: "Black Background",
               icon: "",
               action: {
                 handlerAction: "redux",
-                parameters: [setTheme, 'black']
+                parameters: [setTheme, THEMES.BLACK]
               }
             },{
               label: "Light Background",
               icon: "",
               action: {
                 handlerAction: "redux",
-                parameters: [setTheme, 'light']
+                parameters: [setTheme, THEMES.LIGHT]
               }
             }
           ]

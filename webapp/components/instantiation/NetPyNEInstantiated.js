@@ -5,7 +5,7 @@ import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/c
 
 import { NetWorkControlButtons } from 'netpyne/components'
 import { primaryColor, canvasBgDark, canvasBgLight } from '../../theme'
-
+import { THEMES } from '../../constants'
 
 export default class NetPyNEInstantiated extends React.Component {
 
@@ -25,9 +25,9 @@ export default class NetPyNEInstantiated extends React.Component {
   componentDidUpdate (prevProps, prevState){
     this.resizeIfNeeded()
     const { theme } = this.props
-    if(prevProps.theme !== this.props.theme) {
-      theme === 'light' ? this.updateBtnsWithTheme('canvas-toolbar-btns-dark', 'canvas-toolbar-btns-light') :
-      this.updateBtnsWithTheme('canvas-toolbar-btns-light', 'canvas-toolbar-btns-dark')
+    if (prevProps.theme !== this.props.theme) {
+      theme === THEMES.LIGHT ? this.updateBtnsWithTheme('canvas-toolbar-btns-dark', 'canvas-toolbar-btns-light')
+        : this.updateBtnsWithTheme('canvas-toolbar-btns-light', 'canvas-toolbar-btns-dark')
     }
 
   }
@@ -107,7 +107,7 @@ export default class NetPyNEInstantiated extends React.Component {
   render () {
     const { update, canvasBtnCls } = this.state;
     const { theme } = this.props;
-    const bgColor = theme === 'light' ? canvasBgLight : theme === 'black' ? canvasBgDark : 'transparent';
+    const bgColor = theme === THEMES.LIGHT ? canvasBgLight : theme === THEMES.BLACK ? canvasBgDark : 'transparent';
     return (
       <div className="instantiatedContainer" >
 
@@ -116,7 +116,7 @@ export default class NetPyNEInstantiated extends React.Component {
           name="Canvas"
           componentType='Canvas'
           ref={this.canvasRef}
-          style={{ height: '100%', width: '100%', background: bgColor}}
+          style={{ height: '100%', width: '100%', background: bgColor }}
           update={update}
         />
         <div id="controlpanel" style={{ top: 0 }}>

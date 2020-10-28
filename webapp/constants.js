@@ -6,6 +6,12 @@ import { MINIMIZED_PANEL } from './components/layout';
 export { WidgetStatus };
 export const TOP_PANEL = "hlsPanel";
 
+export const THEMES = {
+  DARK: 'dark',
+  BLACK: 'black',
+  LIGHT: 'light'
+}
+
 export const MODEL_STATE = {
   NOT_INSTANTIATED: 'NOT_INSTANTIATED',
   INSTANTIATED: 'INSTANTIATED',
