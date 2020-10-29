@@ -9,7 +9,7 @@ const styles = ({ spacing }) => ({
   container: {
     position: "absolute",
     top: spacing(35.5),
-    left: spacing(5.5),
+    left: '41px',
   },
   innerContainer: { position: "relative" },
   buttons: { marginBottom: spacing(1) },
