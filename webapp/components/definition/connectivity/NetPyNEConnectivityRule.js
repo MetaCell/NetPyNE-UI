@@ -1,5 +1,5 @@
 import React from "react";
-import TextField from '@material-ui/core/TextField';
+import TextField from "@material-ui/core/TextField";
 import FontIcon from "@material-ui/core/Icon";
 import { BottomNavigation, BottomNavigationAction } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog/Dialog";
@@ -9,15 +9,15 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import MenuItem from "@material-ui/core/MenuItem";
-import Paper from '@material-ui/core/Paper'
-import Box from '@material-ui/core/Box';
+import Paper from "@material-ui/core/Paper";
+import Box from "@material-ui/core/Box";
 
 import {
   NetPyNESelectField,
   NetPyNEField,
   NetPyNETextField,
   ListComponent,
-  NetPyNECoordsRange
+  NetPyNECoordsRange,
 } from "netpyne/components";
 import Utils from "../../../Utils";
 
@@ -29,7 +29,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
       selectedIndex: 0,
       sectionId: "General",
       errorMessage: undefined,
-      errorDetails: undefined
+      errorDetails: undefined,
     };
   }
 
@@ -102,42 +102,43 @@ export default class NetPyNEConnectivityRule extends React.Component {
   }
 
   render () {
-    const dialogPop = this.state.errorMessage != undefined ? (
-      <Dialog open={true} style={{ whiteSpace: "pre-wrap" }}>
-        <DialogTitle id="alert-dialog-title">
-          {this.state.errorMessage}
-        </DialogTitle>
-        <DialogContent style={{ overflow: "auto" }}>
-          <DialogContentText id="alert-dialog-description">
-            {this.state.errorDetails}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() =>
-              this.setState({
-                errorMessage: undefined,
-                errorDetails: undefined
-              })
-            }
-          >
+    const dialogPop
+      = this.state.errorMessage != undefined ? (
+        <Dialog open={true} style={{ whiteSpace: "pre-wrap" }}>
+          <DialogTitle id="alert-dialog-title">
+            {this.state.errorMessage}
+          </DialogTitle>
+          <DialogContent style={{ overflow: "auto" }}>
+            <DialogContentText id="alert-dialog-description">
+              {this.state.errorDetails}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() =>
+                this.setState({
+                  errorMessage: undefined,
+                  errorDetails: undefined,
+                })
+              }
+            >
               BACK
-          </Button>
-        </DialogActions>
-      </Dialog>
-    ) : (
-      undefined
-    );
+            </Button>
+          </DialogActions>
+        </Dialog>
+      ) : (
+        undefined
+      );
 
     if (this.state.sectionId == "General") {
       var content = (
-        <div>
+        <Box className={`scrollbar scrollchild`} mt={1}>
           <Box mb={1}>
             <TextField
               fullWidth
-              variant="filled" 
+              variant="filled"
               id={"ConnectivityName"}
               onChange={this.handleRenameChange}
               value={this.state.currentName}
@@ -145,7 +146,6 @@ export default class NetPyNEConnectivityRule extends React.Component {
               label="The name of the connectivity rule"
             />
           </Box>
-
 
           <NetPyNEField id="netParams.connParams.sec" className="listStyle">
             <ListComponent
@@ -177,38 +177,78 @@ export default class NetPyNEConnectivityRule extends React.Component {
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.convergence">
-            <NetPyNETextField fullWidth variant="filled" model={"netParams.connParams['" + this.props.name + "']['convergence']"}/>
+            <NetPyNETextField
+              fullWidth
+              variant="filled"
+              model={
+                "netParams.connParams['" + this.props.name + "']['convergence']"
+              }
+            />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.divergence">
-            <NetPyNETextField fullWidth variant="filled" model={"netParams.connParams['" + this.props.name + "']['divergence']"}/>
+            <NetPyNETextField
+              fullWidth
+              variant="filled"
+              model={
+                "netParams.connParams['" + this.props.name + "']['divergence']"
+              }
+            />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.probability">
-            <NetPyNETextField fullWidth variant="filled" model={"netParams.connParams['" + this.props.name + "']['probability']"}/>
+            <NetPyNETextField
+              fullWidth
+              variant="filled"
+              model={
+                "netParams.connParams['" + this.props.name + "']['probability']"
+              }
+            />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.synsPerConn">
-            <NetPyNETextField fullWidth variant="filled" model={"netParams.connParams['" + this.props.name + "']['synsPerConn']"}/>
+            <NetPyNETextField
+              fullWidth
+              variant="filled"
+              model={
+                "netParams.connParams['" + this.props.name + "']['synsPerConn']"
+              }
+            />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.weight">
-            <NetPyNETextField fullWidth variant="filled" model={"netParams.connParams['" + this.props.name + "']['weight']"}/>
+            <NetPyNETextField
+              fullWidth
+              variant="filled"
+              model={
+                "netParams.connParams['" + this.props.name + "']['weight']"
+              }
+            />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.delay">
-            <NetPyNETextField fullWidth variant="filled" model={"netParams.connParams['" + this.props.name + "']['delay']"} />
+            <NetPyNETextField
+              fullWidth
+              variant="filled"
+              model={"netParams.connParams['" + this.props.name + "']['delay']"}
+            />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.connParams.plasticity">
-            <NetPyNETextField fullWidth variant="filled" model={"netParams.connParams['" + this.props.name + "']['plasticity']"}/>
+            <NetPyNETextField
+              fullWidth
+              variant="filled"
+              model={
+                "netParams.connParams['" + this.props.name + "']['plasticity']"
+              }
+            />
           </NetPyNEField>
           {dialogPop}
-        </div>
+        </Box>
       );
     } else if (this.state.sectionId == "Pre Conditions") {
       var content = (
-        <div>
+        <Box className={`scrollbar scrollchild`} mt={1}>
           <NetPyNEField id={"netParams.connParams.preConds.pop"}>
             <NetPyNESelectField
               model={
@@ -255,7 +295,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
             conds={"preConds"}
             items={[
               { value: "x", label: "Absolute" },
-              { value: "xnorm", label: "Normalized" }
+              { value: "xnorm", label: "Normalized" },
             ]}
           />
 
@@ -266,7 +306,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
             conds={"preConds"}
             items={[
               { value: "y", label: "Absolute" },
-              { value: "ynorm", label: "Normalized" }
+              { value: "ynorm", label: "Normalized" },
             ]}
           />
 
@@ -277,14 +317,14 @@ export default class NetPyNEConnectivityRule extends React.Component {
             conds={"preConds"}
             items={[
               { value: "z", label: "Absolute" },
-              { value: "znorm", label: "Normalized" }
+              { value: "znorm", label: "Normalized" },
             ]}
           />
-        </div>
+        </Box>
       );
     } else if (this.state.sectionId == "Post Conditions") {
       var content = (
-        <div>
+        <Box className={`scrollbar scrollchild`} mt={1}>
           <NetPyNEField id={"netParams.connParams.postConds.pop"}>
             <NetPyNESelectField
               model={
@@ -332,7 +372,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
             conds={"postConds"}
             items={[
               { value: "x", label: "Absolute" },
-              { value: "xnorm", label: "Normalized" }
+              { value: "xnorm", label: "Normalized" },
             ]}
           />
 
@@ -343,7 +383,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
             conds={"postConds"}
             items={[
               { value: "y", label: "Absolute" },
-              { value: "ynorm", label: "Normalized" }
+              { value: "ynorm", label: "Normalized" },
             ]}
           />
 
@@ -354,10 +394,10 @@ export default class NetPyNEConnectivityRule extends React.Component {
             conds={"postConds"}
             items={[
               { value: "z", label: "Absolute" },
-              { value: "znorm", label: "Normalized" }
+              { value: "znorm", label: "Normalized" },
             ]}
           />
-        </div>
+        </Box>
       );
     }
 
@@ -393,7 +433,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
     );
 
     return (
-      <div>
+      <div className="layoutVerticalFitInner">
         <BottomNavigation showLabels value={this.state.selectedIndex}>
           {bottomNavigationItems}
         </BottomNavigation>
