@@ -26,6 +26,8 @@ export const {
   bgInputs,
   gutter,
   radius,
+  canvasBgDark,
+  canvasBgLight
 } = vars;
 
 const rawTheme = {
@@ -75,12 +77,8 @@ const rawTheme = {
         flex: 1,
       },
     },
-    MuiCard: {
-      root: { backgroundColor: bgDarker, overflowY: "auto", flex: 1 },
-    },
-    MuiBottomNavigation: {
-      root: { margin: gutter, backgroundColor: "transparent" },
-    },
+    MuiCard: { root: { backgroundColor: bgDarker, overflowY: "auto", flex: 1 }, },
+    MuiBottomNavigation: { root: { margin: gutter, backgroundColor: "transparent" }, },
     MuiPaper: { root: { color: "inherit", backgroundColor: bgRegular } },
     MuiBottomNavigationAction: {
       root: { color: fontColor, textTransform: "uppercase", maxwidth: "auto" },
@@ -111,13 +109,7 @@ const rawTheme = {
       },
     },
     MuiDialogTitle: { root: { color: fontColor } },
-    MuiDialogActions: {
-      root: {
-        "& .$MuiButton-root": {
-          textTransform: "uppercase",
-        },
-      },
-    },
+    MuiDialogActions: { root: { "& .$MuiButton-root": { textTransform: "uppercase", }, }, },
     MuiTypography: { root: { color: fontColor } },
     MuiCollapse: {
       container: { padding: 0 },
@@ -141,9 +133,7 @@ const rawTheme = {
         flexDirection: "column",
       },
     },
-    MuiAccordion: {
-      root: { padding: 0, margin: "0px!important", minHeight: "unset" },
-    },
+    MuiAccordion: { root: { padding: 0, margin: "0px!important", minHeight: "unset" }, },
     MuiAutocomplete: { popupIndicator: { marginRight: 0 } },
     MuiCardContent: { root: { padding: 8 } },
   },

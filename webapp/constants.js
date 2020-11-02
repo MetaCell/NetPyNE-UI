@@ -7,9 +7,9 @@ export { WidgetStatus };
 export const TOP_PANEL = "hlsPanel";
 
 export const THEMES = {
-  DARK: 'dark',
-  BLACK: 'black',
-  LIGHT: 'light'
+  DARK: 'gui',
+  BLACK: 'contrast',
+  LIGHT: 'light_minimal'
 }
 
 export const MODEL_STATE = {

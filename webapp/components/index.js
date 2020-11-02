@@ -245,6 +245,7 @@ export const Topbar = connect(
     modelLoaded: state.general.modelLoaded ,
     automaticInstantiation: state.general.automaticInstantiation,
     automaticSimulation: state.general.automaticSimulation,
+    theme: state.general.theme
   }),
   dispatch => ({ 
     dispatchAction: action => dispatch(action),

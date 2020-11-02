@@ -135,55 +135,13 @@ export default {
   buttons: [
     {
       label: "NetPyNE",
-      position: "bottom-start",
       icon: "",
-      list: [
-        {
-          label: "About",
-          icon: "",
-          action: {
-            handlerAction: "redux",
-            parameters: [openDialog, { title: "About", message: "This is about tab" }]
-          }
-        },
-        {
-          label: "Contribute",
-          icon: "",
-          action: {
-            handlerAction: "redux",
-            parameters: [openDialog, { title: "Contribute", message: "This is Contribute tab" }]
-          }
-        },
-        {
-          label: "Color preferences",
-          icon: "",
-          list: [
-            {
-              label: "Dark Background (default)",
-              icon: "",
-              action: {
-                handlerAction: "redux",
-                parameters: [setTheme, THEMES.DARK]
-              }
-            },{
-              label: "Black Background",
-              icon: "",
-              action: {
-                handlerAction: "redux",
-                parameters: [setTheme, THEMES.BLACK]
-              }
-            },{
-              label: "Light Background",
-              icon: "",
-              action: {
-                handlerAction: "redux",
-                parameters: [setTheme, THEMES.LIGHT]
-              }
-            }
-          ]
-        },
-      ],
-      style: firstItemStyle
+      position: "bottom-start",
+      style: firstItemStyle,
+      dynamicListInjector: {
+        handlerAction: "menuInjector",
+        parameters: ["NetPYNE"]
+      }
     },
     {
       label: "File",
@@ -412,5 +370,54 @@ export const getModelMenu = props => (
       ]
     },
 
+  ]
+)
+
+export const getNetPyNEMenu = props => (
+  [
+    {
+      label: "About",
+      icon: "",
+      action: {
+        handlerAction: "redux",
+        parameters: [openDialog, { title: "About", message: "This is about tab" }]
+      }
+    },
+    {
+      label: "Contribute",
+      icon: "",
+      action: {
+        handlerAction: "redux",
+        parameters: [openDialog, { title: "Contribute", message: "This is Contribute tab" }]
+      }
+    },
+    {
+      label: "Color preferences",
+      icon: "",
+      list: [
+        {
+          label: "Dark Background (default)",
+          icon: props.theme === THEMES.DARK ? checkedIcon : 'fa',
+          action: {
+            handlerAction: "redux",
+            parameters: [setTheme, THEMES.DARK]
+          }
+        },{
+          label: "Black Background",
+          icon: props.theme === THEMES.BLACK ? checkedIcon : 'fa',
+          action: {
+            handlerAction: "redux",
+            parameters: [setTheme, THEMES.BLACK]
+          }
+        },{
+          label: "Light Background",
+          icon: props.theme === THEMES.LIGHT ? checkedIcon : 'fa',
+          action: {
+            handlerAction: "redux",
+            parameters: [setTheme, THEMES.LIGHT]
+          }
+        }
+      ]
+    },
   ]
 )
