@@ -32,8 +32,7 @@ export default class NetPyNEInstantiated extends React.Component {
 
   }
 
-
-  componentDidMount () {
+  componentDidMount() {
     this.canvasRef.current.engine.setLinesThreshold(10000);
     this.canvasRef.current.displayAllInstances();
     this.updateBtnsWithTheme('', this.state.canvasBtnCls)
@@ -42,42 +41,44 @@ export default class NetPyNEInstantiated extends React.Component {
     this.updateInstances()
 
     GEPPETTO.on(GEPPETTO.Events.Control_panel_close, () => {
-      this.setState({ bringItToFront: 0 })
+      this.setState({ bringItToFront: 0 });
     });
   }
 
-  componentWillUnmount (){
-    GEPPETTO.off(GEPPETTO.Events.Control_panel_close)
-    clearTimeout(this.timer)
-    window.removeEventListener('resize', this.delayedResize)
+  componentWillUnmount() {
+    GEPPETTO.off(GEPPETTO.Events.Control_panel_close);
+    clearTimeout(this.timer);
+    window.removeEventListener("resize", this.delayedResize);
   }
 
-  updateInstances () {
+  updateInstances() {
     if (Instances.network) {
       // update canvas only if there are instances to show
-      this.canvasRef.current.engine.setLinesThreshold(25000)
-      this.canvasRef.current.engine.updateSceneWithNewInstances(window.Instances);
-      this.canvasRef.current.resetCamera()
+      this.canvasRef.current.engine.setLinesThreshold(25000);
+      this.canvasRef.current.engine.updateSceneWithNewInstances(
+        window.Instances
+      );
+      this.canvasRef.current.resetCamera();
 
-      this.canvasRef.current.setColor('network', primaryColor, true)
-      const spotLight = this.canvasRef.current.engine.scene.children.find(child => child.type === "SpotLight")
+      this.canvasRef.current.setColor("network", primaryColor, true);
+      const spotLight = this.canvasRef.current.engine.scene.children.find(
+        (child) => child.type === "SpotLight"
+      );
       if (spotLight) {
-        this.canvasRef.current.engine.scene.remove(spotLight)
+        this.canvasRef.current.engine.scene.remove(spotLight);
       }
-
-
     }
   }
 
-  resizeCanvas () {
-    this.setState({ update: this.state.update++ })
+  resizeCanvas() {
+    this.setState({ update: this.state.update++ });
   }
 
-  resizeIfNeeded (){
-    const dimensions = this.getParentSize()
+  resizeIfNeeded() {
+    const dimensions = this.getParentSize();
     if (dimensions !== false && this.wasParentResized(dimensions)) {
-      this.dimensions = dimensions
-      this.resizeCanvas()
+      this.dimensions = dimensions;
+      this.resizeCanvas();
     }
   }
 
@@ -85,16 +86,16 @@ export default class NetPyNEInstantiated extends React.Component {
     return dimensions.width !== this.dimensions.width || dimensions.height !== this.dimensions.height
   }
 
-  delayedResize () {
-    this.timer = setTimeout(() => this.resizeIfNeeded(), 100)
+  delayedResize() {
+    this.timer = setTimeout(() => this.resizeIfNeeded(), 100);
   }
 
-  getParentSize () {
+  getParentSize() {
     if (this.canvasRef.current === null) {
-      return false
+      return false;
     }
-    const node = ReactDOM.findDOMNode(this)
-    return node.parentNode.getBoundingClientRect()
+    const node = ReactDOM.findDOMNode(this);
+    return node.parentNode.getBoundingClientRect();
   }
 
   updateBtnsWithTheme = (removeClass, addClass) => {
@@ -110,26 +111,21 @@ export default class NetPyNEInstantiated extends React.Component {
     const bgColor = theme === THEMES.LIGHT ? canvasBgLight : theme === THEMES.BLACK ? canvasBgDark : 'transparent';
     return (
       <div className="instantiatedContainer" >
-
+         <NetWorkControlButtons canvasBtnCls={canvasBtnCls}/>
         <Canvas
           id="CanvasContainer"
           name="Canvas"
-          componentType='Canvas'
+          componentType="Canvas"
           ref={this.canvasRef}
           style={{ height: '100%', width: '100%', background: bgColor }}
           update={update}
         />
         <div id="controlpanel" style={{ top: 0 }}>
-          <ControlPanel
-            icon={null}
-            useBuiltInFilters={false}
-          >
-          </ControlPanel>
+          <ControlPanel icon={null} useBuiltInFilters={false}></ControlPanel>
         </div>
 
-        <NetWorkControlButtons canvasBtnCls={canvasBtnCls}/>
+       
       </div>
-
     );
   }
 }
