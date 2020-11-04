@@ -22,7 +22,7 @@ steps:
     working_directory: ${{main_clone}}
     tag: '${{CF_SHORT_REVISION}}'
     build_arguments:
-      - branch=${{CF_BRANCH}}
+      - branch=gui_cns
     registry: ${{REGISTRY}}
     when:
       branch:
