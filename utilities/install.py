@@ -1,5 +1,3 @@
-import setuptools
-from setuptools.command.install import install
 import subprocess
 import json
 import os, sys
@@ -67,9 +65,11 @@ def checkout(folder, default_branch_or_tag, cwdp):
     python_git = subprocess.Popen("git branch -a", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     outstd, errstd = python_git.communicate()
     if branch and branch in str(outstd):
-        subprocess.call(['git', 'checkout', branch], cwd=DEPS_DIR)
+        print(f'Checking out {branch}')
+        subprocess.call(['git', 'checkout', branch], cwd=newPath)
     else:
-        subprocess.call(['git', 'checkout', default_branch_or_tag], cwd=DEPS_DIR)
+        print(f'Checking out {default_branch_or_tag}')
+        subprocess.call(['git', 'checkout', default_branch_or_tag], cwd=newPath)
     os.chdir(currentPath)
 
 
@@ -85,7 +85,7 @@ def main(branch=branch, skipNpm=False, skipTest=False, development=False):
     if not os.path.exists(DEPS_DIR):
             os.mkdir(DEPS_DIR)
     clone(repository=NETPYNE, default_branch_or_tag='gui_cns')
-    execute(['pip3', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, NETPYNE_DIR))
+    execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, NETPYNE_DIR))
     
     
     if development:
