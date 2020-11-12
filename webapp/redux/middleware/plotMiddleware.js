@@ -1,6 +1,6 @@
 import { ADD_WIDGET, addWidget, SET_WIDGETS, UPDATE_WIDGET } from '../actions/layout';
 import Utils from '../../Utils';
-import { NETPYNE_COMMANDS, PLOT_WIDGETS } from '../../constants';
+import { NETPYNE_COMMANDS, PLOT_WIDGETS, MODEL_STATE } from '../../constants';
 
 import { processError } from './middleware';
 import { SIMULATE_NETWORK, CREATE_SIMULATE_NETWORK, SET_THEME } from '../actions/general';
@@ -53,6 +53,17 @@ export default store => next => action => {
       setWidget(widget).then(widget => widget ? next(addWidget(widget)) : null);
     }
     
+
+    
+    break
+  }
+  case SET_THEME: {
+    next(action);
+    if(store.getState().general.modelState === MODEL_STATE.INSTANTIATED) {
+      for (let widget of Object.values(PLOT_WIDGETS)) {
+        setWidget(widget).then(widget => widget ? next(addWidget(widget)) : null);
+      }
+    }
     break
   }
   default: {
