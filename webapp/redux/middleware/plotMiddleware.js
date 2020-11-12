@@ -57,7 +57,7 @@ export default store => next => action => {
   }
   case SET_THEME: {
     next(action);
-    if (store.getState().general.modelState === MODEL_STATE.INSTANTIATED) {
+    if (!store.getState().general.editMode) {
       for (let widget of Object.values(PLOT_WIDGETS)) {
         setWidget(widget).then(widget => widget ? next(addWidget(widget)) : null);
       }
