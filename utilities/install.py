@@ -80,7 +80,7 @@ def compile_mod():
 def main(branch=branch, skipNpm=False, skipTest=False, development=False):
 
     cprint("Installing requirements")
-    
+    execute(cmd=['pip', 'install', '-r', 'requirements.txt'], cwd=ROOT_DIR)
 
     if not os.path.exists(DEPS_DIR):
             os.mkdir(DEPS_DIR)
@@ -110,7 +110,6 @@ def main(branch=branch, skipNpm=False, skipTest=False, development=False):
         
     else:
         # install requirements
-        execute(cmd=['pip', 'install', '-r', 'requirements.txt'], cwd=ROOT_DIR)
         cprint("Installing UI python package...")
         execute(cmd=['pip', 'install', '.', '--no-deps'], cwd=ROOT_DIR)
 

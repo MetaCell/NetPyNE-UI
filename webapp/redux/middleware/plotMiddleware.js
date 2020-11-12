@@ -46,20 +46,18 @@ export default store => next => action => {
     break;
   }
   case SIMULATE_NETWORK:
-  case CREATE_SIMULATE_NETWORK:
-  case SET_THEME: {
+  case CREATE_SIMULATE_NETWORK: {
     next(action);
     for (let widget of Object.values(PLOT_WIDGETS)) {
       setWidget(widget).then(widget => widget ? next(addWidget(widget)) : null);
     }
-    
 
     
     break
   }
   case SET_THEME: {
     next(action);
-    if(store.getState().general.modelState === MODEL_STATE.INSTANTIATED) {
+    if (store.getState().general.modelState === MODEL_STATE.INSTANTIATED) {
       for (let widget of Object.values(PLOT_WIDGETS)) {
         setWidget(widget).then(widget => widget ? next(addWidget(widget)) : null);
       }
