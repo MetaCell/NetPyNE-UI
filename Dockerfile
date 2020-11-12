@@ -1,7 +1,7 @@
 FROM frodriguez4600/jupyter-neuron:v7.8.0
 USER $NB_USER
 
-ARG branch=development 
+ARG branch=gui_cns 
 RUN echo "$branch";
 
 ENV INSTALLATION_FOLDER=/home/jovyan/work/NetPyNE-UI

@@ -16,7 +16,7 @@ import { NetPyNEField, NetPyNETextField } from "netpyne/components";
 
 const styles = ({ spacing }) => ({ selectField: { marginTop: spacing(3) } });
 class NetPyNESynapse extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       currentName: props.name,
@@ -28,13 +28,13 @@ class NetPyNESynapse extends React.Component {
     this.handleSynMechModChange = this.handleSynMechModChange.bind(this);
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     if (this.state.currentName != nextProps.name) {
       this.setState({ currentName: nextProps.name, synMechMod: "" });
     }
   }
 
-  handleRenameChange = (event) => {
+  handleRenameChange = event => {
     var storedValue = this.props.name;
     var newValue = Utils.nameValidation(event.target.value);
     var updateCondition = this.props.renameHandler(newValue);
@@ -68,7 +68,7 @@ class NetPyNESynapse extends React.Component {
     }
   };
 
-  triggerUpdate(updateMethod) {
+  triggerUpdate (updateMethod) {
     // common strategy when triggering processing of a value change, delay it, every time there is a change we reset
     if (this.updateTimer != undefined) {
       clearTimeout(this.updateTimer);
@@ -76,20 +76,20 @@ class NetPyNESynapse extends React.Component {
     this.updateTimer = setTimeout(updateMethod, 1000);
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.__mounter = true;
     this.updateLayout();
   }
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.__mounter = false;
   }
 
-  updateLayout() {
+  updateLayout () {
     Utils.evalPythonMessage(
-      "[value == netpyne_geppetto.netParams.synMechParams['" +
-        this.state.currentName +
-        "']['mod'] for value in ['ExpSyn', 'Exp2Syn']]"
-    ).then((response) => {
+      "[value == netpyne_geppetto.netParams.synMechParams['"
+        + this.state.currentName
+        + "']['mod'] for value in ['ExpSyn', 'Exp2Syn']]"
+    ).then(response => {
       if (this.__mounter) {
         if (response[0]) {
           this.setState({ synMechMod: "ExpSyn" });
@@ -102,22 +102,22 @@ class NetPyNESynapse extends React.Component {
     });
   }
 
-  handleSynMechModChange(event) {
+  handleSynMechModChange (event) {
     const value = event.target.value;
     Utils.execPythonMessage(
-      "netpyne_geppetto.netParams.synMechParams['" +
-        this.state.currentName +
-        "']['mod'] = '" +
-        value +
-        "'"
+      "netpyne_geppetto.netParams.synMechParams['"
+        + this.state.currentName
+        + "']['mod'] = '"
+        + value
+        + "'"
     );
     this.setState({ synMechMod: value });
   }
 
-  render() {
+  render () {
     const { classes } = this.props;
-    var dialogPop =
-      this.state.errorMessage != undefined ? (
+    var dialogPop
+      = this.state.errorMessage != undefined ? (
         <Dialog open={true} style={{ whiteSpace: "pre-wrap" }}>
           <DialogTitle id="alert-dialog-title">
             {this.state.errorMessage}

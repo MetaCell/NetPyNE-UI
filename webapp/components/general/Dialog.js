@@ -14,7 +14,7 @@ import { withStyles } from "@material-ui/core/styles";
 import logo_netpyne from "../../static/netpyne-logo_white.png";
 import logo_metacell from "../../static/metacell_new.png";
 
-const styles = (theme) => ({
+const styles = theme => ({
   paper: {
     backgroundColor: bgLight,
     textAlign: "center",
@@ -113,7 +113,7 @@ const ContributeContent = withStyles(styles)(({ classes }) => (
     </Box>
   </Paper>
 ));
-export default function Dialog({ open, title, message, handleClose }) {
+export default function Dialog ({ open, title, message, handleClose }) {
   return (
     <div>
       <MuiDialog fullWidth maxWidth="sm" open={open} onClose={handleClose}>
