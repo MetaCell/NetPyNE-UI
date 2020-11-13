@@ -20,5 +20,6 @@ npm*
 app.log
 utilities/x86_64
 .idea
+*.iml
 x86_64
 .jupyter-config
