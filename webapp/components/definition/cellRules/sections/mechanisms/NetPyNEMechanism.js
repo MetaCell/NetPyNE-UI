@@ -5,7 +5,7 @@ import Box from "@material-ui/core/Box";
 import { NetPyNETextField } from "netpyne/components";
 
 export default class NetPyNEMechanism extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       currentName: props.name,
@@ -13,7 +13,7 @@ export default class NetPyNEMechanism extends React.Component {
     };
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     this.setState({ currentName: nextProps.name });
   }
 
@@ -40,12 +40,12 @@ export default class NetPyNEMechanism extends React.Component {
     ));
   };
 
-  render() {
+  render () {
     var content = [];
     if (this.state.currentName != undefined && this.state.currentName != "") {
       Utils.evalPythonMessage("netpyne_geppetto.getMechParams", [
         this.state.currentName,
-      ]).then((response) => {
+      ]).then(response => {
         if (JSON.stringify(this.state.mechFields) != JSON.stringify(response)) {
           this.setState({ mechFields: response });
         }

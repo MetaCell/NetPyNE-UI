@@ -9,24 +9,33 @@ const styles = ({ spacing }) => ({
   container: {
     position: "absolute",
     top: spacing(35.5),
-    left: '41px',
+    left: '45px',
   },
   innerContainer: { position: "relative" },
-  buttons: { marginBottom: spacing(1) },
+  buttons: {
+    width: "24px !important",
+    height: "24px !important",
+    position: "absolute",
+    minWidth: "24px !important",
+    padding: "3px 8px"
+  },
 });
 
 class NetWorkControlButtons extends React.Component {
-  render() {
-    const { classes, modelState } = this.props;
-    const disableSimulate = modelState === MODEL_STATE.SIMULATED;
-    const disableRefreshInstance =
-      modelState === MODEL_STATE.INSTANTIATED ||
-      modelState === MODEL_STATE.SIMULATED;
+  render () {
+    const { classes, modelState, canvasBtnCls } = this.props
+    const disableSimulate = modelState === MODEL_STATE.SIMULATED
+    const disableRefreshInstance = modelState === MODEL_STATE.INSTANTIATED || modelState === MODEL_STATE.SIMULATED
 
     return (
       <div className={classes.container}>
-        <div style={{ position: "relative" }}>
-          <Tooltip title={"Control panel"} placement="left">
+        <div style={{ position: 'relative' }}>
+
+          <Tooltip
+            title={"Control panel"}
+            placement="left"
+            className={canvasBtnCls}
+          >
             <div>
               <IconButton
                 className={classes.buttons}
@@ -36,41 +45,41 @@ class NetWorkControlButtons extends React.Component {
               />
             </div>
           </Tooltip>
-          {/* 
-          <Tooltip 
+          {/*
+          <Tooltip
             title={disableRefreshInstance ? "Your network is in sync" : "Synchronise network"}
             placement="left"
           >
             <div>
-              <IconButton 
+              <IconButton
                 color={disableRefreshInstance ? 'default' : 'secondary'}
-                id={"refreshInstanciatedNetworkButton"} 
+                id={"refreshInstanciatedNetworkButton"}
                 key={"refreshInstanceButton"}
                 icon="fa-refresh"
                 className={classes.buttons}
-                onClick={() => this.props.createNetwork()} 
+                onClick={() => this.props.createNetwork()}
                 disabled={disableRefreshInstance}
               />
             </div>
-          
+
           </Tooltip>
-        
-        
-          <Tooltip 
-            title={disableSimulate ? "You have already simulated the network" : "Simulate the network"} 
+
+
+          <Tooltip
+            title={disableSimulate ? "You have already simulated the network" : "Simulate the network"}
             placement="left"
           >
             <div>
-              <IconButton 
+              <IconButton
                 color={disableSimulate ? 'default' : 'secondary'}
                 id={"launchSimulationButton"}
                 icon="fa-rocket"
                 className={classes.buttons}
-                onClick={() => disableRefreshInstance ? this.props.simulateNetwork() : this.props.createAndSimulateNetwork()} 
+                onClick={() => disableRefreshInstance ? this.props.simulateNetwork() : this.props.createAndSimulateNetwork()}
                 disabled={disableSimulate}
               />
             </div>
-          
+
           </Tooltip>
            */}
         </div>

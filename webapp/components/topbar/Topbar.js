@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Snackbar from '@material-ui/core/Snackbar';
 import Menu from '@geppettoengine/geppetto-client/js/components/interface/menu/Menu';
 
-import toolbarConfig, { getModelMenu, getTutorials, getViewMenu } from './menuConfiguration'
+import toolbarConfig, { getModelMenu, getTutorials, getViewMenu, getNetPyNEMenu } from './menuConfiguration'
 import { bgRegular, bgLight, font } from '../../theme'
 import Splash from '../general/Splash'
 
@@ -60,6 +60,9 @@ class Topbar extends Component {
       }
       if (menuName === "View") {
         return getViewMenu(this.props)
+      }
+      if (menuName === "NetPYNE") {
+        return getNetPyNEMenu(this.props)
       }
       break
     }

@@ -464,7 +464,7 @@ const styles = ({ shape, spacing }) => ({
     flexDirection: "column",
   },
   bottomNav: { margin: spacing(2) },
-  layout: { height: "100%", display: "flex", overflow: "hidden", flexDirection: "column", alignItems: "stretch"  },
+  layout: { height: "100%", display: "flex", overflow: "hidden", flexDirection: "column", alignItems: "stretch" },
   scrollContainer: {
     maxHeight: `calc(100vh - ${spacing(27)}px)`,
     overflowY: "auto",

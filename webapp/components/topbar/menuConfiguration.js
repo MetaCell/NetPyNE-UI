@@ -5,16 +5,17 @@ import { bgRegular, bgDark, font, primaryColor, gutter, radius } from '../../the
 
 import { openTopbarDialog, changePageTransitionMode } from '../../redux/actions/topbar'
 import {
-  openDialog, loadTutorial, 
-  changeAutomaticInstantiation, 
-  changeAutomaticSimulation, 
-  createAndSimulateNetwork, 
-  createNetwork, 
-  simulateNetwork, 
-  editModel, 
-  showNetwork 
+  openDialog, loadTutorial,
+  changeAutomaticInstantiation,
+  changeAutomaticSimulation,
+  createAndSimulateNetwork,
+  createNetwork,
+  simulateNetwork,
+  editModel,
+  showNetwork,
+  setTheme
 } from '../../redux/actions/general'
-import { TOPBAR_CONSTANTS, MODEL_STATE } from '../../constants'
+import { TOPBAR_CONSTANTS, MODEL_STATE, THEMES } from '../../constants'
 
 const checkedIcon = "fa fa-check secondary";
 const unCheckedIcon = "fa fa-check color-dark";
@@ -86,7 +87,7 @@ export const getTutorials = () => {
       }
     }
   })
-  
+
 }
 
 export default {
@@ -134,27 +135,13 @@ export default {
   buttons: [
     {
       label: "NetPyNE",
-      position: "bottom-start",
       icon: "",
-      list: [
-        {
-          label: "About",
-          icon: "",
-          action: {
-            handlerAction: "redux",
-            parameters: [openDialog, { title: "About", message: "This is about tab" }]
-          }
-        },
-        {
-          label: "Contribute",
-          icon: "",
-          action: {
-            handlerAction: "redux",
-            parameters: [openDialog, { title: "Contribute", message: "This is Contribute tab" }]
-          }
-        },
-      ],
-      style: firstItemStyle
+      position: "bottom-start",
+      style: firstItemStyle,
+      dynamicListInjector: {
+        handlerAction: "menuInjector",
+        parameters: ["NetPYNE"]
+      }
     },
     {
       label: "File",
@@ -254,7 +241,7 @@ export default {
         parameters: ["View"]
       }
     },
-    
+
     {
       label: "Model",
       icon: "",
@@ -305,7 +292,7 @@ export const getViewMenu = props => {
       return showNetwork;
     }
   }
-  
+
   return [
     {
       label: "Edit",
@@ -314,7 +301,7 @@ export const getViewMenu = props => {
         handlerAction: "redux",
         parameters: [editModel]
       }
-      
+
     },
     {
       label: "Explore",
@@ -382,6 +369,55 @@ export const getModelMenu = props => (
         },
       ]
     },
-    
+
+  ]
+)
+
+export const getNetPyNEMenu = props => (
+  [
+    {
+      label: "About",
+      icon: "",
+      action: {
+        handlerAction: "redux",
+        parameters: [openDialog, { title: "About", message: "This is about tab" }]
+      }
+    },
+    {
+      label: "Contribute",
+      icon: "",
+      action: {
+        handlerAction: "redux",
+        parameters: [openDialog, { title: "Contribute", message: "This is Contribute tab" }]
+      }
+    },
+    {
+      label: "Color preferences",
+      icon: "",
+      list: [
+        {
+          label: "Dark Background (default)",
+          icon: props.theme === THEMES.DARK ? checkedIcon : 'fa',
+          action: {
+            handlerAction: "redux",
+            parameters: [setTheme, THEMES.DARK]
+          }
+        },{
+          label: "Black Background",
+          icon: props.theme === THEMES.BLACK ? checkedIcon : 'fa',
+          action: {
+            handlerAction: "redux",
+            parameters: [setTheme, THEMES.BLACK]
+          }
+        },{
+          label: "Light Background",
+          icon: props.theme === THEMES.LIGHT ? checkedIcon : 'fa',
+          action: {
+            handlerAction: "redux",
+            parameters: [setTheme, THEMES.LIGHT]
+          }
+        }
+      ]
+    },
   ]
 )

@@ -28,7 +28,7 @@ const styles = ({ spacing }) => ({
 });
 
 class NetPyNEStimulationSource extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       currentName: props.name,
@@ -48,13 +48,13 @@ class NetPyNEStimulationSource extends React.Component {
     );
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     if (this.state.currentName != nextProps.name) {
       Utils.evalPythonMessage(
-        "netpyne_geppetto.netParams.stimSourceParams['" +
-          nextProps.name +
-          "']['type']"
-      ).then((response) => {
+        "netpyne_geppetto.netParams.stimSourceParams['"
+          + nextProps.name
+          + "']['type']"
+      ).then(response => {
         if (response !== this.state.sourceType) {
           this.setState({ sourceType: response });
           this.props.updateCards();
@@ -65,7 +65,7 @@ class NetPyNEStimulationSource extends React.Component {
     }
   }
 
-  handleRenameChange = (event) => {
+  handleRenameChange = event => {
     var storedValue = this.props.name;
     var newValue = Utils.nameValidation(event.target.value);
     var updateCondition = this.props.renameHandler(newValue);
@@ -98,26 +98,26 @@ class NetPyNEStimulationSource extends React.Component {
     }
   };
 
-  triggerUpdate(updateMethod) {
+  triggerUpdate (updateMethod) {
     if (this.updateTimer != undefined) {
       clearTimeout(this.updateTimer);
     }
     this.updateTimer = setTimeout(updateMethod, 1000);
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.updateLayout();
   }
 
-  updateLayout() {
-    var opts = this.stimSourceTypeOptions.map((option) => option.type);
+  updateLayout () {
+    var opts = this.stimSourceTypeOptions.map(option => option.type);
     Utils.evalPythonMessage(
-      "[value == netpyne_geppetto.netParams.stimSourceParams['" +
-        this.state.currentName +
-        "']['type'] for value in " +
-        JSON.stringify(opts) +
-        "]"
-    ).then((responses) => {
+      "[value == netpyne_geppetto.netParams.stimSourceParams['"
+        + this.state.currentName
+        + "']['type'] for value in "
+        + JSON.stringify(opts)
+        + "]"
+    ).then(responses => {
       if (responses.constructor.name == "Array") {
         responses.forEach((response, index) => {
           if (response && this.state.sourceType != opts[index]) {
@@ -129,22 +129,22 @@ class NetPyNEStimulationSource extends React.Component {
     });
   }
 
-  handleStimSourceTypeChange(event) {
+  handleStimSourceTypeChange (event) {
     Utils.execPythonMessage(
-      "netpyne_geppetto.netParams.stimSourceParams['" +
-        this.state.currentName +
-        "']['type'] = '" +
-        event.target.value +
-        "'"
+      "netpyne_geppetto.netParams.stimSourceParams['"
+        + this.state.currentName
+        + "']['type'] = '"
+        + event.target.value
+        + "'"
     );
     this.setState({ sourceType: event.target.value });
     this.props.updateCards();
   }
 
-  render() {
+  render () {
     const { classes } = this.props;
-    var dialogPop =
-      this.state.errorMessage != undefined ? (
+    var dialogPop
+      = this.state.errorMessage != undefined ? (
         <Dialog open={true} style={{ whiteSpace: "pre-wrap" }}>
           <DialogTitle id="alert-dialog-title">
             {this.state.errorMessage}
@@ -335,9 +335,9 @@ class NetPyNEStimulationSource extends React.Component {
               variant="filled"
               fullWidth
               model={
-                "netParams.stimSourceParams['" +
-                this.props.name +
-                "']['interval']"
+                "netParams.stimSourceParams['"
+                + this.props.name
+                + "']['interval']"
               }
             />
           </NetPyNEField>
@@ -347,9 +347,9 @@ class NetPyNEStimulationSource extends React.Component {
               variant="filled"
               fullWidth
               model={
-                "netParams.stimSourceParams['" +
-                this.props.name +
-                "']['number']"
+                "netParams.stimSourceParams['"
+                + this.props.name
+                + "']['number']"
               }
             />
           </NetPyNEField>
@@ -441,19 +441,19 @@ class NetPyNEStimulationSource extends React.Component {
               onChange={this.handleStimSourceTypeChange}
             >
               {this.stimSourceTypeOptions != undefined
-                ? this.stimSourceTypeOptions.map(function(
-                    stimSourceTypeOption
-                  ) {
-                    return (
-                      <MenuItem
-                        id={stimSourceTypeOption.type + "MenuItem"}
-                        key={stimSourceTypeOption.type}
-                        value={stimSourceTypeOption.type}
-                      >
-                        {stimSourceTypeOption.type}
-                      </MenuItem>
-                    );
-                  })
+                ? this.stimSourceTypeOptions.map(function (
+                  stimSourceTypeOption
+                ) {
+                  return (
+                    <MenuItem
+                      id={stimSourceTypeOption.type + "MenuItem"}
+                      key={stimSourceTypeOption.type}
+                      value={stimSourceTypeOption.type}
+                    >
+                      {stimSourceTypeOption.type}
+                    </MenuItem>
+                  );
+                })
                 : null}
             </Select>
           </NetPyNEField>
