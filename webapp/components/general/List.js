@@ -2,11 +2,8 @@ import React, { Component } from "react";
 import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import Add from "@material-ui/icons/Add";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import Tooltip from "./Tooltip";
 import Chip from "@material-ui/core/Chip";
 import Grid from "@material-ui/core/Grid";
-import NetPyNEIcon from "../general/NetPyNEIcons";
 import Box from "@material-ui/core/Box";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -292,7 +289,12 @@ class ListComponent extends Component {
       <Box>
         <Grid container spacing={1} alignItems="flex-end">
           <Grid item>
-            <Box display="flex" alignItems="center" className={classes.addIcon}><IconButton><Add onClick={this.addChild}/></IconButton></Box>
+            <Box display="flex" alignItems="center" className={classes.addIcon}>
+              <IconButton
+                id={`${this.props.id}-button`}>
+                <Add onClick={this.addChild}/>
+              </IconButton>
+            </Box>
             <TextField
               variant="filled"
               id={this.props.id}

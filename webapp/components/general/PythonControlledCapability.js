@@ -9,7 +9,7 @@ define(function (require) {
 
   var $ = require('jquery');
   var React = require('react');
-  var Utils = require('./GeppettoJupyterUtils');
+  var GeppettoUtils = require('./GeppettoJupyterUtils');
 
   module.exports = {
     createPythonControlledComponent (WrappedComponent) {
@@ -19,10 +19,11 @@ define(function (require) {
           render () {
             return <WrappedComponent {...this.props} />;
           }
-        } 
+        }
+
         WrappedComponent = Wrapper;
       }
-      
+
       class PythonControlledComponent extends WrappedComponent {
         constructor (props) {
           super(props);
@@ -32,7 +33,7 @@ define(function (require) {
           this.state.model = props.model;
           this.state.componentType = getNameFromWrappedComponent(WrappedComponent);
           this.id = (this.props.id == undefined) ? this.props.model : this.props.id;
-          
+
           this._isMounted = false;
         }
 
@@ -41,11 +42,11 @@ define(function (require) {
         }
 
         connectToPython (componentType, model) {
-          Utils.execPythonMessage('jupyter_geppetto.ComponentSync(componentType="' + componentType + '",model="' + model + '",id="' + this.id + '").connect()');
+          GeppettoUtils.execPythonMessage('jupyter_geppetto.ComponentSync(componentType="' + componentType + '",model="' + model + '",id="' + this.id + '").connect()');
         }
 
         disconnectFromPython () {
-          Utils.execPythonMessage('jupyter_geppetto.remove_component_sync(componentType="' + this.state.componentType + '",model="' + this.id + '")');
+          GeppettoUtils.execPythonMessage('jupyter_geppetto.remove_component_sync(componentType="' + this.state.componentType + '",model="' + this.id + '")');
           GEPPETTO.ComponentFactory.removeExistingComponent(this.state.componentType, this);
         }
 
@@ -57,7 +58,7 @@ define(function (require) {
         UNSAFE_componentWillReceiveProps (nextProps) {
           this.disconnectFromPython();
           this.id = (nextProps.id == undefined) ? nextProps.model : nextProps.id;
-          
+
           GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
           this.connectToPython(this.state.componentType, nextProps.model);
           if (this.state.value != nextProps.value) {
@@ -84,6 +85,7 @@ define(function (require) {
     createPythonControlledControl (WrappedComponent) {
 
       var PythonControlledComponent = this.createPythonControlledComponent(WrappedComponent);
+
       class PythonControlledControl extends PythonControlledComponent {
 
         constructor (props) {
@@ -98,7 +100,7 @@ define(function (require) {
           this.handleChange = (this.props.handleChange == undefined) ? this.handleChange.bind(this) : this.props.handleChange.bind(this);
           this.handleUpdateInput = this.handleUpdateInput.bind(this);
           this.handleUpdateCheckbox = this.handleUpdateCheckbox.bind(this);
-          
+
         }
 
         componentDidMount () {
@@ -179,8 +181,8 @@ define(function (require) {
              * If the component changes id without unmounting,
              * then default values will never be synched with python
              */
-            this.props.model === prevProps.model 
-            && this.state.value === '' 
+            this.props.model === prevProps.model
+            && this.state.value === ''
             && this.props.default
           ) {
             this.UNRELIABLE_SyncDefaultValueWithPython(1000)
@@ -212,12 +214,12 @@ define(function (require) {
             if (newValue !== '') {
               this.syncValueWithPython(newValue);
             }
-            
+
             if (this.props.callback) {
               this.props.callback(newValue, this.oldValue);
             }
             this.oldValue = undefined
-          
+
           }
           this.setState({ value: newValue, searchText: newValue, checked: newValue });
           this.forceUpdate();
@@ -230,6 +232,7 @@ define(function (require) {
           }
           this.updateTimer = setTimeout(updateMethod, 1000);
         }
+
         // Default handle (mainly textfields and dropdowns)
         handleChange (event, index, value) {
           var targetValue = value;
@@ -239,7 +242,7 @@ define(function (require) {
           if (this.oldValue === undefined) {
             this.oldValue = this.state.value
           }
-          
+
           this.setState({ value: targetValue });
 
           if (this.props.validate) {
@@ -271,8 +274,11 @@ define(function (require) {
             wrappedComponentProps.key = wrappedComponentProps.model;
           }
           if (wrappedComponentProps.id == undefined) {
-            wrappedComponentProps.id = wrappedComponentProps.model;
+            wrappedComponentProps.id = wrappedComponentProps.model ?? "";
           }
+
+          wrappedComponentProps.id = cleanAttributeValue(wrappedComponentProps.id)
+
           delete wrappedComponentProps.model;
           delete wrappedComponentProps.handleChange;
 
@@ -307,9 +313,9 @@ define(function (require) {
             wrappedComponentProps['onChange'] = this.handleChange;
             wrappedComponentProps.value = (typeof this.state.value === 'object' && this.state.value !== null && !Array.isArray(this.state.value)) ? JSON.stringify(this.state.value) : this.state.value;
             // Fix case with multiple values: need to set an empty list in case the value is undefined
-            wrappedComponentProps.value = (wrappedComponentProps.multiple 
-              && wrappedComponentProps.value !== undefined 
-              && !wrappedComponentProps.value) ? [] : wrappedComponentProps.value;
+            wrappedComponentProps.value = (wrappedComponentProps.multiple
+                && wrappedComponentProps.value !== undefined
+                && !wrappedComponentProps.value) ? [] : wrappedComponentProps.value;
             delete wrappedComponentProps.searchText;
             delete wrappedComponentProps.dataSource;
             break;
@@ -328,6 +334,7 @@ define(function (require) {
     createPythonControlledControlWithPythonDataFetch (WrappedComponent) {
 
       var PythonControlledComponent = this.createPythonControlledComponent(WrappedComponent);
+
       class PythonControlledControlWithPythonDataFetch extends PythonControlledComponent {
 
         constructor (props) {
@@ -345,7 +352,7 @@ define(function (require) {
         UNSAFE_componentWillReceiveProps (nextProps) {
           this.disconnectFromPython();
           this.id = (nextProps.id == undefined) ? nextProps.model : nextProps.id;
-          
+
           GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
           this.connectToPython(this.state.componentType, nextProps.model);
           this.callPythonMethod();
@@ -370,7 +377,6 @@ define(function (require) {
           this.forceUpdate();
         }
 
-
         // Default handle (mainly textfields and dropdowns)
         handleChange (event, index, value) {
           var targetValue = value;
@@ -380,7 +386,6 @@ define(function (require) {
           this.setState({ value: targetValue });
           this.updatePythonValue(targetValue);
         }
-
 
         compareArrays (array1, array2) {
           // if the other array is a falsy value, return
@@ -409,7 +414,7 @@ define(function (require) {
         }
 
         callPythonMethod = value => {
-          Utils.evalPythonMessage(this.props.method, []).then(response => {
+          GeppettoUtils.evalPythonMessage(this.props.method, []).then(response => {
             if (this._isMounted) {
               if (Object.keys(response).length != 0) {
                 this.setState({ pythonData: response });
@@ -443,8 +448,11 @@ define(function (require) {
             wrappedComponentProps.key = wrappedComponentProps.model;
           }
           if (wrappedComponentProps.id == undefined) {
-            wrappedComponentProps.id = wrappedComponentProps.model;
+            wrappedComponentProps.id = wrappedComponentProps.model ?? "";
           }
+
+          wrappedComponentProps.id = cleanAttributeValue(wrappedComponentProps.id)
+
           wrappedComponentProps.onChange = this.handleChange;
           wrappedComponentProps.value = wrappedComponentProps.multiple && this.state.value !== undefined && !this.state.value ? [] : this.state.value;
           delete wrappedComponentProps.model;
@@ -456,7 +464,7 @@ define(function (require) {
           if (this.props.postProcessItems) {
             var items = this.props.postProcessItems(this.state.pythonData, wrappedComponentProps.value);
           }
-          
+
           return (
             <WrappedComponent {...wrappedComponentProps}>
               {items}
@@ -470,7 +478,16 @@ define(function (require) {
     },
   }
 })
+
 function getNameFromWrappedComponent (WrappedComponent) {
   return WrappedComponent.name || WrappedComponent.displayName || WrappedComponent.Naked.render.name;
 }
 
+/**
+ * Removes invalid characters from value to enable querying of selectors.
+ *
+ * Due to close integration with Python commands, characters []'". can be part of an id attribute.
+ */
+function cleanAttributeValue (value) {
+  return value.replace(/[\[\]'.]+/g, "")
+}
