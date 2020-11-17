@@ -85,7 +85,7 @@ def main(netpyne_branch, workspace_branch, pygeppetto_branch=None, jupyter_geppe
         cprint("Installing pygeppetto")
         clone(repository=PYGEPPETTO,
               folder='pygeppetto',
-              branch_or_tag=os.getenv('PYGEPPETTO_BRANCH', 'development')
+              branch_or_tag=pygeppetto_branch
               )
         execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, 'pygeppetto'))
 
@@ -93,7 +93,7 @@ def main(netpyne_branch, workspace_branch, pygeppetto_branch=None, jupyter_geppe
         cprint("Installing org.geppetto.frontend.jupyter")
         clone(repository=JUPYTER,
               folder=JUPYTER_DIR,
-              branch_or_tag=os.getenv('JUPYTER_GEPPETTO_BRANCH', 'development')
+              branch_or_tag=jupyter_geppetto_branch
               )
 
         execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, JUPYTER_DIR))
@@ -106,7 +106,7 @@ def main(netpyne_branch, workspace_branch, pygeppetto_branch=None, jupyter_geppe
 
     os.chdir(ROOT_DIR)
     cprint("Cloning workspace")
-    clone(repository=WORKSPACE, branch_or_tag=os.getenv('WORKSPACE_BRANCH', 'development'), cwdp=ROOT_DIR)
+    clone(repository=WORKSPACE, branch_or_tag=workspace_branch, cwdp=ROOT_DIR)
     cprint("Compiling workspace modules")
     compile_mod()
 
@@ -191,7 +191,7 @@ if __name__ == "__main__":
                         help='Specify NetPyNE library branch or tag.')
 
     parser.add_argument('--workspace', '-vw', dest='workspace_version', action="store",
-                        default=os.getenv('WORKSPACE_VERSION', 'development'),
+                        default=os.getenv('WORKSPACE_VERSION', 'master'),
                         help='Specify workspace branch or tag.')
 
     parser.add_argument('--pygeppetto', '-vp', dest='pygeppetto_version', action="store",

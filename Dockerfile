@@ -1,8 +1,6 @@
 FROM frodriguez4600/jupyter-neuron:v7.8.0
 USER $NB_USER
 
-RUN echo "$branch";
-
 ENV INSTALLATION_FOLDER=/home/jovyan/work/NetPyNE-UI
 ENV NETPYNE_VERSION=development
 ENV WORKSPACE_VERSION=nov2020
