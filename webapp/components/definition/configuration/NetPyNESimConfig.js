@@ -1,9 +1,7 @@
-import React, { Component } from "react";
+import React from "react";
 import FontIcon from "@material-ui/core/Icon";
 import { BottomNavigation, BottomNavigationAction } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import { bgDark } from "../../../theme";
 import {
   NetPyNEField,
   NetPyNECheckbox,
@@ -248,8 +246,9 @@ class NetPyNESimConfig extends React.Component {
           >
             <NetPyNECheckbox model={"simConfig.timestampFilename"} />
           </NetPyNEField>
-
-          {/* <NetPyNEField id="simConfig.saveHDF5" className={"netpyneCheckbox"} >
+          {/*
+          // TODO: can this be removed?
+           <NetPyNEField id="simConfig.saveHDF5" className={"netpyneCheckbox"} >
               <NetPyNECheckbox model={"simConfig.saveHDF5"} />
             </NetPyNEField>
 
@@ -407,6 +406,28 @@ class NetPyNESimConfig extends React.Component {
               fullWidth
               variant="filled"
               model={"netParams.rotateCellsRandomly"}
+            />
+          </NetPyNEField>
+
+          <NetPyNEField id="netParams.cellsVisualizationSpacingMultiplierX">
+            <NetPyNETextField
+              fullWidth
+              variant="filled"
+              model={"netParams.cellsVisualizationSpacingMultiplierX"}
+            />
+          </NetPyNEField>
+          <NetPyNEField id="netParams.cellsVisualizationSpacingMultiplierY">
+            <NetPyNETextField
+              fullWidth
+              variant="filled"
+              model={"netParams.cellsVisualizationSpacingMultiplierY"}
+            />
+          </NetPyNEField>
+          <NetPyNEField id="netParams.cellsVisualizationSpacingMultiplierZ">
+            <NetPyNETextField
+              fullWidth
+              variant="filled"
+              model={"netParams.cellsVisualizationSpacingMultiplierZ"}
             />
           </NetPyNEField>
         </div>
