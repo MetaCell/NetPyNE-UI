@@ -14,11 +14,9 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 import { withStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
 import {
   Dimensions,
   NetPyNEField,
-  NetPyNETextField,
   NetPyNECoordsRange,
   NetPyNESelectField,
 } from "netpyne/components";
@@ -49,43 +47,6 @@ class NetPyNEPopulation extends React.Component {
       sectionId: "General",
     });
   }
-
-  setPopulationDimension = value => {
-    // this.setState({ cellModel: value });
-    this.triggerUpdate(() => {
-      // Set Population Dimension Python Side
-      Utils.evalPythonMessage("api.getParametersForCellModel", [value]).then(
-        response => {
-          var cellModelFields = "";
-          if (Object.keys(response).length != 0) {
-            // Merge the new metadata with the current one
-            window.metadata = Utils.mergeDeep(window.metadata, response);
-            // console.log("New Metadata", window.metadata);
-            cellModelFields = [];
-            // Get Fields for new metadata
-            cellModelFields = Utils.getFieldsFromMetadataTree(
-              response,
-              key => (
-                <NetPyNEField id={key}>
-                  <NetPyNETextField
-                    variant="filled"
-                    model={
-                      "netParams.popParams['"
-                      + this.state.currentName
-                      + "']['"
-                      + key.split(".").pop()
-                      + "']"
-                    }
-                  />
-                </NetPyNEField>
-              )
-            );
-          }
-          this.setState({ cellModelFields: cellModelFields, cellModel: value });
-        }
-      );
-    });
-  };
 
   getModelParameters = () => {
     var select = (index, sectionId) =>
