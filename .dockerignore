@@ -10,10 +10,10 @@ netpyne
 Dockerfile
 Dockerfile_base
 Dockerfile_dev
-netpyne_workspace
 webapp/node_modules
 webapp/build
 webapp/geppetto-client
+netpyne_workspace
 k8s
 src
 x86_64

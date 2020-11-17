@@ -22,7 +22,11 @@ steps:
     working_directory: ${{main_clone}}
     tag: '${{CF_SHORT_REVISION}}'
     build_arguments:
-      - branch=gui_cns
+      - NETPYNE_VERSION=${{NETPYNE_VERSION}}
+      - WORKSPACE_VERSION=${{WORKSPACE_VERSION}}
+      - PYGEPPETTO_VERSION=${{PYGEPPETTO_VERSION}}
+      - JUPYTER_GEPPETTO_VERSION=${{JUPYTER_GEPPETTO_VERSION}}
+      - BUILD_ARGS=${{BUILD_ARGS}}
     registry: ${{REGISTRY}}
     when:
       branch:
