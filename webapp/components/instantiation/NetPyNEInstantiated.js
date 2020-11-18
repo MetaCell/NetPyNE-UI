@@ -32,7 +32,6 @@ export default class NetPyNEInstantiated extends React.Component {
       theme === THEMES.LIGHT ? this.updateBtnsWithTheme(CANVAS_DARK, CANVAS_LIGHT)
         : this.updateBtnsWithTheme(CANVAS_LIGHT, CANVAS_DARK)
     }
-
   }
 
   componentDidMount () {
@@ -124,10 +123,8 @@ export default class NetPyNEInstantiated extends React.Component {
           update={update}
         />
         <div id="controlpanel" style={{ top: 0 }}>
-          <ControlPanel icon={null} useBuiltInFilters={false}></ControlPanel>
+          {/* <ControlPanel icon={null} useBuiltInFilters={false}></ControlPanel>*/}
         </div>
-
-       
       </div>
     );
   }

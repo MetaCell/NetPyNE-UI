@@ -151,6 +151,7 @@ const createSimulateBackendCall = async (cmd, payload, consoleMessage, spinnerTy
   const responsePayload = processError(response);
   console.log('Python payload', responsePayload);
   if (responsePayload) {
+    console.error(responsePayload.errorDetails.replace(/\u001b\[.*?m/g, ''))
     throw new Error(responsePayload.errorMessage);
   } else {
     GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
@@ -174,10 +175,11 @@ export const processError = response => {
 
 const pythonCall = async ({ cmd, args }) => {
   const response = await Utils.evalPythonMessage(cmd, [args])
-  const errorPayload = await processError(response);
+  const errorPayload = processError(response);
   GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
   if (errorPayload) {
-    throw new Error(errorPayload);
+    console.error(errorPayload.errorDetails.replace(/\u001b\[.*?m/g, ''))
+    throw new Error(errorPayload.errorMessage);
   } 
   return response;
 }
