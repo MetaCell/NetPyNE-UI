@@ -123,7 +123,7 @@ export default class NetPyNEInstantiated extends React.Component {
           update={update}
         />
         <div id="controlpanel" style={{ top: 0 }}>
-          {/* <ControlPanel icon={null} useBuiltInFilters={false}></ControlPanel>*/}
+           <ControlPanel icon={null} useBuiltInFilters={false}></ControlPanel>
         </div>
       </div>
     );
