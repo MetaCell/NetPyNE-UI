@@ -178,7 +178,8 @@ export default class NetPyNEField extends Component {
       <Grid container alignItems="center">
         <Grid item>
           {(help != undefined && help != "")
-            ? <Tooltip title={help} placement="top-end" enterDelay={2000} enterTouchDelay={2000} enterNextDelay={2000} leaveTouchDelay={0} disableTouchListener={true} disableFocusListener={true}>
+            ? <Tooltip title={help} placement="top-end" enterDelay={2000} enterTouchDelay={2000} enterNextDelay={2000}
+              leaveTouchDelay={0} disableTouchListener={true} disableFocusListener={true}>
               <Box mb={1} width="100%">
                 {childWithProp}
               </Box>

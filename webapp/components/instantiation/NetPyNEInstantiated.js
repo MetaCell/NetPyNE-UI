@@ -25,7 +25,7 @@ export default class NetPyNEInstantiated extends React.Component {
     this.canvasRef = createRef();
   }
 
-  componentDidUpdate (prevProps, prevState){
+  componentDidUpdate (prevProps, prevState) {
     this.resizeIfNeeded()
     const { theme } = this.props
     if (prevProps.theme !== this.props.theme) {
@@ -112,7 +112,7 @@ export default class NetPyNEInstantiated extends React.Component {
     const { theme } = this.props;
     const bgColor = theme === THEMES.LIGHT ? canvasBgLight : theme === THEMES.BLACK ? canvasBgDark : 'transparent';
     return (
-      <div className="instantiatedContainer" >
+      <div className="instantiatedContainer">
         <NetWorkControlButtons canvasBtnCls={canvasBtnCls}/>
         <Canvas
           id="CanvasContainer"
@@ -123,7 +123,7 @@ export default class NetPyNEInstantiated extends React.Component {
           update={update}
         />
         <div id="controlpanel" style={{ top: 0 }}>
-           <ControlPanel icon={null} useBuiltInFilters={false}></ControlPanel>
+          <ControlPanel icon={null} useBuiltInFilters={false}></ControlPanel>
         </div>
       </div>
     );
