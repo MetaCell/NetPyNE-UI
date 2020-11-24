@@ -16,12 +16,26 @@ beforeAll(async () => {
   await page.goto(baseURL)
 });
 
+afterAll(async () => {
+  // Clean workspace
+  await expect(page).toClick('#File', { timeout: TIMEOUT });
+  await page.hover('#New', { timeout: TIMEOUT });
+  await expect(page).toClick('#Blank', { timeout: TIMEOUT });
+  await expect(page).toClick("button[id='appBarPerformActionButton']", { timeout: TIMEOUT });
+  await page.waitForFunction(() => {
+    let el = document.querySelector('#loading-spinner')
+    return el == null || el.clientHeight === 0
+  }, { timeout: 60000 });
+})
+
 describe('Tutorial #1', () => {
 
-  it("Cell types", async () => {
+  beforeAll(async () => {
     page.waitForSelector('.NetPyNE-root-1')
     await page.setViewport({ width: 1300, height: 1024 })
+  })
 
+  it("Cell types", async () => {
     // Add Pyramidal Cell Type
     await page.waitFor(PAGE_WAIT);
     await expect(page).toClick('#selectCellButton button', { timeout: TIMEOUT });
@@ -34,19 +48,16 @@ describe('Tutorial #1', () => {
 
     // Rename Cell to 'pyr'
     await expect(page).toClick('#CellType0', { timeout: TIMEOUT })
-    await page.waitForSelector('#cellRuleName')
-    await expect(page).toFill('#cellRuleName', 'pyr')
+    await page.waitFor(PAGE_WAIT);
+    await expect(page).toFill('#cellRuleName', 'pyr', { timeout: TIMEOUT })
 
     expect(await page.screenshot()).toMatchImageSnapshot({
       ...SNAPSHOT_OPTIONS,
-      customSnapshotsDir: "./tests/snapshots/tutorial_1/CellType"
+      customSnapshotsDir: "./tests/snapshots/tutorial_1/"
     });
   });
 
   it("Adding Excitatory Population", async () => {
-    page.waitForSelector('.NetPyNE-root-1')
-    await page.setViewport({ width: 1300, height: 1024 })
-
     // Add E population
     await page.waitForSelector('.MuiListItem-dense\[title="Populations"\]');
     await page.click('.MuiListItem-dense\[title="Populations"\]');
@@ -55,60 +66,45 @@ describe('Tutorial #1', () => {
     await page.waitFor(PAGE_WAIT);
 
     // Rename Population to E
-    // TODO: Create bug report, crashes application
-    //  1. Create population without cellType,
-    //  2. Rename population
-    // await expect(page).toFill("input[value=Population0]", "E", { timeout: TIMEOUT })
-    // await page.waitFor(PAGE_WAIT);
+    await expect(page).toFill("input[value=Population0]", "E", { timeout: TIMEOUT })
 
     // Set number of cells to 40
-    await expect(page).toClick("#netParamspopParamsPopulation0numCells", { timeout: TIMEOUT })
-    await page.$eval("input[id='netParamspopParamsPopulation0numCells']", el => el.value = 40);
-    await page.waitFor(PAGE_WAIT);
+    await expect(page).toClick("#netParamspopParamsEnumCells", { timeout: TIMEOUT })
+    await expect(page).toFill("input[id='netParamspopParamsEnumCells']", "5", { timeout: TIMEOUT })
 
     // Population - Set CellType to pyr
-    await expect(page).toClick('#netParamspopParamsPopulation0cellType', { timeout: TIMEOUT })
+    await expect(page).toClick('#netParamspopParamsEcellType', { timeout: TIMEOUT })
     await expect(page).toClick('#pyrMenuItem', { timeout: TIMEOUT })
     await page.waitFor(PAGE_WAIT)
 
     expect(await page.screenshot()).toMatchImageSnapshot({
       ...SNAPSHOT_OPTIONS,
-      customSnapshotsDir: "./tests/snapshots/tutorial_1/Population"
+      customSnapshotsDir: "./tests/snapshots/tutorial_1/"
     });
   });
 
   it("Configure Synapses", async () => {
-    page.waitForSelector('.NetPyNE-root-1')
-    await page.setViewport({ width: 1300, height: 1024 })
-
     // Synapse
     await expect(page).toClick('.MuiListItem-dense\[title="Synaptic Mechanisms"\]', { timeout: TIMEOUT });
     await expect(page).toClick('#newSynapseButton', { timeout: PAGE_WAIT })
     await page.waitFor(PAGE_WAIT)
     await expect(page).toFill("input[value='Synapse0']", "exc", { timeout: TIMEOUT })
 
-    await page.waitFor(3000)
-
     await expect(page).toClick('#synapseModSelect', { timeout: TIMEOUT })
-    await page.waitFor(PAGE_WAIT)
     await expect(page).toClick('#Exp2Syn', { timeout: TIMEOUT })
-    await page.waitFor(3000)
+
     await expect(page).toFill("#netParamssynMechParamsexctau1", "0.1", { timeout: TIMEOUT })
-    await page.waitFor(PAGE_WAIT)
     await expect(page).toFill("#netParamssynMechParamsexctau2", "1", { timeout: TIMEOUT })
     await expect(page).toFill("#netParamssynMechParamsexce", "0", { timeout: TIMEOUT })
-    await page.waitFor(3000)
+    await page.waitFor(PAGE_WAIT)
 
     expect(await page.screenshot()).toMatchImageSnapshot({
       ...SNAPSHOT_OPTIONS,
-      customSnapshotsDir: "./tests/snapshots/tutorial_1/Synapses"
+      customSnapshotsDir: "./tests/snapshots/tutorial_1/"
     });
   })
 
   it("Connectivity", async () => {
-      page.waitForSelector('.NetPyNE-root-1')
-      await page.setViewport({ width: 1300, height: 1024 })
-
       await expect(page).toClick('.MuiListItem-dense\[title="Connectivity Rules"\]', { timeout: TIMEOUT });
       await page.waitFor(PAGE_WAIT)
       await expect(page).toClick('#newConnectivityRuleButton', { timeout: TIMEOUT })
@@ -125,30 +121,150 @@ describe('Tutorial #1', () => {
 
       expect(await page.screenshot()).toMatchImageSnapshot({
         ...SNAPSHOT_OPTIONS,
-        customSnapshotsDir: "./tests/snapshots/tutorial_1/Connectivity"
+        customSnapshotsDir: "./tests/snapshots/tutorial_1/"
       });
     }
   )
 
   it("Stim. Sources", async () => {
-    page.waitForSelector('.NetPyNE-root-1')
-    await page.setViewport({ width: 1300, height: 1024 })
+    await expect(page).toClick('img[src*="stimSourceParams.svg"]', { timeout: TIMEOUT });
+    await expect(page).toClick('#newStimulationSourceButton', { timeout: PAGE_WAIT })
+    await expect(page).toFill("input[value='stim_source0']", "IClamp1", { timeout: TIMEOUT })
+    await expect(page).toClick("div[id='stimSourceSelect']", { timeout: TIMEOUT })
+    await expect(page).toClick("li[id='IClampMenuItem']", { timeout: TIMEOUT })
+    await expect(page).toFill("input[id='netParamsstimSourceParamsIClamp1del']", "20", { timeout: TIMEOUT })
+    await expect(page).toFill("input[id='netParamsstimSourceParamsIClamp1dur']", "10", { timeout: TIMEOUT })
+    await expect(page).toFill("input[id='netParamsstimSourceParamsIClamp1amp']", "0.6", { timeout: TIMEOUT })
+    await page.waitFor(5000)
 
-    // await expect(page).toClick('.MuiListItem-dense\[title="Stim. Sources"\]', { timeout: TIMEOUT });
-    // TODO: define stimulation sources
+    expect(await page.screenshot()).toMatchImageSnapshot({
+      ...SNAPSHOT_OPTIONS,
+      customSnapshotsDir: "./tests/snapshots/tutorial_1/"
+    });
   })
 
   it("Stim. Targets", async () => {
-    page.waitForSelector('.NetPyNE-root-1')
-    await page.setViewport({ width: 1300, height: 1024 })
+    let stimTarget = "IClamp1->cell0"
 
-    // TODO: define stimulation targets
-    // await expect(page).toClick('.MuiListItem-dense\[title="Stim. Targets"\]', { timeout: TIMEOUT });
+    await expect(page).toClick('img[src*="stimTargetParams.svg"]', { timeout: TIMEOUT });
+    await page.waitFor(2000)
+    await expect(page).toClick('#newStimulationTargetButton', { timeout: PAGE_WAIT })
+    await expect(page).toFill("input[value='stim_target0']", stimTarget, { timeout: TIMEOUT })
+    await expect(page).toClick(`div[id='netParamsstimTargetParams${stimTarget}source']`, { timeout: PAGE_WAIT })
+    await expect(page).toClick('#IClamp1MenuItem', { timeout: PAGE_WAIT })
+    await expect(page).toFill(`input[id='netParamsstimTargetParams${stimTarget}sec']`, "dend", { timeout: TIMEOUT })
+    await expect(page).toFill(`input[id='netParamsstimTargetParams${stimTarget}loc']`, "1", { timeout: TIMEOUT })
+    await page.waitFor(5000)
 
-    // TODO: define configuration
-    // await expect(page).toClick('.MuiListItem-dense\[title="Configuration"\]', { timeout: TIMEOUT });
+    expect(await page.screenshot()).toMatchImageSnapshot({
+      ...SNAPSHOT_OPTIONS,
+      customSnapshotsDir: "./tests/snapshots/tutorial_1/"
+    });
+  })
 
-    // TODO: define plot settings
-    // await expect(page).toClick('.MuiListItem-dense\[title="Plot Settings"\]', { timeout: TIMEOUT });
+  it("Configuration", async () => {
+    // General section
+    await expect(page).toClick('.MuiListItem-dense\[title="Configuration"\]', { timeout: TIMEOUT });
+    await expect(page).toFill("#simConfigduration", "200", { timeout: TIMEOUT })
+
+    // Record section
+    await expect(page).toClick('#configRecord', { timeout: TIMEOUT });
+    await expect(page).toFill("#simConfigrecordCells", "0", { timeout: TIMEOUT })
+    await expect(page).toClick("#simConfigrecordCells-button", { timeout: TIMEOUT })
+    await expect(page).toFill("#simConfigrecordTraces", "V_soma: {sec: soma, loc: 0.5, var: v}", { timeout: TIMEOUT })
+    await expect(page).toClick('#simConfigrecordTraces-button', { timeout: TIMEOUT });
+    await page.waitFor(1000)
+    await expect(page).toFill("#simConfigrecordTraces", "V_dend: {sec: dend, loc: 1, var: v}", { timeout: TIMEOUT })
+    await expect(page).toClick('#simConfigrecordTraces-button', { timeout: TIMEOUT });
+    await page.waitFor(1000)
+    await expect(page).toFill("#simConfigrecordStep", "1.0", { timeout: TIMEOUT })
+
+    await page.waitFor(500)
+
+    expect(await page.screenshot()).toMatchImageSnapshot({
+      ...SNAPSHOT_OPTIONS,
+      customSnapshotsDir: "./tests/snapshots/tutorial_1/"
+    });
+  })
+
+  it("Plot Settings", async () => {
+    await expect(page).toClick('.MuiListItem-dense[title="Plot Settings"]', { timeout: TIMEOUT });
+    await page.waitFor(1000)
+    expect(await page.screenshot()).toMatchImageSnapshot({
+      ...SNAPSHOT_OPTIONS,
+      customSnapshotsDir: "./tests/snapshots/tutorial_1/"
+    });
+  })
+
+  it("Create Network", async () => {
+    await expect(page).toClick("button[id='Model'", { timeout: TIMEOUT })
+    await expect(page).toClick("li[id='Create network']", { timeout: TIMEOUT })
+    await page.waitForSelector("canvas")
+    await page.waitFor(PAGE_WAIT)
+
+    expect(await page.screenshot()).toMatchImageSnapshot({
+      ...SNAPSHOT_OPTIONS,
+      customSnapshotsDir: "./tests/snapshots/tutorial_1/"
+    });
+  })
+
+  it("Simulate Network", async () => {
+    await expect(page).toClick("button[id='Model'", { timeout: TIMEOUT })
+    await expect(page).toClick("li[id='Simulate network']", { timeout: TIMEOUT })
+    await page.waitFor(3000)
+    await page.waitForFunction(() => {
+      let el = document.querySelector('#loading-spinner')
+      return el.clientHeight === 0
+    }, { timeout: 60000 });
+  })
+
+  it("View Connections Plot", async () => {
+    await expect(page).toClick('div[title=\"Connections Plot\"][role=button]', { timeout: TIMEOUT });
+    await page.waitFor(TIMEOUT)
+
+    expect(await page.screenshot()).toMatchImageSnapshot({
+      ...SNAPSHOT_OPTIONS,
+      customSnapshotsDir: "./tests/snapshots/tutorial_1/"
+    });
+  })
+
+  it("View 2D Net Plot", async () => {
+    await expect(page).toClick('div[title=\"2D Net Plot\"][role=button]', { timeout: TIMEOUT });
+    await page.waitFor(TIMEOUT)
+
+    expect(await page.screenshot()).toMatchImageSnapshot({
+      ...SNAPSHOT_OPTIONS,
+      customSnapshotsDir: "./tests/snapshots/tutorial_1/"
+    });
+  })
+
+  it("Cell traces", async () => {
+    await expect(page).toClick('div[title=\"Cell traces\"][role=button]', { timeout: TIMEOUT });
+    await page.waitFor(TIMEOUT)
+
+    expect(await page.screenshot()).toMatchImageSnapshot({
+      ...SNAPSHOT_OPTIONS,
+      customSnapshotsDir: "./tests/snapshots/tutorial_1/"
+    });
+  })
+
+  it("Raster Plot", async () => {
+    await expect(page).toClick('div[title=\"Raster plot\"][role=button]', { timeout: TIMEOUT });
+    await page.waitFor(TIMEOUT)
+
+    expect(await page.screenshot()).toMatchImageSnapshot({
+      ...SNAPSHOT_OPTIONS,
+      customSnapshotsDir: "./tests/snapshots/tutorial_1/"
+    });
+  })
+
+  it("Spike Hist Plot", async () => {
+    await expect(page).toClick('div[title=\"Spike Hist Plot\"][role=button]', { timeout: TIMEOUT });
+    await page.waitFor(TIMEOUT)
+
+    expect(await page.screenshot()).toMatchImageSnapshot({
+      ...SNAPSHOT_OPTIONS,
+      customSnapshotsDir: "./tests/snapshots/tutorial_1/"
+    });
   })
 });
