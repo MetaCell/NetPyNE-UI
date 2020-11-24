@@ -119,6 +119,18 @@ describe('Tutorial #1', () => {
       await expect(page).toFill("input[id*='delay']", "5", { timeout: TIMEOUT })
       await page.waitFor(PAGE_WAIT)
 
+      // TODO: this is blocked by a bug, have to investigate it first
+      // await expect(page).toClick("#preCondsConnTab", { timeout: TIMEOUT })
+      // await page.waitFor(PAGE_WAIT)
+      // await expect(page).toClick("#preCondsConnTab", { timeout: TIMEOUT })
+      // await expect(page).toClick("div[id*='preCondspop']", { timeout: TIMEOUT })
+      // await expect(page).toClick("#EMenuItem", { timeout: TIMEOUT })
+      // await expect(page).toClick("#postCondsConnTab", { timeout: TIMEOUT })
+      // await expect(page).toClick("div[id*='postCondspop']", { timeout: TIMEOUT })
+      // await expect(page).toClick("#EMenuItem", { timeout: TIMEOUT })
+      // await expect(page).toClick("#generalConnTab", { timeout: TIMEOUT })
+      // await page.waitFor(1000)
+
       expect(await page.screenshot()).toMatchImageSnapshot({
         ...SNAPSHOT_OPTIONS,
         customSnapshotsDir: "./tests/snapshots/tutorial_1/"
@@ -147,14 +159,23 @@ describe('Tutorial #1', () => {
     let stimTarget = "IClamp1->cell0"
 
     await expect(page).toClick('img[src*="stimTargetParams.svg"]', { timeout: TIMEOUT });
-    await page.waitFor(2000)
+    await page.waitFor(PAGE_WAIT)
     await expect(page).toClick('#newStimulationTargetButton', { timeout: PAGE_WAIT })
     await expect(page).toFill("input[value='stim_target0']", stimTarget, { timeout: TIMEOUT })
     await expect(page).toClick(`div[id='netParamsstimTargetParams${stimTarget}source']`, { timeout: PAGE_WAIT })
     await expect(page).toClick('#IClamp1MenuItem', { timeout: PAGE_WAIT })
     await expect(page).toFill(`input[id='netParamsstimTargetParams${stimTarget}sec']`, "dend", { timeout: TIMEOUT })
     await expect(page).toFill(`input[id='netParamsstimTargetParams${stimTarget}loc']`, "1", { timeout: TIMEOUT })
-    await page.waitFor(5000)
+    await page.waitFor(PAGE_WAIT)
+
+    await expect(page).toClick('#stimTargetCondsTab', { timeout: PAGE_WAIT })
+    await page.waitFor(PAGE_WAIT)
+    await expect(page).toFill(`input[id*='condscellList']`, "0", { timeout: TIMEOUT })
+    await expect(page).toClick(`button[id*='condscellList-button']`, { timeout: TIMEOUT })
+    await page.waitFor(PAGE_WAIT)
+
+    await expect(page).toClick('#stimTargetGeneralTab', { timeout: PAGE_WAIT })
+    await page.waitFor(PAGE_WAIT)
 
     expect(await page.screenshot()).toMatchImageSnapshot({
       ...SNAPSHOT_OPTIONS,
