@@ -1,8 +1,8 @@
 import 'expect-puppeteer'
 
 const baseURL = process.env.url || 'http://localhost:8888';
-const PAGE_WAIT = 2000
-const TIMEOUT = 5000
+const PAGE_WAIT = 4000
+const TIMEOUT = 20000
 const SNAPSHOT_OPTIONS = {
   customSnapshotsDir: "./tests/snapshots",
   comparisonMethod: 'ssim',
