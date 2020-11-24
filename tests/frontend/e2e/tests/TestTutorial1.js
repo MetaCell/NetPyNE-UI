@@ -2,7 +2,7 @@ import 'expect-puppeteer'
 
 const baseURL = process.env.url || 'http://localhost:8888';
 const PAGE_WAIT = 4000
-const TIMEOUT = 20000
+const TIMEOUT = 120000
 const SNAPSHOT_OPTIONS = {
   customSnapshotsDir: "./tests/snapshots",
   comparisonMethod: 'ssim',
@@ -32,7 +32,6 @@ describe('Tutorial #1', () => {
 
   beforeAll(async () => {
     page.waitForSelector('.NetPyNE-root-1')
-    await page.setViewport({ width: 1300, height: 1024 })
   })
 
   it("Cell types", async () => {
