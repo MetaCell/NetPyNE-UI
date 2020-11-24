@@ -25,7 +25,7 @@ afterAll(async () => {
   await page.waitForFunction(() => {
     let el = document.querySelector('#loading-spinner')
     return el == null || el.clientHeight === 0
-  }, { timeout: 60000 });
+  }, { timeout: 120000 });
 })
 
 describe('Tutorial #1', () => {
