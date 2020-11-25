@@ -2,7 +2,7 @@ import 'expect-puppeteer'
 
 const baseURL = process.env.url || 'http://localhost:8888';
 const PAGE_WAIT = 2000
-const TIMEOUT = 60000
+const TIMEOUT = 100000
 const SNAPSHOT_OPTIONS = {
   customSnapshotsDir: "./tests/snapshots",
   comparisonMethod: 'ssim',
@@ -25,10 +25,10 @@ afterAll(async () => {
   await page.hover('#New', { timeout: TIMEOUT });
   await expect(page).toClick('#Blank', { timeout: TIMEOUT });
   await expect(page).toClick("button[id='appBarPerformActionButton']", { timeout: TIMEOUT });
-  await page.waitForFunction(() => {
-    let el = document.querySelector('#loading-spinner')
-    return el == null || el.clientHeight === 0
-  }, { timeout: 120000 });
+  // await page.waitForFunction(() => {
+  //   let el = document.querySelector('#loading-spinner')
+  //   return el == null || el.clientHeight === 0
+  // }, { timeout: 120000 });
 })
 
 describe('Tutorial #1', () => {
@@ -41,14 +41,17 @@ describe('Tutorial #1', () => {
     // Add Pyramidal Cell Type
     await page.waitFor(PAGE_WAIT);
     await expect(page).toClick('#selectCellButton', { timeout: TIMEOUT });
+    await page.waitFor(PAGE_WAIT);
 
     // Select Cell Type
     await expect(page).toClick('#BallStick_HHCellTemplate', { timeout: TIMEOUT })
+    await page.waitFor(PAGE_WAIT);
 
     // Rename Cell to 'pyr'
     await expect(page).toClick('#CellType0', { timeout: TIMEOUT })
     await page.waitFor(PAGE_WAIT);
     await expect(page).toFill('#cellRuleName', 'pyr', { timeout: TIMEOUT })
+    await page.waitFor(PAGE_WAIT);
 
     expect(await page.screenshot()).toMatchImageSnapshot({
       ...SNAPSHOT_OPTIONS,
@@ -66,13 +69,17 @@ describe('Tutorial #1', () => {
 
     // Rename Population to E
     await expect(page).toFill("input[value=Population0]", "E", { timeout: TIMEOUT })
+    await page.waitFor(PAGE_WAIT);
 
     // Set number of cells to 40
     await expect(page).toClick("#netParamspopParamsEnumCells", { timeout: TIMEOUT })
+    await page.waitFor(PAGE_WAIT);
     await expect(page).toFill("input[id='netParamspopParamsEnumCells']", "5", { timeout: TIMEOUT })
+    await page.waitFor(PAGE_WAIT);
 
     // Population - Set CellType to pyr
     await expect(page).toClick('#netParamspopParamsEcellType', { timeout: TIMEOUT })
+    await page.waitFor(PAGE_WAIT);
     await expect(page).toClick('#pyrMenuItem', { timeout: TIMEOUT })
     await page.waitFor(PAGE_WAIT)
 
