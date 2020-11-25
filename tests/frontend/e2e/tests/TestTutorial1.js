@@ -40,13 +40,10 @@ describe('Tutorial #1', () => {
   it("Cell types", async () => {
     // Add Pyramidal Cell Type
     await page.waitFor(PAGE_WAIT);
-    await expect(page).toClick('#selectCellButton button', { timeout: TIMEOUT });
+    await expect(page).toClick('#selectCellButton', { timeout: TIMEOUT });
 
     // Select Cell Type
-    await page.waitForSelector('.modal-open > #selectCellMenu #BallStick_HHCellTemplate')
-    await page.waitFor(PAGE_WAIT);
-    await expect(page).toClick('.modal-open > #selectCellMenu #BallStick_HHCellTemplate')
-    await page.waitFor(PAGE_WAIT);
+    await expect(page).toClick('#BallStick_HHCellTemplate', { timeout: TIMEOUT })
 
     // Rename Cell to 'pyr'
     await expect(page).toClick('#CellType0', { timeout: TIMEOUT })
