@@ -23,5 +23,5 @@ script:
   - echo "$http_status"
   - cd tests/frontend/e2e
   - npm install
-  - sleep 5 && travis_retry npm run test
+  - sleep 10 && travis_retry npm run test
   - exit 0
