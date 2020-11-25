@@ -1,8 +1,8 @@
 import 'expect-puppeteer'
 
 const baseURL = process.env.url || 'http://localhost:8888';
-const PAGE_WAIT = 4000
-const TIMEOUT = 120000
+const PAGE_WAIT = 2000
+const TIMEOUT = 60000
 const SNAPSHOT_OPTIONS = {
   customSnapshotsDir: "./tests/snapshots",
   comparisonMethod: 'ssim',
@@ -14,6 +14,9 @@ jest.setTimeout(300000);
 
 beforeAll(async () => {
   await page.goto(baseURL)
+  // Setting user agent helps to speed up an otherwise extremely slow Chromium
+  //    - https://github.com/puppeteer/puppeteer/issues/1718#issuecomment-425618798
+  await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36')
 });
 
 afterAll(async () => {
@@ -240,7 +243,7 @@ describe('Tutorial #1', () => {
 
   it("View Connections Plot", async () => {
     await expect(page).toClick('div[title=\"Connections Plot\"][role=button]', { timeout: TIMEOUT });
-    await page.waitFor(TIMEOUT)
+    await page.waitFor(PAGE_WAIT)
 
     expect(await page.screenshot()).toMatchImageSnapshot({
       ...SNAPSHOT_OPTIONS,
@@ -250,7 +253,7 @@ describe('Tutorial #1', () => {
 
   it("View 2D Net Plot", async () => {
     await expect(page).toClick('div[title=\"2D Net Plot\"][role=button]', { timeout: TIMEOUT });
-    await page.waitFor(TIMEOUT)
+    await page.waitFor(PAGE_WAIT)
 
     expect(await page.screenshot()).toMatchImageSnapshot({
       ...SNAPSHOT_OPTIONS,
@@ -260,7 +263,7 @@ describe('Tutorial #1', () => {
 
   it("Cell traces", async () => {
     await expect(page).toClick('div[title=\"Cell traces\"][role=button]', { timeout: TIMEOUT });
-    await page.waitFor(TIMEOUT)
+    await page.waitFor(PAGE_WAIT)
 
     expect(await page.screenshot()).toMatchImageSnapshot({
       ...SNAPSHOT_OPTIONS,
@@ -270,7 +273,7 @@ describe('Tutorial #1', () => {
 
   it("Raster Plot", async () => {
     await expect(page).toClick('div[title=\"Raster plot\"][role=button]', { timeout: TIMEOUT });
-    await page.waitFor(TIMEOUT)
+    await page.waitFor(PAGE_WAIT)
 
     expect(await page.screenshot()).toMatchImageSnapshot({
       ...SNAPSHOT_OPTIONS,
@@ -280,7 +283,7 @@ describe('Tutorial #1', () => {
 
   it("Spike Hist Plot", async () => {
     await expect(page).toClick('div[title=\"Spike Hist Plot\"][role=button]', { timeout: TIMEOUT });
-    await page.waitFor(TIMEOUT)
+    await page.waitFor(PAGE_WAIT)
 
     expect(await page.screenshot()).toMatchImageSnapshot({
       ...SNAPSHOT_OPTIONS,
