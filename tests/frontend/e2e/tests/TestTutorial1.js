@@ -35,17 +35,25 @@ describe('Tutorial #1', () => {
 
   beforeAll(async () => {
     page.waitForSelector('.NetPyNE-root-1')
+
+    // Wait for initial loading spinner to disappear
+    await page.waitForFunction(() => {
+      let el = document.querySelector('#loading-spinner')
+      return el == null || el.clientHeight === 0
+    }, { timeout: TIMEOUT });
   })
 
   it("Cell types", async () => {
-    console.log("Run first test")
+    console.log("Add cell type ...")
 
     // Add Pyramidal Cell Type
     await page.waitFor(PAGE_WAIT);
+
+    console.log("Wait for select cell button")
     await expect(page).toClick('#selectCellButton', { timeout: TIMEOUT });
-    await page.waitFor(PAGE_WAIT);
 
     // Select Cell Type
+    console.log("Wait for ball stick template")
     await expect(page).toClick('#BallStick_HHCellTemplate', { timeout: TIMEOUT })
     await page.waitFor(PAGE_WAIT);
 
