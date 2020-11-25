@@ -4,7 +4,10 @@ ENV CHROME_BIN=/usr/bin/chromium-browser
 ARG DEBIAN_FRONTEND=noninteractive
 
 COPY package.json .
-RUN npm install ci
+COPY package-lock.json .
+
+RUN npm ci
+
 COPY . .
 	
 CMD ["npm", "run", "test"]

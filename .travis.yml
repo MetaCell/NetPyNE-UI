@@ -22,6 +22,6 @@ script:
   - http_status=$(curl -s -I $1 $LANDING_PAGE | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status"
   - cd tests/frontend/e2e
-  - npm install
+  - npm ci
   - sleep 10 && travis_retry npm run test
   - exit 0
