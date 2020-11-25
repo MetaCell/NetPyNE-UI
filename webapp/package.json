@@ -5,7 +5,7 @@
   "repository": "https://github.com/MetaCell/NetPyNE-UI",
   "license": "MIT",
   "scripts": {
-    "test": "jest --verbose",
+    "test": "jest --verbose -i --colors",
     "prebuild": "eslint . --color",
     "build": "webpack --mode development -p --progress --devtool source-map",
     "prebuild-dev": "eslint . --color --fix",

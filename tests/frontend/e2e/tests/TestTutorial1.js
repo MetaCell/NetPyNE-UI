@@ -38,6 +38,8 @@ describe('Tutorial #1', () => {
   })
 
   it("Cell types", async () => {
+    console.log("Run first test")
+
     // Add Pyramidal Cell Type
     await page.waitFor(PAGE_WAIT);
     await expect(page).toClick('#selectCellButton', { timeout: TIMEOUT });
@@ -60,6 +62,8 @@ describe('Tutorial #1', () => {
   });
 
   it("Adding Excitatory Population", async () => {
+    console.log("Add excitatory population ...")
+
     // Add E population
     await page.waitForSelector('.MuiListItem-dense\[title="Populations"\]');
     await page.click('.MuiListItem-dense\[title="Populations"\]');
@@ -90,6 +94,8 @@ describe('Tutorial #1', () => {
   });
 
   it("Configure Synapses", async () => {
+    console.log("Configure synapses ...")
+
     // Synapse
     await expect(page).toClick('.MuiListItem-dense\[title="Synaptic Mechanisms"\]', { timeout: TIMEOUT });
     await expect(page).toClick('#newSynapseButton', { timeout: PAGE_WAIT })
@@ -111,6 +117,8 @@ describe('Tutorial #1', () => {
   })
 
   it("Connectivity", async () => {
+      console.log("Configure connectivity ...")
+
       await expect(page).toClick('.MuiListItem-dense\[title="Connectivity Rules"\]', { timeout: TIMEOUT });
       await page.waitFor(PAGE_WAIT)
       await expect(page).toClick('#newConnectivityRuleButton', { timeout: TIMEOUT })
@@ -145,6 +153,8 @@ describe('Tutorial #1', () => {
   )
 
   it("Stim. Sources", async () => {
+    console.log("Configure Simulation Sources ...")
+
     await expect(page).toClick('img[src*="stimSourceParams.svg"]', { timeout: TIMEOUT });
     await expect(page).toClick('#newStimulationSourceButton', { timeout: PAGE_WAIT })
     await expect(page).toFill("input[value='stim_source0']", "IClamp1", { timeout: TIMEOUT })
@@ -162,6 +172,8 @@ describe('Tutorial #1', () => {
   })
 
   it("Stim. Targets", async () => {
+    console.log("Configure Simulation Targets ...")
+
     let stimTarget = "IClamp1->cell0"
 
     await expect(page).toClick('img[src*="stimTargetParams.svg"]', { timeout: TIMEOUT });
@@ -190,6 +202,7 @@ describe('Tutorial #1', () => {
   })
 
   it("Configuration", async () => {
+    console.log("Update simulation configuration ...")
     // General section
     await expect(page).toClick('.MuiListItem-dense\[title="Configuration"\]', { timeout: TIMEOUT });
     await expect(page).toFill("#simConfigduration", "200", { timeout: TIMEOUT })
@@ -215,6 +228,8 @@ describe('Tutorial #1', () => {
   })
 
   it("Plot Settings", async () => {
+    console.log("Plot settings ...")
+
     await expect(page).toClick('.MuiListItem-dense[title="Plot Settings"]', { timeout: TIMEOUT });
     await page.waitFor(1000)
     expect(await page.screenshot()).toMatchImageSnapshot({
@@ -224,6 +239,8 @@ describe('Tutorial #1', () => {
   })
 
   it("Create Network", async () => {
+    console.log("Create network ...")
+
     await expect(page).toClick("button[id='Model'", { timeout: TIMEOUT })
     await expect(page).toClick("li[id='Create network']", { timeout: TIMEOUT })
     await page.waitForSelector("canvas")
@@ -236,6 +253,8 @@ describe('Tutorial #1', () => {
   })
 
   it("Simulate Network", async () => {
+    console.log("Simulate network ...")
+
     await expect(page).toClick("button[id='Model'", { timeout: TIMEOUT })
     await expect(page).toClick("li[id='Simulate network']", { timeout: TIMEOUT })
     await page.waitFor(3000)
@@ -246,6 +265,8 @@ describe('Tutorial #1', () => {
   })
 
   it("View Connections Plot", async () => {
+    console.log("View Connections plot ...")
+
     await expect(page).toClick('div[title=\"Connections Plot\"][role=button]', { timeout: TIMEOUT });
     await page.waitFor(PAGE_WAIT)
 
@@ -256,6 +277,8 @@ describe('Tutorial #1', () => {
   })
 
   it("View 2D Net Plot", async () => {
+    console.log("View 2D Net Plot ...")
+
     await expect(page).toClick('div[title=\"2D Net Plot\"][role=button]', { timeout: TIMEOUT });
     await page.waitFor(PAGE_WAIT)
 
@@ -266,6 +289,8 @@ describe('Tutorial #1', () => {
   })
 
   it("Cell traces", async () => {
+    console.log("View cell traces ...")
+
     await expect(page).toClick('div[title=\"Cell traces\"][role=button]', { timeout: TIMEOUT });
     await page.waitFor(PAGE_WAIT)
 
@@ -276,6 +301,8 @@ describe('Tutorial #1', () => {
   })
 
   it("Raster Plot", async () => {
+    console.log("View raster plot ...")
+
     await expect(page).toClick('div[title=\"Raster plot\"][role=button]', { timeout: TIMEOUT });
     await page.waitFor(PAGE_WAIT)
 
@@ -286,6 +313,8 @@ describe('Tutorial #1', () => {
   })
 
   it("Spike Hist Plot", async () => {
+    console.log("View spike hist plot ...")
+
     await expect(page).toClick('div[title=\"Spike Hist Plot\"][role=button]', { timeout: TIMEOUT });
     await page.waitFor(PAGE_WAIT)
 
