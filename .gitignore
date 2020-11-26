@@ -21,3 +21,4 @@ app.log
 utilities/x86_64
 .idea
 x86_64
+.jupyter-config
