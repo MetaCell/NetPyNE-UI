@@ -1,4 +1,5 @@
 import 'expect-puppeteer'
+import { wait4selector, click } from "./utils";
 
 const baseURL = process.env.url || 'http://localhost:8888';
 const PAGE_WAIT = 2000
@@ -46,19 +47,33 @@ describe('Tutorial #1', () => {
   it("Cell types", async () => {
     console.log("Add cell type ...")
 
-    // Add Pyramidal Cell Type
     await page.waitFor(PAGE_WAIT);
-
     console.log("Wait for select cell button")
-    await expect(page).toClick('#selectCellButton > button', { timeout: TIMEOUT });
+
+    await wait4selector(page, '#selectCellButton > button', { timeout: TIMEOUT })
+    await page.evaluate(() => {
+      document.querySelector('#selectCellButton > button').click();
+    });
+
+    await page.waitFor(PAGE_WAIT);
+    // await expect(page).toClick('#selectCellButton > button', { timeout: TIMEOUT })
+
+    await page.waitFor(PAGE_WAIT);
+    expect(await page.screenshot()).toMatchImageSnapshot({
+      ...SNAPSHOT_OPTIONS,
+      customSnapshotsDir: "./tests/snapshots/tests/"
+    });
 
     // Select Cell Type
     console.log("Wait for ball stick template")
-    await expect(page).toClick('#BallStick_HHCellTemplate', { timeout: TIMEOUT })
+
+    console.log("Click on ball stick 2")
+    await wait4selector(page, "li[id='BallStick_HHCellTemplate']", { timeout: TIMEOUT })
+    await click(page, "li[id='BallStick_HHCellTemplate']")
     await page.waitFor(PAGE_WAIT);
 
     // Rename Cell to 'pyr'
-    await expect(page).toClick('#CellType0', { timeout: TIMEOUT })
+    await click(page, '#CellType0', { timeout: TIMEOUT })
     await page.waitFor(PAGE_WAIT);
     await expect(page).toFill('#cellRuleName', 'pyr', { timeout: TIMEOUT })
     await page.waitFor(PAGE_WAIT);
