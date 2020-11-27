@@ -23,7 +23,8 @@ beforeAll(async () => {
 afterAll(async () => {
   // Clean workspace
   await expect(page).toClick('#File', { timeout: TIMEOUT });
-  await page.hover('#New', { timeout: TIMEOUT });
+  await page.waitForSelector('#New', { timeout: TIMEOUT });
+  await page.hover('#New');
   await expect(page).toClick('#Blank', { timeout: TIMEOUT });
   await expect(page).toClick("button[id='appBarPerformActionButton']", { timeout: TIMEOUT });
   // await page.waitForFunction(() => {
@@ -66,8 +67,6 @@ describe('Tutorial #1', () => {
 
     // Select Cell Type
     console.log("Wait for ball stick template")
-
-    console.log("Click on ball stick 2")
     await wait4selector(page, "li[id='BallStick_HHCellTemplate']", { timeout: TIMEOUT })
     await click(page, "li[id='BallStick_HHCellTemplate']")
     await page.waitFor(PAGE_WAIT);
