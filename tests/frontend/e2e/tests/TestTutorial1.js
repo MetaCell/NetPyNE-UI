@@ -2,7 +2,7 @@ import 'expect-puppeteer'
 import { wait4selector, click } from "./utils";
 
 const baseURL = process.env.url || 'http://localhost:8888';
-const PAGE_WAIT = 4000
+const PAGE_WAIT = 3000
 const TIMEOUT = 60000
 const SNAPSHOT_OPTIONS = {
   customSnapshotsDir: "./tests/snapshots",
@@ -71,7 +71,6 @@ describe('Tutorial #1', () => {
 
     // Rename Cell to 'pyr'
     await click(page, '#CellType0', { timeout: TIMEOUT })
-    await page.waitFor(PAGE_WAIT);
     await expect(page).toFill('#cellRuleName', 'pyr', { timeout: TIMEOUT })
     await page.waitFor(PAGE_WAIT);
 
@@ -87,8 +86,6 @@ describe('Tutorial #1', () => {
     // Add E population
     await page.waitForSelector('.MuiListItem-dense\[title="Populations"\]');
     await page.click('.MuiListItem-dense\[title="Populations"\]');
-    await page.waitFor(PAGE_WAIT);
-
     await page.waitForSelector('#newPopulationButton', { timeout: TIMEOUT })
     await page.evaluate(() => {
       document.querySelector('#newPopulationButton').click();
@@ -99,15 +96,14 @@ describe('Tutorial #1', () => {
 
     // Rename Population to E
     await expect(page).toFill("input[value=Population0]", "E", { timeout: TIMEOUT })
+    // Wait till backend applied renaming changes
     await page.waitFor(PAGE_WAIT);
 
     // Set number of cells to 40
     await expect(page).toFill("input[id='netParamspopParamsEnumCells']", "5", { timeout: TIMEOUT })
-    await page.waitFor(PAGE_WAIT);
 
     // Population - Set CellType to pyr
     await expect(page).toClick('#netParamspopParamsEcellType', { timeout: TIMEOUT })
-    await page.waitFor(PAGE_WAIT);
     await expect(page).toClick('#pyrMenuItem', { timeout: TIMEOUT })
     await page.waitFor(PAGE_WAIT)
 
@@ -191,7 +187,7 @@ describe('Tutorial #1', () => {
     await expect(page).toFill("input[id='netParamsstimSourceParamsIClamp1del']", "20", { timeout: TIMEOUT })
     await expect(page).toFill("input[id='netParamsstimSourceParamsIClamp1dur']", "10", { timeout: TIMEOUT })
     await expect(page).toFill("input[id='netParamsstimSourceParamsIClamp1amp']", "0.6", { timeout: TIMEOUT })
-    await page.waitFor(5000)
+    await page.waitFor(PAGE_WAIT)
 
     expect(await page.screenshot()).toMatchImageSnapshot({
       ...SNAPSHOT_OPTIONS,
@@ -243,13 +239,13 @@ describe('Tutorial #1', () => {
     await expect(page).toClick("#simConfigrecordCells-button", { timeout: TIMEOUT })
     await expect(page).toFill("#simConfigrecordTraces", "V_soma: {sec: soma, loc: 0.5, var: v}", { timeout: TIMEOUT })
     await expect(page).toClick('#simConfigrecordTraces-button', { timeout: TIMEOUT });
-    await page.waitFor(1000)
+    await page.waitFor(PAGE_WAIT)
     await expect(page).toFill("#simConfigrecordTraces", "V_dend: {sec: dend, loc: 1, var: v}", { timeout: TIMEOUT })
     await expect(page).toClick('#simConfigrecordTraces-button', { timeout: TIMEOUT });
-    await page.waitFor(1000)
+    await page.waitFor(PAGE_WAIT)
     await expect(page).toFill("#simConfigrecordStep", "1.0", { timeout: TIMEOUT })
 
-    await page.waitFor(500)
+    await page.waitFor(PAGE_WAIT)
 
     expect(await page.screenshot()).toMatchImageSnapshot({
       ...SNAPSHOT_OPTIONS,
@@ -261,7 +257,7 @@ describe('Tutorial #1', () => {
     console.log("Plot settings ...")
 
     await expect(page).toClick('.MuiListItem-dense[title="Plot Settings"]', { timeout: TIMEOUT });
-    await page.waitFor(1000)
+    await page.waitFor(PAGE_WAIT)
     expect(await page.screenshot()).toMatchImageSnapshot({
       ...SNAPSHOT_OPTIONS,
       customSnapshotsDir: "./tests/snapshots/tutorial_1/"
@@ -287,11 +283,12 @@ describe('Tutorial #1', () => {
 
     await expect(page).toClick("button[id='Model'", { timeout: TIMEOUT })
     await expect(page).toClick("li[id='Simulate network']", { timeout: TIMEOUT })
-    await page.waitFor(3000)
+    await page.waitFor(PAGE_WAIT)
+
     await page.waitForFunction(() => {
       let el = document.querySelector('#loading-spinner')
       return el.clientHeight === 0
-    }, { timeout: 60000 });
+    }, { timeout: TIMEOUT });
   })
 
   it("View Connections Plot", async () => {
