@@ -22,11 +22,12 @@ beforeAll(async () => {
 
 afterAll(async () => {
   // Clean workspace
-  await expect(page).toClick('#File', { timeout: TIMEOUT });
-  await page.waitForSelector('#New', { timeout: TIMEOUT });
-  await page.hover('#New');
-  await expect(page).toClick('#Blank', { timeout: TIMEOUT });
-  await expect(page).toClick("button[id='appBarPerformActionButton']", { timeout: TIMEOUT });
+
+  // await expect(page).toClick('#File', { timeout: TIMEOUT });
+  // await page.waitForSelector('#New', { timeout: TIMEOUT });
+  // await page.hover('#New');
+  // await expect(page).toClick('#Blank', { timeout: TIMEOUT });
+  // await expect(page).toClick("button[id='appBarPerformActionButton']", { timeout: TIMEOUT });
   // await page.waitForFunction(() => {
   //   let el = document.querySelector('#loading-spinner')
   //   return el == null || el.clientHeight === 0
@@ -50,12 +51,12 @@ describe('Tutorial #1', () => {
 
     await page.waitFor(PAGE_WAIT);
     console.log("Wait for select cell button")
-
     await page.waitForSelector('#selectCellButton > button', { timeout: TIMEOUT })
     await page.evaluate(() => {
       document.querySelector('#selectCellButton > button').click();
     });
 
+    console.log("Taking snapshot")
     await page.waitFor(PAGE_WAIT);
     expect(await page.screenshot()).toMatchImageSnapshot({
       ...SNAPSHOT_OPTIONS,
