@@ -2,8 +2,8 @@ import 'expect-puppeteer'
 import { wait4selector, click } from "./utils";
 
 const baseURL = process.env.url || 'http://localhost:8888';
-const PAGE_WAIT = 2000
-const TIMEOUT = 100000
+const PAGE_WAIT = 4000
+const TIMEOUT = 120000
 const SNAPSHOT_OPTIONS = {
   customSnapshotsDir: "./tests/snapshots",
   comparisonMethod: 'ssim',
@@ -51,13 +51,10 @@ describe('Tutorial #1', () => {
     await page.waitFor(PAGE_WAIT);
     console.log("Wait for select cell button")
 
-    await wait4selector(page, '#selectCellButton > button', { timeout: TIMEOUT })
+    await page.waitForSelector('#selectCellButton > button', { timeout: TIMEOUT })
     await page.evaluate(() => {
       document.querySelector('#selectCellButton > button').click();
     });
-
-    await page.waitFor(PAGE_WAIT);
-    // await expect(page).toClick('#selectCellButton > button', { timeout: TIMEOUT })
 
     await page.waitFor(PAGE_WAIT);
     expect(await page.screenshot()).toMatchImageSnapshot({
