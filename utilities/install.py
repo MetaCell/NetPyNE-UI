@@ -124,9 +124,6 @@ def main(netpyne_branch, workspace_branch, pygeppetto_branch=None, jupyter_geppe
     execute(cmd=['jupyter', 'nbextension', 'enable', '--py', '--sys-prefix', 'widgetsnbextension'])
     execute(cmd=['jupyter', 'serverextension', 'enable', '--py', '--sys-prefix', 'jupyter_geppetto'])
 
-    # Generate config if not present
-    execute(cmd=['jupyter', 'notebook', '--generate-config'])
-
     # Set python console theme
     print("Installing notebook theme")
 
