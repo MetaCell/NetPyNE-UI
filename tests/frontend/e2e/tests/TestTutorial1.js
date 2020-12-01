@@ -20,20 +20,6 @@ beforeAll(async () => {
   await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36')
 });
 
-afterAll(async () => {
-  // Clean workspace
-
-  // await expect(page).toClick('#File', { timeout: TIMEOUT });
-  // await page.waitForSelector('#New', { timeout: TIMEOUT });
-  // await page.hover('#New');
-  // await expect(page).toClick('#Blank', { timeout: TIMEOUT });
-  // await expect(page).toClick("button[id='appBarPerformActionButton']", { timeout: TIMEOUT });
-  // await page.waitForFunction(() => {
-  //   let el = document.querySelector('#loading-spinner')
-  //   return el == null || el.clientHeight === 0
-  // }, { timeout: 120000 });
-})
-
 describe('Tutorial #1', () => {
 
   beforeAll(async () => {
@@ -99,7 +85,7 @@ describe('Tutorial #1', () => {
     // Wait till backend applied renaming changes
     await page.waitFor(PAGE_WAIT);
 
-    // Set number of cells to 40
+    // Set number of cells to 5 (actual is 20 but 5 is faster)
     await expect(page).toFill("input[id='netParamspopParamsEnumCells']", "5", { timeout: TIMEOUT })
 
     // Population - Set CellType to pyr
@@ -145,27 +131,38 @@ describe('Tutorial #1', () => {
       await page.waitForSelector('#newConnectivityRuleButton', { timeout: TIMEOUT })
       await page.evaluate(() => document.querySelector('#newConnectivityRuleButton').click());
       await expect(page).toFill("#ConnectivityName", "E->E", { timeout: TIMEOUT })
-      await expect(page).toFill("input[id*='Esec']", "dend", { timeout: TIMEOUT })
+      await expect(page).toFill("input[id*='Esec']", "soma", { timeout: TIMEOUT })
       await expect(page).toClick("button[id*='Esec-button']", { timeout: TIMEOUT })
       await expect(page).toClick("div[id*='EsynMech']", { timeout: TIMEOUT })
       await expect(page).toClick("#excMenuItem", { timeout: TIMEOUT })
-      await expect(page).toFill("input[id*='probability']", "0.1", { timeout: TIMEOUT })
+      await expect(page).toFill("input[id*='probability']", "0.3", { timeout: TIMEOUT })
       await expect(page).toFill("input[id*='synsPerConn']", "1", { timeout: TIMEOUT })
-      await expect(page).toFill("input[id*='weight']", "0.005", { timeout: TIMEOUT })
+      await expect(page).toFill("input[id*='weight']", "0.003", { timeout: TIMEOUT })
       await expect(page).toFill("input[id*='delay']", "5", { timeout: TIMEOUT })
       await page.waitFor(PAGE_WAIT)
 
-      // TODO: this is blocked by a bug, have to investigate it first
-      // await expect(page).toClick("#preCondsConnTab", { timeout: TIMEOUT })
-      // await page.waitFor(PAGE_WAIT)
-      // await expect(page).toClick("#preCondsConnTab", { timeout: TIMEOUT })
-      // await expect(page).toClick("div[id*='preCondspop']", { timeout: TIMEOUT })
-      // await expect(page).toClick("#EMenuItem", { timeout: TIMEOUT })
-      // await expect(page).toClick("#postCondsConnTab", { timeout: TIMEOUT })
-      // await expect(page).toClick("div[id*='postCondspop']", { timeout: TIMEOUT })
-      // await expect(page).toClick("#EMenuItem", { timeout: TIMEOUT })
-      // await expect(page).toClick("#generalConnTab", { timeout: TIMEOUT })
-      // await page.waitFor(1000)
+      await expect(page).toClick("#preCondsConnTab", { timeout: TIMEOUT })
+      await page.waitFor(PAGE_WAIT)
+      await expect(page).toClick("#preCondsConnTab", { timeout: TIMEOUT })
+      await expect(page).toClick("div[id*='preCondspop']", { timeout: TIMEOUT })
+      await expect(page).toClick("#EMenuItem", { timeout: TIMEOUT })
+
+      // Deselect multiple selection field
+      await page.waitFor(PAGE_WAIT)
+      await page.mouse.click(600, 600)
+      await page.waitFor(PAGE_WAIT)
+
+      await expect(page).toClick("#postCondsConnTab", { timeout: TIMEOUT })
+      await expect(page).toClick("div[id*='postCondspop']", { timeout: TIMEOUT })
+      await expect(page).toClick("#EMenuItem", { timeout: TIMEOUT })
+
+      // Deselect multiple selection field
+      await page.waitFor(PAGE_WAIT)
+      await page.mouse.click(600, 600)
+      await page.waitFor(PAGE_WAIT)
+
+      await expect(page).toClick("#generalConnTab", { timeout: TIMEOUT })
+      await page.waitFor(PAGE_WAIT)
 
       expect(await page.screenshot()).toMatchImageSnapshot({
         ...SNAPSHOT_OPTIONS,
@@ -331,7 +328,7 @@ describe('Tutorial #1', () => {
     console.log("View raster plot ...")
 
     await expect(page).toClick('div[title=\"Raster plot\"][role=button]', { timeout: TIMEOUT });
-    await page.waitFor(PAGE_WAIT)
+    await page.waitFor(PAGE_WAIT * 4)
 
     expect(await page.screenshot()).toMatchImageSnapshot({
       ...SNAPSHOT_OPTIONS,
@@ -343,7 +340,7 @@ describe('Tutorial #1', () => {
     console.log("View spike hist plot ...")
 
     await expect(page).toClick('div[title=\"Spike Hist Plot\"][role=button]', { timeout: TIMEOUT });
-    await page.waitFor(PAGE_WAIT)
+    await page.waitFor(PAGE_WAIT * 4)
 
     expect(await page.screenshot()).toMatchImageSnapshot({
       ...SNAPSHOT_OPTIONS,

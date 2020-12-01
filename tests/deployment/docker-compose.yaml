@@ -3,12 +3,12 @@ version: '3.7'
 services:
   netpyne-ui:
     image: netpyne-ui:latest
-    restart: always
+    restart: 'no'
     ports:
       - "8888:8888"
-  e2e:
+  netpyne-ui-e2e:
     image: netpyne-ui-e2e:latest
-    restart: always
+    restart: 'no'
     environment:
       - url=http://netpyne-ui:8888
     depends_on:

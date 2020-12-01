@@ -42,19 +42,67 @@ conda activate netpyne
 ### Run install script
 
 ```bash
-git clone https://github.com/MetaCell/NetPyNE-UI.git
-cd utilities
-python install.py
-cd ..
+python utilities/install.py
+```
+
+### Start application
+
+```bash
 ./NetPyNE-UI
+```
+
+For debugging you can use `run.py` instead
+
+```bash
+python run.py
 ```
 
 ### To update sources
 
 ```bash
-python update.py
+python utilities/update.py
 ```
+
+
+## End-to-end tests
+
+End-to-end tests are located in `tests/deployment/frontend/e2e`. 
+Ensure that the application is running in a blank state, since end-to-end tests interact with the running application.
+
+Install packages
+
+```bash
+cd tests/frontend/e2e
+npm install
+```
+
+Start tests
+
+```bash
+npm run test
+```
+
+
+#### Containerized tests
+
+You can also use `docker-compose` to run the tests. 
+Ensure that you have Docker installed on your system.
+
+Build the images
+
+```bash
+cd tests/deployment
+sh build.sh
+```
+
+Run the tests
+
+```bash
+docker-compose up --abort-on-container-exit --exit-code-from netpyne-ui-e2e
+```
+
+
+## Additional Notes
 
 NetPyNE-UI is being developed in collaboration with the [Neurosim Lab](http://neurosimlab.org/).
 See the [Wiki](https://github.com/MetaCell/NetPyNE-UI/wiki) for more info!
-
