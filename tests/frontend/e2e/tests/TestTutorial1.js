@@ -342,8 +342,12 @@ describe('Tutorial #1', () => {
     await expect(page).toClick('div[title=\"Spike Hist Plot\"][role=button]', { timeout: TIMEOUT });
     await page.waitFor(PAGE_WAIT * 4)
 
+    // Due to changing color and different simulation results, we set threshold high
+    let SPIKE_OPTIONS = { ...SNAPSHOT_OPTIONS };
+    SPIKE_OPTIONS.failureThreshold = 5.0
+
     expect(await page.screenshot()).toMatchImageSnapshot({
-      ...SNAPSHOT_OPTIONS,
+      ...SPIKE_OPTIONS,
       customSnapshotsDir: "./tests/snapshots/tutorial_1/"
     });
   })
