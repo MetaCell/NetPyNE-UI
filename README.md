@@ -64,6 +64,22 @@ python utilities/update.py
 ```
 
 
+## Run NetPyNE User Interface in Docker
+
+Ensure that you have Docker installed on your system.
+
+Build the image
+
+```bash
+docker build -t netpyne-ui
+```
+
+Run the image
+
+```bash
+docker run -p 8888:8888 netpyne-ui 
+```
+
 ## End-to-end tests
 
 End-to-end tests are located in `tests/deployment/frontend/e2e`. 
