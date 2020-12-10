@@ -57,12 +57,6 @@ For debugging you can use `run.py` instead
 python run.py
 ```
 
-### To update sources
-
-```bash
-python utilities/update.py
-```
-
 
 ## Run NetPyNE User Interface in Docker
 
