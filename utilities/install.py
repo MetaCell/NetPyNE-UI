@@ -1,8 +1,8 @@
 import subprocess
 import json
-import os, sys
+import os
+import sys
 import logging
-from shutil import copyfile
 
 branch = None
 
@@ -22,6 +22,8 @@ JUPYTER_DIR = 'jupyter-geppetto'
 NETPYNE_DIR = 'netpyne'
 
 WORKSPACE_DIR = 'netpyne_workspace'
+
+os.environ['JUPYTER_CONFIG_DIR'] = os.path.join(ROOT_DIR, '.jupyter-config')
 
 
 def cprint(string):
@@ -70,7 +72,8 @@ def compile_mod():
     execute(['nrnivmodl', os.path.join(WORKSPACE_DIR, 'mod')], cwd=ROOT_DIR)
 
 
-def main(netpyne_branch, workspace_branch, pygeppetto_branch=None, jupyter_geppetto_branch=None, skipNpm=False, skipTest=False, development=False):
+def main(netpyne_branch, workspace_branch, pygeppetto_branch=None, jupyter_geppetto_branch=None, skipNpm=False,
+         skipTest=False, development=False):
     cprint("Installing requirements")
     execute(cmd=['pip', 'install', '-r', 'requirements.txt'], cwd=ROOT_DIR)
 
@@ -121,11 +124,13 @@ def main(netpyne_branch, workspace_branch, pygeppetto_branch=None, jupyter_geppe
     execute(cmd=['jupyter', 'nbextension', 'enable', '--py', '--sys-prefix', 'widgetsnbextension'])
     execute(cmd=['jupyter', 'serverextension', 'enable', '--py', '--sys-prefix', 'jupyter_geppetto'])
 
-    # set python console theme
+    # Set python console theme
     print("Installing notebook theme")
+
     from jupyter_core import paths
     config_dir = paths.jupyter_config_dir()
     print('Jupyter configuration dir is {}'.format(config_dir))
+
     css_path = os.path.join(config_dir, 'custom')
     if not os.path.exists(css_path):
         os.makedirs(css_path)
@@ -201,8 +206,6 @@ if __name__ == "__main__":
     parser.add_argument('--jupyter_geppetto', '-vj', dest='jupyter_geppetto_version', action="store",
                         default=os.getenv('JUPYTER_GEPPETTO_VERSION', 'development'),
                         help='Specify Jupyter Geppetto library branch or tag (only for dev build).')
-
-
 
     args = parser.parse_args(sys.argv[1:])
     print('Install arguments:\n', args)
