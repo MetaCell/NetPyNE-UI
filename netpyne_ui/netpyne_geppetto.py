@@ -90,7 +90,7 @@ class NetPyNEGeppetto:
     def instantiateNetPyNEModelInGeppetto(self, args):
         try:
             with redirect_stdout(sys.__stdout__):
-                if not 'usePrevInst' in args or not args['usePrevInst']:
+                if not args.get("usePrevInst", False):
                     netpyne_model = self.instantiateNetPyNEModel()
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
 
@@ -101,35 +101,53 @@ class NetPyNEGeppetto:
     def simulateNetPyNEModelInGeppetto(self, args):
         try:
             with redirect_stdout(sys.__stdout__):
-                # TODO mpi is not finding  libmpi.dylib.. set LD_LIBRARY_PATH to openmpi bin folder, but nothing
                 if args['parallelSimulation']:
+                    # nrniv needs NRN_PYLIB to be set to python executable path
+                    os.environ["NRN_PYLIB"] = sys.executable
+
                     logging.debug('Running parallel simulation')
-                    if not 'usePrevInst' in args or not args['usePrevInst']:
+
+                    if args.get('usePrevInst', False):
+                        sim.cfg.saveJson = True
+                        oldName = sim.cfg.filename
+                        sim.cfg.filename = 'model_output'
+
+                        # workaround for issue with empty LFP dict when calling saveData()
+                        del sim.allSimData['LFP']
+
+                        sim.saveData()
+                        sim.cfg.filename = oldName
+                        template = os.path.join(os.path.dirname(__file__), 'template2.py')
+                    else:
                         self.netParams.save("netParams.json")
                         self.simConfig.saveJson = True
                         self.simConfig.save("simParams.json")
                         template = os.path.join(os.path.dirname(__file__), 'template.py')
-                    else:
-                        sim.cfg.saveJson = True
-                        oldName = sim.cfg.filename
-                        sim.cfg.filename = 'model_output'
-                        sim.saveData()
-                        sim.cfg.filename = oldName
-                        template = os.path.join(os.path.dirname(__file__), 'template2.py')
+
                     copyfile(template, './init.py')
 
-                    cp = subprocess.run(["mpiexec", "-n", args['cores'], "nrniv", "-mpi", "-python", "init.py"],
-                                        capture_output=True)
-                    print(cp.stdout.decode() + cp.stderr.decode())
-                    if cp.returncode != 0: return utils.getJSONError("Error while simulating the NetPyNE model",
-                                                                     cp.stderr.decode())
+                    cores = str(args.get("cores", "1"))
+
+                    # TODO on linux, mpi is not finding libmpi.dylib
+                    #   requires LD_LIBRARY_PATH to be set
+                    cp = subprocess.run(
+                        ["mpiexec", "-n", cores, "nrniv", "-python", "-mpi", "init.py"],
+                        capture_output=True
+                    )
+                    logging.info(cp.stdout.decode() + cp.stderr.decode())
+                    if cp.returncode != 0:
+                        return utils.getJSONError(
+                            "Error while simulating the NetPyNE model",
+                            cp.stderr.decode()
+                        )
+
                     sim.load('model_output.json')
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
                     netpyne_model = sim
 
-                else:  # single cpu computation
-                    logging.info("Starting simulation")
-                    if not 'usePrevInst' in args or not args['usePrevInst']:
+                else:
+                    # single cpu computation
+                    if not args.get('usePrevInst', False):
                         logging.debug('Instantiating single thread simulation')
                         netpyne_model = self.instantiateNetPyNEModel()
                         self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
@@ -139,6 +157,7 @@ class NetPyNEGeppetto:
 
                 return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
         except:
+            logging.error(sys.exc_info())
             return utils.getJSONError("Error while simulating the NetPyNE model", sys.exc_info())
 
     def compileModMechFiles(self, compileMod, modFolder):
@@ -158,7 +177,7 @@ class NetPyNEGeppetto:
 
     def loadModel(self, args):  # handles all data coming from a .json file (default file system for Netpyne)
         def remove(dictionary):
-            # remove reserved keys such as __dict__, __Method__, etc 
+            # remove reserved keys such as __dict__, __Method__, etc
             # they appear when we do sim.loadAll(json_file)
             if isinstance(dictionary, dict):
                 for key, value in list(dictionary.items()):
@@ -244,7 +263,7 @@ class NetPyNEGeppetto:
                 netParamsPath = str(modelParameters["netParamsPath"])
                 sys.path.append(netParamsPath)
                 os.chdir(netParamsPath)
-                # Import Module 
+                # Import Module
                 netParamsModuleName = importlib.import_module(str(modelParameters["netParamsModuleName"]))
                 # Import Model attributes
                 self.netParams = getattr(netParamsModuleName, str(modelParameters["netParamsVariable"]))
@@ -257,7 +276,7 @@ class NetPyNEGeppetto:
                 simConfigPath = str(modelParameters["simConfigPath"])
                 sys.path.append(simConfigPath)
                 os.chdir(simConfigPath)
-                # Import Module 
+                # Import Module
                 simConfigModuleName = importlib.import_module(str(modelParameters["simConfigModuleName"]))
                 # Import Model attributes
                 self.simConfig = getattr(simConfigModuleName, str(modelParameters["simConfigVariable"]))
@@ -358,10 +377,13 @@ class NetPyNEGeppetto:
         with redirect_stdout(sys.__stdout__):
             saveData = sim.allSimData if hasattr(sim, 'allSimData') and 'spkt' in sim.allSimData.keys() and len(
                 sim.allSimData['spkt']) > 0 else False
+
             sim.create(self.netParams, self.simConfig)
             sim.net.defineCellShapes()  # creates 3d pt for cells with stylized geometries
             sim.gatherData(gatherLFP=False)
-            if saveData: sim.allSimData = saveData  # preserve data from previous simulation
+
+            if saveData:
+                sim.allSimData = saveData  # preserve data from previous simulation
 
         return sim
 
