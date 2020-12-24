@@ -80,12 +80,12 @@ class NetPyNEGeppetto:
     def find_tutorials(self):
         from os import listdir
         from os.path import isfile, join
-        onlyfiles = [f for f in listdir(NETPYNE_WORKDIR_PATH) if isfile(join(NETPYNE_WORKDIR_PATH, f))]
+        only_files = [f for f in listdir(NETPYNE_WORKDIR_PATH) if isfile(join(NETPYNE_WORKDIR_PATH, f))]
 
         def _filter(_file):
             return '.py' in _file and 'tut' in _file and 'gui' in _file
 
-        return list(filter(_filter, onlyfiles))
+        return list(filter(_filter, only_files))
 
     def instantiateNetPyNEModelInGeppetto(self, args):
         try:
@@ -102,8 +102,12 @@ class NetPyNEGeppetto:
         try:
             with redirect_stdout(sys.__stdout__):
                 if args['parallelSimulation']:
-                    # nrniv needs NRN_PYLIB to be set to python executable path
-                    os.environ["NRN_PYLIB"] = sys.executable
+
+                    # TODO: need to understand when to set NRN_PYLIB
+                    #   it's required for pure Python installation, but breaks when using Conda
+                    if "CONDA_VERSION" not in os.environ:
+                        # nrniv needs NRN_PYLIB to be set to python executable path (MacOS, Python 3.7.6)
+                        os.environ["NRN_PYLIB"] = sys.executable
 
                     logging.debug('Running parallel simulation')
 
@@ -127,9 +131,6 @@ class NetPyNEGeppetto:
                     copyfile(template, './init.py')
 
                     cores = str(args.get("cores", "1"))
-
-                    # TODO on linux, mpi is not finding libmpi.dylib
-                    #   requires LD_LIBRARY_PATH to be set
                     cp = subprocess.run(
                         ["mpiexec", "-n", cores, "nrniv", "-python", "-mpi", "init.py"],
                         capture_output=True
@@ -175,7 +176,13 @@ class NetPyNEGeppetto:
         if modFolder:
             neuron.load_mechanisms(str(modFolder))
 
-    def loadModel(self, args):  # handles all data coming from a .json file (default file system for Netpyne)
+    def loadModel(self, args):
+        """ Handles all data coming from a .json file (default file format for Netpyne).
+
+        :param args:
+        :return:
+        """
+
         def remove(dictionary):
             # remove reserved keys such as __dict__, __Method__, etc
             # they appear when we do sim.loadAll(json_file)
