@@ -2,7 +2,7 @@
 import { OPEN_BACKEND_ERROR_DIALOG, CLOSE_BACKEND_ERROR_DIALOG } from '../actions/errors';
 
 // Default state for general
-export const ERROR_DEFAULT_STATE = { 
+export const ERROR_DEFAULT_STATE = {
   openDialog: false,
   errorMessage: '',
   errorDetails: ''
@@ -13,7 +13,7 @@ export const ERROR_DEFAULT_STATE = {
 export default function reduceError (state = ERROR_DEFAULT_STATE, action) {
   switch (action.type) {
   case OPEN_BACKEND_ERROR_DIALOG:
-    return { 
+    return {
       ...state,
       openDialog: true,
       errorMessage: action.payload,

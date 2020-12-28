@@ -9,11 +9,11 @@ const Utils = {
       return prefix;
     }
     // Get New Available ID
-    var id = prefix;
+    let id = prefix;
     if (model[id + 0] == undefined) {
       return id + 0
     }
-    var i = 0;
+    let i = 0;
     id = prefix + i++
     while (model[id] != undefined) {
       id = prefix + i++;
@@ -25,8 +25,8 @@ const Utils = {
     if (key == undefined) {
       return;
     }
-    var currentObject;
-    var nextObject = window.metadata;
+    let currentObject;
+    let nextObject = window.metadata;
     key.split('.').forEach(item => {
       if (item in nextObject) {
         currentObject = nextObject[item];
@@ -42,14 +42,15 @@ const Utils = {
   },
 
   getHTMLType: function (key) {
-    var type = this.getMetadataField(key, "type")
+    const type = this.getMetadataField(key, "type");
+    let htmlType;
 
     switch (type) {
     case "int":
-      var htmlType = "number"
+      htmlType = "number";
       break;
     default:
-      var htmlType = "text"
+      htmlType = "text";
       break;
     }
     return htmlType;
@@ -126,7 +127,7 @@ const Utils = {
     return name;
 
   },
-    
+
   // FIXME: Hack to remove scaped chars (\\ -> \ and \' -> ') manually
   convertToJSON (data){
     if (typeof data === 'string' || data instanceof String){
@@ -136,7 +137,7 @@ const Utils = {
   },
 
   getErrorResponse (data){
-    var parsedData = this.convertToJSON(data)
+    const parsedData = this.convertToJSON(data);
     if (parsedData.type && parsedData['type'] == 'ERROR') {
       const error = { details: parsedData['details'] }
       if (Object.prototype.hasOwnProperty.call(parsedData, "message")) {

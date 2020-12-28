@@ -16,7 +16,11 @@ const handle_output = function (data) {
     } catch (error) {
       var response = data.content.data['text/plain'].replace(/^'(.*)'$/, '$1');
     }
-    GEPPETTO.trigger(GEPPETTO.Events.Receive_Python_Message, { id: data.parent_header.msg_id, type: data.msg_type, response: response });
+    GEPPETTO.trigger(GEPPETTO.Events.Receive_Python_Message, {
+      id: data.parent_header.msg_id,
+      type: data.msg_type,
+      response: response
+    });
     break;
   case "display_data":
     // FIXME
@@ -28,8 +32,12 @@ const handle_output = function (data) {
 
 const execPythonMessage = function (command, callback = handle_output) {
   GEPPETTO.CommandController.log('Executing Python command: ' + command, true);
-  var kernel = IPython.notebook.kernel;
-  var messageID = kernel.execute(command, { iopub: { output: callback } }, { silent: false, stop_on_error: true, store_history: true });
+  const kernel = IPython.notebook.kernel;
+  const messageID = kernel.execute(command, { iopub: { output: callback } }, {
+    silent: false,
+    stop_on_error: true,
+    store_history: true
+  });
 
   return new Promise((resolve, reject) =>
     GEPPETTO.on(GEPPETTO.Events.Receive_Python_Message, function (data) {
@@ -41,7 +49,7 @@ const execPythonMessage = function (command, callback = handle_output) {
 };
 
 const evalPythonMessage = function (command, parameters, parse = true) {
-  var parametersString = '';
+  let parametersString = '';
   if (parameters) {
     if (parameters.length > 0) {
       parametersString = "(" + parameters.map(parameter => "utils.convertToPython('" + JSON.stringify(parameter) + "')").join(",") + ")";
@@ -50,7 +58,7 @@ const evalPythonMessage = function (command, parameters, parse = true) {
     }
   }
 
-  var finalCommand = command + parametersString;
+  let finalCommand = command + parametersString;
   if (parse) {
     finalCommand = 'utils.convertToJS(' + finalCommand + ')'
   }
