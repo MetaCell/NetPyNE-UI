@@ -14,6 +14,7 @@ webapp/node_modules
 webapp/build
 webapp/geppetto-client
 netpyne_workspace
+tests
 k8s
 src
 x86_64

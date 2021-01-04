@@ -28,7 +28,6 @@ import {
 
 import { MINIMIZED_PANEL } from '.';
 import { TabsetPosition } from './model';
-import { Tab } from '@geppettoengine/geppetto-client/js/components/interface/flexLayout2/src/view/Tab';
 
 const styles = (theme) => createStyles({
   container: {
@@ -97,9 +96,16 @@ class LayoutManager {
   onRenderTabSet = (panel, renderValues) => {
     if (panel.getType() === "tabset" && this.enableMinimize) {
       if (panel.getId() != 'leftPanel' && panel.getChildren().length > 0) {
-        renderValues.buttons.push(<div key={panel.getId()} className="fa fa-window-minimize customIconFlexLayout" onClick={() => {
-          this.minimizeWidget(panel.getActiveNode().getId())
-        }} />);
+        renderValues.buttons.push(
+          <div
+            id={panel.getId()}
+            key={panel.getId()}
+            className="fa fa-window-minimize customIconFlexLayout"
+            onClick={() => {
+              this.minimizeWidget(panel.getActiveNode().getId())
+            }}
+          />
+        );
       }
     }
   }
@@ -120,13 +126,10 @@ class LayoutManager {
 
   getComponent = () => withStyles(styles)(this.Component(this));
 
-
   private createTabSet(tabsetID, position = TabsetPosition.RIGHT, weight = 50) {
     // In case the tabset doesn't exist
     const { model } = this;
     const rootNode = model.getNodeById("root");
-
-
 
     const tabset = new FlexLayout.TabSetNode(model, { id: tabsetID });
     tabset._setWeight(weight);
@@ -384,8 +387,7 @@ class LayoutManager {
     if (previousWidget.status != widget.status) {
       if (previousWidget.status == WidgetStatus.MINIMIZED) {
         this.restoreWidget(widget);
-      }
-      else {
+      } else {
         this.moveWidget(widget);
       }
     }
@@ -435,8 +437,7 @@ class LayoutManager {
     const parent = model.getNodeById(widgetId).getParent() as any;
     if (parent.getId() === "border_bottom") {
       return WidgetStatus.MINIMIZED
-    }
-    else {
+    } else {
       const selectedIndex = parent.getSelected()
       if (parent.getChildren()[selectedIndex].getId() === widgetId) {
         return WidgetStatus.ACTIVE

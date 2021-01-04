@@ -14,11 +14,13 @@ webapp/node_modules
 webapp/geppetto-client
 webapp/build
 netpyne_workspace
+tests/frontend/e2e/node_modules
 Dockerfile_mini
 npm*
 .vscode
 app.log
 utilities/x86_64
 .idea
+*.iml
 x86_64
 .jupyter-config

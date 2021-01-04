@@ -2,16 +2,12 @@
 netpyne_geppetto.py
 Initialise NetPyNE Geppetto, this class contains methods to connect NetPyNE with the Geppetto based UI
 """
-import io
 import json
 import os
 import importlib
 import sys
 import subprocess
 import logging
-import threading
-import time
-import traceback
 import re
 
 from netpyne import specs, sim, analysis
@@ -23,19 +19,16 @@ from pygeppetto.model.model_serializer import GeppettoModelSerializer
 import matplotlib.pyplot as plt
 from pygeppetto import ui
 import numpy as np
-from matplotlib.backends.backend_agg import FigureCanvasAgg
-from matplotlib.figure import Figure
 import neuron
 from shutil import copyfile
 from jupyter_geppetto import jupyter_geppetto, synchronization, utils
-import imp
-from contextlib import redirect_stdout, redirect_stderr
+from contextlib import redirect_stdout
 from netpyne_ui.constants import NETPYNE_WORKDIR_PATH
 
 os.chdir(NETPYNE_WORKDIR_PATH)
 
 
-class NetPyNEGeppetto():
+class NetPyNEGeppetto:
 
     def __init__(self):
         self.model_interpreter = NetPyNEModelInterpreter()
@@ -108,8 +101,8 @@ class NetPyNEGeppetto():
     def simulateNetPyNEModelInGeppetto(self, args):
         try:
             with redirect_stdout(sys.__stdout__):
-                if args[
-                    'parallelSimulation']:  # TODO mpi is not finding  libmpi.dylib.. set LD_LIBRARY_PATH to openmpi bin folder, but nothing
+                # TODO mpi is not finding  libmpi.dylib.. set LD_LIBRARY_PATH to openmpi bin folder, but nothing
+                if args['parallelSimulation']:
                     logging.debug('Running parallel simulation')
                     if not 'usePrevInst' in args or not args['usePrevInst']:
                         self.netParams.save("netParams.json")
@@ -135,6 +128,7 @@ class NetPyNEGeppetto():
                     netpyne_model = sim
 
                 else:  # single cpu computation
+                    logging.info("Starting simulation")
                     if not 'usePrevInst' in args or not args['usePrevInst']:
                         logging.debug('Instantiating single thread simulation')
                         netpyne_model = self.instantiateNetPyNEModel()
@@ -224,13 +218,14 @@ class NetPyNEGeppetto():
                         remove(self.netParams.todict())
 
                 if wake_up_geppetto:
-                    section = list(sim.net.cells[0].secs.keys())[0]
-                    if not 'pt3d' in list(sim.net.cells[0].secs[section].geom.keys()):
-                        sim.net.defineCellShapes()
-                        sim.gatherData()
-                        sim.loadSimData(args['jsonModelFolder'])
-                    self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
+                    if len(sim.net.cells) > 0:
+                        section = list(sim.net.cells[0].secs.keys())[0]
+                        if not 'pt3d' in list(sim.net.cells[0].secs[section].geom.keys()):
+                            sim.net.defineCellShapes()
+                            sim.gatherData()
+                            sim.loadSimData(args['jsonModelFolder'])
 
+                    self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
                     return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
                 else:
                     return utils.getJSONReply()

@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  netpyne-ui:
+    image: netpyne-ui:latest
+    restart: 'no'
+    ports:
+      - "8888:8888"
+  netpyne-ui-e2e:
+    image: netpyne-ui-e2e:latest
+    restart: 'no'
+    environment:
+      - url=http://netpyne-ui:8888
+    depends_on:
+      - netpyne-ui
+    command: bash -c "sleep 5 && npm run test"
