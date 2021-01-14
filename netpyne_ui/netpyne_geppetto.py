@@ -16,6 +16,8 @@ from netpyne import specs, sim, analysis
 from netpyne.specs.utils import validateFunction
 from netpyne.conversion.neuronPyHoc import mechVarList
 from netpyne.metadata import metadata
+
+from netpyne_ui import simulations
 from netpyne_ui.netpyne_model_interpreter import NetPyNEModelInterpreter
 from pygeppetto.model.model_serializer import GeppettoModelSerializer
 import matplotlib.pyplot as plt
@@ -106,64 +108,51 @@ class NetPyNEGeppetto:
         try:
             with redirect_stdout(sys.__stdout__):
                 if args['parallelSimulation']:
-
-                    # TODO: need to understand when to set NRN_PYLIB
-                    #   it's required for pure Python installation, but breaks when using Conda
-                    if "CONDA_VERSION" not in os.environ:
-                        # nrniv needs NRN_PYLIB to be set to python executable path (MacOS, Python 3.7.6)
-                        os.environ["NRN_PYLIB"] = sys.executable
-
-                    logging.debug('Running parallel simulation')
-
-                    if args.get('usePrevInst', False):
-                        sim.cfg.saveJson = True
-                        oldName = sim.cfg.filename
-                        sim.cfg.filename = 'model_output'
-
-                        # workaround for issue with empty LFP dict when calling saveData()
-                        del sim.allSimData['LFP']
-
-                        sim.saveData()
-                        sim.cfg.filename = oldName
-                        template = os.path.join(os.path.dirname(__file__), 'template2.py')
-                    else:
-                        self.netParams.save("netParams.json")
-                        self.simConfig.saveJson = True
-                        self.simConfig.save("simParams.json")
-                        template = os.path.join(os.path.dirname(__file__), 'template.py')
-
-                    copyfile(template, './init.py')
-
-                    cores = str(args.get("cores", "1"))
-                    cp = subprocess.run(
-                        ["mpiexec", "-n", cores, "nrniv", "-python", "-mpi", "init.py"],
-                        capture_output=True
-                    )
-                    logging.info(cp.stdout.decode() + cp.stderr.decode())
-                    if cp.returncode != 0:
-                        return utils.getJSONError(
-                            "Error while simulating the NetPyNE model",
-                            cp.stderr.decode()
-                        )
-
-                    sim.load('model_output.json')
-                    self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
-
+                    self._run_parallel(args)
                 else:
-                    # single cpu computation
-                    if not args.get('usePrevInst', False):
-                        logging.debug('Instantiating single thread simulation')
-                        netpyne_model = self.instantiateNetPyNEModel()
-                        self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
-
-                    logging.debug('Running single thread simulation')
-                    self.simulateNetPyNEModel()
-
+                    self._run_in_single_core(args)
                 return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
         except Exception:
             message = "Error while simulating the NetPyNE model"
             logging.exception(message)
             return utils.getJSONError(message, sys.exc_info())
+
+    def _run_parallel(self, args):
+        if args.get('usePrevInst', False):
+            sim.cfg.saveJson = True
+            oldName = sim.cfg.filename
+            sim.cfg.filename = 'model_output'
+
+            # workaround for issue with empty LFP dict when calling saveData()
+            del sim.allSimData['LFP']
+
+            sim.saveData()
+            sim.cfg.filename = oldName
+            template = os.path.join(os.path.dirname(__file__), 'template2.py')
+        else:
+            self.netParams.save("netParams.json")
+            self.simConfig.saveJson = True
+            self.simConfig.save("simParams.json")
+            template = os.path.join(os.path.dirname(__file__), 'template.py')
+
+        # TODO: Instead of copying here files depending on usePrevInst, we can simply parameterize the python script
+        copyfile(template, './init.py')
+
+        cores = str(args.get("cores", "1"))
+        error = simulations.run(parallel=True, cores=cores)
+        if error:
+            return utils.getJSONError("Error while simulating the NetPyNE model", error)
+
+        sim.load('model_output.json')
+        self.geppetto_model = self.model_interpreter.get_geppetto_model(sim)
+
+    def _run_in_single_core(self, args):
+        if not args.get('usePrevInst', False):
+            logging.debug('Instantiating single thread simulation')
+            netpyne_model = self.instantiateNetPyNEModel()
+            self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
+
+        simulations.run()
 
     def compileModMechFiles(self, compileMod, modFolder):
         # Create Symbolic link
@@ -417,13 +406,6 @@ class NetPyNEGeppetto:
             if saveData:
                 sim.allSimData = saveData  # preserve data from previous simulation
 
-        return sim
-
-    def simulateNetPyNEModel(self):
-        with redirect_stdout(sys.__stdout__):
-            sim.setupRecording()
-            sim.simulate()
-            sim.saveData()
         return sim
 
     def doIhaveInstOrSimData(self):  # return [bool, bool] telling if we have an instance and simulated data
