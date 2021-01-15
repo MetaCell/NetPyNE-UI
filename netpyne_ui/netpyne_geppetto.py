@@ -44,7 +44,9 @@ class NetPyNEGeppetto:
         self.netParams = specs.NetParams()
         self.simConfig = specs.SimConfig()
 
-        # TODO: need new methods to store field data in these dictionaries
+        # default values
+        self.simConfig.batch = False
+
         self.batch_config = {
             "enabled": True,
             "params": [
@@ -99,6 +101,31 @@ class NetPyNEGeppetto:
             "type": "float"
         }
 
+        metadata['simConfig']['children']['batch'] = {
+            "label": "Batch enabled",
+            "help": "Activates batch",
+            "suggestions": "",
+            "hintText": "",
+            "type": "bool"
+        }
+
+        metadata['batch_config'] = {
+            "label": "Batch configuration",
+            "help": "",
+            "suggestions": "",
+            "hintText": "",
+            'children': {
+                'enabled': {
+                    "label": "Batch enabled",
+                    "help": "Activates batch",
+                    "suggestions": "",
+                    "hintText": "",
+                    "type": "bool"
+                },
+                # TODO: add here metadata for remaining fields
+            }
+        }
+
         self.netParams.cellsVisualizationSpacingMultiplierX = 1
         self.netParams.cellsVisualizationSpacingMultiplierY = 1
         self.netParams.cellsVisualizationSpacingMultiplierZ = 1
@@ -107,6 +134,7 @@ class NetPyNEGeppetto:
             "metadata": metadata,
             "netParams": self.netParams.todict(),
             "simConfig": self.simConfig.todict(),
+            "batch_config": self.batch_config,
             "isDocker": os.path.isfile('/.dockerenv'),
             "currentFolder": os.getcwd(),
             "tuts": self.find_tutorials()

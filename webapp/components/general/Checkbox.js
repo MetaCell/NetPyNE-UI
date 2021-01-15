@@ -4,7 +4,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import MuiCheckbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { bgLight } from '../../theme'
+import { bgLight } from 'root/theme'
 
 export default class Checkbox extends Component {
   render () {

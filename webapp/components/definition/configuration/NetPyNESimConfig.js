@@ -60,25 +60,25 @@ class NetPyNESimConfig extends React.Component {
           </NetPyNEField>
 
           <NetPyNEField id="simConfig.hParams" className="listStyle">
-            <ListComponent model={"simConfig.hParams"} />
+            <ListComponent model={"simConfig.hParams"}/>
           </NetPyNEField>
 
           <NetPyNEField id="simConfig.seeds" className="listStyle">
-            <ListComponent model={"simConfig.seeds"} />
+            <ListComponent model={"simConfig.seeds"}/>
           </NetPyNEField>
 
           <NetPyNEField
             id="simConfig.checkErrors"
             className={"netpyneCheckbox"}
           >
-            <NetPyNECheckbox model={"simConfig.checkErrors"} />
+            <NetPyNECheckbox model={"simConfig.checkErrors"}/>
           </NetPyNEField>
 
           <NetPyNEField
             id="simConfig.checkErrorsVerbose"
             className={"netpyneCheckbox"}
           >
-            <NetPyNECheckbox model={"simConfig.checkErrorsVerbose"} />
+            <NetPyNECheckbox model={"simConfig.checkErrorsVerbose"}/>
           </NetPyNEField>
         </div>
       );
@@ -88,85 +88,85 @@ class NetPyNESimConfig extends React.Component {
             id="simConfig.createNEURONObj"
             className={"netpyneCheckbox"}
           >
-            <NetPyNECheckbox model={"simConfig.createNEURONObj"} />
+            <NetPyNECheckbox model={"simConfig.createNEURONObj"}/>
           </NetPyNEField>
 
           <NetPyNEField
             id="simConfig.createPyStruct"
             className={"netpyneCheckbox"}
           >
-            <NetPyNECheckbox model={"simConfig.createPyStruct"} />
+            <NetPyNECheckbox model={"simConfig.createPyStruct"}/>
           </NetPyNEField>
 
           <NetPyNEField
             id="simConfig.addSynMechs"
             className={"netpyneCheckbox"}
           >
-            <NetPyNECheckbox model={"simConfig.addSynMechs"} />
+            <NetPyNECheckbox model={"simConfig.addSynMechs"}/>
           </NetPyNEField>
 
           <NetPyNEField
             id="simConfig.includeParamsLabel"
             className={"netpyneCheckbox"}
           >
-            <NetPyNECheckbox model={"simConfig.includeParamsLabel"} />
+            <NetPyNECheckbox model={"simConfig.includeParamsLabel"}/>
           </NetPyNEField>
 
           <NetPyNEField id="simConfig.timing" className={"netpyneCheckbox"}>
-            <NetPyNECheckbox model={"simConfig.timing"} />
+            <NetPyNECheckbox model={"simConfig.timing"}/>
           </NetPyNEField>
 
           <NetPyNEField id="simConfig.verbose" className={"netpyneCheckbox"}>
-            <NetPyNECheckbox model={"simConfig.verbose"} />
+            <NetPyNECheckbox model={"simConfig.verbose"}/>
           </NetPyNEField>
 
           <NetPyNEField
             id="simConfig.compactConnFormat"
             className={"netpyneCheckbox"}
           >
-            <NetPyNECheckbox model={"simConfig.compactConnFormat"} />
+            <NetPyNECheckbox model={"simConfig.compactConnFormat"}/>
           </NetPyNEField>
 
           <NetPyNEField
             id="simConfig.connRandomSecFromList"
             className={"netpyneCheckbox"}
           >
-            <NetPyNECheckbox model={"simConfig.connRandomSecFromList"} />
+            <NetPyNECheckbox model={"simConfig.connRandomSecFromList"}/>
           </NetPyNEField>
 
           <NetPyNEField
             id="simConfig.printPopAvgRates"
             className={"netpyneCheckbox"}
           >
-            <NetPyNECheckbox model={"simConfig.printPopAvgRates"} />
+            <NetPyNECheckbox model={"simConfig.printPopAvgRates"}/>
           </NetPyNEField>
 
           <NetPyNEField
             id="simConfig.printSynsAfterRule"
             className={"netpyneCheckbox"}
           >
-            <NetPyNECheckbox model={"simConfig.printSynsAfterRule"} />
+            <NetPyNECheckbox model={"simConfig.printSynsAfterRule"}/>
           </NetPyNEField>
 
           <NetPyNEField
             id="simConfig.gatherOnlySimData"
             className={"netpyneCheckbox"}
           >
-            <NetPyNECheckbox model={"simConfig.gatherOnlySimData"} />
+            <NetPyNECheckbox model={"simConfig.gatherOnlySimData"}/>
           </NetPyNEField>
 
           <NetPyNEField
             id="simConfig.cache_efficient"
             className={"netpyneCheckbox"}
           >
-            <NetPyNECheckbox model={"simConfig.cache_efficient"} />
+            <NetPyNECheckbox model={"simConfig.cache_efficient"}/>
           </NetPyNEField>
 
           <NetPyNEField
             id="simConfig.cvode_active"
             className={"netpyneCheckbox"}
           >
-            <NetPyNECheckbox model={"simConfig.cvode_active"} />
+            <NetPyNECheckbox model={"simConfig.cvode_active"}/>
           </NetPyNEField>
         </div>
       );
@@ -200,7 +200,7 @@ class NetPyNESimConfig extends React.Component {
           </NetPyNEField>
 
           <NetPyNEField id="simConfig.saveDataInclude" className="listStyle">
-            <ListComponent model={"simConfig.saveDataInclude"} />
+            <ListComponent model={"simConfig.saveDataInclude"}/>
           </NetPyNEField>
 
           <NetPyNEField id="simConfig.backupCfgFile">
@@ -215,36 +215,36 @@ class NetPyNESimConfig extends React.Component {
       contentRight = (
         <div>
           <NetPyNEField id="simConfig.saveJson" className={"netpyneCheckbox"}>
-            <NetPyNECheckbox model={"simConfig.saveJson"} />
+            <NetPyNECheckbox model={"simConfig.saveJson"}/>
           </NetPyNEField>
 
           <NetPyNEField id="simConfig.savePickle" className={"netpyneCheckbox"}>
-            <NetPyNECheckbox model={"simConfig.savePickle"} />
+            <NetPyNECheckbox model={"simConfig.savePickle"}/>
           </NetPyNEField>
 
           <NetPyNEField id="simConfig.saveMat" className={"netpyneCheckbox"}>
-            <NetPyNECheckbox model={"simConfig.saveMat"} />
+            <NetPyNECheckbox model={"simConfig.saveMat"}/>
           </NetPyNEField>
 
           <NetPyNEField
             id="simConfig.saveCellSecs"
             className={"netpyneCheckbox "}
           >
-            <NetPyNECheckbox model={"simConfig.saveCellSecs"} />
+            <NetPyNECheckbox model={"simConfig.saveCellSecs"}/>
           </NetPyNEField>
 
           <NetPyNEField
             id="simConfig.saveCellConns"
             className={"netpyneCheckbox"}
           >
-            <NetPyNECheckbox model={"simConfig.saveCellConns"} />
+            <NetPyNECheckbox model={"simConfig.saveCellConns"}/>
           </NetPyNEField>
 
           <NetPyNEField
             id="simConfig.timestampFilename"
             className={"netpyneCheckbox"}
           >
-            <NetPyNECheckbox model={"simConfig.timestampFilename"} />
+            <NetPyNECheckbox model={"simConfig.timestampFilename"}/>
           </NetPyNEField>
           {/*
           // TODO: can this be removed?
@@ -265,23 +265,23 @@ class NetPyNESimConfig extends React.Component {
             </NetPyNEField> */}
 
           <NetPyNEField id="simConfig.saveTiming" className={"netpyneCheckbox"}>
-            <NetPyNECheckbox model={"simConfig.saveTiming"} />
+            <NetPyNECheckbox model={"simConfig.saveTiming"}/>
           </NetPyNEField>
         </div>
       );
-    } else if (this.state.sectionId == "Record") {
+    } else if (this.state.sectionId === "Record") {
       contentLeft = (
         <div>
           <NetPyNEField id="simConfig.recordCells" className={"listStyle"}>
-            <ListComponent model={"simConfig.recordCells"} />
+            <ListComponent model={"simConfig.recordCells"}/>
           </NetPyNEField>
 
           <NetPyNEField id="simConfig.recordTraces" className={"listStyle"}>
-            <ListComponent model={"simConfig.recordTraces"} />
+            <ListComponent model={"simConfig.recordTraces"}/>
           </NetPyNEField>
 
           <NetPyNEField id="simConfig.recordLFP" className={"listStyle"}>
-            <ListComponent model={"simConfig.recordLFP"} />
+            <ListComponent model={"simConfig.recordLFP"}/>
           </NetPyNEField>
 
           <NetPyNEField id="simConfig.recordStep">
@@ -300,7 +300,7 @@ class NetPyNESimConfig extends React.Component {
             className={"netpyneCheckbox"}
             style={{ marginTop: 25 }}
           >
-            <NetPyNECheckbox model={"simConfig.saveLFPCells"} />
+            <NetPyNECheckbox model={"simConfig.saveLFPCells"}/>
           </NetPyNEField>
 
           <NetPyNEField
@@ -308,11 +308,11 @@ class NetPyNESimConfig extends React.Component {
             className={"netpyneCheckbox"}
             style={{ marginTop: 25 }}
           >
-            <NetPyNECheckbox model={"simConfig.recordStim"} />
+            <NetPyNECheckbox model={"simConfig.recordStim"}/>
           </NetPyNEField>
         </div>
       );
-    } else if (this.state.sectionId == "netParams") {
+    } else if (this.state.sectionId === "netParams") {
       contentLeft = (
         <div>
           <NetPyNEField id="netParams.scale">
@@ -398,7 +398,7 @@ class NetPyNESimConfig extends React.Component {
           </NetPyNEField>
 
           <NetPyNEField id="netParams.shape">
-            <SelectField variant="filled" model={"netParams.shape"} />
+            <SelectField variant="filled" model={"netParams.shape"}/>
           </NetPyNEField>
 
           <NetPyNEField id="netParams.rotateCellsRandomly">
@@ -432,6 +432,23 @@ class NetPyNESimConfig extends React.Component {
           </NetPyNEField>
         </div>
       );
+    } else if (this.state.sectionId === "Batch") {
+      contentLeft = (
+        <div>
+          <NetPyNEField
+            id="simConfig.batch"
+            className={"netpyneCheckbox"}
+          >
+            <NetPyNECheckbox model={"simConfig.batch"}/>
+          </NetPyNEField>
+          <NetPyNEField
+            id="batch_config.enabled"
+            className={"netpyneCheckbox"}
+          >
+            <NetPyNECheckbox model={"batch_config['enabled']"}/>
+          </NetPyNEField>
+        </div>
+      )
     }
     return (
       <div className={classes.root}>
@@ -444,33 +461,40 @@ class NetPyNESimConfig extends React.Component {
             id={"configGeneral"}
             key={"General"}
             label={"General"}
-            icon={<FontIcon className={"fa fa-bars"} />}
+            icon={<FontIcon className={"fa fa-bars"}/>}
             onClick={() => this.select(0, "General")}
           />
           <BottomNavigationAction
             id={"configRecord"}
             key={"Record"}
             label={"Record"}
-            icon={<FontIcon className={"fa fa-circle"} />}
+            icon={<FontIcon className={"fa fa-circle"}/>}
             onClick={() => this.select(1, "Record")}
           />
           <BottomNavigationAction
             id={"configSaveConfiguration"}
             key={"SaveConfiguration"}
             label={"Save Configuration"}
-            icon={<FontIcon className={"fa fa-floppy-o"} />}
+            icon={<FontIcon className={"fa fa-floppy-o"}/>}
             onClick={() => this.select(2, "SaveConfiguration")}
           />
           <BottomNavigationAction
             id={"confignetParams"}
             key={"netParams"}
             label={"Network Attributes"}
-            icon={<FontIcon className={"fa fa-cog"} />}
+            icon={<FontIcon className={"fa fa-cog"}/>}
             onClick={() => this.select(3, "netParams")}
+          />
+          <BottomNavigationAction
+            id={"configBatch"}
+            key={"batch"}
+            label={"Batch Configuration"}
+            icon={<FontIcon className={"fa fa-cog"}/>}
+            onClick={() => this.select(4, "Batch")}
           />
         </BottomNavigation>
         <GridLayout className={classes.layout}>
-          <div />
+          <div/>
           {contentLeft}
           {contentRight}
         </GridLayout>

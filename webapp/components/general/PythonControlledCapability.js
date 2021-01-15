@@ -7,9 +7,9 @@
  */
 define(function (require) {
 
-  var $ = require('jquery');
-  var React = require('react');
-  var GeppettoUtils = require('./GeppettoJupyterUtils');
+  const $ = require('jquery');
+  const React = require('react');
+  const GeppettoUtils = require('./GeppettoJupyterUtils');
 
   module.exports = {
     createPythonControlledComponent (WrappedComponent) {
@@ -27,12 +27,12 @@ define(function (require) {
       class PythonControlledComponent extends WrappedComponent {
         constructor (props) {
           super(props);
-          if (this.state == undefined) {
+          if (this.state === undefined) {
             this.state = {};
           }
           this.state.model = props.model;
           this.state.componentType = getNameFromWrappedComponent(WrappedComponent);
-          this.id = (this.props.id == undefined) ? this.props.model : this.props.id;
+          this.id = (this.props.id === undefined) ? this.props.model : this.props.id;
 
           this._isMounted = false;
         }
@@ -227,7 +227,7 @@ define(function (require) {
 
         triggerUpdate (updateMethod) {
           // common strategy when triggering processing of a value change, delay it, every time there is a change we reset
-          if (this.updateTimer != undefined) {
+          if (this.updateTimer !== undefined) {
             clearTimeout(this.updateTimer);
           }
           this.updateTimer = setTimeout(updateMethod, 1000);
@@ -235,8 +235,8 @@ define(function (require) {
 
         // Default handle (mainly textfields and dropdowns)
         handleChange (event, index, value) {
-          var targetValue = value;
-          if (event != null && event.target.value != undefined) {
+          let targetValue = value;
+          if (event != null && event.target.value !== undefined) {
             targetValue = event.target.value;
           }
           if (this.oldValue === undefined) {
@@ -405,7 +405,7 @@ define(function (require) {
               if (!array1[i].equals(array2[i])) {
                 return false;
               }
-            } else if (array1[i] != array2[i]) {
+            } else if (array1[i] !== array2[i]) {
               // Warning - two different object instances will never be equal: {x:20} != {x:20}
               return false;
             }
@@ -416,7 +416,7 @@ define(function (require) {
         callPythonMethod = value => {
           GeppettoUtils.evalPythonMessage(this.props.method, []).then(response => {
             if (this._isMounted) {
-              if (Object.keys(response).length != 0) {
+              if (Object.keys(response).length !== 0) {
                 this.setState({ pythonData: response });
               } else {
                 this.setState({ pythonData: [] });
@@ -444,10 +444,10 @@ define(function (require) {
 
         render () {
           const wrappedComponentProps = Object.assign({}, this.props);
-          if (wrappedComponentProps.key == undefined) {
+          if (wrappedComponentProps.key === undefined) {
             wrappedComponentProps.key = wrappedComponentProps.model;
           }
-          if (wrappedComponentProps.id == undefined) {
+          if (wrappedComponentProps.id === undefined) {
             wrappedComponentProps.id = wrappedComponentProps.model ?? "";
           }
 
