@@ -29,10 +29,10 @@ class NetPyNESimConfig extends React.Component {
     this.setState({ selectedIndex: index, sectionId: sectionId });
 
   render () {
-    var contentLeft = <div className="layoutVerticalFitInner" />;
-    var contentRight = <div className="layoutVerticalFitInner" />;
+    let contentLeft = <div className="layoutVerticalFitInner"/>;
+    let contentRight = <div className="layoutVerticalFitInner"/>;
     const { classes } = this.props;
-    if (this.state.sectionId == "General") {
+    if (this.state.sectionId === "General") {
       contentLeft = (
         <div className={`scrollbar scrollchild`}>
           <NetPyNEField id="simConfig.duration">
@@ -170,7 +170,7 @@ class NetPyNESimConfig extends React.Component {
           </NetPyNEField>
         </div>
       );
-    } else if (this.state.sectionId == "SaveConfiguration") {
+    } else if (this.state.sectionId === "SaveConfiguration") {
       contentLeft = (
         <div>
           <NetPyNEField id="simConfig.simLabel">
@@ -313,7 +313,7 @@ class NetPyNESimConfig extends React.Component {
         </div>
       );
     } else if (this.state.sectionId == "netParams") {
-      var contentLeft = (
+      contentLeft = (
         <div>
           <NetPyNEField id="netParams.scale">
             <NetPyNETextField
@@ -359,7 +359,7 @@ class NetPyNESimConfig extends React.Component {
             id="netParams.scaleConnWeightModels"
             className={"listStyle"}
           >
-            <ListComponent model={"netParams.scaleConnWeightModels"} />
+            <ListComponent model={"netParams.scaleConnWeightModels"}/>
           </NetPyNEField>
         </div>
       );

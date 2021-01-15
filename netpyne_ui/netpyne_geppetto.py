@@ -11,23 +11,27 @@ import sys
 import subprocess
 import logging
 import re
+import pickle
+
+import matplotlib.pyplot as plt
+import numpy as np
+import neuron
 
 from netpyne import specs, sim, analysis
 from netpyne.specs.utils import validateFunction
 from netpyne.conversion.neuronPyHoc import mechVarList
 from netpyne.metadata import metadata
 
-from netpyne_ui import simulations
-from netpyne_ui.netpyne_model_interpreter import NetPyNEModelInterpreter
 from pygeppetto.model.model_serializer import GeppettoModelSerializer
-import matplotlib.pyplot as plt
 from pygeppetto import ui
-import numpy as np
-import neuron
-from shutil import copyfile
+
+from shutil import copyfile, move
 from jupyter_geppetto import jupyter_geppetto, synchronization, utils
 from contextlib import redirect_stdout
+
 from netpyne_ui.constants import NETPYNE_WORKDIR_PATH
+from netpyne_ui import simulations
+from netpyne_ui.netpyne_model_interpreter import NetPyNEModelInterpreter
 
 os.chdir(NETPYNE_WORKDIR_PATH)
 
@@ -39,6 +43,33 @@ class NetPyNEGeppetto:
 
         self.netParams = specs.NetParams()
         self.simConfig = specs.SimConfig()
+
+        # TODO: need new methods to store field data in these dictionaries
+        self.batch_config = {
+            "enabled": True,
+            "params": [
+                {
+                    # set in cfg.py to cfg.paramX = defaultValue of field
+                    "label": "weight",
+                    # exact path to parameter that will be overwritten
+                    "mapsTo": "netParams.connParams['E->E']['weight']",
+                    # or 'range' with min, max, steps fields
+                    "type": "list",
+                    "values": [1, 2, 3, 4],
+                }
+            ],
+            # possible values: grid|list|evol|asd|optuna
+            "method": "grid",
+            "name": "my_batch",
+            "seed": None,
+            "saveFolder": "batches"
+        }
+
+        self.run_config = {
+            "asynchronous": True,
+            "cores": 1,
+        }
+
         synchronization.startSynchronization(self.__dict__)
         logging.debug("Initializing the original model")
 
@@ -107,15 +138,55 @@ class NetPyNEGeppetto:
     def simulateNetPyNEModelInGeppetto(self, args):
         try:
             with redirect_stdout(sys.__stdout__):
-                if args['parallelSimulation']:
-                    self._run_parallel(args)
+                if self.batch_config["enabled"]:
+                    self._run_as_batch()
                 else:
-                    self._run_in_single_core(args)
+                    if args['parallelSimulation']:
+                        self._run_parallel(args)
+                    else:
+                        self._run_in_single_core(args)
+
                 return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
         except Exception:
             message = "Error while simulating the NetPyNE model"
             logging.exception(message)
             return utils.getJSONError(message, sys.exc_info())
+
+    def _run_as_batch(self):
+        """Runs the configured simulation as a batch of variations of this simulation.
+
+        * Store netParams and cfg as pkl files
+        * Prepare py templates for netParams.py, cfg.py, batch.py, run.py
+        * Copy all to workspace
+        * Submit batch simulation
+        """
+        # Can store param mapping in simConfig
+        self.simConfig.mapping = self.batch_config["params"]
+
+        # Configuration of batch.py in json format
+        batch_config = os.path.join(os.path.dirname(__file__), "templates", "batchConfig.json")
+        json.dump(self.batch_config, open(batch_config, 'w'))
+        move(batch_config, './batchConfig.json')
+
+        # Pickle files of netParams and cfg dicts
+        net_params_pkl = os.path.join(os.path.dirname(__file__), "templates", 'netParams.pkl')
+        cfg_pkl = os.path.join(os.path.dirname(__file__), "templates", 'cfg.pkl')
+        pickle.dump(self.netParams, open(net_params_pkl, "wb"))
+        pickle.dump(self.simConfig, open(cfg_pkl, "wb"))
+        move(net_params_pkl, './netParams.pkl')
+        move(cfg_pkl, './cfg.pkl')
+
+        # Python template files
+        template_single_run = os.path.join(os.path.dirname(__file__), "templates", 'batch_run_single.py')
+        template_batch = os.path.join(os.path.dirname(__file__), "templates", 'batch.py')
+        cfg = os.path.join(os.path.dirname(__file__), "templates", 'batch_cfg.py')
+        net_params = os.path.join(os.path.dirname(__file__), "templates", 'batch_netParams.py')
+        copyfile(template_single_run, './run.py')
+        copyfile(template_batch, './init.py')
+        copyfile(cfg, './cfg.py')
+        copyfile(net_params, './netParams.py')
+
+        simulations.run_in_subprocess("init.py")
 
     def _run_parallel(self, args):
         if args.get('usePrevInst', False):
@@ -128,14 +199,16 @@ class NetPyNEGeppetto:
 
             sim.saveData()
             sim.cfg.filename = oldName
-            template = os.path.join(os.path.dirname(__file__), 'template2.py')
+            template_name = "run_instantiated_net.py"
         else:
+            # Saved in netpyne_workspace
             self.netParams.save("netParams.json")
             self.simConfig.saveJson = True
             self.simConfig.save("simParams.json")
-            template = os.path.join(os.path.dirname(__file__), 'template.py')
+            template_name = "run.py"
 
         # TODO: Instead of copying here files depending on usePrevInst, we can simply parameterize the python script
+        template = os.path.join(os.path.dirname(__file__), "templates", template_name)
         copyfile(template, './init.py')
 
         cores = str(args.get("cores", "1"))
@@ -667,7 +740,7 @@ class NetPyNEGeppetto:
                 return f.read()
 
         except Exception:
-            message = "Error while importing the NetPyNE model"
+            message = "Error while exporting NetPyNE model to python"
             logging.exception(message)
             return utils.getJSONError(message, sys.exc_info())
 

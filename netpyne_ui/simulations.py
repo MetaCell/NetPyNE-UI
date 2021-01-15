@@ -13,6 +13,14 @@ def run(parallel=False, cores=None):
         return _run_in_same_process()
 
 
+def run_in_subprocess(script):
+    completed_process = subprocess.run(["python", "./" + script])
+    if completed_process.returncode == 0:
+        logging.info("Batch finished with success")
+    else:
+        logging.error(f"Batch run failed ...")
+
+
 def _run_with_mpi(cores):
     logging.debug('Running parallel simulation')
 
@@ -26,7 +34,6 @@ def _run_with_mpi(cores):
         ["mpiexec", "-n", cores, "nrniv", "-python", "-mpi", "init.py"],
         capture_output=True
     )
-    logging.info(completed_process.stdout.decode() + completed_process.stderr.decode())
 
     return None if completed_process == 0 else completed_process.stderr.decode()
 
