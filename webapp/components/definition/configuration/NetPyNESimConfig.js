@@ -436,16 +436,50 @@ class NetPyNESimConfig extends React.Component {
       contentLeft = (
         <div>
           <NetPyNEField
-            id="simConfig.batch"
-            className={"netpyneCheckbox"}
-          >
-            <NetPyNECheckbox model={"simConfig.batch"}/>
-          </NetPyNEField>
-          <NetPyNEField
             id="batch_config.enabled"
             className={"netpyneCheckbox"}
           >
             <NetPyNECheckbox model={"batch_config['enabled']"}/>
+          </NetPyNEField>
+          <NetPyNEField
+            id="batch_config.name"
+            className={"netpyneCheckbox"}
+          >
+            <NetPyNETextField
+              model={"batch_config['name']"}
+              fullWidth
+              variant="filled"
+            />
+          </NetPyNEField>
+          <NetPyNEField
+            id="batch_config.method"
+            className={"netpyneCheckbox"}
+          >
+            <NetPyNETextField
+              fullWidth
+              variant="filled"
+              model={"batch_config['method']"}
+            />
+          </NetPyNEField>
+          <NetPyNEField
+            id="batch_config.seed"
+            className={"netpyneCheckbox"}
+          >
+            <NetPyNETextField
+              fullWidth
+              variant="filled"
+              model={"batch_config['seed']"}
+            />
+          </NetPyNEField>
+          <NetPyNEField
+            id="batch_config.saveFolder"
+            className={"netpyneCheckbox"}
+          >
+            <NetPyNETextField
+              fullWidth
+              variant="filled"
+              model={"batch_config['saveFolder']"}
+            />
           </NetPyNEField>
         </div>
       )

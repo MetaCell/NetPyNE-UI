@@ -172,7 +172,7 @@ export default class NetPyNECellRules extends React.Component {
       Object.keys(secs).forEach(sectionName => {
         const { mechs, ...secOthers } = this.state.value[cellRuleName].secs[
           sectionName
-          ];
+        ];
         sections[sectionName] = { ...secOthers, mechs: { ...mechs } };
       });
       model[cellRuleName] = { ...cellOthers, secs: { ...sections } };
@@ -514,9 +514,9 @@ export default class NetPyNECellRules extends React.Component {
       ) {
         var oldLength
           = this.state.value[this.state.selectedCellRule] == undefined
-          ? 0
-          : Object.keys(this.state.value[this.state.selectedCellRule].secs)
-            .length;
+            ? 0
+            : Object.keys(this.state.value[this.state.selectedCellRule].secs)
+              .length;
         newItemCreated
           = newItemCreated
           || oldLength
@@ -529,25 +529,25 @@ export default class NetPyNECellRules extends React.Component {
         && nextState.value[this.state.selectedCellRule] != undefined
         && nextState.value[this.state.selectedCellRule].secs[
           this.state.selectedSection
-          ] != undefined
+        ] != undefined
       ) {
         var oldLength
           = this.state.value[this.state.selectedCellRule].secs[
-          this.state.selectedSection
+            this.state.selectedSection
           ] == undefined
-          ? 0
-          : Object.keys(
-            this.state.value[this.state.selectedCellRule].secs[
-              this.state.selectedSection
+            ? 0
+            : Object.keys(
+              this.state.value[this.state.selectedCellRule].secs[
+                this.state.selectedSection
               ].mechs
-          ).length;
+            ).length;
         newItemCreated
           = newItemCreated
           || oldLength
           != Object.keys(
             nextState.value[this.state.selectedCellRule].secs[
               this.state.selectedSection
-              ].mechs
+            ].mechs
           ).length;
       }
     }
@@ -576,7 +576,7 @@ export default class NetPyNECellRules extends React.Component {
         var model = this.state.value;
         delete model[this.state.selectedCellRule].secs[
           this.state.selectedSection
-          ]["mechs"][name];
+        ]["mechs"][name];
         this.setState({ value: model, selectedMechanism: undefined });
       });
     }
@@ -630,43 +630,43 @@ export default class NetPyNECellRules extends React.Component {
     } = this.state;
 
     switch (rule) {
-      case "cellRule":
-        if (page !== "main") {
-          if (selectedCellRule && selectedCellRule.length > 8) {
-            return selectedCellRule;
-          } else {
-            return "Go back to cell type";
-          }
+    case "cellRule":
+      if (page !== "main") {
+        if (selectedCellRule && selectedCellRule.length > 8) {
+          return selectedCellRule;
         } else {
-          return "Create new cell type";
+          return "Go back to cell type";
         }
+      } else {
+        return "Create new cell type";
+      }
 
-      case "section":
-        if (page === "mechanisms") {
-          if (!!selectedSection && selectedSection.length > 9) {
-            return selectedSection;
-          } else {
-            return "Go back to section";
-          }
+    case "section":
+      if (page === "mechanisms") {
+        if (!!selectedSection && selectedSection.length > 9) {
+          return selectedSection;
         } else {
-          if (page == "sections") {
-            return "Create new section";
-          } else {
-            if (selectedCellRule) {
-              if (
-                !!model
+          return "Go back to section";
+        }
+      } else {
+        if (page == "sections") {
+          return "Create new section";
+        } else {
+          if (selectedCellRule) {
+            if (
+              !!model
                 && !!model[selectedCellRule]
                 && Object.keys(model[selectedCellRule]["secs"]).length > 0
-              ) {
-                return "Explore sections";
-              } else {
-                return "Create first section";
-              }
+            ) {
+              return "Explore sections";
             } else {
-              return "No cell type selected";
+              return "Create first section";
             }
+          } else {
+            return "No cell type selected";
           }
         }
+      }
     }
   }
 
@@ -678,35 +678,35 @@ export default class NetPyNECellRules extends React.Component {
       selectedSection,
     } = this.state;
     switch (rule) {
-      case "cellRule":
-        if (page !== "main") {
-          return "CT";
-        } else {
-          return <ContentAdd style={{ color: "white" }}/>;
-        }
+    case "cellRule":
+      if (page !== "main") {
+        return "CT";
+      } else {
+        return <ContentAdd style={{ color: "white" }}/>;
+      }
 
-      case "sections":
-        if (page === "mechanisms") {
-          return "S";
+    case "sections":
+      if (page === "mechanisms") {
+        return "S";
+      } else {
+        if (page == "sections") {
+          return <ContentAdd style={{ height: "100%", color: "white" }}/>;
         } else {
-          if (page == "sections") {
-            return <ContentAdd style={{ height: "100%", color: "white" }}/>;
-          } else {
-            if (selectedCellRule) {
-              if (
-                !!model
+          if (selectedCellRule) {
+            if (
+              !!model
                 && !!model[selectedCellRule]
                 && Object.keys(model[selectedCellRule]["secs"]).length > 0
-              ) {
-                return <NavigationMoreHoriz style={{ height: "100%" }}/>;
-              } else {
-                return <ContentAdd style={{ height: "100%" }}/>;
-              }
+            ) {
+              return <NavigationMoreHoriz style={{ height: "100%" }}/>;
             } else {
-              return "";
+              return <ContentAdd style={{ height: "100%" }}/>;
             }
+          } else {
+            return "";
           }
         }
+      }
     }
   }
 
@@ -746,28 +746,28 @@ export default class NetPyNECellRules extends React.Component {
       return "undefined";
     }
     switch (this.state.page) {
-      case "main": {
-        if (model[selectedCellRule]) {
-          return `${basePath}["${selectedCellRule}"]`;
-        }
-        break;
+    case "main": {
+      if (model[selectedCellRule]) {
+        return `${basePath}["${selectedCellRule}"]`;
       }
-      case "sections": {
-        if (model[selectedCellRule].secs[selectedSection]) {
-          return `${basePath}["${selectedCellRule}"].secs["${selectedSection}"]`;
-        }
-        break;
+      break;
+    }
+    case "sections": {
+      if (model[selectedCellRule].secs[selectedSection]) {
+        return `${basePath}["${selectedCellRule}"].secs["${selectedSection}"]`;
       }
-      case "mechanisms": {
-        if (
-          model[selectedCellRule].secs[selectedSection].mechs[selectedMechanism]
-        ) {
-          return `${basePath}["${selectedCellRule}"].secs["${selectedSection}"].mechs["${selectedMechanism}"]`;
-        }
-        break;
+      break;
+    }
+    case "mechanisms": {
+      if (
+        model[selectedCellRule].secs[selectedSection].mechs[selectedMechanism]
+      ) {
+        return `${basePath}["${selectedCellRule}"].secs["${selectedSection}"].mechs["${selectedMechanism}"]`;
       }
-      default: {
-      }
+      break;
+    }
+    default: {
+    }
     }
     return "undefined";
   }
@@ -792,35 +792,35 @@ export default class NetPyNECellRules extends React.Component {
 
     const dialogPop
       = errorMessage != undefined ? (
-      <Dialog
-        title={errorMessage}
-        open={true}
-        style={{ whiteSpace: "pre-wrap" }}
-      >
-        <DialogTitle id="alert-dialog-title">{errorMessage}</DialogTitle>
-        <DialogContent style={{ overflow: "auto" }}>
-          <DialogContentText id="alert-dialog-description">
-            {errorDetails}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() =>
-              this.setState({
-                errorMessage: undefined,
-                errorDetails: undefined,
-              })
-            }
-          >
+        <Dialog
+          title={errorMessage}
+          open={true}
+          style={{ whiteSpace: "pre-wrap" }}
+        >
+          <DialogTitle id="alert-dialog-title">{errorMessage}</DialogTitle>
+          <DialogContent style={{ overflow: "auto" }}>
+            <DialogContentText id="alert-dialog-description">
+              {errorDetails}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() =>
+                this.setState({
+                  errorMessage: undefined,
+                  errorDetails: undefined,
+                })
+              }
+            >
             Back
-          </Button>
-        </DialogActions>
-      </Dialog>
-    ) : (
-      undefined
-    );
+            </Button>
+          </DialogActions>
+        </Dialog>
+      ) : (
+        undefined
+      );
 
     if (page == "main") {
       if (
@@ -1055,8 +1055,8 @@ export default class NetPyNECellRules extends React.Component {
                   page === "main"
                     ? "cell rule"
                     : page === "sections"
-                    ? "section"
-                    : "mechanism"
+                      ? "section"
+                      : "mechanism"
                 } by name...`}
                 handleFilterChange={newValue =>
                   this.setState({ filterValue: newValue })
