@@ -16,4 +16,4 @@ with open("netParams.pkl", "rb") as f:
             value = getattr(cfg, param["label"])
 
             # Update value in netParams
-            exec(f"{param['maps_to']} = {value}")
+            exec(f"{param['mapsTo']} = {value}")

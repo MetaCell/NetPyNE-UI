@@ -24,12 +24,6 @@ def run_in_subprocess(script):
 def _run_with_mpi(cores):
     logging.debug('Running parallel simulation')
 
-    # TODO: need to understand when to set NRN_PYLIB
-    #   it's required for pure Python installation, but breaks when using Conda
-    if "CONDA_VERSION" not in os.environ:
-        # nrniv needs NRN_PYLIB to be set to python executable path (MacOS, Python 3.7.6)
-        os.environ["NRN_PYLIB"] = sys.executable
-
     completed_process = subprocess.run(
         ["mpiexec", "-n", cores, "nrniv", "-python", "-mpi", "init.py"],
         capture_output=True
@@ -44,3 +38,10 @@ def _run_in_same_process():
     sim.setupRecording()
     sim.simulate()
     sim.saveData()
+
+
+# TODO: need to understand when to set NRN_PYLIB
+#   it's required for pure Python installation, but breaks when using Conda
+if "CONDA_VERSION" not in os.environ:
+    # nrniv needs NRN_PYLIB to be set to python executable path (MacOS, Python 3.7.6)
+    os.environ["NRN_PYLIB"] = sys.executable

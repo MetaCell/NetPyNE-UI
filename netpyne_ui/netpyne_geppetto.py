@@ -44,9 +44,6 @@ class NetPyNEGeppetto:
         self.netParams = specs.NetParams()
         self.simConfig = specs.SimConfig()
 
-        # default values
-        self.simConfig.batch = False
-
         self.batch_config = {
             "enabled": True,
             "params": [
@@ -57,19 +54,31 @@ class NetPyNEGeppetto:
                     "mapsTo": "netParams.connParams['E->E']['weight']",
                     # or 'range' with min, max, steps fields
                     "type": "list",
-                    "values": [1, 2, 3, 4],
-                }
+                    "values": [1, 2],
+                },
+                # {
+                #     # range example
+                #     "label": "weight",
+                #     "mapsTo": "netParams.connParams['E->E']['weight']",
+                #     "type": "range",
+                #     "min": 1,
+                #     "max": 5,
+                #     "step": 0.5
+                # }
             ],
             # possible values: grid|list|evol|asd|optuna
             "method": "grid",
             "name": "my_batch",
             "seed": None,
-            "saveFolder": "batches"
+            "saveFolder": "batches",
         }
 
         self.run_config = {
+            # or mpi_direct (has problems running on MacOS)
+            "type": "mpi_bulletin",
             "asynchronous": True,
-            "cores": 1,
+            "script": "run.py",
+            "cores": 2,
         }
 
         synchronization.startSynchronization(self.__dict__)
@@ -101,14 +110,6 @@ class NetPyNEGeppetto:
             "type": "float"
         }
 
-        metadata['simConfig']['children']['batch'] = {
-            "label": "Batch enabled",
-            "help": "Activates batch",
-            "suggestions": "",
-            "hintText": "",
-            "type": "bool"
-        }
-
         metadata['batch_config'] = {
             "label": "Batch configuration",
             "help": "",
@@ -122,7 +123,34 @@ class NetPyNEGeppetto:
                     "hintText": "",
                     "type": "bool"
                 },
-                # TODO: add here metadata for remaining fields
+                'name': {
+                    "label": "Name of the batch",
+                    "help": "",
+                    "suggestions": "",
+                    "hintText": "",
+                    "type": "str"
+                },
+                'saveFolder': {
+                    "label": "Save folder",
+                    "help": "",
+                    "suggestions": "",
+                    "hintText": "",
+                    "type": "str"
+                },
+                'seed': {
+                    "label": "Seed",
+                    "help": "",
+                    "suggestions": "",
+                    "hintText": "",
+                    "type": "int"
+                },
+                'method': {
+                    "label": "Method",
+                    "help": "",
+                    "suggestions": "",
+                    "hintText": "",
+                    "type": "str"
+                }
             }
         }
 
@@ -188,8 +216,13 @@ class NetPyNEGeppetto:
         * Copy all to workspace
         * Submit batch simulation
         """
-        # Can store param mapping in simConfig
         self.simConfig.mapping = self.batch_config["params"]
+
+        for param in self.batch_config["params"]:
+            if param["type"] == "range":
+                param["values"] = list(np.arange(param["min"], param["max"], param["step"]))
+
+        self.batch_config["runCfg"] = self.run_config
 
         # Configuration of batch.py in json format
         batch_config = os.path.join(os.path.dirname(__file__), "templates", "batchConfig.json")
