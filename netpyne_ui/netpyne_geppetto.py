@@ -54,7 +54,7 @@ class NetPyNEGeppetto:
                     "mapsTo": "netParams.connParams['E->E']['weight']",
                     # or 'range' with min, max, steps fields
                     "type": "list",
-                    "values": [1, 2],
+                    "values": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                 },
                 # {
                 #     # range example
@@ -77,7 +77,7 @@ class NetPyNEGeppetto:
         self.run_config = {
             # or mpi_direct (has problems running on MacOS)
             "type": "mpi_bulletin",
-            "parallel": True,
+            "parallel": False,
             "asynchronous": False,
             "script": "run.py",
             "cores": 2,
@@ -128,7 +128,13 @@ class NetPyNEGeppetto:
         try:
             with redirect_stdout(sys.__stdout__):
                 if self.batch_config["enabled"]:
-                    simulations.run_batch(self.simConfig, self.batch_config, self.run_config, self.netParams)
+                    if simulations.local_simulation_pool.is_running():
+                        return utils.getJSONError("Simulation is already running", "")
+
+                    simulations.local_simulation_pool.run_batch(
+                        self.simConfig, self.batch_config, self.run_config,
+                        self.netParams
+                    )
                 else:
                     if self.run_config["parallel"]:
                         self._run_parallel(args)
