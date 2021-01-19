@@ -11,8 +11,6 @@ import sys
 import subprocess
 import logging
 import re
-import pickle
-
 import matplotlib.pyplot as plt
 import numpy as np
 import neuron
@@ -25,11 +23,12 @@ from netpyne.metadata import metadata
 from pygeppetto.model.model_serializer import GeppettoModelSerializer
 from pygeppetto import ui
 
-from shutil import copyfile, move
+from shutil import copyfile
 from jupyter_geppetto import jupyter_geppetto, synchronization, utils
 from contextlib import redirect_stdout
 
 from netpyne_ui.constants import NETPYNE_WORKDIR_PATH
+from netpyne_ui import fields
 from netpyne_ui import simulations
 from netpyne_ui.netpyne_model_interpreter import NetPyNEModelInterpreter
 
@@ -44,6 +43,7 @@ class NetPyNEGeppetto:
         self.netParams = specs.NetParams()
         self.simConfig = specs.SimConfig()
 
+        # TODO: use dataclass instead
         self.batch_config = {
             "enabled": True,
             "params": [
@@ -73,13 +73,17 @@ class NetPyNEGeppetto:
             "saveFolder": "batches",
         }
 
+        # Run config for both single and batch simulation
         self.run_config = {
             # or mpi_direct (has problems running on MacOS)
             "type": "mpi_bulletin",
-            "asynchronous": True,
+            "parallel": True,
+            "asynchronous": False,
             "script": "run.py",
             "cores": 2,
         }
+
+        fields.register(metadata, self.netParams)
 
         synchronization.startSynchronization(self.__dict__)
         logging.debug("Initializing the original model")
@@ -87,77 +91,6 @@ class NetPyNEGeppetto:
         jupyter_geppetto.context = {'netpyne_geppetto': self}
 
     def getData(self):
-        # TODO: this needs to be moved into the metadata.py of netpyne repository.
-        metadata['netParams']['children']['cellsVisualizationSpacingMultiplierX'] = {
-            "label": "Cells visualization spacing multiplier X",
-            "help": "Multiplier for spacing in X axis in 3d visualization of cells (default: 1)",
-            "suggestions": "",
-            "hintText": "",
-            "type": "float"
-        }
-        metadata['netParams']['children']['cellsVisualizationSpacingMultiplierY'] = {
-            "label": "Cells visualization spacing multiplier Y",
-            "help": "Multiplier for spacing in Y axis in 3d visualization of cells (default: 1)",
-            "suggestions": "",
-            "hintText": "",
-            "type": "float"
-        }
-        metadata['netParams']['children']['cellsVisualizationSpacingMultiplierZ'] = {
-            "label": "Cells visualization spacing multiplier Z",
-            "help": "Multiplier for spacing in Z axis in 3d visualization of cells (default: 1)",
-            "suggestions": "",
-            "hintText": "",
-            "type": "float"
-        }
-
-        metadata['batch_config'] = {
-            "label": "Batch configuration",
-            "help": "",
-            "suggestions": "",
-            "hintText": "",
-            'children': {
-                'enabled': {
-                    "label": "Batch enabled",
-                    "help": "Activates batch",
-                    "suggestions": "",
-                    "hintText": "",
-                    "type": "bool"
-                },
-                'name': {
-                    "label": "Name of the batch",
-                    "help": "",
-                    "suggestions": "",
-                    "hintText": "",
-                    "type": "str"
-                },
-                'saveFolder': {
-                    "label": "Save folder",
-                    "help": "",
-                    "suggestions": "",
-                    "hintText": "",
-                    "type": "str"
-                },
-                'seed': {
-                    "label": "Seed",
-                    "help": "",
-                    "suggestions": "",
-                    "hintText": "",
-                    "type": "int"
-                },
-                'method': {
-                    "label": "Method",
-                    "help": "",
-                    "suggestions": "",
-                    "hintText": "",
-                    "type": "str"
-                }
-            }
-        }
-
-        self.netParams.cellsVisualizationSpacingMultiplierX = 1
-        self.netParams.cellsVisualizationSpacingMultiplierY = 1
-        self.netParams.cellsVisualizationSpacingMultiplierZ = 1
-
         return {
             "metadata": metadata,
             "netParams": self.netParams.todict(),
@@ -195,59 +128,23 @@ class NetPyNEGeppetto:
         try:
             with redirect_stdout(sys.__stdout__):
                 if self.batch_config["enabled"]:
-                    self._run_as_batch()
+                    simulations.run_batch(self.simConfig, self.batch_config, self.run_config, self.netParams)
                 else:
-                    if args['parallelSimulation']:
+                    if self.run_config["parallel"]:
                         self._run_parallel(args)
                     else:
-                        self._run_in_single_core(args)
+                        if not args.get('usePrevInst', False):
+                            logging.debug('Instantiating single thread simulation')
+                            netpyne_model = self.instantiateNetPyNEModel()
+                            self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
+                        simulations.run()
 
-                return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
+                response = json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
+                return response
         except Exception:
             message = "Error while simulating the NetPyNE model"
             logging.exception(message)
             return utils.getJSONError(message, sys.exc_info())
-
-    def _run_as_batch(self):
-        """Runs the configured simulation as a batch of variations of this simulation.
-
-        * Store netParams and cfg as pkl files
-        * Prepare py templates for netParams.py, cfg.py, batch.py, run.py
-        * Copy all to workspace
-        * Submit batch simulation
-        """
-        self.simConfig.mapping = self.batch_config["params"]
-
-        for param in self.batch_config["params"]:
-            if param["type"] == "range":
-                param["values"] = list(np.arange(param["min"], param["max"], param["step"]))
-
-        self.batch_config["runCfg"] = self.run_config
-
-        # Configuration of batch.py in json format
-        batch_config = os.path.join(os.path.dirname(__file__), "templates", "batchConfig.json")
-        json.dump(self.batch_config, open(batch_config, 'w'))
-        move(batch_config, './batchConfig.json')
-
-        # Pickle files of netParams and cfg dicts
-        net_params_pkl = os.path.join(os.path.dirname(__file__), "templates", 'netParams.pkl')
-        cfg_pkl = os.path.join(os.path.dirname(__file__), "templates", 'cfg.pkl')
-        pickle.dump(self.netParams, open(net_params_pkl, "wb"))
-        pickle.dump(self.simConfig, open(cfg_pkl, "wb"))
-        move(net_params_pkl, './netParams.pkl')
-        move(cfg_pkl, './cfg.pkl')
-
-        # Python template files
-        template_single_run = os.path.join(os.path.dirname(__file__), "templates", 'batch_run_single.py')
-        template_batch = os.path.join(os.path.dirname(__file__), "templates", 'batch.py')
-        cfg = os.path.join(os.path.dirname(__file__), "templates", 'batch_cfg.py')
-        net_params = os.path.join(os.path.dirname(__file__), "templates", 'batch_netParams.py')
-        copyfile(template_single_run, './run.py')
-        copyfile(template_batch, './init.py')
-        copyfile(cfg, './cfg.py')
-        copyfile(net_params, './netParams.py')
-
-        simulations.run_in_subprocess("init.py")
 
     def _run_parallel(self, args):
         if args.get('usePrevInst', False):
@@ -278,15 +175,7 @@ class NetPyNEGeppetto:
             return utils.getJSONError("Error while simulating the NetPyNE model", error)
 
         sim.load('model_output.json')
-        self.geppetto_model = self.model_interpreter.get_geppetto_model(sim)
-
-    def _run_in_single_core(self, args):
-        if not args.get('usePrevInst', False):
-            logging.debug('Instantiating single thread simulation')
-            netpyne_model = self.instantiateNetPyNEModel()
-            self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
-
-        simulations.run()
+        return self.model_interpreter.getGeppettoModel(sim)
 
     def compileModMechFiles(self, compileMod, modFolder):
         # Create Symbolic link
