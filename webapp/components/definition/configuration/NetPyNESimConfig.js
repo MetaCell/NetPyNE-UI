@@ -2,6 +2,7 @@ import React from "react";
 import FontIcon from "@material-ui/core/Icon";
 import { BottomNavigation, BottomNavigationAction } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
 import {
   NetPyNEField,
   NetPyNECheckbox,
@@ -10,6 +11,7 @@ import {
   ListComponent,
   GridLayout,
 } from "netpyne/components";
+import { Autocomplete } from "@material-ui/lab";
 
 class NetPyNESimConfig extends React.Component {
   constructor (props) {
@@ -18,6 +20,13 @@ class NetPyNESimConfig extends React.Component {
       model: props.model,
       selectedIndex: 0,
       sectionId: "General",
+      options: [
+        { title: "net.params.popParams['E']['numCells']" },
+        { title: "net.params.popParams['E']['cellType']" },
+        { title: "net.params.connParams['E->E']['delay']" },
+        { title: "net.params.connParams['E->E']['probability']" },
+        { title: "net.params.connParams['E->E']['weight']" }
+      ]
     };
   }
 
@@ -481,6 +490,13 @@ class NetPyNESimConfig extends React.Component {
               model={"batch_config['saveFolder']"}
             />
           </NetPyNEField>
+          <Autocomplete
+            id="combo-box-demo"
+            options={this.state.options}
+            getOptionLabel={option => option.title}
+            classes={{ option: classes.option }}
+            renderInput={params => <TextField {...params} label="Exploration Parameter" variant="filled"/>}
+          />
         </div>
       )
     }
@@ -548,6 +564,7 @@ const styles = ({ shape, spacing }) => ({
     maxHeight: `calc(100vh - ${spacing(27)}px)`,
     overflowY: "auto",
   },
+  option: { color: "white" }
 });
 
 export default withStyles(styles)(NetPyNESimConfig);

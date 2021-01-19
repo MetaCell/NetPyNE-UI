@@ -57,11 +57,11 @@ define(function (require) {
 
         UNSAFE_componentWillReceiveProps (nextProps) {
           this.disconnectFromPython();
-          this.id = (nextProps.id == undefined) ? nextProps.model : nextProps.id;
+          this.id = (nextProps.id === undefined) ? nextProps.model : nextProps.id;
 
           GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
           this.connectToPython(this.state.componentType, nextProps.model);
-          if (this.state.value != nextProps.value) {
+          if (this.state.value !== nextProps.value) {
             this.setState({ value: (nextProps.value === undefined) ? '' : nextProps.value });
           }
         }
@@ -69,10 +69,10 @@ define(function (require) {
         componentDidMount () {
           this._isMounted = true;
           GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this, true);
-          if (this.props.model != undefined) {
+          if (this.props.model !== undefined) {
             this.connectToPython(this.state.componentType, this.props.model);
           }
-          if (this.props.value != undefined) {
+          if (this.props.value !== undefined) {
             this.setState({ value: this.props.value });
           }
         }
@@ -84,7 +84,7 @@ define(function (require) {
 
     createPythonControlledControl (WrappedComponent) {
 
-      var PythonControlledComponent = this.createPythonControlledComponent(WrappedComponent);
+      const PythonControlledComponent = this.createPythonControlledComponent(WrappedComponent);
 
       class PythonControlledControl extends PythonControlledComponent {
 
@@ -97,7 +97,7 @@ define(function (require) {
           });
 
           // If a handleChange method is passed as a props it will overwrite the handleChange python controlled capability
-          this.handleChange = (this.props.handleChange == undefined) ? this.handleChange.bind(this) : this.props.handleChange.bind(this);
+          this.handleChange = (this.props.handleChange === undefined) ? this.handleChange.bind(this) : this.props.handleChange.bind(this);
           this.handleUpdateInput = this.handleUpdateInput.bind(this);
           this.handleUpdateCheckbox = this.handleUpdateCheckbox.bind(this);
 
@@ -132,19 +132,19 @@ define(function (require) {
 
         UNSAFE_componentWillReceiveProps (nextProps) {
           this.disconnectFromPython();
-          this.id = (nextProps.id == undefined) ? nextProps.model : nextProps.id;
+          this.id = (nextProps.id === undefined) ? nextProps.model : nextProps.id;
           GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
           this.connectToPython(this.state.componentType, nextProps.model);
-          if ((this.state.searchText != nextProps.searchText) && (nextProps.searchText != undefined)) {
+          if ((this.state.searchText !== nextProps.searchText) && (nextProps.searchText !== undefined)) {
             this.setState({ searchText: nextProps.searchText });
           }
-          if ((this.state.checked != nextProps.checked) && (nextProps.checked != undefined)) {
+          if ((this.state.checked !== nextProps.checked) && (nextProps.checked !== undefined)) {
             this.setState({ checked: nextProps.checked });
           }
-          if ((this.state.value != nextProps.value) && (nextProps.value != undefined)) {
+          if ((this.state.value !== nextProps.value) && (nextProps.value !== undefined)) {
             this.setState({ value: nextProps.value });
           }
-          if ((this.state.model != nextProps.model) && (nextProps.model != undefined)) {
+          if ((this.state.model !== nextProps.model) && (nextProps.model !== undefined)) {
             this.setState({ model: nextProps.model });
           }
         }
@@ -270,10 +270,10 @@ define(function (require) {
 
         render () {
           const wrappedComponentProps = Object.assign({}, this.props);
-          if (wrappedComponentProps.key == undefined) {
+          if (wrappedComponentProps.key === undefined) {
             wrappedComponentProps.key = wrappedComponentProps.model;
           }
-          if (wrappedComponentProps.id == undefined) {
+          if (wrappedComponentProps.id === undefined) {
             wrappedComponentProps.id = wrappedComponentProps.model ?? "";
           }
 
@@ -289,7 +289,7 @@ define(function (require) {
           delete wrappedComponentProps.prePythonSyncProcessing;
           delete wrappedComponentProps.callback;
 
-          if (wrappedComponentProps.realType == 'func' || wrappedComponentProps.realType == 'float') {
+          if (wrappedComponentProps.realType === 'func' || wrappedComponentProps.realType === 'float') {
             wrappedComponentProps['helperText'] = this.state.errorMsg;
           }
           if (!getNameFromWrappedComponent(WrappedComponent).includes('ListComponent')) {
@@ -333,7 +333,7 @@ define(function (require) {
 
     createPythonControlledControlWithPythonDataFetch (WrappedComponent) {
 
-      var PythonControlledComponent = this.createPythonControlledComponent(WrappedComponent);
+      const PythonControlledComponent = this.createPythonControlledComponent(WrappedComponent);
 
       class PythonControlledControlWithPythonDataFetch extends PythonControlledComponent {
 
@@ -345,28 +345,18 @@ define(function (require) {
             pythonData: []
           }
           // If a handleChange method is passed as a props it will overwrite the handleChange python controlled capability
-          this.handleChange = (this.props.handleChange == undefined) ? this.handleChange.bind(this) : this.props.handleChange.bind(this);
+          this.handleChange = (this.props.handleChange === undefined) ? this.handleChange.bind(this) : this.props.handleChange.bind(this);
           this.callPythonMethod();
         }
 
         UNSAFE_componentWillReceiveProps (nextProps) {
           this.disconnectFromPython();
-          this.id = (nextProps.id == undefined) ? nextProps.model : nextProps.id;
+          this.id = (nextProps.id === undefined) ? nextProps.model : nextProps.id;
 
           GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
           this.connectToPython(this.state.componentType, nextProps.model);
           this.callPythonMethod();
         }
-
-        /*
-         * TODO: this function appears defined 2 times
-         * I think the last def is picked up, so I am commenting this one
-         * componentDidUpdate (prevProps, prevState) {
-         *   if (this.state.value != prevState.value && this.props.onChange) {
-         *     this.props.onChange(null, null, this.state.value);
-         *   }
-         * }
-         */
 
         updatePythonValue (newValue) {
           this.setState({ value: newValue, searchText: newValue, checked: newValue });
@@ -380,7 +370,7 @@ define(function (require) {
         // Default handle (mainly textfields and dropdowns)
         handleChange (event, index, value) {
           var targetValue = value;
-          if (event != null && event.target.value != undefined) {
+          if (event != null && event.target.value !== undefined) {
             targetValue = event.target.value;
           }
           this.setState({ value: targetValue });
@@ -394,7 +384,7 @@ define(function (require) {
           }
 
           // compare lengths - can save a lot of time 
-          if (array1.length != array2.length) {
+          if (array1.length !== array2.length) {
             return false;
           }
 
@@ -471,7 +461,6 @@ define(function (require) {
             </WrappedComponent>
           );
         }
-
       }
 
       return PythonControlledControlWithPythonDataFetch;

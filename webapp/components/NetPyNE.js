@@ -10,9 +10,9 @@ import {
   Drawer,
   Dialog
 } from "netpyne/components";
-import Splash from './general/Splash'
 
 import Utils from '../Utils';
+
 const styles = ({ zIndex }) => ({
   root: { height: '100%', overflow: 'hidden', display: 'flex', flex: 1 },
   container: {
@@ -22,20 +22,20 @@ const styles = ({ zIndex }) => ({
     flexDirection: "column"
   },
   topbar: { position: "relative", zIndex: zIndex.drawer + 1 },
-  content: { 
-    flexGrow:1, 
-    display: 'flex', 
+  content: {
+    flexGrow: 1,
+    display: 'flex',
     flexDirection: 'row',
-    position: 'relative' 
+    position: 'relative'
   },
   noGrow: { flexGrow: 0 }
 });
 
-import { EDIT_WIDGETS, PYTHON_CONSOLE_WIDGET, WidgetStatus } from '../constants'
+import { EDIT_WIDGETS } from '../constants'
 
 
 class NetPyNE extends React.Component {
-  
+
   openPythonCallDialog (event) {
     const payload = { errorMessage: event['evalue'], errorDetails: event['traceback'].join('\n') }
     this.props.pythonCallErrorDialogBox(payload);
@@ -53,13 +53,13 @@ class NetPyNE extends React.Component {
   componentDidMount () {
     GEPPETTO.on(GEPPETTO.Events.Error_while_exec_python_command, this.openPythonCallDialog, this);
     this.props.setDefaultWidgets();
-    
+
     GEPPETTO.on('jupyter_geppetto_extension_ready', data => {
       let project = { id: 1, name: 'Project', experiments: [{ "id": 1, "name": 'Experiment', "status": 'DESIGN' }] }
       GEPPETTO.Manager.loadProject(project, false);
       GEPPETTO.Manager.loadExperiment(1, [], []);
       Utils.execPythonMessage('from netpyne_ui.netpyne_geppetto import netpyne_geppetto');
-      Utils.evalPythonMessage('netpyne_geppetto.getData',[]).then(response => {
+      Utils.evalPythonMessage('netpyne_geppetto.getData', []).then(response => {
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading NetPyNE-UI");
         const data = Utils.convertToJSON(response);
         this.addMetadataToWindow(data);
@@ -67,9 +67,7 @@ class NetPyNE extends React.Component {
         this.props.modelLoaded();
         GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
       })
-      
     });
-    
   }
 
   componentWillUnmount () {
@@ -93,8 +91,8 @@ class NetPyNE extends React.Component {
               <Grid item className={classes.noGrow}>
                 <Drawer/>
               </Grid>
-              <Grid item >
-                <Layout />
+              <Grid item>
+                <Layout/>
               </Grid>
             </Grid>
           </Box>
@@ -105,4 +103,5 @@ class NetPyNE extends React.Component {
     );
   }
 }
+
 export default withStyles(styles)(NetPyNE)
