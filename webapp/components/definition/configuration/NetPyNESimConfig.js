@@ -2,7 +2,7 @@ import React from "react";
 import FontIcon from "@material-ui/core/Icon";
 import { BottomNavigation, BottomNavigationAction } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
+import NetPyNERunConfig from "root/components/definition/configuration/NetPyNERunConfig";
 import {
   NetPyNEField,
   NetPyNECheckbox,
@@ -11,7 +11,6 @@ import {
   ListComponent,
   GridLayout,
 } from "netpyne/components";
-import { Autocomplete } from "@material-ui/lab";
 
 class NetPyNESimConfig extends React.Component {
   constructor (props) {
@@ -19,14 +18,7 @@ class NetPyNESimConfig extends React.Component {
     this.state = {
       model: props.model,
       selectedIndex: 0,
-      sectionId: "General",
-      options: [
-        { title: "net.params.popParams['E']['numCells']" },
-        { title: "net.params.popParams['E']['cellType']" },
-        { title: "net.params.connParams['E->E']['delay']" },
-        { title: "net.params.connParams['E->E']['probability']" },
-        { title: "net.params.connParams['E->E']['weight']" }
-      ]
+      sectionId: "General"
     };
   }
 
@@ -442,63 +434,7 @@ class NetPyNESimConfig extends React.Component {
         </div>
       );
     } else if (this.state.sectionId === "Batch") {
-      contentLeft = (
-        <div>
-          <NetPyNEField
-            id="batch_config.enabled"
-            className={"netpyneCheckbox"}
-          >
-            <NetPyNECheckbox model={"batch_config['enabled']"}/>
-          </NetPyNEField>
-          <NetPyNEField
-            id="batch_config.name"
-            className={"netpyneCheckbox"}
-          >
-            <NetPyNETextField
-              model={"batch_config['name']"}
-              fullWidth
-              variant="filled"
-            />
-          </NetPyNEField>
-          <NetPyNEField
-            id="batch_config.method"
-            className={"netpyneCheckbox"}
-          >
-            <NetPyNETextField
-              fullWidth
-              variant="filled"
-              model={"batch_config['method']"}
-            />
-          </NetPyNEField>
-          <NetPyNEField
-            id="batch_config.seed"
-            className={"netpyneCheckbox"}
-          >
-            <NetPyNETextField
-              fullWidth
-              variant="filled"
-              model={"batch_config['seed']"}
-            />
-          </NetPyNEField>
-          <NetPyNEField
-            id="batch_config.saveFolder"
-            className={"netpyneCheckbox"}
-          >
-            <NetPyNETextField
-              fullWidth
-              variant="filled"
-              model={"batch_config['saveFolder']"}
-            />
-          </NetPyNEField>
-          <Autocomplete
-            id="combo-box-demo"
-            options={this.state.options}
-            getOptionLabel={option => option.title}
-            classes={{ option: classes.option }}
-            renderInput={params => <TextField {...params} label="Exploration Parameter" variant="filled"/>}
-          />
-        </div>
-      )
+      contentLeft = <NetPyNERunConfig/>
     }
     return (
       <div className={classes.root}>

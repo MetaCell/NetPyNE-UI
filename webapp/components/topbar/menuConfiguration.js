@@ -328,7 +328,7 @@ export const getModelMenu = props => (
       label: TOPBAR_CONSTANTS.SIMULATE,
       action: {
         handlerAction: "redux",
-        parameters: [props.modelState == MODEL_STATE.NOT_INSTANTIATED ? createAndSimulateNetwork : simulateNetwork]
+        parameters: [props.modelState === MODEL_STATE.NOT_INSTANTIATED ? createAndSimulateNetwork : simulateNetwork]
       }
     },
     {

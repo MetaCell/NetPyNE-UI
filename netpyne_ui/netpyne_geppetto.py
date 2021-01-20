@@ -3,8 +3,6 @@ netpyne_geppetto.py
 
 Initialise NetPyNE Geppetto, this class contains methods to connect NetPyNE with the Geppetto based UI
 """
-
-import json
 import os
 import importlib
 import sys
@@ -14,6 +12,8 @@ import re
 import matplotlib.pyplot as plt
 import numpy as np
 import neuron
+import pickle
+import json
 
 from netpyne import specs, sim, analysis
 from netpyne.specs.utils import validateFunction
@@ -23,7 +23,7 @@ from netpyne.metadata import metadata
 from pygeppetto.model.model_serializer import GeppettoModelSerializer
 from pygeppetto import ui
 
-from shutil import copyfile
+from shutil import copyfile, move
 from jupyter_geppetto import jupyter_geppetto, synchronization, utils
 from contextlib import redirect_stdout
 
@@ -78,7 +78,7 @@ class NetPyNEGeppetto:
             # or mpi_direct (has problems running on MacOS)
             "type": "mpi_bulletin",
             "parallel": False,
-            "asynchronous": False,
+            "asynchronous": True,
             "script": "run.py",
             "cores": 2,
         }
@@ -100,6 +100,15 @@ class NetPyNEGeppetto:
             "currentFolder": os.getcwd(),
             "tuts": self.find_tutorials()
         }
+
+    def getStatus(self):
+        return {
+            "status": simulations.local_simulation_pool.status()
+        }
+
+    def stop(self):
+        simulations.local_simulation_pool.stop()
+        return "stopped simulation"
 
     def find_tutorials(self):
         from os import listdir
@@ -131,12 +140,18 @@ class NetPyNEGeppetto:
                     if simulations.local_simulation_pool.is_running():
                         return utils.getJSONError("Simulation is already running", "")
 
-                    simulations.local_simulation_pool.run_batch(
-                        self.simConfig, self.batch_config, self.run_config,
-                        self.netParams
+                    self._prepare_batch_files()
+                    simulations.local_simulation_pool.run(
+                        parallel=self.run_config["parallel"],
+                        cores=self.run_config["cores"],
+                        method=self.run_config["type"],
+                        batch=self.batch_config["enabled"],
                     )
                 else:
                     if self.run_config["parallel"]:
+                        if simulations.local_simulation_pool.is_running():
+                            return utils.getJSONError("Simulation is already running", "")
+
                         self._run_parallel(args)
                     else:
                         if not args.get('usePrevInst', False):
@@ -182,6 +197,38 @@ class NetPyNEGeppetto:
 
         sim.load('model_output.json')
         return self.model_interpreter.getGeppettoModel(sim)
+
+    def _prepare_batch_files(self):
+        self.simConfig.mapping = self.batch_config["params"]
+
+        for param in self.batch_config["params"]:
+            if param["type"] == "range":
+                param["values"] = list(np.arange(param["min"], param["max"], param["step"]))
+
+        self.batch_config["runCfg"] = self.run_config
+
+        # Configuration of batch.py in json format
+        batch_config_json = os.path.join(os.path.dirname(__file__), "templates", "batchConfig.json")
+        json.dump(self.batch_config, open(batch_config_json, 'w'))
+        move(batch_config_json, './batchConfig.json')
+
+        # Pickle files of netParams and cfg dicts
+        net_params_pkl = os.path.join(os.path.dirname(__file__), "templates", 'netParams.pkl')
+        cfg_pkl = os.path.join(os.path.dirname(__file__), "templates", 'cfg.pkl')
+        pickle.dump(self.netParams, open(net_params_pkl, "wb"))
+        pickle.dump(self.simConfig, open(cfg_pkl, "wb"))
+        move(net_params_pkl, './netParams.pkl')
+        move(cfg_pkl, './cfg.pkl')
+
+        # Python template files
+        template_single_run = os.path.join(os.path.dirname(__file__), "templates", 'batch_run_single.py')
+        template_batch = os.path.join(os.path.dirname(__file__), "templates", 'batch.py')
+        cfg = os.path.join(os.path.dirname(__file__), "templates", 'batch_cfg.py')
+        net_params = os.path.join(os.path.dirname(__file__), "templates", 'batch_netParams.py')
+        copyfile(template_single_run, './run.py')
+        copyfile(template_batch, './init.py')
+        copyfile(cfg, './cfg.py')
+        copyfile(net_params, './netParams.py')
 
     def compileModMechFiles(self, compileMod, modFolder):
         # Create Symbolic link
