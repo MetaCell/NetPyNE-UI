@@ -49,16 +49,16 @@ class NetPyNEPopulation extends React.Component {
   }
 
   getModelParameters = () => {
-    var select = (index, sectionId) =>
+    const select = (index, sectionId) =>
       this.setState({ selectedIndex: index, sectionId: sectionId });
 
-    var modelParameters = [];
+    const modelParameters = [];
     modelParameters.push(
       <BottomNavigationAction
         id={"generalPopTab"}
         key={"General"}
         label={"General"}
-        icon={<FontIcon className={"fa fa-bars"} />}
+        icon={<FontIcon className={"fa fa-bars"}/>}
         onClick={() => select(0, "General")}
       />
     );
@@ -67,19 +67,19 @@ class NetPyNEPopulation extends React.Component {
         id={"spatialDistPopTab"}
         key={"SpatialDistribution"}
         label={"Spatial Distribution"}
-        icon={<FontIcon className={"fa fa-cube"} />}
+        icon={<FontIcon className={"fa fa-cube"}/>}
         onClick={() => select(1, "SpatialDistribution")}
       />
     );
     if (
       typeof this.state.cellModelFields != "undefined"
-      && this.state.cellModelFields != ""
+      && this.state.cellModelFields !== ""
     ) {
       modelParameters.push(
         <BottomNavigationAction
           key={this.state.cellModel}
           label={this.state.cellModel + " Model"}
-          icon={<FontIcon className={"fa fa-balance-scale"} />}
+          icon={<FontIcon className={"fa fa-balance-scale"}/>}
           onClick={() => select(2, this.state.cellModel)}
         />
       );
@@ -88,7 +88,7 @@ class NetPyNEPopulation extends React.Component {
       <BottomNavigationAction
         key={"CellList"}
         label={"Cell List"}
-        icon={<FontIcon className={"fa fa-list"} />}
+        icon={<FontIcon className={"fa fa-list"}/>}
         onClick={() => select(3, "CellList")}
       />
     );
@@ -98,19 +98,19 @@ class NetPyNEPopulation extends React.Component {
 
   shouldComponentUpdate (nextProps, nextState) {
     return (
-      this.state.model == undefined
-      || this.state.currentName != nextState.currentName
-      || this.state.cellModelFields != nextState.cellModelFields
-      || this.state.sectionId != nextState.sectionId
-      || this.state.selectedIndex != nextState.selectedIndex
+      this.state.model === undefined
+      || this.state.currentName !== nextState.currentName
+      || this.state.cellModelFields !== nextState.cellModelFields
+      || this.state.sectionId !== nextState.sectionId
+      || this.state.selectedIndex !== nextState.selectedIndex
     );
   }
 
   handleRenameChange = event => {
-    var storedValue = this.props.name;
-    var newValue = Utils.nameValidation(event.target.value);
-    var updateCondition = this.props.renameHandler(newValue);
-    var triggerCondition = Utils.handleUpdate(
+    const storedValue = this.props.name;
+    const newValue = Utils.nameValidation(event.target.value);
+    const updateCondition = this.props.renameHandler(newValue);
+    const triggerCondition = Utils.handleUpdate(
       updateCondition,
       newValue,
       event.target.value,
@@ -137,7 +137,7 @@ class NetPyNEPopulation extends React.Component {
 
   triggerUpdate (updateMethod) {
     // common strategy when triggering processing of a value change, delay it, every time there is a change we reset
-    if (this.updateTimer != undefined) {
+    if (this.updateTimer !== undefined) {
       clearTimeout(this.updateTimer);
     }
     this.updateTimer = setTimeout(updateMethod, 1000);
@@ -157,10 +157,11 @@ class NetPyNEPopulation extends React.Component {
   }
 
   render () {
+    let content;
     const { classes } = this.props;
 
     var dialogPop
-      = this.state.errorMessage != undefined ? (
+      = this.state.errorMessage !== undefined ? (
         <Dialog open={true} style={{ whiteSpace: "pre-wrap" }}>
           <DialogTitle id="alert-dialog-title">
             {this.state.errorMessage}
@@ -181,15 +182,13 @@ class NetPyNEPopulation extends React.Component {
                 })
               }
             >
-              BACK
+            BACK
             </Button>
           </DialogActions>
         </Dialog>
-      ) : (
-        undefined
-      );
-    if (this.state.sectionId == "General") {
-      var content = (
+      ) : undefined;
+    if (this.state.sectionId === "General") {
+      content = (
         <Box className={`scrollbar scrollchild`} mt={1}>
           <Box mb={1}>
             <TextField
@@ -213,12 +212,12 @@ class NetPyNEPopulation extends React.Component {
               />
             </NetPyNEField>
           </div>
-          <Dimensions modelName={this.props.name} />
+          <Dimensions modelName={this.props.name}/>
           {dialogPop}
         </Box>
       );
-    } else if (this.state.sectionId == "SpatialDistribution") {
-      var content = (
+    } else if (this.state.sectionId === "SpatialDistribution") {
+      content = (
         <Box className={`scrollbar scrollchild`} mt={1}>
           <NetPyNECoordsRange
             id={"xRangePopParams"}
@@ -251,12 +250,12 @@ class NetPyNEPopulation extends React.Component {
           />
         </Box>
       );
-    } else if (this.state.sectionId == "CellList") {
-      var content = (
+    } else if (this.state.sectionId === "CellList") {
+      content = (
         <div>Option to provide individual list of cells. Coming soon ...</div>
       );
     } else {
-      var content = <div>{this.state.cellModelFields}</div>;
+      content = <div>{this.state.cellModelFields}</div>;
     }
 
     return (
