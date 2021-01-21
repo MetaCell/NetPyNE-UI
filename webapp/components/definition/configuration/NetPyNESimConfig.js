@@ -2,7 +2,6 @@ import React from "react";
 import FontIcon from "@material-ui/core/Icon";
 import { BottomNavigation, BottomNavigationAction } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import NetPyNERunConfig from "root/components/definition/configuration/NetPyNERunConfig";
 import {
   NetPyNEField,
   NetPyNECheckbox,
@@ -11,6 +10,8 @@ import {
   ListComponent,
   GridLayout,
 } from "netpyne/components";
+import NetPyNEBatchConfig from "root/components/definition/configuration/NetPyNEBatchConfig";
+import NetPyNERunConfig from "root/components/definition/configuration/NetPyNERunConfig";
 
 class NetPyNESimConfig extends React.Component {
   constructor (props) {
@@ -434,7 +435,8 @@ class NetPyNESimConfig extends React.Component {
         </div>
       );
     } else if (this.state.sectionId === "Batch") {
-      contentLeft = <NetPyNERunConfig/>
+      contentLeft = <NetPyNEBatchConfig/>
+      contentRight = <NetPyNERunConfig/>
     }
     return (
       <div className={classes.root}>
