@@ -29,7 +29,7 @@ def register(metadata, net_params):
         "hintText": "",
         'children': {
             'enabled': {
-                "label": "Batch enabled",
+                "label": "Run as batch",
                 "help": "Activates batch",
                 "suggestions": "",
                 "hintText": "",
@@ -62,6 +62,43 @@ def register(metadata, net_params):
                 "suggestions": "",
                 "hintText": "",
                 "type": "str"
+            }
+        }
+    }
+
+    metadata["run_config"] = {
+        "label": "Run configuration",
+        "help": "",
+        "suggestions": "",
+        "hintText": "",
+        'children': {
+            'parallel': {
+                "label": "Parallel",
+                "help": "",
+                "suggestions": "",
+                "hintText": "",
+                "type": "bool"
+            },
+            'asynchronous': {
+                "label": "Run in background",
+                "help": "",
+                "suggestions": "",
+                "hintText": "",
+                "type": "bool"
+            },
+            'type': {
+                "label": "Execution type",
+                "help": "",
+                "suggestions": "",
+                "hintText": "",
+                "type": "str"
+            },
+            'cores': {
+                "label": "Number of cores",
+                "help": "",
+                "suggestions": "",
+                "hintText": "",
+                "type": "int"
             }
         }
     }

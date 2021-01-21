@@ -40,12 +40,15 @@ class NetPyNEGeppetto:
     def __init__(self):
         self.model_interpreter = NetPyNEModelInterpreter()
 
+        # Geppetto model of a created network
+        self.geppetto_model = None
+
         self.netParams = specs.NetParams()
         self.simConfig = specs.SimConfig()
 
         # TODO: use dataclass instead
         self.batch_config = {
-            "enabled": True,
+            "enabled": False,
             "params": [
                 {
                     # set in cfg.py to cfg.paramX = defaultValue of field
@@ -75,12 +78,12 @@ class NetPyNEGeppetto:
 
         # Run config for both single and batch simulation
         self.run_config = {
-            # or mpi_direct (has problems running on MacOS)
-            "type": "mpi_bulletin",
             "parallel": False,
             "asynchronous": True,
-            "script": "run.py",
             "cores": 2,
+            "remote": "local",
+            # or mpi_direct (has problems running on MacOS)
+            "type": "mpi_bulletin",
         }
 
         fields.register(metadata, self.netParams)
@@ -141,40 +144,59 @@ class NetPyNEGeppetto:
                         return utils.getJSONError("Simulation is already running", "")
 
                     self._prepare_batch_files()
-                    simulations.local_simulation_pool.run(
+                    simulations.run(
+                        local=True,
                         parallel=self.run_config["parallel"],
                         cores=self.run_config["cores"],
                         method=self.run_config["type"],
                         batch=self.batch_config["enabled"],
+                        asynchronous=self.run_config["asynchronous"]
                     )
+
+                    return utils.getJSONError(
+                        f"Batch started in background! Results will be stored in your workspace at ./{self.batch_config['saveFolder']}",
+                        "")
                 else:
-                    if self.run_config["parallel"]:
+                    if self.run_config["asynchronous"]:
                         if simulations.local_simulation_pool.is_running():
                             return utils.getJSONError("Simulation is already running", "")
 
-                        self._run_parallel(args)
+                        self._prepare_simulation_files(args)
+                        simulations.run(
+                            parallel=self.run_config["parallel"],
+                            cores=self.run_config["cores"],
+                            asynchronous=self.run_config["asynchronous"]
+                        )
+
+                        if not self.run_config["asynchronous"]:
+                            sim.load('model_output.json')
+                            return self.model_interpreter.getGeppettoModel(sim)
                     else:
                         if not args.get('usePrevInst', False):
                             logging.debug('Instantiating single thread simulation')
                             netpyne_model = self.instantiateNetPyNEModel()
+
                             self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
                         simulations.run()
 
-                response = json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
-                return response
+                if self.geppetto_model:
+                    response = json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
+                    return response
+
         except Exception:
             message = "Error while simulating the NetPyNE model"
             logging.exception(message)
             return utils.getJSONError(message, sys.exc_info())
 
-    def _run_parallel(self, args):
+    def _prepare_simulation_files(self, args):
         if args.get('usePrevInst', False):
             sim.cfg.saveJson = True
             oldName = sim.cfg.filename
             sim.cfg.filename = 'model_output'
 
             # workaround for issue with empty LFP dict when calling saveData()
-            del sim.allSimData['LFP']
+            if 'LFP' in sim.allSimData:
+                del sim.allSimData['LFP']
 
             sim.saveData()
             sim.cfg.filename = oldName
@@ -189,14 +211,6 @@ class NetPyNEGeppetto:
         # TODO: Instead of copying here files depending on usePrevInst, we can simply parameterize the python script
         template = os.path.join(os.path.dirname(__file__), "templates", template_name)
         copyfile(template, './init.py')
-
-        cores = str(args.get("cores", "1"))
-        error = simulations.run(parallel=True, cores=cores)
-        if error:
-            return utils.getJSONError("Error while simulating the NetPyNE model", error)
-
-        sim.load('model_output.json')
-        return self.model_interpreter.getGeppettoModel(sim)
 
     def _prepare_batch_files(self):
         self.simConfig.mapping = self.batch_config["params"]

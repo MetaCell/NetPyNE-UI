@@ -23,22 +23,23 @@ class LocalSimulationPool:
         # We allow to run only one asynchronous simulation at a time on the same instance.
         self.subprocess = None
 
-    def run(self, parallel, cores, method="", batch=False):
+    def run(self, parallel, cores, method="", batch=False, asynchronous=False):
         if batch:
             if method == MPI_DIRECT:
-                self._run_in_subprocess(["python", "./init.py"], asynchronous=True)
+                self._run_in_subprocess(["python", "./init.py"], asynchronous=asynchronous)
             elif method == MPI_BULLETIN:
                 if parallel:
                     cmd = self._bulletin_board_cmd(cores)
-                    self._run_in_subprocess(cmd, asynchronous=True)
+                    self._run_in_subprocess(cmd, asynchronous=asynchronous)
                 else:
-                    self._run_in_subprocess(["python", "./init.py"], asynchronous=True)
+                    self._run_in_subprocess(["python", "./init.py"], asynchronous=asynchronous)
             else:
                 return
         else:
-            if parallel:
+            if asynchronous:
+                logging.info(f"Running single simulation on {cores} cores ...")
                 cmd = self._bulletin_board_cmd(cores)
-                return self._run_in_subprocess(cmd)
+                return self._run_in_subprocess(cmd, asynchronous=asynchronous)
             else:
                 return self._run_in_same_process()
 
@@ -74,26 +75,29 @@ class LocalSimulationPool:
             logging.info("Another simulation is still running")
             return False
 
-        if asynchronous:
-            # store reference in module variable
-            self.subprocess = subprocess.Popen(cmds)
-        else:
-            if subprocess:
-                cp = subprocess.Popen(cmds)
-                # Blocking wait
-                return_code = cp.wait()
-                if return_code == 0:
-                    logging.info("Simulation finished with success")
-                else:
-                    logging.error("Simulation run failed ...")
+        self.subprocess = subprocess.Popen(cmds)
+
+        if not asynchronous:
+            # blocking wait
+            return_code = self.subprocess.wait()
+            if return_code == 0:
+                logging.info("Simulation finished with success")
+            else:
+                logging.error("Simulation run failed")
 
 
 local_simulation_pool = LocalSimulationPool()
 
 
-def run(local=True, parallel=False, cores=None):
+def run(local=True, parallel=False, cores=1, method="", batch=False, asynchronous=False):
     if local:
-        local_simulation_pool.run(parallel, cores)
+        local_simulation_pool.run(
+            parallel=parallel,
+            cores=cores,
+            method=method,
+            batch=batch,
+            asynchronous=asynchronous
+        )
     else:
         # remote simulations in future versions
         pass
