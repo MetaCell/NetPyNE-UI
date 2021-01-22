@@ -5,6 +5,7 @@ import sys
 import multiprocessing
 
 from netpyne import sim
+from netpyne_ui import constants
 
 MPI_DIRECT = "mpi_direct"
 MPI_BULLETIN = "mpi_bulletin"
@@ -23,22 +24,23 @@ class LocalSimulationPool:
         # We allow to run only one asynchronous simulation at a time on the same instance.
         self.subprocess = None
 
-    def run(self, parallel, cores, method="", batch=False, asynchronous=False):
+    def run(self, parallel, cores, method="", batch=False, asynchronous=False, working_directory=None):
         if batch:
             if method == MPI_DIRECT:
-                self._run_in_subprocess(["python", "./init.py"], asynchronous=asynchronous)
+                self._run_in_subprocess(_python_command(working_directory), asynchronous=asynchronous)
+
             elif method == MPI_BULLETIN:
                 if parallel:
-                    cmd = self._bulletin_board_cmd(cores)
+                    cmd = _bulletin_board_cmd(cores, working_directory)
                     self._run_in_subprocess(cmd, asynchronous=asynchronous)
                 else:
-                    self._run_in_subprocess(["python", "./init.py"], asynchronous=asynchronous)
+                    self._run_in_subprocess(_python_command(working_directory), asynchronous=asynchronous)
             else:
                 return
         else:
             if asynchronous:
                 logging.info(f"Running single simulation on {cores} cores ...")
-                cmd = self._bulletin_board_cmd(cores)
+                cmd = _bulletin_board_cmd(cores, working_directory)
                 return self._run_in_subprocess(cmd, asynchronous=asynchronous)
             else:
                 return self._run_in_same_process()
@@ -59,9 +61,6 @@ class LocalSimulationPool:
     def stop(self):
         if self.is_running():
             self.subprocess.kill()
-
-    def _bulletin_board_cmd(self, cores):
-        return ["mpiexec", "-n", str(cores), "nrniv", "-python", "-mpi", "./init.py"]
 
     def _run_in_same_process(self):
         logging.debug('Running single core simulation')
@@ -89,14 +88,28 @@ class LocalSimulationPool:
 local_simulation_pool = LocalSimulationPool()
 
 
-def run(local=True, parallel=False, cores=1, method="", batch=False, asynchronous=False):
+def _bulletin_board_cmd(cores, working_directory=None):
+    return ["mpiexec", "-n", str(cores), "nrniv", "-python", "-mpi", _script_path(working_directory)]
+
+
+def _script_path(working_directory=None):
+    return os.path.join(working_directory,
+                        constants.SIMULATION_SCRIPT_NAME) if working_directory else f"./{constants.SIMULATION_SCRIPT_NAME}"
+
+
+def _python_command(working_directory=None):
+    return ["python", _script_path(working_directory)]
+
+
+def run(local=True, parallel=False, cores=1, method="", batch=False, asynchronous=False, working_directory=None):
     if local:
         local_simulation_pool.run(
             parallel=parallel,
             cores=cores,
             method=method,
             batch=batch,
-            asynchronous=asynchronous
+            asynchronous=asynchronous,
+            working_directory=working_directory
         )
     else:
         # remote simulations in future versions

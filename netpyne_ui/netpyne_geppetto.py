@@ -27,12 +27,12 @@ from shutil import copyfile, move
 from jupyter_geppetto import jupyter_geppetto, synchronization, utils
 from contextlib import redirect_stdout
 
-from netpyne_ui.constants import NETPYNE_WORKDIR_PATH
+from netpyne_ui import constants
 from netpyne_ui import fields
 from netpyne_ui import simulations
 from netpyne_ui.netpyne_model_interpreter import NetPyNEModelInterpreter
 
-os.chdir(NETPYNE_WORKDIR_PATH)
+os.chdir(constants.NETPYNE_WORKDIR_PATH)
 
 
 class NetPyNEGeppetto:
@@ -73,7 +73,7 @@ class NetPyNEGeppetto:
             "method": "grid",
             "name": "my_batch",
             "seed": None,
-            "saveFolder": "batches",
+            "saveFolder": "batch_1",
         }
 
         # Run config for both single and batch simulation
@@ -99,6 +99,7 @@ class NetPyNEGeppetto:
             "netParams": self.netParams.todict(),
             "simConfig": self.simConfig.todict(),
             "batch_config": self.batch_config,
+            "run_config": self.run_config,
             "isDocker": os.path.isfile('/.dockerenv'),
             "currentFolder": os.getcwd(),
             "tuts": self.find_tutorials()
@@ -116,7 +117,8 @@ class NetPyNEGeppetto:
     def find_tutorials(self):
         from os import listdir
         from os.path import isfile, join
-        only_files = [f for f in listdir(NETPYNE_WORKDIR_PATH) if isfile(join(NETPYNE_WORKDIR_PATH, f))]
+        only_files = [f for f in listdir(constants.NETPYNE_WORKDIR_PATH) if
+                      isfile(join(constants.NETPYNE_WORKDIR_PATH, f))]
 
         def _filter(_file):
             return '.py' in _file and 'tut' in _file and 'gui' in _file
@@ -143,19 +145,25 @@ class NetPyNEGeppetto:
                     if simulations.local_simulation_pool.is_running():
                         return utils.getJSONError("Simulation is already running", "")
 
-                    self._prepare_batch_files()
+                    try:
+                        working_directory = self._prepare_batch_files()
+                    except OSError:
+                        return utils.getJSONError("The specified folder already exists", "")
+
                     simulations.run(
                         local=True,
                         parallel=self.run_config["parallel"],
                         cores=self.run_config["cores"],
                         method=self.run_config["type"],
                         batch=self.batch_config["enabled"],
-                        asynchronous=self.run_config["asynchronous"]
+                        asynchronous=self.run_config["asynchronous"],
+                        working_directory=working_directory
                     )
 
-                    return utils.getJSONError(
-                        f"Batch started in background! Results will be stored in your workspace at ./{self.batch_config['saveFolder']}",
-                        "")
+                    message = "Batch started in background! " \
+                              f"Results will be stored in your workspace at ./{self.batch_config['name']}"
+
+                    return utils.getJSONError(message, "")
                 else:
                     if self.run_config["asynchronous"]:
                         if simulations.local_simulation_pool.is_running():
@@ -169,7 +177,7 @@ class NetPyNEGeppetto:
                         )
 
                         if not self.run_config["asynchronous"]:
-                            sim.load('model_output.json')
+                            sim.load(f'{constants.MODEL_OUTPUT_FILENAME}.json')
                             return self.model_interpreter.getGeppettoModel(sim)
                     else:
                         if not args.get('usePrevInst', False):
@@ -192,7 +200,7 @@ class NetPyNEGeppetto:
         if args.get('usePrevInst', False):
             sim.cfg.saveJson = True
             oldName = sim.cfg.filename
-            sim.cfg.filename = 'model_output'
+            sim.cfg.filename = constants.MODEL_OUTPUT_FILENAME
 
             # workaround for issue with empty LFP dict when calling saveData()
             if 'LFP' in sim.allSimData:
@@ -208,9 +216,8 @@ class NetPyNEGeppetto:
             self.simConfig.save("simParams.json")
             template_name = "run.py"
 
-        # TODO: Instead of copying here files depending on usePrevInst, we can simply parameterize the python script
         template = os.path.join(os.path.dirname(__file__), "templates", template_name)
-        copyfile(template, './init.py')
+        copyfile(template, f'./{constants.SIMULATION_SCRIPT_NAME}')
 
     def _prepare_batch_files(self):
         self.simConfig.mapping = self.batch_config["params"]
@@ -221,28 +228,39 @@ class NetPyNEGeppetto:
 
         self.batch_config["runCfg"] = self.run_config
 
+        save_folder_path = os.path.join(constants.BATCHES_FOLDER, self.batch_config["name"])
+        try:
+            os.makedirs(save_folder_path)
+        except OSError:
+            raise
+
+        os.path.join(os.path.dirname(__file__), "templates", "batchConfig.json")
+
         # Configuration of batch.py in json format
         batch_config_json = os.path.join(os.path.dirname(__file__), "templates", "batchConfig.json")
         json.dump(self.batch_config, open(batch_config_json, 'w'))
-        move(batch_config_json, './batchConfig.json')
+        move(batch_config_json, os.path.join(save_folder_path, 'batchConfig.json'))
 
         # Pickle files of netParams and cfg dicts
         net_params_pkl = os.path.join(os.path.dirname(__file__), "templates", 'netParams.pkl')
         cfg_pkl = os.path.join(os.path.dirname(__file__), "templates", 'cfg.pkl')
         pickle.dump(self.netParams, open(net_params_pkl, "wb"))
         pickle.dump(self.simConfig, open(cfg_pkl, "wb"))
-        move(net_params_pkl, './netParams.pkl')
-        move(cfg_pkl, './cfg.pkl')
+        move(net_params_pkl, os.path.join(save_folder_path, 'netParams.pkl'))
+        move(cfg_pkl, os.path.join(save_folder_path, 'cfg.pkl'))
 
         # Python template files
         template_single_run = os.path.join(os.path.dirname(__file__), "templates", 'batch_run_single.py')
         template_batch = os.path.join(os.path.dirname(__file__), "templates", 'batch.py')
         cfg = os.path.join(os.path.dirname(__file__), "templates", 'batch_cfg.py')
         net_params = os.path.join(os.path.dirname(__file__), "templates", 'batch_netParams.py')
-        copyfile(template_single_run, './run.py')
-        copyfile(template_batch, './init.py')
-        copyfile(cfg, './cfg.py')
-        copyfile(net_params, './netParams.py')
+
+        copyfile(template_single_run, os.path.join(save_folder_path, 'run.py'))
+        copyfile(template_batch, os.path.join(save_folder_path, constants.SIMULATION_SCRIPT_NAME))
+        copyfile(cfg, os.path.join(save_folder_path, 'cfg.py'))
+        copyfile(net_params, os.path.join(save_folder_path, 'netParams.py'))
+
+        return save_folder_path
 
     def compileModMechFiles(self, compileMod, modFolder):
         # Create Symbolic link
@@ -545,7 +563,7 @@ class NetPyNEGeppetto:
     def getDirList(self, dir=None, onlyDirs=False, filterFiles=False):
         # Get Current dir
         if dir is None or dir == '':
-            dir = os.path.join(os.getcwd(), NETPYNE_WORKDIR_PATH)
+            dir = os.path.join(os.getcwd(), constants.NETPYNE_WORKDIR_PATH)
         dir_list = []
         file_list = []
         for f in sorted(os.listdir(str(dir)), key=str.lower):

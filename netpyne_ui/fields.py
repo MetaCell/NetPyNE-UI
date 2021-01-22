@@ -57,7 +57,7 @@ def register(metadata, net_params):
                 "type": "int"
             },
             'method': {
-                "label": "Method",
+                "label": "Exploration method",
                 "help": "",
                 "suggestions": "",
                 "hintText": "",

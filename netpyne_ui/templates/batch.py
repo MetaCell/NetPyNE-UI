@@ -1,7 +1,10 @@
 import json
+import os
 
 from netpyne import specs
 from netpyne.batch import Batch
+
+os.chdir(os.path.dirname(__file__))
 
 with open("batchConfig.json", "r") as f:
     batch_config = json.load(f)
@@ -22,8 +25,8 @@ batch = Batch(
 # Label will be subfolder of saveFolder
 batch.batchLabel = batch_config.get("name", "batch_template_run")
 
-# Have to set the saveFolder, default goes to root folder which is not always allowed by OS
-batch.saveFolder = batch_config.get("saveFolder", "./batch")
+# Have to overwrite the saveFolder, default goes to root folder which is not always allowed by OS
+batch.saveFolder = os.getcwd()
 
 # For now, we only support grid|list
 batch.method = batch_config.get("method", "grid")

@@ -2,6 +2,10 @@ import os
 
 UPLOAD_FOLDER_NAME = 'uploads'
 NETPYNE_WORKDIR = 'netpyne_workspace'
+BATCHES_FOLDER = "./batches"
+MODEL_OUTPUT_FILENAME = 'model_output'
+
+SIMULATION_SCRIPT_NAME = "init.py"
 
 ALLOWED_EXTENSIONS = ["py", "zip", "gz", ".tar.gz", "pdf", "txt", "xls", "png", "jpeg", "hoc"]
 
