@@ -38,7 +38,7 @@ class LocalSimulationPool:
             else:
                 return
         else:
-            if asynchronous:
+            if asynchronous or parallel:
                 logging.info(f"Running single simulation on {cores} cores ...")
                 cmd = _bulletin_board_cmd(cores, working_directory)
                 return self._run_in_subprocess(cmd, asynchronous=asynchronous)

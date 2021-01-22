@@ -165,7 +165,7 @@ class NetPyNEGeppetto:
 
                     return utils.getJSONError(message, "")
                 else:
-                    if self.run_config["asynchronous"]:
+                    if self.run_config["asynchronous"] or self.run_config["parallel"]:
                         if simulations.local_simulation_pool.is_running():
                             return utils.getJSONError("Simulation is already running", "")
 
@@ -178,7 +178,8 @@ class NetPyNEGeppetto:
 
                         if not self.run_config["asynchronous"]:
                             sim.load(f'{constants.MODEL_OUTPUT_FILENAME}.json')
-                            return self.model_interpreter.getGeppettoModel(sim)
+                            self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
+
                     else:
                         if not args.get('usePrevInst', False):
                             logging.debug('Instantiating single thread simulation')
