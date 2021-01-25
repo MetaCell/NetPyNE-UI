@@ -1,8 +1,8 @@
 import logging
 import subprocess
 import os
-import sys
 import multiprocessing
+import platform
 
 from netpyne import sim
 from netpyne_ui import constants
@@ -10,9 +10,10 @@ from netpyne_ui import constants
 MPI_DIRECT = "mpi_direct"
 MPI_BULLETIN = "mpi_bulletin"
 
-# TODO: need to understand when to set NRN_PYLIB
-#   it's required for pure Python installation, but breaks when using Conda
-if "CONDA_VERSION" not in os.environ:
+system = platform.system()
+if system == "Darwin":
+    import sys
+
     # nrniv needs NRN_PYLIB to be set to python executable path (MacOS, Python 3.7.6)
     os.environ["NRN_PYLIB"] = sys.executable
 
