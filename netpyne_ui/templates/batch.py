@@ -1,6 +1,8 @@
 import json
 import os
+import sys
 
+from neuron import h
 from netpyne import specs
 from netpyne.batch import Batch
 
@@ -48,3 +50,8 @@ if run_cfg:
     }
 
 batch.run()
+
+if run_cfg['type'] == 'mpi_bulletin':
+    pc = h.ParallelContext()
+    pc.done()
+    sys.exit(0)
