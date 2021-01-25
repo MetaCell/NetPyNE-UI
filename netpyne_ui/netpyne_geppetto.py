@@ -31,6 +31,7 @@ from netpyne_ui import constants
 from netpyne_ui import fields
 from netpyne_ui import simulations
 from netpyne_ui.netpyne_model_interpreter import NetPyNEModelInterpreter
+from netpyne_ui.simulations import InvalidConfigError
 
 os.chdir(constants.NETPYNE_WORKDIR_PATH)
 
@@ -82,7 +83,7 @@ class NetPyNEGeppetto:
             "asynchronous": True,
             "cores": 2,
             "remote": "local",
-            # or mpi_direct (has problems running on MacOS)
+            # or mpi_direct (doesn't support waiting for processes to finish)
             "type": "mpi_bulletin",
         }
 
@@ -150,15 +151,18 @@ class NetPyNEGeppetto:
                     except OSError:
                         return utils.getJSONError("The specified folder already exists", "")
 
-                    simulations.run(
-                        local=True,
-                        parallel=self.run_config["parallel"],
-                        cores=self.run_config["cores"],
-                        method=self.run_config["type"],
-                        batch=self.batch_config["enabled"],
-                        asynchronous=self.run_config["asynchronous"],
-                        working_directory=working_directory
-                    )
+                    try:
+                        simulations.run(
+                            local=True,
+                            parallel=self.run_config["parallel"],
+                            cores=self.run_config["cores"],
+                            method=self.run_config["type"],
+                            batch=self.batch_config["enabled"],
+                            asynchronous=self.run_config["asynchronous"],
+                            working_directory=working_directory
+                        )
+                    except InvalidConfigError as e:
+                        return utils.getJSONError(str(e), "")
 
                     message = "Batch started in background! " \
                               f"Results will be stored in your workspace at ./{self.batch_config['name']}"

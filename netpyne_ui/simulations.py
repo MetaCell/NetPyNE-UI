@@ -17,6 +17,14 @@ if "CONDA_VERSION" not in os.environ:
     os.environ["NRN_PYLIB"] = sys.executable
 
 
+class SimulationError(Exception):
+    """ Base Simulation Exception """
+
+
+class InvalidConfigError(Exception):
+    """ Thrown if invalid number of CPUs were specified. """
+
+
 class LocalSimulationPool:
     cpus = multiprocessing.cpu_count()
 
@@ -25,6 +33,9 @@ class LocalSimulationPool:
         self.subprocess = None
 
     def run(self, parallel, cores, method="", batch=False, asynchronous=False, working_directory=None):
+        if int(cores) > self.cpus:
+            raise InvalidConfigError(f"Specified {cores} cores, but only {self.cpus} are available")
+
         if batch:
             if method == MPI_DIRECT:
                 self._run_in_subprocess(_python_command(working_directory), asynchronous=asynchronous)
