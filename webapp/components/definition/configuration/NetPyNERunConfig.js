@@ -32,19 +32,19 @@ class NetPyNERunConfig extends React.Component {
           id="batch_config.enabled"
           className={"netpyneCheckbox"}
         >
-          <NetPyNECheckbox model={"batch_config['enabled']"}/>
+          <NetPyNECheckbox model={"batch_config.enabled"}/>
         </NetPyNEField>
         <NetPyNEField
           id="run_config.asynchronous"
           className={"netpyneCheckbox"}
         >
-          <NetPyNECheckbox model={"run_config['asynchronous']"}/>
+          <NetPyNECheckbox model={"run_config.asynchronous"}/>
         </NetPyNEField>
         <NetPyNEField
           id="run_config.parallel"
           className={"netpyneCheckbox"}
         >
-          <NetPyNECheckbox model={"run_config['parallel']"}/>
+          <NetPyNECheckbox model={"run_config.parallel"}/>
 
         </NetPyNEField>
         <NetPyNEField
@@ -53,14 +53,14 @@ class NetPyNERunConfig extends React.Component {
           <NetPyNETextField
             fullWidth
             variant="filled"
-            model={"run_config['type']"}
+            model={"run_config.type"}
           />
         </NetPyNEField>
         <NetPyNEField
           id="run_config.cores"
         >
           <NetPyNETextField
-            model={"run_config['cores']"}
+            model={"run_config.cores"}
             fullWidth
             variant="filled"
           />

@@ -3,32 +3,31 @@ netpyne_geppetto.py
 
 Initialise NetPyNE Geppetto, this class contains methods to connect NetPyNE with the Geppetto based UI
 """
-import os
+import dataclasses
 import importlib
-import sys
-import subprocess
-import logging
-import re
-import matplotlib.pyplot as plt
-import numpy as np
-import neuron
-import pickle
 import json
+import logging
+import os
+import pickle
+import re
+import subprocess
+import sys
+from contextlib import redirect_stdout
+from shutil import copyfile, move
 
+import matplotlib.pyplot as plt
+import neuron
+import numpy as np
+from jupyter_geppetto import jupyter_geppetto, synchronization, utils
 from netpyne import specs, sim, analysis
-from netpyne.specs.utils import validateFunction
 from netpyne.conversion.neuronPyHoc import mechVarList
 from netpyne.metadata import metadata
-
-from pygeppetto.model.model_serializer import GeppettoModelSerializer
+from netpyne.specs.utils import validateFunction
 from pygeppetto import ui
-
-from shutil import copyfile, move
-from jupyter_geppetto import jupyter_geppetto, synchronization, utils
-from contextlib import redirect_stdout
+from pygeppetto.model.model_serializer import GeppettoModelSerializer
 
 from netpyne_ui import constants
-from netpyne_ui import fields
+from netpyne_ui import model
 from netpyne_ui import simulations
 from netpyne_ui.netpyne_model_interpreter import NetPyNEModelInterpreter
 from netpyne_ui.simulations import InvalidConfigError
@@ -47,47 +46,28 @@ class NetPyNEGeppetto:
         self.netParams = specs.NetParams()
         self.simConfig = specs.SimConfig()
 
-        # TODO: use dataclass instead
-        self.batch_config = {
-            "enabled": False,
-            "params": [
-                {
-                    # set in cfg.py to cfg.paramX = defaultValue of field
-                    "label": "weight",
-                    # exact path to parameter that will be overwritten
-                    "mapsTo": "netParams.connParams['E->E']['weight']",
-                    # or 'range' with min, max, steps fields
-                    "type": "list",
-                    "values": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-                },
-                # {
-                #     # range example
-                #     "label": "weight",
-                #     "mapsTo": "netParams.connParams['E->E']['weight']",
-                #     "type": "range",
-                #     "min": 1,
-                #     "max": 5,
-                #     "step": 0.5
-                # }
-            ],
-            # possible values: grid|list|evol|asd|optuna
-            "method": "grid",
-            "name": "my_batch",
-            "seed": None,
-            "saveFolder": "batch_1",
-        }
+        self.batch_config = model.BatchConfig(
+            params=[
+                model.ExplorationParameter(
+                    label="weight",
+                    mapsTo="netParams.connParams['E->E']['weight']",
+                    type="list",
+                    values=[1, 2, 3, 4]
+                ),
+                model.ExplorationParameter(
+                    label="weight",
+                    mapsTo="netParams.connParams['E->E']['probability']",
+                    type="range",
+                    min=0.3,
+                    max=1.0,
+                    step=0.2
+                )
+            ]
+        )
 
-        # Run config for both single and batch simulation
-        self.run_config = {
-            "parallel": False,
-            "asynchronous": True,
-            "cores": 2,
-            "remote": "local",
-            # or mpi_direct (doesn't support waiting for processes to finish)
-            "type": "mpi_bulletin",
-        }
+        self.run_config = model.RunConfig()
 
-        fields.register(metadata, self.netParams)
+        model.register(metadata, self.netParams)
 
         synchronization.startSynchronization(self.__dict__)
         logging.debug("Initializing the original model")
@@ -99,8 +79,8 @@ class NetPyNEGeppetto:
             "metadata": metadata,
             "netParams": self.netParams.todict(),
             "simConfig": self.simConfig.todict(),
-            "batch_config": self.batch_config,
-            "run_config": self.run_config,
+            "batch_config": dataclasses.asdict(self.batch_config),
+            "run_config": dataclasses.asdict(self.run_config),
             "isDocker": os.path.isfile('/.dockerenv'),
             "currentFolder": os.getcwd(),
             "tuts": self.find_tutorials()
@@ -142,7 +122,7 @@ class NetPyNEGeppetto:
     def simulateNetPyNEModelInGeppetto(self, args):
         try:
             with redirect_stdout(sys.__stdout__):
-                if self.batch_config["enabled"]:
+                if self.batch_config.enabled:
                     if simulations.local_simulation_pool.is_running():
                         return utils.getJSONError("Simulation is already running", "")
 
@@ -154,33 +134,33 @@ class NetPyNEGeppetto:
                     try:
                         simulations.run(
                             local=True,
-                            parallel=self.run_config["parallel"],
-                            cores=self.run_config["cores"],
-                            method=self.run_config["type"],
-                            batch=self.batch_config["enabled"],
-                            asynchronous=self.run_config["asynchronous"],
+                            parallel=self.run_config.parallel,
+                            cores=self.run_config.cores,
+                            method=self.run_config.type,
+                            batch=self.batch_config.enabled,
+                            asynchronous=self.run_config.asynchronous,
                             working_directory=working_directory
                         )
                     except InvalidConfigError as e:
                         return utils.getJSONError(str(e), "")
 
                     message = "Batch started in background! " \
-                              f"Results will be stored in your workspace at ./{self.batch_config['name']}"
+                              f"Results will be stored in your workspace at ./{self.batch_config.name}"
 
                     return utils.getJSONError(message, "")
                 else:
-                    if self.run_config["asynchronous"] or self.run_config["parallel"]:
+                    if self.run_config.asynchronous or self.run_config.parallel:
                         if simulations.local_simulation_pool.is_running():
                             return utils.getJSONError("Simulation is already running", "")
 
                         self._prepare_simulation_files(args)
                         simulations.run(
-                            parallel=self.run_config["parallel"],
-                            cores=self.run_config["cores"],
-                            asynchronous=self.run_config["asynchronous"]
+                            parallel=self.run_config.parallel,
+                            cores=self.run_config.cores,
+                            asynchronous=self.run_config.asynchronous
                         )
 
-                        if not self.run_config["asynchronous"]:
+                        if not self.run_config.asynchronous:
                             sim.load(f'{constants.MODEL_OUTPUT_FILENAME}.json')
                             self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
 
@@ -225,15 +205,16 @@ class NetPyNEGeppetto:
         copyfile(template, f'./{constants.SIMULATION_SCRIPT_NAME}')
 
     def _prepare_batch_files(self):
-        self.simConfig.mapping = self.batch_config["params"]
+        self.simConfig.mapping = [dataclasses.asdict(p) for p in self.batch_config.params]
 
-        for param in self.batch_config["params"]:
-            if param["type"] == "range":
-                param["values"] = list(np.arange(param["min"], param["max"], param["step"]))
+        for param in self.batch_config.params:
+            if param.type == "range":
+                param.values = list(np.arange(param.min, param.max, param.step))
 
-        self.batch_config["runCfg"] = self.run_config
+        config_dict = dataclasses.asdict(self.batch_config)
+        config_dict["runCfg"] = dataclasses.asdict(self.run_config)
 
-        save_folder_path = os.path.join(constants.BATCHES_FOLDER, self.batch_config["name"])
+        save_folder_path = os.path.join(constants.BATCHES_FOLDER, self.batch_config.name)
         try:
             os.makedirs(save_folder_path)
         except OSError:
@@ -243,7 +224,7 @@ class NetPyNEGeppetto:
 
         # Configuration of batch.py in json format
         batch_config_json = os.path.join(os.path.dirname(__file__), "templates", "batchConfig.json")
-        json.dump(self.batch_config, open(batch_config_json, 'w'))
+        json.dump(config_dict, open(batch_config_json, 'w'))
         move(batch_config_json, os.path.join(save_folder_path, 'batchConfig.json'))
 
         # Pickle files of netParams and cfg dicts

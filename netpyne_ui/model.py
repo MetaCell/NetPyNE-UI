@@ -1,3 +1,6 @@
+from dataclasses import dataclass
+
+
 def register(metadata, net_params):
     # TODO: this needs to be moved into the metadata.py of netpyne repository.
     metadata['netParams']['children']['cellsVisualizationSpacingMultiplierX'] = {
@@ -106,3 +109,42 @@ def register(metadata, net_params):
     net_params.cellsVisualizationSpacingMultiplierX = 1
     net_params.cellsVisualizationSpacingMultiplierY = 1
     net_params.cellsVisualizationSpacingMultiplierZ = 1
+
+
+@dataclass
+class ExplorationParameter:
+    """ Parameter with possible values that will be explored in netpyne.batch. """
+    # Set in cfg.py to cfg.label = <defaultValue of netParams field>
+    label: str
+    # Path to target parameter in netParams dict
+    mapsTo: str
+    # Type can be either list or range
+    type: str
+    # List of values of different type
+    values: list = None
+
+    # Range fields
+    min: float = None
+    max: float = None
+    step: float = None
+
+
+@dataclass
+class BatchConfig:
+    params: [ExplorationParameter]
+    enabled: bool = False
+    method: str = "grid"
+    name: str = "my_batch"
+    seed: int = None
+    saveFolder: str = "batch_1"
+
+
+@dataclass
+class RunConfig:
+    """ Run config for either single or batch simulation."""
+    parallel: bool = False
+    asynchronous: bool = False
+    cores: int = 1
+    remote: str = "local"
+    # or mpi_direct (doesn't support waiting for processes to finish)
+    type: str = 'mpi_bulletin'

@@ -28,7 +28,7 @@ class NetPyNEBatchConfig extends React.Component {
           id="batch_config.name"
         >
           <NetPyNETextField
-            model={"batch_config['name']"}
+            model={"batch_config.name"}
             fullWidth
             variant="filled"
           />
@@ -39,7 +39,7 @@ class NetPyNEBatchConfig extends React.Component {
           <NetPyNETextField
             fullWidth
             variant="filled"
-            model={"batch_config['method']"}
+            model={"batch_config.method"}
           />
         </NetPyNEField>
         <NetPyNEField
@@ -48,7 +48,7 @@ class NetPyNEBatchConfig extends React.Component {
           <NetPyNETextField
             fullWidth
             variant="filled"
-            model={"batch_config['seed']"}
+            model={"batch_config.seed"}
           />
         </NetPyNEField>
         <NetPyNEField
@@ -57,7 +57,7 @@ class NetPyNEBatchConfig extends React.Component {
           <NetPyNETextField
             fullWidth
             variant="filled"
-            model={"batch_config['saveFolder']"}
+            model={"batch_config.saveFolder"}
           />
         </NetPyNEField>
         <Autocomplete
