@@ -35,12 +35,16 @@ batch.method = batch_config.get("method", "grid")
 # * mpi_direct can be started by running batch.py
 # * mpi_bulletin requires to run "mpiexec -n 4 nrniv -mpi batch.py", otherwise runs in single core
 run_cfg = batch_config.get("runCfg", None)
+
+cores = run_cfg.get("cores", None)
+cores = int(cores) if cores else None
+
 if run_cfg:
     batch.runCfg = {
         'type': run_cfg.get("type", 'mpi_bulletin'),
         'script': run_cfg.get("script", 'run.py'),
         'skip': run_cfg.get("skip", True),
-        'cores': run_cfg.get("cores", None)
+        'cores': cores
     }
 
 batch.run()
