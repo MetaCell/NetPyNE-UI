@@ -13,11 +13,12 @@ class NetPyNERunConfig extends React.Component {
 
     setInterval(() => {
       Utils.execPythonMessage('from netpyne_ui.netpyne_geppetto import netpyne_geppetto');
-      Utils.evalPythonMessage('netpyne_geppetto.getStatus', [])
+      Utils.evalPythonMessage('netpyne_geppetto.getSimulations', [])
         .then(response => {
-          const json = Utils.convertToJSON(response)
-          if (this.status !== json.status) {
-            this.setState({ status: json.status })
+          if (response && response.length > 0) {
+            if (this.status !== response[0].status) {
+              this.setState({ status: response[0].status })
+            }
           }
         })
     }, 2000);

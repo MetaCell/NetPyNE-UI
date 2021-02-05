@@ -45,7 +45,7 @@ class NetPyNEGeppetto:
 
         self.netParams = specs.NetParams()
         self.simConfig = specs.SimConfig()
-
+        self.run_config = model.RunConfig()
         self.batch_config = model.BatchConfig(
             params=[
                 model.ExplorationParameter(
@@ -64,8 +64,6 @@ class NetPyNEGeppetto:
                 )
             ]
         )
-
-        self.run_config = model.RunConfig()
 
         model.register(metadata, self.netParams)
 
@@ -86,13 +84,11 @@ class NetPyNEGeppetto:
             "tuts": self.find_tutorials()
         }
 
-    def getStatus(self):
-        return {
-            "status": simulations.local_simulation_pool.status()
-        }
+    def getSimulations(self):
+        return simulations.local.list()
 
     def stop(self):
-        simulations.local_simulation_pool.stop()
+        simulations.local.stop()
         return "stopped simulation"
 
     def find_tutorials(self):
@@ -123,7 +119,7 @@ class NetPyNEGeppetto:
         try:
             with redirect_stdout(sys.__stdout__):
                 if self.batch_config.enabled:
-                    if simulations.local_simulation_pool.is_running():
+                    if simulations.local.is_running():
                         return utils.getJSONError("Simulation is already running", "")
 
                     try:
@@ -133,7 +129,7 @@ class NetPyNEGeppetto:
 
                     try:
                         simulations.run(
-                            local=True,
+                            platform="local",
                             parallel=self.run_config.parallel,
                             cores=self.run_config.cores,
                             method=self.run_config.type,
@@ -150,7 +146,7 @@ class NetPyNEGeppetto:
                     return utils.getJSONError(message, "")
                 else:
                     if self.run_config.asynchronous or self.run_config.parallel:
-                        if simulations.local_simulation_pool.is_running():
+                        if simulations.local.is_running():
                             return utils.getJSONError("Simulation is already running", "")
 
                         self._prepare_simulation_files(args)

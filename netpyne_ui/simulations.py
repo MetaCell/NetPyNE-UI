@@ -3,6 +3,7 @@ import subprocess
 import os
 import multiprocessing
 import platform
+from dataclasses import dataclass
 
 from netpyne import sim
 from netpyne_ui import constants
@@ -26,7 +27,18 @@ class InvalidConfigError(Exception):
     """ Thrown if invalid number of CPUs were specified. """
 
 
+@dataclass
+class Simulation:
+    cores: int
+    name: str
+    asynchronous: bool
+    batch: bool
+    subprocess = None
+
+
 class LocalSimulationPool:
+    """ Pool that manages simulation running on the same machine as Netpyne-UI. """
+
     cpus = multiprocessing.cpu_count()
 
     def __init__(self):
@@ -37,30 +49,23 @@ class LocalSimulationPool:
         if int(cores) > self.cpus:
             raise InvalidConfigError(f"Specified {cores} cores, but only {self.cpus} are available")
 
-        if batch:
+        logging.info(f"Scheduling simulation on {cores} cores ...")
+
+        if batch or asynchronous or parallel:
             if method == MPI_DIRECT:
                 self._run_in_subprocess(_python_command(working_directory), asynchronous=asynchronous)
-
             elif method == MPI_BULLETIN:
                 if parallel:
-                    cmd = _bulletin_board_cmd(cores, working_directory)
-                    self._run_in_subprocess(cmd, asynchronous=asynchronous)
+                    self._run_in_subprocess(_bulletin_board_cmd(cores, working_directory), asynchronous=asynchronous)
                 else:
                     self._run_in_subprocess(_python_command(working_directory), asynchronous=asynchronous)
-            else:
-                return
         else:
-            if asynchronous or parallel:
-                logging.info(f"Running single simulation on {cores} cores ...")
-                cmd = _bulletin_board_cmd(cores, working_directory)
-                return self._run_in_subprocess(cmd, asynchronous=asynchronous)
-            else:
-                return self._run_in_same_process()
+            return self._run_in_same_process()
 
     def is_running(self):
         return self.subprocess and self.subprocess.poll() is None
 
-    def status(self):
+    def list(self):
         if not self.subprocess:
             return "no_simulation"
 
@@ -68,7 +73,8 @@ class LocalSimulationPool:
         if ret_code is None:
             return "running"
 
-        return "completed" if ret_code == 0 else "failed"
+        status = "completed" if ret_code == 0 else "failed"
+        return [{"status": status}]
 
     def stop(self):
         if self.is_running():
@@ -97,9 +103,6 @@ class LocalSimulationPool:
                 logging.error("Simulation run failed")
 
 
-local_simulation_pool = LocalSimulationPool()
-
-
 def _bulletin_board_cmd(cores, working_directory=None):
     return ["mpiexec", "-n", str(cores), "nrniv", "-python", "-mpi", _script_path(working_directory)]
 
@@ -113,9 +116,9 @@ def _python_command(working_directory=None):
     return ["python", _script_path(working_directory)]
 
 
-def run(local=True, parallel=False, cores=1, method="", batch=False, asynchronous=False, working_directory=None):
-    if local:
-        local_simulation_pool.run(
+def run(platform="local", parallel=False, cores=1, method="", batch=False, asynchronous=False, working_directory=None):
+    if platform == "local":
+        local.run(
             parallel=parallel,
             cores=cores,
             method=method,
@@ -126,3 +129,6 @@ def run(local=True, parallel=False, cores=1, method="", batch=False, asynchronou
     else:
         # remote simulations in future versions
         pass
+
+
+local = LocalSimulationPool()
