@@ -440,6 +440,13 @@ class NetPyNEGeppetto:
                 if plotName.startswith('iplot'):
                     # This arg brings dark theme. But some plots are broken by it
                     args['theme'] = theme
+
+                    if plotName in ("iplotConn", "iplot2Dnet") and sim.net.allCells:
+                        # To prevent unresponsive kernel, we don't show conns if they become too many
+                        numConn = sum([len(cell.conns) for cell in sim.net.allCells if cell.conns])
+                        if numConn > NUM_CONN_LIMIT:
+                            args["showConns"] = False
+
                     html = getattr(analysis, plotName)(**args)
                     if not html or html == -1:
                         return ""
