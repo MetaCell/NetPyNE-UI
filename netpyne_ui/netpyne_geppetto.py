@@ -23,7 +23,7 @@ import neuron
 from shutil import copyfile
 from jupyter_geppetto import jupyter_geppetto, synchronization, utils
 from contextlib import redirect_stdout
-from netpyne_ui.constants import NETPYNE_WORKDIR_PATH
+from netpyne_ui.constants import NETPYNE_WORKDIR_PATH, NUM_CONN_LIMIT
 
 os.chdir(NETPYNE_WORKDIR_PATH)
 
