@@ -24,17 +24,17 @@ export const newWidget = ({ path, component, panelName, ...others }) => ({
   }
 });
 
-export const addWidget = (widget) => ({
+export const addWidget = widget => ({
   type: ADD_WIDGET,
   data: widget
 });
 
-export const addWidgets = (widgets) => ({
+export const addWidgets = widgets => ({
   type: ADD_WIDGETS,
   data: widgets
 });
 
-export const setWidgets = (widgets) => ({
+export const setWidgets = widgets => ({
   type: SET_WIDGETS,
   data: widgets
 });
@@ -44,13 +44,10 @@ export const updateWidget = (newConf => ({
   data: newConf
 }))
 
-
-
 export const setLayout = (newLayout => ({
   type: SET_LAYOUT,
   data: newLayout
 }))
-
 
 export const minimizeWidget = id => ({
   type: UPDATE_WIDGET,

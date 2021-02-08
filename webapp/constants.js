@@ -111,6 +111,8 @@ export const PLOT_WIDGETS = {
     defaultPanel: "plotPanel",
     enableRename: false,
     hideOnClose: true,
+    initialized: false,
+    data: null,
     method: {
       plotMethod: 'iplotConn', 
       plotType: false
@@ -126,6 +128,8 @@ export const PLOT_WIDGETS = {
     defaultPanel: "plotPanel",
     enableRename: false,
     hideOnClose: true,
+    initialized: false,
+    data: null,
     method: {
       plotMethod: 'iplot2Dnet', 
       plotType: false
@@ -141,6 +145,8 @@ export const PLOT_WIDGETS = {
     defaultPanel: "plotPanel",
     hideOnClose: true,
     enableRename: false,
+    initialized: false,
+    data: null,
     method: {
       plotMethod: 'iplotTraces', 
       plotType: false
@@ -156,6 +162,8 @@ export const PLOT_WIDGETS = {
     defaultPanel: "plotPanel",
     enableRename: false,
     hideOnClose: true,
+    initialized: false,
+    data: null,
     method: {
       plotMethod: 'iplotRaster', 
       plotType: false
@@ -171,6 +179,8 @@ export const PLOT_WIDGETS = {
     defaultPanel: "plotPanel",
     enableRename: false,
     hideOnClose: true,
+    initialized: false,
+    data: null,
     method: {
       plotMethod: 'iplotSpikeHist', 
       plotType: false
@@ -186,6 +196,8 @@ export const PLOT_WIDGETS = {
     defaultPanel: "plotPanel",
     hideOnClose: true,
     enableRename: false,
+    initialized: false,
+    data: null,
     method: {
       plotMethod: 'iplotSpikeStats', 
       plotType: false
@@ -201,6 +213,8 @@ export const PLOT_WIDGETS = {
     defaultPanel: "plotPanel",
     enableRename: false,
     hideOnClose: true,
+    initialized: false,
+    data: null,
     method: {
       plotMethod: 'iplotRatePSD', 
       plotType: false
@@ -216,6 +230,8 @@ export const PLOT_WIDGETS = {
     defaultPanel: "plotPanel",
     enableRename: false,
     hideOnClose: true,
+    initialized: false,
+    data: null,
     method: {
       plotMethod: 'iplotLFP',
       plotType: 'timeSeries'
@@ -231,6 +247,8 @@ export const PLOT_WIDGETS = {
     defaultPanel: "plotPanel",
     hideOnClose: true,
     enableRename: false,
+    initialized: false,
+    data: null,
     method: {
       plotMethod: 'iplotLFP',
       plotType: 'PSD'
@@ -246,6 +264,8 @@ export const PLOT_WIDGETS = {
     defaultPanel: "plotPanel",
     enableRename: false,
     hideOnClose: true,
+    initialized: false,
+    data: null,
     method: {
       plotMethod: 'iplotLFP',
       plotType: 'spectrogram'
@@ -261,6 +281,8 @@ export const PLOT_WIDGETS = {
     panelName: MINIMIZED_PANEL,
     defaultPanel: "plotPanel",
     enableRename: false,
+    initialized: false,
+    data: null,
     method: {
       plotMethod: 'granger',
       plotType: false
@@ -276,6 +298,8 @@ export const PLOT_WIDGETS = {
     defaultPanel: "plotPanel",
     hideOnClose: true,
     enableRename: false,
+    initialized: false,
+    data: null,
     method: {
       plotMethod: 'iplotRxDConcentration',
       plotType: false

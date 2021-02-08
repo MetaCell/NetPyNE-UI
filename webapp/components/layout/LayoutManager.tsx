@@ -165,12 +165,9 @@ class LayoutManager {
         } else {
           hrow._addChild(tabset, 0);
         }
-
         break;
       }
-
     }
-
 
     setTimeout(() => window.dispatchEvent(new Event("resize")), 1000);
   }
@@ -210,21 +207,21 @@ class LayoutManager {
   }
 
   middleware = (store) => (next) => (action) => {
-
     console.debug(action);
     let nextAction = true;
     let nextSetLayout = true;
-
 
     switch (action.type) {
       case ADD_WIDGET: {
         this.addWidget(action.data);
         break;
       }
+
       case ADD_WIDGETS: {
         this.addWidgets(action.data);
         break;
       }
+
       case UPDATE_WIDGET: {
         this.updateWidget(action.data);
         break;
@@ -243,6 +240,7 @@ class LayoutManager {
         this.updateWidget(widget);
         break;
       }
+
       case SET_WIDGETS: {
         const newWidgets: Map<string, Widget> = action.data;
         for (let widget of this.getWidgets()) {
@@ -252,7 +250,6 @@ class LayoutManager {
         }
         this.addWidgets(Object.values(newWidgets));
         break;
-
       }
 
       case SET_LAYOUT: {
@@ -261,11 +258,11 @@ class LayoutManager {
         }
         break;
       }
+
       case General.IMPORT_APPLICATION_STATE: {
         const incomingState = action.data.redux.layout;
         this.model = FlexLayout.Model.fromJson(incomingState);
         this.importSession(action.data.sessions);
-
         nextSetLayout = false;
       }
 
@@ -280,7 +277,6 @@ class LayoutManager {
     if (nextSetLayout) {
       next(setLayout(this.model.toJson()));
     }
-
   };
 
   private addWidgets(newWidgets: Array<Widget>) {
@@ -295,7 +291,6 @@ class LayoutManager {
     for (const active of actives) {
       this.model.doAction(FlexLayout.Actions.selectTab(active));
     }
-
   }
 
   private deleteWidget(widget: any) {
@@ -303,7 +298,6 @@ class LayoutManager {
   }
 
   private getWidgets() {
-
     let nodes = [];
     this.model.visitNodes((node, level) => {
       // TODO access through public api. getConfig is hiding our data (using extraData maybe works)
@@ -350,12 +344,10 @@ class LayoutManager {
       this.model.doAction(action);
     }
 
-
     const newModel = this.model.toJson();
     if (!isEqual(oldModel, newModel)) {
       this.dispatch(setLayout(newModel));
     }
-
 
     window.dispatchEvent(new Event("resize"));
   }
@@ -366,8 +358,7 @@ class LayoutManager {
   }
 
   private minimizeWidget(widgetId) {
-
-    var updatedWidget = { ...this.getWidget(widgetId) };
+    const updatedWidget = { ...this.getWidget(widgetId) };
     if (updatedWidget === undefined) {
       return;
     }
