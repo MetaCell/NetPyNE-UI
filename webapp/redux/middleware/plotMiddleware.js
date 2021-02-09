@@ -2,7 +2,12 @@ import { addWidget, SET_WIDGETS, UPDATE_WIDGET } from '../actions/layout';
 import Utils from '../../Utils';
 import { NETPYNE_COMMANDS, PLOT_WIDGETS, WidgetStatus } from 'root/constants';
 import { processError } from './middleware';
-import { SIMULATE_NETWORK, CREATE_SIMULATE_NETWORK, SET_THEME, CREATE_NETWORK } from '../actions/general';
+import { SIMULATE_NETWORK, CREATE_SIMULATE_NETWORK, SET_THEME } from '../actions/general';
+
+// A simple cache for plots coming from the backend.
+// This is a temporary solution until we have a proper strategy to store the plot data in redux
+// and ensured that plot data doesn't lead to performance issues due to possible deep-copy in reducers.
+window.plotCache = {};
 
 export default store => next => action => {
 
@@ -10,12 +15,12 @@ export default store => next => action => {
 
     const { plotMethod, plotType } = widget.method;
     return plotFigure(widget.id, plotMethod, plotType, store.getState().general.theme)
-      .then(result => {
+      .then(data => {
+        setPlotToWindow(widget.id, data)
         widget.initialized = true;
-        if (result) {
+        if (data) {
           console.debug('Plot retrieved:', widget.id);
           widget.disabled = false;
-          widget.data = result;
           return widget;
         } else {
           console.warn('Plot not retrieved:', widget.id);
@@ -28,7 +33,9 @@ export default store => next => action => {
   switch (action.type) {
   case UPDATE_WIDGET: {
     const widget = action.data;
-    if (widget.status === WidgetStatus.ACTIVE && !widget.initialized) {
+    if (widget.id in PLOT_WIDGETS
+        && widget.status === WidgetStatus.ACTIVE
+        && !widget.initialized) {
       setWidget(widget).then(widget => widget ? next(action) : null);
     }
     next(action)
@@ -36,21 +43,18 @@ export default store => next => action => {
   }
   case SET_WIDGETS: {
     for (let widget of Object.values(action.data)) {
-      if ((widget.id in PLOT_WIDGETS) && widget.method) {
+      if (widget.id in PLOT_WIDGETS) {
         setWidget(widget).then(widget => widget ? next(addWidget(widget)) : null);
       }
     }
     next(action);
     break;
   }
-
   case SIMULATE_NETWORK:
   case CREATE_SIMULATE_NETWORK: {
+    window.plotCache = {}
     for (let widget of Object.values(PLOT_WIDGETS)) {
-      // Reset widget state once simulation finished
       widget.initialized = false;
-      widget.data = null;
-
       next(addWidget(widget))
     }
 
@@ -116,4 +120,12 @@ const plotFigure = async (plotId, plotMethod, plotType = false, theme) => {
   } catch (error) {
     console.error(error);
   }
+}
+
+const setPlotToWindow = (plotId, data) => {
+  if (data === '') {
+    console.log("No plot to show")
+    return
+  }
+  window.plotCache[plotId] = data
 }

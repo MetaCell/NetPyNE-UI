@@ -69,7 +69,7 @@ export default class WidgetFactory {
     case "D3Canvas":
       return <NetPyNEInstantiated />
     case "Plot": {
-      const data = widgetConfig.data;
+      const data = window['plotCache'][widgetConfig.id]
       if (widgetConfig.method.plotMethod.startsWith("iplot")) {
         return (
           <div style={{ width: '100%', height: '100%', textAlign: "center" }}>
