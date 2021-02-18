@@ -1,4 +1,7 @@
-import { execPythonMessage, evalPythonMessage } from '@geppettoengine/geppetto-client/js/communication/geppettoJupyter/GeppettoJupyterUtils';
+import {
+  execPythonMessage,
+  evalPythonMessage
+} from '@geppettoengine/geppetto-client/js/communication/geppettoJupyter/GeppettoJupyterUtils';
 import React from 'react';
 
 
@@ -126,7 +129,7 @@ const Utils = {
     return name;
 
   },
-    
+
   // FIXME: Hack to remove scaped chars (\\ -> \ and \' -> ') manually
   convertToJSON (data){
     if (typeof data === 'string' || data instanceof String){
@@ -135,7 +138,11 @@ const Utils = {
     return data
   },
 
-  getErrorResponse (data){
+  cleanStacktrace (stackTrace) {
+    return stackTrace.replace(/\u001b\[.*?m/g, '');
+  },
+
+  getErrorResponse (data) {
     var parsedData = this.convertToJSON(data)
     if (parsedData.type && parsedData['type'] == 'ERROR') {
       const error = { details: parsedData['details'] }
@@ -147,10 +154,6 @@ const Utils = {
       return error
     }
     return null;
-  },
-
-  parsePythonException (exception){
-    return <pre style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: IPython.utils.fixConsole(exception) }}></pre>
   },
 
   handleUpdate (updateCondition, newValue, originalValue, context, componentName) {

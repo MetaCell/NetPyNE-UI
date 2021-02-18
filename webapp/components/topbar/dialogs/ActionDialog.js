@@ -1,14 +1,22 @@
 import React from 'react';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
-import Utils from '../../../Utils';
-
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { withStyles } from "@material-ui/core/styles";
+import { bgDarkest, fontColor } from "root/theme";
 
-const styles = { cancel: { marginRight: 10 } }
-export default class ActionDialog extends React.Component {
+const styles = () => ({
+  cancel: { marginRight: 10 },
+  exception: {
+    whiteSpace: 'pre-wrap',
+    backgroundColor: bgDarkest,
+    color: fontColor
+  },
+});
+
+class ActionDialog extends React.Component {
 
   state = { hide: !this.props.openErrorDialogBox && !this.props.openDialog }
 
@@ -16,9 +24,7 @@ export default class ActionDialog extends React.Component {
     if (this.props.command) {
       if (this.props.isFormValid === undefined || this.props.isFormValid()) {
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, this.props.message);
-
         this.props.pythonCall(this.props.command, this.props.args)
-
       }
     }
     this.setState({ hide: true })
@@ -47,12 +53,15 @@ export default class ActionDialog extends React.Component {
   }
 
   render () {
+    const { classes, errorMessage, errorDetails } = this.props;
+
+    let action;
     let title
     let content
 
-    if (this.props.errorMessage === '') {
+    if (errorMessage === '') {
       title = this.props.title
-      var action = (
+      action = (
         <Button
           id="appBarPerformActionButton"
           key="appBarPerformActionButton"
@@ -60,27 +69,23 @@ export default class ActionDialog extends React.Component {
           color="primary"
           onClick={this.performAction}
         >{this.props.buttonLabel}</Button>
-      )
+      );
 
       content = this.props.children;
     } else {
-      var action = (
+      action = (
         <Button
           variant="contained"
           color="primary"
           key="BACK"
           onClick={() => this.handleClickGoBack()}
         >BACK</Button>
-      )
+      );
 
-      title = "Exception in Python kernel was thrown"
-      if (this.props.errorMessage != null && typeof this.props.errorMessage == "string") {
-        title = this.props.errorMessage
-      } else {
-        console.warn("Unknown/Undefined object was passed as error message")
+      title = errorMessage
+      if (errorDetails) {
+        content = StackTrace(classes.exception, errorDetails)
       }
-
-      content = this.props.errorDetails ? Utils.parsePythonException(this.props.errorDetails) : ''
     }
 
     return (
@@ -108,3 +113,12 @@ export default class ActionDialog extends React.Component {
     );
   }
 }
+
+const StackTrace = (classes, stackTrace) => (
+  <pre
+    className={classes}
+    dangerouslySetInnerHTML={{ __html: IPython.utils.fixConsole(stackTrace) }}
+  />
+);
+
+export default withStyles(styles)(ActionDialog);
