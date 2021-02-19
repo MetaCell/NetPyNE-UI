@@ -138,7 +138,7 @@ const Utils = {
     return data
   },
 
-  cleanStacktrace (stackTrace) {
+  getPlainStackTrace (stackTrace) {
     return stackTrace.replace(/\u001b\[.*?m/g, '');
   },
 

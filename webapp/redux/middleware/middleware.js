@@ -32,7 +32,10 @@ export default store => next => action => {
     next(action);
   };
 
-  const pythonErrorCallback = error => next(openBackendErrorDialog(error));
+  const pythonErrorCallback = error => {
+    console.debug(Utils.getPlainStackTrace(error.errorDetails))
+    return next(openBackendErrorDialog(error));
+  };
 
   switch (action.type) {
 
@@ -163,7 +166,7 @@ export const processError = response => {
   if (parsedResponse) {
     return {
       errorMessage: parsedResponse['message'],
-      errorDetails: Utils.cleanStacktrace(parsedResponse['details'])
+      errorDetails: parsedResponse['details']
     }
   }
   return false
