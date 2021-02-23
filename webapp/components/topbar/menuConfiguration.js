@@ -3,7 +3,7 @@ import React from 'react';
 import Divider from '@material-ui/core/Divider';
 import { bgRegular, bgDark, font, primaryColor, gutter, radius } from '../../theme'
 
-import { openTopbarDialog, changePageTransitionMode } from '../../redux/actions/topbar'
+import { openTopbarDialog } from '../../redux/actions/topbar'
 import {
   openDialog, loadTutorial,
   changeAutomaticInstantiation,
@@ -60,14 +60,18 @@ const topLevelMenuItemStyle = {
 
 const firstItemCustom = { fontWeight: 'bold', paddingLeft: `calc(${gutter} / 2)` }
 
-const firstItemStyle = { standard: { ...topLevelMenuItemStyle.standard, ...firstItemCustom }, hover: { ...topLevelMenuItemStyle.hover, ...firstItemCustom } }
-
+const firstItemStyle = {
+  standard: { ...topLevelMenuItemStyle.standard, ...firstItemCustom },
+  hover: { ...topLevelMenuItemStyle.hover, ...firstItemCustom }
+}
 
 const tutorialsList = {
   "tut1": "Tut 1: Simple cell network",
   "tut2": "Tut 2: Detailed cell network",
-  "tut3": "Tut 3: Multiscale network",
-  "tut3_ip3high": "Tut 3: Multiscale network (high IP3)"
+  "tut3": "Tut 3a: Multiscale network (low IP3)",
+  "tut3_ip3high": "Tut 3b: Multiscale network (high IP3)",
+  "tut3_norxd": "Tut 3c: Multiscale network (no RxD) (edited)",
+  "tut_osc": "Tut 4: Simple oscillatory network"
 }
 
 export const getTutorials = () => {
@@ -131,7 +135,7 @@ export default {
       }
     },
   },
-  itemOptions: { customArrow: <i className="fa fa-caret-right menu-caret" /> },
+  itemOptions: { customArrow: <i className="fa fa-caret-right menu-caret"/> },
   buttons: [
     {
       label: "NetPyNE",
@@ -350,7 +354,7 @@ export const getModelMenu = props => (
             parameters: [changeAutomaticInstantiation, false]
           }
         },
-        <Divider />,
+        <Divider/>,
         {
           label: "Automatic simulation",
           icon: props.automaticSimulation ? checkedIcon : 'fa',
@@ -402,14 +406,14 @@ export const getNetPyNEMenu = props => (
             handlerAction: "redux",
             parameters: [setTheme, THEMES.DARK]
           }
-        },{
+        }, {
           label: "Black Background",
           icon: props.theme === THEMES.BLACK ? checkedIcon : 'fa',
           action: {
             handlerAction: "redux",
             parameters: [setTheme, THEMES.BLACK]
           }
-        },{
+        }, {
           label: "Light Background",
           icon: props.theme === THEMES.LIGHT ? checkedIcon : 'fa',
           action: {
