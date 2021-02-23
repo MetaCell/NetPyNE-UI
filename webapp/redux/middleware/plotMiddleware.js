@@ -1,44 +1,49 @@
-import { ADD_WIDGET, addWidget, SET_WIDGETS, UPDATE_WIDGET } from '../actions/layout';
+import { addWidget, SET_WIDGETS, UPDATE_WIDGET } from '../actions/layout';
 import Utils from '../../Utils';
-import { NETPYNE_COMMANDS, PLOT_WIDGETS, MODEL_STATE } from '../../constants';
-
+import { NETPYNE_COMMANDS, PLOT_WIDGETS, WidgetStatus } from 'root/constants';
 import { processError } from './middleware';
 import { SIMULATE_NETWORK, CREATE_SIMULATE_NETWORK, SET_THEME } from '../actions/general';
 
-// Cache for plots coming from the backend
-window.plotSvgImages = {};
-
+// A simple cache for plots coming from the backend.
+// This is a temporary solution until we have a proper strategy to store the plot data in redux
+// and ensured that plot data doesn't lead to performance issues due to possible deep-copy in reducers.
+window.plotCache = {};
 
 export default store => next => action => {
 
   async function setWidget (widget) {
-  
-    const { plotMethod, plotType } = widget.method;
-    return plotFigure(widget.id, plotMethod, plotType, store.getState().general.theme).then(result => {
-      if (!result) {
-        console.warn('Plot not retrieved:', widget.id);
-        widget.disabled = true;
-        return widget;
-        // return null;
-      } else {
-        console.debug('Plot retrieved:', widget.id);
-        widget.disabled = false;
-        return widget;
-      }
-    });
-  
-  }
 
+    const { plotMethod, plotType } = widget.method;
+    return plotFigure(widget.id, plotMethod, plotType, store.getState().general.theme)
+      .then(data => {
+        setPlotToWindow(widget.id, data)
+        widget.initialized = true;
+        if (data) {
+          console.debug('Plot retrieved:', widget.id);
+          widget.disabled = false;
+          return widget;
+        } else {
+          console.warn('Plot not retrieved:', widget.id);
+          widget.disabled = true;
+          return widget;
+        }
+      });
+  }
 
   switch (action.type) {
   case UPDATE_WIDGET: {
     const widget = action.data;
+    if (widget.id in PLOT_WIDGETS
+        && widget.status === WidgetStatus.ACTIVE
+        && !widget.initialized) {
+      setWidget(widget).then(widget => widget ? next(action) : null);
+    }
     next(action)
     break;
   }
   case SET_WIDGETS: {
     for (let widget of Object.values(action.data)) {
-      if ((widget.id in PLOT_WIDGETS) && widget.method) {
+      if (widget.id in PLOT_WIDGETS) {
         setWidget(widget).then(widget => widget ? next(addWidget(widget)) : null);
       }
     }
@@ -47,13 +52,14 @@ export default store => next => action => {
   }
   case SIMULATE_NETWORK:
   case CREATE_SIMULATE_NETWORK: {
-    next(action);
+    window.plotCache = {}
     for (let widget of Object.values(PLOT_WIDGETS)) {
-      setWidget(widget).then(widget => widget ? next(addWidget(widget)) : null);
+      widget.initialized = false;
+      next(addWidget(widget))
     }
 
-    
-    break
+    next(action);
+    break;
   }
   case SET_THEME: {
     next(action);
@@ -70,7 +76,6 @@ export default store => next => action => {
   }
 }
 
-
 const plotFigure = async (plotId, plotMethod, plotType = false, theme) => {
   try {
     let response = await Promise.race([
@@ -80,14 +85,16 @@ const plotFigure = async (plotId, plotMethod, plotType = false, theme) => {
           resolve(null)
         }, 30000)
       })]);
+
     console.log('Plot response received for', plotId);
     if (!response) {
       return null;
     }
+
     // TODO Fix this, use just JSON
-    if (typeof response === 'string'){
+    if (typeof response === 'string') {
       if (response.startsWith("{") && response.endsWith("}")) {
-        if (processError(response, plotId)){
+        if (processError(response, plotId)) {
           console.error(processError(response, plotId))
           return;
         }
@@ -98,31 +105,27 @@ const plotFigure = async (plotId, plotMethod, plotType = false, theme) => {
     }
     if (plotMethod.startsWith("iplot")) {
       let html_text = response.replace ? response.replace(/\\n/g, '').replace(/\\/g, '') : ''
-
       if (plotId === "rxdConcentrationPlot") {
         // FIXME: How can we center the bokeh plots when sizing_mode='scale_height'
         html_text = html_text.replace("<head>", "<head><style>.bk {margin: 0 auto!important;}</style>")
       }
-      setPlotToWindow(plotId, html_text)
+      return html_text;
     } else if (response?.length !== undefined) {
-      setPlotToWindow(plotId, response[0]);
-    } else if (response == -1) {
+      return response[0];
+    } else if (response === -1) {
       return null;
     } else {
-      setPlotToWindow(plotId, response);
+      return response;
     }
-    return response;
   } catch (error) {
     console.error(error);
   }
-  
-
 }
 
-const setPlotToWindow = (plotId, svgResponse) => {
-  if (svgResponse === '') {
+const setPlotToWindow = (plotId, data) => {
+  if (data === '') {
     console.log("No plot to show")
     return
   }
-  window.plotSvgImages[plotId] = svgResponse
+  window.plotCache[plotId] = data
 }
