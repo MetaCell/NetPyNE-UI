@@ -213,7 +213,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
 
     if (this.state.sectionId == "General") {
       var content = (
-        <Box className={`scrollbar scrollchild`} mt={1}>
+        <>
           <Box mb={1}>
             <TextField
               fullWidth
@@ -257,11 +257,11 @@ export default class NetPyNEStimulationTarget extends React.Component {
               }
             />
           </NetPyNEField>
-        </Box>
+        </>
       );
       if (this.state.isSourceTypeNetStim) {
         var extraContent = (
-          <div>
+          <>
             <NetPyNEField id={"netParams.stimTargetParams.synMech"}>
               <NetPyNESelectField
                 fullWidth
@@ -310,7 +310,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
                 }
               />
             </NetPyNEField>
-          </div>
+          </>
         );
       } else {
         var extraContent = <div />;
@@ -349,8 +349,10 @@ export default class NetPyNEStimulationTarget extends React.Component {
         >
           {bottomNavigationItems}
         </BottomNavigation>
-        {content}
-        {extraContent}
+        <Box className={`scrollbar scrollchild`} mt={1}>
+          {content}
+          {extraContent}
+        </Box>
         {dialogPop}
       </div>
     );
