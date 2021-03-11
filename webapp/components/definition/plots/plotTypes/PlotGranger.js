@@ -1,11 +1,7 @@
-import React, { Component } from "react";
-import TimeRange from "../TimeRange";
-import Box from "@material-ui/core/Box";
-import {
-  NetPyNEField,
-  NetPyNETextField,
-  ListComponent,
-} from "netpyne/components";
+import React from 'react';
+import Box from '@material-ui/core/Box';
+import { ListComponent, NetPyNEField, NetPyNETextField } from 'netpyne/components';
+import TimeRange from '../TimeRange';
 
 export default class PlotGranger extends React.Component {
   constructor (props) {
@@ -14,42 +10,42 @@ export default class PlotGranger extends React.Component {
   }
 
   render () {
-    var tags = "simConfig.analysis['granger']";
-    var content = (
-      <Box className={`scrollbar scrollchild`} mt={1}>
+    const tags = 'simConfig.analysis[\'granger\']';
+    return (
+      <Box className="scrollbar scrollchild" mt={1}>
         <NetPyNEField
           id="simConfig.analysis.granger.cells1"
           className="listStyle"
         >
-          <ListComponent model={tags + "['cells1']"} />
+          <ListComponent model={`${tags}['cells1']`} />
         </NetPyNEField>
 
         <NetPyNEField
           id="simConfig.analysis.granger.cells2"
           className="listStyle"
         >
-          <ListComponent model={tags + "['cells2']"} />
+          <ListComponent model={`${tags}['cells2']`} />
         </NetPyNEField>
 
         <NetPyNEField
           id="simConfig.analysis.granger.spks1"
           className="listStyle"
         >
-          <ListComponent model={tags + "['spks1']"} />
+          <ListComponent model={`${tags}['spks1']`} />
         </NetPyNEField>
 
         <NetPyNEField
           id="simConfig.analysis.granger.spks2"
           className="listStyle"
         >
-          <ListComponent model={tags + "['spks2']"} />
+          <ListComponent model={`${tags}['spks2']`} />
         </NetPyNEField>
 
         <NetPyNEField id="simConfig.analysis.granger.label1">
           <NetPyNETextField
             fullWidth
             ariant="filled"
-            model={tags + "['label1']"}
+            model={`${tags}['label1']`}
           />
         </NetPyNEField>
 
@@ -57,24 +53,22 @@ export default class PlotGranger extends React.Component {
           <NetPyNETextField
             fullWidth
             variant="filled"
-            model={tags + "['label2']"}
+            model={`${tags}['label2']`}
           />
         </NetPyNEField>
 
         <NetPyNEField id="simConfig.analysis.granger.timeRange">
-          <TimeRange model={tags + "['timeRange']"} />
+          <TimeRange model={`${tags}['timeRange']`} />
         </NetPyNEField>
 
         <NetPyNEField id="simConfig.analysis.granger.binSize">
           <NetPyNETextField
             fullWidth
             variant="filled"
-            model={tags + "['binSize']"}
+            model={`${tags}['binSize']`}
           />
         </NetPyNEField>
       </Box>
     );
-
-    return content;
   }
 }

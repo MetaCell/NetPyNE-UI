@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
-import Box from '@material-ui/core/Box'
+import Box from '@material-ui/core/Box';
 import SelectField from './Select';
 import Utils from '../../Utils';
 
-import { AdapterComponent, NetPyNEField } from "netpyne/components"; 
+import { AdapterComponent, NetPyNEField } from 'netpyne/components';
 
 export default class NetPyNECoordsRange extends Component {
- 
+
   constructor (props) {
     super(props);
     this.state = { rangeType: undefined };
@@ -27,13 +27,13 @@ export default class NetPyNECoordsRange extends Component {
   componentDidUpdate (prevProps, prevState) {
     if (this.props.name != prevProps.name) {
       this.triggerUpdate(() => {
-        var message = 'netpyne_geppetto.' + this.props.model + "['" + this.props.name + "']" + ((this.props.conds != undefined) ? "['" + this.props.conds + "']" : "");
+        var message = 'netpyne_geppetto.' + this.props.model + '[\'' + this.props.name + '\']' + ((this.props.conds != undefined) ? '[\'' + this.props.conds + '\']' : '');
         Utils
-          .evalPythonMessage("[key in " + message + " for key in ['" + this.props.items[0].value + "', '" + this.props.items[1].value + "']]")
+          .evalPythonMessage('[key in ' + message + ' for key in [\'' + this.props.items[0].value + '\', \'' + this.props.items[1].value + '\']]')
           .then(response => {
             if (response[0] && this._isMounted === true) {
               this.setState({ rangeType: this.props.items[0].value });
-            } else if (response[1] && this._isMounted === true){
+            } else if (response[1] && this._isMounted === true) {
               this.setState({ rangeType: this.props.items[1].value });
             } else if (this._isMounted === true) {
               this.setState({ rangeType: undefined });
@@ -51,13 +51,13 @@ export default class NetPyNECoordsRange extends Component {
   }
 
   updateLayout () {
-    var message = 'netpyne_geppetto.' + this.props.model + "['" + this.props.name + "']" + ((this.props.conds != undefined) ? "['" + this.props.conds + "']" : "");
+    var message = 'netpyne_geppetto.' + this.props.model + '[\'' + this.props.name + '\']' + ((this.props.conds != undefined) ? '[\'' + this.props.conds + '\']' : '');
     Utils
-      .evalPythonMessage("[key in " + message + " for key in ['" + this.props.items[0].value + "', '" + this.props.items[1].value + "']]")
+      .evalPythonMessage('[key in ' + message + ' for key in [\'' + this.props.items[0].value + '\', \'' + this.props.items[1].value + '\']]')
       .then(response => {
         if (response[0] && this._isMounted === true) {
           this.setState({ rangeType: this.props.items[0].value });
-        } else if (response[1] && this._isMounted === true){
+        } else if (response[1] && this._isMounted === true) {
           this.setState({ rangeType: this.props.items[1].value });
         } else if (this._isMounted === true) {
           this.setState({ rangeType: undefined });
@@ -81,17 +81,17 @@ export default class NetPyNECoordsRange extends Component {
 
   render () {
     if (this.props.conds != undefined) {
-      var meta = this.props.model + "." + this.props.conds + "." + this.props.items[0].value;
-      var path = this.props.model + "['" + this.props.name + "']['" + this.props.conds + "']['" + this.state.rangeType + "']";
+      var meta = this.props.model + '.' + this.props.conds + '.' + this.props.items[0].value;
+      var path = this.props.model + '[\'' + this.props.name + '\'][\'' + this.props.conds + '\'][\'' + this.state.rangeType + '\']';
     } else {
       var meta = this.props.model + '.' + this.props.items[0].value;
-      var path = this.props.model + "['" + this.props.name + "']['" + this.state.rangeType + "']";
+      var path = this.props.model + '[\'' + this.props.name + '\'][\'' + this.state.rangeType + '\']';
     }
-    var min = this.props.id + "MinRange";
-    var max = this.props.id + "MaxRange";
+    var min = this.props.id + 'MinRange';
+    var max = this.props.id + 'MaxRange';
     return (
-      <div >
-        <NetPyNEField id={meta} >
+      <div>
+        <NetPyNEField id={meta}>
           <SelectField
             id={this.props.id + 'Select'}
             label="Range type"
@@ -106,15 +106,16 @@ export default class NetPyNECoordsRange extends Component {
             <AdapterComponent
               model={path}
               convertToPython={state => {
-                if (!state[state.lastUpdated].toString().endsWith(".")
-                && ((!isNaN(parseFloat(state[min]))) && (!isNaN(parseFloat(state[max]))))) {
+                if (!state[state.lastUpdated].toString()
+                    .endsWith('.')
+                  && ((!isNaN(parseFloat(state[min]))) && (!isNaN(parseFloat(state[max]))))) {
                   return [parseFloat(state[min]), parseFloat(state[max])];
                 }
               }
               }
               convertFromPython={(prevProps, prevState, value) => {
                 if (value != undefined && prevProps.value != value && value != '') {
-                  var output = {}
+                  var output = {};
                   output[min] = value[0];
                   output[max] = value[1];
                   return output;

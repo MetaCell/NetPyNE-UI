@@ -1,44 +1,44 @@
-import React from "react";
-import TimeRange from "../TimeRange";
+import React from 'react';
 import {
   NetPyNEField,
   NetPyNECheckbox,
   NetPyNETextField,
   SelectField,
   ListComponent,
-} from "netpyne/components";
-import Box from "@material-ui/core/Box";
+} from 'netpyne/components';
+import Box from '@material-ui/core/Box';
+import TimeRange from '../TimeRange';
 
 export default class PlotLFP extends React.Component {
   constructor (props) {
     super(props);
-    this.state = { plots: "" };
+    this.state = { plots: '' };
   }
 
   render () {
-    var tag = "simConfig.analysis['iplotLFP']";
+    const tag = 'simConfig.analysis[\'iplotLFP\']';
     return (
-      <Box className={`scrollbar scrollchild`} mt={1}>
+      <Box className="scrollbar scrollchild" mt={1}>
         <NetPyNEField
           id="simConfig.analysis.plotLFP.electrodes"
           className="listStyle"
         >
-          <ListComponent model={tag + "['electrodes']"} />
+          <ListComponent model={`${tag}['electrodes']`} />
         </NetPyNEField>
 
         <NetPyNEField id="simConfig.analysis.plotLFP.plots">
-          <SelectField model={tag + "['plots']"} multiple={true} />
+          <SelectField model={`${tag}['plots']`} multiple />
         </NetPyNEField>
 
         <NetPyNEField id="simConfig.analysis.plotLFP.timeRange">
-          <TimeRange model={tag + "['timeRange']"} />
+          <TimeRange model={`${tag}['timeRange']`} />
         </NetPyNEField>
 
         <NetPyNEField id="simConfig.analysis.plotLFP.NFFT">
           <NetPyNETextField
             fullWidth
             variant="filled"
-            model={tag + "['NFFT']"}
+            model={`${tag}['NFFT']`}
           />
         </NetPyNEField>
 
@@ -46,7 +46,7 @@ export default class PlotLFP extends React.Component {
           <NetPyNETextField
             fullWidth
             variant="filled"
-            model={tag + "['noverlap']"}
+            model={`${tag}['noverlap']`}
           />
         </NetPyNEField>
 
@@ -54,7 +54,7 @@ export default class PlotLFP extends React.Component {
           <NetPyNETextField
             fullWidth
             variant="filled"
-            model={tag + "['maxFreq']"}
+            model={`${tag}['maxFreq']`}
           />
         </NetPyNEField>
 
@@ -62,7 +62,7 @@ export default class PlotLFP extends React.Component {
           <NetPyNETextField
             fullWidth
             variant="filled"
-            model={tag + "['nperseg']"}
+            model={`${tag}['nperseg']`}
           />
         </NetPyNEField>
 
@@ -70,7 +70,7 @@ export default class PlotLFP extends React.Component {
           <NetPyNETextField
             fullWidth
             variant="filled"
-            model={tag + "['smooth']"}
+            model={`${tag}['smooth']`}
           />
         </NetPyNEField>
 
@@ -78,15 +78,15 @@ export default class PlotLFP extends React.Component {
           <NetPyNETextField
             fullWidth
             variant="filled"
-            model={tag + "['separation']"}
+            model={`${tag}['separation']`}
           />
         </NetPyNEField>
 
         <NetPyNEField
           id="simConfig.analysis.plotLFP.includeAxon"
-          className={"netpyneCheckbox"}
+          className="netpyneCheckbox"
         >
-          <NetPyNECheckbox model={tag + "['includeAxon']"} />
+          <NetPyNECheckbox model={`${tag}['includeAxon']`} />
         </NetPyNEField>
       </Box>
     );

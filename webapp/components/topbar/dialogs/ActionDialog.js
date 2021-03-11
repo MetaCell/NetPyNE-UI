@@ -4,8 +4,8 @@ import Button from '@material-ui/core/Button';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { withStyles } from "@material-ui/core/styles";
-import { bgDarkest, fontColor } from "root/theme";
+import { withStyles } from '@material-ui/core/styles';
+import { bgDarkest, fontColor } from 'root/theme';
 
 const styles = () => ({
   cancel: { marginRight: 10 },
@@ -18,49 +18,53 @@ const styles = () => ({
 
 class ActionDialog extends React.Component {
 
-  state = { hide: !this.props.openErrorDialogBox && !this.props.openDialog }
+  state = { hide: !this.props.openErrorDialogBox && !this.props.openDialog };
 
   performAction = () => {
     if (this.props.command) {
       if (this.props.isFormValid === undefined || this.props.isFormValid()) {
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, this.props.message);
-        this.props.pythonCall(this.props.command, this.props.args)
+        this.props.pythonCall(this.props.command, this.props.args);
       }
     }
-    this.setState({ hide: true })
+    this.setState({ hide: true });
     if (this.props.onAction) {
       this.props.onAction();
     }
-  }
+  };
 
   clearErrorDialogBox () {
     if (this.props.closeBackendErrorDialog) {
-      this.props.closeBackendErrorDialog()
+      this.props.closeBackendErrorDialog();
     }
   }
 
   cancelDialog = () => {
-    this.clearErrorDialogBox()
-    this.setState({ hide: true })
+    this.clearErrorDialogBox();
+    this.setState({ hide: true });
     if (this.props.onRequestClose) {
       this.props.onRequestClose();
     }
-  }
+  };
 
   handleClickGoBack () {
-    this.setState({ hide: true })
-    this.clearErrorDialogBox()
+    this.setState({ hide: true });
+    this.clearErrorDialogBox();
   }
 
   render () {
-    const { classes, errorMessage, errorDetails } = this.props;
+    const {
+      classes,
+      errorMessage,
+      errorDetails
+    } = this.props;
 
     let action;
-    let title
-    let content
+    let title;
+    let content;
 
     if (errorMessage === '') {
-      title = this.props.title
+      title = this.props.title;
       action = (
         <Button
           id="appBarPerformActionButton"
@@ -82,9 +86,9 @@ class ActionDialog extends React.Component {
         >BACK</Button>
       );
 
-      title = errorMessage
+      title = errorMessage;
       if (errorDetails) {
-        content = StackTrace(classes.exception, errorDetails)
+        content = StackTrace(classes.exception, errorDetails);
       }
     }
 

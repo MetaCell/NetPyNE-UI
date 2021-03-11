@@ -1,14 +1,14 @@
 import React, { createRef } from 'react';
-import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom';
 import Canvas from '@geppettoengine/geppetto-client/js/components/interface/3dCanvas/Canvas';
 import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
 
-import { NetWorkControlButtons } from 'netpyne/components'
-import { primaryColor, canvasBgDark, canvasBgLight } from '../../theme'
-import { THEMES } from '../../constants'
+import { NetWorkControlButtons } from 'netpyne/components';
+import { primaryColor, canvasBgDark, canvasBgLight } from '../../theme';
+import { THEMES } from '../../constants';
 
-const CANVAS_LIGHT = 'canvas-toolbar-btns-light'
-const CANVAS_DARK = 'canvas-toolbar-btns-dark'
+const CANVAS_LIGHT = 'canvas-toolbar-btns-light';
+const CANVAS_DARK = 'canvas-toolbar-btns-dark';
 
 export default class NetPyNEInstantiated extends React.Component {
 
@@ -21,21 +21,25 @@ export default class NetPyNEInstantiated extends React.Component {
       update: 0,
       canvasBtnCls: props.theme === THEMES.LIGHT ? CANVAS_LIGHT : CANVAS_DARK
     };
-    this.dimensions = { width: 200, height: 200 }
+    this.dimensions = {
+      width: 200,
+      height: 200
+    };
     this.canvasRef = createRef();
     this.controlPanelToggle = this.controlPanelToggle.bind(this);
   }
 
   componentDidUpdate (prevProps, prevState) {
-    this.resizeIfNeeded()
-    const { theme } = this.props
+    this.resizeIfNeeded();
+    const { theme } = this.props;
     if (prevProps.theme !== this.props.theme) {
       theme === THEMES.LIGHT ? this.updateBtnsWithTheme(CANVAS_DARK, CANVAS_LIGHT)
-        : this.updateBtnsWithTheme(CANVAS_LIGHT, CANVAS_DARK)
+        : this.updateBtnsWithTheme(CANVAS_LIGHT, CANVAS_DARK);
     }
     if (prevState.controlPanelInitialized !== this.state.controlPanelInitialized) {
       if (this.state.controlPanelInitialized) {
-        $("#controlpanel").show()
+        $('#controlpanel')
+          .show();
       }
     }
   }
@@ -43,10 +47,10 @@ export default class NetPyNEInstantiated extends React.Component {
   componentDidMount () {
     this.canvasRef.current.engine.setLinesThreshold(10000);
     this.canvasRef.current.displayAllInstances();
-    this.updateBtnsWithTheme('', this.state.canvasBtnCls)
-    window.addEventListener('resize', this.delayedResize.bind(this))
-    this.resizeIfNeeded()
-    this.updateInstances()
+    this.updateBtnsWithTheme('', this.state.canvasBtnCls);
+    window.addEventListener('resize', this.delayedResize.bind(this));
+    this.resizeIfNeeded();
+    this.updateInstances();
 
     GEPPETTO.on(GEPPETTO.Events.Control_panel_close, () => {
       this.setState({ bringItToFront: 0 });
@@ -56,7 +60,7 @@ export default class NetPyNEInstantiated extends React.Component {
   componentWillUnmount () {
     GEPPETTO.off(GEPPETTO.Events.Control_panel_close);
     clearTimeout(this.timer);
-    window.removeEventListener("resize", this.delayedResize);
+    window.removeEventListener('resize', this.delayedResize);
   }
 
   updateInstances () {
@@ -68,9 +72,9 @@ export default class NetPyNEInstantiated extends React.Component {
       );
       this.canvasRef.current.resetCamera();
 
-      this.canvasRef.current.setColor("network", primaryColor, true);
+      this.canvasRef.current.setColor('network', primaryColor, true);
       const spotLight = this.canvasRef.current.engine.scene.children.find(
-        child => child.type === "SpotLight"
+        child => child.type === 'SpotLight'
       );
       if (spotLight) {
         this.canvasRef.current.engine.scene.remove(spotLight);
@@ -91,7 +95,7 @@ export default class NetPyNEInstantiated extends React.Component {
   }
 
   wasParentResized (dimensions) {
-    return dimensions.width !== this.dimensions.width || dimensions.height !== this.dimensions.height
+    return dimensions.width !== this.dimensions.width || dimensions.height !== this.dimensions.height;
   }
 
   delayedResize () {
@@ -107,23 +111,28 @@ export default class NetPyNEInstantiated extends React.Component {
   }
 
   updateBtnsWithTheme = (removeClass, addClass) => {
-    const element = document.getElementById('CanvasContainer_component')
-    removeClass && element.classList.remove(removeClass)
-    element.classList.add(addClass)
-    this.setState({ canvasBtnCls: addClass })
-  }
+    const element = document.getElementById('CanvasContainer_component');
+    removeClass && element.classList.remove(removeClass);
+    element.classList.add(addClass);
+    this.setState({ canvasBtnCls: addClass });
+  };
 
   controlPanelToggle () {
     if (!this.state.controlPanelInitialized) {
-      this.setState({ controlPanelInitialized: true })
+      this.setState({ controlPanelInitialized: true });
     } else {
-      $("#controlpanel").show()
+      $('#controlpanel')
+        .show();
     }
-    
+
   }
 
   render () {
-    const { update, canvasBtnCls, controlPanelInitialized } = this.state;
+    const {
+      update,
+      canvasBtnCls,
+      controlPanelInitialized
+    } = this.state;
     const { theme } = this.props;
     const { controlPanelToggle: controlPanelToggle } = this;
     const bgColor = theme === THEMES.LIGHT ? canvasBgLight : theme === THEMES.BLACK ? canvasBgDark : 'transparent';
@@ -135,11 +144,16 @@ export default class NetPyNEInstantiated extends React.Component {
           name="Canvas"
           componentType="Canvas"
           ref={this.canvasRef}
-          style={{ height: '100%', width: '100%', background: bgColor }}
+          style={{
+            height: '100%',
+            width: '100%',
+            background: bgColor
+          }}
           update={update}
         />
         <div id="controlpanel" style={{ top: 0 }}>
-          { controlPanelInitialized && <ControlPanel icon={null} useBuiltInFilters={false}></ControlPanel> }
+          {controlPanelInitialized &&
+          <ControlPanel icon={null} useBuiltInFilters={false}></ControlPanel>}
         </div>
       </div>
     );
