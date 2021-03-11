@@ -25,13 +25,17 @@ export default store => next => action => {
       ? previousLayout.edit ? setLayout(previousLayout.edit) : setWidgets({ ...Constants.EDIT_WIDGETS })
       : previousLayout.network ? setLayout(previousLayout.network) : setWidgets({ ...Constants.DEFAULT_NETWORK_WIDGETS }));
   }
-  const toNetworkCallback = reset => () => {
 
+  const toNetworkCallback = reset => () => {
     switchLayoutAction(false, reset);
     next(action);
   };
 
-  const pythonErrorCallback = errorPayload => next(openBackendErrorDialog(errorPayload.message));
+  const pythonErrorCallback = error => {
+    console.debug(Utils.getPlainStackTrace(error.errorDetails))
+    return next(openBackendErrorDialog(error));
+  };
+
   switch (action.type) {
 
   case UPDATE_CARDS:
@@ -106,7 +110,6 @@ export default store => next => action => {
       simConfigPath: ".",
       simConfigModuleName: tutName,
       simConfigVariable: "simConfig",
-
     }
 
     pythonCall({ cmd: 'netpyne_geppetto.importModel', args: params })
@@ -119,13 +122,11 @@ export default store => next => action => {
   }
 }
 
-
 const instantiateNetwork = payload => createSimulateBackendCall(
   NETPYNE_COMMANDS.instantiateModel,
   payload,
   "The NetPyNE model is getting instantiated...",
   GEPPETTO.Resources.INSTANTIATING_MODEL)
-
 
 const simulateNetwork = payload =>
   createSimulateBackendCall(
@@ -135,20 +136,19 @@ const simulateNetwork = payload =>
     GEPPETTO.Resources.RUNNING_SIMULATION
   )
 
-
 const createSimulateBackendCall = async (cmd, payload, consoleMessage, spinnerType) => {
   GEPPETTO.CommandController.log(consoleMessage);
   GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, spinnerType);
-
 
   const response = await Utils.evalPythonMessage(cmd, [payload]);
   console.log('Python response', response);
   GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
   const responsePayload = processError(response);
   console.log('Python payload', responsePayload);
+
   if (responsePayload) {
-    console.error(responsePayload.errorDetails.replace(/\u001b\[.*?m/g, ''))
-    throw new Error(responsePayload.errorMessage);
+    throw responsePayload
+
   } else {
     GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
 
@@ -156,7 +156,6 @@ const createSimulateBackendCall = async (cmd, payload, consoleMessage, spinnerTy
 
     GEPPETTO.Manager.loadModel(response);
     GEPPETTO.CommandController.log('Instantiation / Simulation completed.');
-
   }
   return response;
 }
@@ -164,7 +163,10 @@ const createSimulateBackendCall = async (cmd, payload, consoleMessage, spinnerTy
 export const processError = response => {
   const parsedResponse = Utils.getErrorResponse(response);
   if (parsedResponse) {
-    return { errorMessage: parsedResponse['message'], errorDetails: parsedResponse['details'] }
+    return {
+      errorMessage: parsedResponse['message'],
+      errorDetails: parsedResponse['details']
+    }
   }
   return false
 }
@@ -173,13 +175,13 @@ const pythonCall = async ({ cmd, args }) => {
   const response = await Utils.evalPythonMessage(cmd, [args])
   const errorPayload = processError(response);
   GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+
   if (errorPayload) {
-    console.error(errorPayload.errorDetails.replace(/\u001b\[.*?m/g, ''))
-    throw new Error(errorPayload.errorMessage);
+    throw errorPayload
   }
+
   return response;
 }
-
 
 const dehydrateCanvas = () => {
   if ('CanvasContainer' in window) {

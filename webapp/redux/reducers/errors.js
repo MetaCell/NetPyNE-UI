@@ -8,7 +8,6 @@ export const ERROR_DEFAULT_STATE = {
   errorDetails: ''
 };
 
-
 // reducer function
 export default function reduceError (state = ERROR_DEFAULT_STATE, action) {
   switch (action.type) {
@@ -16,7 +15,8 @@ export default function reduceError (state = ERROR_DEFAULT_STATE, action) {
     return {
       ...state,
       openDialog: true,
-      errorMessage: action.payload,
+      errorMessage: action.payload.errorMessage,
+      errorDetails: action.payload.errorDetails
     }
   case CLOSE_BACKEND_ERROR_DIALOG:
     return { ...state, ...ERROR_DEFAULT_STATE }

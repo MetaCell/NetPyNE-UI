@@ -1,9 +1,14 @@
 module.exports = {
   extends: [
-    "./node_modules/@geppettoengine/geppetto-client/.eslintrc.js"
+    'airbnb',
   ],
   rules: {
-    'multiline-comment-style': 0,
+    // Turn off some rules so that we can improve the code step by step
+    'class-methods-use-this': 0,
+    'react/jsx-filename-extension': 0,
+
+    // Tweak some rules to our preferences
+    'space-before-function-paren': ['error', 'always'],
   },
   globals: {
     page: true,
@@ -14,6 +19,6 @@ module.exports = {
     pvdr: true,
     net1: true,
     CanvasContainer: true,
-    patchRequire: true
-  }
+    patchRequire: true,
+  },
 };

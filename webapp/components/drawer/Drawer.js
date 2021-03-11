@@ -89,7 +89,6 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
     return DEFAULT_NETWORK_WIDGETS[widgetId]
   }
 
-
   function getMenu () {
     return layoutManager.getWidgets().sort((w1, w2) => w1.pos - w2.pos);
   }
@@ -111,9 +110,7 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
         createOrFocusWidget={createOrFocusWidget}
         status={status}
       />
-      
     )
-    
   };
   
   return (
@@ -139,8 +136,6 @@ export default ({ newWidget, editMode, activateWidget, updateWidget }) => {
             </IconButton>
           </Tooltip>  
         </div>
-        
-        
       </div>
     </Paper>
   )

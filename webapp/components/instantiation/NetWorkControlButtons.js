@@ -23,9 +23,7 @@ const styles = ({ spacing }) => ({
 
 class NetWorkControlButtons extends React.Component {
   render () {
-    const { classes, modelState, canvasBtnCls } = this.props
-    const disableSimulate = modelState === MODEL_STATE.SIMULATED
-    const disableRefreshInstance = modelState === MODEL_STATE.INSTANTIATED || modelState === MODEL_STATE.SIMULATED
+    const { classes, modelState, canvasBtnCls, controlPanelShow } = this.props
 
     return (
       <div className={classes.container}>
@@ -39,49 +37,13 @@ class NetWorkControlButtons extends React.Component {
             <div>
               <IconButton
                 className={classes.buttons}
-                onClick={() => $("#controlpanel").show()}
+                onClick={controlPanelShow}
                 icon={"fa-list"}
                 id="ControlPanelButton"
               />
             </div>
           </Tooltip>
-          {/*
-          <Tooltip
-            title={disableRefreshInstance ? "Your network is in sync" : "Synchronise network"}
-            placement="left"
-          >
-            <div>
-              <IconButton
-                color={disableRefreshInstance ? 'default' : 'secondary'}
-                id={"refreshInstanciatedNetworkButton"}
-                key={"refreshInstanceButton"}
-                icon="fa-refresh"
-                className={classes.buttons}
-                onClick={() => this.props.createNetwork()}
-                disabled={disableRefreshInstance}
-              />
-            </div>
-
-          </Tooltip>
-
-
-          <Tooltip
-            title={disableSimulate ? "You have already simulated the network" : "Simulate the network"}
-            placement="left"
-          >
-            <div>
-              <IconButton
-                color={disableSimulate ? 'default' : 'secondary'}
-                id={"launchSimulationButton"}
-                icon="fa-rocket"
-                className={classes.buttons}
-                onClick={() => disableRefreshInstance ? this.props.simulateNetwork() : this.props.createAndSimulateNetwork()}
-                disabled={disableSimulate}
-              />
-            </div>
-
-          </Tooltip>
-           */}
+        
         </div>
       </div>
     );

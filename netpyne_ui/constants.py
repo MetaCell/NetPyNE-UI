@@ -17,3 +17,6 @@ if not os.path.exists(UPLOAD_FOLDER_PATH):
 
 if not os.path.exists(NETPYNE_WORKDIR_PATH):
     os.makedirs(NETPYNE_WORKDIR_PATH)
+
+# Number of connections above this limit are considered too many to be shown.
+NUM_CONN_LIMIT = 1000

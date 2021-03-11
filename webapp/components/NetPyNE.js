@@ -33,6 +33,7 @@ const styles = ({ zIndex }) => ({
 
 import { EDIT_WIDGETS } from '../constants'
 
+const TIMEOUT = 10000
 
 class NetPyNE extends React.Component {
 
@@ -58,15 +59,28 @@ class NetPyNE extends React.Component {
       let project = { id: 1, name: 'Project', experiments: [{ "id": 1, "name": 'Experiment', "status": 'DESIGN' }] }
       GEPPETTO.Manager.loadProject(project, false);
       GEPPETTO.Manager.loadExperiment(1, [], []);
-      Utils.execPythonMessage('from netpyne_ui.netpyne_geppetto import netpyne_geppetto');
-      Utils.evalPythonMessage('netpyne_geppetto.getData', []).then(response => {
-        GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading NetPyNE-UI");
-        const data = Utils.convertToJSON(response);
-        this.addMetadataToWindow(data);
-        this.props.setWidgets(EDIT_WIDGETS);
-        this.props.modelLoaded();
-        GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-      })
+
+      let responded = false;
+      Utils.execPythonMessage('from netpyne_ui.netpyne_geppetto import netpyne_geppetto')
+      Utils.evalPythonMessage('netpyne_geppetto.getData', [])
+        .then(response => {
+          responded = true
+
+          GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading NetPyNE-UI");
+          const data = Utils.convertToJSON(response);
+          this.addMetadataToWindow(data);
+          this.props.setWidgets(EDIT_WIDGETS);
+          this.props.modelLoaded();
+          GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+        });
+
+      setTimeout(() => {
+        if (!responded) {
+          GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Reloading Python Kernel");
+          IPython.notebook.restart_kernel({ confirm: false })
+            .then(() => window.location.reload());
+        }
+      }, TIMEOUT)
     });
   }
 

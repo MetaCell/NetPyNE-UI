@@ -1,4 +1,7 @@
-import { execPythonMessage, evalPythonMessage } from '@geppettoengine/geppetto-client/js/communication/geppettoJupyter/GeppettoJupyterUtils';
+import {
+  execPythonMessage,
+  evalPythonMessage
+} from '@geppettoengine/geppetto-client/js/communication/geppettoJupyter/GeppettoJupyterUtils';
 import React from 'react';
 
 
@@ -136,8 +139,12 @@ const Utils = {
     return data
   },
 
-  getErrorResponse (data){
-    const parsedData = this.convertToJSON(data);
+  getPlainStackTrace (stackTrace) {
+    return stackTrace.replace(/\u001b\[.*?m/g, '');
+  },
+
+  getErrorResponse (data) {
+    var parsedData = this.convertToJSON(data)
     if (parsedData.type && parsedData['type'] == 'ERROR') {
       const error = { details: parsedData['details'] }
       if (Object.prototype.hasOwnProperty.call(parsedData, "message")) {
@@ -148,10 +155,6 @@ const Utils = {
       return error
     }
     return null;
-  },
-
-  parsePythonException (exception){
-    return <pre style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: IPython.utils.fixConsole(exception) }}></pre>
   },
 
   handleUpdate (updateCondition, newValue, originalValue, context, componentName) {

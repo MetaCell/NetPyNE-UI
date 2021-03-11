@@ -16,13 +16,14 @@ export default class NetPyNEInstantiated extends React.Component {
     super(props);
     this.state = {
       model: props.model,
-      controlPanelHidden: true,
+      controlPanelInitialized: false,
       bringItToFront: 0,
       update: 0,
       canvasBtnCls: props.theme === THEMES.LIGHT ? CANVAS_LIGHT : CANVAS_DARK
     };
     this.dimensions = { width: 200, height: 200 }
     this.canvasRef = createRef();
+    this.controlPanelToggle = this.controlPanelToggle.bind(this);
   }
 
   componentDidUpdate (prevProps, prevState) {
@@ -31,6 +32,11 @@ export default class NetPyNEInstantiated extends React.Component {
     if (prevProps.theme !== this.props.theme) {
       theme === THEMES.LIGHT ? this.updateBtnsWithTheme(CANVAS_DARK, CANVAS_LIGHT)
         : this.updateBtnsWithTheme(CANVAS_LIGHT, CANVAS_DARK)
+    }
+    if (prevState.controlPanelInitialized !== this.state.controlPanelInitialized) {
+      if (this.state.controlPanelInitialized) {
+        $("#controlpanel").show()
+      }
     }
   }
 
@@ -107,13 +113,23 @@ export default class NetPyNEInstantiated extends React.Component {
     this.setState({ canvasBtnCls: addClass })
   }
 
+  controlPanelToggle () {
+    if (!this.state.controlPanelInitialized) {
+      this.setState({ controlPanelInitialized: true })
+    } else {
+      $("#controlpanel").show()
+    }
+    
+  }
+
   render () {
-    const { update, canvasBtnCls } = this.state;
+    const { update, canvasBtnCls, controlPanelInitialized } = this.state;
     const { theme } = this.props;
+    const { controlPanelToggle: controlPanelToggle } = this;
     const bgColor = theme === THEMES.LIGHT ? canvasBgLight : theme === THEMES.BLACK ? canvasBgDark : 'transparent';
     return (
       <div className="instantiatedContainer">
-        <NetWorkControlButtons canvasBtnCls={canvasBtnCls}/>
+        <NetWorkControlButtons canvasBtnCls={canvasBtnCls} controlPanelShow={controlPanelToggle}/>
         <Canvas
           id="CanvasContainer"
           name="Canvas"
@@ -123,7 +139,7 @@ export default class NetPyNEInstantiated extends React.Component {
           update={update}
         />
         <div id="controlpanel" style={{ top: 0 }}>
-          <ControlPanel icon={null} useBuiltInFilters={false}></ControlPanel>
+          { controlPanelInitialized && <ControlPanel icon={null} useBuiltInFilters={false}></ControlPanel> }
         </div>
       </div>
     );

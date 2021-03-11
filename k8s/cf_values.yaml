@@ -34,7 +34,11 @@ auth:
 singleuser:
   storage:
     type: none
+  cpu:
+    limit: 0.5
+    guarantee: 0.2
   memory:
+    limit: 0.5G
     guarantee: 0.2G
   image:
     name:  gcr.io/metacellllc/netpyne-ui
