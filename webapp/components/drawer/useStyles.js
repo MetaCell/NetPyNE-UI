@@ -1,8 +1,8 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-const drawerCss = (entering, transitions, palette, spacing) => ({ 
+const drawerCss = (entering, transitions, palette, spacing) => ({
   overflow: 'hidden',
-  width: props => props.width,
+  width: (props) => props.width,
   flexShrink: 0,
   borderRight: 'none',
   position: 'relative',
@@ -12,28 +12,38 @@ const drawerCss = (entering, transitions, palette, spacing) => ({
   transition: transitions.create('width', {
     easing: transitions.easing.sharp,
     duration: entering ? transitions.duration.enteringScreen : transitions.duration.leavingScreen,
-  })
-})
+  }),
+});
 
-export default makeStyles(({ transitions, palette, spacing }) => ({
+export default makeStyles(({
+  transitions,
+  palette,
+  spacing,
+}) => ({
   openDrawer: drawerCss(true, transitions, palette, spacing),
 
   closeDrawer: drawerCss(false, transitions, palette, spacing),
 
   buttonContainerOpen: { textAlign: 'end' },
   buttonContainerClosed: { textAlign: 'center' },
-  button: { color: 'white', fontSize: '1em' },
+  button: {
+    color: 'white',
+    fontSize: '1em',
+  },
   text: { marginLeft: spacing(1) },
-  container: { 
+  container: {
     display: 'flex',
     justifyContent: 'space-between',
     flexDirection: 'column',
     flex: 1,
-    width: '100%'
+    width: '100%',
   },
-  
+
   selected: { color: palette.primary.main },
   unselected: { color: palette.common.white },
   disabled: { color: palette.common.black },
-  icon: { color: 'inherit', minWidth: 'unset' }
-}))
+  icon: {
+    color: 'inherit',
+    minWidth: 'unset',
+  },
+}));

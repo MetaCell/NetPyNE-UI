@@ -1,17 +1,17 @@
-import React, { Component } from "react";
-import Dialog from "@material-ui/core/Dialog/Dialog";
+import React, { Component } from 'react';
+import Dialog from '@material-ui/core/Dialog/Dialog';
 
-import Button from "@material-ui/core/Button";
-import Utils from "../../../Utils";
-import NetPyNEHome from "../../general/NetPyNEHome";
-import NetPyNEAddNew from "../../general/NetPyNEAddNew";
+import Button from '@material-ui/core/Button';
+import Utils from '../../../Utils';
+import NetPyNEHome from '../../general/NetPyNEHome';
+import NetPyNEAddNew from '../../general/NetPyNEAddNew';
 
-import NetPyNEConnectivityRule from "./NetPyNEConnectivityRule";
-import { NetPyNEThumbnail, GridLayout, Filter } from "netpyne/components";
+import NetPyNEConnectivityRule from './NetPyNEConnectivityRule';
+import { NetPyNEThumbnail, GridLayout, Filter } from 'netpyne/components';
 
-import RulePath from "../../general/RulePath";
-import Accordion from "../../general/ExpansionPanel";
-import Box from "@material-ui/core/Box";
+import RulePath from '../../general/RulePath';
+import Accordion from '../../general/ExpansionPanel';
+import Box from '@material-ui/core/Box';
 
 export default class NetPyNEConnectivityRules extends Component {
   constructor (props) {
@@ -20,7 +20,7 @@ export default class NetPyNEConnectivityRules extends Component {
       drawerOpen: false,
       selectedConnectivityRule: undefined,
       deletedConnectivityRule: undefined,
-      page: "main",
+      page: 'main',
       errorMessage: undefined,
       errorDetails: undefined,
       filterValue: null,
@@ -66,9 +66,9 @@ export default class NetPyNEConnectivityRules extends Component {
     // Create Cell Rule Client side
     Utils.execPythonMessage(
       'netpyne_geppetto.netParams.connParams["'
-        + connectivityRuleId
-        + '"] = '
-        + JSON.stringify(value)
+      + connectivityRuleId
+      + '"] = '
+      + JSON.stringify(value)
     );
     model[connectivityRuleId] = newConnectivityRule;
     // Update state
@@ -115,7 +115,7 @@ export default class NetPyNEConnectivityRules extends Component {
     } else if (
       prevState.value !== undefined
       && Object.keys(prevState.value).length
-        !== Object.keys(this.state.value).length
+      !== Object.keys(this.state.value).length
     ) {
       /*
        * logic into this if to check if the user added a new object from the python backend and
@@ -123,7 +123,7 @@ export default class NetPyNEConnectivityRules extends Component {
        */
       var model = this.state.value;
       for (var m in model) {
-        if (prevState.value !== "" && !(m in prevState.value)) {
+        if (prevState.value !== '' && !(m in prevState.value)) {
           var newValue = Utils.nameValidation(m);
           if (newValue != m) {
             newValue = Utils.getAvailableKey(model, newValue);
@@ -132,19 +132,20 @@ export default class NetPyNEConnectivityRules extends Component {
             this.setState(
               {
                 value: model,
-                errorMessage: "Error",
+                errorMessage: 'Error',
                 errorDetails:
-                  "Leading digits or whitespaces are not allowed in ConnectivityRule names.\n"
+                  'Leading digits or whitespaces are not allowed in ConnectivityRule names.\n'
                   + m
-                  + " has been renamed "
+                  + ' has been renamed '
                   + newValue,
               },
               function () {
                 Utils.renameKey(
-                  "netParams.connParams",
+                  'netParams.connParams',
                   m,
                   newValue,
-                  (response, newValue) => {}
+                  (response, newValue) => {
+                  }
                 );
               }.bind(this)
             );
@@ -182,7 +183,7 @@ export default class NetPyNEConnectivityRules extends Component {
   }
 
   handleRenameChildren (childName) {
-    childName = childName.replace(/\s*$/, "");
+    childName = childName.replace(/\s*$/, '');
     var childrenList = Object.keys(this.state.value);
     for (var i = 0; childrenList.length > i; i++) {
       if (childName === childrenList[i]) {
@@ -193,7 +194,10 @@ export default class NetPyNEConnectivityRules extends Component {
   }
 
   getCopyPath () {
-    const { value: model, selectedConnectivityRule } = this.state;
+    const {
+      value: model,
+      selectedConnectivityRule
+    } = this.state;
     return (
       model
       && model[selectedConnectivityRule]
@@ -206,9 +210,12 @@ export default class NetPyNEConnectivityRules extends Component {
       <Button
         variant="contained"
         color="primary"
-        label={"BACK"}
+        label={'BACK'}
         onTouchTap={() =>
-          this.setState({ errorMessage: undefined, errorDetails: undefined })
+          this.setState({
+            errorMessage: undefined,
+            errorDetails: undefined
+          })
         }
       />,
     ];
@@ -216,28 +223,29 @@ export default class NetPyNEConnectivityRules extends Component {
     var children = this.state.errorDetails;
     var dialogPop
       = this.state.errorMessage != undefined ? (
-        <Dialog
-          title={title}
-          open={true}
-          actions={actions}
-          bodyStyle={{ overflow: "auto" }}
-          style={{ whiteSpace: "pre-wrap" }}
-        >
-          {children}
-        </Dialog>
-      ) : (
-        undefined
-      );
+      <Dialog
+        title={title}
+        open={true}
+        actions={actions}
+        bodyStyle={{ overflow: 'auto' }}
+        style={{ whiteSpace: 'pre-wrap' }}
+      >
+        {children}
+      </Dialog>
+    ) : (
+      undefined
+    );
 
     var that = this;
     var model = this.state.value;
     var content;
-    if (this.state.page == "main") {
+    if (this.state.page == 'main') {
       const filterName
-        = this.state.filterValue === null ? "" : this.state.filterValue;
+        = this.state.filterValue === null ? '' : this.state.filterValue;
       var ConnectivityRules = Object.keys(model || [])
         .filter(connName =>
-          connName.toLowerCase().includes(filterName.toLowerCase())
+          connName.toLowerCase()
+            .includes(filterName.toLowerCase())
         )
         .map(connName => (
           <NetPyNEThumbnail
@@ -252,7 +260,8 @@ export default class NetPyNEConnectivityRules extends Component {
       var selectedConnectivityRule = undefined;
       if (
         this.state.selectedConnectivityRule !== undefined
-        && Object.keys(model).indexOf(this.state.selectedConnectivityRule) > -1
+        && Object.keys(model)
+          .indexOf(this.state.selectedConnectivityRule) > -1
       ) {
         selectedConnectivityRule = (
           <NetPyNEConnectivityRule
@@ -283,17 +292,17 @@ export default class NetPyNEConnectivityRules extends Component {
               <div>
                 <NetPyNEAddNew
                   title="Create new connectivity rule"
-                  id={"newConnectivityRuleButton"}
+                  id={'newConnectivityRuleButton'}
                   handleClick={this.handleNewConnectivityRule}
                 />
                 <div
                   style={{
-                    textAlign: "center",
-                    fontFamily: "Source Sans Pro",
+                    textAlign: 'center',
+                    fontFamily: 'Source Sans Pro',
                     maxWidth: 40,
-                    overflow: "visible",
-                    display: "flex",
-                    justifyContent: "center",
+                    overflow: 'visible',
+                    display: 'flex',
+                    justifyContent: 'center',
                   }}
                 >
                   Connectivity
@@ -301,8 +310,8 @@ export default class NetPyNEConnectivityRules extends Component {
               </div>
             </div>
             <Box p={1}>
-              <RulePath text={this.getCopyPath()} />
-              <Box mb={1} />
+              <RulePath text={this.getCopyPath()}/>
+              <Box mb={1}/>
               <Filter
                 value={this.state.filterValue}
                 label="Filter connectivity rule by name..."

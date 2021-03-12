@@ -7,4 +7,6 @@ import errors from './errors';
 import drawer from './drawer';
 import topbar from './topbar';
 
-export default combineReducers({ general, notebook, layout, errors, drawer, topbar });
+export default combineReducers({
+  general, notebook, layout, errors, drawer, topbar,
+});

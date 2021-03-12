@@ -1,30 +1,30 @@
-import React from "react";
-import TextField from "@material-ui/core/TextField";
-import { BottomNavigation, BottomNavigationAction } from "@material-ui/core";
-import FontIcon from "@material-ui/core/Icon";
-import Utils from "../../../Utils";
-import Box from "@material-ui/core/Box";
-import Dialog from "@material-ui/core/Dialog/Dialog";
-import Button from "@material-ui/core/Button";
-import MenuItem from "@material-ui/core/MenuItem";
+import React from 'react';
+import TextField from '@material-ui/core/TextField';
+import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
+import FontIcon from '@material-ui/core/Icon';
+import Utils from '../../../Utils';
+import Box from '@material-ui/core/Box';
+import Dialog from '@material-ui/core/Dialog/Dialog';
+import Button from '@material-ui/core/Button';
+import MenuItem from '@material-ui/core/MenuItem';
 
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from '@material-ui/core/styles';
 import {
   Dimensions,
   NetPyNEField,
   NetPyNECoordsRange,
   NetPyNESelectField,
-} from "netpyne/components";
+} from 'netpyne/components';
 
 const styles = ({ spacing }) => ({
   fields: {
     marginTop: spacing(3),
-    width: "100%",
+    width: '100%',
   },
 });
 
@@ -34,7 +34,7 @@ class NetPyNEPopulation extends React.Component {
     this.state = {
       currentName: props.name,
       selectedIndex: 0,
-      sectionId: "General",
+      sectionId: 'General',
       errorMessage: undefined,
       errorDetails: undefined,
     };
@@ -44,52 +44,55 @@ class NetPyNEPopulation extends React.Component {
     this.setState({
       currentName: nextProps.name,
       selectedIndex: 0,
-      sectionId: "General",
+      sectionId: 'General',
     });
   }
 
   getModelParameters = () => {
     var select = (index, sectionId) =>
-      this.setState({ selectedIndex: index, sectionId: sectionId });
+      this.setState({
+        selectedIndex: index,
+        sectionId: sectionId
+      });
 
     var modelParameters = [];
     modelParameters.push(
       <BottomNavigationAction
-        id={"generalPopTab"}
-        key={"General"}
-        label={"General"}
-        icon={<FontIcon className={"fa fa-bars"} />}
-        onClick={() => select(0, "General")}
+        id={'generalPopTab'}
+        key={'General'}
+        label={'General'}
+        icon={<FontIcon className={'fa fa-bars'}/>}
+        onClick={() => select(0, 'General')}
       />
     );
     modelParameters.push(
       <BottomNavigationAction
-        id={"spatialDistPopTab"}
-        key={"SpatialDistribution"}
-        label={"Spatial Distribution"}
-        icon={<FontIcon className={"fa fa-cube"} />}
-        onClick={() => select(1, "SpatialDistribution")}
+        id={'spatialDistPopTab'}
+        key={'SpatialDistribution'}
+        label={'Spatial Distribution'}
+        icon={<FontIcon className={'fa fa-cube'}/>}
+        onClick={() => select(1, 'SpatialDistribution')}
       />
     );
     if (
-      typeof this.state.cellModelFields != "undefined"
-      && this.state.cellModelFields != ""
+      typeof this.state.cellModelFields != 'undefined'
+      && this.state.cellModelFields != ''
     ) {
       modelParameters.push(
         <BottomNavigationAction
           key={this.state.cellModel}
-          label={this.state.cellModel + " Model"}
-          icon={<FontIcon className={"fa fa-balance-scale"} />}
+          label={this.state.cellModel + ' Model'}
+          icon={<FontIcon className={'fa fa-balance-scale'}/>}
           onClick={() => select(2, this.state.cellModel)}
         />
       );
     }
     modelParameters.push(
       <BottomNavigationAction
-        key={"CellList"}
-        label={"Cell List"}
-        icon={<FontIcon className={"fa fa-list"} />}
-        onClick={() => select(3, "CellList")}
+        key={'CellList'}
+        label={'Cell List'}
+        icon={<FontIcon className={'fa fa-list'}/>}
+        onClick={() => select(3, 'CellList')}
       />
     );
 
@@ -115,14 +118,14 @@ class NetPyNEPopulation extends React.Component {
       newValue,
       event.target.value,
       this,
-      "Population"
+      'Population'
     );
 
     if (triggerCondition) {
       this.triggerUpdate(() => {
         // Rename the population in Python
         Utils.renameKey(
-          "netParams.popParams",
+          'netParams.popParams',
           storedValue,
           newValue,
           (response, newValue) => {
@@ -146,7 +149,7 @@ class NetPyNEPopulation extends React.Component {
   postProcessMenuItems (pythonData, selected) {
     return pythonData.map(name => (
       <MenuItem
-        id={name + "MenuItem"}
+        id={name + 'MenuItem'}
         key={name}
         checked={selected.indexOf(name) > -1}
         value={name}
@@ -161,34 +164,34 @@ class NetPyNEPopulation extends React.Component {
 
     var dialogPop
       = this.state.errorMessage != undefined ? (
-        <Dialog open={true} style={{ whiteSpace: "pre-wrap" }}>
-          <DialogTitle id="alert-dialog-title">
-            {this.state.errorMessage}
-          </DialogTitle>
-          <DialogContent style={{ overflow: "auto" }}>
-            <DialogContentText id="alert-dialog-description">
-              {this.state.errorDetails}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() =>
-                this.setState({
-                  errorMessage: undefined,
-                  errorDetails: undefined,
-                })
-              }
-            >
-              BACK
-            </Button>
-          </DialogActions>
-        </Dialog>
-      ) : (
-        undefined
-      );
-    if (this.state.sectionId == "General") {
+      <Dialog open={true} style={{ whiteSpace: 'pre-wrap' }}>
+        <DialogTitle id="alert-dialog-title">
+          {this.state.errorMessage}
+        </DialogTitle>
+        <DialogContent style={{ overflow: 'auto' }}>
+          <DialogContentText id="alert-dialog-description">
+            {this.state.errorDetails}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() =>
+              this.setState({
+                errorMessage: undefined,
+                errorDetails: undefined,
+              })
+            }
+          >
+            BACK
+          </Button>
+        </DialogActions>
+      </Dialog>
+    ) : (
+      undefined
+    );
+    if (this.state.sectionId == 'General') {
       var content = (
         <Box className={`scrollbar scrollchild`} mt={1}>
           <Box mb={1}>
@@ -205,53 +208,71 @@ class NetPyNEPopulation extends React.Component {
           <div id="netParams_popParams_cellType">
             <NetPyNEField id="netParams.popParams.cellType">
               <NetPyNESelectField
-                method={"netpyne_geppetto.getAvailableCellTypes"}
+                method={'netpyne_geppetto.getAvailableCellTypes'}
                 model={
-                  "netParams.popParams['" + this.props.name + "']['cellType']"
+                  'netParams.popParams[\'' + this.props.name + '\'][\'cellType\']'
                 }
                 postProcessItems={this.postProcessMenuItems}
               />
             </NetPyNEField>
           </div>
-          <Dimensions modelName={this.props.name} />
+          <Dimensions modelName={this.props.name}/>
           {dialogPop}
         </Box>
       );
-    } else if (this.state.sectionId == "SpatialDistribution") {
+    } else if (this.state.sectionId == 'SpatialDistribution') {
       var content = (
         <Box className={`scrollbar scrollchild`} mt={1}>
           <NetPyNECoordsRange
-            id={"xRangePopParams"}
+            id={'xRangePopParams'}
             name={this.props.name}
-            model={"netParams.popParams"}
+            model={'netParams.popParams'}
             items={[
-              { value: "xRange", label: "Absolute" },
-              { value: "xnormRange", label: "Normalized" },
+              {
+                value: 'xRange',
+                label: 'Absolute'
+              },
+              {
+                value: 'xnormRange',
+                label: 'Normalized'
+              },
             ]}
           />
 
           <NetPyNECoordsRange
             id="yRangePopParams"
             name={this.props.name}
-            model={"netParams.popParams"}
+            model={'netParams.popParams'}
             items={[
-              { value: "yRange", label: "Absolute" },
-              { value: "ynormRange", label: "Normalized" },
+              {
+                value: 'yRange',
+                label: 'Absolute'
+              },
+              {
+                value: 'ynormRange',
+                label: 'Normalized'
+              },
             ]}
           />
 
           <NetPyNECoordsRange
             id="zRangePopParams"
             name={this.props.name}
-            model={"netParams.popParams"}
+            model={'netParams.popParams'}
             items={[
-              { value: "zRange", label: "Absolute" },
-              { value: "znormRange", label: "Normalized" },
+              {
+                value: 'zRange',
+                label: 'Absolute'
+              },
+              {
+                value: 'znormRange',
+                label: 'Normalized'
+              },
             ]}
           />
         </Box>
       );
-    } else if (this.state.sectionId == "CellList") {
+    } else if (this.state.sectionId == 'CellList') {
       var content = (
         <div>Option to provide individual list of cells. Coming soon ...</div>
       );

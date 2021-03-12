@@ -2,20 +2,20 @@ import { WidgetStatus } from './components/layout/model';
 import { MINIMIZED_PANEL } from './components/layout';
 
 export { WidgetStatus };
-export const TOP_PANEL = "hlsPanel";
+export const TOP_PANEL = 'hlsPanel';
 
 export const THEMES = {
   DARK: 'gui',
   BLACK: 'contrast',
-  LIGHT: 'light_minimal'
-}
+  LIGHT: 'light_minimal',
+};
 
 export const MODEL_STATE = {
   NOT_INSTANTIATED: 'NOT_INSTANTIATED',
   INSTANTIATED: 'INSTANTIATED',
-  SIMULATED: 'SIMULATED'
+  SIMULATED: 'SIMULATED',
 
-}
+};
 
 export const NETPYNE_COMMANDS = {
   instantiateModel: 'netpyne_geppetto.instantiateNetPyNEModelInGeppetto',
@@ -24,8 +24,8 @@ export const NETPYNE_COMMANDS = {
   exportModel: 'netpyne_geppetto.exportModel',
   exportHLS: 'netpyne_geppetto.exportHLS',
   plotFigure: 'netpyne_geppetto.getPlot',
-  deleteParam: 'netpyne_geppetto.deleteParam'
-}
+  deleteParam: 'netpyne_geppetto.deleteParam',
+};
 
 export const PYTHON_CONSOLE_WIDGET = {
   id: 'python',
@@ -35,13 +35,13 @@ export const PYTHON_CONSOLE_WIDGET = {
   panelName: MINIMIZED_PANEL,
   defaultWeight: 30,
   defaultPosition: 'BOTTOM',
-  defaultPanel: "consolePanel",
+  defaultPanel: 'consolePanel',
   enableClose: true,
   enableDrag: true,
   enableRename: false,
   hideOnClose: true,
-  pos: 1000
-}
+  pos: 1000,
+};
 /*
  * ------------------------------------------------------------------------------ //
  * ------------------------------------------------------------------------------ //
@@ -60,9 +60,9 @@ export const TOPBAR_CONSTANTS = {
   SIMULATE: 'Simulate network',
   EXPLORE_EXISTING_NETWORK: 'Explore model',
   BACK_TO_EDITION: 'Back to edit',
-  NEW_PAGE: 'NEW_PAGE'
+  NEW_PAGE: 'NEW_PAGE',
 
-}
+};
 
 /*
  * ------------------------------------------------------------------------------ //
@@ -75,15 +75,15 @@ export const PLOT_WIDGETS = {
     status: WidgetStatus.MINIMIZED,
     component: 'Plot',
     panelName: MINIMIZED_PANEL,
-    defaultPanel: "plotPanel",
+    defaultPanel: 'plotPanel',
     enableRename: false,
     hideOnClose: true,
     initialized: false,
     method: {
       plotMethod: 'iplotConn',
-      plotType: false
+      plotType: false,
     },
-    pos: 1
+    pos: 1,
   },
   d2NetPlot: {
     id: 'd2NetPlot',
@@ -91,15 +91,15 @@ export const PLOT_WIDGETS = {
     status: WidgetStatus.MINIMIZED,
     component: 'Plot',
     panelName: MINIMIZED_PANEL,
-    defaultPanel: "plotPanel",
+    defaultPanel: 'plotPanel',
     enableRename: false,
     hideOnClose: true,
     initialized: false,
     method: {
       plotMethod: 'iplot2Dnet',
-      plotType: false
+      plotType: false,
     },
-    pos: 2
+    pos: 2,
   },
   tracesPlot: {
     id: 'tracesPlot',
@@ -107,15 +107,15 @@ export const PLOT_WIDGETS = {
     status: WidgetStatus.MINIMIZED,
     component: 'Plot',
     panelName: MINIMIZED_PANEL,
-    defaultPanel: "plotPanel",
+    defaultPanel: 'plotPanel',
     hideOnClose: true,
     enableRename: false,
     initialized: false,
     method: {
       plotMethod: 'iplotTraces',
-      plotType: false
+      plotType: false,
     },
-    pos: 3
+    pos: 3,
   },
   rasterPlot: {
     id: 'rasterPlot',
@@ -123,15 +123,15 @@ export const PLOT_WIDGETS = {
     status: WidgetStatus.MINIMIZED,
     component: 'Plot',
     panelName: MINIMIZED_PANEL,
-    defaultPanel: "plotPanel",
+    defaultPanel: 'plotPanel',
     enableRename: false,
     hideOnClose: true,
     initialized: false,
     method: {
       plotMethod: 'iplotRaster',
-      plotType: false
+      plotType: false,
     },
-    pos: 4
+    pos: 4,
   },
   spikePlot: {
     id: 'spikePlot',
@@ -139,15 +139,15 @@ export const PLOT_WIDGETS = {
     status: WidgetStatus.MINIMIZED,
     component: 'Plot',
     panelName: MINIMIZED_PANEL,
-    defaultPanel: "plotPanel",
+    defaultPanel: 'plotPanel',
     enableRename: false,
     hideOnClose: true,
     initialized: false,
     method: {
       plotMethod: 'iplotSpikeHist',
-      plotType: false
+      plotType: false,
     },
-    pos: 5
+    pos: 5,
   },
   spikeStatsPlot: {
     id: 'spikeStatsPlot',
@@ -155,15 +155,15 @@ export const PLOT_WIDGETS = {
     status: WidgetStatus.MINIMIZED,
     component: 'Plot',
     panelName: MINIMIZED_PANEL,
-    defaultPanel: "plotPanel",
+    defaultPanel: 'plotPanel',
     hideOnClose: true,
     enableRename: false,
     initialized: false,
     method: {
       plotMethod: 'iplotSpikeStats',
-      plotType: false
+      plotType: false,
     },
-    pos: 6
+    pos: 6,
   },
   ratePSDPlot: {
     id: 'ratePSDPlot',
@@ -171,15 +171,15 @@ export const PLOT_WIDGETS = {
     status: WidgetStatus.MINIMIZED,
     component: 'Plot',
     panelName: MINIMIZED_PANEL,
-    defaultPanel: "plotPanel",
+    defaultPanel: 'plotPanel',
     enableRename: false,
     hideOnClose: true,
     initialized: false,
     method: {
       plotMethod: 'iplotRatePSD',
-      plotType: false
+      plotType: false,
     },
-    pos: 7
+    pos: 7,
   },
   LFPTimeSeriesPlot: {
     id: 'LFPTimeSeriesPlot',
@@ -187,15 +187,15 @@ export const PLOT_WIDGETS = {
     status: WidgetStatus.MINIMIZED,
     component: 'Plot',
     panelName: MINIMIZED_PANEL,
-    defaultPanel: "plotPanel",
+    defaultPanel: 'plotPanel',
     enableRename: false,
     hideOnClose: true,
     initialized: false,
     method: {
       plotMethod: 'iplotLFP',
-      plotType: 'timeSeries'
+      plotType: 'timeSeries',
     },
-    pos: 8
+    pos: 8,
   },
   LFPPSDPlot: {
     id: 'LFPPSDPlot',
@@ -203,15 +203,15 @@ export const PLOT_WIDGETS = {
     status: WidgetStatus.MINIMIZED,
     component: 'Plot',
     panelName: MINIMIZED_PANEL,
-    defaultPanel: "plotPanel",
+    defaultPanel: 'plotPanel',
     hideOnClose: true,
     enableRename: false,
     initialized: false,
     method: {
       plotMethod: 'iplotLFP',
-      plotType: 'PSD'
+      plotType: 'PSD',
     },
-    pos: 9
+    pos: 9,
   },
   LFPSpectrogramPlot: {
     id: 'LFPSpectrogramPlot',
@@ -219,15 +219,15 @@ export const PLOT_WIDGETS = {
     status: WidgetStatus.MINIMIZED,
     component: 'Plot',
     panelName: MINIMIZED_PANEL,
-    defaultPanel: "plotPanel",
+    defaultPanel: 'plotPanel',
     enableRename: false,
     hideOnClose: true,
     initialized: false,
     method: {
       plotMethod: 'iplotLFP',
-      plotType: 'spectrogram'
+      plotType: 'spectrogram',
     },
-    pos: 10
+    pos: 10,
   },
   grangerPlot: {
     id: 'grangerPlot',
@@ -236,14 +236,14 @@ export const PLOT_WIDGETS = {
     component: 'Plot',
     hideOnClose: true,
     panelName: MINIMIZED_PANEL,
-    defaultPanel: "plotPanel",
+    defaultPanel: 'plotPanel',
     enableRename: false,
     initialized: false,
     method: {
       plotMethod: 'granger',
-      plotType: false
+      plotType: false,
     },
-    pos: 11
+    pos: 11,
   },
   rxdConcentrationPlot: {
     id: 'rxdConcentrationPlot',
@@ -251,17 +251,17 @@ export const PLOT_WIDGETS = {
     status: WidgetStatus.MINIMIZED,
     component: 'Plot',
     panelName: MINIMIZED_PANEL,
-    defaultPanel: "plotPanel",
+    defaultPanel: 'plotPanel',
     hideOnClose: true,
     enableRename: false,
     initialized: false,
     method: {
       plotMethod: 'iplotRxDConcentration',
-      plotType: false
+      plotType: false,
     },
-    pos: 12
-  }
-}
+    pos: 12,
+  },
+};
 
 export const DEFAULT_NETWORK_WIDGETS = {
   PYTHON_CONSOLE_WIDGET,
@@ -270,18 +270,18 @@ export const DEFAULT_NETWORK_WIDGETS = {
     name: '3D Representation',
     status: WidgetStatus.ACTIVE,
     component: 'D3Canvas',
-    panelName: "morphoPanel",
+    panelName: 'morphoPanel',
     enableRename: false,
     hideOnClose: true,
-    pos: 0
+    pos: 0,
   },
   ...PLOT_WIDGETS,
-  [PYTHON_CONSOLE_WIDGET.id]: PYTHON_CONSOLE_WIDGET
-}
+  [PYTHON_CONSOLE_WIDGET.id]: PYTHON_CONSOLE_WIDGET,
+};
 
 export const EDIT_WIDGETS = {
   [PYTHON_CONSOLE_WIDGET.id]: PYTHON_CONSOLE_WIDGET,
-  'cellParams': {
+  cellParams: {
     id: 'cellParams',
     name: 'Cell Types',
     status: WidgetStatus.ACTIVE,
@@ -289,9 +289,9 @@ export const EDIT_WIDGETS = {
     panelName: TOP_PANEL,
     enableRename: false,
     hideOnClose: true,
-    pos: 0
+    pos: 0,
   },
-  'popParams': {
+  popParams: {
     id: 'popParams',
     name: 'Populations',
     status: WidgetStatus.HIDDEN,
@@ -299,9 +299,9 @@ export const EDIT_WIDGETS = {
     panelName: TOP_PANEL,
     enableRename: false,
     hideOnClose: true,
-    pos: 1
+    pos: 1,
   },
-  'synMechParams': {
+  synMechParams: {
     id: 'synMechParams',
     name: 'Synaptic Mechanisms',
     status: WidgetStatus.HIDDEN,
@@ -309,9 +309,9 @@ export const EDIT_WIDGETS = {
     panelName: TOP_PANEL,
     enableRename: false,
     hideOnClose: true,
-    pos: 2
+    pos: 2,
   },
-  'connParams': {
+  connParams: {
     id: 'connParams',
     name: 'Connectivity Rules',
     status: WidgetStatus.HIDDEN,
@@ -319,9 +319,9 @@ export const EDIT_WIDGETS = {
     panelName: TOP_PANEL,
     hideOnClose: true,
     enableRename: false,
-    pos: 3
+    pos: 3,
   },
-  'stimSourceParams': {
+  stimSourceParams: {
     id: 'stimSourceParams',
     name: 'Stim. sources',
     status: WidgetStatus.HIDDEN,
@@ -329,9 +329,9 @@ export const EDIT_WIDGETS = {
     hideOnClose: true,
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 4
+    pos: 4,
   },
-  'stimTargetParams': {
+  stimTargetParams: {
     id: 'stimTargetParams',
     name: 'Stim. targets',
     status: WidgetStatus.HIDDEN,
@@ -339,9 +339,9 @@ export const EDIT_WIDGETS = {
     hideOnClose: true,
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 5
+    pos: 5,
   },
-  'simConfig': {
+  simConfig: {
     id: 'simConfig',
     name: 'Configuration',
     status: WidgetStatus.HIDDEN,
@@ -349,9 +349,9 @@ export const EDIT_WIDGETS = {
     component: 'simConfig',
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 6
+    pos: 6,
   },
-  'analysis': {
+  analysis: {
     id: 'analysis',
     name: 'Plot Settings',
     status: WidgetStatus.HIDDEN,
@@ -359,6 +359,6 @@ export const EDIT_WIDGETS = {
     component: 'analysis',
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 7
-  }
-}
+    pos: 7,
+  },
+};

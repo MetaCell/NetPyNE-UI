@@ -2,13 +2,13 @@ import * as React from 'react';
 
 import Icon from '@material-ui/core/Icon'
 
-export default class TabsetIconFactory{
+export default class TabsetIconFactory {
 
-  factory (widgetConfig) {
+  factory(widgetConfig) {
     return this.createIcon(widgetConfig.icon)
   }
-  
-  createIcon (iconName) {
+
+  createIcon(iconName) {
     return <Icon className={iconName}/>
   }
-} 
+}

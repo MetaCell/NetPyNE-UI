@@ -1,5 +1,5 @@
-import React from "react";
-import Utils from "../../../Utils";
+import React from 'react';
+import Utils from '../../../Utils';
 
 import {
   NetPyNEHome,
@@ -8,14 +8,14 @@ import {
   NetPyNEPopulation,
   GridLayout,
   Filter,
-} from "netpyne/components";
+} from 'netpyne/components';
 
-import RulePath from "../../general/RulePath";
-import Accordion from "../../general/ExpansionPanel";
+import RulePath from '../../general/RulePath';
+import Accordion from '../../general/ExpansionPanel';
 
-import Dialog from "@material-ui/core/Dialog/Dialog";
-import Button from "@material-ui/core/Button";
-import Box from "@material-ui/core/Box";
+import Dialog from '@material-ui/core/Dialog/Dialog';
+import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
 
 export default class NetPyNEPopulations extends React.Component {
   constructor (props) {
@@ -73,7 +73,7 @@ export default class NetPyNEPopulations extends React.Component {
     } else if (
       prevState.value !== undefined
       && Object.keys(prevState.value).length
-        !== Object.keys(this.state.value).length
+      !== Object.keys(this.state.value).length
     ) {
       /*
        * logic into this if to check if the user added a new object from the python backend and
@@ -81,7 +81,7 @@ export default class NetPyNEPopulations extends React.Component {
        */
       var model = this.state.value;
       for (var m in model) {
-        if (prevState.value !== "" && !(m in prevState.value)) {
+        if (prevState.value !== '' && !(m in prevState.value)) {
           var newValue = Utils.nameValidation(model[m].name);
           if (newValue != model[m].name) {
             newValue = Utils.getAvailableKey(model, newValue);
@@ -91,16 +91,16 @@ export default class NetPyNEPopulations extends React.Component {
             this.setState(
               {
                 value: model,
-                errorMessage: "Error",
+                errorMessage: 'Error',
                 errorDetails:
-                  "Leading digits or whitespaces are not allowed in Population names.\n"
+                  'Leading digits or whitespaces are not allowed in Population names.\n'
                   + m
-                  + " has been renamed "
+                  + ' has been renamed '
                   + newValue,
               },
               () =>
                 Utils.renameKey(
-                  "netParams.popParams",
+                  'netParams.popParams',
                   m,
                   newValue,
                   (response, newValue) => {
@@ -141,7 +141,12 @@ export default class NetPyNEPopulations extends React.Component {
   }
 
   handleNewPopulation () {
-    var defaultPopulationValues = { Population: { cellModel: "", cellType: "" }, };
+    var defaultPopulationValues = {
+      Population: {
+        cellModel: '',
+        cellType: ''
+      },
+    };
     // Get Key and Value
     var key = Object.keys(defaultPopulationValues)[0];
     var value = defaultPopulationValues[key];
@@ -156,9 +161,9 @@ export default class NetPyNEPopulations extends React.Component {
     // Create Population Client side
     Utils.execPythonMessage(
       'netpyne_geppetto.netParams.popParams["'
-        + populationId
-        + '"] = '
-        + JSON.stringify(value)
+      + populationId
+      + '"] = '
+      + JSON.stringify(value)
     );
 
     // Update state
@@ -178,7 +183,7 @@ export default class NetPyNEPopulations extends React.Component {
   }
 
   handleRenameChildren (childName) {
-    childName = childName.replace(/\s*$/, "");
+    childName = childName.replace(/\s*$/, '');
     var childrenList = Object.keys(this.state.value);
     for (var i = 0; childrenList.length > i; i++) {
       if (childName === childrenList[i]) {
@@ -189,7 +194,10 @@ export default class NetPyNEPopulations extends React.Component {
   }
 
   getPath () {
-    const { value: model, selectedPopulation } = this.state;
+    const {
+      value: model,
+      selectedPopulation
+    } = this.state;
     return (
       model
       && model[selectedPopulation]
@@ -202,9 +210,12 @@ export default class NetPyNEPopulations extends React.Component {
       <Button
         variant="contained"
         color="primary"
-        label={"BACK"}
+        label={'BACK'}
         onTouchTap={() =>
-          this.setState({ errorMessage: undefined, errorDetails: undefined })
+          this.setState({
+            errorMessage: undefined,
+            errorDetails: undefined
+          })
         }
       />,
     ];
@@ -212,29 +223,30 @@ export default class NetPyNEPopulations extends React.Component {
     var children = this.state.errorDetails;
     var dialogPop
       = this.state.errorMessage != undefined ? (
-        <Dialog
-          title={title}
-          open={true}
-          actions={actions}
-          bodyStyle={{ overflow: "auto" }}
-          style={{ whiteSpace: "pre-wrap" }}
-        >
-          {children}
-        </Dialog>
-      ) : (
-        undefined
-      );
+      <Dialog
+        title={title}
+        open={true}
+        actions={actions}
+        bodyStyle={{ overflow: 'auto' }}
+        style={{ whiteSpace: 'pre-wrap' }}
+      >
+        {children}
+      </Dialog>
+    ) : (
+      undefined
+    );
 
-    if (this.state.value != undefined && this.state.value !== "") {
+    if (this.state.value != undefined && this.state.value !== '') {
       var model = this.state.value;
       for (var m in model) {
         model[m].name = m;
       }
       const filterName
-        = this.state.filterPopValue === null ? "" : this.state.filterPopValue;
+        = this.state.filterPopValue === null ? '' : this.state.filterPopValue;
       var populations = Object.keys(model)
         .filter(popName =>
-          popName.toLowerCase().includes(filterName.toLowerCase())
+          popName.toLowerCase()
+            .includes(filterName.toLowerCase())
         )
         .map(popName => (
           <NetPyNEThumbnail
@@ -249,7 +261,8 @@ export default class NetPyNEPopulations extends React.Component {
       var selectedPopulation = undefined;
       if (
         this.state.selectedPopulation !== undefined
-        && Object.keys(model).indexOf(this.state.selectedPopulation) > -1
+        && Object.keys(model)
+          .indexOf(this.state.selectedPopulation) > -1
       ) {
         selectedPopulation = (
           <NetPyNEPopulation
@@ -278,18 +291,18 @@ export default class NetPyNEPopulations extends React.Component {
 
               <div>
                 <NetPyNEAddNew
-                  id={"newPopulationButton"}
+                  id={'newPopulationButton'}
                   title="Create new population"
                   handleClick={this.handleNewPopulation}
                 />
                 <div
                   style={{
-                    textAlign: "center",
-                    fontFamily: "Source Sans Pro",
+                    textAlign: 'center',
+                    fontFamily: 'Source Sans Pro',
                     maxWidth: 40,
-                    overflow: "visible",
-                    display: "flex",
-                    justifyContent: "center",
+                    overflow: 'visible',
+                    display: 'flex',
+                    justifyContent: 'center',
                   }}
                 >
                   Population
@@ -297,8 +310,8 @@ export default class NetPyNEPopulations extends React.Component {
               </div>
             </div>
             <Box p={1}>
-              <RulePath text={this.getPath()} />
-              <Box mb={1} />
+              <RulePath text={this.getPath()}/>
+              <Box mb={1}/>
               <Filter
                 value={this.state.filterPopValue}
                 label="Filter population by name..."

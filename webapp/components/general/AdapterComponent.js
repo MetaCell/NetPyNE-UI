@@ -9,7 +9,6 @@ import Grid from '@material-ui/core/Grid';
  */
 
 export default class AdapterComponent extends Component {
-
   constructor (props) {
     super(props);
     /**
@@ -28,7 +27,7 @@ export default class AdapterComponent extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
-    var newValue = this.props.convertFromPython(prevProps, prevState, this.props.value);
+    const newValue = this.props.convertFromPython(prevProps, prevState, this.props.value);
     if (newValue != undefined) {
       this.setState(newValue);
     }
@@ -36,29 +35,29 @@ export default class AdapterComponent extends Component {
 
   handleChildChange (event) {
     // Update State
-    var newState = this.state;
-    var value = event.target.value
+    const newState = this.state;
+    let { value } = event.target;
     if (value === '') {
-      value = 0
+      value = 0;
     } else if (isNaN(parseFloat(value))) {
-      return ''
+      return '';
     }
 
-    newState['lastUpdated'] = event.target.id;
+    newState.lastUpdated = event.target.id;
     newState[event.target.id] = value;
-    this.setState(newState)
+    this.setState(newState);
 
     // Call to conversion function
-    var newValue = this.props.convertToPython(this.state);
+    const newValue = this.props.convertToPython(this.state);
     if (newValue != undefined && this.state.value != newValue) {
       this.props.onChange(null, null, newValue);
     }
   }
 
   render () {
-    const childrenWithExtraProp = React.Children.map(this.props.children, child => React.cloneElement(child, {
+    const childrenWithExtraProp = React.Children.map(this.props.children, (child) => React.cloneElement(child, {
       onChange: this.handleChildChange,
-      value: this.state[child.props.id]
+      value: this.state[child.props.id],
     }));
 
     return (
@@ -66,6 +65,6 @@ export default class AdapterComponent extends Component {
         <Grid item>{childrenWithExtraProp[0]}</Grid>
         <Grid item>{childrenWithExtraProp[1]}</Grid>
       </Grid>
-    )
+    );
   }
 }

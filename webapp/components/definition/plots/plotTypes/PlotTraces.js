@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import TimeRange from "../TimeRange";
-import Box from "@material-ui/core/Box";
+import React from 'react';
+import Box from '@material-ui/core/Box';
 import {
   NetPyNEInclude,
   NetPyNEField,
   NetPyNECheckbox,
   SelectField,
-} from "netpyne/components";
+} from 'netpyne/components';
+import TimeRange from '../TimeRange';
 
 export default class PlotTraces extends React.Component {
   constructor (props) {
@@ -15,39 +15,39 @@ export default class PlotTraces extends React.Component {
   }
 
   render () {
-    var tag = "simConfig.analysis['iplotTraces']";
+    const tag = "simConfig.analysis['iplotTraces']";
     return (
-      <Box className={`scrollbar scrollchild`} mt={1}>
+      <Box className="scrollbar scrollchild" mt={1}>
         <NetPyNEInclude
-          id={"simConfig.analysis.plotTraces.include"}
-          model={tag + "['include']"}
-          defaultOptions={["all", "allCells", "allNetStims"]}
-          initialValue={"all"}
+          id="simConfig.analysis.plotTraces.include"
+          model={`${tag}['include']`}
+          defaultOptions={['all', 'allCells', 'allNetStims']}
+          initialValue="all"
         />
 
         <NetPyNEField id="simConfig.analysis.plotTraces.timeRange">
-          <TimeRange model={tag + "['timeRange']"} />
+          <TimeRange model={`${tag}['timeRange']`} />
         </NetPyNEField>
 
         <NetPyNEField
           id="simConfig.analysis.plotTraces.oneFigPer"
           className="listStyle"
         >
-          <SelectField model={tag + "['oneFigPer']"} />
+          <SelectField model={`${tag}['oneFigPer']`} />
         </NetPyNEField>
 
         <NetPyNEField
           id="simConfig.analysis.plotTraces.overlay"
-          className={"netpyneCheckbox"}
+          className="netpyneCheckbox"
         >
-          <NetPyNECheckbox model={tag + "['overlay']"} />
+          <NetPyNECheckbox model={`${tag}['overlay']`} />
         </NetPyNEField>
 
         <NetPyNEField
           id="simConfig.analysis.plotTraces.rerun"
-          className={"netpyneCheckbox"}
+          className="netpyneCheckbox"
         >
-          <NetPyNECheckbox model={tag + "['rerun']"} />
+          <NetPyNECheckbox model={`${tag}['rerun']`} />
         </NetPyNEField>
       </Box>
     );
