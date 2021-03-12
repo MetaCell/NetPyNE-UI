@@ -1,33 +1,37 @@
-import React, { Component } from 'react'
-import Box from '@material-ui/core/Box'
+import React, { Component } from 'react';
+import Box from '@material-ui/core/Box';
 import FormGroup from '@material-ui/core/FormGroup';
 import MuiCheckbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { bgLight } from 'root/theme'
+import { bgLight } from '../../theme';
 
 export default class Checkbox extends Component {
   render () {
-    const { fullWidth, noBackground, styles } = this.props
-    const localStyle = fullWidth ? { width: '100%' } : {}
+    const {
+      fullWidth,
+      noBackground,
+      styles,
+    } = this.props;
+    const localStyle = fullWidth ? { width: '100%' } : {};
     if (noBackground) {
-      localStyle.backgroundColor = 'inherit'
+      localStyle.backgroundColor = 'inherit';
     }
 
     return (
-      <FormGroup 
-        style={{ 
-          backgroundColor: bgLight, 
-          borderTopLeftRadius: 4, 
+      <FormGroup
+        style={{
+          backgroundColor: bgLight,
+          borderTopLeftRadius: 4,
           borderTopRightRadius: 4,
           ...localStyle,
-          ...styles
+          ...styles,
         }}
       >
         <FormControlLabel
           disabled={!!this.props.disabled}
           label={this.props.label ? this.props.label : ''}
-          control={
+          control={(
             <Box ml={1}>
               <MuiCheckbox
                 id={this.props.id}
@@ -37,11 +41,10 @@ export default class Checkbox extends Component {
                 onChange={this.props.onChange}
               />
             </Box>
-            
-          }
+          )}
         />
       </FormGroup>
-      
-    )
+
+    );
   }
 }

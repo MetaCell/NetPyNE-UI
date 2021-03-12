@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import Dialog from "@material-ui/core/Dialog/Dialog";
-import Button from "@material-ui/core/Button";
+import Dialog from '@material-ui/core/Dialog/Dialog';
+import Button from '@material-ui/core/Button';
 
-import Utils from "../../../Utils";
+import Utils from '../../../Utils';
 
 import {
   NetPyNEHome,
@@ -12,11 +12,11 @@ import {
   NetPyNEStimulationTarget,
   GridLayout,
   Filter,
-} from "netpyne/components";
+} from 'netpyne/components';
 
-import RulePath from "../../general/RulePath";
-import Accordion from "../../general/ExpansionPanel";
-import Box from "@material-ui/core/Box";
+import RulePath from '../../general/RulePath';
+import Accordion from '../../general/ExpansionPanel';
+import Box from '@material-ui/core/Box';
 
 export default class NetPyNEStimulationTargets extends Component {
   constructor (props) {
@@ -24,7 +24,7 @@ export default class NetPyNEStimulationTargets extends Component {
     this.state = {
       selectedStimulationTarget: undefined,
       deletedStimulationTarget: undefined,
-      page: "main",
+      page: 'main',
       errorMessage: undefined,
       errorDetails: undefined,
       filterValue: null,
@@ -43,7 +43,12 @@ export default class NetPyNEStimulationTargets extends Component {
   }
 
   handleNewStimulationTarget () {
-    var defaultStimulationTargets = { stim_target: { source: "", conds: {} } };
+    var defaultStimulationTargets = {
+      stim_target: {
+        source: '',
+        conds: {}
+      }
+    };
     var key = Object.keys(defaultStimulationTargets)[0];
     var value = defaultStimulationTargets[key];
     var model = { ...this.state.value };
@@ -54,9 +59,9 @@ export default class NetPyNEStimulationTargets extends Component {
     );
     Utils.execPythonMessage(
       'netpyne_geppetto.netParams.stimTargetParams["'
-        + StimulationTargetId
-        + '"] = '
-        + JSON.stringify(value)
+      + StimulationTargetId
+      + '"] = '
+      + JSON.stringify(value)
     );
     model[StimulationTargetId] = newStimulationTarget;
     this.setState({
@@ -101,7 +106,7 @@ export default class NetPyNEStimulationTargets extends Component {
     } else if (
       prevState.value !== undefined
       && Object.keys(prevState.value).length
-        !== Object.keys(this.state.value).length
+      !== Object.keys(this.state.value).length
     ) {
       /*
        * logic into this if to check if the user added a new object from the python backend and
@@ -109,7 +114,7 @@ export default class NetPyNEStimulationTargets extends Component {
        */
       var model = this.state.value;
       for (var m in model) {
-        if (prevState.value !== "" && !(m in prevState.value)) {
+        if (prevState.value !== '' && !(m in prevState.value)) {
           var newValue = Utils.nameValidation(m);
           if (newValue != m) {
             newValue = Utils.getAvailableKey(model, newValue);
@@ -118,19 +123,20 @@ export default class NetPyNEStimulationTargets extends Component {
             this.setState(
               {
                 value: model,
-                errorMessage: "Error",
+                errorMessage: 'Error',
                 errorDetails:
-                  "Leading digits or whitespaces are not allowed in Population names.\n"
+                  'Leading digits or whitespaces are not allowed in Population names.\n'
                   + m
-                  + " has been renamed "
+                  + ' has been renamed '
                   + newValue,
               },
               () =>
                 Utils.renameKey(
-                  "netParams.stimTargetParams",
+                  'netParams.stimTargetParams',
                   m,
                   newValue,
-                  (response, newValue) => {}
+                  (response, newValue) => {
+                  }
                 )
             );
           }
@@ -168,7 +174,7 @@ export default class NetPyNEStimulationTargets extends Component {
   }
 
   handleRenameChildren (childName) {
-    childName = childName.replace(/\s*$/, "");
+    childName = childName.replace(/\s*$/, '');
     var childrenList = Object.keys(this.state.value);
     for (var i = 0; childrenList.length > i; i++) {
       if (childName === childrenList[i]) {
@@ -179,7 +185,10 @@ export default class NetPyNEStimulationTargets extends Component {
   }
 
   getPath () {
-    const { value: model, selectedStimulationTarget } = this.state;
+    const {
+      value: model,
+      selectedStimulationTarget
+    } = this.state;
     return (
       model
       && model[selectedStimulationTarget]
@@ -192,9 +201,12 @@ export default class NetPyNEStimulationTargets extends Component {
       <Button
         variant="contained"
         color="primary"
-        label={"BACK"}
+        label={'BACK'}
         onTouchTap={() =>
-          this.setState({ errorMessage: undefined, errorDetails: undefined })
+          this.setState({
+            errorMessage: undefined,
+            errorDetails: undefined
+          })
         }
       />,
     ];
@@ -202,26 +214,27 @@ export default class NetPyNEStimulationTargets extends Component {
     var children = this.state.errorDetails;
     var dialogPop
       = this.state.errorMessage != undefined ? (
-        <Dialog
-          title={title}
-          open={true}
-          actions={actions}
-          bodyStyle={{ overflow: "auto" }}
-          style={{ whiteSpace: "pre-wrap" }}
-        >
-          {children}
-        </Dialog>
-      ) : (
-        undefined
-      );
+      <Dialog
+        title={title}
+        open={true}
+        actions={actions}
+        bodyStyle={{ overflow: 'auto' }}
+        style={{ whiteSpace: 'pre-wrap' }}
+      >
+        {children}
+      </Dialog>
+    ) : (
+      undefined
+    );
 
     var model = this.state.value;
 
     const filterName
-      = this.state.filterValue === null ? "" : this.state.filterValue;
+      = this.state.filterValue === null ? '' : this.state.filterValue;
     var StimulationTargets = Object.keys(model || [])
       .filter(stimTargetName =>
-        stimTargetName.toLowerCase().includes(filterName.toLowerCase())
+        stimTargetName.toLowerCase()
+          .includes(filterName.toLowerCase())
       )
       .map(stimTargetName => (
         <NetPyNEThumbnail
@@ -236,7 +249,8 @@ export default class NetPyNEStimulationTargets extends Component {
     var selectedStimulationTarget = undefined;
     if (
       this.state.selectedStimulationTarget !== undefined
-      && Object.keys(model).indexOf(this.state.selectedStimulationTarget) > -1
+      && Object.keys(model)
+        .indexOf(this.state.selectedStimulationTarget) > -1
     ) {
       selectedStimulationTarget = (
         <NetPyNEStimulationTarget
@@ -263,17 +277,17 @@ export default class NetPyNEStimulationTargets extends Component {
               <div>
                 <NetPyNEAddNew
                   title="Create new stimulation target"
-                  id={"newStimulationTargetButton"}
+                  id={'newStimulationTargetButton'}
                   handleClick={this.handleNewStimulationTarget}
                 />
                 <div
                   style={{
-                    textAlign: "center",
-                    fontFamily: "Source Sans Pro",
+                    textAlign: 'center',
+                    fontFamily: 'Source Sans Pro',
                     maxWidth: 40,
-                    overflow: "visible",
-                    display: "flex",
-                    justifyContent: "center",
+                    overflow: 'visible',
+                    display: 'flex',
+                    justifyContent: 'center',
                   }}
                 >
                   Target
@@ -281,8 +295,8 @@ export default class NetPyNEStimulationTargets extends Component {
               </div>
             </div>
             <Box p={1}>
-              <RulePath text={this.getPath()} />
-              <Box mb={1} />
+              <RulePath text={this.getPath()}/>
+              <Box mb={1}/>
               <Filter
                 value={this.state.filterValue}
                 label="Filter stimulation target rule by name..."

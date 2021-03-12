@@ -1,153 +1,159 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import Menu from '@geppettoengine/geppetto-client/js/components/interface/menu/Menu';
 
-import toolbarConfig, { getModelMenu, getTutorials, getViewMenu, getNetPyNEMenu } from './menuConfiguration'
-import { bgRegular, bgLight, font } from '../../theme'
-import Splash from '../general/Splash'
+import toolbarConfig, {
+  getModelMenu,
+  getTutorials,
+  getViewMenu,
+  getNetPyNEMenu
+} from './menuConfiguration';
+import { bgRegular, bgLight, font } from '../../theme';
+import Splash from '../general/Splash';
 
 import LoadFileDialog from './dialogs/LoadFile';
 import SaveFileDialog from './dialogs/SaveFile';
 import NewModelDialog from './dialogs/NewModel';
 import ImportExportHLSDialog from './dialogs/ImportExportHLS';
-import ImportCellParamsDialog from './dialogs/ImportCellParams'
+import ImportCellParamsDialog from './dialogs/ImportCellParams';
 import UploadDownloadFilesDialog from './dialogs/UploadDownloadFiles';
 
 import { TOPBAR_CONSTANTS } from '../../constants';
-import { withStyles } from '@material-ui/core/styles'
-import { SwitchPageButton } from 'netpyne/components'
+import { withStyles } from '@material-ui/core/styles';
+import { SwitchPageButton } from 'netpyne/components';
 
-const styles = () => ({ 
-  topbar: { 
+const styles = () => ({
+  topbar: {
     backgroundColor: bgRegular,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between'
-  } 
+  }
 });
 
 class Topbar extends Component {
 
-  state = { openSnackBar: false }
-  snackBarMessage = ""
+  state = { openSnackBar: false };
+  snackBarMessage = '';
+
   menuHandler (click) {
     if (!click) {
-      return
-    } 
+      return;
+    }
     switch (click.handlerAction) {
-    case 'redux':{
-      const [action, payload] = click.parameters
-      if (payload !== undefined) {
-        this.props.dispatchAction(action(payload))
-      } else {
-        this.props.dispatchAction(action)
+      case 'redux': {
+        const [action, payload] = click.parameters;
+        if (payload !== undefined) {
+          this.props.dispatchAction(action(payload));
+        } else {
+          this.props.dispatchAction(action);
+        }
+
+        break;
       }
-      
-      break;
-    }
-    case TOPBAR_CONSTANTS.NEW_PAGE:{
-      const [url] = click.parameters
-      window.open(url, "_blank")
-      break
-    }
-    case 'menuInjector': {
-      const [ menuName ] = click.parameters
-      if (menuName === "Model") {
-        return getModelMenu(this.props)
+      case TOPBAR_CONSTANTS.NEW_PAGE: {
+        const [url] = click.parameters;
+        window.open(url, '_blank');
+        break;
       }
-      if (menuName === "Tutorials") {
-        return getTutorials()
+      case 'menuInjector': {
+        const [menuName] = click.parameters;
+        if (menuName === 'Model') {
+          return getModelMenu(this.props);
+        }
+        if (menuName === 'Tutorials') {
+          return getTutorials();
+        }
+        if (menuName === 'View') {
+          return getViewMenu(this.props);
+        }
+        if (menuName === 'NetPYNE') {
+          return getNetPyNEMenu(this.props);
+        }
+        break;
       }
-      if (menuName === "View") {
-        return getViewMenu(this.props)
-      }
-      if (menuName === "NetPYNE") {
-        return getNetPyNEMenu(this.props)
-      }
-      break
-    }
-      
-    default:
-      console.log("Menu action not mapped, it is " + click);
+
+      default:
+        console.log('Menu action not mapped, it is ' + click);
     }
   }
 
   handleClose () {
-    this.props.closeDialog()
+    this.props.closeDialog();
   }
 
   resetModel () {
-    this.props.closeDialog()
-    this.props.resetModel()
+    this.props.closeDialog();
+    this.props.resetModel();
   }
 
   handleOpenSnackBar (message) {
-    this.snackBarMessage = message
-    this.setState({ openSnackBar: true }) 
+    this.snackBarMessage = message;
+    this.setState({ openSnackBar: true });
   }
 
   render () {
-    var content
-    if (this.props.dialogOpen){
-      switch (this.props.topbarDialogName){
-      case TOPBAR_CONSTANTS.LOAD:
-        content = <LoadFileDialog
-          open={this.props.dialogOpen}
-          onRequestClose={() => this.handleClose()}
-        />
-        break;
-      case TOPBAR_CONSTANTS.SAVE:
-        content = <SaveFileDialog
-          open={this.props.dialogOpen}
-          onRequestClose={() => this.handleClose()}
-        />
-        break;
-      case TOPBAR_CONSTANTS.IMPORT_HLS:
-        content = <ImportExportHLSDialog 
-          open={this.props.dialogOpen}
-          onRequestClose={() => this.handleClose()}
-          mode ={"IMPORT"}/>
-        break;
-      case TOPBAR_CONSTANTS.EXPORT_HLS:
-        content = <ImportExportHLSDialog 
-          open={this.props.dialogOpen}
-          onRequestClose={() => this.handleClose()}
-          mode ={"EXPORT"}
-        />
-        break;
-      case TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE:
-        content = <ImportCellParamsDialog
-          open={this.props.dialogOpen}
-          cellRuleName={this.props.topbarDialogMetadata.cellRuleName}
-          onRequestClose={() => this.handleClose()}
-        />
-        break;
-      case TOPBAR_CONSTANTS.NEW_MODEL:
-        content = <NewModelDialog
-          open={this.props.dialogOpen}
-          onRequestClose={() => this.handleClose()}
-          onAction={() => this.resetModel()}
-        />
-        break;
-      case TOPBAR_CONSTANTS.UPLOAD_FILES:
-        content = <UploadDownloadFilesDialog
-          open={this.props.dialogOpen}
-          onRequestClose={() => this.handleClose()}
-          openSnackBar={message => {
-            this.handleOpenSnackBar(message)
-          } }
-          mode ={"UPLOAD"}/>
-        break;
-      case TOPBAR_CONSTANTS.DOWNLOAD_FILES:
-        content = <UploadDownloadFilesDialog 
-          open={this.props.dialogOpen}
-          onRequestClose={() => this.handleClose()}
-          openSnackBar={message => {
-            this.handleOpenSnackBar(message)
-          } }
-          mode ={"DOWNLOAD"}
-        />
-        break;
+    var content;
+    if (this.props.dialogOpen) {
+      switch (this.props.topbarDialogName) {
+        case TOPBAR_CONSTANTS.LOAD:
+          content = <LoadFileDialog
+            open={this.props.dialogOpen}
+            onRequestClose={() => this.handleClose()}
+          />;
+          break;
+        case TOPBAR_CONSTANTS.SAVE:
+          content = <SaveFileDialog
+            open={this.props.dialogOpen}
+            onRequestClose={() => this.handleClose()}
+          />;
+          break;
+        case TOPBAR_CONSTANTS.IMPORT_HLS:
+          content = <ImportExportHLSDialog
+            open={this.props.dialogOpen}
+            onRequestClose={() => this.handleClose()}
+            mode={'IMPORT'}/>;
+          break;
+        case TOPBAR_CONSTANTS.EXPORT_HLS:
+          content = <ImportExportHLSDialog
+            open={this.props.dialogOpen}
+            onRequestClose={() => this.handleClose()}
+            mode={'EXPORT'}
+          />;
+          break;
+        case TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE:
+          content = <ImportCellParamsDialog
+            open={this.props.dialogOpen}
+            cellRuleName={this.props.topbarDialogMetadata.cellRuleName}
+            onRequestClose={() => this.handleClose()}
+          />;
+          break;
+        case TOPBAR_CONSTANTS.NEW_MODEL:
+          content = <NewModelDialog
+            open={this.props.dialogOpen}
+            onRequestClose={() => this.handleClose()}
+            onAction={() => this.resetModel()}
+          />;
+          break;
+        case TOPBAR_CONSTANTS.UPLOAD_FILES:
+          content = <UploadDownloadFilesDialog
+            open={this.props.dialogOpen}
+            onRequestClose={() => this.handleClose()}
+            openSnackBar={message => {
+              this.handleOpenSnackBar(message);
+            }}
+            mode={'UPLOAD'}/>;
+          break;
+        case TOPBAR_CONSTANTS.DOWNLOAD_FILES:
+          content = <UploadDownloadFilesDialog
+            open={this.props.dialogOpen}
+            onRequestClose={() => this.handleClose()}
+            openSnackBar={message => {
+              this.handleOpenSnackBar(message);
+            }}
+            mode={'DOWNLOAD'}
+          />;
+          break;
       }
     }
 
@@ -159,12 +165,12 @@ class Topbar extends Component {
             menuHandler={this.menuHandler.bind(this)}
           />
           <div>
-            
+
             <SwitchPageButton/>
           </div>
 
         </div>
-        { this.props.modelLoaded ? null : <Splash/> }
+        {this.props.modelLoaded ? null : <Splash/>}
         <Snackbar
           message={this.snackBarMessage}
           autoHideDuration={4000}
@@ -173,9 +179,9 @@ class Topbar extends Component {
         />
         {content}
       </div>
-      
-    )
+
+    );
   }
 }
 
-export default withStyles(styles)(Topbar)
+export default withStyles(styles)(Topbar);

@@ -3,7 +3,7 @@ import { WidgetStatus, Widget } from './model';
 /**
  * Transforms a widget configutation into a flexlayout node descriptor
  */
-export function widget2Node (configuration: Widget) {
+export function widget2Node(configuration: Widget) {
   const { id, name, component, status, panelName, enableClose = true, ...others } = configuration;
   return {
     id,
@@ -14,7 +14,7 @@ export function widget2Node (configuration: Widget) {
     enableRename: false,
     enableClose,
     // attr defined inside config, will also be available from within flexlayout nodes.  For example:  node.getNodeById(id).getConfig()
-    config: {...configuration} ,
+    config: { ...configuration },
     ...others
   };
 }
@@ -22,10 +22,10 @@ export function widget2Node (configuration: Widget) {
 
 /**
  * Deep object comparison
- * @param {*} a 
- * @param {*} b 
+ * @param {*} a
+ * @param {*} b
  */
-export function isEqual (a: any, b: any): boolean {
+export function isEqual(a: any, b: any): boolean {
   if (a === b) {
     return true;
   }

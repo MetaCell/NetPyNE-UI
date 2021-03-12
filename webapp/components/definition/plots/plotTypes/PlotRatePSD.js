@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import Box from "@material-ui/core/Box";
-import TimeRange from "../TimeRange";
+import React from 'react';
+import Box from '@material-ui/core/Box';
 import {
   NetPyNEInclude,
   NetPyNEField,
   NetPyNECheckbox,
   NetPyNETextField,
-} from "netpyne/components";
+} from 'netpyne/components';
+import TimeRange from '../TimeRange';
 
 export default class PlotRatePSD extends React.Component {
   constructor (props) {
@@ -15,25 +15,25 @@ export default class PlotRatePSD extends React.Component {
   }
 
   render () {
-    var tag = "simConfig.analysis['iplotRatePSD']";
+    const tag = "simConfig.analysis['iplotRatePSD']";
     return (
-      <Box className={`scrollbar scrollchild`} mt={1}>
+      <Box className="scrollbar scrollchild" mt={1}>
         <NetPyNEInclude
-          id={"simConfig.analysis.plotRatePSD.include"}
-          model={tag + "['include']"}
-          defaultOptions={["all", "allCells", "allNetStims"]}
-          initialValue={"all"}
+          id="simConfig.analysis.plotRatePSD.include"
+          model={`${tag}['include']`}
+          defaultOptions={['all', 'allCells', 'allNetStims']}
+          initialValue="all"
         />
 
         <NetPyNEField id="simConfig.analysis.plotRatePSD.timeRange">
-          <TimeRange model={tag + "['timeRange']"} />
+          <TimeRange model={`${tag}['timeRange']`} />
         </NetPyNEField>
 
         <NetPyNEField id="simConfig.analysis.plotRatePSD.binSize">
           <NetPyNETextField
             fullWidth
             variant="filled"
-            model={tag + "['binSize']"}
+            model={`${tag}['binSize']`}
           />
         </NetPyNEField>
 
@@ -41,7 +41,7 @@ export default class PlotRatePSD extends React.Component {
           <NetPyNETextField
             fullWidth
             variant="filled"
-            model={tag + "['maxFreq']"}
+            model={`${tag}['maxFreq']`}
           />
         </NetPyNEField>
 
@@ -49,7 +49,7 @@ export default class PlotRatePSD extends React.Component {
           <NetPyNETextField
             fullWidth
             variant="filled"
-            model={tag + "['NFFT']"}
+            model={`${tag}['NFFT']`}
           />
         </NetPyNEField>
 
@@ -57,7 +57,7 @@ export default class PlotRatePSD extends React.Component {
           <NetPyNETextField
             fullWidth
             variant="filled"
-            model={tag + "['noverlap']"}
+            model={`${tag}['noverlap']`}
           />
         </NetPyNEField>
 
@@ -65,15 +65,15 @@ export default class PlotRatePSD extends React.Component {
           <NetPyNETextField
             fullWidth
             variant="filled"
-            model={tag + "['smooth']"}
+            model={`${tag}['smooth']`}
           />
         </NetPyNEField>
 
         <NetPyNEField
           id="simConfig.analysis.plotRatePSD.overlay"
-          className={"netpyneCheckbox"}
+          className="netpyneCheckbox"
         >
-          <NetPyNECheckbox model={tag + "['overlay']"} />
+          <NetPyNECheckbox model={`${tag}['overlay']`} />
         </NetPyNEField>
       </Box>
     );

@@ -9,6 +9,7 @@ module.exports = {
 
     // Tweak some rules to our preferences
     'space-before-function-paren': ['error', 'always'],
+    'no-console': 0,
   },
   globals: {
     page: true,
@@ -20,5 +21,7 @@ module.exports = {
     net1: true,
     CanvasContainer: true,
     patchRequire: true,
+    window: true,
+    GEPPETTO: true,
   },
 };

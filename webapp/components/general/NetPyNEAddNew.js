@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import ContentAdd from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 import { withStyles } from '@material-ui/core/styles';
-import Tooltip from './Tooltip'
+import Tooltip from './Tooltip';
 
-const styles = ({ spacing, palette }) => ({ plus:{ color: palette.common.white } })
+const styles = ({ spacing, palette }) => ({ plus: { color: palette.common.white } });
 
 class NetPyNEAddNew extends React.Component {
-
   constructor (props) {
     super(props);
     this.state = {};
@@ -16,28 +15,28 @@ class NetPyNEAddNew extends React.Component {
 
   handleClick (event) {
     if (this.props.handleClick) {
-      event.stopPropagation()
+      event.stopPropagation();
       this.props.handleClick();
     }
   }
 
   render () {
-    const { classes, title } = this.props
+    const { classes, title } = this.props;
     return (
-      <Tooltip title={title ? title : "Create rule"} placement="top">
-        <Fab 
+      <Tooltip title={title || 'Create rule'} placement="top">
+        <Fab
           size="small"
-          color='primary'
+          color="primary"
           id={this.props.id}
           className={classes.root}
           onClick={this.handleClick}
         >
-          <ContentAdd className={classes.plus}/>
+          <ContentAdd className={classes.plus} />
         </Fab>
       </Tooltip>
-      
+
     );
   }
 }
 
-export default withStyles(styles)(NetPyNEAddNew)
+export default withStyles(styles)(NetPyNEAddNew);

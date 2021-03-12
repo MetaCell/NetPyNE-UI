@@ -1,9 +1,9 @@
-import React from "react";
-import Button from "@material-ui/core/Button";
-import ContentAdd from "@material-ui/icons/Add";
-import NavigationMoreHoriz from "@material-ui/icons/MoreHoriz";
-import Fab from "@material-ui/core/Fab";
-import Box from "@material-ui/core/Box";
+import React from 'react';
+import Button from '@material-ui/core/Button';
+import ContentAdd from '@material-ui/icons/Add';
+import NavigationMoreHoriz from '@material-ui/icons/MoreHoriz';
+import Fab from '@material-ui/core/Fab';
+import Box from '@material-ui/core/Box';
 
 import {
   NetPyNECellRule,
@@ -12,26 +12,26 @@ import {
   Filter,
   NetPyNESection,
   SelectCellTemplate,
-} from "netpyne/components";
+} from 'netpyne/components';
 
-import NetPyNEMechanism from "./sections/mechanisms/NetPyNEMechanism";
-import NetPyNENewMechanism from "./sections/mechanisms/NetPyNENewMechanism";
+import NetPyNEMechanism from './sections/mechanisms/NetPyNEMechanism';
+import NetPyNENewMechanism from './sections/mechanisms/NetPyNENewMechanism';
 
-import Dialog from "@material-ui/core/Dialog/Dialog";
+import Dialog from '@material-ui/core/Dialog/Dialog';
 
-import Utils from "../../../Utils";
-import NetPyNEHome from "../../general/NetPyNEHome";
+import Utils from '../../../Utils';
+import NetPyNEHome from '../../general/NetPyNEHome';
 
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
-import RulePath from "../../general/RulePath";
-import Accordion from "../../general/ExpansionPanel";
-import Tooltip from "../../general/Tooltip";
+import RulePath from '../../general/RulePath';
+import Accordion from '../../general/ExpansionPanel';
+import Tooltip from '../../general/Tooltip';
 
-import { ArrowRightIcon } from "../../general/NetPyNEIcons";
+import { ArrowRightIcon } from '../../general/NetPyNEIcons';
 
 const styles = ({ spacing }) => ({
   arrowRight: { marginLeft: spacing(1) },
@@ -51,7 +51,7 @@ export default class NetPyNECellRules extends React.Component {
       deletedSection: undefined,
       errorMessage: undefined,
       errorDetails: undefined,
-      page: "main",
+      page: 'main',
       filterValue: null,
       anchorEl: null,
     };
@@ -114,7 +114,10 @@ export default class NetPyNECellRules extends React.Component {
   }
 
   selectSection (section) {
-    this.setState({ selectedSection: section, selectedMechanism: undefined });
+    this.setState({
+      selectedSection: section,
+      selectedMechanism: undefined
+    });
   }
 
   handleNewSection (defaultSectionValues) {
@@ -122,15 +125,22 @@ export default class NetPyNECellRules extends React.Component {
     let value = defaultSectionValues[key];
     const { selectedCellRule } = this.state;
     const model = {};
-    Object.keys(this.state.value).forEach(cellRuleName => {
-      const { secs, ...others } = this.state.value[cellRuleName];
-      model[cellRuleName] = { ...others, secs: { ...secs } };
-    });
+    Object.keys(this.state.value)
+      .forEach(cellRuleName => {
+        const {
+          secs,
+          ...others
+        } = this.state.value[cellRuleName];
+        model[cellRuleName] = {
+          ...others,
+          secs: { ...secs }
+        };
+      });
     // Get New Available ID
-    var sectionId = Utils.getAvailableKey(model[selectedCellRule]["secs"], key);
+    var sectionId = Utils.getAvailableKey(model[selectedCellRule]['secs'], key);
     var newSection = Object.assign({ name: sectionId }, value);
-    if (model[selectedCellRule]["secs"] == undefined) {
-      model[selectedCellRule]["secs"] = {};
+    if (model[selectedCellRule]['secs'] == undefined) {
+      model[selectedCellRule]['secs'] = {};
       Utils.execPythonMessage(
         'netpyne_geppetto.netParams.cellParams["'
         + selectedCellRule
@@ -145,7 +155,7 @@ export default class NetPyNECellRules extends React.Component {
       + '"] = '
       + JSON.stringify(value)
     );
-    model[selectedCellRule]["secs"][sectionId] = newSection;
+    model[selectedCellRule]['secs'][sectionId] = newSection;
     // Update state
     this.setState({
       value: model,
@@ -154,8 +164,8 @@ export default class NetPyNECellRules extends React.Component {
     });
 
     // Move to section page if not already there
-    if (this.state.page !== "sections") {
-      this.setState({ page: "sections" });
+    if (this.state.page !== 'sections') {
+      this.setState({ page: 'sections' });
     }
   }
 
@@ -164,23 +174,40 @@ export default class NetPyNECellRules extends React.Component {
   }
 
   handleNewMechanism (mechanism) {
-    const { selectedCellRule, selectedSection } = this.state;
+    const {
+      selectedCellRule,
+      selectedSection
+    } = this.state;
     const model = {};
-    Object.keys(this.state.value).forEach(cellRuleName => {
-      const { secs, ...cellOthers } = this.state.value[cellRuleName];
-      const sections = {};
-      Object.keys(secs).forEach(sectionName => {
-        const { mechs, ...secOthers } = this.state.value[cellRuleName].secs[
-          sectionName
-        ];
-        sections[sectionName] = { ...secOthers, mechs: { ...mechs } };
+    Object.keys(this.state.value)
+      .forEach(cellRuleName => {
+        const {
+          secs,
+          ...cellOthers
+        } = this.state.value[cellRuleName];
+        const sections = {};
+        Object.keys(secs)
+          .forEach(sectionName => {
+            const {
+              mechs,
+              ...secOthers
+            } = this.state.value[cellRuleName].secs[
+              sectionName
+              ];
+            sections[sectionName] = {
+              ...secOthers,
+              mechs: { ...mechs }
+            };
+          });
+        model[cellRuleName] = {
+          ...cellOthers,
+          secs: { ...sections }
+        };
       });
-      model[cellRuleName] = { ...cellOthers, secs: { ...sections } };
-    });
 
     // Create Mechanism Client side
-    if (model[selectedCellRule].secs[selectedSection]["mechs"] == undefined) {
-      model[selectedCellRule].secs[selectedSection]["mechs"] = {};
+    if (model[selectedCellRule].secs[selectedSection]['mechs'] == undefined) {
+      model[selectedCellRule].secs[selectedSection]['mechs'] = {};
       Utils.execPythonMessage(
         'netpyne_geppetto.netParams.cellParams["'
         + selectedCellRule
@@ -189,22 +216,23 @@ export default class NetPyNECellRules extends React.Component {
         + '"]["mechs"] = {}'
       );
     }
-    Utils.evalPythonMessage("netpyne_geppetto.getMechParams", [mechanism]).then(
-      response => {
-        const params = {};
-        response.forEach(param => (params[param] = 0));
-        Utils.execPythonMessage(
-          'netpyne_geppetto.netParams.cellParams["'
-          + selectedCellRule
-          + '"]["secs"]["'
-          + selectedSection
-          + '"]["mechs"]["'
-          + mechanism
-          + '"] = '
-          + JSON.stringify(params)
-        );
-      }
-    );
+    Utils.evalPythonMessage('netpyne_geppetto.getMechParams', [mechanism])
+      .then(
+        response => {
+          const params = {};
+          response.forEach(param => (params[param] = 0));
+          Utils.execPythonMessage(
+            'netpyne_geppetto.netParams.cellParams["'
+            + selectedCellRule
+            + '"]["secs"]["'
+            + selectedSection
+            + '"]["mechs"]["'
+            + mechanism
+            + '"] = '
+            + JSON.stringify(params)
+          );
+        }
+      );
     this.setState({
       value: model,
       selectedMechanism: mechanism,
@@ -332,7 +360,7 @@ export default class NetPyNECellRules extends React.Component {
        */
       var model = this.state.value;
       for (var m in model) {
-        if (prevState.value !== "" && !(m in prevState.value)) {
+        if (prevState.value !== '' && !(m in prevState.value)) {
           var newValue = Utils.nameValidation(m);
           if (newValue != m) {
             newValue = Utils.getAvailableKey(model, newValue);
@@ -341,16 +369,16 @@ export default class NetPyNECellRules extends React.Component {
             this.setState(
               {
                 value: model,
-                errorMessage: "Error",
+                errorMessage: 'Error',
                 errorDetails:
-                  "Leading digits or whitespaces are not allowed in CellRule names.\n"
+                  'Leading digits or whitespaces are not allowed in CellRule names.\n'
                   + m
-                  + " has been renamed "
+                  + ' has been renamed '
                   + newValue,
               },
               function () {
                 Utils.renameKey(
-                  "netParams.cellParams",
+                  'netParams.cellParams',
                   m,
                   newValue,
                   (response, newValue) => {
@@ -381,25 +409,25 @@ export default class NetPyNECellRules extends React.Component {
       for (var n in model2) {
         if (
           prevModel[n] !== undefined
-          && Object.keys(model2[n]["secs"]).length
-          !== Object.keys(prevModel[n]["secs"]).length
+          && Object.keys(model2[n]['secs']).length
+          !== Object.keys(prevModel[n]['secs']).length
         ) {
-          var cellRule = model2[n]["secs"];
+          var cellRule = model2[n]['secs'];
           for (var s in cellRule) {
-            if (!(s in prevState.value[n]["secs"])) {
+            if (!(s in prevState.value[n]['secs'])) {
               var newValue2 = Utils.nameValidation(s);
               if (newValue2 != s) {
-                newValue2 = Utils.getAvailableKey(model2[n]["secs"], newValue2);
-                model2[n]["secs"][newValue2] = model2[n]["secs"][s];
-                delete model2[n]["secs"][s];
+                newValue2 = Utils.getAvailableKey(model2[n]['secs'], newValue2);
+                model2[n]['secs'][newValue2] = model2[n]['secs'][s];
+                delete model2[n]['secs'][s];
                 this.setState(
                   {
                     value: model2,
-                    errorMessage: "Error",
+                    errorMessage: 'Error',
                     errorDetails:
-                      "Leading digits or whitespaces are not allowed in Population names.\n"
+                      'Leading digits or whitespaces are not allowed in Population names.\n'
                       + s
-                      + " has been renamed "
+                      + ' has been renamed '
                       + newValue2,
                   },
                   () =>
@@ -435,7 +463,7 @@ export default class NetPyNECellRules extends React.Component {
         selectedCellRule: undefined,
         selectedSection: undefined,
         selectedMechanism: undefined,
-        page: "main",
+        page: 'main',
       });
     }
   }
@@ -455,37 +483,52 @@ export default class NetPyNECellRules extends React.Component {
      * here we chech if we want to jump to a different level or if we want to create a new rule in the current level
      */
     if (nextPage === page) {
-      if (page === "main") {
+      if (page === 'main') {
         event.preventDefault();
         this.setState({ anchorEl: event.currentTarget });
         // this.handleNewCellRule({ 'CellType': { 'conds':{}, 'secs':{} } });
-      } else if (page === "sections") {
-        this.handleNewSection({ Section: { geom: {}, topol: {}, mechs: {} } });
+      } else if (page === 'sections') {
+        this.handleNewSection({
+          Section: {
+            geom: {},
+            topol: {},
+            mechs: {}
+          }
+        });
       }
     } else {
       const selection = {};
-      if (nextPage === "sections" && !selectedSection) {
-        if (Object.keys(model[selectedCellRule]["secs"]).length > 0) {
+      if (nextPage === 'sections' && !selectedSection) {
+        if (Object.keys(model[selectedCellRule]['secs']).length > 0) {
           selection.selectedSection = Object.keys(
-            model[selectedCellRule]["secs"]
+            model[selectedCellRule]['secs']
           )[0];
         }
       }
-      if (nextPage === "mechanisms" && !selectedMechanism) {
+      if (nextPage === 'mechanisms' && !selectedMechanism) {
         if (
-          Object.keys(model[selectedCellRule]["secs"][selectedSection]["mechs"])
+          Object.keys(model[selectedCellRule]['secs'][selectedSection]['mechs'])
             .length > 0
         ) {
           selection.selectedMechanism = Object.keys(
-            model[selectedCellRule]["secs"][selectedSection]["mechs"]
+            model[selectedCellRule]['secs'][selectedSection]['mechs']
           )[0];
         }
       }
-      this.setState({ page: nextPage, filterValue: null, ...selection });
-      if (nextPage == "sections") {
+      this.setState({
+        page: nextPage,
+        filterValue: null, ...selection
+      });
+      if (nextPage == 'sections') {
         // saves one click if there are no sections
-        if (Object.keys(model[selectedCellRule]["secs"]).length == 0) {
-          this.handleNewSection({ Section: { geom: {}, topol: {}, mechs: {} }, });
+        if (Object.keys(model[selectedCellRule]['secs']).length == 0) {
+          this.handleNewSection({
+            Section: {
+              geom: {},
+              topol: {},
+              mechs: {}
+            },
+          });
         }
       }
     }
@@ -514,9 +557,9 @@ export default class NetPyNECellRules extends React.Component {
       ) {
         var oldLength
           = this.state.value[this.state.selectedCellRule] == undefined
-            ? 0
-            : Object.keys(this.state.value[this.state.selectedCellRule].secs)
-              .length;
+          ? 0
+          : Object.keys(this.state.value[this.state.selectedCellRule].secs)
+            .length;
         newItemCreated
           = newItemCreated
           || oldLength
@@ -529,25 +572,25 @@ export default class NetPyNECellRules extends React.Component {
         && nextState.value[this.state.selectedCellRule] != undefined
         && nextState.value[this.state.selectedCellRule].secs[
           this.state.selectedSection
-        ] != undefined
+          ] != undefined
       ) {
         var oldLength
           = this.state.value[this.state.selectedCellRule].secs[
-            this.state.selectedSection
+          this.state.selectedSection
           ] == undefined
-            ? 0
-            : Object.keys(
-              this.state.value[this.state.selectedCellRule].secs[
-                this.state.selectedSection
+          ? 0
+          : Object.keys(
+            this.state.value[this.state.selectedCellRule].secs[
+              this.state.selectedSection
               ].mechs
-            ).length;
+          ).length;
         newItemCreated
           = newItemCreated
           || oldLength
           != Object.keys(
             nextState.value[this.state.selectedCellRule].secs[
               this.state.selectedSection
-            ].mechs
+              ].mechs
           ).length;
       }
     }
@@ -569,38 +612,43 @@ export default class NetPyNECellRules extends React.Component {
       this.state.selectedCellRule != undefined
       && this.state.selectedSection != undefined
     ) {
-      Utils.evalPythonMessage("netpyne_geppetto.deleteParam", [
+      Utils.evalPythonMessage('netpyne_geppetto.deleteParam', [
         [this.state.selectedCellRule, this.state.selectedSection],
         name,
-      ]).then(response => {
-        var model = this.state.value;
-        delete model[this.state.selectedCellRule].secs[
-          this.state.selectedSection
-        ]["mechs"][name];
-        this.setState({ value: model, selectedMechanism: undefined });
-      });
+      ])
+        .then(response => {
+          var model = this.state.value;
+          delete model[this.state.selectedCellRule].secs[
+            this.state.selectedSection
+            ]['mechs'][name];
+          this.setState({
+            value: model,
+            selectedMechanism: undefined
+          });
+        });
     }
   }
 
   deleteSection (name) {
     if (this.state.selectedCellRule != undefined) {
-      Utils.evalPythonMessage("netpyne_geppetto.deleteParam", [
+      Utils.evalPythonMessage('netpyne_geppetto.deleteParam', [
         [this.state.selectedCellRule],
         name,
-      ]).then(response => {
-        var model = this.state.value;
-        delete model[this.state.selectedCellRule]["secs"][name];
-        this.setState({
-          value: model,
-          selectedSection: undefined,
-          deletedSection: name,
+      ])
+        .then(response => {
+          var model = this.state.value;
+          delete model[this.state.selectedCellRule]['secs'][name];
+          this.setState({
+            value: model,
+            selectedSection: undefined,
+            deletedSection: name,
+          });
         });
-      });
     }
   }
 
   handleRenameChildren (childName) {
-    childName = childName.replace(/\s*$/, "");
+    childName = childName.replace(/\s*$/, '');
     var childrenList = Object.keys(this.state.value);
     for (var i = 0; childrenList.length > i; i++) {
       if (childName === childrenList[i]) {
@@ -611,8 +659,8 @@ export default class NetPyNECellRules extends React.Component {
   }
 
   handleRenameSections (childName, leaf) {
-    childName = childName.replace(/\s*$/, "");
-    var childrenList = Object.keys(this.state.value[leaf]["secs"]);
+    childName = childName.replace(/\s*$/, '');
+    var childrenList = Object.keys(this.state.value[leaf]['secs']);
     for (var i = 0; childrenList.length > i; i++) {
       if (childName === childrenList[i]) {
         return false;
@@ -630,43 +678,43 @@ export default class NetPyNECellRules extends React.Component {
     } = this.state;
 
     switch (rule) {
-    case "cellRule":
-      if (page !== "main") {
-        if (selectedCellRule && selectedCellRule.length > 8) {
-          return selectedCellRule;
-        } else {
-          return "Go back to cell type";
-        }
-      } else {
-        return "Create new cell type";
-      }
-
-    case "section":
-      if (page === "mechanisms") {
-        if (!!selectedSection && selectedSection.length > 9) {
-          return selectedSection;
-        } else {
-          return "Go back to section";
-        }
-      } else {
-        if (page == "sections") {
-          return "Create new section";
-        } else {
-          if (selectedCellRule) {
-            if (
-              !!model
-                && !!model[selectedCellRule]
-                && Object.keys(model[selectedCellRule]["secs"]).length > 0
-            ) {
-              return "Explore sections";
-            } else {
-              return "Create first section";
-            }
+      case 'cellRule':
+        if (page !== 'main') {
+          if (selectedCellRule && selectedCellRule.length > 8) {
+            return selectedCellRule;
           } else {
-            return "No cell type selected";
+            return 'Go back to cell type';
+          }
+        } else {
+          return 'Create new cell type';
+        }
+
+      case 'section':
+        if (page === 'mechanisms') {
+          if (!!selectedSection && selectedSection.length > 9) {
+            return selectedSection;
+          } else {
+            return 'Go back to section';
+          }
+        } else {
+          if (page == 'sections') {
+            return 'Create new section';
+          } else {
+            if (selectedCellRule) {
+              if (
+                !!model
+                && !!model[selectedCellRule]
+                && Object.keys(model[selectedCellRule]['secs']).length > 0
+              ) {
+                return 'Explore sections';
+              } else {
+                return 'Create first section';
+              }
+            } else {
+              return 'No cell type selected';
+            }
           }
         }
-      }
     }
   }
 
@@ -678,35 +726,38 @@ export default class NetPyNECellRules extends React.Component {
       selectedSection,
     } = this.state;
     switch (rule) {
-    case "cellRule":
-      if (page !== "main") {
-        return "CT";
-      } else {
-        return <ContentAdd style={{ color: "white" }}/>;
-      }
-
-    case "sections":
-      if (page === "mechanisms") {
-        return "S";
-      } else {
-        if (page == "sections") {
-          return <ContentAdd style={{ height: "100%", color: "white" }}/>;
+      case 'cellRule':
+        if (page !== 'main') {
+          return 'CT';
         } else {
-          if (selectedCellRule) {
-            if (
-              !!model
-                && !!model[selectedCellRule]
-                && Object.keys(model[selectedCellRule]["secs"]).length > 0
-            ) {
-              return <NavigationMoreHoriz style={{ height: "100%" }}/>;
-            } else {
-              return <ContentAdd style={{ height: "100%" }}/>;
-            }
+          return <ContentAdd style={{ color: 'white' }}/>;
+        }
+
+      case 'sections':
+        if (page === 'mechanisms') {
+          return 'S';
+        } else {
+          if (page == 'sections') {
+            return <ContentAdd style={{
+              height: '100%',
+              color: 'white'
+            }}/>;
           } else {
-            return "";
+            if (selectedCellRule) {
+              if (
+                !!model
+                && !!model[selectedCellRule]
+                && Object.keys(model[selectedCellRule]['secs']).length > 0
+              ) {
+                return <NavigationMoreHoriz style={{ height: '100%' }}/>;
+              } else {
+                return <ContentAdd style={{ height: '100%' }}/>;
+              }
+            } else {
+              return '';
+            }
           }
         }
-      }
     }
   }
 
@@ -720,56 +771,60 @@ export default class NetPyNECellRules extends React.Component {
     if (model === undefined) {
       return [];
     }
-    if (page === "main") {
+    if (page === 'main') {
       return Object.keys(model);
     }
     if (model[selectedCellRule] === undefined) {
       return [];
     }
-    if (page === "sections") {
+    if (page === 'sections') {
       return Object.keys(model[selectedCellRule].secs);
     }
     if (model[selectedCellRule].secs[selectedSection] === undefined) {
       return [];
     }
-    if (page === "mechanisms") {
+    if (page === 'mechanisms') {
       return Object.keys(model[selectedCellRule].secs[selectedSection].mechs);
     }
     return [];
   }
 
   getCopyPath () {
-    const basePath = "netParams.cellParams";
+    const basePath = 'netParams.cellParams';
     const { value: model } = this.state;
-    const { selectedCellRule, selectedSection, selectedMechanism } = this.state;
+    const {
+      selectedCellRule,
+      selectedSection,
+      selectedMechanism
+    } = this.state;
     if (!model) {
-      return "undefined";
+      return 'undefined';
     }
     switch (this.state.page) {
-    case "main": {
-      if (model[selectedCellRule]) {
-        return `${basePath}["${selectedCellRule}"]`;
+      case 'main': {
+        if (model[selectedCellRule]) {
+          return `${basePath}["${selectedCellRule}"]`;
+        }
+        break;
       }
-      break;
-    }
-    case "sections": {
-      if (model[selectedCellRule].secs[selectedSection]) {
-        return `${basePath}["${selectedCellRule}"].secs["${selectedSection}"]`;
+      case 'sections': {
+        if (model[selectedCellRule].secs[selectedSection]) {
+          return `${basePath}["${selectedCellRule}"].secs["${selectedSection}"]`;
+        }
+        break;
       }
-      break;
-    }
-    case "mechanisms": {
-      if (
-        model[selectedCellRule].secs[selectedSection].mechs[selectedMechanism]
-      ) {
-        return `${basePath}["${selectedCellRule}"].secs["${selectedSection}"].mechs["${selectedMechanism}"]`;
+      case 'mechanisms': {
+        if (
+          model[selectedCellRule].secs[selectedSection].mechs[selectedMechanism]
+        ) {
+          return `${basePath}["${selectedCellRule}"].secs["${selectedSection}"].mechs["${selectedMechanism}"]`;
+        }
+        break;
       }
-      break;
+      default: {
+      }
     }
-    default: {
-    }
-    }
-    return "undefined";
+    return 'undefined';
   }
 
   callbackForNewCellTypeCreated (newCellTypeName) {
@@ -792,41 +847,42 @@ export default class NetPyNECellRules extends React.Component {
 
     const dialogPop
       = errorMessage != undefined ? (
-        <Dialog
-          title={errorMessage}
-          open={true}
-          style={{ whiteSpace: "pre-wrap" }}
-        >
-          <DialogTitle id="alert-dialog-title">{errorMessage}</DialogTitle>
-          <DialogContent style={{ overflow: "auto" }}>
-            <DialogContentText id="alert-dialog-description">
-              {errorDetails}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() =>
-                this.setState({
-                  errorMessage: undefined,
-                  errorDetails: undefined,
-                })
-              }
-            >
+      <Dialog
+        title={errorMessage}
+        open={true}
+        style={{ whiteSpace: 'pre-wrap' }}
+      >
+        <DialogTitle id="alert-dialog-title">{errorMessage}</DialogTitle>
+        <DialogContent style={{ overflow: 'auto' }}>
+          <DialogContentText id="alert-dialog-description">
+            {errorDetails}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() =>
+              this.setState({
+                errorMessage: undefined,
+                errorDetails: undefined,
+              })
+            }
+          >
             Back
-            </Button>
-          </DialogActions>
-        </Dialog>
-      ) : (
-        undefined
-      );
+          </Button>
+        </DialogActions>
+      </Dialog>
+    ) : (
+      undefined
+    );
 
-    if (page == "main") {
+    if (page == 'main') {
       if (
         selectedCellRule !== undefined
         && model
-        && Object.keys(model).indexOf(selectedCellRule) > -1
+        && Object.keys(model)
+          .indexOf(selectedCellRule) > -1
       ) {
         selection = (
           <NetPyNECellRule
@@ -835,17 +891,24 @@ export default class NetPyNECellRules extends React.Component {
             model={model[selectedCellRule]}
             renameHandler={this.handleRenameChildren}
             HandleAddNewSection={() =>
-              this.handleNewSection({ Section: { geom: {}, topol: {}, mechs: {} }, })
+              this.handleNewSection({
+                Section: {
+                  geom: {},
+                  topol: {},
+                  mechs: {}
+                },
+              })
             }
           />
         );
       }
       if (model != undefined) {
         const filterName
-          = this.state.filterValue === null ? "" : this.state.filterValue;
+          = this.state.filterValue === null ? '' : this.state.filterValue;
         container = Object.keys(model)
           .filter(cellRuleName =>
-            cellRuleName.toLowerCase().includes(filterName.toLowerCase())
+            cellRuleName.toLowerCase()
+              .includes(filterName.toLowerCase())
           )
           .map(cellRuleName => (
             <NetPyNEThumbnail
@@ -858,7 +921,7 @@ export default class NetPyNECellRules extends React.Component {
           ));
       }
     } else if (
-      page == "sections"
+      page == 'sections'
       && Object.keys(model).length > 0
       && model[selectedCellRule]
     ) {
@@ -866,7 +929,8 @@ export default class NetPyNECellRules extends React.Component {
 
       if (
         selectedSection !== undefined
-        && Object.keys(sectionsModel).indexOf(selectedSection) > -1
+        && Object.keys(sectionsModel)
+          .indexOf(selectedSection) > -1
       ) {
         selection = (
           <NetPyNESection
@@ -880,10 +944,11 @@ export default class NetPyNECellRules extends React.Component {
       }
 
       const filterName
-        = this.state.filterValue === null ? "" : this.state.filterValue;
+        = this.state.filterValue === null ? '' : this.state.filterValue;
       container = Object.keys(sectionsModel)
         .filter(sectionName =>
-          sectionName.toLowerCase().includes(filterName.toLowerCase())
+          sectionName.toLowerCase()
+            .includes(filterName.toLowerCase())
         )
         .map(sectionName => (
           <NetPyNEThumbnail
@@ -897,7 +962,7 @@ export default class NetPyNECellRules extends React.Component {
           />
         ));
     } else if (
-      page == "mechanisms"
+      page == 'mechanisms'
       && Object.keys(model).length > 0
       && model[selectedCellRule]
       && model[selectedCellRule].secs[selectedSection]
@@ -906,7 +971,8 @@ export default class NetPyNECellRules extends React.Component {
         = model[selectedCellRule].secs[selectedSection].mechs;
       if (
         selectedMechanism !== undefined
-        && Object.keys(mechanismsModel).indexOf(selectedMechanism) > -1
+        && Object.keys(mechanismsModel)
+          .indexOf(selectedMechanism) > -1
       ) {
         selection = (
           <NetPyNEMechanism
@@ -920,10 +986,11 @@ export default class NetPyNECellRules extends React.Component {
       }
 
       const filterName
-        = this.state.filterValue === null ? "" : this.state.filterValue;
+        = this.state.filterValue === null ? '' : this.state.filterValue;
       container = Object.keys(mechanismsModel)
         .filter(mechName =>
-          mechName.toLowerCase().includes(filterName.toLowerCase())
+          mechName.toLowerCase()
+            .includes(filterName.toLowerCase())
         )
         .map(mechName => (
           <NetPyNEThumbnail
@@ -948,7 +1015,7 @@ export default class NetPyNECellRules extends React.Component {
                   selection={selectedCellRule}
                   handleClick={() =>
                     this.setState({
-                      page: "main",
+                      page: 'main',
                       selectedCellRule: undefined,
                       selectedSection: undefined,
                       selectedMechanism: undefined,
@@ -960,13 +1027,13 @@ export default class NetPyNECellRules extends React.Component {
 
               <SelectCellTemplate
                 page={this.state.page}
-                label={this.createLabel("cellRule")}
-                tooltip={this.createTooltip("cellRule")}
+                label={this.createLabel('cellRule')}
+                tooltip={this.createTooltip('cellRule')}
                 anchorEl={this.state.anchorEl}
                 model={this.state.value}
                 clearAnchorEl={() => this.setState({ anchorEl: null })}
                 handleButtonClick={event =>
-                  this.handleHierarchyClick("main", event)
+                  this.handleHierarchyClick('main', event)
                 }
                 callback={cellTypeName =>
                   this.callbackForNewCellTypeCreated(cellTypeName)
@@ -982,7 +1049,7 @@ export default class NetPyNECellRules extends React.Component {
                 <div style={{ opacity: 0 }}>S</div>
               </div>
 
-              <Tooltip title={this.createTooltip("section")} placement="top">
+              <Tooltip title={this.createTooltip('section')} placement="top">
                 <div>
                   <Fab
                     id="newSectionButton"
@@ -994,16 +1061,16 @@ export default class NetPyNECellRules extends React.Component {
                       marginTop: 6,
                       marginBottom: 7,
                     }}
-                    color={page === "mechanisms" ? "secondary" : "primary"}
+                    color={page === 'mechanisms' ? 'secondary' : 'primary'}
                     disabled={selectedCellRule == undefined}
-                    onClick={() => this.handleHierarchyClick("sections")}
+                    onClick={() => this.handleHierarchyClick('sections')}
                   >
-                    {this.createLabel("sections")}
+                    {this.createLabel('sections')}
                   </Fab>
                   <div
                     style={{
-                      textAlign: "center",
-                      fontFamily: "Source Sans Pro",
+                      textAlign: 'center',
+                      fontFamily: 'Source Sans Pro',
                     }}
                   >
                     Section
@@ -1024,22 +1091,25 @@ export default class NetPyNECellRules extends React.Component {
                 <NetPyNENewMechanism
                   id="mechanismButton"
                   handleClick={this.handleNewMechanism}
-                  disabled={selectedSection == undefined || page == "main"}
+                  disabled={selectedSection == undefined || page == 'main'}
                   handleHierarchyClick={() =>
-                    this.handleHierarchyClick("mechanisms")
+                    this.handleHierarchyClick('mechanisms')
                   }
                   blockButton={
-                    page != "mechanisms"
+                    page != 'mechanisms'
                     && !!model
                     && !!model[selectedCellRule]
-                    && !!model[selectedCellRule]["secs"][selectedSection]
+                    && !!model[selectedCellRule]['secs'][selectedSection]
                     && Object.keys(
-                      model[selectedCellRule]["secs"][selectedSection]["mechs"]
+                      model[selectedCellRule]['secs'][selectedSection]['mechs']
                     ).length > 0
                   }
                 />
                 <div
-                  style={{ textAlign: "center", fontFamily: "Source Sans Pro" }}
+                  style={{
+                    textAlign: 'center',
+                    fontFamily: 'Source Sans Pro'
+                  }}
                 >
                   Mech
                 </div>
@@ -1052,11 +1122,11 @@ export default class NetPyNECellRules extends React.Component {
               <Filter
                 value={this.state.filterValue}
                 label={`Filter ${
-                  page === "main"
-                    ? "cell rule"
-                    : page === "sections"
-                      ? "section"
-                      : "mechanism"
+                  page === 'main'
+                    ? 'cell rule'
+                    : page === 'sections'
+                    ? 'section'
+                    : 'mechanism'
                 } by name...`}
                 handleFilterChange={newValue =>
                   this.setState({ filterValue: newValue })

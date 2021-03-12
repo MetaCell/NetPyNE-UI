@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import Box from "@material-ui/core/Box";
-import { NetPyNEInclude, NetPyNEField, SelectField } from "netpyne/components";
+import React from 'react';
+import Box from '@material-ui/core/Box';
+import { NetPyNEInclude, NetPyNEField, SelectField } from 'netpyne/components';
 
 export default class plotConn extends React.Component {
   constructor (props) {
@@ -9,35 +9,35 @@ export default class plotConn extends React.Component {
   }
 
   render () {
-    var tag = "simConfig.analysis['iplotConn']";
+    const tag = 'simConfig.analysis[\'iplotConn\']';
     return (
-      <Box className={`scrollbar scrollchild`} mt={1}>
+      <Box className="scrollbar scrollchild" mt={1}>
         <NetPyNEInclude
-          id={"simConfig.analysis.plotConn.include"}
-          model={tag + "['include']"}
-          defaultOptions={["all", "allCells", "allNetStims"]}
-          initialValue={"all"}
+          id="simConfig.analysis.plotConn.include"
+          model={`${tag}['include']`}
+          defaultOptions={['all', 'allCells', 'allNetStims']}
+          initialValue="all"
         />
 
         <NetPyNEField
           id="simConfig.analysis.plotConn.feature"
           className="listStyle"
         >
-          <SelectField model={tag + "['feature']"} />
+          <SelectField model={`${tag}['feature']`} />
         </NetPyNEField>
 
         <NetPyNEField
           id="simConfig.analysis.plotConn.groupBy"
           className="listStyle"
         >
-          <SelectField model={tag + "['groupBy']"} />
+          <SelectField model={`${tag}['groupBy']`} />
         </NetPyNEField>
 
         <NetPyNEField
           id="simConfig.analysis.plotConn.orderBy"
           className="listStyle"
         >
-          <SelectField model={tag + "['orderBy']"} />
+          <SelectField model={`${tag}['orderBy']`} />
         </NetPyNEField>
       </Box>
     );

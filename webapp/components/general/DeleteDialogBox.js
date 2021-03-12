@@ -1,7 +1,7 @@
 /**
  * Tabbed Drawer resizable component
  * It uses the components DrawerButton and Rnd to create a resizable Tabbed Drawer.
- * 
+ *
  *  @author Dario Del Piano
  *  @author Adrian Quintana
  */
@@ -16,12 +16,11 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 export default class DeleteDialogBox extends React.Component {
-
   constructor (props) {
     super(props);
     this.state = {
       open: props.open,
-      response: false
+      response: false,
     };
   }
 
@@ -30,29 +29,33 @@ export default class DeleteDialogBox extends React.Component {
       this.setState({ open: this.props.open });
     }
   }
-    
+
   render () {
     return (
       <Dialog
         open={this.state.open}
         onClose={this.handleClose}
       >
-        <DialogTitle>{"Delete " + this.props.textForDialog}</DialogTitle>
+        <DialogTitle>{`Delete ${this.props.textForDialog}`}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {"Do you want to remove " + this.props.textForDialog + " ?"}
+            {`Do you want to remove ${this.props.textForDialog} ?`}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button
             id="confirmCancel"
             onClick={() => this.props.onDialogResponse(false)}
-          >Cancel</Button>
+          >
+            Cancel
+          </Button>
           <Button
             id="confirmDeletion"
             color="primary"
             onClick={() => this.props.onDialogResponse(true)}
-          >Confirm</Button>
+          >
+            Confirm
+          </Button>
         </DialogActions>
       </Dialog>
     );

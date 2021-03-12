@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import MenuItem from "@material-ui/core/MenuItem";
-import Box from "@material-ui/core/Box";
+import React from 'react';
+import MenuItem from '@material-ui/core/MenuItem';
+import Box from '@material-ui/core/Box';
 import {
   NetPyNEField,
   NetPyNESelectField,
   NetPyNECoordsRange,
   ListComponent,
-} from "netpyne/components";
+} from 'netpyne/components';
 
 export default class StimulationConditions extends React.Component {
   constructor (props) {
@@ -16,9 +16,9 @@ export default class StimulationConditions extends React.Component {
   }
 
   postProcessMenuItems (pythonData, selected) {
-    return pythonData.map(name => (
+    return pythonData.map((name) => (
       <MenuItem
-        id={name + "MenuItem"}
+        id={`${name}MenuItem`}
         key={name}
         checked={selected.indexOf(name) > -1}
         value={name}
@@ -29,46 +29,46 @@ export default class StimulationConditions extends React.Component {
   }
 
   render () {
-    var content = (
-      <Box className={`scrollbar scrollchild`} mt={1}>
-        <NetPyNEField id={"netParams.stimTargetParams.conds.pop"}>
+    const content = (
+      <Box className="scrollbar scrollchild" mt={1}>
+        <NetPyNEField id="netParams.stimTargetParams.conds.pop">
           <NetPyNESelectField
             model={
-              "netParams.stimTargetParams['"
-              + this.props.name
-              + "']['conds']['pop']"
+              `netParams.stimTargetParams['${
+                this.props.name
+              }']['conds']['pop']`
             }
-            method={"netpyne_geppetto.getAvailablePops"}
+            method="netpyne_geppetto.getAvailablePops"
             postProcessItems={this.postProcessMenuItems}
-            multiple={true}
+            multiple
             fullWidth
           />
         </NetPyNEField>
 
-        <NetPyNEField id={"netParams.stimTargetParams.conds.cellModel"}>
+        <NetPyNEField id="netParams.stimTargetParams.conds.cellModel">
           <NetPyNESelectField
             model={
-              "netParams.stimTargetParams['"
-              + this.props.name
-              + "']['conds']['cellModel']"
+              `netParams.stimTargetParams['${
+                this.props.name
+              }']['conds']['cellModel']`
             }
             fullWidth
-            method={"netpyne_geppetto.getAvailableCellModels"}
+            method="netpyne_geppetto.getAvailableCellModels"
             postProcessItems={this.postProcessMenuItems}
-            multiple={true}
+            multiple
           />
         </NetPyNEField>
 
-        <NetPyNEField id={"netParams.stimTargetParams.conds.cellType"}>
+        <NetPyNEField id="netParams.stimTargetParams.conds.cellType">
           <NetPyNESelectField
             model={
-              "netParams.stimTargetParams['"
-              + this.props.name
-              + "']['conds']['cellType']"
+              `netParams.stimTargetParams['${
+                this.props.name
+              }']['conds']['cellType']`
             }
-            method={"netpyne_geppetto.getAvailableCellTypes"}
+            method="netpyne_geppetto.getAvailableCellTypes"
             postProcessItems={this.postProcessMenuItems}
-            multiple={true}
+            multiple
             fullWidth
           />
         </NetPyNEField>
@@ -76,33 +76,51 @@ export default class StimulationConditions extends React.Component {
         <NetPyNECoordsRange
           id="xRangeStimTarget"
           name={this.props.name}
-          model={"netParams.stimTargetParams"}
-          conds={"conds"}
+          model="netParams.stimTargetParams"
+          conds="conds"
           items={[
-            { value: "x", label: "Absolute" },
-            { value: "xnorm", label: "Normalized" },
+            {
+              value: 'x',
+              label: 'Absolute',
+            },
+            {
+              value: 'xnorm',
+              label: 'Normalized',
+            },
           ]}
         />
 
         <NetPyNECoordsRange
           id="yRangeStimTarget"
           name={this.props.name}
-          model={"netParams.stimTargetParams"}
-          conds={"conds"}
+          model="netParams.stimTargetParams"
+          conds="conds"
           items={[
-            { value: "y", label: "Absolute" },
-            { value: "ynorm", label: "Normalized" },
+            {
+              value: 'y',
+              label: 'Absolute',
+            },
+            {
+              value: 'ynorm',
+              label: 'Normalized',
+            },
           ]}
         />
 
         <NetPyNECoordsRange
           id="zRangeStimTarget"
           name={this.props.name}
-          model={"netParams.stimTargetParams"}
-          conds={"conds"}
+          model="netParams.stimTargetParams"
+          conds="conds"
           items={[
-            { value: "z", label: "Absolute" },
-            { value: "znorm", label: "Normalized" },
+            {
+              value: 'z',
+              label: 'Absolute',
+            },
+            {
+              value: 'znorm',
+              label: 'Normalized',
+            },
           ]}
         />
 
@@ -112,9 +130,9 @@ export default class StimulationConditions extends React.Component {
         >
           <ListComponent
             model={
-              "netParams.stimTargetParams['"
-              + this.props.name
-              + "']['conds']['cellList']"
+              `netParams.stimTargetParams['${
+                this.props.name
+              }']['conds']['cellList']`
             }
           />
         </NetPyNEField>

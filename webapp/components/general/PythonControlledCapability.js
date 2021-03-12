@@ -13,7 +13,7 @@ define(function (require) {
 
   module.exports = {
     createPythonControlledComponent (WrappedComponent) {
-      if (typeof WrappedComponent !== "function") {
+      if (typeof WrappedComponent !== 'function') {
         // Fixes components defined as objects (e.g. Material-ui components)
         class Wrapper extends React.Component {
           render () {
@@ -104,8 +104,8 @@ define(function (require) {
         }
 
         componentDidMount () {
-          super.componentDidMount()
-          this.UNRELIABLE_SyncDefaultValueWithPython()
+          super.componentDidMount();
+          this.UNRELIABLE_SyncDefaultValueWithPython();
         }
 
         /*
@@ -121,12 +121,12 @@ define(function (require) {
                   // this function is added by jupyter_geppetto after the component is synched with python
                   this.syncValueWithPython(this.props.default);
                 } else {
-                  this.UNRELIABLE_SyncDefaultValueWithPython(timeInterval * 2, attemps + 1)
+                  this.UNRELIABLE_SyncDefaultValueWithPython(timeInterval * 2, attemps + 1);
                 }
               }
-            }, timeInterval)
+            }, timeInterval);
           } else {
-            console.warn(`Tried to sync default value for ${this.props.model} and failed after 3 attemps.`)
+            console.warn(`Tried to sync default value for ${this.props.model} and failed after 3 attemps.`);
           }
         }
 
@@ -151,21 +151,21 @@ define(function (require) {
 
         componentDidUpdate (prevProps, prevState) {
           switch (getNameFromWrappedComponent(WrappedComponent)) {
-          case 'AutoComplete':
-            if (this.state.searchText !== prevState.searchText && this.props.onChange) {
-              this.props.onChange(this.state.searchText);
-            }
-            break;
-          case 'Checkbox':
-            if (this.state.checked !== prevState.checked && this.props.onChange) {
-              this.props.onChange(null, this.state.checked);
-            }
-            break;
-          default:
-            if (this.state.value !== prevState.value && this.props.onChange) {
-              this.props.onChange(null, null, this.state.value);
-            }
-            break;
+            case 'AutoComplete':
+              if (this.state.searchText !== prevState.searchText && this.props.onChange) {
+                this.props.onChange(this.state.searchText);
+              }
+              break;
+            case 'Checkbox':
+              if (this.state.checked !== prevState.checked && this.props.onChange) {
+                this.props.onChange(null, this.state.checked);
+              }
+              break;
+            default:
+              if (this.state.value !== prevState.value && this.props.onChange) {
+                this.props.onChange(null, null, this.state.value);
+              }
+              break;
           }
           if (this.props.validate) {
             this.props.validate(this.state.value)
@@ -185,7 +185,7 @@ define(function (require) {
             && this.state.value === ''
             && this.props.default
           ) {
-            this.UNRELIABLE_SyncDefaultValueWithPython(1000)
+            this.UNRELIABLE_SyncDefaultValueWithPython(1000);
           }
         }
 
@@ -197,18 +197,18 @@ define(function (require) {
           if (this.syncValueWithPython) {
             // this.syncValueWithPython((event.target.type == 'number') ? parseFloat(this.state.value) : this.state.value, this.props.requirement);
             switch (this.props.realType) {
-            case 'float':
-              if (!isNaN(newValue) && newValue !== '') {
-                newValue = parseFloat(newValue)
-              }
-              break;
-            case 'dict':
-              if (typeof newValue === 'string') {
-                newValue = JSON.parse(newValue)
-              }
-              break;
-            default:
-              break;
+              case 'float':
+                if (!isNaN(newValue) && newValue !== '') {
+                  newValue = parseFloat(newValue);
+                }
+                break;
+              case 'dict':
+                if (typeof newValue === 'string') {
+                  newValue = JSON.parse(newValue);
+                }
+                break;
+              default:
+                break;
             }
             // Don't sync if new value is emtpy string
             if (newValue !== '') {
@@ -218,10 +218,14 @@ define(function (require) {
             if (this.props.callback) {
               this.props.callback(newValue, this.oldValue);
             }
-            this.oldValue = undefined
+            this.oldValue = undefined;
 
           }
-          this.setState({ value: newValue, searchText: newValue, checked: newValue });
+          this.setState({
+            value: newValue,
+            searchText: newValue,
+            checked: newValue
+          });
           this.forceUpdate();
         }
 
@@ -240,7 +244,7 @@ define(function (require) {
             targetValue = event.target.value;
           }
           if (this.oldValue === undefined) {
-            this.oldValue = this.state.value
+            this.oldValue = this.state.value;
           }
 
           this.setState({ value: targetValue });
@@ -274,10 +278,10 @@ define(function (require) {
             wrappedComponentProps.key = wrappedComponentProps.model;
           }
           if (wrappedComponentProps.id === undefined) {
-            wrappedComponentProps.id = wrappedComponentProps.model ?? "";
+            wrappedComponentProps.id = wrappedComponentProps.model ?? '';
           }
 
-          wrappedComponentProps.id = cleanAttributeValue(wrappedComponentProps.id)
+          wrappedComponentProps.id = cleanAttributeValue(wrappedComponentProps.id);
 
           delete wrappedComponentProps.model;
           delete wrappedComponentProps.handleChange;
@@ -292,33 +296,34 @@ define(function (require) {
           if (wrappedComponentProps.realType === 'func' || wrappedComponentProps.realType === 'float') {
             wrappedComponentProps['helperText'] = this.state.errorMsg;
           }
-          if (!getNameFromWrappedComponent(WrappedComponent).includes('ListComponent')) {
+          if (!getNameFromWrappedComponent(WrappedComponent)
+            .includes('ListComponent')) {
             delete wrappedComponentProps.realType;
           }
 
           switch (getNameFromWrappedComponent(WrappedComponent)) {
-          case 'AutoComplete':
-            wrappedComponentProps['onUpdateInput'] = this.handleUpdateInput;
-            wrappedComponentProps['searchText'] = this.state.searchText;
-            break;
-          case 'Checkbox':
-            wrappedComponentProps['onChange'] = this.handleUpdateCheckbox;
-            wrappedComponentProps['checked'] = this.state.checked;
-            delete wrappedComponentProps.searchText;
-            delete wrappedComponentProps.dataSource;
-            delete wrappedComponentProps.floatingLabelText;
-            delete wrappedComponentProps.hintText;
-            break;
-          default:
-            wrappedComponentProps['onChange'] = this.handleChange;
-            wrappedComponentProps.value = (typeof this.state.value === 'object' && this.state.value !== null && !Array.isArray(this.state.value)) ? JSON.stringify(this.state.value) : this.state.value;
-            // Fix case with multiple values: need to set an empty list in case the value is undefined
-            wrappedComponentProps.value = (wrappedComponentProps.multiple
+            case 'AutoComplete':
+              wrappedComponentProps['onUpdateInput'] = this.handleUpdateInput;
+              wrappedComponentProps['searchText'] = this.state.searchText;
+              break;
+            case 'Checkbox':
+              wrappedComponentProps['onChange'] = this.handleUpdateCheckbox;
+              wrappedComponentProps['checked'] = this.state.checked;
+              delete wrappedComponentProps.searchText;
+              delete wrappedComponentProps.dataSource;
+              delete wrappedComponentProps.floatingLabelText;
+              delete wrappedComponentProps.hintText;
+              break;
+            default:
+              wrappedComponentProps['onChange'] = this.handleChange;
+              wrappedComponentProps.value = (typeof this.state.value === 'object' && this.state.value !== null && !Array.isArray(this.state.value)) ? JSON.stringify(this.state.value) : this.state.value;
+              // Fix case with multiple values: need to set an empty list in case the value is undefined
+              wrappedComponentProps.value = (wrappedComponentProps.multiple
                 && wrappedComponentProps.value !== undefined
                 && !wrappedComponentProps.value) ? [] : wrappedComponentProps.value;
-            delete wrappedComponentProps.searchText;
-            delete wrappedComponentProps.dataSource;
-            break;
+              delete wrappedComponentProps.searchText;
+              delete wrappedComponentProps.dataSource;
+              break;
           }
 
           return (
@@ -343,7 +348,7 @@ define(function (require) {
             ...this.state,
             value: [],
             pythonData: []
-          }
+          };
           // If a handleChange method is passed as a props it will overwrite the handleChange python controlled capability
           this.handleChange = (this.props.handleChange === undefined) ? this.handleChange.bind(this) : this.props.handleChange.bind(this);
           this.callPythonMethod();
@@ -359,7 +364,11 @@ define(function (require) {
         }
 
         updatePythonValue (newValue) {
-          this.setState({ value: newValue, searchText: newValue, checked: newValue });
+          this.setState({
+            value: newValue,
+            searchText: newValue,
+            checked: newValue
+          });
           if (this.syncValueWithPython) {
             this.syncValueWithPython(newValue);
           }
@@ -383,7 +392,7 @@ define(function (require) {
             return false;
           }
 
-          // compare lengths - can save a lot of time 
+          // compare lengths - can save a lot of time
           if (array1.length !== array2.length) {
             return false;
           }
@@ -404,16 +413,17 @@ define(function (require) {
         }
 
         callPythonMethod = value => {
-          GeppettoUtils.evalPythonMessage(this.props.method, []).then(response => {
-            if (this._isMounted) {
-              if (Object.keys(response).length !== 0) {
-                this.setState({ pythonData: response });
-              } else {
-                this.setState({ pythonData: [] });
+          GeppettoUtils.evalPythonMessage(this.props.method, [])
+            .then(response => {
+              if (this._isMounted) {
+                if (Object.keys(response).length !== 0) {
+                  this.setState({ pythonData: response });
+                } else {
+                  this.setState({ pythonData: [] });
+                }
               }
-            }
-          });
-        }
+            });
+        };
 
         componentDidUpdate (prevProps, prevState) {
           if (!this.compareArrays(this.state.value, prevState.value)) {
@@ -438,10 +448,10 @@ define(function (require) {
             wrappedComponentProps.key = wrappedComponentProps.model;
           }
           if (wrappedComponentProps.id === undefined) {
-            wrappedComponentProps.id = wrappedComponentProps.model ?? "";
+            wrappedComponentProps.id = wrappedComponentProps.model ?? '';
           }
 
-          wrappedComponentProps.id = cleanAttributeValue(wrappedComponentProps.id)
+          wrappedComponentProps.id = cleanAttributeValue(wrappedComponentProps.id);
 
           wrappedComponentProps.onChange = this.handleChange;
           wrappedComponentProps.value = wrappedComponentProps.multiple && this.state.value !== undefined && !this.state.value ? [] : this.state.value;
@@ -465,8 +475,8 @@ define(function (require) {
 
       return PythonControlledControlWithPythonDataFetch;
     },
-  }
-})
+  };
+});
 
 function getNameFromWrappedComponent (WrappedComponent) {
   return WrappedComponent.name || WrappedComponent.displayName || WrappedComponent.Naked.render.name;
@@ -478,5 +488,5 @@ function getNameFromWrappedComponent (WrappedComponent) {
  * Due to close integration with Python commands, characters []'". can be part of an id attribute.
  */
 function cleanAttributeValue (value) {
-  return value.replace(/[\[\]'.]+/g, "")
+  return value.replace(/[\[\]'.]+/g, '');
 }
