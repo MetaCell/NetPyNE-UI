@@ -1,4 +1,8 @@
+import random
+
 from dataclasses import dataclass
+from dataclasses import field
+from datetime import datetime
 
 
 def register(metadata, net_params):
@@ -114,6 +118,7 @@ def register(metadata, net_params):
 @dataclass
 class ExplorationParameter:
     """ Parameter with possible values that will be explored in netpyne.batch. """
+
     # Set in cfg.py to cfg.label = <defaultValue of netParams field>
     label: str
     # Path to target parameter in netParams dict
@@ -130,13 +135,38 @@ class ExplorationParameter:
 
 
 @dataclass
-class BatchConfig:
-    params: [ExplorationParameter]
+class Trial:
+    # [{ "paramX": 0.2, "paramY": "0.4"}]
+    params: list
+
+
+@dataclass
+class Experiment:
+    # DESIGN, INSTANTIATING, INSTANTIATED, SIMULATING, SIMULATED
+    state: str
+    # Name is the unique identifier
+    name: str
+    params: [ExplorationParameter] = field(default_factory=list)
+    # Generated based on params
+    trials: [Trial] = field(default_factory=list)
+
+    # Enabled is depreated, will be removed
     enabled: bool = False
     method: str = "grid"
-    name: str = "my_batch"
+
+    # Overwrites simConfig parameters
+    initConfig: dict = field(default_factory=dict)
+
+    # Part of initCfg?
     seed: int = None
-    saveFolder: str = "batch_1"
+
+    saveFolder: str = "experiment_1"
+
+    # SIMULATED or INSTANTIATED date
+    timestamp: datetime = None
+
+    # Folder in workspace, empty in DESIGN
+    folder: str = None
 
 
 @dataclass
@@ -148,3 +178,98 @@ class RunConfig:
     remote: str = "local"
     # or mpi_direct (doesn't support waiting for processes to finish)
     type: str = 'mpi_bulletin'
+
+
+experiments = [
+    Experiment(
+        name="EI Populations",
+        state="DESIGN",
+        params=[
+            ExplorationParameter(
+                label="weight",
+                mapsTo="netParams.connParams['E->E']['weight']",
+                type="list",
+                values=[1, 2, 3, 4]
+            ),
+            ExplorationParameter(
+                label="probability",
+                mapsTo="netParams.connParams['E->E']['probability']",
+                type="range",
+                min=0.3,
+                max=1.0,
+                step=0.2
+            )
+        ],
+        trials=[
+            Trial(params=[{"weight": i, "probability": random.random()}]) for i in range(0, 1000)
+        ]
+    ),
+    Experiment(
+        name="MyExperiment",
+        state="SIMULATED",
+        params=[
+            ExplorationParameter(
+                label="weight",
+                mapsTo="netParams.connParams['E->E']['weight']",
+                type="list",
+                values=[1, 2, 3, 4]
+            ),
+            ExplorationParameter(
+                label="weight",
+                mapsTo="netParams.connParams['E->E']['probability']",
+                type="range",
+                min=0.3,
+                max=1.0,
+                step=0.2
+            ),
+        ],
+        trials=[
+            Trial(params=[{"weight": 1, "probability": 0.3}]),
+            Trial(params=[{"weight": 2, "probability": 0.4}]),
+            Trial(params=[{"weight": 3, "probability": 0.5}]),
+            Trial(params=[{"weight": 4, "probability": 0.6}]),
+            Trial(params=[{"weight": 5, "probability": 0.7}]),
+            Trial(params=[{"weight": 6, "probability": 0.8}]),
+        ]
+    ),
+    Experiment(
+        name="Long running experiment",
+        state="SIMULATING",
+        params=[
+            ExplorationParameter(
+                label="weight",
+                mapsTo="netParams.connParams['E->E']['weight']",
+                type="list",
+                values=[1, 2, 3, 4, 5, 6, 7, 8, 9]
+            ),
+            ExplorationParameter(
+                label="weight",
+                mapsTo="netParams.connParams['E->E']['probability']",
+                type="range",
+                min=0.5,
+                max=10.0,
+                step=0.2
+            )
+        ]
+    ),
+    Experiment(
+        name="My instantiated model",
+        state="INSTANTIATED",
+        params=[
+            ExplorationParameter(
+                label="weight",
+                mapsTo="netParams.connParams['E->E']['weight']",
+                type="list",
+                values=[1, 2, 3, 4, 5, 6, 7, 8, 9]
+            ),
+            ExplorationParameter(
+                label="weight",
+                mapsTo="netParams.connParams['E->E']['probability']",
+                type="range",
+                min=0.5,
+                max=10.0,
+                step=0.2
+            )
+        ]
+    ),
+]

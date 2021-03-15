@@ -23,15 +23,17 @@ from netpyne import specs, sim, analysis
 from netpyne.conversion.neuronPyHoc import mechVarList
 from netpyne.metadata import metadata
 from netpyne.specs.utils import validateFunction
+from netpyne.sim import utils as netpyne_utils
 from pygeppetto import ui
 from pygeppetto.model.model_serializer import GeppettoModelSerializer
 
+from netpyne_ui import experiments
 from netpyne_ui import constants
 from netpyne_ui import model
 from netpyne_ui import simulations
 from netpyne_ui.netpyne_model_interpreter import NetPyNEModelInterpreter
 from netpyne_ui.simulations import InvalidConfigError
-from netpyne_ui.constants import NETPYNE_WORKDIR_PATH, NUM_CONN_LIMIT
+from netpyne_ui.constants import NUM_CONN_LIMIT
 
 os.chdir(constants.NETPYNE_WORKDIR_PATH)
 
@@ -47,7 +49,11 @@ class NetPyNEGeppetto:
         self.netParams = specs.NetParams()
         self.simConfig = specs.SimConfig()
         self.run_config = model.RunConfig()
-        self.batch_config = model.BatchConfig(
+
+        # TODO: deprecated, remove in next step
+        self.batch_config = model.Experiment(
+            name="Deprecated",
+            state="DESIGN",
             params=[
                 model.ExplorationParameter(
                     label="weight",
@@ -66,12 +72,21 @@ class NetPyNEGeppetto:
             ]
         )
 
+        self.experiments = experiments
+
         model.register(metadata, self.netParams)
 
         synchronization.startSynchronization(self.__dict__)
         logging.debug("Initializing the original model")
 
         jupyter_geppetto.context = {'netpyne_geppetto': self}
+
+    def getModelAsJson(self):
+        # TODO: netpyne should offer a method asJSON (based on saveJSON)
+        #  that returns the JSON model without dumping to to disk.
+        obj = netpyne_utils.replaceFuncObj(self.netParams.__dict__)
+        obj = netpyne_utils.replaceDictODict(obj)
+        return obj
 
     def getData(self):
         return {
