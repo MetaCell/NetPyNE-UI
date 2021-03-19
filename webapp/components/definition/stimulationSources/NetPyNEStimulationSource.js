@@ -70,10 +70,10 @@ class NetPyNEStimulationSource extends React.Component {
   }
 
   handleRenameChange = event => {
-    var storedValue = this.props.name;
-    var newValue = Utils.nameValidation(event.target.value);
-    var updateCondition = this.props.renameHandler(newValue);
-    var triggerCondition = Utils.handleUpdate(
+    const storedValue = this.props.name;
+    const newValue = Utils.nameValidation(event.target.value);
+    const updateCondition = this.props.renameHandler(newValue);
+    const triggerCondition = Utils.handleUpdate(
       updateCondition,
       newValue,
       event.target.value,
@@ -103,7 +103,7 @@ class NetPyNEStimulationSource extends React.Component {
   };
 
   triggerUpdate (updateMethod) {
-    if (this.updateTimer != undefined) {
+    if (this.updateTimer !== undefined) {
       clearTimeout(this.updateTimer);
     }
     this.updateTimer = setTimeout(updateMethod, 1000);
@@ -114,7 +114,7 @@ class NetPyNEStimulationSource extends React.Component {
   }
 
   updateLayout () {
-    var opts = this.stimSourceTypeOptions.map(option => option.type);
+    const opts = this.stimSourceTypeOptions.map(option => option.type);
     Utils.evalPythonMessage(
       '[value == netpyne_geppetto.netParams.stimSourceParams[\''
       + this.state.currentName
@@ -123,9 +123,9 @@ class NetPyNEStimulationSource extends React.Component {
       + ']'
     )
       .then(responses => {
-        if (responses.constructor.name == 'Array') {
+        if (responses.constructor.name === 'Array') {
           responses.forEach((response, index) => {
-            if (response && this.state.sourceType != opts[index]) {
+            if (response && this.state.sourceType !== opts[index]) {
               this.setState({ sourceType: opts[index] });
               this.props.updateCards();
             }
@@ -174,9 +174,7 @@ class NetPyNEStimulationSource extends React.Component {
           </Button>
         </DialogActions>
       </Dialog>
-    ) : (
-      undefined
-    );
+    ) : undefined;
 
     if (this.state.sourceType == 'IClamp') {
       var variableContent = (

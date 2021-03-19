@@ -23,5 +23,6 @@ module.exports = {
     patchRequire: true,
     window: true,
     GEPPETTO: true,
+    IPython: true,
   },
 };

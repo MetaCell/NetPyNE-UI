@@ -76,7 +76,6 @@ define(function (require) {
             this.setState({ value: this.props.value });
           }
         }
-
       }
 
       return PythonControlledComponent;

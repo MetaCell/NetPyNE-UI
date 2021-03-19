@@ -187,13 +187,16 @@ experiments = [
         params=[
             ExplorationParameter(
                 label="weight",
-                mapsTo="netParams.connParams['E->E']['weight']",
+                # TODO: Fix json parsing issue
+                # mapsTo="netParams.connParams['E->E']['weight']",
+                mapsTo="",
                 type="list",
                 values=[1, 2, 3, 4]
             ),
             ExplorationParameter(
                 label="probability",
-                mapsTo="netParams.connParams['E->E']['probability']",
+                # mapsTo="netParams.connParams['E->E']['probability']",
+                mapsTo="",
                 type="range",
                 min=0.3,
                 max=1.0,
@@ -210,13 +213,15 @@ experiments = [
         params=[
             ExplorationParameter(
                 label="weight",
-                mapsTo="netParams.connParams['E->E']['weight']",
+                # mapsTo="netParams.connParams['E->E']['weight']",
+                mapsTo="",
                 type="list",
                 values=[1, 2, 3, 4]
             ),
             ExplorationParameter(
                 label="weight",
-                mapsTo="netParams.connParams['E->E']['probability']",
+                # mapsTo="netParams.connParams['E->E']['probability']",
+                mapsTo="",
                 type="range",
                 min=0.3,
                 max=1.0,
@@ -238,13 +243,15 @@ experiments = [
         params=[
             ExplorationParameter(
                 label="weight",
-                mapsTo="netParams.connParams['E->E']['weight']",
+                # mapsTo="netParams.connParams['E->E']['weight']",
+                mapsTo="",
                 type="list",
                 values=[1, 2, 3, 4, 5, 6, 7, 8, 9]
             ),
             ExplorationParameter(
                 label="weight",
-                mapsTo="netParams.connParams['E->E']['probability']",
+                # mapsTo="netParams.connParams['E->E']['probability']",
+                mapsTo="",
                 type="range",
                 min=0.5,
                 max=10.0,
@@ -258,13 +265,15 @@ experiments = [
         params=[
             ExplorationParameter(
                 label="weight",
-                mapsTo="netParams.connParams['E->E']['weight']",
+                # mapsTo="netParams.connParams['E->E']['weight']",
+                mapsTo="",
                 type="list",
                 values=[1, 2, 3, 4, 5, 6, 7, 8, 9]
             ),
             ExplorationParameter(
                 label="weight",
-                mapsTo="netParams.connParams['E->E']['probability']",
+                # mapsTo="netParams.connParams['E->E']['probability']",
+                mapsTo="",
                 type="range",
                 min=0.5,
                 max=10.0,

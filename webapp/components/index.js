@@ -18,6 +18,13 @@ import {
 } from '../redux/actions/general';
 
 import {
+  resetCurrentExperiment,
+  removeExperiment,
+  viewExperiment,
+  getExperiments,
+} from '../redux/actions/experiments';
+
+import {
   openTopbarDialog,
   closeTopbarDialog,
 } from '../redux/actions/topbar';
@@ -52,6 +59,9 @@ import _SwitchPageButton from './topbar/SwitchPageButton';
 import _NetPyNEThumbnail from './general/NetPyNEThumbnail';
 import _Dialog from './general/Dialog';
 import _SelectCellTemplate from './definition/cellRules/SelectCellTemplate';
+import _Experiments from './experiments/Experiments';
+import _Experiment from './experiments/Experiment';
+import _EditExperiment from './experiments/EditExperiment';
 
 const updateCardsDispatch = (dispatch) => ({ updateCards: () => dispatch(updateCards) });
 
@@ -97,6 +107,24 @@ export const NetPyNEStimulationTargets = PythonControlledCapability.createPython
 export const SelectField = PythonControlledCapability.createPythonControlledControl(
   _SelectField,
 );
+
+// TODO: @lrebscher use react hooks instead of connect wrapper
+export const Experiments = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    experiments: state.experiments.experiments,
+  }),
+  (dispatch) => ({
+    cleanExperiment: () => dispatch(resetCurrentExperiment()),
+    deleteExperiment: (name) => dispatch(removeExperiment(name)),
+    viewExperiment: (payload) => dispatch(viewExperiment(payload)),
+    getExperiments: () => dispatch(getExperiments()),
+  }),
+)(_Experiments);
+
+export const Experiment = _Experiment;
+
+export const EditExperiment = _EditExperiment;
 
 // ---------------------------------------------------------------------------------------- //
 

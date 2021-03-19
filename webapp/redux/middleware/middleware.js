@@ -1,24 +1,43 @@
 import {
-  UPDATE_CARDS, CREATE_NETWORK, CREATE_SIMULATE_NETWORK, PYTHON_CALL, SIMULATE_NETWORK, SHOW_NETWORK,
-  editModel, EDIT_MODEL, LOAD_TUTORIAL, RESET_MODEL, setDefaultWidgets,
+  GET_EXPERIMENTS,
+  SET_EXPERIMENTS,
+  setExperiments,
+  VIEW_TRIAL_AS_JSON
+} from 'root/redux/actions/experiments';
+import {
+  UPDATE_CARDS,
+  CREATE_NETWORK,
+  CREATE_SIMULATE_NETWORK,
+  PYTHON_CALL,
+  SIMULATE_NETWORK,
+  SHOW_NETWORK,
+  editModel,
+  EDIT_MODEL,
+  LOAD_TUTORIAL,
+  RESET_MODEL,
 } from '../actions/general';
-import FLEXLAYOUT_DEFAULT_STATE from '../../components/layout/defaultLayout';
 import { openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
 import Utils from '../../Utils';
-import { NETPYNE_COMMANDS } from '../../constants';
+import { NETPYNE_COMMANDS } from 'root/constants';
 import { downloadJsonResponse, downloadPythonResponse } from './utils';
 
 import { setWidgets, setLayout } from '../actions/layout';
 import * as Constants from '../../constants';
 
-let previousLayout = { edit: undefined, network: undefined };
+let previousLayout = {
+  edit: undefined,
+  network: undefined,
+};
 
 export default (store) => (next) => (action) => {
   const switchLayoutAction = (edit = true, reset = true) => {
     previousLayout[store.getState().general.editMode ? 'edit' : 'network'] = store.getState().layout;
     if (reset) {
-      previousLayout = { edit: undefined, network: undefined };
+      previousLayout = {
+        edit: undefined,
+        network: undefined,
+      };
     }
     return next(edit
       ? previousLayout.edit ? setLayout(previousLayout.edit) : setWidgets({ ...Constants.EDIT_WIDGETS })
@@ -52,23 +71,30 @@ export default (store) => (next) => (action) => {
     }
     case RESET_MODEL: {
       GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, 'Reloading Python Kernel');
-      IPython.notebook.restart_kernel({ confirm: false }).then(
-        () => {
-          window.location.reload();
-        },
-      );
+      IPython.notebook.restart_kernel({ confirm: false })
+        .then(
+          () => {
+            window.location.reload();
+          },
+        );
       break;
     }
     case CREATE_NETWORK: {
-      instantiateNetwork({}).then(toNetworkCallback(false), pythonErrorCallback);
+      instantiateNetwork({})
+        .then(toNetworkCallback(false), pythonErrorCallback);
       break;
     }
     case CREATE_SIMULATE_NETWORK: {
-      simulateNetwork({ parallelSimulation: false }).then(toNetworkCallback(false), pythonErrorCallback);
+      simulateNetwork({ parallelSimulation: false })
+        .then(toNetworkCallback(false), pythonErrorCallback);
       break;
     }
     case SIMULATE_NETWORK:
-      simulateNetwork({ parallelSimulation: false, usePrevInst: true }).then(toNetworkCallback(false), pythonErrorCallback);
+      simulateNetwork({
+        parallelSimulation: false,
+        usePrevInst: true,
+      })
+        .then(toNetworkCallback(false), pythonErrorCallback);
       break;
     case PYTHON_CALL: {
       const callback = (response) => {
@@ -89,7 +115,8 @@ export default (store) => (next) => (action) => {
         }
         next(closeDrawerDialogBox);
       };
-      pythonCall(action).then(callback, pythonErrorCallback);
+      pythonCall(action)
+        .then(callback, pythonErrorCallback);
       break;
     }
     case LOAD_TUTORIAL: {
@@ -110,8 +137,16 @@ export default (store) => (next) => (action) => {
         simConfigVariable: 'simConfig',
       };
 
-      pythonCall({ cmd: 'netpyne_geppetto.importModel', args: params })
+      pythonCall({
+        cmd: 'netpyne_geppetto.importModel',
+        args: params,
+      })
         .then((response) => console.log(response));
+      break;
+    }
+    case GET_EXPERIMENTS: {
+      Utils.evalPythonMessage('netpyne_geppetto.experiments.get_experiments', [])
+        .then((response) => next(setExperiments(response)));
       break;
     }
     default: {
@@ -168,7 +203,10 @@ export const processError = (response) => {
   return false;
 };
 
-const pythonCall = async ({ cmd, args }) => {
+const pythonCall = async ({
+  cmd,
+  args,
+}) => {
   const response = await Utils.evalPythonMessage(cmd, [args]);
   const errorPayload = processError(response);
   GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
@@ -183,8 +221,9 @@ const pythonCall = async ({ cmd, args }) => {
 const dehydrateCanvas = () => {
   if ('CanvasContainer' in window) {
     CanvasContainer.engine.reset();
-    Object.values(CanvasContainer.engine.meshes).forEach((mesh) => {
-      CanvasContainer.engine.removeObject(mesh);
-    });
+    Object.values(CanvasContainer.engine.meshes)
+      .forEach((mesh) => {
+        CanvasContainer.engine.removeObject(mesh);
+      });
   }
 };

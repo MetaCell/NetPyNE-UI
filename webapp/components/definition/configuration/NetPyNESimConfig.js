@@ -9,8 +9,9 @@ import {
   SelectField,
   ListComponent,
   GridLayout,
+  Experiments,
+  Experiment,
 } from 'netpyne/components';
-import NetPyNEBatchConfig from 'root/components/definition/configuration/NetPyNEBatchConfig';
 import NetPyNERunConfig from 'root/components/definition/configuration/NetPyNERunConfig';
 
 class NetPyNESimConfig extends React.Component {
@@ -438,7 +439,7 @@ class NetPyNESimConfig extends React.Component {
         </div>
       );
     } else if (this.state.sectionId === 'Batch') {
-      contentLeft = <NetPyNEBatchConfig/>;
+      contentLeft = <div><Experiments/><Experiment/></div>;
       contentRight = <NetPyNERunConfig/>;
     }
     return (

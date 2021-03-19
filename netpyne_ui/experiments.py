@@ -24,3 +24,9 @@ def remove_experiment(name):
     experiment = next((e for e in model.experiments if e.name == name), None)
     if experiment:
         model.experiments.remove(experiment)
+
+
+getExperiments = get_experiments
+getExperiment = get_experiment
+addExperiment = add_experiment
+removeExperiment = remove_experiment
