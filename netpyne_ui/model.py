@@ -163,7 +163,7 @@ class Experiment:
     saveFolder: str = "experiment_1"
 
     # SIMULATED or INSTANTIATED date
-    timestamp: datetime = None
+    timestamp: datetime = field(default_factory=datetime.today)
 
     # Folder in workspace, empty in DESIGN
     folder: str = None
