@@ -1,7 +1,6 @@
 @import "colors";
 @import (css)
   url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap");
-
 html,
 body {
   height: 100%;
@@ -568,4 +567,77 @@ div.flexlayout__layout {
   overflow: hidden;
   overflow-y: auto;
   flex: 1;
+}
+//experiment table start
+.experimentTableContainer {
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+  .experimentTable {
+    font-family: 'Roboto', sans-serif;
+    .experimentHead {
+      font-size: 1rem;
+    }
+    .experimentHeadIcon {
+      font-size: 1rem;
+    }
+    .experimentDate {
+      font-style: italic;
+      color:#A8A5A5;
+      font-weight: 300;
+      font-size: 1rem;
+    }
+    .experimentIcon {
+      color:#A8A5A5;
+      min-width: auto;
+      .MuiSvgIcon-root {
+        font-size: 1.2rem;
+      }
+    }
+    .MuiChip-label {
+      font-size: 0.77rem;
+      font-weight: 600;
+      color:#A8A5A5;
+    }
+    .MuiChip-root {
+      background: rgba(255, 255, 255, 0.1);
+      height: 26px;
+    }
+    .MuiChip-deleteIcon {
+      margin-right: 2px;
+    }
+    .MuiTableCell-root {
+      padding: 8px 16px;
+      &:nth-child(1) {
+        white-space: nowrap;
+      }
+      &:nth-child(3) {
+        width: 70%;
+      }
+      &:nth-child(6) {
+        .MuiButton-label {
+          transform: rotate(-65deg);
+        }
+      }
+    }
+    .MuiChip-icon {
+      color: #A8A5A5;
+    }
+    .MuiDivider-vertical {
+      height: 30px;
+      background: rgba(255, 255, 255, 0.3);
+    }
+    .MuiTableCell-alignRight {
+      width: 50px;
+      padding-left: 0;
+    }
+    .MuiTableCell-alignCenter {
+      width: 50px;
+    }
+  }
+}
+.experimentFooter {
+  position: absolute;
+  bottom: 20px;
+  left: auto;
 }
