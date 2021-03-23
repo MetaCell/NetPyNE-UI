@@ -349,7 +349,7 @@ export const EDIT_WIDGETS = {
     component: 'simConfig',
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 6,
+    pos: 7,
   },
   analysis: {
     id: 'analysis',
@@ -359,6 +359,6 @@ export const EDIT_WIDGETS = {
     component: 'analysis',
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 7,
+    pos: 6,
   },
 };
