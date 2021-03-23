@@ -635,6 +635,24 @@ div.flexlayout__layout {
       width: 50px;
     }
   }
+  .MuiChipLoader {
+    border: 3px solid rgba(196, 196, 196, 0.3);
+    border-radius: 50%;
+    border-top: 3px solid #A8A5A5;
+    width: 20px;
+    height: 20px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+  }
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
 }
 .experimentFooter {
   position: absolute;
