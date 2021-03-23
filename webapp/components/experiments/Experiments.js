@@ -60,6 +60,11 @@ const Experiments = (props) => {
     console.info('You clicked the Chip.');
   };
 
+  const formatDate = (timestamp) => {
+    const date = new Date(timestamp)
+    return date?.toLocaleDateString().replaceAll('/', '.');
+  }
+
   return (
     <GridLayout>
       <div>
@@ -79,7 +84,7 @@ const Experiments = (props) => {
                     </TableCell>
                     <TableCell align="left">
                       <Typography variant="h6" className="experimentDate">
-                        28.03.2021
+                        { formatDate(experiment?.timestamp) }
                       </Typography>
                     </TableCell>
                     <TableCell align="left" className="experimentTableCell">
