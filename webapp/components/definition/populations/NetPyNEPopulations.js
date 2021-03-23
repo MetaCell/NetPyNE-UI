@@ -79,11 +79,11 @@ export default class NetPyNEPopulations extends React.Component {
        * logic into this if to check if the user added a new object from the python backend and
        * if the name convention pass the checks, differently rename this and open dialog to inform.
        */
-      var model = this.state.value;
-      for (var m in model) {
+      const model = this.state.value;
+      for (const m in model) {
         if (prevState.value !== '' && !(m in prevState.value)) {
-          var newValue = Utils.nameValidation(model[m].name);
-          if (newValue != model[m].name) {
+          let newValue = Utils.nameValidation(model[m].name);
+          if (newValue !== model[m].name) {
             newValue = Utils.getAvailableKey(model, newValue);
             model[newValue] = model[m];
             model[newValue].name = newValue;
@@ -115,17 +115,17 @@ export default class NetPyNEPopulations extends React.Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    var itemRenamed
+    const itemRenamed
       = this.hasSelectedPopulationBeenRenamed(this.state, nextState)
       !== undefined;
-    var newItemCreated = false;
-    var selectionChanged
-      = this.state.selectedPopulation != nextState.selectedPopulation;
-    var newModel = this.state.value == undefined;
+    let newItemCreated = false;
+    const selectionChanged
+      = this.state.selectedPopulation !== nextState.selectedPopulation;
+    const newModel = this.state.value === undefined;
     if (!newModel) {
       newItemCreated
         = Object.keys(this.state.value).length
-        != Object.keys(nextState.value).length;
+        !== Object.keys(nextState.value).length;
     }
     // check if the dialog has been triggered due name convention or name collision errors.
     var errorDialogOpen = this.state.errorDetails !== nextState.errorDetails;
@@ -141,22 +141,22 @@ export default class NetPyNEPopulations extends React.Component {
   }
 
   handleNewPopulation () {
-    var defaultPopulationValues = {
+    const defaultPopulationValues = {
       Population: {
         cellModel: '',
         cellType: ''
       },
     };
     // Get Key and Value
-    var key = Object.keys(defaultPopulationValues)[0];
-    var value = defaultPopulationValues[key];
-    var model = { ...this.state.value };
+    const key = Object.keys(defaultPopulationValues)[0];
+    const value = defaultPopulationValues[key];
+    const model = { ...this.state.value };
 
     // Get New Available ID
-    var populationId = Utils.getAvailableKey(model, key);
+    const populationId = Utils.getAvailableKey(model, key);
 
     // Create Population Object
-    var newPopulation = Object.assign({ name: populationId }, value);
+    const newPopulation = Object.assign({ name: populationId }, value);
 
     // Create Population Client side
     Utils.execPythonMessage(
@@ -184,8 +184,8 @@ export default class NetPyNEPopulations extends React.Component {
 
   handleRenameChildren (childName) {
     childName = childName.replace(/\s*$/, '');
-    var childrenList = Object.keys(this.state.value);
-    for (var i = 0; childrenList.length > i; i++) {
+    const childrenList = Object.keys(this.state.value);
+    for (let i = 0; childrenList.length > i; i++) {
       if (childName === childrenList[i]) {
         return false;
       }
@@ -232,9 +232,7 @@ export default class NetPyNEPopulations extends React.Component {
       >
         {children}
       </Dialog>
-    ) : (
-      undefined
-    );
+    ) : undefined;
 
     if (this.state.value != undefined && this.state.value !== '') {
       var model = this.state.value;
