@@ -8,8 +8,10 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
-
+import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
+import CodeIcon from '@material-ui/icons/Code';
 import { WidgetStatus } from '../layout/model';
+import Divider from '@material-ui/core/Divider';
 import {
   EDIT_WIDGETS,
   DEFAULT_NETWORK_WIDGETS, TOP_PANEL,
@@ -96,7 +98,7 @@ export default ({
   function getNewWidgetConf (widgetId) {
     if (editMode) {
       // return a High Level Specification widget
-      return EDIT_WIDGETS[widgetId];
+      return EDIT_WIDGETS[modelList[widgetId]];
     }
 
     // return either 3dcanvas or python console
@@ -134,9 +136,22 @@ export default ({
     <Paper elevation={0} className={expand ? classes.openDrawer : classes.closeDrawer}>
       <div className={classes.container}>
         <Box p={2}>
+          <Box className="drawerListBox">
+            <Typography variant="body2">Model Specification</Typography>
+          </Box>
           <List dense disablePadding>
             {getMenu()
               .map(mapItem)}
+          </List>
+          <Box className="drawerListBox">
+            <Divider />
+            <Typography variant="body2">Tools</Typography>
+          </Box>
+          <List dense disablePadding className="drawerList">
+            <ListItem button>
+              <ListItemIcon><SubscriptionsIcon /></ListItemIcon>
+              <ListItemText>Experiment Manager</ListItemText>
+            </ListItem>
           </List>
         </Box>
 

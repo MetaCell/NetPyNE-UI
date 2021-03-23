@@ -569,3 +569,33 @@ div.flexlayout__layout {
   overflow-y: auto;
   flex: 1;
 }
+.drawerListBox {
+  .MuiTypography-root {
+    color: #A8A5A5;
+    margin: 0 0 16px;
+    white-space: nowrap;
+    font-size: 0.875rem;
+  }
+  .MuiDivider-root {
+    margin: 14px 0 20px;
+  }
+}
+.drawerList {
+  .MuiListItem-gutters {
+    padding: 4px 0;
+  }
+  .MuiListItemIcon-root {
+    min-width: 32px;
+  }
+  .MuiListItemText-root {
+    white-space: nowrap;
+  }
+  .MuiSvgIcon-root {
+    color: #EB517A;
+  }
+}
+[class*="makeStyles-closeDrawer-"] {
+  .drawerList .MuiListItemText-root {
+    visibility: hidden;
+  }
+}
