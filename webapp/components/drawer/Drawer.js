@@ -8,13 +8,11 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
-import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
-import CodeIcon from '@material-ui/icons/Code';
 import { WidgetStatus } from '../layout/model';
 import Divider from '@material-ui/core/Divider';
 import {
   EDIT_WIDGETS,
-  DEFAULT_NETWORK_WIDGETS, TOP_PANEL,
+  DEFAULT_NETWORK_WIDGETS, TOP_PANEL, TOOLS_LIST
 } from '../../constants';
 
 import DrawerIcon from '../general/NetPyNEIcons';
@@ -98,7 +96,7 @@ export default ({
   function getNewWidgetConf (widgetId) {
     if (editMode) {
       // return a High Level Specification widget
-      return EDIT_WIDGETS[modelList[widgetId]];
+      return EDIT_WIDGETS[widgetId];
     }
 
     // return either 3dcanvas or python console
@@ -106,8 +104,11 @@ export default ({
   }
 
   function getMenu () {
-    return layoutManager.getWidgets()
-      .sort((w1, w2) => w1.pos - w2.pos);
+    const [modelDrawerItems, toolsDrawerItems] = [[], []]
+    layoutManager.getWidgets().sort((w1, w2) => w1.pos - w2.pos).filter(widget => {
+      widget.specification !== TOOLS_LIST ? modelDrawerItems.push(widget) : toolsDrawerItems.push(widget)
+    })
+    return [ modelDrawerItems, toolsDrawerItems];
   }
 
   const mapItem = ({
@@ -140,18 +141,16 @@ export default ({
             <Typography variant="body2">Model Specification</Typography>
           </Box>
           <List dense disablePadding>
-            {getMenu()
+            {getMenu()[0]
               .map(mapItem)}
           </List>
           <Box className="drawerListBox">
             <Divider />
             <Typography variant="body2">Tools</Typography>
           </Box>
-          <List dense disablePadding className="drawerList">
-            <ListItem button>
-              <ListItemIcon><SubscriptionsIcon /></ListItemIcon>
-              <ListItemText>Experiment Manager</ListItemText>
-            </ListItem>
+          <List dense disablePadding>
+            {getMenu()[1]
+              .map(mapItem)}
           </List>
         </Box>
 

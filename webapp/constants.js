@@ -3,7 +3,7 @@ import { MINIMIZED_PANEL } from './components/layout';
 
 export { WidgetStatus };
 export const TOP_PANEL = 'hlsPanel';
-
+export const TOOLS_LIST = 'tools'
 export const THEMES = {
   DARK: 'gui',
   BLACK: 'contrast',
@@ -41,6 +41,7 @@ export const PYTHON_CONSOLE_WIDGET = {
   enableRename: false,
   hideOnClose: true,
   pos: 1000,
+  specification: TOOLS_LIST
 };
 /*
  * ------------------------------------------------------------------------------ //
