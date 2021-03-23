@@ -62,7 +62,7 @@ const Experiments = (props) => {
 
   const formatDate = (timestamp) => {
     const date = new Date(timestamp)
-    return date?.toLocaleDateString().replaceAll('/', '.');
+    return date?.toLocaleDateString();
   }
 
   return (
