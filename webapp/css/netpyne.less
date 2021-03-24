@@ -583,12 +583,12 @@ div.flexlayout__layout {
     }
     .experimentDate {
       font-style: italic;
-      color:#A8A5A5;
+      color: @experimentGrey;
       font-weight: 300;
       font-size: 1rem;
     }
     .experimentIcon {
-      color:#A8A5A5;
+      color: @experimentGrey;
       min-width: auto;
       .MuiSvgIcon-root {
         font-size: 1.2rem;
@@ -597,7 +597,7 @@ div.flexlayout__layout {
     .MuiChip-label {
       font-size: 0.77rem;
       font-weight: 600;
-      color:#A8A5A5;
+      color: @experimentGrey;
     }
     .MuiChip-root {
       background: rgba(255, 255, 255, 0.1);
@@ -609,10 +609,10 @@ div.flexlayout__layout {
     .MuiTableCell-root {
       padding: 8px 16px;
       &:nth-child(1) {
-        white-space: nowrap;
+        width: 300px
       }
-      &:nth-child(3) {
-        width: 70%;
+      &:nth-child(2) {
+        width: 150px;
       }
       &:nth-child(6) {
         .MuiButton-label {

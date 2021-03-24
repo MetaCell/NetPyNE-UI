@@ -115,7 +115,7 @@ export default class WidgetFactory {
         return <NetPyNEPlots model={"simConfig.analysis"}/>
       }
       case "experiments": {
-        return <Experiments />
+        return <Experiments/>
       }
     }
   }

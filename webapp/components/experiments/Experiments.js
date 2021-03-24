@@ -21,6 +21,9 @@ import AddIcon from '@material-ui/icons/Add';
 import {
   GridLayout,
 } from 'netpyne/components';
+import {
+  EXPERIMENT_STATE
+} from '../../constants';
 
 /**
  * Lists all Experiments.
@@ -88,20 +91,20 @@ const Experiments = (props) => {
                       </Typography>
                     </TableCell>
                     <TableCell align="left" className="experimentTableCell">
-                      {experiment?.state !== 'SIMULATING' ? 
-                        <Chip
-                          label={experiment?.state}
-                        /> :
+                      {(experiment?.state === EXPERIMENT_STATE.SIMULATING || experiment?.state === EXPERIMENT_STATE.INSTANTIATING) ? 
                         <Chip
                           icon={<Box className="MuiChipLoader"></Box>}
-                          label="SIMULATING"
+                          label={experiment?.state}
                           onDelete={handleDelete}
                           deleteIcon={<CancelRoundedIcon />}
+                        /> :
+                        <Chip
+                          label={experiment?.state}
                         />
                       }
                     </TableCell>
                     <TableCell align="right">
-                      <Button className="experimentIcon" onClick={viewExperiment}>{experiment?.state === 'DESIGN' ? <EditIcon/> :  <FileCopyOutlinedIcon/>}</Button>
+                      <Button className="experimentIcon" onClick={viewExperiment}>{experiment?.state === EXPERIMENT_STATE.DESIGN ? <EditIcon/> :  <FileCopyOutlinedIcon/>}</Button>
                     </TableCell>
                     <TableCell align="center">
                       <Divider orientation="vertical" />
