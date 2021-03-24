@@ -569,93 +569,25 @@ div.flexlayout__layout {
   flex: 1;
 }
 //experiment table start
-.experimentTableContainer {
-  &::-webkit-scrollbar {
-    height: 8px;
+.MuiTableContainer-root {
+  .experimentDate {
+    color: @experimentGrey;
   }
-  .experimentTable {
-    font-family: 'Roboto', sans-serif;
-    .experimentHead {
-      font-size: 1rem;
-    }
-    .experimentHeadIcon {
-      font-size: 1rem;
-    }
-    .experimentDate {
-      font-style: italic;
-      color: @experimentGrey;
-      font-weight: 300;
-      font-size: 1rem;
-    }
-    .experimentIcon {
-      color: @experimentGrey;
-      min-width: auto;
-      .MuiSvgIcon-root {
-        font-size: 1.2rem;
-      }
-    }
-    .MuiChip-label {
-      font-size: 0.77rem;
-      font-weight: 600;
-      color: @experimentGrey;
-    }
-    .MuiChip-root {
-      background: rgba(255, 255, 255, 0.1);
-      height: 26px;
-    }
-    .MuiChip-deleteIcon {
-      margin-right: 2px;
-    }
-    .MuiTableCell-root {
-      padding: 8px 16px;
-      &:nth-child(1) {
-        width: 300px
-      }
-      &:nth-child(2) {
-        width: 150px;
-      }
-      &:nth-child(6) {
-        .MuiButton-label {
-          transform: rotate(-65deg);
-        }
-      }
-    }
-    .MuiChip-icon {
-      color: #A8A5A5;
-    }
-    .MuiDivider-vertical {
-      height: 30px;
-      background: rgba(255, 255, 255, 0.3);
-    }
-    .MuiTableCell-alignRight {
-      width: 50px;
-      padding-left: 0;
-    }
-    .MuiTableCell-alignCenter {
-      width: 50px;
-    }
+  .experimentIcon {
+    color: @experimentGrey;
   }
-  .MuiChipLoader {
-    border: 3px solid rgba(196, 196, 196, 0.3);
-    border-radius: 50%;
-    border-top: 3px solid #A8A5A5;
-    width: 20px;
-    height: 20px;
-    -webkit-animation: spin 2s linear infinite; /* Safari */
-    animation: spin 2s linear infinite;
+  .MuiChip-label {
+    color: @experimentGrey;
   }
-  @-webkit-keyframes spin {
-    0% { -webkit-transform: rotate(0deg); }
-    100% { -webkit-transform: rotate(360deg); }
-  }
+}
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
 
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
-.experimentFooter {
-  position: absolute;
-  bottom: 20px;
-  left: auto;
-}
+
+
