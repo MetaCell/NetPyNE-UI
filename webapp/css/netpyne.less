@@ -1,7 +1,6 @@
 @import "colors";
 @import (css)
   url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap");
-
 html,
 body {
   height: 100%;
@@ -573,4 +572,25 @@ div.flexlayout__layout {
   .drawerList .MuiListItemText-root {
     visibility: hidden;
   }
+}
+//experiment table start
+.MuiTableContainer-root {
+  .experimentDate {
+    color: @experimentGrey;
+  }
+  .experimentIcon {
+    color: @experimentGrey;
+  }
+  .MuiChip-label {
+    color: @experimentGrey;
+  }
+}
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

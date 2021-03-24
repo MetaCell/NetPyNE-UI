@@ -18,6 +18,7 @@ import {
 import DrawerIcon from '../general/NetPyNEIcons';
 import useStyles from './useStyles';
 import Tooltip from '../general/Tooltip';
+import { withStyles } from '@material-ui/core/styles';
 
 const drawerOpenWidth = 'auto';
 const drawerCloseWidth = 55;
@@ -58,7 +59,39 @@ const DrawerItem = ({
   </Tooltip>
 );
 
-export default ({
+
+const drawerStyles = theme => ({
+  root: {
+    '& .drawerListBox': {
+      '& .MuiTypography-root': {
+        color: '#A8A5A5',
+        marginBottom: theme.spacing(2),
+        whiteSpace: 'nowrap',
+        fontSize: '0.875rem',
+      },
+      '& .MuiDivider-root': {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2.5),
+      }
+    },
+    '& .drawerList': {
+      '& .MuiListItem-gutters': {
+        padding: theme.spacing(0.4, 0),
+      },
+      '& .MuiListItemIcon-root': {
+        minWidth: theme.spacing(4),
+      },
+      '& .MuiListItemText-root': {
+        whiteSpace: nowrap,
+      },
+      '& .MuiSvgIcon-root': {
+        color: '#EB517A',
+      }
+    }
+  },
+});
+
+const DrawerList = ({
   newWidget,
   editMode,
   activateWidget,
@@ -173,3 +206,5 @@ export default ({
     </Paper>
   );
 };
+
+export default withStyles(drawerStyles)(DrawerList);
