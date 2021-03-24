@@ -60,29 +60,29 @@ const DrawerItem = ({
 );
 
 
-const drawerStyles = theme => ({
+const drawerStyles = ({spacing}) => ({
   root: {
     '& .drawerListBox': {
       '& .MuiTypography-root': {
         color: '#A8A5A5',
-        marginBottom: theme.spacing(2),
+        marginBottom: spacing(2),
         whiteSpace: 'nowrap',
         fontSize: '0.875rem',
       },
       '& .MuiDivider-root': {
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2.5),
+        marginTop: spacing(2),
+        marginBottom: spacing(2.5),
       }
     },
     '& .drawerList': {
       '& .MuiListItem-gutters': {
-        padding: theme.spacing(0.4, 0),
+        padding: spacing(0.4, 0),
       },
       '& .MuiListItemIcon-root': {
-        minWidth: theme.spacing(4),
+        minWidth: spacing(4),
       },
       '& .MuiListItemText-root': {
-        whiteSpace: nowrap,
+        whiteSpace: 'nowrap',
       },
       '& .MuiSvgIcon-root': {
         color: '#EB517A',
@@ -96,12 +96,13 @@ const DrawerList = ({
   editMode,
   activateWidget,
   updateWidget,
+  classes
 }) => {
   const [expand, setExpand] = useState(false);
 
-  const classes = useStyles({
+  const drawerClasses = useStyles({
     width: expand ? drawerOpenWidth : drawerCloseWidth,
-    expand,
+    expand
   });
   const layoutManager = require('../layout/LayoutManager')
     .getLayoutManagerInstance();
@@ -159,16 +160,16 @@ const DrawerList = ({
         widget={widget}
         disabled={widget.disabled}
         expanded={expand}
-        classes={classes}
+        classes={drawerClasses}
         createOrFocusWidget={createOrFocusWidget}
         status={status}
       />
     );
   };
-
+  const paperClasses = `${expand ? drawerClasses.openDrawer : drawerClasses.closeDrawer} ${classes.root}`;
   return (
-    <Paper elevation={0} className={expand ? classes.openDrawer : classes.closeDrawer}>
-      <div className={classes.container}>
+    <Paper elevation={0} className={paperClasses}>
+      <div className={drawerClasses.container}>
         <Box p={2}>
           <Box className="drawerListBox">
             <Typography variant="body2">Model Specification</Typography>
@@ -187,10 +188,10 @@ const DrawerList = ({
           </List>
         </Box>
 
-        <div className={expand ? classes.buttonContainerOpen : classes.buttonContainerClosed}>
+        <div className={expand ? drawerClasses.buttonContainerOpen : drawerClasses.buttonContainerClosed}>
           <Tooltip title={expand ? 'Collapse' : 'Expand'}>
             <IconButton
-              className={classes.button}
+              className={drawerClasses.button}
               size="medium"
               onClick={() => {
                 setExpand(!expand);
