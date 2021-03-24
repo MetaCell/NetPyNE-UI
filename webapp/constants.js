@@ -361,4 +361,23 @@ export const EDIT_WIDGETS = {
     enableRename: false,
     pos: 7,
   },
+  experiments: {
+    id: 'experiments',
+    name: 'Experiment Manager',
+    status: WidgetStatus.HIDDEN,
+    hideOnClose: true,
+    component: 'experiments',
+    panelName: TOP_PANEL,
+    enableRename: false,
+    pos: 8,
+  },
+};
+
+export const EXPERIMENT_STATE = {
+  DESIGN: 'DESIGN',
+  SIMULATING: 'SIMULATING',
+  SIMULATED: 'SIMULATED',
+  INSTANTIATING: 'INSTANTIATING',
+  INSTANTIATED: 'INSTANTIATED',
+  ERROR: 'ERROR'
 };
