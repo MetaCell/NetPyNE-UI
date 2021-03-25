@@ -3,7 +3,7 @@ import { MINIMIZED_PANEL } from './components/layout';
 
 export { WidgetStatus };
 export const TOP_PANEL = 'hlsPanel';
-export const TOOLS_LIST = 'tools'
+export const TOOLS_LIST = 'tools';
 export const THEMES = {
   DARK: 'gui',
   BLACK: 'contrast',
@@ -383,3 +383,9 @@ export const EXPERIMENT_STATE = {
   INSTANTIATED: 'INSTANTIATED',
   ERROR: 'ERROR'
 };
+
+export const SIDEBAR_HEADINGS = {
+  MODEL: 'Model Specification',
+  TOOLS: 'Tools',
+  PLOTS: 'Plots',
+}

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import Box from '@material-ui/core/Box';
@@ -8,17 +7,17 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
-import { WidgetStatus } from '../layout/model';
 import Divider from '@material-ui/core/Divider';
+import { withStyles } from '@material-ui/core/styles';
+import { WidgetStatus } from '../layout/model';
+
 import {
-  EDIT_WIDGETS,
-  DEFAULT_NETWORK_WIDGETS, TOP_PANEL, TOOLS_LIST
+  EDIT_WIDGETS, DEFAULT_NETWORK_WIDGETS, TOP_PANEL, TOOLS_LIST, SIDEBAR_HEADINGS,
 } from '../../constants';
 
 import DrawerIcon from '../general/NetPyNEIcons';
 import useStyles from './useStyles';
 import Tooltip from '../general/Tooltip';
-import { withStyles } from '@material-ui/core/styles';
 
 const drawerOpenWidth = 'auto';
 const drawerCloseWidth = 55;
@@ -38,7 +37,6 @@ const DrawerItem = ({
       button
       key={id}
       dense
-
       disableGutters
       disabled={disabled}
       className={widget ? classes.selected : classes.unselected}
@@ -59,8 +57,7 @@ const DrawerItem = ({
   </Tooltip>
 );
 
-
-const drawerStyles = ({spacing}) => ({
+const drawerStyles = ({ spacing }) => ({
   root: {
     '& .drawerListBox': {
       '& .MuiTypography-root': {
@@ -72,7 +69,7 @@ const drawerStyles = ({spacing}) => ({
       '& .MuiDivider-root': {
         marginTop: spacing(2),
         marginBottom: spacing(2.5),
-      }
+      },
     },
     '& .drawerList': {
       '& .MuiListItem-gutters': {
@@ -86,8 +83,8 @@ const drawerStyles = ({spacing}) => ({
       },
       '& .MuiSvgIcon-root': {
         color: '#EB517A',
-      }
-    }
+      },
+    },
   },
 });
 
@@ -102,7 +99,7 @@ const DrawerList = ({
 
   const drawerClasses = useStyles({
     width: expand ? drawerOpenWidth : drawerCloseWidth,
-    expand
+    expand,
   });
   const layoutManager = require('../layout/LayoutManager')
     .getLayoutManagerInstance();
@@ -138,11 +135,12 @@ const DrawerList = ({
   }
 
   function getMenu () {
-    const [modelDrawerItems, toolsDrawerItems] = [[], []]
-    layoutManager.getWidgets().sort((w1, w2) => w1.pos - w2.pos).filter(widget => {
-      widget.specification !== TOOLS_LIST ? modelDrawerItems.push(widget) : toolsDrawerItems.push(widget)
-    })
-    return [ modelDrawerItems, toolsDrawerItems];
+    const [modelDrawerItems, toolsDrawerItems] = [[], []];
+    layoutManager.getWidgets().sort((w1, w2) => w1.pos - w2.pos).filter((widget) => {
+      widget.specification !== TOOLS_LIST
+      ? modelDrawerItems.push(widget) : toolsDrawerItems.push(widget)
+    });
+    return [modelDrawerItems, toolsDrawerItems];
   }
 
   const mapItem = ({
@@ -172,7 +170,7 @@ const DrawerList = ({
       <div className={drawerClasses.container}>
         <Box p={2}>
           <Box className="drawerListBox">
-            <Typography variant="body2">Model Specification</Typography>
+            <Typography variant="body2">{editMode ? SIDEBAR_HEADINGS.MODEL : SIDEBAR_HEADINGS.PLOTS}</Typography>
           </Box>
           <List dense disablePadding>
             {getMenu()[0]
@@ -180,7 +178,7 @@ const DrawerList = ({
           </List>
           <Box className="drawerListBox">
             <Divider />
-            <Typography variant="body2">Tools</Typography>
+            <Typography variant="body2">{SIDEBAR_HEADINGS.TOOLS}</Typography>
           </Box>
           <List dense disablePadding>
             {getMenu()[1]
@@ -188,7 +186,9 @@ const DrawerList = ({
           </List>
         </Box>
 
-        <div className={expand ? drawerClasses.buttonContainerOpen : drawerClasses.buttonContainerClosed}>
+        <div className={expand
+          ? drawerClasses.buttonContainerOpen : drawerClasses.buttonContainerClosed}
+        >
           <Tooltip title={expand ? 'Collapse' : 'Expand'}>
             <IconButton
               className={drawerClasses.button}
