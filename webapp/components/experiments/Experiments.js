@@ -64,6 +64,15 @@ const useStyles = theme => ({
           padding: theme.spacing(1, 2),
           '&:nth-child(1)': {
             width: '18.75rem',
+            '& button': {
+              maxWidth: '50vw',
+              justifyContent: 'inherit',
+            },
+            '& h6': {
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+            }
           },
           '&:nth-child(2)': {
             width: '9.375rem',
@@ -98,13 +107,6 @@ const useStyles = theme => ({
         animation: 'spin 2s linear infinite',
       }
     },
-    '& .MuiBox-root': {
-      '&.experimentFooter': {
-        position: 'absolute',
-        bottom: theme.spacing(2.4),
-        left: 'auto',
-      }
-    }
   },
 });
 
@@ -174,7 +176,7 @@ const Experiments = (props) => {
                       </Typography>
                     </TableCell>
                     <TableCell align="left" className="experimentTableCell">
-                      {(experiment?.state === EXPERIMENT_STATE.SIMULATING || experiment?.state === EXPERIMENT_STATE.INSTANTIATING) ? 
+                      {(experiment?.state === EXPERIMENT_STATE.SIMULATING || experiment?.state === EXPERIMENT_STATE.INSTANTIATING) ?
                         <Chip
                           icon={<Box className="MuiChipLoader"></Box>}
                           label={experiment?.state}
@@ -211,7 +213,7 @@ const Experiments = (props) => {
         display="flex"
         flexWrap="wrap"
       >
-        <Box className="experimentFooter">
+        <Box>
           <Button
             color="primary"
             startIcon={<AddIcon />}

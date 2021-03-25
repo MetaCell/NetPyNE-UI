@@ -3,7 +3,7 @@ import { MINIMIZED_PANEL } from './components/layout';
 
 export { WidgetStatus };
 export const TOP_PANEL = 'hlsPanel';
-
+export const TOOLS_LIST = 'tools';
 export const THEMES = {
   DARK: 'gui',
   BLACK: 'contrast',
@@ -41,6 +41,7 @@ export const PYTHON_CONSOLE_WIDGET = {
   enableRename: false,
   hideOnClose: true,
   pos: 1000,
+  specification: TOOLS_LIST
 };
 /*
  * ------------------------------------------------------------------------------ //
@@ -349,7 +350,7 @@ export const EDIT_WIDGETS = {
     component: 'simConfig',
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 6,
+    pos: 7,
   },
   analysis: {
     id: 'analysis',
@@ -359,7 +360,7 @@ export const EDIT_WIDGETS = {
     component: 'analysis',
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 7,
+    pos: 6,
   },
   experiments: {
     id: 'experiments',
@@ -370,7 +371,8 @@ export const EDIT_WIDGETS = {
     panelName: TOP_PANEL,
     enableRename: false,
     pos: 8,
-  },
+    specification: TOOLS_LIST
+  }
 };
 
 export const EXPERIMENT_STATE = {
@@ -381,3 +383,9 @@ export const EXPERIMENT_STATE = {
   INSTANTIATED: 'INSTANTIATED',
   ERROR: 'ERROR'
 };
+
+export const SIDEBAR_HEADINGS = {
+  MODEL: 'Model Specification',
+  TOOLS: 'Tools',
+  PLOTS: 'Plots',
+}

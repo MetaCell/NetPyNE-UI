@@ -568,6 +568,11 @@ div.flexlayout__layout {
   overflow-y: auto;
   flex: 1;
 }
+[class*="makeStyles-closeDrawer-"] {
+  .drawerList .MuiListItemText-root {
+    visibility: hidden;
+  }
+}
 //experiment table start
 .MuiTableContainer-root {
   .experimentDate {
@@ -589,5 +594,3 @@ div.flexlayout__layout {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-
-
