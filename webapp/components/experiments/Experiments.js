@@ -107,13 +107,6 @@ const useStyles = theme => ({
         animation: 'spin 2s linear infinite',
       }
     },
-    '& .MuiBox-root': {
-      '&.experimentFooter': {
-        position: 'absolute',
-        bottom: theme.spacing(2.4),
-        left: 'auto',
-      }
-    }
   },
 });
 
@@ -220,7 +213,7 @@ const Experiments = (props) => {
         display="flex"
         flexWrap="wrap"
       >
-        <Box className="experimentFooter">
+        <Box>
           <Button
             color="primary"
             startIcon={<AddIcon />}
