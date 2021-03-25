@@ -66,7 +66,7 @@ const useStyles = theme => ({
             width: '18.75rem',
             '& button': {
               maxWidth: '50vw',
-              justifyContent: 'left',
+              justifyContent: 'inherit',
             },
             '& h6': {
               textOverflow: 'ellipsis',
