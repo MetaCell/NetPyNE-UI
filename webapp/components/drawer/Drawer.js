@@ -169,16 +169,20 @@ const DrawerList = ({
     <Paper elevation={0} className={paperClasses}>
       <div className={drawerClasses.container}>
         <Box p={2}>
-          <Box className="drawerListBox">
-            <Typography variant="body2">{editMode ? SIDEBAR_HEADINGS.MODEL : SIDEBAR_HEADINGS.PLOTS}</Typography>
-          </Box>
+          { expand && (
+            <Box className="drawerListBox">
+              <Typography variant="body2">{editMode ? SIDEBAR_HEADINGS.MODEL : SIDEBAR_HEADINGS.PLOTS}</Typography>
+            </Box>
+          )}
           <List dense disablePadding>
             {getMenu()[0]
               .map(mapItem)}
           </List>
           <Box className="drawerListBox">
             <Divider />
-            <Typography variant="body2">{SIDEBAR_HEADINGS.TOOLS}</Typography>
+            { expand && (
+              <Typography variant="body2">{SIDEBAR_HEADINGS.TOOLS}</Typography>
+            )}
           </Box>
           <List dense disablePadding>
             {getMenu()[1]
