@@ -14,7 +14,6 @@ export const MODEL_STATE = {
   NOT_INSTANTIATED: 'NOT_INSTANTIATED',
   INSTANTIATED: 'INSTANTIATED',
   SIMULATED: 'SIMULATED',
-
 };
 
 export const NETPYNE_COMMANDS = {
@@ -41,7 +40,7 @@ export const PYTHON_CONSOLE_WIDGET = {
   enableRename: false,
   hideOnClose: true,
   pos: 1000,
-  specification: TOOLS_LIST
+  specification: TOOLS_LIST,
 };
 /*
  * ------------------------------------------------------------------------------ //
@@ -371,8 +370,8 @@ export const EDIT_WIDGETS = {
     panelName: TOP_PANEL,
     enableRename: false,
     pos: 8,
-    specification: TOOLS_LIST
-  }
+    specification: TOOLS_LIST,
+  },
 };
 
 export const EXPERIMENT_STATE = {
@@ -381,11 +380,11 @@ export const EXPERIMENT_STATE = {
   SIMULATED: 'SIMULATED',
   INSTANTIATING: 'INSTANTIATING',
   INSTANTIATED: 'INSTANTIATED',
-  ERROR: 'ERROR'
+  ERROR: 'ERROR',
 };
 
 export const SIDEBAR_HEADINGS = {
   MODEL: 'Model Specification',
   TOOLS: 'Tools',
   PLOTS: 'Plots',
-}
+};
