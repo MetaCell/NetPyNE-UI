@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { filterTrials } from 'root/redux/actions/experiments';
-import Utils from 'root/Utils';
+import { getJsonModel } from 'root/api/experiments';
 import Button from '@material-ui/core/Button';
-
-// TODO: @lrebscher extract from component
-const getModelAsJson = (payload) => Utils.evalPythonMessage('netpyne_geppetto.getModelAsJson', []);
 
 /**
  * Detail view of a single Experiment.
@@ -14,7 +11,6 @@ const Experiment = () => {
   const dispatch = useDispatch();
   const experimentDetail = useSelector((state) => state.experiments.experimentDetail);
 
-  // Don't need to save modelTree in global state.
   const [modelTree, setModelTree] = useState({});
 
   const filter = (payload) => {
@@ -22,7 +18,7 @@ const Experiment = () => {
   };
 
   const viewJson = () => {
-    getModelAsJson({})
+    getJsonModel({})
       .then((response) => {
         setModelTree(response);
       });

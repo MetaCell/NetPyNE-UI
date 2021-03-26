@@ -127,11 +127,12 @@ class ExplorationParameter:
     type: str
     # List of values of different type
     values: list = None
-
     # Range fields
     min: float = None
     max: float = None
     step: float = None
+    # If True, parameter is added to grouped parameters
+    inGroup: bool = False
 
 
 @dataclass
@@ -142,16 +143,17 @@ class Trial:
 
 @dataclass
 class Experiment:
-    # DESIGN, INSTANTIATING, INSTANTIATED, SIMULATING, SIMULATED
-    state: str
     # Name is the unique identifier
     name: str
+    # DESIGN, INSTANTIATING, INSTANTIATED, SIMULATING, SIMULATED
+    state: str
     params: [ExplorationParameter] = field(default_factory=list)
     # Generated based on params
     trials: [Trial] = field(default_factory=list)
 
-    # Enabled is depreated, will be removed
+    # Enabled is deprecated, will be removed
     enabled: bool = False
+
     method: str = "grid"
 
     # Overwrites simConfig parameters
@@ -159,8 +161,6 @@ class Experiment:
 
     # Part of initCfg?
     seed: int = None
-
-    saveFolder: str = "experiment_1"
 
     # SIMULATED or INSTANTIATED date
     timestamp: datetime = field(default_factory=datetime.today)
@@ -180,6 +180,7 @@ class RunConfig:
     type: str = 'mpi_bulletin'
 
 
+# Dummy data for frontend.
 experiments = [
     Experiment(
         name="EI Populations",
@@ -260,7 +261,19 @@ experiments = [
         ]
     ),
     Experiment(
-        name="My instantiated model",
+        name="Failing model",
+        state="ERROR",
+        params=[
+            ExplorationParameter(
+                label="weight",
+                mapsTo="",
+                type="list",
+                values=[1, 2, 3, 4]
+            ),
+        ]
+    ),
+    Experiment(
+        name="My instantiated model with a longer name than usual",
         state="INSTANTIATED",
         params=[
             ExplorationParameter(
@@ -279,6 +292,19 @@ experiments = [
                 max=10.0,
                 step=0.2
             )
+        ]
+    ),
+    Experiment(
+        name="Instantiating model",
+        state="INSTANTIATING",
+        params=[
+            ExplorationParameter(
+                label="weight",
+                # mapsTo="netParams.connParams['E->E']['weight']",
+                mapsTo="",
+                type="list",
+                values=[1, 2, 3, 4, 5, 6, 7, 8, 9]
+            ),
         ]
     ),
 ]

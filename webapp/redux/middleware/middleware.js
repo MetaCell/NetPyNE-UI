@@ -1,8 +1,6 @@
 import {
   GET_EXPERIMENTS,
-  SET_EXPERIMENTS,
   setExperiments,
-  VIEW_TRIAL_AS_JSON
 } from 'root/redux/actions/experiments';
 import {
   UPDATE_CARDS,
@@ -29,6 +27,79 @@ let previousLayout = {
   edit: undefined,
   network: undefined,
 };
+
+export const processError = (response) => {
+  const parsedResponse = Utils.getErrorResponse(response);
+  if (parsedResponse) {
+    return {
+      errorMessage: parsedResponse.message,
+      errorDetails: parsedResponse.details,
+    };
+  }
+  return false;
+};
+
+const pythonCall = async ({
+  cmd,
+  args,
+}) => {
+  const response = await Utils.evalPythonMessage(cmd, [args]);
+  const errorPayload = processError(response);
+  GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+
+  if (errorPayload) {
+    throw errorPayload;
+  }
+
+  return response;
+};
+
+const dehydrateCanvas = () => {
+  if ('CanvasContainer' in window) {
+    CanvasContainer.engine.reset();
+    Object.values(CanvasContainer.engine.meshes)
+      .forEach((mesh) => {
+        CanvasContainer.engine.removeObject(mesh);
+      });
+  }
+};
+
+const createSimulateBackendCall = async (cmd, payload, consoleMessage, spinnerType) => {
+  GEPPETTO.CommandController.log(consoleMessage);
+  GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, spinnerType);
+
+  const response = await Utils.evalPythonMessage(cmd, [payload]);
+  console.log('Python response', response);
+  GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+  const responsePayload = processError(response);
+  console.log('Python payload', responsePayload);
+
+  if (responsePayload) {
+    throw responsePayload;
+  } else {
+    GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
+
+    dehydrateCanvas();
+
+    GEPPETTO.Manager.loadModel(response);
+    GEPPETTO.CommandController.log('Instantiation / Simulation completed.');
+  }
+  return response;
+};
+
+const instantiateNetwork = (payload) => createSimulateBackendCall(
+  NETPYNE_COMMANDS.instantiateModel,
+  payload,
+  'The NetPyNE model is getting instantiated...',
+  GEPPETTO.Resources.INSTANTIATING_MODEL,
+);
+
+const simulateNetwork = (payload) => createSimulateBackendCall(
+  NETPYNE_COMMANDS.simulateModel,
+  payload,
+  'The NetPyNE model is getting simulated...',
+  GEPPETTO.Resources.RUNNING_SIMULATION,
+);
 
 export default (store) => (next) => (action) => {
   const switchLayoutAction = (edit = true, reset = true) => {
@@ -60,7 +131,6 @@ export default (store) => (next) => (action) => {
       next(action);
       break;
     case SHOW_NETWORK:
-
       switchLayoutAction(false, false);
       next(action);
       break;
@@ -108,7 +178,6 @@ export default (store) => (next) => (action) => {
           case NETPYNE_COMMANDS.deleteModel:
             next(editModel);
             switchLayoutAction(true, true);
-
             break;
           default:
             break;
@@ -152,78 +221,5 @@ export default (store) => (next) => (action) => {
     default: {
       next(action);
     }
-  }
-};
-
-const instantiateNetwork = (payload) => createSimulateBackendCall(
-  NETPYNE_COMMANDS.instantiateModel,
-  payload,
-  'The NetPyNE model is getting instantiated...',
-  GEPPETTO.Resources.INSTANTIATING_MODEL,
-);
-
-const simulateNetwork = (payload) => createSimulateBackendCall(
-  NETPYNE_COMMANDS.simulateModel,
-  payload,
-  'The NetPyNE model is getting simulated...',
-  GEPPETTO.Resources.RUNNING_SIMULATION,
-);
-
-const createSimulateBackendCall = async (cmd, payload, consoleMessage, spinnerType) => {
-  GEPPETTO.CommandController.log(consoleMessage);
-  GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, spinnerType);
-
-  const response = await Utils.evalPythonMessage(cmd, [payload]);
-  console.log('Python response', response);
-  GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-  const responsePayload = processError(response);
-  console.log('Python payload', responsePayload);
-
-  if (responsePayload) {
-    throw responsePayload;
-  } else {
-    GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
-
-    dehydrateCanvas();
-
-    GEPPETTO.Manager.loadModel(response);
-    GEPPETTO.CommandController.log('Instantiation / Simulation completed.');
-  }
-  return response;
-};
-
-export const processError = (response) => {
-  const parsedResponse = Utils.getErrorResponse(response);
-  if (parsedResponse) {
-    return {
-      errorMessage: parsedResponse.message,
-      errorDetails: parsedResponse.details,
-    };
-  }
-  return false;
-};
-
-const pythonCall = async ({
-  cmd,
-  args,
-}) => {
-  const response = await Utils.evalPythonMessage(cmd, [args]);
-  const errorPayload = processError(response);
-  GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-
-  if (errorPayload) {
-    throw errorPayload;
-  }
-
-  return response;
-};
-
-const dehydrateCanvas = () => {
-  if ('CanvasContainer' in window) {
-    CanvasContainer.engine.reset();
-    Object.values(CanvasContainer.engine.meshes)
-      .forEach((mesh) => {
-        CanvasContainer.engine.removeObject(mesh);
-      });
   }
 };
