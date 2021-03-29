@@ -50,28 +50,6 @@ class NetPyNEGeppetto:
         self.simConfig = specs.SimConfig()
         self.run_config = model.RunConfig()
 
-        # TODO: deprecated, remove in next step
-        self.batch_config = model.Experiment(
-            name="Deprecated",
-            state="DESIGN",
-            params=[
-                model.ExplorationParameter(
-                    label="weight",
-                    mapsTo="netParams.connParams['E->E']['weight']",
-                    type="list",
-                    values=[1, 2, 3, 4]
-                ),
-                model.ExplorationParameter(
-                    label="weight",
-                    mapsTo="netParams.connParams['E->E']['probability']",
-                    type="range",
-                    min=0.3,
-                    max=1.0,
-                    step=0.2
-                )
-            ]
-        )
-
         self.experiments = experiments
 
         model.register(metadata, self.netParams)
@@ -93,8 +71,6 @@ class NetPyNEGeppetto:
             "metadata": metadata,
             "netParams": self.netParams.todict(),
             "simConfig": self.simConfig.todict(),
-            "batch_config": dataclasses.asdict(self.batch_config),
-            "run_config": dataclasses.asdict(self.run_config),
             "isDocker": os.path.isfile('/.dockerenv'),
             "currentFolder": os.getcwd(),
             "tuts": self.find_tutorials()
@@ -134,12 +110,14 @@ class NetPyNEGeppetto:
     def simulateNetPyNEModelInGeppetto(self, args):
         try:
             with redirect_stdout(sys.__stdout__):
-                if self.batch_config.enabled:
+                if args.get("complete", None):
                     if simulations.local.is_running():
                         return utils.getJSONError("Simulation is already running", "")
 
                     try:
-                        working_directory = self._prepare_batch_files()
+                        # TODO: Use the selected experiment
+                        experiment = model.Experiment(name="Test")
+                        working_directory = self._prepare_batch_files(experiment)
                     except OSError:
                         return utils.getJSONError("The specified folder already exists", "")
 
@@ -149,14 +127,14 @@ class NetPyNEGeppetto:
                             parallel=self.run_config.parallel,
                             cores=self.run_config.cores,
                             method=self.run_config.type,
-                            batch=self.batch_config.enabled,
+                            batch=True,
                             asynchronous=self.run_config.asynchronous,
                             working_directory=working_directory
                         )
                     except InvalidConfigError as e:
                         return utils.getJSONError(str(e), "")
 
-                    message = "Batch started in background! " \
+                    message = "Experiment started in background! " \
                               f"Results will be stored in your workspace at ./{self.batch_config.name}"
 
                     return utils.getJSONError(message, "")
@@ -216,17 +194,17 @@ class NetPyNEGeppetto:
         template = os.path.join(os.path.dirname(__file__), "templates", template_name)
         copyfile(template, f'./{constants.SIMULATION_SCRIPT_NAME}')
 
-    def _prepare_batch_files(self):
-        self.simConfig.mapping = [dataclasses.asdict(p) for p in self.batch_config.params]
+    def _prepare_batch_files(self, experiment):
+        self.simConfig.mapping = [dataclasses.asdict(p) for p in experiment.params]
 
-        for param in self.batch_config.params:
+        for param in experiment.params:
             if param.type == "range":
                 param.values = list(np.arange(param.min, param.max, param.step))
 
-        config_dict = dataclasses.asdict(self.batch_config)
+        config_dict = dataclasses.asdict(experiment)
         config_dict["runCfg"] = dataclasses.asdict(self.run_config)
 
-        save_folder_path = os.path.join(constants.BATCHES_FOLDER, self.batch_config.name)
+        save_folder_path = os.path.join(constants.BATCHES_FOLDER, experiment.name)
         try:
             os.makedirs(save_folder_path)
         except OSError:

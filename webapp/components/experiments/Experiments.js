@@ -121,7 +121,6 @@ const Experiments = (props) => {
   const {
     experiments,
     getExperiments,
-    editExperiment,
     classes,
   } = props;
 

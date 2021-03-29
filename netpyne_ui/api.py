@@ -87,11 +87,8 @@ class NetPyNEController:  # pytest: no cover
 
     @get('/downloads')
     def downloads(handler: IPythonHandler):
-
         file_paths = get_file_paths(handler)
-
         if file_paths:
-
             if len(file_paths) == 0:
                 handler.set_status(400, f"Files not found.")
                 handler.finish()

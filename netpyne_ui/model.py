@@ -115,15 +115,22 @@ def register(metadata, net_params):
     net_params.cellsVisualizationSpacingMultiplierZ = 1
 
 
+class ExperimentState:
+    DESIGN = "DESIGN"
+    SIMULATING = "SIMULATING"
+    INSTANTIATING = "INSTANTIATING"
+    SIMULATED = "SIMULATED"
+    INSTANTIATED = "INSTANTIATED"
+    ERROR = "ERROR"
+
+
 @dataclass
 class ExplorationParameter:
     """ Parameter with possible values that will be explored in netpyne.batch. """
 
-    # Set in cfg.py to cfg.label = <defaultValue of netParams field>
-    label: str
     # Path to target parameter in netParams dict
     mapsTo: str
-    # Type can be either list or range
+    # Type can be either 'list' or 'range'
     type: str
     # List of values of different type
     values: list = None
@@ -133,6 +140,8 @@ class ExplorationParameter:
     step: float = None
     # If True, parameter is added to grouped parameters
     inGroup: bool = False
+    # Set in cfg.py to cfg.label = <defaultValue of netParams field>
+    label: str = ""
 
 
 @dataclass
@@ -146,24 +155,19 @@ class Experiment:
     # Name is the unique identifier
     name: str
     # DESIGN, INSTANTIATING, INSTANTIATED, SIMULATING, SIMULATED
-    state: str
+    state: str = ExperimentState.DESIGN
+    # Exploration parameter config
     params: [ExplorationParameter] = field(default_factory=list)
     # Generated based on params
     trials: [Trial] = field(default_factory=list)
-
-    # Enabled is deprecated, will be removed
-    enabled: bool = False
-
-    method: str = "grid"
+    # SIMULATED or INSTANTIATED date
+    timestamp: datetime = field(default_factory=datetime.today)
 
     # Overwrites simConfig parameters
     initConfig: dict = field(default_factory=dict)
-
+    method: str = "grid"
     # Part of initCfg?
     seed: int = None
-
-    # SIMULATED or INSTANTIATED date
-    timestamp: datetime = field(default_factory=datetime.today)
 
     # Folder in workspace, empty in DESIGN
     folder: str = None
