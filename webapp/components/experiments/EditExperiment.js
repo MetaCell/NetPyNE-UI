@@ -13,16 +13,36 @@ const EditExperiment = () => {
   const experimentDetail = useSelector((state) => state.experiments.experimentDetail);
   console.log(experimentDetail);
 
-  const create = (experiment) => {
+  // Example payload for new experiment
+  const newExperiment = {
+    name: 'New Experiment',
+    params: [{
+      mapsTo: 'netParams.connParams.weight',
+      type: 'list',
+      values: [1, 2, 3, 4, 5],
+      inGroup: true,
+    }, {
+      mapsTo: 'netParams.connParams.probability',
+      type: 'range',
+      min: 0.0,
+      max: 1.0,
+      step: 0.3,
+      inGroup: false,
+    },
+    ],
+  };
+
+  const create = () => {
     // When user creates a new Experiment
-    addExperiment({ name: 'New Experiment' })
+    addExperiment(newExperiment)
       .then((result) => {
         console.log(result);
       });
   };
 
-  const update = (experiment) => {
+  const update = () => {
     // When user edits existing Experiment
+    // TODO: use name of current Experiment
     editExperiment('EI Populations', { name: 'New Experiment' })
       .then((result) => {
         console.log(result);
