@@ -24,6 +24,7 @@ import {
   EXPERIMENT_STATE
 } from '../../constants';
 import { withStyles } from '@material-ui/core/styles';
+import useInterval from 'root/api/hooks';
 
 const useStyles = theme => ({
   root: {
@@ -50,7 +51,7 @@ const useStyles = theme => ({
           }
         },
         '& .MuiChip-label': {
-          fontSize:' 0.77rem',
+          fontSize: ' 0.77rem',
           fontWeight: 600,
         },
         '& .MuiChip-root': {
@@ -124,9 +125,10 @@ const Experiments = (props) => {
     classes,
   } = props;
 
-  useEffect(() => {
-    getExperiments();
-  }, []);
+  const POLL_INTERVAL = 1000;
+
+  useEffect(getExperiments, []);
+  useInterval(getExperiments, POLL_INTERVAL);
 
   const cleanExperiment = (payload) => {
     props.cleanExperiment(payload);
@@ -149,9 +151,9 @@ const Experiments = (props) => {
   };
 
   const formatDate = (timestamp) => {
-    const date = new Date(timestamp)
+    const date = new Date(timestamp);
     return date?.toLocaleDateString();
-  }
+  };
   return (
     <GridLayout className={classes.root}>
       <div>
@@ -159,19 +161,19 @@ const Experiments = (props) => {
           <TableContainer component={Paper}>
             <Table aria-label="simple table">
               <TableBody>
-                { experiments.map((experiment) => (
+                {experiments.map((experiment) => (
                   <TableRow key={experiment?.name}>
                     <TableCell component="th" scope="row">
                       <Button>
                         <Typography variant="h6" className="experimentHead">
                           {experiment?.name}
                         </Typography>
-                        <ChevronRightIcon className="experimentHeadIcon" />
+                        <ChevronRightIcon className="experimentHeadIcon"/>
                       </Button>
                     </TableCell>
                     <TableCell align="left">
                       <Typography variant="h6" className="experimentDate">
-                        { formatDate(experiment?.timestamp) }
+                        {formatDate(experiment?.timestamp)}
                       </Typography>
                     </TableCell>
                     <TableCell align="left" className="experimentTableCell">
@@ -180,7 +182,7 @@ const Experiments = (props) => {
                           icon={<Box className="MuiChipLoader"></Box>}
                           label={experiment?.state}
                           onDelete={handleDelete}
-                          deleteIcon={<CancelRoundedIcon />}
+                          deleteIcon={<CancelRoundedIcon/>}
                         /> :
                         <Chip
                           label={experiment?.state}
@@ -188,16 +190,20 @@ const Experiments = (props) => {
                       }
                     </TableCell>
                     <TableCell align="right">
-                      <Button className="experimentIcon" onClick={viewExperiment}>{experiment?.state === EXPERIMENT_STATE.DESIGN ? <EditIcon/> :  <FileCopyOutlinedIcon/>}</Button>
+                      <Button className="experimentIcon"
+                              onClick={viewExperiment}>{experiment?.state === EXPERIMENT_STATE.DESIGN ?
+                        <EditIcon/> : <FileCopyOutlinedIcon/>}</Button>
                     </TableCell>
                     <TableCell align="center">
-                      <Divider orientation="vertical" />
+                      <Divider orientation="vertical"/>
                     </TableCell>
                     <TableCell align="right">
-                      <Button className="experimentIcon" onClick={cleanExperiment}><ReplayIcon/></Button>
+                      <Button className="experimentIcon"
+                              onClick={cleanExperiment}><ReplayIcon/></Button>
                     </TableCell>
                     <TableCell align="right">
-                      <Button className="experimentIcon" onClick={deleteExperiment}><DeleteIcon/></Button>
+                      <Button className="experimentIcon"
+                              onClick={deleteExperiment}><DeleteIcon/></Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -215,7 +221,7 @@ const Experiments = (props) => {
         <Box>
           <Button
             color="primary"
-            startIcon={<AddIcon />}
+            startIcon={<AddIcon/>}
           >
             CREATE NEW EXPERIMENT
           </Button>
