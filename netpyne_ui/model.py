@@ -3,6 +3,7 @@ import random
 from dataclasses import dataclass
 from dataclasses import field
 from datetime import datetime
+from typing import List
 
 
 def register(metadata, net_params):
@@ -133,7 +134,7 @@ class ExplorationParameter:
     # Type can be either 'list' or 'range'
     type: str
     # List of values of different type
-    values: list = None
+    values: List = None
     # Range fields
     min: float = None
     max: float = None
@@ -157,9 +158,9 @@ class Experiment:
     # DESIGN, INSTANTIATING, INSTANTIATED, SIMULATING, SIMULATED
     state: str = ExperimentState.DESIGN
     # Exploration parameter config
-    params: [ExplorationParameter] = field(default_factory=list)
+    params: List[ExplorationParameter] = field(default_factory=list)
     # Generated based on params
-    trials: [Trial] = field(default_factory=list)
+    trials: List[Trial] = field(default_factory=list)
     # SIMULATED or INSTANTIATED date
     timestamp: datetime = field(default_factory=datetime.today)
 

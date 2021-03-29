@@ -14,10 +14,7 @@ def get_experiments() -> List[dict]:
 
 def add_experiment(experiment: dict):
     exp = from_dict(model.Experiment, experiment)
-    if _get_by_name(exp.name):
-        raise ExperimentsError(f"Experiment {exp.name} already exists")
-
-    model.experiments.append(exp)
+    _add_experiment(exp)
 
 
 def get_experiment(name: str) -> dict:
@@ -31,7 +28,7 @@ def remove_experiment(name: str):
         model.experiments.remove(experiment)
 
 
-def edit_experiment(name, experiment) -> dict:
+def edit_experiment(name: str, experiment: dict):
     exp = _get_by_name(name)
     if exp.state != model.ExperimentState.DESIGN:
         raise ExperimentsError(f"Can only edit experiment in f{model.ExperimentState.DESIGN} state")
@@ -40,8 +37,14 @@ def edit_experiment(name, experiment) -> dict:
 
     updated_exp = from_dict(model.Experiment, experiment)
     model.experiments.remove(exp)
-    model.experiments.append(updated_exp)
-    return dataclasses.asdict(updated_exp)
+    _add_experiment(updated_exp)
+
+
+def _add_experiment(experiment: model.Experiment):
+    if _get_by_name(experiment.name):
+        raise ExperimentsError(f"Experiment {experiment.name} already exists")
+
+    model.experiments.append(experiment)
 
 
 def _get_by_name(name: str) -> model.Experiment:
