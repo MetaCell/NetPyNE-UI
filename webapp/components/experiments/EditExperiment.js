@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import { addExperiment, editExperiment, getParameters } from 'root/api/experiments';
@@ -24,6 +24,8 @@ import {
   GridLayout,
 } from 'netpyne/components';
 import { withStyles } from '@material-ui/core/styles';
+const RANGE = 'range';
+const LIST = 'list';
 /**
  * Edit/Add view of a single Experiment.
  *
@@ -139,17 +141,29 @@ const EditExperiment = (props) => {
   const experimentDetail = useSelector((state) => state.experiments.experimentDetail);
   console.log(experimentDetail);
 
+  const [parameters, setParameters] = useState([{
+    mapsTo: '', type: RANGE, min: 0, max: 0, step: 0, inGroup: false,
+  }, {
+    mapsTo: '', type: LIST, values: [], inGroup: false,
+  }]);
+
+  const [groupParameters, setGroupParameters] = useState([{
+    mapsTo: '', type: RANGE, min: 0, max: 0, step: 0, inGroup: false,
+  }, {
+    mapsTo: '', type: LIST, values: [], inGroup: false,
+  }]);
+
   // Example payload for new experiment
   const newExperiment = {
     name: 'New Experiment',
     params: [{
       mapsTo: 'netParams.connParams.weight',
-      type: 'list',
+      type: LIST,
       values: [1, 2, 3, 4, 5],
       inGroup: true,
     }, {
       mapsTo: 'netParams.connParams.probability',
-      type: 'range',
+      type: RANGE,
       min: 0.0,
       max: 1.0,
       step: 0.3,
@@ -183,7 +197,7 @@ const EditExperiment = (props) => {
   };
 
   useEffect(() => {
-    // viewParameters();
+    viewParameters();
   }, []);
 
   const top100Films = [
@@ -202,10 +216,91 @@ const EditExperiment = (props) => {
     setAnchorEl(null);
   };
 
-  const [age, setAge] = React.useState('');
+  const handleChange = (event, parameter, index, type) => {
+    const newParam = type === 'group' ?  [...groupParameters] : [...parameters];
+    newParam[index] = { ...parameter, type: event.target.value };
+    type === 'group' ? setGroupParameters(newParam) : setParameters(newParam);
+  };
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
+  const parameterRow = (parameter, index, type='single') => (
+    <Grid className="editExperimentList" container spacing={1}>
+      <Grid item xs className="editExperimentAutocomplete">
+        <Autocomplete
+          popupIcon={<ExpandMoreIcon />}
+          id="combo-box-demo"
+          options={top100Films}
+          getOptionLabel={(option) => option.title}
+          style={{ width: 300 }}
+          renderOption={(option) => (
+            <>
+              <ArrowRightIcon />
+              {option.title}
+            </>
+          )}
+          renderInput={(params) => <TextField {...params} label="Type or select parameter" variant="outlined" />}
+        />
+      </Grid>
+      <Grid item xs={3} className="editExperimentSelect">
+        <FormControl variant="filled">
+          <InputLabel id="demo-simple-select-filled-label">Type</InputLabel>
+          <Select
+            labelId="demo-simple-select-filled-label"
+            id="demo-simple-select-filled"
+            value={parameter.type}
+            onChange={(e) => handleChange(e, parameter, index, type)}
+            IconComponent={ExpandMoreIcon}
+          >
+
+            <MenuItem value="range">Range</MenuItem>
+            <MenuItem value="list">List</MenuItem>
+          </Select>
+        </FormControl>
+      </Grid>
+      <Grid container item xs={4} spacing={1} className="editExperimentField">
+        { parameter.type === RANGE ? (
+          <>
+            <Grid item xs={4}>
+              <TextField id="filled-basic" label="From" variant="filled" value={parameter?.min || 0} />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField id="filled-basic" label="To" variant="filled" value={parameter?.max || 0} />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField id="filled-basic" label="Step" variant="filled" value={parameter?.step || 0} />
+            </Grid>
+          </>
+        )
+          : (
+            <Grid item xs={12}>
+              <TextField id="filled-basic" label="Values (separated with comas)" variant="filled" value={parameter?.values ? [...parameter?.values] : []}/>
+            </Grid>
+          )}
+      </Grid>
+      <Grid item xs="auto" className="editExperimentMenu">
+        <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+          <MoreVertIcon />
+        </IconButton>
+        <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          classes={{ paper: 'MuiPopover-experiment' }}
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+          <MenuItem onClick={handleClose}>Add to Group</MenuItem>
+          <MenuItem onClick={handleClose}>Delete</MenuItem>
+        </Menu>
+      </Grid>
+    </Grid>
+  );
+
+  const addParameter = () => {
+    setParameters([...parameters, {
+      mapsTo: '', type: RANGE, min: 0, max: 0, step: 0, inGroup: false,
+    }]);
   };
 
   return (
@@ -227,7 +322,7 @@ const EditExperiment = (props) => {
           <Box mb={2} className="editExperimentDefault">
             <Box mb={2} className="editExperimentBreadcrumb">
               <Typography variant="body2">Parameters</Typography>
-              <Link to="true" color="primary">
+              <Link to="true" color="primary" onClick={addParameter}>
                 <AddIcon />
                 Add parameter
               </Link>
@@ -237,241 +332,15 @@ const EditExperiment = (props) => {
                 <Typography variant="body2">Groupped Parameters</Typography>
               </Box>
               <Box className="editExperimentRow">
-                <Grid className="editExperimentList" container spacing={1}>
-                  <Grid item xs className="editExperimentAutocomplete">
-                    <Autocomplete
-                      popupIcon={<ExpandMoreIcon />}
-                      id="combo-box-demo"
-                      options={top100Films}
-                      getOptionLabel={(option) => option.title}
-                      style={{ width: 300 }}
-                      renderOption={(option) => (
-                        <>
-                          <ArrowRightIcon />
-                          {option.title}
-                        </>
-                      )}
-                      renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined" />}
-                    />
-                  </Grid>
-                  <Grid item xs={3} className="editExperimentSelect">
-                    <FormControl variant="filled">
-                      <InputLabel id="demo-simple-select-filled-label">Type</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-filled-label"
-                        id="demo-simple-select-filled"
-                        value={age}
-                        onChange={handleChange}
-                        IconComponent={ExpandMoreIcon}
-                      >
-
-                        <MenuItem value={20}>Range</MenuItem>
-                        <MenuItem value={30}>List</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid container item xs={4} spacing={1} className="editExperimentField">
-                    <Grid item xs={4}>
-                      <TextField id="filled-basic" label="From" variant="filled" />
-                    </Grid>
-                    <Grid item xs={4}>
-                      <TextField id="filled-basic" label="To" variant="filled" />
-                    </Grid>
-                    <Grid item xs={4}>
-                      <TextField id="filled-basic" label="Range" variant="filled" />
-                    </Grid>
-                  </Grid>
-                  <Grid item xs="auto" className="editExperimentMenu">
-                    <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-                      <MoreVertIcon />
-                    </IconButton>
-                    <Menu
-                      id="simple-menu"
-                      anchorEl={anchorEl}
-                      keepMounted
-                      classes={{ paper: 'MuiPopover-experiment' }}
-                      open={Boolean(anchorEl)}
-                      onClose={handleClose}
-                      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                    >
-                      <MenuItem onClick={handleClose}>Range</MenuItem>
-                      <MenuItem onClick={handleClose}>List</MenuItem>
-                    </Menu>
-                  </Grid>
-                </Grid>
-                <Grid className="editExperimentList" container spacing={1}>
-                  <Grid item xs className="editExperimentAutocomplete">
-                    <Autocomplete
-                      popupIcon={<ExpandMoreIcon />}
-                      id="combo-box-demo"
-                      options={top100Films}
-                      getOptionLabel={(option) => option.title}
-                      style={{ width: 300 }}
-                      renderOption={(option) => (
-                        <>
-                          <ArrowRightIcon />
-                          {option.title}
-                        </>
-                      )}
-                      renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined" />}
-                    />
-                  </Grid>
-                  <Grid item xs={3} className="editExperimentSelect">
-                    <FormControl variant="filled">
-                      <InputLabel id="demo-simple-select-filled-label">Type</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-filled-label"
-                        id="demo-simple-select-filled"
-                        value={age}
-                        onChange={handleChange}
-                        IconComponent={ExpandMoreIcon}
-                      >
-
-                        <MenuItem value={20}>Range</MenuItem>
-                        <MenuItem value={30}>List</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid container item xs={4} spacing={1} className="editExperimentField">
-                    <Grid item xs={12}>
-                      <TextField id="filled-basic" label="Values (separated with comas)" variant="filled" />
-                    </Grid>
-                  </Grid>
-                  <Grid item xs="auto" className="editExperimentMenu">
-                    <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-                      <MoreVertIcon />
-                    </IconButton>
-                    <Menu
-                      id="simple-menu"
-                      anchorEl={anchorEl}
-                      keepMounted
-                      classes={{ paper: 'MuiPopover-experiment' }}
-                      open={Boolean(anchorEl)}
-                      onClose={handleClose}
-                      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                    >
-                      <MenuItem onClick={handleClose}>Range</MenuItem>
-                      <MenuItem onClick={handleClose}>List</MenuItem>
-                    </Menu>
-                  </Grid>
-                </Grid>
+                {groupParameters.map((parameter, index) => (
+                  parameterRow(parameter, index, 'group')
+                ))}
               </Box>
             </Box>
             <Box className="editExperimentRow">
-              <Grid className="editExperimentList" container spacing={1}>
-                <Grid item xs className="editExperimentAutocomplete">
-                  <Autocomplete
-                    popupIcon={<ExpandMoreIcon />}
-                    id="combo-box-demo"
-                    options={top100Films}
-                    getOptionLabel={(option) => option.title}
-                    style={{ width: 300 }}
-                    renderOption={(option) => (
-                      <>
-                        <ArrowRightIcon />
-                        {option.title}
-                      </>
-                    )}
-                    renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined" />}
-                  />
-                </Grid>
-                <Grid item xs={3} className="editExperimentSelect">
-                  <FormControl variant="filled">
-                    <InputLabel id="demo-simple-select-filled-label">Type</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-filled-label"
-                      id="demo-simple-select-filled"
-                      value={age}
-                      classes={{
-                        root: classes.root,
-                      }}
-                      onChange={handleChange}
-                      IconComponent={ExpandMoreIcon}
-                    >
-                      <MenuItem value={20}>Range</MenuItem>
-                      <MenuItem value={30}>List</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={4} className="editExperimentField">
-                  <TextField id="filled-basic" label="Values (separated with comas)" variant="filled" />
-                </Grid>
-                <Grid item xs="auto" className="editExperimentMenu">
-                  <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-                    <MoreVertIcon />
-                  </IconButton>
-                  <Menu
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                    classes={{ paper: 'MuiPopover-experiment' }}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                  >
-                    <MenuItem onClick={handleClose}>Range</MenuItem>
-                    <MenuItem onClick={handleClose}>List</MenuItem>
-                  </Menu>
-                </Grid>
-              </Grid>
-              <Grid className="editExperimentList" container spacing={1}>
-                <Grid item xs className="editExperimentAutocomplete">
-                  <Autocomplete
-                    id="combo-box-demo"
-                    popupIcon={<ExpandMoreIcon />}
-                    options={top100Films}
-                    getOptionLabel={(option) => option.title}
-                    style={{ width: 300 }}
-                    renderOption={(option) => (
-                      <>
-                        <ArrowRightIcon />
-                        {option.title}
-                      </>
-                    )}
-                    renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined" />}
-                  />
-                </Grid>
-                <Grid item xs={3} className="editExperimentSelect">
-                  <FormControl variant="filled">
-                    <InputLabel id="demo-simple-select-filled-label">Type</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-filled-label"
-                      id="demo-simple-select-filled"
-                      value={age}
-                      onChange={handleChange}
-                      IconComponent={ExpandMoreIcon}
-                    >
-
-                      <MenuItem value={20}>Range</MenuItem>
-                      <MenuItem value={30}>List</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={4} className="editExperimentField">
-                  <TextField id="filled-basic" label="Values (separated with comas)" variant="filled" />
-                </Grid>
-                <Grid item xs="auto" className="editExperimentMenu">
-                  <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-                    <MoreVertIcon />
-                  </IconButton>
-                  <Menu
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    classes={{ paper: 'MuiPopover-experiment' }}
-                    onClose={handleClose}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                  >
-                    <MenuItem onClick={handleClose}>Range</MenuItem>
-                    <MenuItem onClick={handleClose}>List</MenuItem>
-                  </Menu>
-                </Grid>
-              </Grid>
+              {parameters.map((parameter, index) => (
+                parameterRow(parameter, index)
+              ))}
             </Box>
           </Box>
         </Box>
