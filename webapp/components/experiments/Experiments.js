@@ -241,7 +241,7 @@ const Experiments = (props) => {
           </Box>
         </Box>
       </GridLayout> :
-      <EditExperiment />
+      <EditExperiment setList={setList} />
     }
     </>
   );

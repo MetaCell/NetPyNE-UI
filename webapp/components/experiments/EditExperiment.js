@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import { addExperiment, editExperiment, getParameters } from 'root/api/experiments';
@@ -135,7 +135,7 @@ const useStyles = (theme) => ({
 });
 
 const EditExperiment = (props) => {
-  const { classes } = props;
+  const { classes, setList } = props;
   const experimentDetail = useSelector((state) => state.experiments.experimentDetail);
   console.log(experimentDetail);
 
@@ -182,6 +182,10 @@ const EditExperiment = (props) => {
     });
   };
 
+  useEffect(() => {
+    // viewParameters();
+  }, []);
+
   const top100Films = [
     { title: 'The Shawshank Redemption', year: 1994 },
     { title: 'The Godfather', year: 1972 },
@@ -205,16 +209,10 @@ const EditExperiment = (props) => {
   };
 
   return (
-    // <div>
-    //   <div>{experimentDetail.name}</div>
-    //   <Button onClick={viewParameters}>JSON View</Button>
-    //   <Button onClick={create}>Create</Button>
-    //   <Button onClick={update}>Update</Button>
-    // </div>
     <GridLayout className={classes.root}>
       <Box className="editExperimentContainer">
         <Box my={3} className="editExperimentBack">
-          <ArrowBackIcon />
+          <ArrowBackIcon onClick={() => setList(true)} />
           <Typography variant="body2">New Experiment</Typography>
         </Box>
         <Box mb={2} className="editExperimentHead">
@@ -229,7 +227,7 @@ const EditExperiment = (props) => {
           <Box mb={2} className="editExperimentDefault">
             <Box mb={2} className="editExperimentBreadcrumb">
               <Typography variant="body2">Parameters</Typography>
-              <Link to color="primary">
+              <Link to="true" color="primary">
                 <AddIcon />
                 Add parameter
               </Link>
@@ -422,177 +420,6 @@ const EditExperiment = (props) => {
               <Grid className="editExperimentList" container spacing={1}>
                 <Grid item xs className="editExperimentAutocomplete">
                   <Autocomplete
-                    popupIcon={<ExpandMoreIcon />}
-                    id="combo-box-demo"
-                    options={top100Films}
-                    getOptionLabel={(option) => option.title}
-                    style={{ width: 300 }}
-                    renderOption={(option) => (
-                      <>
-                        <ArrowRightIcon />
-                        {option.title}
-                      </>
-                    )}
-                    renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined" />}
-                  />
-                </Grid>
-                <Grid item xs={3} className="editExperimentSelect">
-                  <FormControl variant="filled">
-                    <InputLabel id="demo-simple-select-filled-label">Type</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-filled-label"
-                      id="demo-simple-select-filled"
-                      value={age}
-                      classes={{
-                        root: classes.root,
-                      }}
-                      onChange={handleChange}
-                      IconComponent={ExpandMoreIcon}
-                    >
-                      <MenuItem value={20}>Range</MenuItem>
-                      <MenuItem value={30}>List</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={4} className="editExperimentField">
-                  <TextField id="filled-basic" label="Values (separated with comas)" variant="filled" />
-                </Grid>
-                <Grid item xs="auto" className="editExperimentMenu">
-                  <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-                    <MoreVertIcon />
-                  </IconButton>
-                  <Menu
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                    classes={{ paper: 'MuiPopover-experiment' }}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                  >
-                    <MenuItem onClick={handleClose}>Range</MenuItem>
-                    <MenuItem onClick={handleClose}>List</MenuItem>
-                  </Menu>
-                </Grid>
-              </Grid>
-              <Grid className="editExperimentList" container spacing={1}>
-                <Grid item xs className="editExperimentAutocomplete">
-                  <Autocomplete
-                    popupIcon={<ExpandMoreIcon />}
-                    id="combo-box-demo"
-                    options={top100Films}
-                    getOptionLabel={(option) => option.title}
-                    style={{ width: 300 }}
-                    renderOption={(option) => (
-                      <>
-                        <ArrowRightIcon />
-                        {option.title}
-                      </>
-                    )}
-                    renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined" />}
-                  />
-                </Grid>
-                <Grid item xs={3} className="editExperimentSelect">
-                  <FormControl variant="filled">
-                    <InputLabel id="demo-simple-select-filled-label">Type</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-filled-label"
-                      id="demo-simple-select-filled"
-                      value={age}
-                      classes={{
-                        root: classes.root,
-                      }}
-                      onChange={handleChange}
-                      IconComponent={ExpandMoreIcon}
-                    >
-                      <MenuItem value={20}>Range</MenuItem>
-                      <MenuItem value={30}>List</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={4} className="editExperimentField">
-                  <TextField id="filled-basic" label="Values (separated with comas)" variant="filled" />
-                </Grid>
-                <Grid item xs="auto" className="editExperimentMenu">
-                  <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-                    <MoreVertIcon />
-                  </IconButton>
-                  <Menu
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                    classes={{ paper: 'MuiPopover-experiment' }}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                  >
-                    <MenuItem onClick={handleClose}>Range</MenuItem>
-                    <MenuItem onClick={handleClose}>List</MenuItem>
-                  </Menu>
-                </Grid>
-              </Grid>
-              <Grid className="editExperimentList" container spacing={1}>
-                <Grid item xs className="editExperimentAutocomplete">
-                  <Autocomplete
-                    popupIcon={<ExpandMoreIcon />}
-                    id="combo-box-demo"
-                    options={top100Films}
-                    getOptionLabel={(option) => option.title}
-                    style={{ width: 300 }}
-                    renderOption={(option) => (
-                      <>
-                        <ArrowRightIcon />
-                        {option.title}
-                      </>
-                    )}
-                    renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined" />}
-                  />
-                </Grid>
-                <Grid item xs={3} className="editExperimentSelect">
-                  <FormControl variant="filled">
-                    <InputLabel id="demo-simple-select-filled-label">Type</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-filled-label"
-                      id="demo-simple-select-filled"
-                      value={age}
-                      classes={{
-                        root: classes.root,
-                      }}
-                      onChange={handleChange}
-                      IconComponent={ExpandMoreIcon}
-                    >
-                      <MenuItem value={20}>Range</MenuItem>
-                      <MenuItem value={30}>List</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={4} className="editExperimentField">
-                  <TextField id="filled-basic" label="Values (separated with comas)" variant="filled" />
-                </Grid>
-                <Grid item xs="auto" className="editExperimentMenu">
-                  <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-                    <MoreVertIcon />
-                  </IconButton>
-                  <Menu
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                    classes={{ paper: 'MuiPopover-experiment' }}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                  >
-                    <MenuItem onClick={handleClose}>Range</MenuItem>
-                    <MenuItem onClick={handleClose}>List</MenuItem>
-                  </Menu>
-                </Grid>
-              </Grid>
-              <Grid className="editExperimentList" container spacing={1}>
-                <Grid item xs className="editExperimentAutocomplete">
-                  <Autocomplete
                     id="combo-box-demo"
                     popupIcon={<ExpandMoreIcon />}
                     options={top100Films}
@@ -656,10 +483,10 @@ const EditExperiment = (props) => {
         flexWrap="wrap"
       >
         <Box className="editExperimentFooter" display="flex">
-          <Button color="secondary">
+          <Button color="secondary" onClick={() => setList(true)}>
             Cancel
           </Button>
-          <Button variant="contained" color="primary">
+          <Button variant="contained" color="primary" onClick={create}>
             Create
           </Button>
         </Box>
