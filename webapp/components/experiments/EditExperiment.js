@@ -176,7 +176,7 @@ const EditExperiment = (props) => {
   };
 
   const viewParameters = () => {
-    getParameters.then((parameters) => {
+    getParameters().then((parameters) => {
       // netParams JSON dict
       console.log(parameters);
     });
