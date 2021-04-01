@@ -130,7 +130,7 @@ const Experiments = (props) => {
   const POLL_INTERVAL = 1000;
 
   useEffect(getExperiments, []);
-  useInterval(getExperiments, POLL_INTERVAL);
+  // useInterval(getExperiments, POLL_INTERVAL);
 
   const cleanExperiment = (payload) => {
     props.cleanExperiment(payload);
@@ -162,7 +162,7 @@ const Experiments = (props) => {
     setList(false)
   };
 
-  const [list, setList] = useState(true);
+  const [list, setList] = useState(false);
 
   return (
     <>

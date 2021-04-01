@@ -139,7 +139,6 @@ const useStyles = (theme) => ({
 const EditExperiment = (props) => {
   const { classes, setList } = props;
   const experimentDetail = useSelector((state) => state.experiments.experimentDetail);
-  console.log(experimentDetail);
 
   const [parameters, setParameters] = useState([{
     mapsTo: '', type: RANGE, min: 0, max: 0, step: 0, inGroup: false,
@@ -189,22 +188,19 @@ const EditExperiment = (props) => {
       });
   };
 
+  const [selectionParams, setSelectionParams] = useState([])
   const viewParameters = () => {
     getParameters().then((parameters) => {
       // netParams JSON dict
-      console.log(parameters);
+      const keys = [];
+      Object.keys((parameters)).map((key) => keys.push({title: key}) );
+      setSelectionParams(keys);
     });
   };
 
   useEffect(() => {
     viewParameters();
   }, []);
-
-  const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-    { title: 'The Godfather: Part II', year: 1974 },
-  ];
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -222,13 +218,19 @@ const EditExperiment = (props) => {
     type === 'group' ? setGroupParameters(newParam) : setParameters(newParam);
   };
 
+  const handleParamSelection = (event, parameter, index, type) => {
+    const newParam = type === 'group' ?  [...groupParameters] : [...parameters];
+    newParam[index] = { ...parameter, mapsTo: event.target.value };
+    type === 'group' ? setGroupParameters(newParam) : setParameters(newParam);
+  }
+
   const parameterRow = (parameter, index, type='single') => (
     <Grid className="editExperimentList" container spacing={1}>
       <Grid item xs className="editExperimentAutocomplete">
         <Autocomplete
           popupIcon={<ExpandMoreIcon />}
           id="combo-box-demo"
-          options={top100Films}
+          options={selectionParams}
           getOptionLabel={(option) => option.title}
           style={{ width: 300 }}
           renderOption={(option) => (
@@ -238,6 +240,7 @@ const EditExperiment = (props) => {
             </>
           )}
           renderInput={(params) => <TextField {...params} label="Type or select parameter" variant="outlined" />}
+          onChange={(e) => handleParamSelection(e, parameter, index, type)}
         />
       </Grid>
       <Grid item xs={3} className="editExperimentSelect">
