@@ -241,9 +241,7 @@ const EditExperiment = (props) => {
   const viewParameters = () => {
     getParameters().then((parameters) => {
       // netParams JSON dict
-      const keys = [];
-      Object.keys((parameters)).map((key) => keys.push({title: key}) );
-      setSelectionParams(keys);
+      setSelectionParams(Object.keys(parameters));
     });
   };
 
@@ -258,9 +256,9 @@ const EditExperiment = (props) => {
     parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
   };
 
-  const handleParamSelection = (event, parameter, index) => {
+  const handleParamSelection = (val, parameter, index) => {
     const newParam = parameter.inGroup ?  [...groupParameters] : [...parameters];
-    newParam[index] = { ...parameter, mapsTo: event.target.value };
+    newParam[index] = { ...parameter, 'mapsTo': val };
     parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
   }
 
@@ -307,21 +305,21 @@ const EditExperiment = (props) => {
           popupIcon={<ExpandMoreIcon />}
           id={`${parameter.name}-combo-box-demo`}
           options={selectionParams}
-          getOptionLabel={(option) => option.title}
           style={{ width: 300 }}
           renderOption={(option) => (
             <>
               <ArrowRightIcon />
-              {option.title}
+              {option}
             </>
           )}
           renderInput={(params) => <TextField {...params} label="Type or select parameter" variant="outlined" />}
-          onChange={(e) => handleParamSelection(e, parameter, index)}
+          value={parameter.mapsTo || ''}
+          onChange={(e, val) => handleParamSelection(val, parameter, index)}
         />
       </Grid>
       <Grid item xs={3} className="editExperimentSelect">
         <FormControl variant="filled">
-          <InputLabel id={`${parameter.name}-select-filled-label`}>Type</InputLabel>
+          <InputLabel id={`${parameter.name}-select-filled-label`}>Type{parameter.mapsTo}</InputLabel>
           <Select
             labelId={`${parameter.name}-select-filled-label`}
             id={`${parameter.name}-select-filled-filled`}
@@ -339,19 +337,19 @@ const EditExperiment = (props) => {
         { parameter.type === RANGE ? (
           <>
             <Grid item xs={4}>
-              <TextField id={`${parameter.name}-from`} label="From" variant="filled" value={parameter?.min || 0} />
+              <TextField id={`${parameter.name}-from`} label="From" variant="filled" value={parameter?.min || ''} onChange={(e) => handleInputText(e, index, parameter, 'min')} />
             </Grid>
             <Grid item xs={4}>
-              <TextField id={`${parameter.name}-to`} label="To" variant="filled" value={parameter?.max || 0} />
+              <TextField id={`${parameter.name}-to`} label="To" variant="filled" value={parameter?.max || ''} onChange={(e) => handleInputText(e, index, parameter, 'max')} />
             </Grid>
             <Grid item xs={4}>
-              <TextField id={`${parameter.name}-step`} label="Step" variant="filled" value={parameter?.step || 0} />
+              <TextField id={`${parameter.name}-step`} label="Step" variant="filled" value={parameter?.step || ''} onChange={(e) => handleInputText(e, index, parameter, 'step')} />
             </Grid>
           </>
         )
           : (
             <Grid item xs={12}>
-              <TextField id={`${parameter.name}-values`} label="Values (separated with comas)" variant="filled" value={parameter?.values ? [...parameter?.values] : []}/>
+              <TextField id={`${parameter.name}-values`} label="Values (separated with comas)" variant="filled" value={parameter?.values || ''} onChange={(e) => handleInputText(e, index, parameter, 'values')} />
             </Grid>
           )}
       </Grid>
@@ -388,6 +386,12 @@ const EditExperiment = (props) => {
     newGroupParams.splice(index, 1);
     setGroupParameters(newGroupParams)
     handleClose()
+  }
+
+  const handleInputText = (event, index, parameter, key ) => {
+    const newParameters = parameter.inGroup ?  [...groupParameters] : [...parameters];
+    newParameters[index] = {...parameter, [key]: event.target.value};
+    parameter.inGroup ? setGroupParameters(newParameters) : setParameters(newParameters);
   }
 
   return (
