@@ -199,11 +199,7 @@ const EditExperiment = (props) => {
     mapsTo: '', type: LIST, values: [], inGroup: false,
   }]);
 
-  const [groupParameters, setGroupParameters] = useState([{
-    mapsTo: '', type: RANGE, min: 0, max: 0, step: 0, inGroup: true,
-  }, {
-    mapsTo: '', type: LIST, values: [1, 33, 3, 3, 3], inGroup: true,
-  }]);
+  const [groupParameters, setGroupParameters] = useState([]);
 
   // Example payload for new experiment
   const newExperiment = {
@@ -255,34 +251,61 @@ const EditExperiment = (props) => {
     viewParameters();
   }, []);
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleChange = (event, parameter, index) => {
+    const newParam = parameter.inGroup ?  [...groupParameters] : [...parameters];
+    const newValues = event.target.value === RANGE ? { min: 0, max: 0, step: 0, type: RANGE } : { values: [], type: LIST }
+    newParam[index] = { ...parameter, ...newValues };
+    parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleChange = (event, parameter, index, type) => {
-    const newParam = type === parameter.inGroup ?  [...groupParameters] : [...parameters];
-    newParam[index] = { ...parameter, type: event.target.value };
-    type === parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
-  };
-
-  const handleParamSelection = (event, parameter, index, type) => {
-    const newParam = type === parameter.inGroup ?  [...groupParameters] : [...parameters];
+  const handleParamSelection = (event, parameter, index) => {
+    const newParam = parameter.inGroup ?  [...groupParameters] : [...parameters];
     newParam[index] = { ...parameter, mapsTo: event.target.value };
-    type === parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
+    parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
+  }
+
+  const ParameterMenu = (props) => {
+    const { parameter, index } = props;
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handleClick = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
+
+    return (
+      <>
+        <IconButton aria-haspopup="true" aria-controls={`${parameter.name}-simple-menu-${index}`} onClick={handleClick}>
+            <MoreVertIcon />
+        </IconButton>
+        <Menu
+          id={`${parameter.name}-simple-menu-${index}`}
+          anchorEl={anchorEl}
+          keepMounted
+          classes={{ paper: 'MuiPopover-experiment' }}
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+          { parameter.inGroup ?
+            <MenuItem onClick={() => removeFromGroup(index)}>Remove from group</MenuItem> : <MenuItem onClick={() => addToGroup(index)}>Add to Group</MenuItem>
+          }
+          <MenuItem onClick={() => removeParamter(index, parameter)}>Delete</MenuItem>
+        </Menu>
+      </>
+    )
   }
 
   const parameterRow = (parameter, index) => (
-    <Grid className="editExperimentList" container spacing={1} key={parameter.name}>
+    <Grid className="editExperimentList" container spacing={1} key={`${parameter.name}-${index}`}>
       <Grid item xs className="editExperimentAutocomplete">
         <Autocomplete
           popupIcon={<ExpandMoreIcon />}
-          id="combo-box-demo"
+          id={`${parameter.name}-combo-box-demo`}
           options={selectionParams}
           getOptionLabel={(option) => option.title}
           style={{ width: 300 }}
@@ -293,17 +316,17 @@ const EditExperiment = (props) => {
             </>
           )}
           renderInput={(params) => <TextField {...params} label="Type or select parameter" variant="outlined" />}
-          onChange={(e) => handleParamSelection(e, parameter, index, type)}
+          onChange={(e) => handleParamSelection(e, parameter, index)}
         />
       </Grid>
       <Grid item xs={3} className="editExperimentSelect">
         <FormControl variant="filled">
-          <InputLabel id="demo-simple-select-filled-label">Type</InputLabel>
+          <InputLabel id={`${parameter.name}-select-filled-label`}>Type</InputLabel>
           <Select
-            labelId="demo-simple-select-filled-label"
-            id="demo-simple-select-filled"
+            labelId={`${parameter.name}-select-filled-label`}
+            id={`${parameter.name}-select-filled-filled`}
             value={parameter.type}
-            onChange={(e) => handleChange(e, parameter, index, type)}
+            onChange={(e) => handleChange(e, parameter, index)}
             IconComponent={ExpandMoreIcon}
           >
 
@@ -316,41 +339,24 @@ const EditExperiment = (props) => {
         { parameter.type === RANGE ? (
           <>
             <Grid item xs={4}>
-              <TextField id="filled-basic" label="From" variant="filled" value={parameter?.min || 0} />
+              <TextField id={`${parameter.name}-from`} label="From" variant="filled" value={parameter?.min || 0} />
             </Grid>
             <Grid item xs={4}>
-              <TextField id="filled-basic" label="To" variant="filled" value={parameter?.max || 0} />
+              <TextField id={`${parameter.name}-to`} label="To" variant="filled" value={parameter?.max || 0} />
             </Grid>
             <Grid item xs={4}>
-              <TextField id="filled-basic" label="Step" variant="filled" value={parameter?.step || 0} />
+              <TextField id={`${parameter.name}-step`} label="Step" variant="filled" value={parameter?.step || 0} />
             </Grid>
           </>
         )
           : (
             <Grid item xs={12}>
-              <TextField id="filled-basic" label="Values (separated with comas)" variant="filled" value={parameter?.values ? [...parameter?.values] : []}/>
+              <TextField id={`${parameter.name}-values`} label="Values (separated with comas)" variant="filled" value={parameter?.values ? [...parameter?.values] : []}/>
             </Grid>
           )}
       </Grid>
       <Grid item xs="auto" className="editExperimentMenu">
-        <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-          <MoreVertIcon />
-        </IconButton>
-        <Menu
-          id="simple-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          classes={{ paper: 'MuiPopover-experiment' }}
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        >
-          { parameter.inGroup ?
-            <MenuItem onClick={() => removeFromGroup(index, parameter)}>Remove from group</MenuItem> : <MenuItem onClick={() => addToGroup(index, parameter)}>{`Add to Group${!parameter.inGroup}`}</MenuItem>
-          }
-          <MenuItem onClick={() => removeParamter(index, parameter)}>Delete</MenuItem>
-        </Menu>
+        <ParameterMenu parameter={parameter} index={index} />
       </Grid>
     </Grid>
   );
@@ -361,8 +367,7 @@ const EditExperiment = (props) => {
     }]);
   };
 
-  const addToGroup = (index, parameter) => {
-    console.log(index, parameter)
+  const addToGroup = (index) => {
     const newParams = [...parameters]
     newParams.splice(index, 1);
     setGroupParameters([...groupParameters, {...parameters[index], inGroup: true}])
@@ -371,18 +376,17 @@ const EditExperiment = (props) => {
   }
 
   const removeParamter = (index, parameter) => {
-    console.log(index)
     const selectedParameters = parameter.inGroup ? [...groupParameters] : [...parameters];
     selectedParameters.splice(index, 1);
     parameter.inGroup ? setGroupParameters(selectedParameters) : setParameters(selectedParameters)
     handleClose()
   }
 
-  const removeFromGroup = (index, parameter) => {
+  const removeFromGroup = (index) => {
     setParameters([...parameters, {...groupParameters[index], inGroup: false}])
-    const newParams = [...groupParameters]
-    newParams.splice(index, 1);
-    setGroupParameters(newParams)
+    const newGroupParams = [...groupParameters]
+    newGroupParams.splice(index, 1);
+    setGroupParameters(newGroupParams)
     handleClose()
   }
 
@@ -395,7 +399,7 @@ const EditExperiment = (props) => {
         </Box>
         <Box mb={2} className="editExperimentHead">
           <form noValidate autoComplete="off">
-            <TextField id="filled-basic" label="Experiment Name" variant="filled" />
+            <TextField id="experiment-name" label="Experiment Name" variant="filled" />
           </form>
           <Box mt={3}>
             <Divider />
@@ -406,19 +410,21 @@ const EditExperiment = (props) => {
             <Box mb={2} className="editExperimentBreadcrumb">
               <Typography variant="body2">Parameters</Typography>
             </Box>
-            <Box mb={2} className="editExperimentGroup">
-              <Box mb={2} className="editExperimentBreadcrumb">
-                <Typography variant="body2">Groupped Parameters</Typography>
+            { groupParameters.length > 0 && (
+              <Box mb={2} className="editExperimentGroup">
+                <Box mb={2} className="editExperimentBreadcrumb">
+                  <Typography variant="body2">Groupped Parameters</Typography>
+                </Box>
+                <Box className="editExperimentRow scrollbar scrollchild">
+                  {groupParameters.map((parameter, index) => (
+                    parameterRow(parameter, index)
+                  ))}
+                </Box>
+                { groupParameters.length === 1 && <Box className="editExpermentWarning">
+                  <Typography variant="caption">Warning: You need at least two parameters for the grouping to work.</Typography>
+                </Box> }
               </Box>
-              <Box className="editExperimentRow scrollbar scrollchild">
-                {groupParameters.map((parameter, index) => (
-                  parameterRow(parameter, index)
-                ))}
-              </Box>
-              { groupParameters.length === 1 && <Box className="editExpermentWarning">
-                <Typography variant="caption">Warning: You need at least two parameters for the grouping to work.</Typography>
-              </Box> }
-            </Box>
+            )}
             <Box className="editExperimentRow">
               {parameters.map((parameter, index) => (
                 parameterRow(parameter, index)
