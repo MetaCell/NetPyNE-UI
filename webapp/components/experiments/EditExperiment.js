@@ -36,6 +36,7 @@ const useStyles = (theme) => ({
   root: {
     '& .editExperimentBack': {
       display: 'flex',
+      cursor: 'pointer',
       paddingLeft: theme.spacing(1),
       '& .MuiTypography-root': {
         marginLeft: theme.spacing(1),
@@ -45,15 +46,6 @@ const useStyles = (theme) => ({
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      '& .MuiTypography-colorPrimary': {
-        borderBottom: '#EB517A 1px solid',
-        display: 'inline-flex',
-        color: '#EB517A',
-        '& .MuiSvgIcon-root': {
-          fontSize: '1rem',
-          marginTop: theme.spacing(0.4),
-        },
-      },
       '& .MuiButton-startIcon': {
         marginRight: theme.spacing(0.4),
       },
@@ -69,12 +61,15 @@ const useStyles = (theme) => ({
     '& .editExperimentList': {
       display: 'flex',
       marginBottom: theme.spacing(1),
+      width: '100%'
     },
     '& .MuiTypography-body2': {
       fontSize: '1rem',
     },
     '& .editExperimentDefault': {
       paddingLeft: theme.spacing(1),
+      overflow: 'auto',
+      maxHeight: '60vh'
     },
     '& .editExperimentHead': {
       paddingLeft: theme.spacing(1),
@@ -88,6 +83,8 @@ const useStyles = (theme) => ({
       '& .editExperimentRow': {
         paddingLeft: theme.spacing(4),
         position: 'relative',
+        overflow: 'auto',
+        maxHeight: '25vh',
         '&:before': {
           background: '#4A4A4A',
           content: '""',
@@ -102,6 +99,27 @@ const useStyles = (theme) => ({
     },
     '& .MuiAutocomplete-root': {
       width: '100% !important',
+      '& .MuiAutocomplete-popper': {
+        marginTop: -theme.spacing(1),
+        '& .MuiAutocomplete-option': {
+          paddingLeft: theme.spacing(1),
+          paddingRight: theme.spacing(1),
+        }
+      },
+      '& .MuiPopover-root': {
+        '& .MuiPaper-root': {
+          '& .MuiList-root': {
+            '& .MuiMenuItem-gutters': {
+              paddingLeft: theme.spacing(2),
+              paddingRight: theme.spacing(2),
+            }
+          }
+        }
+      },
+
+      '& .MuiPopover-experiment': {
+        width: theme.spacing(14),
+      },
     },
     '& .MuiFormControl-root': {
       width: '100%',
@@ -119,8 +137,29 @@ const useStyles = (theme) => ({
     },
     '& .editExperimentFooter': {
       position: 'absolute',
-      bottom: theme.spacing(4),
-      right: theme.spacing(4),
+      left: 0,
+      bottom: 0,
+      right: 0,
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      background: '#434343',
+      boxShadow: '0 -7px 13px -4px rgb(0, 0, 0, 0.6)',
+      padding: theme.spacing(2.5),
+      zIndex: 100,
+      '& .MuiTypography-colorPrimary': {
+        borderBottom: '#EB517A 1px solid',
+        display: 'inline-flex',
+        color: '#EB517A',
+        cursor: 'pointer',
+        '&:hover': {
+          textDecoration: 'none',
+        },
+        '& .MuiSvgIcon-root': {
+          fontSize: '1rem',
+          marginTop: theme.spacing(0.4),
+        },
+      },
       '& .MuiButton-root': {
         minWidth: theme.spacing(11),
         padding: theme.spacing(0.4),
@@ -133,6 +172,20 @@ const useStyles = (theme) => ({
         color: '#fff',
       },
     },
+    '& .editExpermentWarning': {
+      paddingLeft: '0.625rem',
+      '& .MuiTypography-caption': {
+        fontSize: '0.875rem',
+      }
+    },
+    '& .editExperimentField': {
+      '& .MuiFormControl-root': {
+        overflow: 'hidden',
+        '& .MuiFormLabel-root': {
+          whiteSpace: 'noWrap',
+        }
+      }
+    }
   },
 });
 
@@ -149,7 +202,7 @@ const EditExperiment = (props) => {
   const [groupParameters, setGroupParameters] = useState([{
     mapsTo: '', type: RANGE, min: 0, max: 0, step: 0, inGroup: true,
   }, {
-    mapsTo: '', type: LIST, values: [], inGroup: true,
+    mapsTo: '', type: LIST, values: [1, 33, 3, 3, 3], inGroup: true,
   }]);
 
   // Example payload for new experiment
@@ -352,20 +405,19 @@ const EditExperiment = (props) => {
           <Box mb={2} className="editExperimentDefault">
             <Box mb={2} className="editExperimentBreadcrumb">
               <Typography variant="body2">Parameters</Typography>
-              <Link to="true" color="primary" onClick={addParameter}>
-                <AddIcon />
-                Add parameter
-              </Link>
             </Box>
             <Box mb={2} className="editExperimentGroup">
               <Box mb={2} className="editExperimentBreadcrumb">
                 <Typography variant="body2">Groupped Parameters</Typography>
               </Box>
-              <Box className="editExperimentRow">
+              <Box className="editExperimentRow scrollbar scrollchild">
                 {groupParameters.map((parameter, index) => (
                   parameterRow(parameter, index)
                 ))}
               </Box>
+              { groupParameters.length === 1 && <Box className="editExpermentWarning">
+                <Typography variant="caption">Warning: You need at least two parameters for the grouping to work.</Typography>
+              </Box> }
             </Box>
             <Box className="editExperimentRow">
               {parameters.map((parameter, index) => (
@@ -381,13 +433,21 @@ const EditExperiment = (props) => {
         display="flex"
         flexWrap="wrap"
       >
-        <Box className="editExperimentFooter" display="flex">
-          <Button color="secondary" onClick={() => setList(true)}>
-            Cancel
-          </Button>
-          <Button variant="contained" color="primary" onClick={create}>
+        <Box className="editExperimentFooter">
+          <Box>
+            <Link to="true" color="primary" onClick={addParameter}>
+              <AddIcon />
+              Add parameter
+            </Link>
+          </Box>
+          <Box display="flex">
+            <Button color="secondary" onClick={() => setList(true)}>
+              Cancel
+            </Button>
+            <Button variant="contained" color="primary" onClick={create}>
             Create
           </Button>
+          </Box>
         </Box>
       </Box>
     </GridLayout>
