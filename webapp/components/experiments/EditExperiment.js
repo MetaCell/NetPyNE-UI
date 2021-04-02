@@ -147,9 +147,9 @@ const EditExperiment = (props) => {
   }]);
 
   const [groupParameters, setGroupParameters] = useState([{
-    mapsTo: '', type: RANGE, min: 0, max: 0, step: 0, inGroup: false,
+    mapsTo: '', type: RANGE, min: 0, max: 0, step: 0, inGroup: true,
   }, {
-    mapsTo: '', type: LIST, values: [], inGroup: false,
+    mapsTo: '', type: LIST, values: [], inGroup: true,
   }]);
 
   // Example payload for new experiment
@@ -213,19 +213,19 @@ const EditExperiment = (props) => {
   };
 
   const handleChange = (event, parameter, index, type) => {
-    const newParam = type === 'group' ?  [...groupParameters] : [...parameters];
+    const newParam = type === parameter.inGroup ?  [...groupParameters] : [...parameters];
     newParam[index] = { ...parameter, type: event.target.value };
-    type === 'group' ? setGroupParameters(newParam) : setParameters(newParam);
+    type === parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
   };
 
   const handleParamSelection = (event, parameter, index, type) => {
-    const newParam = type === 'group' ?  [...groupParameters] : [...parameters];
+    const newParam = type === parameter.inGroup ?  [...groupParameters] : [...parameters];
     newParam[index] = { ...parameter, mapsTo: event.target.value };
-    type === 'group' ? setGroupParameters(newParam) : setParameters(newParam);
+    type === parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
   }
 
-  const parameterRow = (parameter, index, type='single') => (
-    <Grid className="editExperimentList" container spacing={1}>
+  const parameterRow = (parameter, index) => (
+    <Grid className="editExperimentList" container spacing={1} key={parameter.name}>
       <Grid item xs className="editExperimentAutocomplete">
         <Autocomplete
           popupIcon={<ExpandMoreIcon />}
@@ -293,8 +293,10 @@ const EditExperiment = (props) => {
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         >
-          <MenuItem onClick={handleClose}>Add to Group</MenuItem>
-          <MenuItem onClick={handleClose}>Delete</MenuItem>
+          { parameter.inGroup ?
+            <MenuItem onClick={() => removeFromGroup(index, parameter)}>Remove from group</MenuItem> : <MenuItem onClick={() => addToGroup(index, parameter)}>{`Add to Group${!parameter.inGroup}`}</MenuItem>
+          }
+          <MenuItem onClick={() => removeParamter(index, parameter)}>Delete</MenuItem>
         </Menu>
       </Grid>
     </Grid>
@@ -305,6 +307,31 @@ const EditExperiment = (props) => {
       mapsTo: '', type: RANGE, min: 0, max: 0, step: 0, inGroup: false,
     }]);
   };
+
+  const addToGroup = (index, parameter) => {
+    console.log(index, parameter)
+    const newParams = [...parameters]
+    newParams.splice(index, 1);
+    setGroupParameters([...groupParameters, {...parameters[index], inGroup: true}])
+    setParameters(newParams)
+    handleClose()
+  }
+
+  const removeParamter = (index, parameter) => {
+    console.log(index)
+    const selectedParameters = parameter.inGroup ? [...groupParameters] : [...parameters];
+    selectedParameters.splice(index, 1);
+    parameter.inGroup ? setGroupParameters(selectedParameters) : setParameters(selectedParameters)
+    handleClose()
+  }
+
+  const removeFromGroup = (index, parameter) => {
+    setParameters([...parameters, {...groupParameters[index], inGroup: false}])
+    const newParams = [...groupParameters]
+    newParams.splice(index, 1);
+    setGroupParameters(newParams)
+    handleClose()
+  }
 
   return (
     <GridLayout className={classes.root}>
@@ -336,7 +363,7 @@ const EditExperiment = (props) => {
               </Box>
               <Box className="editExperimentRow">
                 {groupParameters.map((parameter, index) => (
-                  parameterRow(parameter, index, 'group')
+                  parameterRow(parameter, index)
                 ))}
               </Box>
             </Box>
