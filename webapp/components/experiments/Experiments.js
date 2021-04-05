@@ -25,8 +25,8 @@ import {
 } from '../../constants';
 import { withStyles } from '@material-ui/core/styles';
 import useInterval from 'root/api/hooks';
-import { openDialog } from '../../redux/actions/general';
 import EditExperiment from './EditExperiment';
+import ExperimentDialog from './ExperimentDialog';
 
 const useStyles = theme => ({
   root: {
@@ -133,9 +133,8 @@ const Experiments = (props) => {
   } = props;
 
   const POLL_INTERVAL = 1000;
-
   useEffect(getExperiments, []);
-  useInterval(getExperiments, POLL_INTERVAL);
+  // useInterval(getExperiments, POLL_INTERVAL);
 
   const cleanExperiment = (payload) => {
     props.cleanExperiment(payload);
@@ -162,13 +161,14 @@ const Experiments = (props) => {
     return date?.toLocaleDateString();
   };
 
-  const openCreateDialog = (fields) => {
-    openDialog(fields);
-    setList(false)
-  };
+  const [dialogOpen, setDialogOpen] = useState(false)
 
   const [list, setList] = useState(true);
 
+  const createExperimentScreen = () => {
+    setDialogOpen(false)
+    setList(false)
+  }
   return (
     <>
     { list ?
@@ -240,7 +240,7 @@ const Experiments = (props) => {
             <Button
               color="primary"
               startIcon={<AddIcon/>}
-              onClick={() => openCreateDialog({title: 'Create new experiment', message:'xyz'})}
+              onClick={() => setDialogOpen(true)}
             >
               CREATE NEW EXPERIMENT
             </Button>
@@ -249,6 +249,7 @@ const Experiments = (props) => {
       </GridLayout> :
       <EditExperiment setList={setList} />
     }
+    <ExperimentDialog open={dialogOpen} dialogClose={setDialogOpen} createExperiment={createExperimentScreen} />
     </>
   );
 };
