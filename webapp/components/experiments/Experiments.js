@@ -30,7 +30,12 @@ import EditExperiment from './EditExperiment';
 
 const useStyles = theme => ({
   root: {
+    '& .scrollDiv': {
+      overflow: 'auto',
+    },
     '& .MuiTableContainer-root': {
+      maxHeight: 'calc(100% -60vh)',
+      overflow: 'auto',
       '&::-webkit-scrollbar': {
         height: theme.spacing(1),
       },
@@ -130,7 +135,7 @@ const Experiments = (props) => {
   const POLL_INTERVAL = 1000;
 
   useEffect(getExperiments, []);
-  // useInterval(getExperiments, POLL_INTERVAL);
+  useInterval(getExperiments, POLL_INTERVAL);
 
   const cleanExperiment = (payload) => {
     props.cleanExperiment(payload);
@@ -162,13 +167,13 @@ const Experiments = (props) => {
     setList(false)
   };
 
-  const [list, setList] = useState(false);
+  const [list, setList] = useState(true);
 
   return (
     <>
     { list ?
       <GridLayout className={classes.root}>
-        <div>
+        <div className="scrollDiv">
           <Box>
             <TableContainer component={Paper}>
               <Table aria-label="simple table">
@@ -180,7 +185,7 @@ const Experiments = (props) => {
                           <Typography variant="h6" className="experimentHead">
                             {experiment?.name}
                           </Typography>
-                          <ChevronRightIcon className="experimentHeadIcon"/>
+                          <ChevronRightIcon className="experimentHeadIcon" onClick={() => setList(false)}/>
                         </Button>
                       </TableCell>
                       <TableCell align="left">
@@ -229,6 +234,7 @@ const Experiments = (props) => {
           mt={1}
           display="flex"
           flexWrap="wrap"
+          flex="none"
         >
           <Box>
             <Button
