@@ -26,6 +26,7 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 const RANGE = 'range';
 const LIST = 'list';
+const regex = new RegExp(/^(\s*-?\d+(\.\d+)?)(\s*,\s*-?\d+(\.\d+)?)*$/);
 /**
  * Edit/Add view of a single Experiment.
  *
@@ -192,40 +193,29 @@ const useStyles = (theme) => ({
 const EditExperiment = (props) => {
   const { classes, setList } = props;
   const experimentDetail = useSelector((state) => state.experiments.experimentDetail);
-
+  console.log(experimentDetail)
   const [parameters, setParameters] = useState([{
     mapsTo: '', type: RANGE, min: 0, max: 0, step: 0, inGroup: false,
   }, {
-    mapsTo: '', type: LIST, values: [], inGroup: false,
+    mapsTo: '', type: LIST, values: [], inGroup: false, val: ''
   }]);
-
   const [groupParameters, setGroupParameters] = useState([]);
-
-  // Example payload for new experiment
-  const newExperiment = {
-    name: 'New Experiment',
-    params: [{
-      mapsTo: 'netParams.connParams.weight',
-      type: LIST,
-      values: [1, 2, 3, 4, 5],
-      inGroup: true,
-    }, {
-      mapsTo: 'netParams.connParams.probability',
-      type: RANGE,
-      min: 0.0,
-      max: 1.0,
-      step: 0.3,
-      inGroup: false,
-    },
-    ],
-  };
-
+  const [experimentName, setExperimentName] = useState('');
+  const [experimentError, setExperimentError] = useState(false);
   const create = () => {
     // When user creates a new Experiment
-    addExperiment(newExperiment)
-      .then((result) => {
-        console.log(result);
-      });
+    if(experimentName === '') {
+      setExperimentError(true)
+    } else {
+      setExperimentError(false)
+      const newExperiment = {name: experimentName, params: [...parameters, ...groupParameters]};
+      console.log(newExperiment)
+      addExperiment(newExperiment)
+        .then((result) => {
+          console.log(result);
+          setList(true);
+        });
+      }
   };
 
   const update = () => {
@@ -251,7 +241,7 @@ const EditExperiment = (props) => {
 
   const handleChange = (event, parameter, index) => {
     const newParam = parameter.inGroup ?  [...groupParameters] : [...parameters];
-    const newValues = event.target.value === RANGE ? { min: 0, max: 0, step: 0, type: RANGE } : { values: [], type: LIST }
+    const newValues = event.target.value === RANGE ? { min: 0, max: 0, step: 0, type: RANGE } : { values: [], type: LIST, val: '' }
     newParam[index] = { ...parameter, ...newValues };
     parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
   };
@@ -319,7 +309,7 @@ const EditExperiment = (props) => {
       </Grid>
       <Grid item xs={3} className="editExperimentSelect">
         <FormControl variant="filled">
-          <InputLabel id={`${parameter.name}-select-filled-label`}>Type{parameter.mapsTo}</InputLabel>
+          <InputLabel id={`${parameter.name}-select-filled-label`}>Type</InputLabel>
           <Select
             labelId={`${parameter.name}-select-filled-label`}
             id={`${parameter.name}-select-filled-filled`}
@@ -337,19 +327,19 @@ const EditExperiment = (props) => {
         { parameter.type === RANGE ? (
           <>
             <Grid item xs={4}>
-              <TextField id={`${parameter.name}-from`} label="From" variant="filled" value={parameter?.min || ''} onChange={(e) => handleInputText(e, index, parameter, 'min')} />
+              <TextField id={`${parameter.name}-from`} label="From" variant="filled" type="number" value={parameter?.min} onChange={(e) => handleInputText(e, index, parameter, 'min')} />
             </Grid>
             <Grid item xs={4}>
-              <TextField id={`${parameter.name}-to`} label="To" variant="filled" value={parameter?.max || ''} onChange={(e) => handleInputText(e, index, parameter, 'max')} />
+              <TextField id={`${parameter.name}-to`} label="To" variant="filled" type="number" value={parameter?.max} onChange={(e) => handleInputText(e, index, parameter, 'max')} />
             </Grid>
             <Grid item xs={4}>
-              <TextField id={`${parameter.name}-step`} label="Step" variant="filled" value={parameter?.step || ''} onChange={(e) => handleInputText(e, index, parameter, 'step')} />
+              <TextField id={`${parameter.name}-step`} label="Step" variant="filled" type="number" value={parameter?.step} onChange={(e) => handleInputText(e, index, parameter, 'step')} />
             </Grid>
           </>
         )
           : (
             <Grid item xs={12}>
-              <TextField id={`${parameter.name}-values`} label="Values (separated with comas)" variant="filled" value={parameter?.values || ''} onChange={(e) => handleInputText(e, index, parameter, 'values')} />
+              <TextField id={`${parameter.name}-values`} label="Values (separated with comas)" variant="filled" value={parameter?.val || ''} onChange={(e) => handleInputValues(e, index, parameter, 'val')} error={parameter.error} helperText={parameter.helperText} />
             </Grid>
           )}
       </Grid>
@@ -390,8 +380,19 @@ const EditExperiment = (props) => {
 
   const handleInputText = (event, index, parameter, key ) => {
     const newParameters = parameter.inGroup ?  [...groupParameters] : [...parameters];
-    newParameters[index] = {...parameter, [key]: event.target.value};
+    newParameters[index] = {...parameter, [key]: parseFloat(event.target.value)};
     parameter.inGroup ? setGroupParameters(newParameters) : setParameters(newParameters);
+  }
+
+  const handleInputValues = (event, index, parameter ) => {
+    const newParameters = parameter.inGroup ?  [...groupParameters] : [...parameters];
+    newParameters[index] = regex.test(event.target.value) ? { ...parameter, 'val': event.target.value, 'values': [...event.target.value], error: false, helperText: ''} : { ...parameter, 'val': event.target.value, 'values': [...event.target.value], error: true, helperText: 'Please check the input'}
+    parameter.inGroup ? setGroupParameters(newParameters) : setParameters(newParameters);
+  }
+
+  const setExperimentNameInfo = (val) => {
+    setExperimentError(val === '')
+    setExperimentName(val)
   }
 
   return (
@@ -403,7 +404,7 @@ const EditExperiment = (props) => {
         </Box>
         <Box mb={2} className="editExperimentHead">
           <form noValidate autoComplete="off">
-            <TextField id="experiment-name" label="Experiment Name" variant="filled" />
+            <TextField id="experiment-name" label="Experiment Name" variant="filled" value={experimentName} onChange={(e) => setExperimentNameInfo(e.target.value)} error={experimentError} helperText={experimentError ? 'Please enter experiment name' : ''} />
           </form>
           <Box mt={3}>
             <Divider />
