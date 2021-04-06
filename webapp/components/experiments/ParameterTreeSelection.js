@@ -14,107 +14,7 @@ const useStyles = (theme) => ({
 });
 
 const ParameterTreeSelection = (props) => {
-  const [treeData, setTreeData] = useState([
-    {
-      title: 'San Diego, APRIL 25-26, 2009',
-      subtitle:
-        '1.5 T General Electric (GE) Signa Excite. 8-channel, transmit-receive head coil',
-      children: [
-        {
-          title: 'cellparams',
-          data: 'cellParams.FS_rule.conds.cellType',
-          children: [
-            {
-              title: 'FS_rule',
-              children: [
-                {
-                  title: 'conds',
-                  children: [
-                    {
-                      title: 'cellType, FS',
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              title: 'old',
-            }
-          ]
-        },
-        {
-          title: '3-D FAST SPIN ECHO',
-          data: '3-D FAST SPIN ECHO',
-          children: [
-            {
-              title: 'car',
-            },
-            {
-              title: 'truck',
-            }
-          ]
-        },
-        {
-          title: '2-D FAST SPIN ECHO',
-          data: '2-D FAST SPIN ECHO',
-        },
-        {
-          title: 'HIGH RES 3-D T1-WEIGHTED FSPGR',
-          data: 'HIGH RES 3-D T1-WEIGHTED FSPGR',
-        },
-      ],
-    },
-    {
-      title: 'Chicken',
-      subtitle:
-        '1.5 T General Electric (GE) Signa Excite. 8-channel, transmit-receive head coil',
-      children: [
-        {
-          title: 'cellparams',
-          data: 'cellParams.FS_rule.conds.cellType',
-          children: [
-            {
-              title: 'FS_rule',
-              children: [
-                {
-                  title: 'conds',
-                  children: [
-                    {
-                      title: 'cellType, FS',
-                      data: 'cellParams.FS_rule.conds.cellType',
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              title: 'old',
-            }
-          ]
-        },
-        {
-          title: '3-D FAST SPIN ECHO',
-          data: '3-D FAST SPIN ECHO',
-          children: [
-            {
-              title: 'car',
-            },
-            {
-              title: 'truck',
-            }
-          ]
-        },
-        {
-          title: '2-D FAST SPIN ECHO',
-          data: '2-D FAST SPIN ECHO',
-        },
-        {
-          title: 'HIGH RES 3-D T1-WEIGHTED FSPGR',
-          data: 'HIGH RES 3-D T1-WEIGHTED FSPGR',
-        },
-      ],
-    },
-  ]);
+  const [treeData, setTreeData] = useState(props.data);
   const { classes } = props;
   const [searchQuery, setSearchQuery] = useState('');
   const [treeStyle, setTreeStyle] = useState({ width: '100%' });
@@ -138,8 +38,8 @@ const ParameterTreeSelection = (props) => {
     <Tree
       style={treeStyle}
       treeData={treeData}
-      handleClick={treeOptionSelection}
-      rowHeight={50}
+      // handleClick={treeOptionSelection}
+      rowHeight={35}
       toggleMode={false}
       searchQuery={searchQuery}
       controls={(

@@ -31,7 +31,7 @@ const ExperimentDialog = (props) => {
     >
       <DialogTitle>Create New Experiment</DialogTitle>
       <DialogContent>
-        <Typography variant="subtitle" className={classes.heading}>The new experiment will replace the current experiment in design, are you sure you want to proceed?</Typography>
+        <Typography className={classes.heading}>The new experiment will replace the current experiment in design, are you sure you want to proceed?</Typography>
       </DialogContent>
       <DialogActions>
         <Button

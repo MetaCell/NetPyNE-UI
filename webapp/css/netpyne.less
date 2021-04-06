@@ -670,8 +670,12 @@ div.flexlayout__layout {
 }
 .editExperimentAutocomplete {
   .treeViewer {
+    height: 100% !important;
     .rst__virtualScrollOverride {
       background: transparent;
+    }
+    .MuiOutlinedInput-input {
+      padding: 1.688rem 0.75 0.75rem;
     }
     .ReactVirtualized__Grid__innerScrollContainer {
       z-index: 99;
@@ -682,9 +686,19 @@ div.flexlayout__layout {
       .rst__rowContents {
         background: transparent !important;
       }
-      // background-color: #434343;
+      .rst__rowTitle {
+        font-weight: normal;
+      }
       .rst__expandButton {
-        // background: #fff url('/static/icons/arrow_drop_down.svg') no-repeat center;
+        .expandIcon;
+      }
+      .rst__collapseButton {
+        .collapseIcon;
+      }
+      .rst__rowContents{
+        &:hover {
+          color: @textColor !important;
+        }
       }
       .rst__lineBlock:before, .rst__lineBlock:after {
         background-color: transparent;

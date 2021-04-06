@@ -25,6 +25,7 @@ import {
 } from 'netpyne/components';
 import { withStyles } from '@material-ui/core/styles';
 import ParameterTreeSelection from './ParameterTreeSelection';
+
 const RANGE = 'range';
 const LIST = 'list';
 const regex = new RegExp(/^(\s*-?\d+(\.\d+)?)(\s*,\s*-?\d+(\.\d+)?)*$/);
@@ -239,10 +240,33 @@ const EditExperiment = (props) => {
   const viewParameters = () => {
     getParameters().then((parameters) => {
       // netParams JSON dict
-      setSelectionParams(Object.keys(parameters));
-      console.log(flatten(parameters))
+      setSelectionParams(hierarchy(parameters))
     });
   };
+
+  const hierarchy = (obj) => {
+    if (!(obj instanceof Object)) return [{ title : obj }];
+    return Object.keys(obj).map((key, index) => {
+      if(obj instanceof Object) {
+        // if(obj[key] instanceof Object) {
+          return {
+            title: key,
+            children: hierarchy(obj[key])
+          }
+        // } else {
+        //   return {
+        //     title: key
+        //   }
+        // }
+
+      } else {
+        console.log(obj[key], 'm here', obj)
+        return { title : obj[key] };
+      }
+    }, [])
+
+
+  }
 
   useEffect(() => {
     viewParameters();
@@ -298,20 +322,6 @@ const EditExperiment = (props) => {
   }
 
   const parameterRow = (parameter, index) => {
-    // const [searchQuery, setSearchQuery] = useState('')
-    // const [treeStyle, setTreeStyle] = useState({ width: '100%'});
-
-    // const setQuery = (value) => {
-    //   setTreeStyle({...treeStyle, height: value === '' ? '0px' : '250px'})
-    //   setSearchQuery(value)
-    // }
-
-    // const customSearchMethod = ({ node, searchQuery }) => searchQuery && node.title.toLowerCase().indexOf(searchQuery.toLowerCase()) > -1;
-
-    // const treeOptionSelection = (event, rowInfo) => {
-    //   setSearchQuery(rowInfo.node.data || rowInfo.node.title)
-    //   setTreeStyle({...treeStyle, height: '0px'})
-    // }
     return (
     <Grid className="editExperimentList" container spacing={1} key={`${parameter.name}-${index}`}>
       <Grid item xs className="editExperimentAutocomplete">
@@ -330,7 +340,7 @@ const EditExperiment = (props) => {
           value={parameter.mapsTo || ''}
           onChange={(e, val) => handleParamSelection(val, parameter, index)}
         /> */}
-          <ParameterTreeSelection classes={classes} />
+          <ParameterTreeSelection classes={classes} data={selectionParams} />
       </Grid>
       <Grid item xs={3} className="editExperimentSelect">
         <FormControl variant="filled">
@@ -455,11 +465,12 @@ const EditExperiment = (props) => {
                 </Box> }
               </Box>
             )}
-            <Box className="editExperimentRow">
+            {selectionParams.length > 0 && <Box className="editExperimentRow">
               {parameters.map((parameter, index) => (
                 parameterRow(parameter, index)
               ))}
             </Box>
+            }
           </Box>
         </Box>
       </Box>
