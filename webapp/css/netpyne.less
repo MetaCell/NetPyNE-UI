@@ -668,3 +668,30 @@ div.flexlayout__layout {
     color: @experimentSvgcolor;
   }
 }
+.editExperimentAutocomplete {
+  .treeViewer {
+    .rst__virtualScrollOverride {
+      background: transparent;
+    }
+    .ReactVirtualized__Grid__innerScrollContainer {
+      z-index: 99;
+      background: transparent;
+      .rst__node{
+        background: @experimentInputColor;
+      }
+      .rst__rowContents {
+        background: transparent !important;
+      }
+      // background-color: #434343;
+      .rst__expandButton {
+        // background: #fff url('/static/icons/arrow_drop_down.svg') no-repeat center;
+      }
+      .rst__lineBlock:before, .rst__lineBlock:after {
+        background-color: transparent;
+      }
+      .rst__lineChildren:after {
+        background-color: transparent;
+      }
+    }
+  }
+}

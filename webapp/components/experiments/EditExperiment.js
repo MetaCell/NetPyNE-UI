@@ -24,6 +24,7 @@ import {
   GridLayout,
 } from 'netpyne/components';
 import { withStyles } from '@material-ui/core/styles';
+import ParameterTreeSelection from './ParameterTreeSelection';
 const RANGE = 'range';
 const LIST = 'list';
 const regex = new RegExp(/^(\s*-?\d+(\.\d+)?)(\s*,\s*-?\d+(\.\d+)?)*$/);
@@ -193,7 +194,7 @@ const useStyles = (theme) => ({
 const EditExperiment = (props) => {
   const { classes, setList } = props;
   const experimentDetail = useSelector((state) => state.experiments.experimentDetail);
-  console.log(experimentDetail)
+
   const [parameters, setParameters] = useState([{
     mapsTo: '', type: RANGE, min: 0, max: 0, step: 0, inGroup: false,
   }, {
@@ -209,10 +210,8 @@ const EditExperiment = (props) => {
     } else {
       setExperimentError(false)
       const newExperiment = {name: experimentName, params: [...parameters, ...groupParameters]};
-      console.log(newExperiment)
       addExperiment(newExperiment)
         .then((result) => {
-          console.log(result);
           setList(true);
         });
       }
@@ -228,10 +227,20 @@ const EditExperiment = (props) => {
   };
 
   const [selectionParams, setSelectionParams] = useState([])
+  const flatten = (obj, path = '') => {
+    if (!(obj instanceof Object)) return {[path.replace(/\.$/g, '')]:obj};
+
+    return Object.keys(obj).reduce((output, key) => {
+        return obj instanceof Array ?
+             {...output, ...flatten(obj[key], path +  '[' + key + '].')}:
+             {...output, ...flatten(obj[key], path + key + '.')};
+    }, {});
+}
   const viewParameters = () => {
     getParameters().then((parameters) => {
       // netParams JSON dict
       setSelectionParams(Object.keys(parameters));
+      console.log(flatten(parameters))
     });
   };
 
@@ -288,10 +297,25 @@ const EditExperiment = (props) => {
     )
   }
 
-  const parameterRow = (parameter, index) => (
+  const parameterRow = (parameter, index) => {
+    // const [searchQuery, setSearchQuery] = useState('')
+    // const [treeStyle, setTreeStyle] = useState({ width: '100%'});
+
+    // const setQuery = (value) => {
+    //   setTreeStyle({...treeStyle, height: value === '' ? '0px' : '250px'})
+    //   setSearchQuery(value)
+    // }
+
+    // const customSearchMethod = ({ node, searchQuery }) => searchQuery && node.title.toLowerCase().indexOf(searchQuery.toLowerCase()) > -1;
+
+    // const treeOptionSelection = (event, rowInfo) => {
+    //   setSearchQuery(rowInfo.node.data || rowInfo.node.title)
+    //   setTreeStyle({...treeStyle, height: '0px'})
+    // }
+    return (
     <Grid className="editExperimentList" container spacing={1} key={`${parameter.name}-${index}`}>
       <Grid item xs className="editExperimentAutocomplete">
-        <Autocomplete
+        {/* <Autocomplete
           popupIcon={<ExpandMoreIcon />}
           id={`${parameter.name}-combo-box-demo`}
           options={selectionParams}
@@ -305,7 +329,8 @@ const EditExperiment = (props) => {
           renderInput={(params) => <TextField {...params} label="Type or select parameter" variant="outlined" />}
           value={parameter.mapsTo || ''}
           onChange={(e, val) => handleParamSelection(val, parameter, index)}
-        />
+        /> */}
+          <ParameterTreeSelection classes={classes} />
       </Grid>
       <Grid item xs={3} className="editExperimentSelect">
         <FormControl variant="filled">
@@ -347,7 +372,7 @@ const EditExperiment = (props) => {
         <ParameterMenu parameter={parameter} index={index} />
       </Grid>
     </Grid>
-  );
+  )};
 
   const addParameter = () => {
     setParameters([...parameters, {
@@ -456,8 +481,8 @@ const EditExperiment = (props) => {
               Cancel
             </Button>
             <Button variant="contained" color="primary" onClick={create}>
-            Create
-          </Button>
+              Create
+            </Button>
           </Box>
         </Box>
       </Box>
