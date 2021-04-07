@@ -18,27 +18,41 @@ const ParameterTreeSelection = (props) => {
   const { classes } = props;
   const [searchQuery, setSearchQuery] = useState('');
   const [treeStyle, setTreeStyle] = useState({ width: '100%' });
+
+  // play with tree height to give a dropdown view instead of always open
+  const showTreeStructure = (hide) => {
+    setTreeStyle({ ...treeStyle, height: hide ? '0px' : '250px' });
+  };
+
   const setQuery = (value) => {
-    setTreeStyle({ ...treeStyle, height: value === '' ? '0px' : '250px' });
+    showTreeStructure(value === '');
     setSearchQuery(value);
   };
 
+  const [tempSelection, setTempSelection] = useState('');
   const treeOptionSelection = (event, rowInfo) => {
-    // alert('tree selection')
-    setSearchQuery(rowInfo.node.data || rowInfo.node.title);
-    setTreeStyle({ ...treeStyle, height: '0px' });
+    const { title, children } = rowInfo.node;
+    if (title && (children && children.length > 0)) {
+      setTempSelection(`${tempSelection + title}.`);
+    }
+    if (!children || children.length === 0) {
+      setSearchQuery(tempSelection + title);
+      setTempSelection('');
+    }
   };
+
+  // make tree appear like a autocomplete dropdown, toggle visibility on textfield click
   const [expand, setExpand] = useState(false);
   const toggleExpand = () => {
     setExpand(!expand);
-    setTreeStyle({ ...treeStyle, height: expand ? '0px' : '250px' });
+    showTreeStructure(expand);
   };
 
   return (
     <Tree
       style={treeStyle}
       treeData={treeData}
-      // handleClick={treeOptionSelection}
+      handleClick={treeOptionSelection}
       rowHeight={35}
       toggleMode={false}
       searchQuery={searchQuery}
@@ -48,16 +62,16 @@ const ParameterTreeSelection = (props) => {
           variant="outlined"
           value={searchQuery}
           onChange={(e) => setQuery(e.target.value)}
+          onClick={toggleExpand}
           InputProps={{
             endAdornment: (
-              <ExpandMoreIcon onClick={toggleExpand} />
+              <ExpandMoreIcon />
             ),
           }}
           className={classes.treeViewerSearch}
         />
       )}
-      onlyExpandSearchedNodes={true}
-      classes={classes.treeViewer}
+      onlyExpandSearchedNodes
     />
   );
 };

@@ -228,44 +228,24 @@ const EditExperiment = (props) => {
   };
 
   const [selectionParams, setSelectionParams] = useState([])
-  const flatten = (obj, path = '') => {
-    if (!(obj instanceof Object)) return {[path.replace(/\.$/g, '')]:obj};
 
-    return Object.keys(obj).reduce((output, key) => {
-        return obj instanceof Array ?
-             {...output, ...flatten(obj[key], path +  '[' + key + '].')}:
-             {...output, ...flatten(obj[key], path + key + '.')};
-    }, {});
-}
   const viewParameters = () => {
     getParameters().then((parameters) => {
       // netParams JSON dict
-      setSelectionParams(hierarchy(parameters))
+      setSelectionParams(treeHierarchy(parameters))
     });
   };
 
-  const hierarchy = (obj) => {
-    if (!(obj instanceof Object)) return [{ title : obj }];
+  const treeHierarchy = (obj) => {
+    if (!(obj instanceof Object)) return [{ title : obj === false ? 'false' : obj }];
     return Object.keys(obj).map((key, index) => {
       if(obj instanceof Object) {
-        // if(obj[key] instanceof Object) {
-          return {
-            title: key,
-            children: hierarchy(obj[key])
-          }
-        // } else {
-        //   return {
-        //     title: key
-        //   }
-        // }
-
-      } else {
-        console.log(obj[key], 'm here', obj)
-        return { title : obj[key] };
+        return {
+          title: key,
+          children: treeHierarchy(obj[key])
+        }
       }
     }, [])
-
-
   }
 
   useEffect(() => {
@@ -279,11 +259,11 @@ const EditExperiment = (props) => {
     parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
   };
 
-  const handleParamSelection = (val, parameter, index) => {
-    const newParam = parameter.inGroup ?  [...groupParameters] : [...parameters];
-    newParam[index] = { ...parameter, 'mapsTo': val };
-    parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
-  }
+  // const handleParamSelection = (val, parameter, index) => {
+  //   const newParam = parameter.inGroup ?  [...groupParameters] : [...parameters];
+  //   newParam[index] = { ...parameter, 'mapsTo': val };
+  //   parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
+  // }
 
   const ParameterMenu = (props) => {
     const { parameter, index } = props;
