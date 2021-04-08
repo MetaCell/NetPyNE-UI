@@ -62,6 +62,7 @@ import _SelectCellTemplate from './definition/cellRules/SelectCellTemplate';
 import _Experiments from './experiments/Experiments';
 import _Experiment from './experiments/Experiment';
 import _EditExperiment from './experiments/EditExperiment';
+import _ExperimentManager from './experiments/ExperimentManager';
 
 const updateCardsDispatch = (dispatch) => ({ updateCards: () => dispatch(updateCards) });
 
@@ -125,7 +126,7 @@ export const Experiments = connect(
 export const Experiment = _Experiment;
 
 export const EditExperiment = _EditExperiment;
-
+export const ExperimentManager = _ExperimentManager;
 // ---------------------------------------------------------------------------------------- //
 
 // CONNECT

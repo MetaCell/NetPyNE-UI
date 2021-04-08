@@ -25,7 +25,6 @@ import {
 } from '../../constants';
 import { withStyles } from '@material-ui/core/styles';
 import useInterval from 'root/api/hooks';
-import EditExperiment from './EditExperiment';
 import DeleteDialogBox from '../general/DeleteDialogBox';
 
 const useStyles = theme => ({
@@ -130,11 +129,12 @@ const Experiments = (props) => {
     experiments,
     getExperiments,
     classes,
+    setList
   } = props;
 
   const POLL_INTERVAL = 1000;
   useEffect(getExperiments, []);
-  // useInterval(getExperiments, POLL_INTERVAL);
+  useInterval(getExperiments, POLL_INTERVAL);
 
   const cleanExperiment = (payload) => {
     props.cleanExperiment(payload);
@@ -148,22 +148,12 @@ const Experiments = (props) => {
     props.viewExperiment(payload);
   };
 
-  const handleDelete = () => {
-    console.info('You clicked the delete icon.');
-  };
-
-  const handleClick = () => {
-    console.info('You clicked the Chip.');
-  };
-
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
     return date?.toLocaleDateString();
   };
 
   const [dialogOpen, setDialogOpen] = useState(false)
-
-  const [list, setList] = useState(true);
 
   const createExperimentScreen = (actionConfirmed) => {
     setDialogOpen(false)
@@ -172,84 +162,80 @@ const Experiments = (props) => {
 
   return (
     <>
-    { list ?
-      <GridLayout className={classes.root}>
-        <div className="scrollDiv">
-          <Box>
-            <TableContainer component={Paper}>
-              <Table aria-label="simple table">
-                <TableBody>
-                  {experiments.map((experiment) => (
-                    <TableRow key={experiment?.name}>
-                      <TableCell component="th" scope="row">
-                        <Button>
-                          <Typography variant="h6" className="experimentHead">
-                            {experiment?.name}
-                          </Typography>
-                          <ChevronRightIcon className="experimentHeadIcon" onClick={() => setList(false)}/>
-                        </Button>
-                      </TableCell>
-                      <TableCell align="left">
-                        <Typography variant="h6" className="experimentDate">
-                          {formatDate(experiment?.timestamp)}
+    <GridLayout className={classes.root}>
+      <div className="scrollDiv">
+        <Box>
+          <TableContainer component={Paper}>
+            <Table aria-label="simple table">
+              <TableBody>
+                {experiments.map((experiment) => (
+                  <TableRow key={experiment?.name}>
+                    <TableCell component="th" scope="row">
+                      <Button>
+                        <Typography variant="h6" className="experimentHead">
+                          {experiment?.name}
                         </Typography>
-                      </TableCell>
-                      <TableCell align="left" className="experimentTableCell">
-                        {(experiment?.state === EXPERIMENT_STATE.SIMULATING || experiment?.state === EXPERIMENT_STATE.INSTANTIATING) ?
-                          <Chip
-                            icon={<Box className="MuiChipLoader"></Box>}
-                            label={experiment?.state}
-                            onDelete={handleDelete}
-                            deleteIcon={<CancelRoundedIcon/>}
-                          /> :
-                          <Chip
-                            label={experiment?.state}
-                          />
-                        }
-                      </TableCell>
-                      <TableCell align="right">
-                        <Button className="experimentIcon"
-                                onClick={viewExperiment}>{experiment?.state === EXPERIMENT_STATE.DESIGN ?
-                          <EditIcon/> : <FileCopyOutlinedIcon/>}</Button>
-                      </TableCell>
-                      <TableCell align="center">
-                        <Divider orientation="vertical"/>
-                      </TableCell>
-                      <TableCell align="right">
-                        <Button className="experimentIcon"
-                                onClick={cleanExperiment}><ReplayIcon/></Button>
-                      </TableCell>
-                      <TableCell align="right">
-                        <Button className="experimentIcon"
-                                onClick={deleteExperiment}><DeleteIcon/></Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Box>
-        </div>
-        <Box
-          className={`scrollbar scrollchild`}
-          mt={1}
-          display="flex"
-          flexWrap="wrap"
-          flex="none"
-        >
-          <Box>
-            <Button
-              color="primary"
-              startIcon={<AddIcon/>}
-              onClick={() => setDialogOpen(true)}
-            >
-              CREATE NEW EXPERIMENT
-            </Button>
-          </Box>
+                        <ChevronRightIcon className="experimentHeadIcon" onClick={() => setList(false)}/>
+                      </Button>
+                    </TableCell>
+                    <TableCell align="left">
+                      <Typography variant="h6" className="experimentDate">
+                        {formatDate(experiment?.timestamp)}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="left" className="experimentTableCell">
+                      {(experiment?.state === EXPERIMENT_STATE.SIMULATING || experiment?.state === EXPERIMENT_STATE.INSTANTIATING) ?
+                        <Chip
+                          icon={<Box className="MuiChipLoader"></Box>}
+                          label={experiment?.state}
+                          deleteIcon={<CancelRoundedIcon/>}
+                        /> :
+                        <Chip
+                          label={experiment?.state}
+                        />
+                      }
+                    </TableCell>
+                    <TableCell align="right">
+                      <Button className="experimentIcon"
+                              onClick={viewExperiment}>{experiment?.state === EXPERIMENT_STATE.DESIGN ?
+                        <EditIcon/> : <FileCopyOutlinedIcon/>}</Button>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Divider orientation="vertical"/>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Button className="experimentIcon"
+                              onClick={cleanExperiment}><ReplayIcon/></Button>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Button className="experimentIcon"
+                              onClick={deleteExperiment}><DeleteIcon/></Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Box>
-      </GridLayout> :
-      <EditExperiment setList={setList} />
-    }
+      </div>
+      <Box
+        className={`scrollbar scrollchild`}
+        mt={1}
+        display="flex"
+        flexWrap="wrap"
+        flex="none"
+      >
+        <Box>
+          <Button
+            color="primary"
+            startIcon={<AddIcon/>}
+            onClick={() => setDialogOpen(true)}
+          >
+            CREATE NEW EXPERIMENT
+          </Button>
+        </Box>
+      </Box>
+    </GridLayout>
     <DeleteDialogBox open={dialogOpen} onDialogResponse={createExperimentScreen} textForDialog={{ heading: EXPERIMENT_TEXTS.CREATE_EXPERIMENT, content: EXPERIMENT_TEXTS.DIALOG_MESSAGE }} />
     </>
   );
