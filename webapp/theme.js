@@ -26,8 +26,16 @@ export const {
   bgInputs,
   gutter,
   radius,
+  borderRadius,
   canvasBgDark,
   canvasBgLight,
+  experimentAutomcompleteBorder,
+  experimentInputColor,
+  experimentGrey,
+  experimentFieldColor,
+  experimentSvgcolor,
+  experimentlabelcolor,
+  errorFieldBorder,
 } = vars;
 
 const rawTheme = {

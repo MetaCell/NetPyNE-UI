@@ -573,18 +573,6 @@ div.flexlayout__layout {
     visibility: hidden;
   }
 }
-//experiment table start
-.MuiTableContainer-root {
-  .experimentDate {
-    color: @experimentGrey;
-  }
-  .experimentIcon {
-    color: @experimentGrey;
-  }
-  .MuiChip-label {
-    color: @experimentGrey;
-  }
-}
 @-webkit-keyframes spin {
   0% { -webkit-transform: rotate(0deg); }
   100% { -webkit-transform: rotate(360deg); }
@@ -593,78 +581,4 @@ div.flexlayout__layout {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-}
-.editExperimentContainer {
-  .editExperimentContent {
-    .MuiTypography-body2 {
-      opacity: 0.54;
-    }
-  }
-  .MuiOutlinedInput-root {
-    background: @experimentInputColor;
-  }
-  .MuiFilledInput-root {
-    border-radius: @borderRadius;
-    background: @experimentInputColor;
-  }
-  .MuiFormLabel-root {
-    color: #FFF;
-    opacity: 0.54;
-  }
-  .MuiInputLabel-filled.MuiInputLabel-shrink {
-    color: @experimentlabelcolor;
-    opacity: 0.87;
-  }
-  .editExperimentGroup {
-    .scrollbar {
-      &::-webkit-scrollbar-thumb {
-        background: @secondaryColor;
-        border-left: @radius solid @bgDarkest;
-        border-right: @radius solid @bgDarkest;
-      }
-      &::-webkit-scrollbar {
-        width: @gutter;
-      }
-    }
-    background: @bgDarkest;
-    .MuiFilledInput-root {
-      background: @experimentFieldColor;
-    }
-    .MuiOutlinedInput-root {
-      background: @experimentFieldColor;
-    }
-  }
-  .editExperimentWarning {
-    .MuiTypography-root {
-      color: @experimentlabelcolor;
-    }
-  }
-  .MuiFilledInput-root {
-    border: 1px solid transparent;
-    &.Mui-error {
-      border-color: @errorFieldBorder;
-      box-shadow: 0 0 0 2px rgba(242, 69, 61, 0.2);
-    }
-  }
-  .MuiFormHelperText-contained {
-    margin-left: 0;
-  }
-  .MuiFormHelperText-root {
-    color: @errorFieldBorder;
-    font-size: 0.875rem;
-    line-height: 100%;
-  }
-}
-.MuiAutocomplete-popper {
-  .MuiPaper-root {
-    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);    
-    border-radius: 0 0 @borderRadius @borderRadius;
-    border-top: 1px solid @experimentAutomcompleteBorder;
-  }
-  .MuiAutocomplete-option {
-    color: @textColor;
-  }
-  .MuiSvgIcon-root {
-    color: @experimentSvgcolor;
-  }
 }

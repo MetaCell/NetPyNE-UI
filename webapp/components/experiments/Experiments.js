@@ -26,6 +26,7 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 import useInterval from 'root/api/hooks';
 import DeleteDialogBox from '../general/DeleteDialogBox';
+import { experimentGrey, experimentInputColor } from '../../theme';
 
 const useStyles = theme => ({
   root: {
@@ -49,19 +50,22 @@ const useStyles = theme => ({
           fontStyle: 'italic',
           fontWeight: 300,
           fontSize: '1rem',
+          color: experimentGrey,
         },
         '& .experimentIcon': {
+          color: experimentGrey,
           minWidth: 'auto',
           '& .MuiSvgIcon-root': {
             fontSize: '1.2rem',
           }
         },
         '& .MuiChip-label': {
+          color: experimentGrey,
           fontSize: ' 0.77rem',
           fontWeight: 600,
         },
         '& .MuiChip-root': {
-          background: 'rgba(255, 255, 255, 0.1)',
+          background: experimentInputColor,
           height: theme.spacing(3.2),
         },
         '& .MuiChip-deleteIcon': {
@@ -91,7 +95,7 @@ const useStyles = theme => ({
           }
         },
         '& .MuiChip-icon': {
-          color: '#A8A5A5',
+          color: experimentGrey,
         },
         '& .MuiDivider-vertical': {
           height: theme.spacing(4),
@@ -108,7 +112,7 @@ const useStyles = theme => ({
       '& .MuiChipLoader': {
         border: '3px solid rgba(196, 196, 196, 0.3)',
         borderRadius: '50%',
-        borderTop: '3px solid #A8A5A5',
+        borderTop: `3px solid ${experimentGrey}`,
         width: theme.spacing(2.4),
         height: theme.spacing(2.4),
         animation: 'spin 2s linear infinite',

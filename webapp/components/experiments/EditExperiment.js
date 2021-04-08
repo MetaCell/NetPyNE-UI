@@ -23,6 +23,8 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 import { EXPERIMENT_TEXTS } from '../../constants';
 import ParameterMenu from './ParameterMenu';
+import { bgDarkest, bgLight, bgRegular, secondaryColor, fontColor, radius, primaryColor, borderRadius, experimentInputColor, experimentFieldColor, experimentSvgcolor, experimentlabelcolor, experimentAutomcompleteBorder, errorFieldBorder,
+} from '../../theme';
 
 const regex = new RegExp(/^(\s*-?\d+(\.\d+)?)(\s*,\s*-?\d+(\.\d+)?)*$/);
 /**
@@ -33,6 +35,13 @@ const regex = new RegExp(/^(\s*-?\d+(\.\d+)?)(\s*,\s*-?\d+(\.\d+)?)*$/);
  */
 const useStyles = (theme) => ({
   root: {
+    '& .editExperimentContainer': {
+      '& .editExperimentContent': {
+        '& .MuiTypography-body2': {
+          opacity: '0.54',
+        }
+      }
+    },
     '& .editExperimentBack': {
       display: 'flex',
       cursor: 'pointer',
@@ -74,8 +83,19 @@ const useStyles = (theme) => ({
       paddingLeft: theme.spacing(1),
     },
     '& .editExperimentGroup': {
+      background: bgDarkest,
       borderRadius: theme.spacing(0.4),
       padding: theme.spacing(2, 0),
+      '& .scrollbar': {
+        '&::-webkit-scrollbar-thumb': {
+          background: secondaryColor,
+          borderLeft: `${radius} solid ${bgDarkest}`,
+          borderRight: `${radius} solid ${bgDarkest}`,
+        },
+        '&::-webkit-scrollbar': {
+          width: theme.spacing(2),
+        }
+      },
       '& .editExperimentBreadcrumb': {
         paddingLeft: '0.625rem',
       },
@@ -85,7 +105,7 @@ const useStyles = (theme) => ({
         overflow: 'auto',
         maxHeight: '25vh',
         '&:before': {
-          background: '#4A4A4A',
+          background: bgLight,
           content: '""',
           height: '100%',
           width: '0.125rem',
@@ -95,33 +115,43 @@ const useStyles = (theme) => ({
           left: '0.875rem',
         },
       },
+      '& .MuiFilledInput-root': {
+        background: experimentFieldColor,
+      },
+      '& .MuiOutlinedInput-root': {
+        background: experimentFieldColor,
+      },
     },
     '& .MuiAutocomplete-root': {
       width: '100% !important',
-      '& .MuiAutocomplete-popper': {
-        marginTop: -theme.spacing(1),
-        '& .MuiAutocomplete-option': {
-          paddingLeft: theme.spacing(1),
-          paddingRight: theme.spacing(1),
-        }
-      },
-      '& .MuiPopover-root': {
-        '& .MuiPaper-root': {
-          '& .MuiList-root': {
-            '& .MuiMenuItem-gutters': {
-              paddingLeft: theme.spacing(2),
-              paddingRight: theme.spacing(2),
-            }
+    },
+    '& .MuiPopover-root': {
+      '& .MuiPaper-root': {
+        '& .MuiList-root': {
+          '& .MuiMenuItem-gutters': {
+            paddingLeft: theme.spacing(2),
+            paddingRight: theme.spacing(2),
           }
         }
-      },
-
-      '& .MuiPopover-experiment': {
-        width: theme.spacing(14),
-      },
+      }
+    },
+    '& .MuiPopover-experiment': {
+      width: theme.spacing(14),
     },
     '& .MuiFormControl-root': {
       width: '100%',
+    },
+    '& .MuiOutlinedInput-root': {
+      background: experimentInputColor,
+    },
+    '& .MuiFilledInput-root': {
+      borderRadius: borderRadius,
+      background: experimentInputColor,
+      border: '1px solid transparent',
+      '& .Mui-error': {
+        borderColor: errorFieldBorder,
+        boxShadow: '0 0 0 2px rgba(242, 69, 61, 0.2)',
+      }
     },
     '& .MuiOutlinedInput-notchedOutline': {
       border: '0 !important',
@@ -133,6 +163,26 @@ const useStyles = (theme) => ({
     },
     '& .MuiFormLabel-root': {
       fontWeight: 'normal',
+      color: fontColor,
+      opacity: '0.54',
+      '&.MuiInputLabel-shrink': {
+        color: experimentlabelcolor,
+        opacity: '0.87',
+      },
+    },
+    '& .MuiTypography-colorPrimary': {
+      borderBottom: `${primaryColor} 1px solid`,
+      display: 'inline-flex',
+      color: primaryColor,
+      cursor: 'pointer',
+      marginTop: theme.spacing(1),
+      '&:hover': {
+        textDecoration: 'none',
+      },
+      '& .MuiSvgIcon-root': {
+        fontSize: '1rem',
+        marginTop: theme.spacing(0.4),
+      },
     },
     '& .editExperimentFooter': {
       position: 'absolute',
@@ -140,25 +190,12 @@ const useStyles = (theme) => ({
       bottom: 0,
       right: 0,
       display: 'flex',
-      justifyContent: 'space-between',
+      justifyContent: 'flex-end',
       alignItems: 'center',
-      background: '#434343',
+      background: bgRegular,
       boxShadow: '0 -7px 13px -4px rgb(0, 0, 0, 0.6)',
       padding: theme.spacing(2.5),
       zIndex: 100,
-      '& .MuiTypography-colorPrimary': {
-        borderBottom: '#EB517A 1px solid',
-        display: 'inline-flex',
-        color: '#EB517A',
-        cursor: 'pointer',
-        '&:hover': {
-          textDecoration: 'none',
-        },
-        '& .MuiSvgIcon-root': {
-          fontSize: '1rem',
-          marginTop: theme.spacing(0.4),
-        },
-      },
       '& .MuiButton-root': {
         minWidth: theme.spacing(11),
         padding: theme.spacing(0.4),
@@ -168,11 +205,14 @@ const useStyles = (theme) => ({
         textTransform: 'uppercase',
       },
       '& .MuiButton-textSecondary': {
-        color: '#fff',
+        color: fontColor,
       },
     },
     '& .editExperimentWarning': {
       paddingLeft: '0.625rem',
+      '& .MuiTypography-root': {
+        color: experimentlabelcolor,
+      },
       '& .MuiTypography-caption': {
         fontSize: '0.875rem',
       }
@@ -184,13 +224,38 @@ const useStyles = (theme) => ({
           whiteSpace: 'noWrap',
         }
       }
+    },
+    '& .MuiFormHelperText-contained': {
+      marginLeft: 0,
+    },
+    '& .MuiFormHelperText-root': {
+      color: errorFieldBorder,
+      fontSize: '0.875rem',
+      lineHeight: '100%',
+    }
+  },
+  popper: {
+    marginTop: -theme.spacing(1),
+    '& .MuiPaper-root': {
+      boxShadow: '0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12)',
+      borderRadius: `0 0 ${borderRadius} ${borderRadius}`,
+      borderTop: `1px solid ${experimentAutomcompleteBorder}`,
+    },
+    '& .MuiSvgIcon-root': {
+      color: experimentSvgcolor,
+    },
+    '& .MuiAutocomplete-option': {
+      paddingLeft: theme.spacing(1),
+      color: fontColor,
+      paddingRight: theme.spacing(1),
     }
   },
 });
 
-const ParameterRow = (parameter, index, handleParamSelection, handleChange, handleInputText, handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams) => {
+const ParameterRow = (parameter, index, handleParamSelection, handleChange, handleInputText, handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams, classes) => {
   const { RANGE } = EXPERIMENT_TEXTS;
   return (
+
     <Grid className="editExperimentList" container spacing={1} key={`${parameter.name}-${index}`}>
       <Grid item xs className="editExperimentAutocomplete">
         <Autocomplete
@@ -198,6 +263,9 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
           id={`${parameter.name}-combo-box-demo`}
           options={selectionParams}
           style={{ width: 300 }}
+          classes={{
+            popper: classes.popper
+          }}
           renderOption={(option) => (
             <>
               <ArrowRightIcon />
@@ -249,6 +317,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
         <ParameterMenu parameter={parameter} index={index} addToGroup={addToGroup} removeParameter={removeParameter} removeFromGroup={removeFromGroup} />
       </Grid>
     </Grid>
+
   )
 };
 
@@ -383,7 +452,7 @@ const EditExperiment = (props) => {
                 </Box>
                 <Box className="editExperimentRow scrollbar scrollchild">
                   {groupParameters.map((parameter, index) => (
-                    ParameterRow(parameter, index, handleParamSelection, handleChange, handleInputText, handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams)
+                    ParameterRow(parameter, index, handleParamSelection, handleChange, handleInputText, handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams, classes)
                   ))}
                 </Box>
                 { groupParameters.length === 1 && <Box className="editExperimentWarning">
@@ -393,8 +462,14 @@ const EditExperiment = (props) => {
             )}
             <Box className="editExperimentRow">
               {parameters.map((parameter, index) => (
-                ParameterRow(parameter, index, handleParamSelection, handleChange, handleInputText, handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams)
+                ParameterRow(parameter, index, handleParamSelection, handleChange, handleInputText, handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams, classes)
               ))}
+            </Box>
+            <Box>
+              <Link to="true" color="primary" onClick={addParameter}>
+                <AddIcon />
+                Add parameter
+              </Link>
             </Box>
           </Box>
         </Box>
@@ -406,12 +481,6 @@ const EditExperiment = (props) => {
         flexWrap="wrap"
       >
         <Box className="editExperimentFooter">
-          <Box>
-            <Link to="true" color="primary" onClick={addParameter}>
-              <AddIcon />
-              Add parameter
-            </Link>
-          </Box>
           <Box display="flex">
             <Button color="secondary" onClick={() => setList(true)}>
               Cancel
