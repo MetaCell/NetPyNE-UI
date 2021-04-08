@@ -25,8 +25,9 @@ import { EXPERIMENT_TEXTS } from '../../constants';
 import ParameterMenu from './ParameterMenu';
 import { bgDarkest, bgLight, bgRegular, secondaryColor, fontColor, radius, primaryColor, borderRadius, experimentInputColor, experimentFieldColor, experimentSvgcolor, experimentlabelcolor, experimentAutomcompleteBorder, errorFieldBorder,
 } from '../../theme';
-
+const RANGE_VALUE = '';
 const regex = new RegExp(/^(\s*-?\d+(\.\d+)?)(\s*,\s*-?\d+(\.\d+)?)*$/);
+const regexRange = RegExp((/^(-?[0-9]*[.][0-9]+)(,-?[0-9]*[.][0-9]+)*$/));
 /**
  * Edit/Add view of a single Experiment.
  *
@@ -297,19 +298,19 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
         { parameter.type === RANGE ? (
           <>
             <Grid item xs={4}>
-              <TextField id={`${parameter.name}-from`} label="From" variant="filled" type="number" value={parameter?.min} onChange={(e) => handleInputText(e, index, parameter, 'min')} />
+              <TextField id={`${parameter.name}-from`} label="From" variant="filled" value={parameter?.min} onChange={(e) => handleInputText(e.target.value, index, parameter, 'min')} error={parameter?.minerror} helperText={parameter?.minhelperText} autoComplete="off" />
             </Grid>
             <Grid item xs={4}>
-              <TextField id={`${parameter.name}-to`} label="To" variant="filled" type="number" value={parameter?.max} onChange={(e) => handleInputText(e, index, parameter, 'max')} />
+              <TextField id={`${parameter.name}-to`} label="To" variant="filled" value={parameter?.max} onChange={(e) => handleInputText(e.target.value, index, parameter, 'max')} error={parameter?.maxerror} helperText={parameter?.maxhelperText} autoComplete="off" />
             </Grid>
             <Grid item xs={4}>
-              <TextField id={`${parameter.name}-step`} label="Step" variant="filled" type="number" value={parameter?.step} onChange={(e) => handleInputText(e, index, parameter, 'step')} />
+              <TextField id={`${parameter.name}-step`} label="Step" variant="filled" value={parameter?.step} onChange={(e) => handleInputText(e.target.value, index, parameter, 'step')} error={parameter?.steperror} helperText={parameter?.stephelperText} autoComplete="off" />
             </Grid>
           </>
         )
           : (
             <Grid item xs={12}>
-              <TextField id={`${parameter.name}-values`} label="Values (separated with comas)" variant="filled" value={parameter?.val || ''} onChange={(e) => handleInputValues(e, index, parameter, 'val')} error={parameter.error} helperText={parameter.helperText} autoComplete="off" />
+              <TextField id={`${parameter.name}-values`} label="Values (separated with comas)" variant="filled" value={parameter?.val || ''} onChange={(e) => handleInputValues(e.target.value, index, parameter, 'val')} error={parameter.error} helperText={parameter.helperText} autoComplete="off" />
             </Grid>
           )}
       </Grid>
@@ -326,7 +327,7 @@ const EditExperiment = (props) => {
   const experimentDetail = useSelector((state) => state.experiments.experimentDetail);
   const { RANGE, LIST } = EXPERIMENT_TEXTS;
   const [parameters, setParameters] = useState([{
-    mapsTo: '', type: RANGE, min: 0, max: 0, step: 0, inGroup: false,
+    mapsTo: '', type: RANGE, min: RANGE_VALUE, max: RANGE_VALUE, step: RANGE_VALUE, inGroup: false,
   }, {
     mapsTo: '', type: LIST, values: [], inGroup: false, val: ''
   }]);
@@ -371,7 +372,7 @@ const EditExperiment = (props) => {
 
   const handleChange = (event, parameter, index) => {
     const newParam = parameter.inGroup ?  [...groupParameters] : [...parameters];
-    const newValues = event.target.value === RANGE ? { min: 0, max: 0, step: 0, type: RANGE } : { values: [], type: LIST, val: '' }
+    const newValues = event.target.value === RANGE ? { min: RANGE_VALUE, max: RANGE_VALUE, step: RANGE_VALUE, type: RANGE } : { values: [], type: LIST, val: '' }
     newParam[index] = { ...parameter, ...newValues };
     parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
   };
@@ -384,7 +385,7 @@ const EditExperiment = (props) => {
 
   const addParameter = () => {
     setParameters([...parameters, {
-      mapsTo: '', type: RANGE, min: 0, max: 0, step: 0, inGroup: false,
+      mapsTo: '', type: RANGE, min: RANGE_VALUE, max: RANGE_VALUE, step: RANGE_VALUE, inGroup: false,
     }]);
   };
 
@@ -408,15 +409,17 @@ const EditExperiment = (props) => {
     setGroupParameters(newGroupParams)
   }
 
-  const handleInputText = (event, index, parameter, key ) => {
+  const handleInputText = (val, index, parameter, key ) => {
     const newParameters = parameter.inGroup ?  [...groupParameters] : [...parameters];
-    newParameters[index] = {...parameter, [key]: parseFloat(event.target.value)};
+    const validValue = regexRange.test(val);
+    newParameters[index] = {...parameter, [key]: val, [`${key}error`]: !validValue, [`${key}helperText`]: validValue ? '' : EXPERIMENT_TEXTS.FLOAT_ERR_MESSAGE};
     parameter.inGroup ? setGroupParameters(newParameters) : setParameters(newParameters);
   }
 
-  const handleInputValues = (event, index, parameter ) => {
+  const handleInputValues = (val, index, parameter ) => {
     const newParameters = parameter.inGroup ?  [...groupParameters] : [...parameters];
-    newParameters[index] = regex.test(event.target.value) ? { ...parameter, 'val': event.target.value, 'values': [...event.target.value], error: false, helperText: ''} : { ...parameter, 'val': event.target.value, 'values': [...event.target.value], error: true, helperText: EXPERIMENT_TEXTS.INPUT_ERR_MESSAGE}
+    const validValue = regex.test(val);
+    newParameters[index] = { ...parameter, 'val': val, 'values': [...val], error: !validValue, helperText: validValue ? '': EXPERIMENT_TEXTS.INPUT_ERR_MESSAGE};
     parameter.inGroup ? setGroupParameters(newParameters) : setParameters(newParameters);
   }
 
