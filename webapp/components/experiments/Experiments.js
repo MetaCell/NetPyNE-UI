@@ -161,7 +161,7 @@ const Experiments = (props) => {
 
   const createExperimentScreen = (actionConfirmed) => {
     setDialogOpen(false)
-    setList(false)
+    setList(!actionConfirmed)
   }
 
   return (
