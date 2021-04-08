@@ -14,9 +14,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import Link from '@material-ui/core/Link';
@@ -25,6 +22,7 @@ import {
 } from 'netpyne/components';
 import { withStyles } from '@material-ui/core/styles';
 import { EXPERIMENT_TEXTS } from '../../constants';
+import ParameterMenu from './ParameterMenu';
 
 const regex = new RegExp(/^(\s*-?\d+(\.\d+)?)(\s*,\s*-?\d+(\.\d+)?)*$/);
 /**
@@ -190,105 +188,9 @@ const useStyles = (theme) => ({
   },
 });
 
-const EditExperiment = (props) => {
-  const { classes, setList } = props;
-  const experimentDetail = useSelector((state) => state.experiments.experimentDetail);
-  const { RANGE, LIST } = EXPERIMENT_TEXTS;
-  const [parameters, setParameters] = useState([{
-    mapsTo: '', type: RANGE, min: 0, max: 0, step: 0, inGroup: false,
-  }, {
-    mapsTo: '', type: LIST, values: [], inGroup: false, val: ''
-  }]);
-  const [groupParameters, setGroupParameters] = useState([]);
-  const [experimentName, setExperimentName] = useState('');
-  const [experimentError, setExperimentError] = useState(false);
-  const create = () => {
-    // When user creates a new Experiment
-    if(experimentName === '') {
-      setExperimentError(true)
-    } else {
-      setExperimentError(false)
-      const newExperiment = {name: experimentName, params: [...parameters, ...groupParameters]};
-      console.log(newExperiment)
-      addExperiment(newExperiment)
-        .then((result) => {
-          console.log(result);
-          setList(true);
-        });
-      }
-  };
-
-  const update = () => {
-    // When user edits existing Experiment
-    // TODO: use name of current Experiment
-    editExperiment('EI Populations', { name: 'New Experiment' })
-      .then((result) => {
-        console.log(result);
-      });
-  };
-
-  const [selectionParams, setSelectionParams] = useState([])
-  const viewParameters = () => {
-    getParameters().then((parameters) => {
-      // netParams JSON dict
-      setSelectionParams(Object.keys(parameters));
-    });
-  };
-
-  useEffect(() => {
-    viewParameters();
-  }, []);
-
-  const handleChange = (event, parameter, index) => {
-    const newParam = parameter.inGroup ?  [...groupParameters] : [...parameters];
-    const newValues = event.target.value === RANGE ? { min: 0, max: 0, step: 0, type: RANGE } : { values: [], type: LIST, val: '' }
-    newParam[index] = { ...parameter, ...newValues };
-    parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
-  };
-
-  const handleParamSelection = (val, parameter, index) => {
-    const newParam = parameter.inGroup ?  [...groupParameters] : [...parameters];
-    newParam[index] = { ...parameter, 'mapsTo': val };
-    parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
-  }
-
-  const ParameterMenu = (props) => {
-    const { parameter, index } = props;
-    const [anchorEl, setAnchorEl] = useState(null);
-
-    const handleClick = (event) => {
-      setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-      setAnchorEl(null);
-    };
-
-    return (
-      <>
-        <IconButton aria-haspopup="true" aria-controls={`${parameter.name}-simple-menu-${index}`} onClick={handleClick}>
-            <MoreVertIcon />
-        </IconButton>
-        <Menu
-          id={`${parameter.name}-simple-menu-${index}`}
-          anchorEl={anchorEl}
-          keepMounted
-          classes={{ paper: 'MuiPopover-experiment' }}
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        >
-          { parameter.inGroup ?
-            <MenuItem onClick={() => removeFromGroup(index)}>Remove from group</MenuItem> : <MenuItem onClick={() => addToGroup(index)}>Add to Group</MenuItem>
-          }
-          <MenuItem onClick={() => removeParameter(index, parameter)}>Delete</MenuItem>
-        </Menu>
-      </>
-    )
-  }
-
-  const parameterRow = (parameter, index) => (
+const ParameterRow = (parameter, index, handleParamSelection, handleChange, handleInputText, handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams) => {
+  const { RANGE } = EXPERIMENT_TEXTS;
+  return (
     <Grid className="editExperimentList" container spacing={1} key={`${parameter.name}-${index}`}>
       <Grid item xs className="editExperimentAutocomplete">
         <Autocomplete
@@ -344,10 +246,72 @@ const EditExperiment = (props) => {
           )}
       </Grid>
       <Grid item xs="auto" className="editExperimentMenu">
-        <ParameterMenu parameter={parameter} index={index} />
+        <ParameterMenu parameter={parameter} index={index} addToGroup={addToGroup} removeParameter={removeParameter} removeFromGroup={removeFromGroup} />
       </Grid>
     </Grid>
-  );
+  )
+};
+
+const EditExperiment = (props) => {
+  const { classes, setList } = props;
+  const experimentDetail = useSelector((state) => state.experiments.experimentDetail);
+  const { RANGE, LIST } = EXPERIMENT_TEXTS;
+  const [parameters, setParameters] = useState([{
+    mapsTo: '', type: RANGE, min: 0, max: 0, step: 0, inGroup: false,
+  }, {
+    mapsTo: '', type: LIST, values: [], inGroup: false, val: ''
+  }]);
+  const [groupParameters, setGroupParameters] = useState([]);
+  const [experimentName, setExperimentName] = useState('');
+  const [experimentError, setExperimentError] = useState(false);
+  const create = () => {
+    // When user creates a new Experiment
+    if(experimentName === '') {
+      setExperimentError(true)
+    } else {
+      setExperimentError(false)
+      const newExperiment = {name: experimentName, params: [...parameters, ...groupParameters]};
+      console.log(newExperiment)
+      addExperiment(newExperiment)
+        .then((result) => {
+          setList(true);
+        });
+      }
+  };
+
+  const update = () => {
+    // When user edits existing Experiment
+    // TODO: use name of current Experiment
+    editExperiment('EI Populations', { name: 'New Experiment' })
+      .then((result) => {
+        console.log(result);
+      });
+  };
+
+  const [selectionParams, setSelectionParams] = useState([])
+  const viewParameters = () => {
+    getParameters().then((parameters) => {
+      // netParams JSON dict
+      setSelectionParams(Object.keys(parameters));
+    });
+  };
+
+  useEffect(() => {
+    viewParameters();
+  }, []);
+
+  const handleChange = (event, parameter, index) => {
+    const newParam = parameter.inGroup ?  [...groupParameters] : [...parameters];
+    const newValues = event.target.value === RANGE ? { min: 0, max: 0, step: 0, type: RANGE } : { values: [], type: LIST, val: '' }
+    newParam[index] = { ...parameter, ...newValues };
+    parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
+  };
+
+  const handleParamSelection = (val, parameter, index) => {
+    const newParam = parameter.inGroup ?  [...groupParameters] : [...parameters];
+    newParam[index] = { ...parameter, 'mapsTo': val };
+    parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
+  }
 
   const addParameter = () => {
     setParameters([...parameters, {
@@ -360,14 +324,12 @@ const EditExperiment = (props) => {
     newParams.splice(index, 1);
     setGroupParameters([...groupParameters, {...parameters[index], inGroup: true}])
     setParameters(newParams)
-    handleClose()
   }
 
   const removeParameter = (index, parameter) => {
     const selectedParameters = parameter.inGroup ? [...groupParameters] : [...parameters];
     selectedParameters.splice(index, 1);
     parameter.inGroup ? setGroupParameters(selectedParameters) : setParameters(selectedParameters)
-    handleClose()
   }
 
   const removeFromGroup = (index) => {
@@ -375,7 +337,6 @@ const EditExperiment = (props) => {
     const newGroupParams = [...groupParameters]
     newGroupParams.splice(index, 1);
     setGroupParameters(newGroupParams)
-    handleClose()
   }
 
   const handleInputText = (event, index, parameter, key ) => {
@@ -422,7 +383,7 @@ const EditExperiment = (props) => {
                 </Box>
                 <Box className="editExperimentRow scrollbar scrollchild">
                   {groupParameters.map((parameter, index) => (
-                    parameterRow(parameter, index)
+                    ParameterRow(parameter, index, handleParamSelection, handleChange, handleInputText, handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams)
                   ))}
                 </Box>
                 { groupParameters.length === 1 && <Box className="editExperimentWarning">
@@ -432,7 +393,7 @@ const EditExperiment = (props) => {
             )}
             <Box className="editExperimentRow">
               {parameters.map((parameter, index) => (
-                parameterRow(parameter, index)
+                ParameterRow(parameter, index, handleParamSelection, handleChange, handleInputText, handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams)
               ))}
             </Box>
           </Box>

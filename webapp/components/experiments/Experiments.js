@@ -189,6 +189,7 @@ const Experiments = (props) => {
                           icon={<Box className="MuiChipLoader"></Box>}
                           label={experiment?.state}
                           deleteIcon={<CancelRoundedIcon/>}
+                          onDelete={() => {}}
                         /> :
                         <Chip
                           label={experiment?.state}
