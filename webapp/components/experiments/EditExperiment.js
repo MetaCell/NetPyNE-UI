@@ -24,8 +24,8 @@ import {
   GridLayout,
 } from 'netpyne/components';
 import { withStyles } from '@material-ui/core/styles';
-const RANGE = 'range';
-const LIST = 'list';
+import { EXPERIMENT_TEXTS } from '../../constants';
+
 const regex = new RegExp(/^(\s*-?\d+(\.\d+)?)(\s*,\s*-?\d+(\.\d+)?)*$/);
 /**
  * Edit/Add view of a single Experiment.
@@ -173,7 +173,7 @@ const useStyles = (theme) => ({
         color: '#fff',
       },
     },
-    '& .editExpermentWarning': {
+    '& .editExperimentWarning': {
       paddingLeft: '0.625rem',
       '& .MuiTypography-caption': {
         fontSize: '0.875rem',
@@ -193,7 +193,7 @@ const useStyles = (theme) => ({
 const EditExperiment = (props) => {
   const { classes, setList } = props;
   const experimentDetail = useSelector((state) => state.experiments.experimentDetail);
-  console.log(experimentDetail)
+  const { RANGE, LIST } = EXPERIMENT_TEXTS;
   const [parameters, setParameters] = useState([{
     mapsTo: '', type: RANGE, min: 0, max: 0, step: 0, inGroup: false,
   }, {
@@ -254,7 +254,7 @@ const EditExperiment = (props) => {
 
   const ParameterMenu = (props) => {
     const { parameter, index } = props;
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
 
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
@@ -282,7 +282,7 @@ const EditExperiment = (props) => {
           { parameter.inGroup ?
             <MenuItem onClick={() => removeFromGroup(index)}>Remove from group</MenuItem> : <MenuItem onClick={() => addToGroup(index)}>Add to Group</MenuItem>
           }
-          <MenuItem onClick={() => removeParamter(index, parameter)}>Delete</MenuItem>
+          <MenuItem onClick={() => removeParameter(index, parameter)}>Delete</MenuItem>
         </Menu>
       </>
     )
@@ -339,7 +339,7 @@ const EditExperiment = (props) => {
         )
           : (
             <Grid item xs={12}>
-              <TextField id={`${parameter.name}-values`} label="Values (separated with comas)" variant="filled" value={parameter?.val || ''} onChange={(e) => handleInputValues(e, index, parameter, 'val')} error={parameter.error} helperText={parameter.helperText} />
+              <TextField id={`${parameter.name}-values`} label="Values (separated with comas)" variant="filled" value={parameter?.val || ''} onChange={(e) => handleInputValues(e, index, parameter, 'val')} error={parameter.error} helperText={parameter.helperText} autoComplete="off" />
             </Grid>
           )}
       </Grid>
@@ -363,7 +363,7 @@ const EditExperiment = (props) => {
     handleClose()
   }
 
-  const removeParamter = (index, parameter) => {
+  const removeParameter = (index, parameter) => {
     const selectedParameters = parameter.inGroup ? [...groupParameters] : [...parameters];
     selectedParameters.splice(index, 1);
     parameter.inGroup ? setGroupParameters(selectedParameters) : setParameters(selectedParameters)
@@ -386,7 +386,7 @@ const EditExperiment = (props) => {
 
   const handleInputValues = (event, index, parameter ) => {
     const newParameters = parameter.inGroup ?  [...groupParameters] : [...parameters];
-    newParameters[index] = regex.test(event.target.value) ? { ...parameter, 'val': event.target.value, 'values': [...event.target.value], error: false, helperText: ''} : { ...parameter, 'val': event.target.value, 'values': [...event.target.value], error: true, helperText: 'Please check the input'}
+    newParameters[index] = regex.test(event.target.value) ? { ...parameter, 'val': event.target.value, 'values': [...event.target.value], error: false, helperText: ''} : { ...parameter, 'val': event.target.value, 'values': [...event.target.value], error: true, helperText: EXPERIMENT_TEXTS.INPUT_ERR_MESSAGE}
     parameter.inGroup ? setGroupParameters(newParameters) : setParameters(newParameters);
   }
 
@@ -418,15 +418,15 @@ const EditExperiment = (props) => {
             { groupParameters.length > 0 && (
               <Box mb={2} className="editExperimentGroup">
                 <Box mb={2} className="editExperimentBreadcrumb">
-                  <Typography variant="body2">Groupped Parameters</Typography>
+                  <Typography variant="body2">Grouped Parameters</Typography>
                 </Box>
                 <Box className="editExperimentRow scrollbar scrollchild">
                   {groupParameters.map((parameter, index) => (
                     parameterRow(parameter, index)
                   ))}
                 </Box>
-                { groupParameters.length === 1 && <Box className="editExpermentWarning">
-                  <Typography variant="caption">Warning: You need at least two parameters for the grouping to work.</Typography>
+                { groupParameters.length === 1 && <Box className="editExperimentWarning">
+                  <Typography variant="caption">{EXPERIMENT_TEXTS.WARNING}</Typography>
                 </Box> }
               </Box>
             )}

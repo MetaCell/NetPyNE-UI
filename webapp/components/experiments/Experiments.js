@@ -21,12 +21,12 @@ import {
   GridLayout,
 } from 'netpyne/components';
 import {
-  EXPERIMENT_STATE
+  EXPERIMENT_STATE, EXPERIMENT_TEXTS
 } from '../../constants';
 import { withStyles } from '@material-ui/core/styles';
 import useInterval from 'root/api/hooks';
 import EditExperiment from './EditExperiment';
-import ExperimentDialog from './ExperimentDialog';
+import DeleteDialogBox from '../general/DeleteDialogBox';
 
 const useStyles = theme => ({
   root: {
@@ -165,10 +165,11 @@ const Experiments = (props) => {
 
   const [list, setList] = useState(true);
 
-  const createExperimentScreen = () => {
+  const createExperimentScreen = (actionConfirmed) => {
     setDialogOpen(false)
     setList(false)
   }
+
   return (
     <>
     { list ?
@@ -249,7 +250,7 @@ const Experiments = (props) => {
       </GridLayout> :
       <EditExperiment setList={setList} />
     }
-    <ExperimentDialog open={dialogOpen} dialogClose={setDialogOpen} createExperiment={createExperimentScreen} />
+    <DeleteDialogBox open={dialogOpen} onDialogResponse={createExperimentScreen} textForDialog={{ heading: EXPERIMENT_TEXTS.CREATE_EXPERIMENT, content: EXPERIMENT_TEXTS.DIALOG_MESSAGE }} />
     </>
   );
 };

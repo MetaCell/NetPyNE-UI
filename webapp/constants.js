@@ -388,3 +388,12 @@ export const SIDEBAR_HEADINGS = {
   TOOLS: 'Tools',
   PLOTS: 'Plots',
 };
+
+export const EXPERIMENT_TEXTS = {
+  WARNING: 'Warning: You need at least two parameters for the grouping to work.',
+  RANGE: 'range',
+  LIST: 'list',
+  CREATE_EXPERIMENT: 'Create New Experiment',
+  DIALOG_MESSAGE: 'The new experiment will replace the current experiment in design, are you sure you want to proceed?',
+  INPUT_ERR_MESSAGE: 'Please check the input',
+};
