@@ -25,6 +25,7 @@ import { EXPERIMENT_TEXTS } from '../../constants';
 import ParameterMenu from './ParameterMenu';
 import { bgDarkest, bgLight, bgRegular, secondaryColor, fontColor, radius, primaryColor, borderRadius, experimentInputColor, experimentFieldColor, experimentSvgcolor, experimentlabelcolor, experimentAutomcompleteBorder, errorFieldBorder,
 } from '../../theme';
+import ParameterTreeSelection from './ParameterTreeSelection';
 
 const RANGE_VALUE = 0;
 const regex = new RegExp(/^(\s*-?\d+(\.\d+)?)(\s*,\s*-?\d+(\.\d+)?)*$/);
@@ -258,27 +259,9 @@ const useStyles = (theme) => ({
 const ParameterRow = (parameter, index, handleParamSelection, handleChange, handleInputText, handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams, classes) => {
   const { RANGE } = EXPERIMENT_TEXTS;
   return (
-
     <Grid className="editExperimentList" container spacing={1} key={`${parameter.name}-${index}`}>
       <Grid item xs className="editExperimentAutocomplete">
-        <Autocomplete
-          popupIcon={<ExpandMoreIcon />}
-          id={`${parameter.name}-combo-box-demo`}
-          options={selectionParams}
-          style={{ width: 300 }}
-          classes={{
-            popper: classes.popper
-          }}
-          renderOption={(option) => (
-            <>
-              <ArrowRightIcon />
-              {option}
-            </>
-          )}
-          renderInput={(params) => <TextField {...params} label="Type or select parameter" variant="outlined" />}
-          value={parameter.mapsTo || ''}
-          onChange={(e, val) => handleParamSelection(val, parameter, index)}
-        />
+        <ParameterTreeSelection classes={classes} data={selectionParams} />
       </Grid>
       <Grid item xs={3} className="editExperimentSelect">
         <FormControl variant="filled">
@@ -362,10 +345,23 @@ const EditExperiment = (props) => {
   };
 
   const [selectionParams, setSelectionParams] = useState([])
+
+  const treeHierarchy = (obj) => {
+    if (!(obj instanceof Object)) return [];
+    return Object.keys(obj).map((key) => {
+      if(obj instanceof Object) {
+        return {
+          title: key,
+          children: treeHierarchy(obj[key])
+        }
+      }
+    }, [])
+  }
+
   const viewParameters = () => {
     getParameters().then((parameters) => {
       // netParams JSON dict
-      setSelectionParams(Object.keys(parameters));
+      setSelectionParams(treeHierarchy(parameters))
     });
   };
 
