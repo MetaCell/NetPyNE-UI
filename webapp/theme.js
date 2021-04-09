@@ -26,15 +26,14 @@ export const {
   bgInputs,
   gutter,
   radius,
-  borderRadius,
   canvasBgDark,
   canvasBgLight,
-  experimentAutomcompleteBorder,
+  experimentAutocompleteBorder,
   experimentInputColor,
   experimentGrey,
   experimentFieldColor,
-  experimentSvgcolor,
-  experimentlabelcolor,
+  experimentSvgColor,
+  experimentLabelColor,
   errorFieldBorder,
 } = vars;
 
