@@ -23,7 +23,7 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 import { EXPERIMENT_TEXTS } from '../../constants';
 import ParameterMenu from './ParameterMenu';
-import { bgDarkest, bgLight, bgRegular, secondaryColor, fontColor, radius, primaryColor, borderRadius, experimentInputColor, experimentFieldColor, experimentSvgcolor, experimentlabelcolor, experimentAutomcompleteBorder, errorFieldBorder,
+import { bgDarkest, bgLight, bgRegular, secondaryColor, fontColor, radius, primaryColor, experimentInputColor, experimentFieldColor, experimentSvgColor, experimentLabelColor, experimentAutocompleteBorder, errorFieldBorder,
 } from '../../theme';
 import ParameterTreeSelection from './ParameterTreeSelection';
 
@@ -149,7 +149,7 @@ const useStyles = (theme) => ({
       background: experimentInputColor,
     },
     '& .MuiFilledInput-root': {
-      borderRadius: borderRadius,
+      borderRadius: radius,
       background: experimentInputColor,
       border: '1px solid transparent',
       '&.Mui-error': {
@@ -170,7 +170,7 @@ const useStyles = (theme) => ({
       color: fontColor,
       opacity: '0.54',
       '&.MuiInputLabel-shrink': {
-        color: experimentlabelcolor,
+        color: experimentLabelColor,
         opacity: '0.87',
       },
     },
@@ -215,7 +215,7 @@ const useStyles = (theme) => ({
     '& .editExperimentWarning': {
       paddingLeft: '0.625rem',
       '& .MuiTypography-root': {
-        color: experimentlabelcolor,
+        color: experimentLabelColor,
       },
       '& .MuiTypography-caption': {
         fontSize: '0.875rem',
@@ -242,11 +242,11 @@ const useStyles = (theme) => ({
     marginTop: -theme.spacing(1),
     '& .MuiPaper-root': {
       boxShadow: '0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12)',
-      borderRadius: `0 0 ${borderRadius} ${borderRadius}`,
-      borderTop: `1px solid ${experimentAutomcompleteBorder}`,
+      borderRadius: `0 0 ${radius} ${radius}`,
+      borderTop: `1px solid ${experimentAutocompleteBorder}`,
     },
     '& .MuiSvgIcon-root': {
-      color: experimentSvgcolor,
+      color: experimentSvgColor,
     },
     '& .MuiAutocomplete-option': {
       paddingLeft: theme.spacing(1),
