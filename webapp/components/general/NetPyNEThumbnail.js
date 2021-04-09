@@ -79,7 +79,7 @@ export default class NetPyNEThumbnail extends React.Component {
         <DeleteDialogBox
           open={dialogOpen}
           onDialogResponse={this.handleDialogBox}
-          textForDialog={name}
+          textForDialog={{ heading: `Delete ${name}`, content: `Do you want to remove ${name} ?` }}
         />
       </div>
     );

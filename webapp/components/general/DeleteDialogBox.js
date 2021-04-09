@@ -36,10 +36,10 @@ export default class DeleteDialogBox extends React.Component {
         open={this.state.open}
         onClose={this.handleClose}
       >
-        <DialogTitle>{`Delete ${this.props.textForDialog}`}</DialogTitle>
+        <DialogTitle>{this.props.textForDialog?.heading}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {`Do you want to remove ${this.props.textForDialog} ?`}
+            {this.props.textForDialog?.content}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

@@ -361,12 +361,12 @@ export const EDIT_WIDGETS = {
     enableRename: false,
     pos: 6,
   },
-  experiments: {
-    id: 'experiments',
+  experimentManager: {
+    id: 'experimentManager',
     name: 'Experiment Manager',
     status: WidgetStatus.HIDDEN,
     hideOnClose: true,
-    component: 'experiments',
+    component: 'experimentManager',
     panelName: TOP_PANEL,
     enableRename: false,
     pos: 8,
@@ -387,4 +387,13 @@ export const SIDEBAR_HEADINGS = {
   MODEL: 'Model Specification',
   TOOLS: 'Tools',
   PLOTS: 'Plots',
+};
+
+export const EXPERIMENT_TEXTS = {
+  WARNING: 'Warning: You need at least two parameters for the grouping to work.',
+  RANGE: 'range',
+  LIST: 'list',
+  CREATE_EXPERIMENT: 'Create New Experiment',
+  DIALOG_MESSAGE: 'The new experiment will replace the current experiment in design, are you sure you want to proceed?',
+  INPUT_ERR_MESSAGE: 'Please check the input',
 };

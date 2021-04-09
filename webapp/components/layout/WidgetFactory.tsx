@@ -12,7 +12,7 @@ import {
   NetPyNEPopulations,
   NetPyNEPlots,
   NetPyNEPythonConsole,
-  Experiments
+  ExperimentManager
 } from "../";
 
 import { WidgetComponent } from './model';
@@ -114,8 +114,8 @@ export default class WidgetFactory {
       case "analysis": {
         return <NetPyNEPlots model={"simConfig.analysis"}/>
       }
-      case "experiments": {
-        return <Experiments/>
+      case "experimentManager": {
+        return <ExperimentManager/>
       }
     }
   }

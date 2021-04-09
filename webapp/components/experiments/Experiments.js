@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@material-ui/core/Box';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -21,14 +21,21 @@ import {
   GridLayout,
 } from 'netpyne/components';
 import {
-  EXPERIMENT_STATE
+  EXPERIMENT_STATE, EXPERIMENT_TEXTS
 } from '../../constants';
 import { withStyles } from '@material-ui/core/styles';
 import useInterval from 'root/api/hooks';
+import DeleteDialogBox from '../general/DeleteDialogBox';
+import { experimentGrey, experimentInputColor } from '../../theme';
 
 const useStyles = theme => ({
   root: {
+    '& .scrollDiv': {
+      overflow: 'auto',
+    },
     '& .MuiTableContainer-root': {
+      maxHeight: 'calc(100% -60vh)',
+      overflow: 'auto',
       '&::-webkit-scrollbar': {
         height: theme.spacing(1),
       },
@@ -43,19 +50,22 @@ const useStyles = theme => ({
           fontStyle: 'italic',
           fontWeight: 300,
           fontSize: '1rem',
+          color: experimentGrey,
         },
         '& .experimentIcon': {
+          color: experimentGrey,
           minWidth: 'auto',
           '& .MuiSvgIcon-root': {
             fontSize: '1.2rem',
           }
         },
         '& .MuiChip-label': {
+          color: experimentGrey,
           fontSize: ' 0.77rem',
           fontWeight: 600,
         },
         '& .MuiChip-root': {
-          background: 'rgba(255, 255, 255, 0.1)',
+          background: experimentInputColor,
           height: theme.spacing(3.2),
         },
         '& .MuiChip-deleteIcon': {
@@ -85,7 +95,7 @@ const useStyles = theme => ({
           }
         },
         '& .MuiChip-icon': {
-          color: '#A8A5A5',
+          color: experimentGrey,
         },
         '& .MuiDivider-vertical': {
           height: theme.spacing(4),
@@ -102,7 +112,7 @@ const useStyles = theme => ({
       '& .MuiChipLoader': {
         border: '3px solid rgba(196, 196, 196, 0.3)',
         borderRadius: '50%',
-        borderTop: '3px solid #A8A5A5',
+        borderTop: `3px solid ${experimentGrey}`,
         width: theme.spacing(2.4),
         height: theme.spacing(2.4),
         animation: 'spin 2s linear infinite',
@@ -123,10 +133,10 @@ const Experiments = (props) => {
     experiments,
     getExperiments,
     classes,
+    setList
   } = props;
 
   const POLL_INTERVAL = 1000;
-
   useEffect(getExperiments, []);
   useInterval(getExperiments, POLL_INTERVAL);
 
@@ -142,21 +152,22 @@ const Experiments = (props) => {
     props.viewExperiment(payload);
   };
 
-  const handleDelete = () => {
-    console.info('You clicked the delete icon.');
-  };
-
-  const handleClick = () => {
-    console.info('You clicked the Chip.');
-  };
-
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
     return date?.toLocaleDateString();
   };
+
+  const [dialogOpen, setDialogOpen] = useState(false)
+
+  const createExperimentScreen = (actionConfirmed) => {
+    setDialogOpen(false)
+    setList(!actionConfirmed)
+  }
+
   return (
+    <>
     <GridLayout className={classes.root}>
-      <div>
+      <div className="scrollDiv">
         <Box>
           <TableContainer component={Paper}>
             <Table aria-label="simple table">
@@ -168,7 +179,7 @@ const Experiments = (props) => {
                         <Typography variant="h6" className="experimentHead">
                           {experiment?.name}
                         </Typography>
-                        <ChevronRightIcon className="experimentHeadIcon"/>
+                        <ChevronRightIcon className="experimentHeadIcon" onClick={() => setList(false)}/>
                       </Button>
                     </TableCell>
                     <TableCell align="left">
@@ -181,8 +192,8 @@ const Experiments = (props) => {
                         <Chip
                           icon={<Box className="MuiChipLoader"></Box>}
                           label={experiment?.state}
-                          onDelete={handleDelete}
                           deleteIcon={<CancelRoundedIcon/>}
+                          onDelete={() => {}}
                         /> :
                         <Chip
                           label={experiment?.state}
@@ -217,17 +228,21 @@ const Experiments = (props) => {
         mt={1}
         display="flex"
         flexWrap="wrap"
+        flex="none"
       >
         <Box>
           <Button
             color="primary"
             startIcon={<AddIcon/>}
+            onClick={() => setDialogOpen(true)}
           >
             CREATE NEW EXPERIMENT
           </Button>
         </Box>
       </Box>
     </GridLayout>
+    <DeleteDialogBox open={dialogOpen} onDialogResponse={createExperimentScreen} textForDialog={{ heading: EXPERIMENT_TEXTS.CREATE_EXPERIMENT, content: EXPERIMENT_TEXTS.DIALOG_MESSAGE }} />
+    </>
   );
 };
 
