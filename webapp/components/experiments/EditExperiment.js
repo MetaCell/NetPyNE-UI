@@ -25,9 +25,10 @@ import { EXPERIMENT_TEXTS } from '../../constants';
 import ParameterMenu from './ParameterMenu';
 import { bgDarkest, bgLight, bgRegular, secondaryColor, fontColor, radius, primaryColor, borderRadius, experimentInputColor, experimentFieldColor, experimentSvgcolor, experimentlabelcolor, experimentAutomcompleteBorder, errorFieldBorder,
 } from '../../theme';
-const RANGE_VALUE = '';
+
+const RANGE_VALUE = 0;
 const regex = new RegExp(/^(\s*-?\d+(\.\d+)?)(\s*,\s*-?\d+(\.\d+)?)*$/);
-const regexRange = RegExp((/^(-?[0-9]*[.][0-9]+)(,-?[0-9]*[.][0-9]+)*$/));
+
 /**
  * Edit/Add view of a single Experiment.
  *
@@ -38,6 +39,8 @@ const useStyles = (theme) => ({
   root: {
     '& .editExperimentContainer': {
       '& .editExperimentContent': {
+        overflow: 'auto',
+        maxHeight: 'calc(100vh - 400px)',
         '& .MuiTypography-body2': {
           opacity: '0.54',
         }
@@ -78,7 +81,6 @@ const useStyles = (theme) => ({
     '& .editExperimentDefault': {
       paddingLeft: theme.spacing(1),
       overflow: 'auto',
-      maxHeight: '60vh'
     },
     '& .editExperimentHead': {
       paddingLeft: theme.spacing(1),
@@ -149,7 +151,7 @@ const useStyles = (theme) => ({
       borderRadius: borderRadius,
       background: experimentInputColor,
       border: '1px solid transparent',
-      '& .Mui-error': {
+      '&.Mui-error': {
         borderColor: errorFieldBorder,
         boxShadow: '0 0 0 2px rgba(242, 69, 61, 0.2)',
       }
@@ -176,7 +178,7 @@ const useStyles = (theme) => ({
       display: 'inline-flex',
       color: primaryColor,
       cursor: 'pointer',
-      marginTop: theme.spacing(1),
+      marginLeft: theme.spacing(1),
       '&:hover': {
         textDecoration: 'none',
       },
@@ -298,13 +300,13 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
         { parameter.type === RANGE ? (
           <>
             <Grid item xs={4}>
-              <TextField id={`${parameter.name}-from`} label="From" variant="filled" value={parameter?.min} onChange={(e) => handleInputText(e.target.value, index, parameter, 'min')} error={parameter?.minerror} helperText={parameter?.minhelperText} autoComplete="off" />
+              <TextField id={`${parameter.name}-from`} label="From" variant="filled" value={parameter?.minVal} onChange={(e) => handleInputText(e.target.value, index, parameter, 'min')} error={parameter?.minerror} helperText={parameter?.minhelperText} autoComplete="off" />
             </Grid>
             <Grid item xs={4}>
-              <TextField id={`${parameter.name}-to`} label="To" variant="filled" value={parameter?.max} onChange={(e) => handleInputText(e.target.value, index, parameter, 'max')} error={parameter?.maxerror} helperText={parameter?.maxhelperText} autoComplete="off" />
+              <TextField id={`${parameter.name}-to`} label="To" variant="filled" value={parameter?.maxVal} onChange={(e) => handleInputText(e.target.value, index, parameter, 'max')} error={parameter?.maxerror} helperText={parameter?.maxhelperText} autoComplete="off" />
             </Grid>
             <Grid item xs={4}>
-              <TextField id={`${parameter.name}-step`} label="Step" variant="filled" value={parameter?.step} onChange={(e) => handleInputText(e.target.value, index, parameter, 'step')} error={parameter?.steperror} helperText={parameter?.stephelperText} autoComplete="off" />
+              <TextField id={`${parameter.name}-step`} label="Step" variant="filled" value={parameter?.stepVal} onChange={(e) => handleInputText(e.target.value, index, parameter, 'step')} error={parameter?.steperror} helperText={parameter?.stephelperText} autoComplete="off" />
             </Grid>
           </>
         )
@@ -326,8 +328,9 @@ const EditExperiment = (props) => {
   const { classes, setList } = props;
   const experimentDetail = useSelector((state) => state.experiments.experimentDetail);
   const { RANGE, LIST } = EXPERIMENT_TEXTS;
+  const rangeParam = {type: RANGE, min: RANGE_VALUE, minVal: RANGE_VALUE, max: RANGE_VALUE, maxVal: RANGE_VALUE, step: RANGE_VALUE, stepVal: RANGE_VALUE}
   const [parameters, setParameters] = useState([{
-    mapsTo: '', type: RANGE, min: RANGE_VALUE, max: RANGE_VALUE, step: RANGE_VALUE, inGroup: false,
+    mapsTo: '', ...rangeParam, inGroup: false,
   }, {
     mapsTo: '', type: LIST, values: [], inGroup: false, val: ''
   }]);
@@ -372,7 +375,7 @@ const EditExperiment = (props) => {
 
   const handleChange = (event, parameter, index) => {
     const newParam = parameter.inGroup ?  [...groupParameters] : [...parameters];
-    const newValues = event.target.value === RANGE ? { min: RANGE_VALUE, max: RANGE_VALUE, step: RANGE_VALUE, type: RANGE } : { values: [], type: LIST, val: '' }
+    const newValues = event.target.value === RANGE ? { ...rangeParam } : { values: [], type: LIST, val: '' }
     newParam[index] = { ...parameter, ...newValues };
     parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
   };
@@ -385,7 +388,7 @@ const EditExperiment = (props) => {
 
   const addParameter = () => {
     setParameters([...parameters, {
-      mapsTo: '', type: RANGE, min: RANGE_VALUE, max: RANGE_VALUE, step: RANGE_VALUE, inGroup: false,
+      mapsTo: '', ...rangeParam, inGroup: false,
     }]);
   };
 
@@ -411,8 +414,8 @@ const EditExperiment = (props) => {
 
   const handleInputText = (val, index, parameter, key ) => {
     const newParameters = parameter.inGroup ?  [...groupParameters] : [...parameters];
-    const validValue = regexRange.test(val);
-    newParameters[index] = {...parameter, [key]: val, [`${key}error`]: !validValue, [`${key}helperText`]: validValue ? '' : EXPERIMENT_TEXTS.FLOAT_ERR_MESSAGE};
+    const invalidValue = isNaN(val);
+    newParameters[index] = {...parameter, [`${key}Val`]: val, [key]: parseFloat(val), [`${key}error`]: invalidValue, [`${key}helperText`]: !invalidValue ? '' : EXPERIMENT_TEXTS.INPUT_ERR_MESSAGE};
     parameter.inGroup ? setGroupParameters(newParameters) : setParameters(newParameters);
   }
 
@@ -444,7 +447,7 @@ const EditExperiment = (props) => {
           </Box>
         </Box>
         <Box className="editExperimentContent">
-          <Box mb={2} className="editExperimentDefault">
+          <Box mb={1} className="editExperimentDefault">
             <Box mb={2} className="editExperimentBreadcrumb">
               <Typography variant="body2">Parameters</Typography>
             </Box>
@@ -468,13 +471,13 @@ const EditExperiment = (props) => {
                 ParameterRow(parameter, index, handleParamSelection, handleChange, handleInputText, handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams, classes)
               ))}
             </Box>
-            <Box>
-              <Link to="true" color="primary" onClick={addParameter}>
-                <AddIcon />
-                Add parameter
-              </Link>
-            </Box>
           </Box>
+        </Box>
+        <Box>
+          <Link to="true" color="primary" onClick={addParameter}>
+            <AddIcon />
+            Add parameter
+          </Link>
         </Box>
       </Box>
       <Box

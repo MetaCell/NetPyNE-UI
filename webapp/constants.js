@@ -396,5 +396,4 @@ export const EXPERIMENT_TEXTS = {
   CREATE_EXPERIMENT: 'Create New Experiment',
   DIALOG_MESSAGE: 'The new experiment will replace the current experiment in design, are you sure you want to proceed?',
   INPUT_ERR_MESSAGE: 'Please check the input',
-  FLOAT_ERR_MESSAGE: 'Only float allowed',
 };
