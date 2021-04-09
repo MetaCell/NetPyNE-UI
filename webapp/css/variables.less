@@ -32,3 +32,28 @@
 @experimentlabelcolor: #989898;
 @experimentAutomcompleteBorder: #727272;
 @errorFieldBorder: #F2453D;
+
+.collapseIcon {
+  background: transparent;
+  box-shadow: none;
+  width: 0;
+  height: 0;
+  border-left: @borderWidth solid transparent;
+  border-right: @borderWidth solid transparent;
+  border-top: @borderWidth solid @experimentSvgcolor;
+  border-radius: 0;
+  margin-left: @gutter / 2;
+  padding: 0;
+}
+
+.expandIcon {
+  background: transparent;
+  box-shadow: none;
+  width: 0;
+  height: 0;
+  border-top: @borderWidth solid transparent;
+  border-bottom: @borderWidth solid transparent;
+  border-left: @borderWidth solid @experimentSvgcolor;
+  border-radius: 0;
+  margin-left: @gutter / 2;
+}
