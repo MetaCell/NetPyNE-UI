@@ -462,11 +462,11 @@ const EditExperiment = (props) => {
                 </Box> }
               </Box>
             )}
-            <Box className="editExperimentRow">
+            {selectionParams.length > 0 && <Box className="editExperimentRow">
               {parameters.map((parameter, index) => (
                 ParameterRow(parameter, index, handleParamSelection, handleChange, handleInputText, handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams, classes)
               ))}
-            </Box>
+            </Box>}
           </Box>
         </Box>
         <Box>
