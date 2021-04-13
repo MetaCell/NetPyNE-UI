@@ -1,8 +1,13 @@
 import { addWidget, SET_WIDGETS, UPDATE_WIDGET } from '../actions/layout';
 import Utils from '../../Utils';
-import { NETPYNE_COMMANDS, PLOT_WIDGETS, WidgetStatus } from 'root/constants';
+import { NETPYNE_COMMANDS, NETWORK_PLOT_WIDGETS, PLOT_WIDGETS, WidgetStatus } from 'root/constants';
 import { processError } from './middleware';
-import { SIMULATE_NETWORK, CREATE_SIMULATE_NETWORK, SET_THEME } from '../actions/general';
+import {
+  SIMULATE_NETWORK,
+  CREATE_SIMULATE_NETWORK,
+  SET_THEME,
+  CREATE_NETWORK
+} from '../actions/general';
 
 // A simple cache for plots coming from the backend.
 // This is a temporary solution until we have a proper strategy to store the plot data in redux
@@ -51,6 +56,16 @@ export default store => next => action => {
           setWidget(widget)
             .then(widget => widget ? next(addWidget(widget)) : null);
         }
+      }
+      next(action);
+      break;
+    }
+    case CREATE_NETWORK: {
+      // Reset network plots
+      for (let widget of Object.values(NETWORK_PLOT_WIDGETS)) {
+        delete window.plotCache[widget.id];
+        widget.initialized = false;
+        next(addWidget(widget));
       }
       next(action);
       break;
