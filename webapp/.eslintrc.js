@@ -2,6 +2,7 @@ module.exports = {
   extends: [
     'airbnb',
   ],
+  parser: 'babel-eslint',
   rules: {
     // Turn off some rules so that we can improve the code step by step
     'class-methods-use-this': 0,

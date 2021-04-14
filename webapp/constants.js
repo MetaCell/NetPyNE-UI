@@ -68,7 +68,7 @@ export const TOPBAR_CONSTANTS = {
  * ------------------------------------------------------------------------------ //
  * ------------------------------------------------------------------------------ //
  */
-export const PLOT_WIDGETS = {
+export const NETWORK_PLOT_WIDGETS = {
   connectionPlot: {
     id: 'connectionPlot',
     name: 'Connections Plot',
@@ -101,6 +101,10 @@ export const PLOT_WIDGETS = {
     },
     pos: 2,
   },
+};
+
+export const PLOT_WIDGETS = {
+  ...NETWORK_PLOT_WIDGETS,
   tracesPlot: {
     id: 'tracesPlot',
     name: 'Cell traces',
