@@ -1,12 +1,14 @@
+import {
+  NETPYNE_COMMANDS, NETWORK_PLOT_WIDGETS, PLOT_WIDGETS, WidgetStatus,
+} from 'root/constants';
 import { addWidget, SET_WIDGETS, UPDATE_WIDGET } from '../actions/layout';
 import Utils from '../../Utils';
-import { NETPYNE_COMMANDS, NETWORK_PLOT_WIDGETS, PLOT_WIDGETS, WidgetStatus } from 'root/constants';
 import { processError } from './middleware';
 import {
   SIMULATE_NETWORK,
   CREATE_SIMULATE_NETWORK,
   SET_THEME,
-  CREATE_NETWORK
+  CREATE_NETWORK,
 } from '../actions/general';
 
 // A simple cache for plots coming from the backend.
@@ -14,47 +16,48 @@ import {
 // and ensured that plot data doesn't lead to performance issues due to possible deep-copy in reducers.
 window.plotCache = {};
 
-export default store => next => action => {
-
+export default (store) => (next) => (action) => {
   async function setWidget (widget) {
-
     const {
       plotMethod,
-      plotType
+      plotType,
     } = widget.method;
     return plotFigure(widget.id, plotMethod, plotType, store.getState().general.theme)
-      .then(data => {
+      .then((data) => {
         setPlotToWindow(widget.id, data);
         widget.initialized = true;
         if (data) {
           console.debug('Plot retrieved:', widget.id);
           widget.disabled = false;
           return widget;
-        } else {
-          console.warn('Plot not retrieved:', widget.id);
-          widget.disabled = true;
-          return widget;
         }
+        console.warn('Plot not retrieved:', widget.id);
+        widget.disabled = true;
+        return widget;
       });
   }
 
   switch (action.type) {
     case UPDATE_WIDGET: {
+      // Triggered on tab of widget icon in sidebar
+      // and refreshes widget data if widget wasn't initialized before.
       const widget = action.data;
       if (widget.id in PLOT_WIDGETS
         && widget.status === WidgetStatus.ACTIVE
         && !widget.initialized) {
         setWidget(widget)
-          .then(widget => widget ? next(action) : null);
+          .then((widget) => (widget ? next(action) : null));
       }
       next(action);
       break;
     }
     case SET_WIDGETS: {
-      for (let widget of Object.values(action.data)) {
+      // This is triggered once when we change the layout from Edit > Explore
+      for (const widget of Object.values(action.data)) {
+        // TODO: initializes all widgets once CREATE_NETWORK was called, but we want lazy loading!
         if (widget.id in PLOT_WIDGETS) {
           setWidget(widget)
-            .then(widget => widget ? next(addWidget(widget)) : null);
+            .then((widget) => (widget ? next(addWidget(widget)) : null));
         }
       }
       next(action);
@@ -62,7 +65,7 @@ export default store => next => action => {
     }
     case CREATE_NETWORK: {
       // Reset network plots
-      for (let widget of Object.values(NETWORK_PLOT_WIDGETS)) {
+      for (const widget of Object.values(NETWORK_PLOT_WIDGETS)) {
         delete window.plotCache[widget.id];
         widget.initialized = false;
         next(addWidget(widget));
@@ -72,8 +75,12 @@ export default store => next => action => {
     }
     case SIMULATE_NETWORK:
     case CREATE_SIMULATE_NETWORK: {
+      // TODO: reset widget state (disabled|false)
+      // TODO: widget.disabled = True|False
       window.plotCache = {};
-      for (let widget of Object.values(PLOT_WIDGETS)) {
+      // TODO: use netpyne checkAvailable plots to determine what is enabled and disabled!
+      // only have to call it here and for create network, i.e. once the model changes
+      for (const widget of Object.values(PLOT_WIDGETS)) {
         widget.initialized = false;
         next(addWidget(widget));
       }
@@ -84,9 +91,9 @@ export default store => next => action => {
     case SET_THEME: {
       next(action);
       if (!store.getState().general.editMode) {
-        for (let widget of Object.values(PLOT_WIDGETS)) {
+        for (const widget of Object.values(PLOT_WIDGETS)) {
           setWidget(widget)
-            .then(widget => widget ? next(addWidget(widget)) : null);
+            .then((widget) => (widget ? next(addWidget(widget)) : null));
         }
       }
       break;
@@ -95,7 +102,7 @@ export default store => next => action => {
       next(action);
     }
   }
-}
+};
 
 const plotFigure = async (plotId, plotMethod, plotType = false, theme) => {
   try {
@@ -125,20 +132,21 @@ const plotFigure = async (plotId, plotMethod, plotType = false, theme) => {
       }
     }
     if (plotMethod.startsWith('iplot')) {
-      let html_text = response.replace ? response.replace(/\\n/g, '')
+      let htmlText = response.replace ? response.replace(/\\n/g, '')
         .replace(/\\/g, '') : '';
       if (plotId === 'rxdConcentrationPlot') {
         // FIXME: How can we center the bokeh plots when sizing_mode='scale_height'
-        html_text = html_text.replace('<head>', '<head><style>.bk {margin: 0 auto!important;}</style>');
+        htmlText = htmlText.replace('<head>', '<head><style>.bk {margin: 0 auto!important;}</style>');
       }
-      return html_text;
-    } else if (response?.length !== undefined) {
-      return response[0];
-    } else if (response === -1) {
-      return null;
-    } else {
-      return response;
+      return htmlText;
     }
+    if (response?.length !== undefined) {
+      return response[0];
+    }
+    if (response === -1) {
+      return null;
+    }
+    return response;
   } catch (error) {
     console.error(error);
   }
