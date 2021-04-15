@@ -52,12 +52,11 @@ export default (store) => (next) => (action) => {
       break;
     }
     case SET_WIDGETS: {
-      // This is triggered once when we change the layout from Edit > Explore
+      // This is triggered once when we change the layout from Edit > Explore.
+      // We add the widgets (back) to the sidebar but without fetching any data.
       for (const widget of Object.values(action.data)) {
-        // TODO: initializes all widgets once CREATE_NETWORK was called, but we want lazy loading!
         if (widget.id in PLOT_WIDGETS) {
-          setWidget(widget)
-            .then((widget) => (widget ? next(addWidget(widget)) : null));
+          next(addWidget(widget));
         }
       }
       next(action);
@@ -75,15 +74,20 @@ export default (store) => (next) => (action) => {
     }
     case SIMULATE_NETWORK:
     case CREATE_SIMULATE_NETWORK: {
-      // TODO: reset widget state (disabled|false)
-      // TODO: widget.disabled = True|False
       window.plotCache = {};
-      // TODO: use netpyne checkAvailable plots to determine what is enabled and disabled!
-      // only have to call it here and for create network, i.e. once the model changes
-      for (const widget of Object.values(PLOT_WIDGETS)) {
-        widget.initialized = false;
-        next(addWidget(widget));
-      }
+
+      Utils.evalPythonMessage(NETPYNE_COMMANDS.checkAvailablePlots, [])
+        .then((plots) => {
+          Object.values(PLOT_WIDGETS)
+            .forEach((widget) => {
+              widget.initialized = false;
+              widget.disabled = true;
+              if (widget.method.plotKey in plots) {
+                widget.disabled = !plots[widget.method.plotKey];
+              }
+              next(addWidget(widget));
+            });
+        });
 
       next(action);
       break;

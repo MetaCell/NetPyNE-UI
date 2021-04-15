@@ -428,6 +428,9 @@ class NetPyNEGeppetto:
                     file_list.append({'title': f, 'path': ff})
         return dir_list + file_list
 
+    def checkAvailablePlots(self):
+        return analysis.checkAvailablePlots()
+
     def getPlot(self, plotName, LFPflavour, theme='gui'):
         try:
             with redirect_stdout(sys.__stdout__):
@@ -523,8 +526,18 @@ class NetPyNEGeppetto:
         return [value[:-(len(mechanism) + 1)] for value in params]
 
     def getAvailablePlots(self):
-        plots = ["iplotRaster", "iplotSpikeHist", "plotSpikeStats", "iplotRatePSD", "iplotTraces", "iplotLFP",
-                 "plotShape", "plot2Dnet", "iplotConn", "granger"]
+        plots = [
+            "iplotRaster",
+            "iplotSpikeHist",
+            "plotSpikeStats",
+            "iplotRatePSD",
+            "iplotTraces",
+            "iplotLFP",
+            "plotShape",
+            "plot2Dnet",
+            "iplotConn",
+            "granger"
+        ]
 
         return [plot for plot in plots if plot not in list(self.simConfig.analysis.keys())]
 
