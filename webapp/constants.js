@@ -118,6 +118,7 @@ export const PLOT_WIDGETS = {
     hideOnClose: true,
     enableRename: false,
     initialized: false,
+    disabled: true,
     method: {
       plotKey: 'plotTraces',
       plotMethod: 'iplotTraces',
@@ -135,6 +136,7 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     initialized: false,
+    disabled: true,
     method: {
       plotKey: 'plotRaster',
       plotMethod: 'iplotRaster',
@@ -152,6 +154,7 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     initialized: false,
+    disabled: true,
     method: {
       plotKey: 'plotSpikeHist',
       plotMethod: 'iplotSpikeHist',
@@ -169,6 +172,7 @@ export const PLOT_WIDGETS = {
     hideOnClose: true,
     enableRename: false,
     initialized: false,
+    disabled: true,
     method: {
       key: 'plotSpikeStats',
       plotMethod: 'iplotSpikeStats',
@@ -186,6 +190,7 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     initialized: false,
+    disabled: true,
     method: {
       key: 'plotRatePSD',
       plotMethod: 'iplotRatePSD',
@@ -203,6 +208,7 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     initialized: false,
+    disabled: true,
     method: {
       plotKey: 'plotLFP',
       plotMethod: 'iplotLFP',
@@ -220,6 +226,7 @@ export const PLOT_WIDGETS = {
     hideOnClose: true,
     enableRename: false,
     initialized: false,
+    disabled: true,
     method: {
       plotKey: 'plotLFP',
       plotMethod: 'iplotLFP',
@@ -237,6 +244,7 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     initialized: false,
+    disabled: true,
     method: {
       plotKey: 'plotLFP',
       plotMethod: 'iplotLFP',
@@ -254,6 +262,7 @@ export const PLOT_WIDGETS = {
     defaultPanel: 'plotPanel',
     enableRename: false,
     initialized: false,
+    disabled: true,
     method: {
       plotKey: 'granger',
       plotMethod: 'granger',
@@ -271,6 +280,7 @@ export const PLOT_WIDGETS = {
     hideOnClose: true,
     enableRename: false,
     initialized: false,
+    disabled: true,
     method: {
       plotKey: 'plotRxDConcentration',
       plotMethod: 'iplotRxDConcentration',

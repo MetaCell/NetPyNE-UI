@@ -16,6 +16,8 @@ import {
 // and ensured that plot data doesn't lead to performance issues due to possible deep-copy in reducers.
 window.plotCache = {};
 
+const isDisabled = (widget, plots) => !plots[widget.method.plotKey] ?? true;
+
 export default (store) => (next) => (action) => {
   async function setWidget (widget) {
     const {
@@ -28,11 +30,9 @@ export default (store) => (next) => (action) => {
         widget.initialized = true;
         if (data) {
           console.debug('Plot retrieved:', widget.id);
-          widget.disabled = false;
           return widget;
         }
         console.warn('Plot not retrieved:', widget.id);
-        widget.disabled = true;
         return widget;
       });
   }
@@ -54,37 +54,37 @@ export default (store) => (next) => (action) => {
     case SET_WIDGETS: {
       // This is triggered once when we change the layout from Edit > Explore.
       // We add the widgets (back) to the sidebar but without fetching any data.
-      for (const widget of Object.values(action.data)) {
-        if (widget.id in PLOT_WIDGETS) {
-          next(addWidget(widget));
-        }
-      }
+      Object.values(action.data)
+        .filter((widget) => widget.id in PLOT_WIDGETS)
+        .forEach((widget) => next(addWidget(widget)));
       next(action);
       break;
     }
     case CREATE_NETWORK: {
-      // Reset network plots
-      for (const widget of Object.values(NETWORK_PLOT_WIDGETS)) {
-        delete window.plotCache[widget.id];
-        widget.initialized = false;
-        next(addWidget(widget));
-      }
+      Utils.evalPythonMessage(NETPYNE_COMMANDS.checkAvailablePlots, [])
+        .then((plots) => {
+          // Only reset network plots
+          Object.values(NETWORK_PLOT_WIDGETS)
+            .forEach((widget) => {
+              delete window.plotCache[widget.id];
+              widget.initialized = false;
+              widget.disabled = isDisabled(widget, plots);
+              next(addWidget(widget));
+            });
+        });
+
       next(action);
       break;
     }
     case SIMULATE_NETWORK:
     case CREATE_SIMULATE_NETWORK: {
-      window.plotCache = {};
-
       Utils.evalPythonMessage(NETPYNE_COMMANDS.checkAvailablePlots, [])
         .then((plots) => {
+          window.plotCache = {};
           Object.values(PLOT_WIDGETS)
             .forEach((widget) => {
               widget.initialized = false;
-              widget.disabled = true;
-              if (widget.method.plotKey in plots) {
-                widget.disabled = !plots[widget.method.plotKey];
-              }
+              widget.disabled = isDisabled(widget, plots);
               next(addWidget(widget));
             });
         });
