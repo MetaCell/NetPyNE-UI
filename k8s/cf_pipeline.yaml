@@ -63,8 +63,6 @@ steps:
       custom_values:
         - 'hub_image_tag=${{CF_SHORT_REVISION}}'
         - 'singleuser_image_tag=${{CF_SHORT_REVISION}}'
-        - 'singleuser_cpu_limit=${{CPU_MAX}}'
-        - 'singleuser_cpu_guarantee=${{CPU_MIN}}'
         - 'singleuser_memory_limit=${{MEMORY_MAX}}'
         - 'singleuser_memory_guarantee=${{MEMORY_MIN}}'
         - 'proxy_secretToken=${{SECRET_TOKEN}}'
