@@ -158,7 +158,7 @@ class NetPyNEGeppetto:
 
     def loadModel(self, args):  # handles all data coming from a .json file (default file system for Netpyne)
         def remove(dictionary):
-            # remove reserved keys such as __dict__, __Method__, etc 
+            # remove reserved keys such as __dict__, __Method__, etc
             # they appear when we do sim.loadAll(json_file)
             if isinstance(dictionary, dict):
                 for key, value in list(dictionary.items()):
@@ -244,7 +244,7 @@ class NetPyNEGeppetto:
                 netParamsPath = str(modelParameters["netParamsPath"])
                 sys.path.append(netParamsPath)
                 os.chdir(netParamsPath)
-                # Import Module 
+                # Import Module
                 netParamsModuleName = importlib.import_module(str(modelParameters["netParamsModuleName"]))
                 # Import Model attributes
                 self.netParams = getattr(netParamsModuleName, str(modelParameters["netParamsVariable"]))
@@ -257,7 +257,7 @@ class NetPyNEGeppetto:
                 simConfigPath = str(modelParameters["simConfigPath"])
                 sys.path.append(simConfigPath)
                 os.chdir(simConfigPath)
-                # Import Module 
+                # Import Module
                 simConfigModuleName = importlib.import_module(str(modelParameters["simConfigModuleName"]))
                 # Import Model attributes
                 self.simConfig = getattr(simConfigModuleName, str(modelParameters["simConfigVariable"]))
@@ -428,6 +428,9 @@ class NetPyNEGeppetto:
                     file_list.append({'title': f, 'path': ff})
         return dir_list + file_list
 
+    def checkAvailablePlots(self):
+        return analysis.checkAvailablePlots()
+
     def getPlot(self, plotName, LFPflavour, theme='gui'):
         try:
             with redirect_stdout(sys.__stdout__):
@@ -443,8 +446,8 @@ class NetPyNEGeppetto:
 
                     if plotName in ("iplotConn", "iplot2Dnet") and sim.net.allCells:
                         # To prevent unresponsive kernel, we don't show conns if they become too many
-                        numConn = sum([len(cell.conns) for cell in sim.net.allCells if cell.conns])
-                        if numConn > NUM_CONN_LIMIT:
+                        num_conn = sum([len(cell.conns) for cell in sim.net.allCells if cell.conns])
+                        if num_conn > NUM_CONN_LIMIT:
                             args["showConns"] = False
 
                     html = getattr(analysis, plotName)(**args)
@@ -452,12 +455,9 @@ class NetPyNEGeppetto:
                         return ""
 
                     # some plots return "fig", some return "(fig, data)"
-                    if plotName == 'iplotRaster':
+                    if plotName in ('iplotRaster', 'iplotRxDConcentration', 'iplot2Dnet'):
                         html = html[0]
-                    elif plotName == 'iplotRxDConcentration':
-                        html = html[0]
-                    elif plotName == 'iplot2Dnet':
-                        html = html[0]
+
                     return html
 
                 else:
@@ -479,9 +479,6 @@ class NetPyNEGeppetto:
                             return [ui.getSVG(fig)]
                     else:
                         return figData
-
-
-
         except Exception as e:
             # TODO: Extract these two lines as a function and call it in every catch clause
             err = "There was an exception in %s():" % (e.plotName)
@@ -529,8 +526,18 @@ class NetPyNEGeppetto:
         return [value[:-(len(mechanism) + 1)] for value in params]
 
     def getAvailablePlots(self):
-        plots = ["iplotRaster", "iplotSpikeHist", "plotSpikeStats", "iplotRatePSD", "iplotTraces", "iplotLFP",
-                 "plotShape", "plot2Dnet", "iplotConn", "granger"]
+        plots = [
+            "iplotRaster",
+            "iplotSpikeHist",
+            "plotSpikeStats",
+            "iplotRatePSD",
+            "iplotTraces",
+            "iplotLFP",
+            "plotShape",
+            "plot2Dnet",
+            "iplotConn",
+            "granger"
+        ]
 
         return [plot for plot in plots if plot not in list(self.simConfig.analysis.keys())]
 
