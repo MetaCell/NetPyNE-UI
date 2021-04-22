@@ -15,7 +15,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import Link from '@material-ui/core/Link';
 import {
   GridLayout,
@@ -25,7 +24,6 @@ import { EXPERIMENT_TEXTS } from '../../constants';
 import ParameterMenu from './ParameterMenu';
 import { bgDarkest, bgLight, bgRegular, secondaryColor, fontColor, radius, primaryColor, experimentInputColor, experimentFieldColor, experimentSvgColor, experimentLabelColor, experimentAutocompleteBorder, errorFieldBorder,
 } from '../../theme';
-import ParameterTreeSelection from './ParameterTreeSelection';
 
 const RANGE_VALUE = 0;
 const regex = new RegExp(/^(\s*-?\d+(\.\d+)?)(\s*,\s*-?\d+(\.\d+)?)*$/);
@@ -249,7 +247,7 @@ const useStyles = (theme) => ({
       color: experimentSvgColor,
     },
     '& .MuiAutocomplete-option': {
-      paddingLeft: theme.spacing(1),
+      paddingLeft: theme.spacing(2),
       color: fontColor,
       paddingRight: theme.spacing(1),
     }
@@ -261,7 +259,23 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
   return (
     <Grid className="editExperimentList" container spacing={1} key={`${parameter.name}-${index}`}>
       <Grid item xs className="editExperimentAutocomplete">
-        <ParameterTreeSelection classes={classes} data={selectionParams} />
+        <Autocomplete
+          popupIcon={<ExpandMoreIcon />}
+          id={`${parameter.name}-combo-box-demo`}
+          options={selectionParams}
+          style={{ width: 300 }}
+          classes={{
+            popper: classes.popper
+          }}
+          renderOption={(option) => (
+            <>
+              {option}
+            </>
+          )}
+          renderInput={(params) => <TextField {...params} label="Type or select parameter" variant="outlined" />}
+          value={parameter.mapsTo || ''}
+          onChange={(e, val) => handleParamSelection(val, parameter, index)}
+        />
       </Grid>
       <Grid item xs={3} className="editExperimentSelect">
         <FormControl variant="filled">
@@ -346,22 +360,20 @@ const EditExperiment = (props) => {
 
   const [selectionParams, setSelectionParams] = useState([])
 
-  const treeHierarchy = (obj) => {
-    if (!(obj instanceof Object)) return [];
-    return Object.keys(obj).map((key) => {
-      if(obj instanceof Object) {
-        return {
-          title: key,
-          children: treeHierarchy(obj[key])
-        }
-      }
-    }, [])
-  }
+  const flatten = (obj, path = '') => {
+    if (!(obj instanceof Object)) return {[path.replace(/\.$/g, '')]:obj};
+
+    return Object.keys(obj).reduce((output, key) => {
+        return obj instanceof Array ?
+             {...output, ...flatten(obj[key], path +  '[' + key + '].')}:
+             {...output, ...flatten(obj[key], path + key + '.')};
+    }, {});
+}
 
   const viewParameters = () => {
     getParameters().then((parameters) => {
       // netParams JSON dict
-      setSelectionParams(treeHierarchy(parameters))
+      setSelectionParams(Object.keys(flatten(parameters)));
     });
   };
 
