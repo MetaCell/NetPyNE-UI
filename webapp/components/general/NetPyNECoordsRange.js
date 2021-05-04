@@ -2,13 +2,11 @@ import React, { Component } from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
+import { AdapterComponent, NetPyNEField } from 'netpyne/components';
 import SelectField from './Select';
 import Utils from '../../Utils';
 
-import { AdapterComponent, NetPyNEField } from 'netpyne/components';
-
 export default class NetPyNECoordsRange extends Component {
-
   constructor (props) {
     super(props);
     this.state = { rangeType: undefined };
@@ -27,10 +25,10 @@ export default class NetPyNECoordsRange extends Component {
   componentDidUpdate (prevProps, prevState) {
     if (this.props.name != prevProps.name) {
       this.triggerUpdate(() => {
-        var message = 'netpyne_geppetto.' + this.props.model + '[\'' + this.props.name + '\']' + ((this.props.conds != undefined) ? '[\'' + this.props.conds + '\']' : '');
+        const message = `netpyne_geppetto.${this.props.model}['${this.props.name}']${(this.props.conds != undefined) ? `['${this.props.conds}']` : ''}`;
         Utils
-          .evalPythonMessage('[key in ' + message + ' for key in [\'' + this.props.items[0].value + '\', \'' + this.props.items[1].value + '\']]')
-          .then(response => {
+          .evalPythonMessage(`[key in ${message} for key in ['${this.props.items[0].value}', '${this.props.items[1].value}']]`)
+          .then((response) => {
             if (response[0] && this._isMounted === true) {
               this.setState({ rangeType: this.props.items[0].value });
             } else if (response[1] && this._isMounted === true) {
@@ -51,10 +49,10 @@ export default class NetPyNECoordsRange extends Component {
   }
 
   updateLayout () {
-    var message = 'netpyne_geppetto.' + this.props.model + '[\'' + this.props.name + '\']' + ((this.props.conds != undefined) ? '[\'' + this.props.conds + '\']' : '');
+    const message = `netpyne_geppetto.${this.props.model}['${this.props.name}']${(this.props.conds != undefined) ? `['${this.props.conds}']` : ''}`;
     Utils
-      .evalPythonMessage('[key in ' + message + ' for key in [\'' + this.props.items[0].value + '\', \'' + this.props.items[1].value + '\']]')
-      .then(response => {
+      .evalPythonMessage(`[key in ${message} for key in ['${this.props.items[0].value}', '${this.props.items[1].value}']]`)
+      .then((response) => {
         if (response[0] && this._isMounted === true) {
           this.setState({ rangeType: this.props.items[0].value });
         } else if (response[1] && this._isMounted === true) {
@@ -65,9 +63,9 @@ export default class NetPyNECoordsRange extends Component {
       });
   }
 
-  createMenuItems = () => this.props.items.map(obj => (
+  createMenuItems = () => this.props.items.map((obj) => (
     <MenuItem
-      id={this.props.id + obj.label + 'MenuItem'}
+      id={`${this.props.id + obj.label}MenuItem`}
       key={obj.value}
       value={obj.value}
     >
@@ -81,52 +79,52 @@ export default class NetPyNECoordsRange extends Component {
 
   render () {
     if (this.props.conds != undefined) {
-      var meta = this.props.model + '.' + this.props.conds + '.' + this.props.items[0].value;
-      var path = this.props.model + '[\'' + this.props.name + '\'][\'' + this.props.conds + '\'][\'' + this.state.rangeType + '\']';
+      var meta = `${this.props.model}.${this.props.conds}.${this.props.items[0].value}`;
+      var path = `${this.props.model}['${this.props.name}']['${this.props.conds}']['${this.state.rangeType}']`;
     } else {
-      var meta = this.props.model + '.' + this.props.items[0].value;
-      var path = this.props.model + '[\'' + this.props.name + '\'][\'' + this.state.rangeType + '\']';
+      var meta = `${this.props.model}.${this.props.items[0].value}`;
+      var path = `${this.props.model}['${this.props.name}']['${this.state.rangeType}']`;
     }
-    var min = this.props.id + 'MinRange';
-    var max = this.props.id + 'MaxRange';
+    const min = `${this.props.id}MinRange`;
+    const max = `${this.props.id}MaxRange`;
     return (
       <div>
         <NetPyNEField id={meta}>
           <SelectField
-            id={this.props.id + 'Select'}
+            id={`${this.props.id}Select`}
             label="Range type"
             value={this.state.rangeType || ''}
-            onChange={event => this.setState({ rangeType: event.target.value })}
+            onChange={(event) => this.setState({ rangeType: event.target.value })}
           >
             {this.createMenuItems()}
           </SelectField>
         </NetPyNEField>
         {(this.state.rangeType != undefined)
-          ? <Box width="100%" p={1}>
-            <AdapterComponent
-              model={path}
-              convertToPython={state => {
-                if (!state[state.lastUpdated].toString()
+          ? (
+            <Box width="100%" p={1}>
+              <AdapterComponent
+                model={path}
+                convertToPython={(state) => {
+                  if (!state[state.lastUpdated].toString()
                     .endsWith('.')
                   && ((!isNaN(parseFloat(state[min]))) && (!isNaN(parseFloat(state[max]))))) {
-                  return [parseFloat(state[min]), parseFloat(state[max])];
-                }
-              }
-              }
-              convertFromPython={(prevProps, prevState, value) => {
-                if (value != undefined && prevProps.value != value && value != '') {
-                  var output = {};
-                  output[min] = value[0];
-                  output[max] = value[1];
-                  return output;
-                }
-              }
-              }
-            >
-              <TextField label="Minimum" id={min} variant="filled" fullWidth/>
-              <TextField label="Maximum" id={max} variant="filled" fullWidth/>
-            </AdapterComponent>
-          </Box>
+                    return [parseFloat(state[min]), parseFloat(state[max])];
+                  }
+                }}
+                convertFromPython={(prevProps, prevState, value) => {
+                  if (value != undefined && prevProps.value != value && value != '') {
+                    const output = {};
+                    output[min] = value[0];
+                    output[max] = value[1];
+                    return output;
+                  }
+                }}
+              >
+                <TextField label="Minimum" id={min} variant="filled" fullWidth />
+                <TextField label="Maximum" id={max} variant="filled" fullWidth />
+              </AdapterComponent>
+            </Box>
+          )
           : null}
       </div>
     );

@@ -10,16 +10,16 @@ import DialogContent from '@material-ui/core/DialogContent';
 
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import FileBrowser from '../../general/FileBrowser';
 import { Tooltip } from 'netpyne/components';
 import { withStyles } from '@material-ui/core/styles';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import FileBrowser from '../../general/FileBrowser';
 
 const styles = ({
   spacing,
   typography,
   zIndex,
-  palette
+  palette,
 }) => ({
   root: { color: palette.common.white },
   container: {
@@ -27,7 +27,7 @@ const styles = ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'flex-end',
-    width: '100%'
+    width: '100%',
   },
   icon: {
     '&:hover': { backgroundColor: 'inherit' },
@@ -36,7 +36,7 @@ const styles = ({
     width: typography.h3.fontSize,
     height: typography.h3.fontSize,
     padding: '0px!important',
-    zIndex: zIndex.modal
+    zIndex: zIndex.modal,
   },
   input: {
     outline: 'none',
@@ -46,8 +46,8 @@ const styles = ({
       outline: 'none',
       border: 'none',
       boxShadow: 'none',
-    }
-  }
+    },
+  },
 });
 
 class UploadDownloadFile extends React.Component {
@@ -64,14 +64,14 @@ class UploadDownloadFile extends React.Component {
       downloadPaths: [],
       downloadPathsDisplayText: '',
       explorerDialogOpen: false,
-      uploadFiles: ''
+      uploadFiles: '',
     };
   }
 
   async uploadFiles () {
     const { uploadFiles } = this.state;
     const formData = new FormData();
-    var data = {};
+    const data = {};
 
     this.setState({ open: false });
     GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, 'UPLOADING FILES');
@@ -84,7 +84,7 @@ class UploadDownloadFile extends React.Component {
       try {
         const response = await fetch('uploads', {
           method: 'POST',
-          body: formData
+          body: formData,
         });
         if (response.status === 200) {
           this.message = response.statusText;
@@ -106,11 +106,11 @@ class UploadDownloadFile extends React.Component {
   generateUrl () {
     const {
       downloadPaths,
-      downloadPathsDisplayText
+      downloadPathsDisplayText,
     } = this.state;
 
-    var url = 'downloads';
-    var downloadFileName = 'download.tar.gz';
+    let url = 'downloads';
+    let downloadFileName = 'download.tar.gz';
 
     if (downloadPaths.length > 0) {
       downloadPaths.forEach((path, index) => url += `${index === 0 ? '?' : '&'}uri=${path}`);
@@ -126,7 +126,7 @@ class UploadDownloadFile extends React.Component {
     }
     return {
       url,
-      downloadFileName
+      downloadFileName,
     };
   }
 
@@ -143,7 +143,7 @@ class UploadDownloadFile extends React.Component {
   async downloadFiles () {
     const {
       url,
-      downloadFileName
+      downloadFileName,
     } = this.generateUrl();
 
     if (!url) {
@@ -185,8 +185,8 @@ class UploadDownloadFile extends React.Component {
     return true;
   }
 
-  onUploadFileArrayChange = event => {
-    var files = event.target.files;
+  onUploadFileArrayChange = (event) => {
+    const { files } = event.target;
     if (this.maxSelectFile(files) && this.checkMimeType(files) && this.checkFileSize(files)) {
       this.setState({ uploadFiles: files });
     }
@@ -196,9 +196,9 @@ class UploadDownloadFile extends React.Component {
     const state = { explorerDialogOpen: false };
     if (selectedNodes) {
       state.downloadPaths = Object.values(selectedNodes)
-        .map(s => s.path);
+        .map((s) => s.path);
       state.downloadPathsDisplayText = Object.values(selectedNodes)
-        .map(s => s.path.split('/')
+        .map((s) => s.path.split('/')
           .pop())
         .join(' - ');
     }
@@ -208,14 +208,14 @@ class UploadDownloadFile extends React.Component {
   showExplorerDialog (filterFiles = '') {
     this.setState({
       explorerDialogOpen: true,
-      filterFiles
+      filterFiles,
     });
   }
 
   changeDownloadFilePathsDisplayText (text) {
     this.setState({
       downloadPaths: [text],
-      downloadPathsDisplayText: text
+      downloadPathsDisplayText: text,
 
     });
   }
@@ -253,7 +253,7 @@ class UploadDownloadFile extends React.Component {
             fullWidth
             variant="filled"
             value={this.state.downloadPathsDisplayText}
-            onChange={event => this.changeDownloadFilePathsDisplayText(event.target.value)}
+            onChange={(event) => this.changeDownloadFilePathsDisplayText(event.target.value)}
             label="Files:"
             helperText="Select files to download"
             InputProps={{
@@ -261,13 +261,13 @@ class UploadDownloadFile extends React.Component {
                 <InputAdornment position="start">
                   <Tooltip title="File explorer" placement="top">
                     <Icon
-                      className='fa fa-folder hovered'
+                      className="fa fa-folder hovered"
                       onClick={() => this.showExplorerDialog()}
                       style={{ cursor: 'pointer' }}
                     />
                   </Tooltip>
                 </InputAdornment>
-              )
+              ),
             }}
           />
         );
@@ -281,7 +281,7 @@ class UploadDownloadFile extends React.Component {
       <div>
         <Dialog
           fullWidth
-          maxWidth='sm'
+          maxWidth="sm"
           open={this.state.open}
           onClose={() => this.closeDialog()}
         >
@@ -295,7 +295,7 @@ class UploadDownloadFile extends React.Component {
               color="primary"
               id="appBarPerformActionButton"
               disabled={mode === 'UPLOAD' ? !this.state.uploadFiles : this.state.downloadPaths.lenght === 0 || !this.state.downloadPathsDisplayText}
-              onClick={() => mode === 'UPLOAD' ? this.uploadFiles() : this.downloadFiles()}
+              onClick={() => (mode === 'UPLOAD' ? this.uploadFiles() : this.downloadFiles())}
             >
               {buttonLabel}
             </Button>
@@ -307,7 +307,7 @@ class UploadDownloadFile extends React.Component {
           exploreOnlyDirs={false}
           filterFiles={this.state.filterFiles}
           toggleMode
-          onRequestClose={multiSelection => this.closeExplorerDialog(multiSelection)}
+          onRequestClose={(multiSelection) => this.closeExplorerDialog(multiSelection)}
         />
       </div>
 

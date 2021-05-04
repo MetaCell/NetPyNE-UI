@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-import Utils from '../../../Utils';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
 
@@ -13,9 +12,10 @@ import {
   Filter,
 } from 'netpyne/components';
 
+import Box from '@material-ui/core/Box';
 import RulePath from '../../general/RulePath';
 import Accordion from '../../general/ExpansionPanel';
-import Box from '@material-ui/core/Box';
+import Utils from '../../../Utils';
 
 export default class NetPyNEStimulationSources extends Component {
   constructor (props) {
@@ -30,7 +30,7 @@ export default class NetPyNEStimulationSources extends Component {
     };
     this.selectStimulationSource = this.selectStimulationSource.bind(this);
     this.handleNewStimulationSource = this.handleNewStimulationSource.bind(
-      this
+      this,
     );
 
     this.handleRenameChildren = this.handleRenameChildren.bind(this);
@@ -42,20 +42,20 @@ export default class NetPyNEStimulationSources extends Component {
   }
 
   handleNewStimulationSource () {
-    var defaultStimulationSources = { stim_source: { type: 'IClamp' } };
-    var key = Object.keys(defaultStimulationSources)[0];
-    var value = defaultStimulationSources[key];
-    var model = { ...this.state.value };
-    var StimulationSourceId = Utils.getAvailableKey(model, key);
-    var newStimulationSource = Object.assign(
-      { name: StimulationSourceId },
-      value
-    );
+    const defaultStimulationSources = { stim_source: { type: 'IClamp' } };
+    const key = Object.keys(defaultStimulationSources)[0];
+    const value = defaultStimulationSources[key];
+    const model = { ...this.state.value };
+    const StimulationSourceId = Utils.getAvailableKey(model, key);
+    const newStimulationSource = {
+      name: StimulationSourceId,
+      ...value,
+    };
     Utils.execPythonMessage(
-      'netpyne_geppetto.netParams.stimSourceParams["'
-      + StimulationSourceId
-      + '"] = '
-      + JSON.stringify(value)
+      `netpyne_geppetto.netParams.stimSourceParams["${
+        StimulationSourceId
+      }"] = ${
+        JSON.stringify(value)}`,
     );
     model[StimulationSourceId] = newStimulationSource;
     this.setState(
@@ -63,20 +63,20 @@ export default class NetPyNEStimulationSources extends Component {
         value: model,
         selectedStimulationSource: StimulationSourceId,
       },
-      () => this.props.updateCards()
+      () => this.props.updateCards(),
     );
   }
 
   hasSelectedStimulationSourceBeenRenamed (prevState, currentState) {
-    var currentModel = prevState.value;
-    var model = currentState.value;
+    const currentModel = prevState.value;
+    const model = currentState.value;
     // deal with rename
     if (currentModel != undefined && model != undefined) {
-      var oldP = Object.keys(currentModel);
-      var newP = Object.keys(model);
+      const oldP = Object.keys(currentModel);
+      const newP = Object.keys(model);
       if (oldP.length == newP.length) {
         // if it's the same lenght there could be a rename
-        for (var i = 0; i < oldP.length; i++) {
+        for (let i = 0; i < oldP.length; i++) {
           if (oldP[i] != newP[i]) {
             if (prevState.selectedStimulationSource != undefined) {
               if (oldP[i] == prevState.selectedStimulationSource) {
@@ -91,9 +91,9 @@ export default class NetPyNEStimulationSources extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
-    var newStimulationSourceName = this.hasSelectedStimulationSourceBeenRenamed(
+    const newStimulationSourceName = this.hasSelectedStimulationSourceBeenRenamed(
       prevState,
-      this.state
+      this.state,
     );
     if (newStimulationSourceName !== undefined) {
       this.setState({
@@ -109,7 +109,7 @@ export default class NetPyNEStimulationSources extends Component {
        * logic into this if to check if the user added a new object from the python backend and
        * if the name convention pass the checks, differently rename this and open dialog to inform.
        */
-      var model = this.state.value;
+      const model = this.state.value;
       for (var m in model) {
         if (prevState.value !== '' && !(m in prevState.value)) {
           var newValue = Utils.nameValidation(m);
@@ -122,18 +122,17 @@ export default class NetPyNEStimulationSources extends Component {
                 value: model,
                 errorMessage: 'Error',
                 errorDetails:
-                  'Leading digits or whitespaces are not allowed in Population names.\n'
-                  + m
-                  + ' has been renamed '
-                  + newValue,
+                  `Leading digits or whitespaces are not allowed in Population names.\n${
+                    m
+                  } has been renamed ${
+                    newValue}`,
               },
-              () =>
-                Utils.renameKey(
-                  'netParams.stimSourceParams',
-                  m,
-                  newValue,
-                  (response, newValue) => this.props.updateCards()
-                )
+              () => Utils.renameKey(
+                'netParams.stimSourceParams',
+                m,
+                newValue,
+                (response, newValue) => this.props.updateCards(),
+              ),
             );
           }
         }
@@ -142,21 +141,18 @@ export default class NetPyNEStimulationSources extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    var itemRenamed
-      = this.hasSelectedStimulationSourceBeenRenamed(this.state, nextState)
+    const itemRenamed = this.hasSelectedStimulationSourceBeenRenamed(this.state, nextState)
       !== undefined;
-    var newItemCreated = false;
-    var selectionChanged
-      = this.state.selectedStimulationSource
+    let newItemCreated = false;
+    const selectionChanged = this.state.selectedStimulationSource
       != nextState.selectedStimulationSource;
-    var pageChanged = this.state.page != nextState.page;
-    var newModel = this.state.value == undefined;
+    const pageChanged = this.state.page != nextState.page;
+    const newModel = this.state.value == undefined;
     if (!newModel) {
-      newItemCreated
-        = Object.keys(this.state.value).length
+      newItemCreated = Object.keys(this.state.value).length
         != Object.keys(nextState.value).length;
     }
-    var errorDialogOpen = this.state.errorDetails !== nextState.errorDetails;
+    const errorDialogOpen = this.state.errorDetails !== nextState.errorDetails;
     const filterValueChanged = nextState.filterValue !== this.state.filterValue;
     return (
       filterValueChanged
@@ -171,8 +167,8 @@ export default class NetPyNEStimulationSources extends Component {
 
   handleRenameChildren (childName) {
     childName = childName.replace(/\s*$/, '');
-    var childrenList = Object.keys(this.state.value);
-    for (var i = 0; childrenList.length > i; i++) {
+    const childrenList = Object.keys(this.state.value);
+    for (let i = 0; childrenList.length > i; i++) {
       if (childName === childrenList[i]) {
         return false;
       }
@@ -183,7 +179,7 @@ export default class NetPyNEStimulationSources extends Component {
   getPath () {
     const {
       value: model,
-      selectedStimulationSource
+      selectedStimulationSource,
     } = this.state;
     return (
       model
@@ -193,26 +189,23 @@ export default class NetPyNEStimulationSources extends Component {
   }
 
   render () {
-    var actions = [
+    const actions = [
       <Button
         variant="contained"
         color="primary"
-        label={'BACK'}
-        onTouchTap={() =>
-          this.setState({
-            errorMessage: undefined,
-            errorDetails: undefined
-          })
-        }
+        label="BACK"
+        onTouchTap={() => this.setState({
+          errorMessage: undefined,
+          errorDetails: undefined,
+        })}
       />,
     ];
-    var title = this.state.errorMessage;
-    var children = this.state.errorDetails;
-    var dialogPop
-      = this.state.errorMessage != undefined ? (
+    const title = this.state.errorMessage;
+    const children = this.state.errorDetails;
+    const dialogPop = this.state.errorMessage != undefined ? (
       <Dialog
         title={title}
-        open={true}
+        open
         actions={actions}
         bodyStyle={{ overflow: 'auto' }}
         style={{ whiteSpace: 'pre-wrap' }}
@@ -223,15 +216,12 @@ export default class NetPyNEStimulationSources extends Component {
       undefined
     );
 
-    var model = this.state.value;
-    const filterName
-      = this.state.filterValue === null ? '' : this.state.filterValue;
-    var StimulationSources = Object.keys(model || [])
-      .filter(stimSource =>
-        stimSource.toLowerCase()
-          .includes(filterName.toLowerCase())
-      )
-      .map(stimSource => (
+    const model = this.state.value;
+    const filterName = this.state.filterValue === null ? '' : this.state.filterValue;
+    const StimulationSources = Object.keys(model || [])
+      .filter((stimSource) => stimSource.toLowerCase()
+        .includes(filterName.toLowerCase()))
+      .map((stimSource) => (
         <NetPyNEThumbnail
           name={stimSource}
           key={stimSource}
@@ -241,7 +231,7 @@ export default class NetPyNEStimulationSources extends Component {
         />
       ));
 
-    var selectedStimulationSource = undefined;
+    let selectedStimulationSource;
     if (
       this.state.selectedStimulationSource !== undefined
       && Object.keys(model)
@@ -263,15 +253,13 @@ export default class NetPyNEStimulationSources extends Component {
               <div>
                 <NetPyNEHome
                   selection={this.state.selectedStimulationSource}
-                  handleClick={() =>
-                    this.setState({ selectedStimulationSource: undefined })
-                  }
+                  handleClick={() => this.setState({ selectedStimulationSource: undefined })}
                 />
                 <div style={{ opacity: 0 }}>H</div>
               </div>
               <div>
                 <NetPyNEAddNew
-                  id={'newStimulationSourceButton'}
+                  id="newStimulationSourceButton"
                   title="Create new stimulation source"
                   handleClick={this.handleNewStimulationSource}
                 />
@@ -290,20 +278,18 @@ export default class NetPyNEStimulationSources extends Component {
               </div>
             </div>
             <Box p={1}>
-              <RulePath text={this.getPath()}/>
-              <Box mb={1}/>
+              <RulePath text={this.getPath()} />
+              <Box mb={1} />
               <Filter
                 value={this.state.filterValue}
                 label="Filter stimulation source rule by name..."
-                handleFilterChange={newValue =>
-                  this.setState({ filterValue: newValue })
-                }
+                handleFilterChange={(newValue) => this.setState({ filterValue: newValue })}
                 options={model === undefined ? [] : Object.keys(model)}
               />
             </Box>
           </Accordion>
         </div>
-        <Box className={`scrollbar scrollchild`} mt={1}>
+        <Box className="scrollbar scrollchild" mt={1}>
           {StimulationSources}
         </Box>
         {selectedStimulationSource}

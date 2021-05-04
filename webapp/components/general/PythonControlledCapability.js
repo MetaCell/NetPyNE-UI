@@ -5,11 +5,10 @@
  * @author Adrian Quintana (adrian@metacell.us)
  * @author Matteo Cantarelli (matteo@metacell.us)
  */
-define(function (require) {
-
-  var $ = require('jquery');
-  var React = require('react');
-  var GeppettoUtils = require('./GeppettoJupyterUtils');
+define((require) => {
+  const $ = require('jquery');
+  const React = require('react');
+  const GeppettoUtils = require('./GeppettoJupyterUtils');
 
   module.exports = {
     createPythonControlledComponent (WrappedComponent) {
@@ -42,11 +41,11 @@ define(function (require) {
         }
 
         connectToPython (componentType, model) {
-          GeppettoUtils.execPythonMessage('jupyter_geppetto.ComponentSync(componentType="' + componentType + '",model="' + model + '",id="' + this.id + '").connect()');
+          GeppettoUtils.execPythonMessage(`jupyter_geppetto.ComponentSync(componentType="${componentType}",model="${model}",id="${this.id}").connect()`);
         }
 
         disconnectFromPython () {
-          GeppettoUtils.execPythonMessage('jupyter_geppetto.remove_component_sync(componentType="' + this.state.componentType + '",model="' + this.id + '")');
+          GeppettoUtils.execPythonMessage(`jupyter_geppetto.remove_component_sync(componentType="${this.state.componentType}",model="${this.id}")`);
           GEPPETTO.ComponentFactory.removeExistingComponent(this.state.componentType, this);
         }
 
@@ -76,31 +75,27 @@ define(function (require) {
             this.setState({ value: this.props.value });
           }
         }
-
       }
 
       return PythonControlledComponent;
     },
 
     createPythonControlledControl (WrappedComponent) {
-
-      var PythonControlledComponent = this.createPythonControlledComponent(WrappedComponent);
+      const PythonControlledComponent = this.createPythonControlledComponent(WrappedComponent);
 
       class PythonControlledControl extends PythonControlledComponent {
-
         constructor (props) {
           super(props);
           this.state = $.extend(this.state, {
             value: '',
             searchText: '',
-            checked: false
+            checked: false,
           });
 
           // If a handleChange method is passed as a props it will overwrite the handleChange python controlled capability
           this.handleChange = (this.props.handleChange == undefined) ? this.handleChange.bind(this) : this.props.handleChange.bind(this);
           this.handleUpdateInput = this.handleUpdateInput.bind(this);
           this.handleUpdateCheckbox = this.handleUpdateCheckbox.bind(this);
-
         }
 
         componentDidMount () {
@@ -169,7 +164,7 @@ define(function (require) {
           }
           if (this.props.validate) {
             this.props.validate(this.state.value)
-              .then(response => {
+              .then((response) => {
                 if (this.state.errorState !== response.errorMsg) {
                   this.setState({ errorState: response.errorMsg });
                 }
@@ -219,12 +214,11 @@ define(function (require) {
               this.props.callback(newValue, this.oldValue);
             }
             this.oldValue = undefined;
-
           }
           this.setState({
             value: newValue,
             searchText: newValue,
-            checked: newValue
+            checked: newValue,
           });
           this.forceUpdate();
         }
@@ -239,7 +233,7 @@ define(function (require) {
 
         // Default handle (mainly textfields and dropdowns)
         handleChange (event, index, value) {
-          var targetValue = value;
+          let targetValue = value;
           if (event != null && event.target.value != undefined) {
             targetValue = event.target.value;
           }
@@ -251,7 +245,7 @@ define(function (require) {
 
           if (this.props.validate) {
             this.props.validate(targetValue)
-              .then(response => {
+              .then((response) => {
                 if (response.errorMsg !== this.state.errorMsg) {
                   this.setState({ errorMsg: response.errorMsg });
                 }
@@ -273,7 +267,7 @@ define(function (require) {
         }
 
         render () {
-          const wrappedComponentProps = Object.assign({}, this.props);
+          const wrappedComponentProps = { ...this.props };
           if (wrappedComponentProps.key == undefined) {
             wrappedComponentProps.key = wrappedComponentProps.model;
           }
@@ -294,7 +288,7 @@ define(function (require) {
           delete wrappedComponentProps.callback;
 
           if (wrappedComponentProps.realType == 'func' || wrappedComponentProps.realType == 'float') {
-            wrappedComponentProps['helperText'] = this.state.errorMsg;
+            wrappedComponentProps.helperText = this.state.errorMsg;
           }
           if (!getNameFromWrappedComponent(WrappedComponent)
             .includes('ListComponent')) {
@@ -303,19 +297,19 @@ define(function (require) {
 
           switch (getNameFromWrappedComponent(WrappedComponent)) {
             case 'AutoComplete':
-              wrappedComponentProps['onUpdateInput'] = this.handleUpdateInput;
-              wrappedComponentProps['searchText'] = this.state.searchText;
+              wrappedComponentProps.onUpdateInput = this.handleUpdateInput;
+              wrappedComponentProps.searchText = this.state.searchText;
               break;
             case 'Checkbox':
-              wrappedComponentProps['onChange'] = this.handleUpdateCheckbox;
-              wrappedComponentProps['checked'] = this.state.checked;
+              wrappedComponentProps.onChange = this.handleUpdateCheckbox;
+              wrappedComponentProps.checked = this.state.checked;
               delete wrappedComponentProps.searchText;
               delete wrappedComponentProps.dataSource;
               delete wrappedComponentProps.floatingLabelText;
               delete wrappedComponentProps.hintText;
               break;
             default:
-              wrappedComponentProps['onChange'] = this.handleChange;
+              wrappedComponentProps.onChange = this.handleChange;
               wrappedComponentProps.value = (typeof this.state.value === 'object' && this.state.value !== null && !Array.isArray(this.state.value)) ? JSON.stringify(this.state.value) : this.state.value;
               // Fix case with multiple values: need to set an empty list in case the value is undefined
               wrappedComponentProps.value = (wrappedComponentProps.multiple
@@ -330,24 +324,21 @@ define(function (require) {
             <WrappedComponent {...wrappedComponentProps} />
           );
         }
-
       }
 
       return PythonControlledControl;
     },
 
     createPythonControlledControlWithPythonDataFetch (WrappedComponent) {
-
-      var PythonControlledComponent = this.createPythonControlledComponent(WrappedComponent);
+      const PythonControlledComponent = this.createPythonControlledComponent(WrappedComponent);
 
       class PythonControlledControlWithPythonDataFetch extends PythonControlledComponent {
-
         constructor (props) {
           super(props);
           this.state = {
             ...this.state,
             value: [],
-            pythonData: []
+            pythonData: [],
           };
           // If a handleChange method is passed as a props it will overwrite the handleChange python controlled capability
           this.handleChange = (this.props.handleChange == undefined) ? this.handleChange.bind(this) : this.props.handleChange.bind(this);
@@ -377,7 +368,7 @@ define(function (require) {
           this.setState({
             value: newValue,
             searchText: newValue,
-            checked: newValue
+            checked: newValue,
           });
           if (this.syncValueWithPython) {
             this.syncValueWithPython(newValue);
@@ -388,7 +379,7 @@ define(function (require) {
 
         // Default handle (mainly textfields and dropdowns)
         handleChange (event, index, value) {
-          var targetValue = value;
+          let targetValue = value;
           if (event != null && event.target.value != undefined) {
             targetValue = event.target.value;
           }
@@ -407,7 +398,7 @@ define(function (require) {
             return false;
           }
 
-          for (var i = 0, l = array1.length; i < l; i++) {
+          for (let i = 0, l = array1.length; i < l; i++) {
             // Check if we have nested arrays
             if (array1[i] instanceof Array && array2[i] instanceof Array) {
               // recurse into the nested arrays
@@ -422,9 +413,9 @@ define(function (require) {
           return true;
         }
 
-        callPythonMethod = value => {
+        callPythonMethod = (value) => {
           GeppettoUtils.evalPythonMessage(this.props.method, [])
-            .then(response => {
+            .then((response) => {
               if (this._isMounted) {
                 if (Object.keys(response).length != 0) {
                   this.setState({ pythonData: response });
@@ -438,9 +429,9 @@ define(function (require) {
         componentDidUpdate (prevProps, prevState) {
           if (!this.compareArrays(this.state.value, prevState.value)) {
             if ($.isArray(this.state.value)) {
-              for (var v in this.state.value) {
+              for (const v in this.state.value) {
                 if (this.state.pythonData.indexOf(this.state.value[v]) < 0) {
-                  var newValue = [this.state.value[v]];
+                  const newValue = [this.state.value[v]];
                   this.setState({ pythonData: this.state.pythonData.concat(newValue) });
                 }
               }
@@ -453,7 +444,7 @@ define(function (require) {
         }
 
         render () {
-          const wrappedComponentProps = Object.assign({}, this.props);
+          const wrappedComponentProps = { ...this.props };
           if (wrappedComponentProps.key == undefined) {
             wrappedComponentProps.key = wrappedComponentProps.model;
           }
@@ -481,7 +472,6 @@ define(function (require) {
             </WrappedComponent>
           );
         }
-
       }
 
       return PythonControlledControlWithPythonDataFetch;

@@ -80,7 +80,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
         id={id}
         key={sectionId}
         label={label}
-        icon={<FontIcon className={`fa ${icon}`}/>}
+        icon={<FontIcon className={`fa ${icon}`} />}
         onClick={() => this.select(index, sectionId)}
       />
     );

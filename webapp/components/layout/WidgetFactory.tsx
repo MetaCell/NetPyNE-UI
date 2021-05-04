@@ -65,10 +65,10 @@ export default class WidgetFactory {
     const { component } = widgetConfig;
     switch (component) {
       case 'PythonConsole': {
-        return <NetPyNEPythonConsole/>;
+        return <NetPyNEPythonConsole />;
       }
       case 'D3Canvas':
-        return <NetPyNEInstantiated/>;
+        return <NetPyNEInstantiated />;
       case 'Plot': {
         const data = window['plotCache'][widgetConfig.id];
         if (widgetConfig.method.plotMethod.startsWith('iplot')) {
@@ -101,28 +101,28 @@ export default class WidgetFactory {
       }
 
       case 'popParams': {
-        return <NetPyNEPopulations model="netParams.popParams"/>;
+        return <NetPyNEPopulations model="netParams.popParams" />;
       }
       case 'cellParams': {
-        return <NetPyNECellRules model="netParams.cellParams"/>;
+        return <NetPyNECellRules model="netParams.cellParams" />;
       }
       case 'synMechParams': {
-        return <NetPyNESynapses model="netParams.synMechParams"/>;
+        return <NetPyNESynapses model="netParams.synMechParams" />;
       }
       case 'connParams': {
-        return <NetPyNEConnectivityRules model="netParams.connParams"/>;
+        return <NetPyNEConnectivityRules model="netParams.connParams" />;
       }
       case 'stimSourceParams': {
-        return <NetPyNEStimulationSources model="netParams.stimSourceParams"/>;
+        return <NetPyNEStimulationSources model="netParams.stimSourceParams" />;
       }
       case 'stimTargetParams': {
-        return <NetPyNEStimulationTargets model="netParams.stimTargetParams"/>;
+        return <NetPyNEStimulationTargets model="netParams.stimTargetParams" />;
       }
       case 'simConfig': {
-        return <NetPyNESimConfig model="simConfig"/>;
+        return <NetPyNESimConfig model="simConfig" />;
       }
       case 'analysis': {
-        return <NetPyNEPlots model="simConfig.analysis"/>;
+        return <NetPyNEPlots model="simConfig.analysis" />;
       }
     }
   }

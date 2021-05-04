@@ -11,7 +11,6 @@ const CANVAS_LIGHT = 'canvas-toolbar-btns-light';
 const CANVAS_DARK = 'canvas-toolbar-btns-dark';
 
 export default class NetPyNEInstantiated extends React.Component {
-
   constructor (props) {
     super(props);
     this.state = {
@@ -19,11 +18,11 @@ export default class NetPyNEInstantiated extends React.Component {
       controlPanelInitialized: false,
       bringItToFront: 0,
       update: 0,
-      canvasBtnCls: props.theme === THEMES.LIGHT ? CANVAS_LIGHT : CANVAS_DARK
+      canvasBtnCls: props.theme === THEMES.LIGHT ? CANVAS_LIGHT : CANVAS_DARK,
     };
     this.dimensions = {
       width: 200,
-      height: 200
+      height: 200,
     };
     this.canvasRef = createRef();
     this.controlPanelToggle = this.controlPanelToggle.bind(this);
@@ -68,13 +67,13 @@ export default class NetPyNEInstantiated extends React.Component {
       // update canvas only if there are instances to show
       this.canvasRef.current.engine.setLinesThreshold(25000);
       this.canvasRef.current.engine.updateSceneWithNewInstances(
-        window.Instances
+        window.Instances,
       );
       this.canvasRef.current.resetCamera();
 
       this.canvasRef.current.setColor('network', primaryColor, true);
       const spotLight = this.canvasRef.current.engine.scene.children.find(
-        child => child.type === 'SpotLight'
+        (child) => child.type === 'SpotLight',
       );
       if (spotLight) {
         this.canvasRef.current.engine.scene.remove(spotLight);
@@ -124,21 +123,20 @@ export default class NetPyNEInstantiated extends React.Component {
       $('#controlpanel')
         .show();
     }
-
   }
 
   render () {
     const {
       update,
       canvasBtnCls,
-      controlPanelInitialized
+      controlPanelInitialized,
     } = this.state;
     const { theme } = this.props;
-    const { controlPanelToggle: controlPanelToggle } = this;
+    const { controlPanelToggle } = this;
     const bgColor = theme === THEMES.LIGHT ? canvasBgLight : theme === THEMES.BLACK ? canvasBgDark : 'transparent';
     return (
       <div className="instantiatedContainer">
-        <NetWorkControlButtons canvasBtnCls={canvasBtnCls} controlPanelShow={controlPanelToggle}/>
+        <NetWorkControlButtons canvasBtnCls={canvasBtnCls} controlPanelShow={controlPanelToggle} />
         <Canvas
           id="CanvasContainer"
           name="Canvas"
@@ -147,13 +145,13 @@ export default class NetPyNEInstantiated extends React.Component {
           style={{
             height: '100%',
             width: '100%',
-            background: bgColor
+            background: bgColor,
           }}
           update={update}
         />
         <div id="controlpanel" style={{ top: 0 }}>
-          {controlPanelInitialized &&
-          <ControlPanel icon={null} useBuiltInFilters={false}></ControlPanel>}
+          {controlPanelInitialized
+          && <ControlPanel icon={null} useBuiltInFilters={false} />}
         </div>
       </div>
     );

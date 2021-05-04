@@ -7,7 +7,6 @@ import TextField from '@material-ui/core/TextField';
  * obtained through the value parameter fired on an onChange event.
  */
 export default class NetPyNESlider extends Component {
-
   constructor (props) {
     super(props);
     this.state = { value: 0.5 };
@@ -20,7 +19,7 @@ export default class NetPyNESlider extends Component {
   }
 
   handleSlider = (event, value) => {
-    this.setState({ value: value });
+    this.setState({ value });
 
     this.props.onChange(event, null, value);
   };
@@ -35,7 +34,7 @@ export default class NetPyNESlider extends Component {
           {...this.props}
           style={{
             float: 'left',
-            width: '220px'
+            width: '220px',
           }}
           value={this.state.value}
           onChange={this.handleSlider}
@@ -46,10 +45,10 @@ export default class NetPyNESlider extends Component {
           style={{
             float: 'left',
             width: '40px',
-            margin: '0 5px'
+            margin: '0 5px',
           }}
           value={this.state.value}
-          onChange={event => this.handleSlider(event, event.target.value)}
+          onChange={(event) => this.handleSlider(event, event.target.value)}
         />
 
       </div>

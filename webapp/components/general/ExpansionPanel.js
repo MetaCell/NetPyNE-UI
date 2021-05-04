@@ -4,9 +4,8 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import Tooltip from './Tooltip';
-
 import { withStyles } from '@material-ui/core/styles';
+import Tooltip from './Tooltip';
 
 const styles = ({ spacing }) => ({ button: { marginRight: 0 } });
 
@@ -14,7 +13,6 @@ class NetPyNEAccordion extends Component {
   state = { expanded: false };
 
   render () {
-
     const {
       children,
       classes,
@@ -29,15 +27,15 @@ class NetPyNEAccordion extends Component {
             onClick: () => this.setState({ expanded: !this.state.expanded }),
             className: classes.button,
           }}
-          expandIcon={
+          expandIcon={(
             <Tooltip
-              title={this.state.expanded ? 'Collapse' : 'Expand'} placement="top"
+              title={this.state.expanded ? 'Collapse' : 'Expand'}
+              placement="top"
             >
-              {this.state.expanded ? <ExpandLessIcon color="inherit"/> :
-                <ExpandMoreIcon color="inherit"/>}
+              {this.state.expanded ? <ExpandLessIcon color="inherit" />
+                : <ExpandMoreIcon color="inherit" />}
             </Tooltip>
-
-          }
+          )}
         >
           {summary}
         </AccordionSummary>
