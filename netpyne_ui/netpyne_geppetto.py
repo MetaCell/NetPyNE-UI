@@ -156,7 +156,13 @@ class NetPyNEGeppetto:
         if modFolder:
             neuron.load_mechanisms(str(modFolder))
 
-    def loadModel(self, args):  # handles all data coming from a .json file (default file system for Netpyne)
+    def loadModel(self, args):
+        """ Imports a model stored as file in json format.
+
+        :param args:
+        :return:
+        """
+
         def remove(dictionary):
             # remove reserved keys such as __dict__, __Method__, etc
             # they appear when we do sim.loadAll(json_file)
@@ -220,11 +226,12 @@ class NetPyNEGeppetto:
                 if wake_up_geppetto:
                     if len(sim.net.cells) > 0:
                         section = list(sim.net.cells[0].secs.keys())[0]
-                        if not 'pt3d' in list(sim.net.cells[0].secs[section].geom.keys()):
+                        if 'pt3d' not in list(sim.net.cells[0].secs[section].geom.keys()):
                             sim.net.defineCellShapes()
                             sim.gatherData()
                             sim.loadSimData(args['jsonModelFolder'])
 
+                    sim.gatherData()
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
                     return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
                 else:
@@ -233,6 +240,11 @@ class NetPyNEGeppetto:
             return utils.getJSONError("Error while loading the NetPyNE model", sys.exc_info())
 
     def importModel(self, modelParameters):
+        """ Imports a model stored in form of Python files.
+
+        :param modelParameters:
+        :return:
+        """
         try:
             # Get Current dir
             owd = os.getcwd()
