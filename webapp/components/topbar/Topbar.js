@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import Menu from '@geppettoengine/geppetto-client/js/components/interface/menu/Menu';
 
+import { withStyles } from '@material-ui/core/styles';
+import { SwitchPageButton } from 'netpyne/components';
 import toolbarConfig, {
   getModelMenu,
   getTutorials,
   getViewMenu,
-  getNetPyNEMenu
+  getNetPyNEMenu,
 } from './menuConfiguration';
-import { bgRegular, bgLight, font } from '../../theme';
+import { bgRegular } from '../../theme';
 import Splash from '../general/Splash';
 
 import LoadFileDialog from './dialogs/LoadFile';
@@ -19,21 +21,19 @@ import ImportCellParamsDialog from './dialogs/ImportCellParams';
 import UploadDownloadFilesDialog from './dialogs/UploadDownloadFiles';
 
 import { TOPBAR_CONSTANTS } from '../../constants';
-import { withStyles } from '@material-ui/core/styles';
-import { SwitchPageButton } from 'netpyne/components';
 
 const styles = () => ({
   topbar: {
     backgroundColor: bgRegular,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between'
-  }
+    justifyContent: 'space-between',
+  },
 });
 
 class Topbar extends Component {
-
   state = { openSnackBar: false };
+
   snackBarMessage = '';
 
   menuHandler (click) {
@@ -74,7 +74,7 @@ class Topbar extends Component {
       }
 
       default:
-        console.log('Menu action not mapped, it is ' + click);
+        console.log(`Menu action not mapped, it is ${click}`);
     }
   }
 
@@ -93,66 +93,84 @@ class Topbar extends Component {
   }
 
   render () {
-    var content;
+    let content;
     if (this.props.dialogOpen) {
       switch (this.props.topbarDialogName) {
         case TOPBAR_CONSTANTS.LOAD:
-          content = <LoadFileDialog
-            open={this.props.dialogOpen}
-            onRequestClose={() => this.handleClose()}
-          />;
+          content = (
+            <LoadFileDialog
+              open={this.props.dialogOpen}
+              onRequestClose={() => this.handleClose()}
+            />
+          );
           break;
         case TOPBAR_CONSTANTS.SAVE:
-          content = <SaveFileDialog
-            open={this.props.dialogOpen}
-            onRequestClose={() => this.handleClose()}
-          />;
+          content = (
+            <SaveFileDialog
+              open={this.props.dialogOpen}
+              onRequestClose={() => this.handleClose()}
+            />
+          );
           break;
         case TOPBAR_CONSTANTS.IMPORT_HLS:
-          content = <ImportExportHLSDialog
-            open={this.props.dialogOpen}
-            onRequestClose={() => this.handleClose()}
-            mode={'IMPORT'}/>;
+          content = (
+            <ImportExportHLSDialog
+              open={this.props.dialogOpen}
+              onRequestClose={() => this.handleClose()}
+              mode="IMPORT"
+            />
+          );
           break;
         case TOPBAR_CONSTANTS.EXPORT_HLS:
-          content = <ImportExportHLSDialog
-            open={this.props.dialogOpen}
-            onRequestClose={() => this.handleClose()}
-            mode={'EXPORT'}
-          />;
+          content = (
+            <ImportExportHLSDialog
+              open={this.props.dialogOpen}
+              onRequestClose={() => this.handleClose()}
+              mode="EXPORT"
+            />
+          );
           break;
         case TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE:
-          content = <ImportCellParamsDialog
-            open={this.props.dialogOpen}
-            cellRuleName={this.props.topbarDialogMetadata.cellRuleName}
-            onRequestClose={() => this.handleClose()}
-          />;
+          content = (
+            <ImportCellParamsDialog
+              open={this.props.dialogOpen}
+              cellRuleName={this.props.topbarDialogMetadata.cellRuleName}
+              onRequestClose={() => this.handleClose()}
+            />
+          );
           break;
         case TOPBAR_CONSTANTS.NEW_MODEL:
-          content = <NewModelDialog
-            open={this.props.dialogOpen}
-            onRequestClose={() => this.handleClose()}
-            onAction={() => this.resetModel()}
-          />;
+          content = (
+            <NewModelDialog
+              open={this.props.dialogOpen}
+              onRequestClose={() => this.handleClose()}
+              onAction={() => this.resetModel()}
+            />
+          );
           break;
         case TOPBAR_CONSTANTS.UPLOAD_FILES:
-          content = <UploadDownloadFilesDialog
-            open={this.props.dialogOpen}
-            onRequestClose={() => this.handleClose()}
-            openSnackBar={message => {
-              this.handleOpenSnackBar(message);
-            }}
-            mode={'UPLOAD'}/>;
+          content = (
+            <UploadDownloadFilesDialog
+              open={this.props.dialogOpen}
+              onRequestClose={() => this.handleClose()}
+              openSnackBar={(message) => {
+                this.handleOpenSnackBar(message);
+              }}
+              mode="UPLOAD"
+            />
+          );
           break;
         case TOPBAR_CONSTANTS.DOWNLOAD_FILES:
-          content = <UploadDownloadFilesDialog
-            open={this.props.dialogOpen}
-            onRequestClose={() => this.handleClose()}
-            openSnackBar={message => {
-              this.handleOpenSnackBar(message);
-            }}
-            mode={'DOWNLOAD'}
-          />;
+          content = (
+            <UploadDownloadFilesDialog
+              open={this.props.dialogOpen}
+              onRequestClose={() => this.handleClose()}
+              openSnackBar={(message) => {
+                this.handleOpenSnackBar(message);
+              }}
+              mode="DOWNLOAD"
+            />
+          );
           break;
       }
     }
@@ -166,11 +184,11 @@ class Topbar extends Component {
           />
           <div>
 
-            <SwitchPageButton/>
+            <SwitchPageButton />
           </div>
 
         </div>
-        {this.props.modelLoaded ? null : <Splash/>}
+        {this.props.modelLoaded ? null : <Splash />}
         <Snackbar
           message={this.snackBarMessage}
           autoHideDuration={4000}

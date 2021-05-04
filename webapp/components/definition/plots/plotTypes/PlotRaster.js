@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import TimeRange from "../TimeRange";
-import Box from "@material-ui/core/Box";
+import React, { Component } from 'react';
+import Box from '@material-ui/core/Box';
 import {
   NetPyNEInclude,
   NetPyNEField,
   SelectField,
   NetPyNECheckbox,
   NetPyNETextField,
-} from "netpyne/components";
+} from 'netpyne/components';
+import TimeRange from '../TimeRange';
 
 export default class PlotRaster extends React.Component {
   constructor (props) {
@@ -23,23 +23,23 @@ export default class PlotRaster extends React.Component {
   render () {
     const tag = 'simConfig.analysis[\'iplotRaster\']';
     return (
-      <Box className={`scrollbar scrollchild`} mt={1}>
+      <Box className="scrollbar scrollchild" mt={1}>
         <NetPyNEInclude
-          id={"simConfig.analysis.plotRaster.include"}
-          model={tag + "['include']"}
-          defaultOptions={["all", "allCells", "allNetStims"]}
-          initialValue={"all"}
+          id="simConfig.analysis.plotRaster.include"
+          model={`${tag}['include']`}
+          defaultOptions={['all', 'allCells', 'allNetStims']}
+          initialValue="all"
         />
 
         <NetPyNEField id="simConfig.analysis.plotRaster.timeRange">
-          <TimeRange model={tag + "['timeRange']"} />
+          <TimeRange model={`${tag}['timeRange']`} />
         </NetPyNEField>
 
         <NetPyNEField id="simConfig.analysis.plotRaster.maxSpikes">
           <NetPyNETextField
             fullWidth
             variant="filled"
-            model={tag + "['maxSpikes']"}
+            model={`${tag}['maxSpikes']`}
           />
         </NetPyNEField>
 
@@ -47,43 +47,43 @@ export default class PlotRaster extends React.Component {
           id="simConfig.analysis.plotRaster.orderBy"
           className="listStyle"
         >
-          <SelectField model={tag + "['orderBy']"} />
+          <SelectField model={`${tag}['orderBy']`} />
         </NetPyNEField>
 
         <NetPyNEField
           id="simConfig.analysis.plotRaster.popRates"
           className="listStyle"
         >
-          <SelectField model={tag + "['popRates']"} />
+          <SelectField model={`${tag}['popRates']`} />
         </NetPyNEField>
 
         <NetPyNEField
           id="simConfig.analysis.plotRaster.spikeHist"
           className="listStyle"
         >
-          <SelectField model={tag + "['spikeHist']"} />
+          <SelectField model={`${tag}['spikeHist']`} />
         </NetPyNEField>
 
         <NetPyNEField id="simConfig.analysis.plotRaster.spikeHistBin">
           <NetPyNETextField
             fullWidth
             variant="filled"
-            model={tag + "['spikeHistBin']"}
+            model={`${tag}['spikeHistBin']`}
           />
         </NetPyNEField>
 
         <NetPyNEField
           id="simConfig.analysis.plotRaster.orderInverse"
-          className={"netpyneCheckbox"}
+          className="netpyneCheckbox"
         >
-          <NetPyNECheckbox model={tag + "['orderInverse']"} />
+          <NetPyNECheckbox model={`${tag}['orderInverse']`} />
         </NetPyNEField>
 
         <NetPyNEField
           id="simConfig.analysis.plotRaster.syncLines"
-          className={"netpyneCheckbox"}
+          className="netpyneCheckbox"
         >
-          <NetPyNECheckbox model={tag + "['syncLines']"} />
+          <NetPyNECheckbox model={`${tag}['syncLines']`} />
         </NetPyNEField>
       </Box>
     );

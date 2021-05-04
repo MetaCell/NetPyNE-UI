@@ -3,29 +3,30 @@ import MuiAlert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import FileCopyIcon from '@material-ui/icons/FileCopyOutlined';
-import Tooltip from './Tooltip';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import Tooltip from './Tooltip';
 
 const styles = ({
   spacing,
-  palette
+  palette,
 }) => ({
   root: {},
   text: {
     color: palette.text.secondary,
-    fontFamily: 'Menlo, Monaco, Consolas, "Courier New", monospace'
+    fontFamily: 'Menlo, Monaco, Consolas, "Courier New", monospace',
   },
   icon: {
     padding: 0,
     opacity: 0.7,
     fontSize: '1.2em',
-    marginLeft: '0.3em'
-  }
+    marginLeft: '0.3em',
+  },
 });
 
 class RulePath extends Component {
   state = { open: false };
+
   textAreaRef = createRef();
 
   copyCodeToClipboard = () => {
@@ -74,18 +75,25 @@ class RulePath extends Component {
           {text}
           <span>
             <Tooltip title="Copy" placement="top">
-              <IconButton aria-label="delete" padding="" size="small" className={classes.icon}
-                          onClick={() => this.copyCodeToClipboard()}>
-                <FileCopyIcon fontSize="inherit"/>
+              <IconButton
+                aria-label="delete"
+                padding=""
+                size="small"
+                className={classes.icon}
+                onClick={() => this.copyCodeToClipboard()}
+              >
+                <FileCopyIcon fontSize="inherit" />
               </IconButton>
             </Tooltip>
 
           </span>
         </Typography>
 
-
-        <Snackbar open={this.state.open} autoHideDuration={3000}
-                  onClose={() => this.setState({ open: false })}>
+        <Snackbar
+          open={this.state.open}
+          autoHideDuration={3000}
+          onClose={() => this.setState({ open: false })}
+        >
           <MuiAlert elevation={6} variant="filled" severity="success">Copied to clipboard</MuiAlert>
         </Snackbar>
       </div>

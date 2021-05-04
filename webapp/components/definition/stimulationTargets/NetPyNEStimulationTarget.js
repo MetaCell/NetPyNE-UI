@@ -13,14 +13,13 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import Utils from '../../../Utils';
-import StimulationConditions from './StimulationConditions';
-
 import {
   NetPyNEField,
   NetPyNETextField,
   NetPyNESelectField,
 } from 'netpyne/components';
+import Utils from '../../../Utils';
+import StimulationConditions from './StimulationConditions';
 
 export default class NetPyNEStimulationTarget extends React.Component {
   constructor (props) {
@@ -35,7 +34,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
     };
     this.postProcessMenuItems = this.postProcessMenuItems.bind(this);
     this.postProcessMenuItems4SynMech = this.postProcessMenuItems4SynMech.bind(
-      this
+      this,
     );
     this.handleSelection = this.handleSelection.bind(this);
     this.select = this.select.bind(this);
@@ -59,14 +58,14 @@ export default class NetPyNEStimulationTarget extends React.Component {
 
   async handleStimSourceSelection (selectedStimSourceName) {
     return await Utils.evalPythonMessage(
-      '\'NetStim\' == netpyne_geppetto.netParams.stimSourceParams[\''
-      + selectedStimSourceName
-      + '\'][\'type\']'
+      `'NetStim' == netpyne_geppetto.netParams.stimSourceParams['${
+        selectedStimSourceName
+      }']['type']`,
     );
   }
 
   async isStimSourceTypeNetStim (stimSourceName) {
-    var isNetStim = false;
+    let isNetStim = false;
     const { name: stimName } = this.props;
     if (stimSourceName === undefined) {
       try {
@@ -81,9 +80,9 @@ export default class NetPyNEStimulationTarget extends React.Component {
 
     if (stimSourceName !== '') {
       isNetStim = await Utils.evalPythonMessage(
-        '\'NetStim\' == netpyne_geppetto.netParams.stimSourceParams[\''
-        + stimSourceName
-        + '\'][\'type\']'
+        `'NetStim' == netpyne_geppetto.netParams.stimSourceParams['${
+          stimSourceName
+        }']['type']`,
       );
     }
 
@@ -102,16 +101,16 @@ export default class NetPyNEStimulationTarget extends React.Component {
     }
   }
 
-  handleRenameChange = event => {
-    var storedValue = this.props.name;
-    var newValue = Utils.nameValidation(event.target.value);
-    var updateCondition = this.props.renameHandler(newValue);
-    var triggerCondition = Utils.handleUpdate(
+  handleRenameChange = (event) => {
+    const storedValue = this.props.name;
+    const newValue = Utils.nameValidation(event.target.value);
+    const updateCondition = this.props.renameHandler(newValue);
+    const triggerCondition = Utils.handleUpdate(
       updateCondition,
       newValue,
       event.target.value,
       this,
-      'StimulationTarget'
+      'StimulationTarget',
     );
 
     if (triggerCondition) {
@@ -122,7 +121,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
           newValue,
           (response, newValue) => {
             this.renaming = false;
-          }
+          },
         );
         this.renaming = true;
       });
@@ -136,13 +135,13 @@ export default class NetPyNEStimulationTarget extends React.Component {
     this.updateTimer = setTimeout(updateMethod, 1000);
   }
 
-  handleSelection = selection => {
+  handleSelection = (selection) => {
     Utils.evalPythonMessage(
-      '\'NetStim\' == netpyne_geppetto.netParams.stimSourceParams[\''
-      + selection
-      + '\'][\'type\']'
+      `'NetStim' == netpyne_geppetto.netParams.stimSourceParams['${
+        selection
+      }']['type']`,
     )
-      .then(response => {
+      .then((response) => {
         this.setState({ sourceTypeNetStim: response });
       });
   };
@@ -151,25 +150,23 @@ export default class NetPyNEStimulationTarget extends React.Component {
     if ((selectedStimSourceName != Object) & (selectedStimSourceName != '')) {
       this.isStimSourceTypeNetStim(selectedStimSourceName);
     }
-    return pythonData.map(name => (
-      <MenuItem id={name + 'MenuItem'} key={name} value={name}>
+    return pythonData.map((name) => (
+      <MenuItem id={`${name}MenuItem`} key={name} value={name}>
         {name}
       </MenuItem>
     ));
   };
 
-  postProcessMenuItems4SynMech = (pythonData, selected) =>
-    pythonData.map(name => (
-      <MenuItem id={name + 'MenuItem'} key={name} value={name}>
-        {name}
-      </MenuItem>
-    ));
+  postProcessMenuItems4SynMech = (pythonData, selected) => pythonData.map((name) => (
+    <MenuItem id={`${name}MenuItem`} key={name} value={name}>
+      {name}
+    </MenuItem>
+  ));
 
-  select = (index, sectionId) =>
-    this.setState({
-      selectedIndex: index,
-      sectionId: sectionId
-    });
+  select = (index, sectionId) => this.setState({
+    selectedIndex: index,
+    sectionId,
+  });
 
   getBottomNavigationAction (index, sectionId, label, icon, id) {
     return (
@@ -184,9 +181,8 @@ export default class NetPyNEStimulationTarget extends React.Component {
   }
 
   render () {
-    var dialogPop
-      = this.state.errorMessage != undefined ? (
-      <Dialog open={true} style={{ whiteSpace: 'pre-wrap' }}>
+    const dialogPop = this.state.errorMessage != undefined ? (
+      <Dialog open style={{ whiteSpace: 'pre-wrap' }}>
         <DialogTitle id="alert-dialog-title">
           {this.state.errorMessage}
         </DialogTitle>
@@ -199,12 +195,10 @@ export default class NetPyNEStimulationTarget extends React.Component {
           <Button
             variant="contained"
             color="primary"
-            onClick={() =>
-              this.setState({
-                errorMessage: undefined,
-                errorDetails: undefined,
-              })
-            }
+            onClick={() => this.setState({
+              errorMessage: undefined,
+              errorDetails: undefined,
+            })}
           >
             BACK
           </Button>
@@ -228,15 +222,15 @@ export default class NetPyNEStimulationTarget extends React.Component {
             />
           </Box>
 
-          <NetPyNEField id={'netParams.stimTargetParams.source'}>
+          <NetPyNEField id="netParams.stimTargetParams.source">
             <NetPyNESelectField
               fullWidth
               model={
-                'netParams.stimTargetParams[\''
-                + this.props.name
-                + '\'][\'source\']'
+                `netParams.stimTargetParams['${
+                  this.props.name
+                }']['source']`
               }
-              method={'netpyne_geppetto.getAvailableStimSources'}
+              method="netpyne_geppetto.getAvailableStimSources"
               postProcessItems={this.postProcessMenuItems}
             />
           </NetPyNEField>
@@ -246,7 +240,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
               fullWidth
               variant="filled"
               model={
-                'netParams.stimTargetParams[\'' + this.props.name + '\'][\'sec\']'
+                `netParams.stimTargetParams['${this.props.name}']['sec']`
               }
             />
           </NetPyNEField>
@@ -256,7 +250,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
               fullWidth
               variant="filled"
               model={
-                'netParams.stimTargetParams[\'' + this.props.name + '\'][\'loc\']'
+                `netParams.stimTargetParams['${this.props.name}']['loc']`
               }
             />
           </NetPyNEField>
@@ -265,15 +259,15 @@ export default class NetPyNEStimulationTarget extends React.Component {
       if (this.state.isSourceTypeNetStim) {
         var extraContent = (
           <>
-            <NetPyNEField id={'netParams.stimTargetParams.synMech'}>
+            <NetPyNEField id="netParams.stimTargetParams.synMech">
               <NetPyNESelectField
                 fullWidth
                 model={
-                  'netParams.stimTargetParams[\''
-                  + this.props.name
-                  + '\'][\'synMech\']'
+                  `netParams.stimTargetParams['${
+                    this.props.name
+                  }']['synMech']`
                 }
-                method={'netpyne_geppetto.getAvailableSynMech'}
+                method="netpyne_geppetto.getAvailableSynMech"
                 postProcessItems={this.postProcessMenuItems4SynMech}
               />
             </NetPyNEField>
@@ -283,9 +277,9 @@ export default class NetPyNEStimulationTarget extends React.Component {
                 fullWidth
                 variant="filled"
                 model={
-                  'netParams.stimTargetParams[\''
-                  + this.props.name
-                  + '\'][\'weight\']'
+                  `netParams.stimTargetParams['${
+                    this.props.name
+                  }']['weight']`
                 }
               />
             </NetPyNEField>
@@ -295,9 +289,9 @@ export default class NetPyNEStimulationTarget extends React.Component {
                 fullWidth
                 variant="filled"
                 model={
-                  'netParams.stimTargetParams[\''
-                  + this.props.name
-                  + '\'][\'delay\']'
+                  `netParams.stimTargetParams['${
+                    this.props.name
+                  }']['delay']`
                 }
               />
             </NetPyNEField>
@@ -307,40 +301,40 @@ export default class NetPyNEStimulationTarget extends React.Component {
                 fullWidth
                 variant="filled"
                 model={
-                  'netParams.stimTargetParams[\''
-                  + this.props.name
-                  + '\'][\'synsPerConn\']'
+                  `netParams.stimTargetParams['${
+                    this.props.name
+                  }']['synsPerConn']`
                 }
               />
             </NetPyNEField>
           </>
         );
       } else {
-        var extraContent = <div/>;
+        var extraContent = <div />;
       }
     } else if (this.state.sectionId == 'Conditions') {
-      var content = <StimulationConditions name={this.state.currentName}/>;
+      var content = <StimulationConditions name={this.state.currentName} />;
     }
 
-    var index = 0;
-    var bottomNavigationItems = [];
+    let index = 0;
+    const bottomNavigationItems = [];
     bottomNavigationItems.push(
       this.getBottomNavigationAction(
         index++,
         'General',
         'General',
-        <StimTargetIcon/>,
-        'stimTargetGeneralTab'
-      )
+        <StimTargetIcon />,
+        'stimTargetGeneralTab',
+      ),
     );
     bottomNavigationItems.push(
       this.getBottomNavigationAction(
         index++,
         'Conditions',
         'Conditions',
-        <CondsIcon/>,
-        'stimTargetCondsTab'
-      )
+        <CondsIcon />,
+        'stimTargetCondsTab',
+      ),
     );
 
     return (
@@ -352,7 +346,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
         >
           {bottomNavigationItems}
         </BottomNavigation>
-        <Box className={`scrollbar scrollchild`} mt={1}>
+        <Box className="scrollbar scrollchild" mt={1}>
           {content}
           {extraContent}
         </Box>

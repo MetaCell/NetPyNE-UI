@@ -12,12 +12,11 @@ const styles = () => ({
   exception: {
     whiteSpace: 'pre-wrap',
     backgroundColor: bgDarkest,
-    color: fontColor
+    color: fontColor,
   },
 });
 
 class ActionDialog extends React.Component {
-
   state = { hide: !this.props.openErrorDialogBox && !this.props.openDialog };
 
   performAction = () => {
@@ -56,7 +55,7 @@ class ActionDialog extends React.Component {
     const {
       classes,
       errorMessage,
-      errorDetails
+      errorDetails,
     } = this.props;
 
     let action;
@@ -72,7 +71,9 @@ class ActionDialog extends React.Component {
           variant="contained"
           color="primary"
           onClick={this.performAction}
-        >{this.props.buttonLabel}</Button>
+        >
+          {this.props.buttonLabel}
+        </Button>
       );
 
       content = this.props.children;
@@ -83,7 +84,9 @@ class ActionDialog extends React.Component {
           color="primary"
           key="BACK"
           onClick={() => this.handleClickGoBack()}
-        >BACK</Button>
+        >
+          BACK
+        </Button>
       );
 
       title = errorMessage;
