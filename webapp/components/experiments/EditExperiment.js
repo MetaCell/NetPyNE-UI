@@ -15,7 +15,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import Link from '@material-ui/core/Link';
 import {
   GridLayout,
@@ -248,7 +247,7 @@ const useStyles = (theme) => ({
       color: experimentSvgColor,
     },
     '& .MuiAutocomplete-option': {
-      paddingLeft: theme.spacing(1),
+      paddingLeft: theme.spacing(2),
       color: fontColor,
       paddingRight: theme.spacing(1),
     }
@@ -258,7 +257,6 @@ const useStyles = (theme) => ({
 const ParameterRow = (parameter, index, handleParamSelection, handleChange, handleInputText, handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams, classes) => {
   const { RANGE } = EXPERIMENT_TEXTS;
   return (
-
     <Grid className="editExperimentList" container spacing={1} key={`${parameter.name}-${index}`}>
       <Grid item xs className="editExperimentAutocomplete">
         <Autocomplete
@@ -271,7 +269,6 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
           }}
           renderOption={(option) => (
             <>
-              <ArrowRightIcon />
               {option}
             </>
           )}
@@ -362,10 +359,21 @@ const EditExperiment = (props) => {
   };
 
   const [selectionParams, setSelectionParams] = useState([])
+
+  const flatten = (obj, path = '') => {
+    if (!(obj instanceof Object)) return {[path.replace(/\.$/g, '')]:obj};
+
+    return Object.keys(obj).reduce((output, key) => {
+        return obj instanceof Array ?
+             {...output, ...flatten(obj[key], path +  '[' + key + '].')}:
+             {...output, ...flatten(obj[key], path + key + '.')};
+    }, {});
+}
+
   const viewParameters = () => {
     getParameters().then((parameters) => {
       // netParams JSON dict
-      setSelectionParams(Object.keys(parameters));
+      setSelectionParams(Object.keys(flatten(parameters)));
     });
   };
 
@@ -466,11 +474,11 @@ const EditExperiment = (props) => {
                 </Box> }
               </Box>
             )}
-            <Box className="editExperimentRow">
+            {selectionParams.length > 0 && <Box className="editExperimentRow">
               {parameters.map((parameter, index) => (
                 ParameterRow(parameter, index, handleParamSelection, handleChange, handleInputText, handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams, classes)
               ))}
-            </Box>
+            </Box>}
           </Box>
         </Box>
         <Box>
