@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@geppettoengine/geppetto-client": "openworm/geppetto-client#hotfix/html-viewer",
+    "@geppettoengine/geppetto-client": "git+https://git@github.com/openworm/geppetto-client.git#hotfix/html-viewer",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.51",
     "less-vars-to-js": "^1.3.0",
