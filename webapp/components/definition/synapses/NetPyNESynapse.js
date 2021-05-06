@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
 import Dialog from '@material-ui/core/Dialog/Dialog';
@@ -140,9 +140,7 @@ class NetPyNESynapse extends React.Component {
           </Button>
         </DialogActions>
       </Dialog>
-    ) : (
-      undefined
-    );
+    ) : undefined;
 
     if (this.state.synMechMod == '' || this.state.synMechMod == undefined) {
       var content = <div />;
