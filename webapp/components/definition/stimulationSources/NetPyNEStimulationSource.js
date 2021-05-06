@@ -32,7 +32,7 @@ class NetPyNEStimulationSource extends React.Component {
     super(props);
     this.state = {
       currentName: props.name,
-      sourceType: 'IClamp',
+      sourceType: 'NetStim',
       errorMessage: undefined,
       errorDetails: undefined,
     };
