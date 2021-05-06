@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
+import Dialog from '@material-ui/core/Dialog';
+import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
+
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import { Tooltip } from 'netpyne/components';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import { Tooltip } from 'netpyne/components';
 import Utils from '../../Utils';
 
 export default class NetPyNEField extends Component {
@@ -11,24 +18,31 @@ export default class NetPyNEField extends Component {
     this.state = { openHelp: false };
   }
 
+  handleOpenHelp = (help) => {
+    this.setState({ openHelp: true, helpText: help });
+  };
+
+  handleCloseHelp = () => {
+    this.setState({ openHelp: false });
+  };
+
   setErrorMessage (value) {
     return new Promise((resolve, reject) => {
-      if (this.realType === 'func') {
-        if (value !== '' && value !== undefined) {
+      if (this.realType == 'func') {
+        if (value != '' && value != undefined) {
           Utils.evalPythonMessage('netpyne_geppetto.validateFunction', [
             value,
-          ])
-            .then((response) => {
-              if (!response) {
-                resolve({ errorMsg: 'Not a valid function' });
-              } else {
-                resolve({ errorMsg: '' });
-              }
-            });
+          ]).then((response) => {
+            if (!response) {
+              resolve({ errorMsg: 'Not a valid function' });
+            } else {
+              resolve({ errorMsg: '' });
+            }
+          });
         } else {
           resolve({ errorMsg: '' });
         }
-      } else if (this.realType === 'float') {
+      } else if (this.realType == 'float') {
         if (isNaN(value)) {
           resolve({ errorMsg: 'Only float allowed' });
         } else {
@@ -39,8 +53,8 @@ export default class NetPyNEField extends Component {
   }
 
   prePythonSyncProcessing (value) {
-    if (value === '') {
-      if (this.default !== undefined) {
+    if (value == '') {
+      if (this.default != undefined) {
         return this.default;
       } if (
         !this.model.split('.')[0].startsWith('simConfig')
@@ -54,8 +68,42 @@ export default class NetPyNEField extends Component {
 
   render () {
     const help = Utils.getMetadataField(this.props.id, 'help');
+    if (help != undefined && help != '') {
+      const helpComponent = (
+        <div>
+          <Tooltip title="Help" placement="top">
+            <div className="helpIcon">
+              <i
+                className="fa fa-question"
+                aria-hidden="true"
+                onClick={() => this.handleOpenHelp(help)}
+              />
+            </div>
+          </Tooltip>
+          <Dialog
+            style={{ zIndex: 5000 }}
+            open={this.state.openHelp}
+            onClose={() => this.setState({ openHelp: false })}
+          >
+            <DialogTitle>NetPyNE Help</DialogTitle>
+            <DialogContent>
+              <DialogContentText>{this.state.helpText}</DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                autoFocus
+                color="primary"
+                onClick={() => this.setState({ openHelp: false })}
+              >
+                Got it
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+      );
+    }
+
     const childWithProp = React.Children.map(this.props.children, (child) => {
-      const realType = Utils.getMetadataField(this.props.id, 'type');
       const extraProps = {};
       let name = child.type.name ? child.type.name : child.type.muiName;
       if (name === undefined) {
@@ -77,27 +125,32 @@ export default class NetPyNEField extends Component {
         extraProps.prePythonSyncProcessing = this.prePythonSyncProcessing;
 
         const dataSource = Utils.getMetadataField(this.props.id, 'suggestions');
-        if (dataSource !== '') {
+        if (dataSource != '') {
           extraProps.dataSource = dataSource;
         }
       }
 
-      extraProps.label = Utils.getMetadataField(this.props.id, 'label');
+      const floatingLabelText = Utils.getMetadataField(this.props.id, 'label');
+      extraProps.label = floatingLabelText;
+
       const type = Utils.getHTMLType(this.props.id);
-      if (type !== '') {
+      if (type != '') {
         extraProps.type = type;
       }
 
-      if (name === 'PythonControlledControl') {
+      if (name == 'PythonControlledControl') {
+        var realType = Utils.getMetadataField(this.props.id, 'type');
         extraProps.realType = realType;
       }
 
-      let defaultValue = Utils.getMetadataField(this.props.id, 'default');
-      if (defaultValue) {
+      const hintText = Utils.getMetadataField(this.props.id, 'hintText');
+
+      let default_value = Utils.getMetadataField(this.props.id, 'default');
+      if (default_value) {
         if (realType === 'dict' || realType === 'dict(dict)') {
-          defaultValue = JSON.parse(defaultValue);
+          default_value = JSON.parse(default_value);
         }
-        extraProps.default = defaultValue;
+        extraProps.default = default_value;
       }
 
       const options = Utils.getMetadataField(this.props.id, 'options');
@@ -109,13 +162,22 @@ export default class NetPyNEField extends Component {
         ));
       }
 
+      // // This seems a more material way to add the help icon (at least for TextFields)
+      // if (child.props.fullWidth) {
+      //   extraProps.InputProps = { endAdornment: helpComponent }
+      // }
       return React.cloneElement(child, extraProps);
     });
+
+    const classes = [];
+    if (this.props.className) {
+      classes.push(this.props.className);
+    }
 
     return (
       <Grid container alignItems="center">
         <Grid item>
-          {(help !== undefined && help !== '')
+          {(help != undefined && help != '')
             ? (
               <Tooltip
                 title={help}
@@ -138,6 +200,7 @@ export default class NetPyNEField extends Component {
               </Box>
             )}
         </Grid>
+        {/* {helpComponent} */}
       </Grid>
     );
   }

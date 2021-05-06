@@ -3,27 +3,27 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import NavigationMoreHoriz from '@material-ui/icons/MoreHoriz';
 import { withStyles } from '@material-ui/core/styles';
-import Utils from '../../../../../Utils';
 import ContentAdd from '@material-ui/icons/Add';
+import Utils from '../../../../../Utils';
 import { MechIcon } from '../../../../general/NetPyNEIcons';
 import Tooltip from '../../../../general/Tooltip';
 
 const fontSize = 40;
 const styles = ({
   spacing,
-  palette
+  palette,
 }) => ({
   icon: {
     color: palette.primary.main,
-    cursor: 'pointer'
+    cursor: 'pointer',
   },
   disabledIcon: {
     color: '#d1d1d1',
-    cursor: 'auto'
+    cursor: 'auto',
   },
   iconContent: {
     position: 'absolute',
-    color: 'white'
+    color: 'white',
   },
   cogIconContent: {
     width: fontSize,
@@ -31,52 +31,51 @@ const styles = ({
     position: 'absolute',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   container: {
     position: 'relative',
     width: fontSize - 2,
-    height: fontSize - 2
+    height: fontSize - 2,
   },
   cogIcon: {
     width: fontSize,
     height: fontSize,
-    position: 'absolute'
-  }
+    position: 'absolute',
+  },
 
 });
 
 class NetPyNENewMechanism extends React.Component {
-
   constructor (props) {
     super(props);
     this.state = {
       open: false,
-      mechanisms: []
+      mechanisms: [],
     };
   }
 
   componentDidMount () {
     Utils.evalPythonMessage('netpyne_geppetto.getAvailableMechs', [])
-      .then(response => {
+      .then((response) => {
         this.setState({ mechanisms: response });
       });
   }
 
-  handleClick = event => {
+  handleClick = (event) => {
     this.setState({ open: false });
     this.props.handleClick(event.target.innerText);
   };
 
-  handleButtonClick = anchor => {
+  handleButtonClick = (anchor) => {
     const {
       blockButton,
-      handleHierarchyClick
+      handleHierarchyClick,
     } = this.props;
     if (!blockButton) {
       this.setState({
         open: true,
-        anchorEl: anchor
+        anchorEl: anchor,
       });
     }
     handleHierarchyClick();
@@ -85,45 +84,41 @@ class NetPyNENewMechanism extends React.Component {
   createTooltip () {
     const {
       disabled,
-      blockButton
+      blockButton,
     } = this.props;
     if (disabled) {
       return '';
-    } else {
-      if (blockButton) {
-        return 'Explore mechanisms';
-      } else {
-        return 'Create new mechanism';
-      }
     }
+    if (blockButton) {
+      return 'Explore mechanisms';
+    }
+    return 'Create new mechanism';
   }
 
   createLabel (classes) {
     const {
       disabled,
-      blockButton
+      blockButton,
     } = this.props;
     if (disabled) {
       return '';
-    } else {
-      if (blockButton) {
-        return <NavigationMoreHoriz className={classes.iconContent}/>;
-      } else {
-        return <ContentAdd className={classes.iconContent}/>;
-      }
     }
+    if (blockButton) {
+      return <NavigationMoreHoriz className={classes.iconContent} />;
+    }
+    return <ContentAdd className={classes.iconContent} />;
   }
 
   render () {
     const {
       disabled,
       classes,
-      className
+      className,
     } = this.props;
     const {
       open,
       anchorEl,
-      mechanisms
+      mechanisms,
     } = this.state;
     const tooltip = disabled ? '' : this.createTooltip();
     return (
@@ -132,15 +127,19 @@ class NetPyNENewMechanism extends React.Component {
           <div
             id="newMechButton"
             className={disabled ? classes.disabledIcon : classes.icon}
-            onClick={e => !disabled && this.handleButtonClick(e.currentTarget)}
+            onClick={(e) => !disabled && this.handleButtonClick(e.currentTarget)}
           >
             <div>
               <div className={classes.container}>
-                <MechIcon color={disabled ? 'disabled' : 'primary'} style={{
-                  width: fontSize,
-                  height: fontSize,
-                  overflow: 'visible'
-                }} className={classes.cogIcon}/>
+                <MechIcon
+                  color={disabled ? 'disabled' : 'primary'}
+                  style={{
+                    width: fontSize,
+                    height: fontSize,
+                    overflow: 'visible',
+                  }}
+                  className={classes.cogIcon}
+                />
                 <span className={classes.cogIconContent}>
                   {this.createLabel(classes)}
                 </span>
@@ -149,13 +148,12 @@ class NetPyNENewMechanism extends React.Component {
           </div>
         </Tooltip>
 
-
         <Menu
           open={open}
           anchorEl={anchorEl}
           onClose={() => this.setState({ open: false })}
         >
-          {mechanisms.map(mechLabel =>
+          {mechanisms.map((mechLabel) => (
             <MenuItem
               id={mechLabel}
               key={mechLabel}
@@ -164,7 +162,7 @@ class NetPyNENewMechanism extends React.Component {
             >
               {mechLabel}
             </MenuItem>
-          )}
+          ))}
         </Menu>
       </div>
     );

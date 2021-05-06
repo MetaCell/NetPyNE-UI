@@ -254,7 +254,7 @@ class NetPyNEGeppetto:
             neuron.load_mechanisms(str(modFolder))
 
     def loadModel(self, args):
-        """ Handles all data coming from a .json file (default file format for Netpyne).
+        """ Imports a model stored as file in json format.
 
         :param args:
         :return:
@@ -334,6 +334,7 @@ class NetPyNEGeppetto:
                             sim.gatherData()
                             sim.loadSimData(args['jsonModelFolder'])
 
+                    sim.gatherData()
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
                     return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
                 else:
@@ -344,6 +345,11 @@ class NetPyNEGeppetto:
             return utils.getJSONError(message, sys.exc_info())
 
     def importModel(self, modelParameters):
+        """ Imports a model stored in form of Python files.
+
+        :param modelParameters:
+        :return:
+        """
         try:
             # Get Current dir
             owd = os.getcwd()
@@ -551,6 +557,9 @@ class NetPyNEGeppetto:
                     file_list.append({'title': f, 'path': ff})
         return dir_list + file_list
 
+    def checkAvailablePlots(self):
+        return analysis.checkAvailablePlots()
+
     def getPlot(self, plotName, LFPflavour, theme='gui'):
         try:
             with redirect_stdout(sys.__stdout__):
@@ -566,8 +575,8 @@ class NetPyNEGeppetto:
 
                     if plotName in ("iplotConn", "iplot2Dnet") and sim.net.allCells:
                         # To prevent unresponsive kernel, we don't show conns if they become too many
-                        numConn = sum([len(cell.conns) for cell in sim.net.allCells if cell.conns])
-                        if numConn > NUM_CONN_LIMIT:
+                        num_conn = sum([len(cell.conns) for cell in sim.net.allCells if cell.conns])
+                        if num_conn > NUM_CONN_LIMIT:
                             args["showConns"] = False
 
                     html = getattr(analysis, plotName)(**args)
@@ -575,12 +584,9 @@ class NetPyNEGeppetto:
                         return ""
 
                     # some plots return "fig", some return "(fig, data)"
-                    if plotName == 'iplotRaster':
+                    if plotName in ('iplotRaster', 'iplotRxDConcentration', 'iplot2Dnet'):
                         html = html[0]
-                    elif plotName == 'iplotRxDConcentration':
-                        html = html[0]
-                    elif plotName == 'iplot2Dnet':
-                        html = html[0]
+
                     return html
 
                 else:
@@ -599,7 +605,7 @@ class NetPyNEGeppetto:
                         else:
                             return [ui.getSVG(fig)]
                     else:
-                        return fig_data
+                        return figData
         except Exception as e:
             err = "There was an exception in %s():" % (e.plotName)
             logging.exception(("%s \n %s \n%s" % (err, e, sys.exc_info())))
@@ -646,8 +652,18 @@ class NetPyNEGeppetto:
         return [value[:-(len(mechanism) + 1)] for value in params]
 
     def getAvailablePlots(self):
-        plots = ["iplotRaster", "iplotSpikeHist", "plotSpikeStats", "iplotRatePSD", "iplotTraces", "iplotLFP",
-                 "plotShape", "plot2Dnet", "iplotConn", "granger"]
+        plots = [
+            "iplotRaster",
+            "iplotSpikeHist",
+            "plotSpikeStats",
+            "iplotRatePSD",
+            "iplotTraces",
+            "iplotLFP",
+            "plotShape",
+            "plot2Dnet",
+            "iplotConn",
+            "granger"
+        ]
 
         return [plot for plot in plots if plot not in list(self.simConfig.analysis.keys())]
 

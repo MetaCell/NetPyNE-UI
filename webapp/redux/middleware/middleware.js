@@ -2,6 +2,7 @@ import {
   GET_EXPERIMENTS,
   setExperiments,
 } from 'root/redux/actions/experiments';
+import { NETPYNE_COMMANDS } from 'root/constants';
 import {
   UPDATE_CARDS,
   CREATE_NETWORK,
@@ -17,7 +18,6 @@ import {
 import { openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
 import Utils from '../../Utils';
-import { NETPYNE_COMMANDS } from 'root/constants';
 import { downloadJsonResponse, downloadPythonResponse } from './utils';
 
 import { setWidgets, setLayout } from '../actions/layout';

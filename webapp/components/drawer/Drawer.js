@@ -93,7 +93,7 @@ const DrawerList = ({
   editMode,
   activateWidget,
   updateWidget,
-  classes
+  classes,
 }) => {
   const [expand, setExpand] = useState(false);
 
@@ -138,7 +138,7 @@ const DrawerList = ({
     const [modelDrawerItems, toolsDrawerItems] = [[], []];
     layoutManager.getWidgets().sort((w1, w2) => w1.pos - w2.pos).filter((widget) => {
       widget.specification !== TOOLS_LIST
-      ? modelDrawerItems.push(widget) : toolsDrawerItems.push(widget)
+        ? modelDrawerItems.push(widget) : toolsDrawerItems.push(widget);
     });
     return [modelDrawerItems, toolsDrawerItems];
   }

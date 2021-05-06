@@ -10,8 +10,8 @@ const style = ({ palette }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'inherit'
-  }
+    backgroundColor: 'inherit',
+  },
 });
 
 class CustomHTMLViewer extends Component {
@@ -19,7 +19,7 @@ class CustomHTMLViewer extends Component {
 
   dimensions = {
     width: 200,
-    height: 200
+    height: 200,
   };
 
   componentDidMount () {
@@ -62,7 +62,6 @@ class CustomHTMLViewer extends Component {
       svg.setAttribute('width', width);
       svg.setAttribute('height', height);
     }
-
   }
 
   resizeIfNeeded () {
@@ -82,7 +81,7 @@ class CustomHTMLViewer extends Component {
     const { classes } = this.props;
     return (
       <div id="plot" className={classes.container} ref={this.containerRef}>
-        <HTMLViewer {...this.props} style={{ backgroundColor: 'inherit' }}/>
+        <HTMLViewer {...this.props} style={{ backgroundColor: 'inherit' }} />
       </div>
     );
   }

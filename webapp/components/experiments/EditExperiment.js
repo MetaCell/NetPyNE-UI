@@ -22,7 +22,8 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 import { EXPERIMENT_TEXTS } from '../../constants';
 import ParameterMenu from './ParameterMenu';
-import { bgDarkest, bgLight, bgRegular, secondaryColor, fontColor, radius, primaryColor, experimentInputColor, experimentFieldColor, experimentSvgColor, experimentLabelColor, experimentAutocompleteBorder, errorFieldBorder,
+import {
+  bgDarkest, bgLight, bgRegular, secondaryColor, fontColor, radius, primaryColor, experimentInputColor, experimentFieldColor, experimentSvgColor, experimentLabelColor, experimentAutocompleteBorder, errorFieldBorder,
 } from '../../theme';
 
 const RANGE_VALUE = 0;
@@ -42,8 +43,8 @@ const useStyles = (theme) => ({
         maxHeight: 'calc(100vh - 400px)',
         '& .MuiTypography-body2': {
           opacity: '0.54',
-        }
-      }
+        },
+      },
     },
     '& .editExperimentBack': {
       display: 'flex',
@@ -72,7 +73,7 @@ const useStyles = (theme) => ({
     '& .editExperimentList': {
       display: 'flex',
       marginBottom: theme.spacing(1),
-      width: '100%'
+      width: '100%',
     },
     '& .MuiTypography-body2': {
       fontSize: '1rem',
@@ -96,7 +97,7 @@ const useStyles = (theme) => ({
         },
         '&::-webkit-scrollbar': {
           width: theme.spacing(2),
-        }
+        },
       },
       '& .editExperimentBreadcrumb': {
         paddingLeft: '0.625rem',
@@ -133,9 +134,9 @@ const useStyles = (theme) => ({
           '& .MuiMenuItem-gutters': {
             paddingLeft: theme.spacing(2),
             paddingRight: theme.spacing(2),
-          }
-        }
-      }
+          },
+        },
+      },
     },
     '& .MuiPopover-experiment': {
       width: theme.spacing(14),
@@ -153,7 +154,7 @@ const useStyles = (theme) => ({
       '&.Mui-error': {
         borderColor: errorFieldBorder,
         boxShadow: '0 0 0 2px rgba(242, 69, 61, 0.2)',
-      }
+      },
     },
     '& .MuiOutlinedInput-notchedOutline': {
       border: '0 !important',
@@ -217,15 +218,15 @@ const useStyles = (theme) => ({
       },
       '& .MuiTypography-caption': {
         fontSize: '0.875rem',
-      }
+      },
     },
     '& .editExperimentField': {
       '& .MuiFormControl-root': {
         overflow: 'hidden',
         '& .MuiFormLabel-root': {
           whiteSpace: 'noWrap',
-        }
-      }
+        },
+      },
     },
     '& .MuiFormHelperText-contained': {
       marginLeft: 0,
@@ -234,7 +235,7 @@ const useStyles = (theme) => ({
       color: errorFieldBorder,
       fontSize: '0.875rem',
       lineHeight: '100%',
-    }
+    },
   },
   popper: {
     marginTop: -theme.spacing(1),
@@ -250,7 +251,7 @@ const useStyles = (theme) => ({
       paddingLeft: theme.spacing(2),
       color: fontColor,
       paddingRight: theme.spacing(1),
-    }
+    },
   },
 });
 
@@ -265,7 +266,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
           options={selectionParams}
           style={{ width: 300 }}
           classes={{
-            popper: classes.popper
+            popper: classes.popper,
           }}
           renderOption={(option) => (
             <>
@@ -318,35 +319,37 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
       </Grid>
     </Grid>
 
-  )
+  );
 };
 
 const EditExperiment = (props) => {
   const { classes, setList } = props;
   const experimentDetail = useSelector((state) => state.experiments.experimentDetail);
   const { RANGE, LIST } = EXPERIMENT_TEXTS;
-  const rangeParam = {type: RANGE, min: RANGE_VALUE, minVal: RANGE_VALUE, max: RANGE_VALUE, maxVal: RANGE_VALUE, step: RANGE_VALUE, stepVal: RANGE_VALUE}
+  const rangeParam = {
+    type: RANGE, min: RANGE_VALUE, minVal: RANGE_VALUE, max: RANGE_VALUE, maxVal: RANGE_VALUE, step: RANGE_VALUE, stepVal: RANGE_VALUE,
+  };
   const [parameters, setParameters] = useState([{
     mapsTo: '', ...rangeParam, inGroup: false,
   }, {
-    mapsTo: '', type: LIST, values: [], inGroup: false, val: ''
+    mapsTo: '', type: LIST, values: [], inGroup: false, val: '',
   }]);
   const [groupParameters, setGroupParameters] = useState([]);
   const [experimentName, setExperimentName] = useState('');
   const [experimentError, setExperimentError] = useState(false);
   const create = () => {
     // When user creates a new Experiment
-    if(experimentName === '') {
-      setExperimentError(true)
+    if (experimentName === '') {
+      setExperimentError(true);
     } else {
-      setExperimentError(false)
-      const newExperiment = {name: experimentName, params: [...parameters, ...groupParameters]};
-      console.log(newExperiment)
+      setExperimentError(false);
+      const newExperiment = { name: experimentName, params: [...parameters, ...groupParameters] };
+      console.log(newExperiment);
       addExperiment(newExperiment)
         .then((result) => {
           setList(true);
         });
-      }
+    }
   };
 
   const update = () => {
@@ -358,17 +361,15 @@ const EditExperiment = (props) => {
       });
   };
 
-  const [selectionParams, setSelectionParams] = useState([])
+  const [selectionParams, setSelectionParams] = useState([]);
 
   const flatten = (obj, path = '') => {
-    if (!(obj instanceof Object)) return {[path.replace(/\.$/g, '')]:obj};
+    if (!(obj instanceof Object)) return { [path.replace(/\.$/g, '')]: obj };
 
-    return Object.keys(obj).reduce((output, key) => {
-        return obj instanceof Array ?
-             {...output, ...flatten(obj[key], path +  '[' + key + '].')}:
-             {...output, ...flatten(obj[key], path + key + '.')};
-    }, {});
-}
+    return Object.keys(obj).reduce((output, key) => (obj instanceof Array
+      ? { ...output, ...flatten(obj[key], `${path}[${key}].`) }
+      : { ...output, ...flatten(obj[key], `${path + key}.`) }), {});
+  };
 
   const viewParameters = () => {
     getParameters().then((parameters) => {
@@ -382,17 +383,17 @@ const EditExperiment = (props) => {
   }, []);
 
   const handleChange = (event, parameter, index) => {
-    const newParam = parameter.inGroup ?  [...groupParameters] : [...parameters];
-    const newValues = event.target.value === RANGE ? { ...rangeParam } : { values: [], type: LIST, val: '' }
+    const newParam = parameter.inGroup ? [...groupParameters] : [...parameters];
+    const newValues = event.target.value === RANGE ? { ...rangeParam } : { values: [], type: LIST, val: '' };
     newParam[index] = { ...parameter, ...newValues };
     parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
   };
 
   const handleParamSelection = (val, parameter, index) => {
-    const newParam = parameter.inGroup ?  [...groupParameters] : [...parameters];
-    newParam[index] = { ...parameter, 'mapsTo': val };
+    const newParam = parameter.inGroup ? [...groupParameters] : [...parameters];
+    newParam[index] = { ...parameter, mapsTo: val };
     parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
-  }
+  };
 
   const addParameter = () => {
     setParameters([...parameters, {
@@ -401,43 +402,47 @@ const EditExperiment = (props) => {
   };
 
   const addToGroup = (index) => {
-    const newParams = [...parameters]
+    const newParams = [...parameters];
     newParams.splice(index, 1);
-    setGroupParameters([...groupParameters, {...parameters[index], inGroup: true}])
-    setParameters(newParams)
-  }
+    setGroupParameters([...groupParameters, { ...parameters[index], inGroup: true }]);
+    setParameters(newParams);
+  };
 
   const removeParameter = (index, parameter) => {
     const selectedParameters = parameter.inGroup ? [...groupParameters] : [...parameters];
     selectedParameters.splice(index, 1);
-    parameter.inGroup ? setGroupParameters(selectedParameters) : setParameters(selectedParameters)
-  }
+    parameter.inGroup ? setGroupParameters(selectedParameters) : setParameters(selectedParameters);
+  };
 
   const removeFromGroup = (index) => {
-    setParameters([...parameters, {...groupParameters[index], inGroup: false}])
-    const newGroupParams = [...groupParameters]
+    setParameters([...parameters, { ...groupParameters[index], inGroup: false }]);
+    const newGroupParams = [...groupParameters];
     newGroupParams.splice(index, 1);
-    setGroupParameters(newGroupParams)
-  }
+    setGroupParameters(newGroupParams);
+  };
 
-  const handleInputText = (val, index, parameter, key ) => {
-    const newParameters = parameter.inGroup ?  [...groupParameters] : [...parameters];
+  const handleInputText = (val, index, parameter, key) => {
+    const newParameters = parameter.inGroup ? [...groupParameters] : [...parameters];
     const invalidValue = isNaN(val);
-    newParameters[index] = {...parameter, [`${key}Val`]: val, [key]: parseFloat(val), [`${key}error`]: invalidValue, [`${key}helperText`]: !invalidValue ? '' : EXPERIMENT_TEXTS.INPUT_ERR_MESSAGE};
+    newParameters[index] = {
+      ...parameter, [`${key}Val`]: val, [key]: parseFloat(val), [`${key}error`]: invalidValue, [`${key}helperText`]: !invalidValue ? '' : EXPERIMENT_TEXTS.INPUT_ERR_MESSAGE,
+    };
     parameter.inGroup ? setGroupParameters(newParameters) : setParameters(newParameters);
-  }
+  };
 
-  const handleInputValues = (val, index, parameter ) => {
-    const newParameters = parameter.inGroup ?  [...groupParameters] : [...parameters];
+  const handleInputValues = (val, index, parameter) => {
+    const newParameters = parameter.inGroup ? [...groupParameters] : [...parameters];
     const validValue = regex.test(val);
-    newParameters[index] = { ...parameter, 'val': val, 'values': [...val], error: !validValue, helperText: validValue ? '': EXPERIMENT_TEXTS.INPUT_ERR_MESSAGE};
+    newParameters[index] = {
+      ...parameter, val, values: [...val], error: !validValue, helperText: validValue ? '' : EXPERIMENT_TEXTS.INPUT_ERR_MESSAGE,
+    };
     parameter.inGroup ? setGroupParameters(newParameters) : setParameters(newParameters);
-  }
+  };
 
   const setExperimentNameInfo = (val) => {
-    setExperimentError(val === '')
-    setExperimentName(val)
-  }
+    setExperimentError(val === '');
+    setExperimentName(val);
+  };
 
   return (
     <GridLayout className={classes.root}>
@@ -469,16 +474,20 @@ const EditExperiment = (props) => {
                     ParameterRow(parameter, index, handleParamSelection, handleChange, handleInputText, handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams, classes)
                   ))}
                 </Box>
-                { groupParameters.length === 1 && <Box className="editExperimentWarning">
+                { groupParameters.length === 1 && (
+                <Box className="editExperimentWarning">
                   <Typography variant="caption">{EXPERIMENT_TEXTS.WARNING}</Typography>
-                </Box> }
+                </Box>
+                ) }
               </Box>
             )}
-            {selectionParams.length > 0 && <Box className="editExperimentRow">
+            {selectionParams.length > 0 && (
+            <Box className="editExperimentRow">
               {parameters.map((parameter, index) => (
                 ParameterRow(parameter, index, handleParamSelection, handleChange, handleInputText, handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams, classes)
               ))}
-            </Box>}
+            </Box>
+            )}
           </Box>
         </Box>
         <Box>
@@ -500,8 +509,8 @@ const EditExperiment = (props) => {
               Cancel
             </Button>
             <Button variant="contained" color="primary" onClick={create}>
-            Create
-          </Button>
+              Create
+            </Button>
           </Box>
         </Box>
       </Box>

@@ -24,6 +24,7 @@ export const NETPYNE_COMMANDS = {
   exportHLS: 'netpyne_geppetto.exportHLS',
   plotFigure: 'netpyne_geppetto.getPlot',
   deleteParam: 'netpyne_geppetto.deleteParam',
+  checkAvailablePlots: 'netpyne_geppetto.checkAvailablePlots',
 };
 
 export const PYTHON_CONSOLE_WIDGET = {
@@ -80,6 +81,7 @@ export const NETWORK_PLOT_WIDGETS = {
     hideOnClose: true,
     initialized: false,
     method: {
+      plotKey: 'plotConn',
       plotMethod: 'iplotConn',
       plotType: false,
     },
@@ -96,6 +98,7 @@ export const NETWORK_PLOT_WIDGETS = {
     hideOnClose: true,
     initialized: false,
     method: {
+      plotKey: 'plot2Dnet',
       plotMethod: 'iplot2Dnet',
       plotType: false,
     },
@@ -115,7 +118,9 @@ export const PLOT_WIDGETS = {
     hideOnClose: true,
     enableRename: false,
     initialized: false,
+    disabled: true,
     method: {
+      plotKey: 'plotTraces',
       plotMethod: 'iplotTraces',
       plotType: false,
     },
@@ -131,7 +136,9 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     initialized: false,
+    disabled: true,
     method: {
+      plotKey: 'plotRaster',
       plotMethod: 'iplotRaster',
       plotType: false,
     },
@@ -147,7 +154,9 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     initialized: false,
+    disabled: true,
     method: {
+      plotKey: 'plotSpikeHist',
       plotMethod: 'iplotSpikeHist',
       plotType: false,
     },
@@ -163,7 +172,9 @@ export const PLOT_WIDGETS = {
     hideOnClose: true,
     enableRename: false,
     initialized: false,
+    disabled: true,
     method: {
+      key: 'plotSpikeStats',
       plotMethod: 'iplotSpikeStats',
       plotType: false,
     },
@@ -179,7 +190,9 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     initialized: false,
+    disabled: true,
     method: {
+      key: 'plotRatePSD',
       plotMethod: 'iplotRatePSD',
       plotType: false,
     },
@@ -195,7 +208,9 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     initialized: false,
+    disabled: true,
     method: {
+      plotKey: 'plotLFP',
       plotMethod: 'iplotLFP',
       plotType: 'timeSeries',
     },
@@ -211,7 +226,9 @@ export const PLOT_WIDGETS = {
     hideOnClose: true,
     enableRename: false,
     initialized: false,
+    disabled: true,
     method: {
+      plotKey: 'plotLFP',
       plotMethod: 'iplotLFP',
       plotType: 'PSD',
     },
@@ -227,7 +244,9 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     initialized: false,
+    disabled: true,
     method: {
+      plotKey: 'plotLFP',
       plotMethod: 'iplotLFP',
       plotType: 'spectrogram',
     },
@@ -243,7 +262,9 @@ export const PLOT_WIDGETS = {
     defaultPanel: 'plotPanel',
     enableRename: false,
     initialized: false,
+    disabled: true,
     method: {
+      plotKey: 'granger',
       plotMethod: 'granger',
       plotType: false,
     },
@@ -259,7 +280,9 @@ export const PLOT_WIDGETS = {
     hideOnClose: true,
     enableRename: false,
     initialized: false,
+    disabled: true,
     method: {
+      plotKey: 'plotRxDConcentration',
       plotMethod: 'iplotRxDConcentration',
       plotType: false,
     },

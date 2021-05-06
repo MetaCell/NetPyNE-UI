@@ -2,10 +2,10 @@ import React from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import Box from '@material-ui/core/Box';
 import {
+  ListComponent,
+  NetPyNECoordsRange,
   NetPyNEField,
   NetPyNESelectField,
-  NetPyNECoordsRange,
-  ListComponent,
 } from 'netpyne/components';
 
 export default class StimulationConditions extends React.Component {
@@ -29,14 +29,13 @@ export default class StimulationConditions extends React.Component {
   }
 
   render () {
-    const content = (
+    const { name } = this.props;
+    return (
       <Box className="scrollbar scrollchild" mt={1}>
         <NetPyNEField id="netParams.stimTargetParams.conds.pop">
           <NetPyNESelectField
             model={
-              `netParams.stimTargetParams['${
-                this.props.name
-              }']['conds']['pop']`
+              `netParams.stimTargetParams['${name}']['conds']['pop']`
             }
             method="netpyne_geppetto.getAvailablePops"
             postProcessItems={this.postProcessMenuItems}
@@ -45,26 +44,10 @@ export default class StimulationConditions extends React.Component {
           />
         </NetPyNEField>
 
-        <NetPyNEField id="netParams.stimTargetParams.conds.cellModel">
-          <NetPyNESelectField
-            model={
-              `netParams.stimTargetParams['${
-                this.props.name
-              }']['conds']['cellModel']`
-            }
-            fullWidth
-            method="netpyne_geppetto.getAvailableCellModels"
-            postProcessItems={this.postProcessMenuItems}
-            multiple
-          />
-        </NetPyNEField>
-
         <NetPyNEField id="netParams.stimTargetParams.conds.cellType">
           <NetPyNESelectField
             model={
-              `netParams.stimTargetParams['${
-                this.props.name
-              }']['conds']['cellType']`
+              `netParams.stimTargetParams['${name}']['conds']['cellType']`
             }
             method="netpyne_geppetto.getAvailableCellTypes"
             postProcessItems={this.postProcessMenuItems}
@@ -75,7 +58,7 @@ export default class StimulationConditions extends React.Component {
 
         <NetPyNECoordsRange
           id="xRangeStimTarget"
-          name={this.props.name}
+          name={name}
           model="netParams.stimTargetParams"
           conds="conds"
           items={[
@@ -92,7 +75,7 @@ export default class StimulationConditions extends React.Component {
 
         <NetPyNECoordsRange
           id="yRangeStimTarget"
-          name={this.props.name}
+          name={name}
           model="netParams.stimTargetParams"
           conds="conds"
           items={[
@@ -109,7 +92,7 @@ export default class StimulationConditions extends React.Component {
 
         <NetPyNECoordsRange
           id="zRangeStimTarget"
-          name={this.props.name}
+          name={name}
           model="netParams.stimTargetParams"
           conds="conds"
           items={[
@@ -130,15 +113,11 @@ export default class StimulationConditions extends React.Component {
         >
           <ListComponent
             model={
-              `netParams.stimTargetParams['${
-                this.props.name
-              }']['conds']['cellList']`
+              `netParams.stimTargetParams['${name}']['conds']['cellList']`
             }
           />
         </NetPyNEField>
       </Box>
     );
-
-    return content;
   }
 }
