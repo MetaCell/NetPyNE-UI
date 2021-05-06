@@ -37,15 +37,13 @@ class NetPyNEStimulationSource extends React.Component {
       errorDetails: undefined,
     };
     this.stimSourceTypeOptions = [
+      { type: 'NetStim' },
       { type: 'IClamp' },
       { type: 'VClamp' },
       { type: 'SEClamp' },
-      { type: 'NetStim' },
       { type: 'AlphaSynapse' },
     ];
-    this.handleStimSourceTypeChange = this.handleStimSourceTypeChange.bind(
-      this,
-    );
+    this.handleStimSourceTypeChange = this.handleStimSourceTypeChange.bind(this);
   }
 
   UNSAFE_componentWillReceiveProps (nextProps) {
