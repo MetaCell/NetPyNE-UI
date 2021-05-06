@@ -14,7 +14,6 @@ export const MODEL_STATE = {
   NOT_INSTANTIATED: 'NOT_INSTANTIATED',
   INSTANTIATED: 'INSTANTIATED',
   SIMULATED: 'SIMULATED',
-
 };
 
 export const NETPYNE_COMMANDS = {
@@ -388,4 +387,13 @@ export const EDIT_WIDGETS = {
     enableRename: false,
     pos: 7,
   },
+};
+
+export const TUTORIALS_LIST = {
+  tut1: 'Tut 1: Simple cell network',
+  tut2: 'Tut 2: Detailed cell network',
+  tut3: 'Tut 3a: Multiscale network (low IP3)',
+  tut3_ip3high: 'Tut 3b: Multiscale network (high IP3)',
+  tut3_norxd: 'Tut 3c: Multiscale network (no RxD)',
+  tut_osc: 'Tut 4: Simple oscillatory network',
 };

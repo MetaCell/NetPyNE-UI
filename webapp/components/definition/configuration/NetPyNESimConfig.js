@@ -31,7 +31,7 @@ class NetPyNESimConfig extends React.Component {
   });
 
   render () {
-    var contentLeft = <div className="layoutVerticalFitInner" />;
+    let contentLeft = <div className="layoutVerticalFitInner" />;
     let contentRight = <div className="layoutVerticalFitInner" />;
     const { classes } = this.props;
     if (this.state.sectionId == 'General') {
@@ -174,7 +174,7 @@ class NetPyNESimConfig extends React.Component {
       );
     } else if (this.state.sectionId == 'SaveConfiguration') {
       contentLeft = (
-        <div>
+        <div className="scrollbar scrollchild">
           <NetPyNEField id="simConfig.simLabel">
             <NetPyNETextField
               fullWidth
@@ -215,7 +215,7 @@ class NetPyNESimConfig extends React.Component {
         </div>
       );
       contentRight = (
-        <div>
+        <div className="scrollbar scrollchild">
           <NetPyNEField id="simConfig.saveJson" className="netpyneCheckbox">
             <NetPyNECheckbox model="simConfig.saveJson" />
           </NetPyNEField>
@@ -248,23 +248,6 @@ class NetPyNESimConfig extends React.Component {
           >
             <NetPyNECheckbox model="simConfig.timestampFilename" />
           </NetPyNEField>
-          {/*
-          // TODO: can this be removed?
-           <NetPyNEField id="simConfig.saveHDF5" className={"netpyneCheckbox"} >
-              <NetPyNECheckbox model={"simConfig.saveHDF5"} />
-            </NetPyNEField>
-
-            <NetPyNEField id="simConfig.saveDpk" className={"netpyneCheckbox"} >
-              <NetPyNECheckbox model={"simConfig.saveDpk"} />
-            </NetPyNEField>
-
-            <NetPyNEField id="simConfig.saveDat" className={"netpyneCheckbox"} >
-              <NetPyNECheckbox model={"simConfig.saveDat"} />
-            </NetPyNEField>
-
-            <NetPyNEField id="simConfig.saveCSV" className={"netpyneCheckbox"} >
-              <NetPyNECheckbox model={"simConfig.saveCSV"} />
-            </NetPyNEField> */}
 
           <NetPyNEField id="simConfig.saveTiming" className="netpyneCheckbox">
             <NetPyNECheckbox model="simConfig.saveTiming" />
@@ -273,7 +256,7 @@ class NetPyNESimConfig extends React.Component {
       );
     } else if (this.state.sectionId == 'Record') {
       contentLeft = (
-        <div>
+        <div className="scrollbar scrollchild">
           <NetPyNEField id="simConfig.recordCells" className="listStyle">
             <ListComponent model="simConfig.recordCells" />
           </NetPyNEField>
@@ -296,7 +279,7 @@ class NetPyNESimConfig extends React.Component {
         </div>
       );
       contentRight = (
-        <div>
+        <div className="scrollbar scrollchild">
           <NetPyNEField
             id="simConfig.saveLFPCells"
             className="netpyneCheckbox"
@@ -315,8 +298,8 @@ class NetPyNESimConfig extends React.Component {
         </div>
       );
     } else if (this.state.sectionId == 'netParams') {
-      var contentLeft = (
-        <div>
+      contentLeft = (
+        <div className="scrollbar scrollchild">
           <NetPyNEField id="netParams.scale">
             <NetPyNETextField
               fullWidth
@@ -366,7 +349,7 @@ class NetPyNESimConfig extends React.Component {
         </div>
       );
       contentRight = (
-        <div>
+        <div className="scrollbar scrollchild">
           <NetPyNEField id="netParams.sizeX">
             <NetPyNETextField
               fullWidth

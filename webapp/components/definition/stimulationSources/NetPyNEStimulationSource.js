@@ -32,20 +32,18 @@ class NetPyNEStimulationSource extends React.Component {
     super(props);
     this.state = {
       currentName: props.name,
-      sourceType: 'IClamp',
+      sourceType: 'NetStim',
       errorMessage: undefined,
       errorDetails: undefined,
     };
     this.stimSourceTypeOptions = [
+      { type: 'NetStim' },
       { type: 'IClamp' },
       { type: 'VClamp' },
       { type: 'SEClamp' },
-      { type: 'NetStim' },
       { type: 'AlphaSynapse' },
     ];
-    this.handleStimSourceTypeChange = this.handleStimSourceTypeChange.bind(
-      this,
-    );
+    this.handleStimSourceTypeChange = this.handleStimSourceTypeChange.bind(this);
   }
 
   UNSAFE_componentWillReceiveProps (nextProps) {
@@ -177,7 +175,7 @@ class NetPyNEStimulationSource extends React.Component {
 
     if (this.state.sourceType == 'IClamp') {
       var variableContent = (
-        <div>
+        <div className="scrollbar scrollchild">
           <NetPyNEField id="netParams.stimSourceParams.del">
             <NetPyNETextField
               variant="filled"
@@ -211,7 +209,7 @@ class NetPyNEStimulationSource extends React.Component {
       );
     } else if (this.state.sourceType == 'VClamp') {
       var variableContent = (
-        <div>
+        <div className="scrollbar scrollchild">
           <NetPyNEField id="netParams.stimSourceParams.tau1">
             <NetPyNETextField
               variant="filled"
@@ -277,7 +275,7 @@ class NetPyNEStimulationSource extends React.Component {
       );
     } else if (this.state.sourceType == 'AlphaSynapse') {
       var variableContent = (
-        <div>
+        <div className="scrollbar scrollchild">
           <NetPyNEField id="netParams.stimSourceParams.onset">
             <NetPyNETextField
               variant="filled"
@@ -321,7 +319,7 @@ class NetPyNEStimulationSource extends React.Component {
       );
     } else if (this.state.sourceType == 'NetStim') {
       var variableContent = (
-        <div>
+        <div className="scrollbar scrollchild">
           <NetPyNEField id="netParams.stimSourceParams.rate">
             <NetPyNETextField
               variant="filled"
@@ -379,7 +377,7 @@ class NetPyNEStimulationSource extends React.Component {
       );
     } else if (this.state.sourceType == 'SEClamp') {
       var variableContent = (
-        <div>
+        <div className="scrollbar scrollchild">
           <NetPyNEField
             id="netParams.stimSourceParams.vClampDur"
             className="listStyle"
