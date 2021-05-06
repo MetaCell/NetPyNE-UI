@@ -605,7 +605,7 @@ class NetPyNEGeppetto:
                         else:
                             return [ui.getSVG(fig)]
                     else:
-                        return figData
+                        return fig_data
         except Exception as e:
             err = "There was an exception in %s():" % (e.plotName)
             logging.exception(("%s \n %s \n%s" % (err, e, sys.exc_info())))
