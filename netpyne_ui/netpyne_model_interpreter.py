@@ -24,12 +24,12 @@ class NetPyNEModelInterpreter(ModelInterpreter):
             name='netpynelib')
         geppetto_model.libraries.append(netpyne_geppetto_library)
 
-        self.extractPopulations(netpyne_model, netpyne_geppetto_library, geppetto_model)
-        self.extractInstances(netpyne_model, netpyne_geppetto_library, geppetto_model)
+        self.extractPopulations(netpyne_model, netpyne_geppetto_library)
+        self.extractInstances(netpyne_geppetto_library, geppetto_model)
 
         return geppetto_model
 
-    def extractPopulations(self, netpyne_model, netpyne_geppetto_library, geppetto_model):
+    def extractPopulations(self, netpyne_model, netpyne_geppetto_library):
         # Initialise network
         network = pygeppetto.CompositeType(id='network_netpyne', name='network_netpyne')
         netpyne_geppetto_library.types.append(network)
@@ -103,7 +103,7 @@ class NetPyNEModelInterpreter(ModelInterpreter):
                 )
             )
 
-    def extractInstances(self, netpyne_model, netpyne_geppetto_library, geppetto_model):
+    def extractInstances(self, netpyne_geppetto_library, geppetto_model):
         instance = pygeppetto.Variable(id='network')
         instance.types.append(netpyne_geppetto_library.types[0])
         geppetto_model.variables.append(instance)
