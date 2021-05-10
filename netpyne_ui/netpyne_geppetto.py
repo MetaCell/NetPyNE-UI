@@ -104,8 +104,13 @@ class NetPyNEGeppetto:
                     logging.info("Starting simulation")
                     if not 'usePrevInst' in args or not args['usePrevInst']:
                         logging.debug('Instantiating single thread simulation')
-                        netpyne_model = self.instantiateNetPyNEModel()
-                        self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
+
+                    # TODO: we should instantiate the network before simulation per default
+                    #   or we need a mechanism to detect if the currently instantiated network matches with
+                    #   the current net params and simConfig. When I import a new model or change sth and directly simulate
+                    #   we run simulation with an old network but new config, this causes issues!
+                    netpyne_model = self.instantiateNetPyNEModel()
+                    self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
 
                     logging.debug('Running single thread simulation')
                     netpyne_model = self.simulateNetPyNEModel()
@@ -218,6 +223,12 @@ class NetPyNEGeppetto:
         :param modelParameters:
         :return:
         """
+        # TODO: Still need attributes check to avoid exception with empty sim
+        if getattr(sim, "pc", None):
+            # TODO: this must be integrated into the general lifecycle of "model change -> simulate"
+            #   Shouldn't be specific to Import
+            sim.clearAll()
+
         try:
             # Get Current dir
             owd = os.getcwd()
@@ -247,6 +258,9 @@ class NetPyNEGeppetto:
                 # Import Model attributes
                 self.simConfig = getattr(simConfigModuleName, str(modelParameters["simConfigVariable"]))
 
+                # TODO: when should sim.initialize be called?
+                #   Only on import or better before every simulation or network instantiation?
+                sim.initialize()
             return utils.getJSONReply()
         except:
             return utils.getJSONError("Error while importing the NetPyNE model", sys.exc_info())
