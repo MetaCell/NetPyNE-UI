@@ -93,7 +93,7 @@ define((require) => {
           });
 
           // If a handleChange method is passed as a props it will overwrite the handleChange python controlled capability
-          this.handleChange = (this.props.handleChange == undefined) ? this.handleChange.bind(this) : this.props.handleChange.bind(this);
+          this.handleChange = (this.props.handleChange === undefined) ? this.handleChange.bind(this) : this.props.handleChange.bind(this);
           this.handleUpdateInput = this.handleUpdateInput.bind(this);
           this.handleUpdateCheckbox = this.handleUpdateCheckbox.bind(this);
         }
@@ -121,7 +121,7 @@ define((require) => {
               }
             }, timeInterval);
           } else {
-            console.warn(`Tried to sync default value for ${this.props.model} and failed after 3 attemps.`);
+            console.warn(`Tried to sync default value for ${this.props.model} and failed after 3 attempts.`);
           }
         }
 
@@ -188,9 +188,9 @@ define((require) => {
           if (this.props.prePythonSyncProcessing !== undefined) {
             newValue = this.props.prePythonSyncProcessing(newValue);
           }
-          // whenever we invoke syncValueWithPython we will propagate the Javascript value of the model to Python
+          // whenever we invoke syncValueWithPython we will propagate
+          // the Javascript value of the model to Python
           if (this.syncValueWithPython) {
-            // this.syncValueWithPython((event.target.type == 'number') ? parseFloat(this.state.value) : this.state.value, this.props.requirement);
             switch (this.props.realType) {
               case 'float':
                 if (!isNaN(newValue) && newValue !== '') {
@@ -200,6 +200,13 @@ define((require) => {
               case 'dict':
                 if (typeof newValue === 'string') {
                   newValue = JSON.parse(newValue);
+                }
+                break;
+              case 'func':
+                // 'func' type can be a function or a float in netpyne
+                // In case the value is a float we want to convert "1.4" -> 1.4
+                if (!isNaN(newValue) && newValue !== '') {
+                  newValue = parseFloat(newValue);
                 }
                 break;
               default:
@@ -353,16 +360,6 @@ define((require) => {
           this.connectToPython(this.state.componentType, nextProps.model);
           this.callPythonMethod();
         }
-
-        /*
-         * TODO: this function appears defined 2 times
-         * I think the last def is picked up, so I am commenting this one
-         * componentDidUpdate (prevProps, prevState) {
-         *   if (this.state.value != prevState.value && this.props.onChange) {
-         *     this.props.onChange(null, null, this.state.value);
-         *   }
-         * }
-         */
 
         updatePythonValue (newValue) {
           this.setState({
