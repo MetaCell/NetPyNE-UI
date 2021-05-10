@@ -17,7 +17,9 @@ import {
   showNetwork,
   setTheme,
 } from '../../redux/actions/general';
-import { TOPBAR_CONSTANTS, MODEL_STATE, THEMES } from '../../constants';
+import {
+  TOPBAR_CONSTANTS, MODEL_STATE, THEMES, TUTORIALS_LIST,
+} from '../../constants';
 
 const checkedIcon = 'fa fa-check secondary';
 
@@ -69,15 +71,6 @@ const firstItemStyle = {
   hover: { ...topLevelMenuItemStyle.hover, ...firstItemCustom },
 };
 
-const tutorialsList = {
-  tut1: 'Tut 1: Simple cell network',
-  tut2: 'Tut 2: Detailed cell network',
-  tut3: 'Tut 3a: Multiscale network (low IP3)',
-  tut3_ip3high: 'Tut 3b: Multiscale network (high IP3)',
-  tut3_norxd: 'Tut 3c: Multiscale network (no RxD) (edited)',
-  tut_osc: 'Tut 4: Simple oscillatory network',
-};
-
 export const getTutorials = () => {
   const { tuts } = window;
   if (!tuts) {
@@ -88,7 +81,7 @@ export const getTutorials = () => {
       const tutName = tutFile.replace('.py', '')
         .replace('gui', '')
         .replace('_', '');
-      const tutLabel = tutorialsList[tutName] !== undefined ? tutorialsList[tutName] : tutName;
+      const tutLabel = TUTORIALS_LIST[tutName] !== undefined ? TUTORIALS_LIST[tutName] : tutName;
       return {
         label: tutLabel,
         icon: '',
@@ -162,16 +155,10 @@ export default {
         {
           label: 'New',
           icon: '',
-          list: [
-            {
-              label: 'Blank',
-              icon: '',
-              action: {
-                handlerAction: 'redux',
-                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.NEW_MODEL],
-              },
-            },
-          ],
+          action: {
+            handlerAction: 'redux',
+            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.NEW_MODEL],
+          },
         },
         {
           label: 'Open...',
@@ -296,7 +283,8 @@ export const getViewMenu = (props) => {
   const networkAction = () => {
     if (instantiate && props.automaticSimulation) {
       return createAndSimulateNetwork;
-    } if (instantiate) {
+    }
+    if (instantiate) {
       return createNetwork;
     }
     return showNetwork;
