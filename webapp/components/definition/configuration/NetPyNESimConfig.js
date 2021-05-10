@@ -410,28 +410,6 @@ class NetPyNESimConfig extends React.Component {
               model="netParams.rotateCellsRandomly"
             />
           </NetPyNEField>
-
-          <NetPyNEField id="netParams.cellsVisualizationSpacingMultiplierX">
-            <NetPyNETextField
-              fullWidth
-              variant="filled"
-              model="netParams.cellsVisualizationSpacingMultiplierX"
-            />
-          </NetPyNEField>
-          <NetPyNEField id="netParams.cellsVisualizationSpacingMultiplierY">
-            <NetPyNETextField
-              fullWidth
-              variant="filled"
-              model="netParams.cellsVisualizationSpacingMultiplierY"
-            />
-          </NetPyNEField>
-          <NetPyNEField id="netParams.cellsVisualizationSpacingMultiplierZ">
-            <NetPyNETextField
-              fullWidth
-              variant="filled"
-              model="netParams.cellsVisualizationSpacingMultiplierZ"
-            />
-          </NetPyNEField>
         </div>
       );
     }
