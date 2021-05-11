@@ -1,8 +1,7 @@
 import {
   UPDATE_CARDS, CREATE_NETWORK, CREATE_SIMULATE_NETWORK, PYTHON_CALL, SIMULATE_NETWORK, SHOW_NETWORK,
-  editModel, EDIT_MODEL, LOAD_TUTORIAL, RESET_MODEL, setDefaultWidgets,
+  editModel, EDIT_MODEL, LOAD_TUTORIAL, RESET_MODEL,
 } from '../actions/general';
-import FLEXLAYOUT_DEFAULT_STATE from '../../components/layout/defaultLayout';
 import { openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
 import Utils from '../../Utils';
@@ -68,7 +67,7 @@ export default (store) => (next) => (action) => {
       break;
     }
     case SIMULATE_NETWORK:
-      simulateNetwork({ parallelSimulation: false, usePrevInst: true }).then(toNetworkCallback(false), pythonErrorCallback);
+      simulateNetwork({ parallelSimulation: false, usePrevInst: false }).then(toNetworkCallback(false), pythonErrorCallback);
       break;
     case PYTHON_CALL: {
       const callback = (response) => {

@@ -100,17 +100,16 @@ class NetPyNEGeppetto:
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
                     netpyne_model = sim
 
-                else:  # single cpu computation
+                else:
                     logging.info("Starting simulation")
-                    if not 'usePrevInst' in args or not args['usePrevInst']:
-                        logging.debug('Instantiating single thread simulation')
 
-                    # TODO: we should instantiate the network before simulation per default
+                    # TODO: (#263) we should instantiate the network here per default
                     #   or we need a mechanism to detect if the currently instantiated network matches with
-                    #   the current net params and simConfig. When I import a new model or change sth and directly simulate
-                    #   we run simulation with an old network but new config, this causes issues!
-                    netpyne_model = self.instantiateNetPyNEModel()
-                    self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
+                    #   the current net params and simConfig, otherwise this can cause errors
+                    if not args.get('usePrevInst', False):
+                        logging.debug('Instantiating single thread simulation')
+                        netpyne_model = self.instantiateNetPyNEModel()
+                        self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
 
                     logging.debug('Running single thread simulation')
                     netpyne_model = self.simulateNetPyNEModel()
@@ -168,7 +167,8 @@ class NetPyNEGeppetto:
                 wake_up_geppetto = False
                 if all([args[option] for option in ['loadNetParams', 'loadSimCfg', 'loadSimData', 'loadNet']]):
                     wake_up_geppetto = True
-                    if self.doIhaveInstOrSimData()['haveInstance']: sim.clearAll()
+                    if self.doIhaveInstOrSimData()['haveInstance']:
+                        sim.clearAll()
                     sim.initialize()
                     sim.loadAll(args['jsonModelFolder'])
                     self.netParams = sim.net.params
@@ -178,7 +178,8 @@ class NetPyNEGeppetto:
                 else:
                     if args['loadNet']:
                         wake_up_geppetto = True
-                        if self.doIhaveInstOrSimData()['haveInstance']: sim.clearAll()
+                        if self.doIhaveInstOrSimData()['haveInstance']:
+                            sim.clearAll()
                         sim.initialize()
                         sim.loadNet(args['jsonModelFolder'])
 
@@ -196,7 +197,8 @@ class NetPyNEGeppetto:
                         remove(self.simConfig.todict())
 
                     if args['loadNetParams']:
-                        if self.doIhaveInstOrSimData()['haveInstance']: sim.clearAll()
+                        if self.doIhaveInstOrSimData()['haveInstance']:
+                            sim.clearAll()
                         sim.loadNetParams(args['jsonModelFolder'])
                         self.netParams = sim.net.params
                         remove(self.netParams.todict())
@@ -223,8 +225,7 @@ class NetPyNEGeppetto:
         :param modelParameters:
         :return:
         """
-        # TODO: Still need attributes check to avoid exception with empty sim
-        if getattr(sim, "pc", None):
+        if self.doIhaveInstOrSimData()['haveInstance']:
             # TODO: this must be integrated into the general lifecycle of "model change -> simulate"
             #   Shouldn't be specific to Import
             sim.clearAll()
@@ -237,26 +238,26 @@ class NetPyNEGeppetto:
 
             with redirect_stdout(sys.__stdout__):
                 # NetParams
-                netParamsPath = str(modelParameters["netParamsPath"])
-                sys.path.append(netParamsPath)
-                os.chdir(netParamsPath)
+                net_params_path = str(modelParameters["netParamsPath"])
+                sys.path.append(net_params_path)
+                os.chdir(net_params_path)
                 # Import Module
-                netParamsModuleName = importlib.import_module(str(modelParameters["netParamsModuleName"]))
+                net_params_module_name = importlib.import_module(str(modelParameters["netParamsModuleName"]))
                 # Import Model attributes
-                self.netParams = getattr(netParamsModuleName, str(modelParameters["netParamsVariable"]))
+                self.netParams = getattr(net_params_module_name, str(modelParameters["netParamsVariable"]))
 
                 for key, value in self.netParams.cellParams.items():
                     if hasattr(value, 'todict'):
                         self.netParams.cellParams[key] = value.todict()
 
                 # SimConfig
-                simConfigPath = str(modelParameters["simConfigPath"])
-                sys.path.append(simConfigPath)
-                os.chdir(simConfigPath)
+                sim_config_path = str(modelParameters["simConfigPath"])
+                sys.path.append(sim_config_path)
+                os.chdir(sim_config_path)
                 # Import Module
-                simConfigModuleName = importlib.import_module(str(modelParameters["simConfigModuleName"]))
+                sim_config_module_name = importlib.import_module(str(modelParameters["simConfigModuleName"]))
                 # Import Model attributes
-                self.simConfig = getattr(simConfigModuleName, str(modelParameters["simConfigVariable"]))
+                self.simConfig = getattr(sim_config_module_name, str(modelParameters["simConfigVariable"]))
 
                 # TODO: when should sim.initialize be called?
                 #   Only on import or better before every simulation or network instantiation?
@@ -333,7 +334,6 @@ class NetPyNEGeppetto:
             return utils.getJSONError("Error while exporting the NetPyNE model", sys.exc_info())
 
     def deleteModel(self, modelParams):
-
         try:
             with redirect_stdout(sys.__stdout__):
                 self.netParams = specs.NetParams()
@@ -346,8 +346,8 @@ class NetPyNEGeppetto:
         try:
             # This function fails is some keys don't exists
             # sim.clearAll()
+            # TODO: as part of #264 we should remove the method and use clearAll intstead
             self.clearSim()
-
         except:
             pass
 
@@ -371,7 +371,11 @@ class NetPyNEGeppetto:
             sim.saveData()
         return sim
 
-    def doIhaveInstOrSimData(self):  # return [bool, bool] telling if we have an instance and simulated data
+    def doIhaveInstOrSimData(self):
+        """ Telling if we have an instance or simulated data.
+
+        return [bool, bool]
+        """
         with redirect_stdout(sys.__stdout__):
             out = [False, False]
             if hasattr(sim, 'net'):
