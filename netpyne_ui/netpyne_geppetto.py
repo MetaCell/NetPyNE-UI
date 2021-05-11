@@ -103,9 +103,6 @@ class NetPyNEGeppetto:
                 else:
                     logging.info("Starting simulation")
 
-                    # TODO: (#263) we should instantiate the network here per default
-                    #   or we need a mechanism to detect if the currently instantiated network matches with
-                    #   the current net params and simConfig, otherwise this can cause errors
                     if not args.get('usePrevInst', False):
                         logging.debug('Instantiating single thread simulation')
                         netpyne_model = self.instantiateNetPyNEModel()
