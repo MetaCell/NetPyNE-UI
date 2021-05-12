@@ -75,19 +75,16 @@ export default class NetPyNEThumbnail extends React.Component {
 
     const props = this.getCommonProps();
     return (
-      <>
+      <Box position="relative">
         <Tooltip position="bottom" title={<HoverActions deleteAction={() => this.setState({ dialogOpen: true })} />} interactive>
-          <Box position="relative">
-            {getButton(isCog, isButton, label, selected, props)}
-
-          </Box>
+          {getButton(isCog, isButton, label, selected, props)}
         </Tooltip>
         <DeleteDialogBox
           open={dialogOpen}
           onDialogResponse={this.handleDialogBox}
           textForDialog={name}
         />
-      </>
+      </Box>
     );
   }
 }
