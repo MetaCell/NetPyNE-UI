@@ -18,10 +18,10 @@ const styles = {
   },
   toolbar: {
 
-    fontSize: "0.7em",
+    fontSize: '0.7em',
     zIndex: 1000,
 
-  }
+  },
 };
 
 export default class NetPyNEThumbnail extends React.Component {
@@ -33,7 +33,6 @@ export default class NetPyNEThumbnail extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.handleDialogBox = this.handleDialogBox.bind(this);
   }
-
 
   handleClick() {
     if (this.props.handleClick) {
@@ -57,8 +56,6 @@ export default class NetPyNEThumbnail extends React.Component {
       onClick: () => this.handleClick(),
     };
   }
-
-
 
   render() {
     const {
@@ -99,19 +96,16 @@ const getButton = (isCogButton, isRegularButton, label, selected, tooltip, props
   return getFabButton(label, selected, tooltip, props);
 };
 
-
 const HoverActions = ({ deleteAction }) => (
-  <Box style={styles.toolbar} >
-    <Tooltip title={"Delete item"} placement="top">
+  <Box style={styles.toolbar}>
+    <Tooltip title="Delete item" placement="top">
       <IconButton size="small" onClick={deleteAction}>
         <Icon fontSize="inherit" className="fa fa-trash-o" />
       </IconButton>
     </Tooltip>
-  </Box >
+  </Box>
 
-)
-
-
+);
 
 const getCogButton = (label, selected, others) => (
 
@@ -141,7 +135,6 @@ const getRegularButton = (label, selected, others) => (
 
     {label}
   </Button>
-
 
 );
 
