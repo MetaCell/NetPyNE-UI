@@ -325,6 +325,8 @@ export const getModelMenu = (props) => (
       label: TOPBAR_CONSTANTS.SIMULATE,
       action: {
         handlerAction: 'redux',
+        // TODO: (#263) this logic causes issues by potentially simulating
+        //  old instance with modified netParams and simConfig
         parameters: [props.modelState === MODEL_STATE.NOT_INSTANTIATED ? createAndSimulateNetwork : simulateNetwork],
       },
     },
