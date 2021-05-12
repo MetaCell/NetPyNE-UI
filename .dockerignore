@@ -13,7 +13,7 @@ Dockerfile_dev
 webapp/node_modules
 webapp/build
 webapp/geppetto-client
-netpyne_workspace
+workspace
 tests
 k8s
 src

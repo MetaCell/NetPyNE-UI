@@ -13,7 +13,7 @@ init.py
 webapp/node_modules
 webapp/geppetto-client
 webapp/build
-netpyne_workspace
+workspace
 tests/frontend/e2e/node_modules
 Dockerfile_mini
 npm*

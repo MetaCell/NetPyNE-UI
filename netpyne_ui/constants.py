@@ -1,7 +1,7 @@
 import os
 
 UPLOAD_FOLDER_NAME = 'uploads'
-NETPYNE_WORKDIR = 'netpyne_workspace'
+NETPYNE_WORKDIR = 'workspace'
 
 ALLOWED_EXTENSIONS = ["py", "zip", "gz", ".tar.gz", "pdf", "txt", "xls", "png", "jpeg", "hoc"]
 

@@ -28,6 +28,7 @@ from netpyne_ui.mod_utils import compileModMechFiles
 
 os.chdir(NETPYNE_WORKDIR_PATH)
 
+neuron.nrn_dll_loaded.append("/home/user/NetPyNE-UI/workspace/mod") # Avoids to load workspace modfiles twice
 
 class NetPyNEGeppetto:
 
