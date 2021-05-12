@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Fab from '@material-ui/core/Fab';
 import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 import DeleteDialogBox from './DeleteDialogBox';
@@ -15,13 +16,18 @@ const styles = {
     position: 'absolute',
     color: 'white',
   },
+  toolbar: {
+
+    fontSize: '0.7em',
+    zIndex: 1000,
+
+  },
 };
 
 export default class NetPyNEThumbnail extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      isHovered: false,
       dialogOpen: false,
     };
     this.handleClick = this.handleClick.bind(this);
@@ -30,19 +36,21 @@ export default class NetPyNEThumbnail extends React.Component {
 
   handleClick () {
     if (this.props.handleClick) {
-      if (this.props.selected && this.state.isHovered) {
-        this.setState({ dialogOpen: true });
-      } else {
-        this.props.handleClick(this.props.name, true);
-      }
+      this.props.handleClick(this.props.name, true);
     }
   }
 
   handleDialogBox (actionConfirmed) {
-    if (this.props.handleClick && actionConfirmed) {
+    const {
+      handleClick, paramPath, name, onDelete, deleteNetParamsObj,
+    } = this.props;
+    if (handleClick && actionConfirmed) {
       // this.props.deleteMethod(this.props.name);
-      this.props.deleteNetParamsObj({ paramPath: this.props.paramPath, paramName: this.props.name });
-      this.props.onDelete && this.props.onDelete();
+      deleteNetParamsObj({
+        paramPath,
+        paramName: name,
+      });
+      tonDelete && onDelete();
     }
     this.setState({ dialogOpen: false });
   }
@@ -52,8 +60,6 @@ export default class NetPyNEThumbnail extends React.Component {
       id: this.props.name,
       color: this.props.selected ? 'primary' : 'secondary',
       onClick: () => this.handleClick(),
-      onMouseEnter: () => this.setState({ isHovered: true }),
-      onMouseLeave: () => this.setState({ isHovered: false }),
     };
   }
 
@@ -61,12 +67,10 @@ export default class NetPyNEThumbnail extends React.Component {
     const {
       name, selected, isButton = false, isCog = false,
     } = this.props;
-    const { dialogOpen, isHovered } = this.state;
+    const { dialogOpen } = this.state;
 
     let label;
-    if (isHovered && selected) {
-      label = '';
-    } else if (name.length > 14) {
+    if (name.length > 14) {
       label = `${name.slice(0, 11)}...`;
     } else {
       label = name;
@@ -74,71 +78,79 @@ export default class NetPyNEThumbnail extends React.Component {
 
     const props = this.getCommonProps();
     return (
-      <div>
-        {getButton(isCog, isButton, label, selected, isHovered, name, props)}
+      <Box position="relative">
+        <Tooltip position="bottom" title={<HoverActions deleteAction={() => this.setState({ dialogOpen: true })} />} interactive>
+          {getButton(isCog, isButton, label, selected, props)}
+        </Tooltip>
         <DeleteDialogBox
           open={dialogOpen}
           onDialogResponse={this.handleDialogBox}
           textForDialog={name}
         />
-      </div>
+      </Box>
     );
   }
 }
 
-const getButton = (isCogButton, isRegularButton, label, selected, isHovered, tooltip, props) => {
+const getButton = (isCogButton, isRegularButton, label, selected, tooltip, props) => {
   if (isCogButton) {
-    return getCogButton(label, selected, isHovered, tooltip, props);
+    return getCogButton(label, selected, tooltip, props);
   }
   if (isRegularButton) {
-    return getRegularButton(label, selected, isHovered, tooltip, props);
+    return getRegularButton(label, selected, tooltip, props);
   }
-  return getFabButton(label, selected, isHovered, tooltip, props);
+  return getFabButton(label, selected, tooltip, props);
 };
 
-const getCogButton = (label, selected, isHovered, tooltip, others) => (
-  <Tooltip title={tooltip} placement="top">
-    <IconButton
-      className={`gearThumbButton ${selected ? 'selectedGearButton' : ''}`}
-      {...others}
-    >
-      <div>
-        {(isHovered && selected)
-          ? <Icon className="fa fa-trash-o" style={styles.cog} />
-          : (
-            <span className="gearThumbLabel">
-              {label}
-            </span>
-          )}
-        <Icon color="primary" className="gpt-fullgear" />
-      </div>
-    </IconButton>
-  </Tooltip>
+const HoverActions = ({ deleteAction }) => (
+  <Box style={styles.toolbar}>
+    <Tooltip title="Delete item" placement="top">
+      <IconButton size="small" onClick={deleteAction}>
+        <Icon fontSize="inherit" className="fa fa-trash-o" />
+      </IconButton>
+    </Tooltip>
+  </Box>
 
 );
 
-const getRegularButton = (label, selected, isHovered, tooltip, others) => (
-  <Tooltip title={tooltip} placement="top">
-    <Button
-      variant="contained"
-      style={styles.btn}
-      className={`rectangularActionButton ${selected ? 'selectedRectangularActionButton ' : ''}`}
-      {...others}
-    >
-      {(isHovered && selected) ? <Icon className="fa fa-trash-o" /> : label}
-    </Button>
-  </Tooltip>
+const getCogButton = (label, selected, others) => (
+
+  <IconButton
+    className={`gearThumbButton ${selected ? 'selectedGearButton' : ''}`}
+    {...others}
+  >
+    <div>
+
+      <span className="gearThumbLabel">
+        {label}
+      </span>
+      <Icon color="primary" className="gpt-fullgear" />
+    </div>
+  </IconButton>
 
 );
 
-const getFabButton = (label, selected, isHovered, tooltip, others) => (
-  <Tooltip title={tooltip} placement="top">
-    <Fab
-      className={`actionButton ${selected ? 'selectedActionButton' : ''}`}
-      {...others}
-    >
-      {(isHovered && selected) ? <Icon className="fa fa-trash-o" /> : label}
-    </Fab>
-  </Tooltip>
+const getRegularButton = (label, selected, others) => (
+
+  <Button
+    variant="contained"
+    style={styles.btn}
+    className={`rectangularActionButton ${selected ? 'selectedRectangularActionButton ' : ''}`}
+    {...others}
+  >
+
+    {label}
+  </Button>
+
+);
+
+const getFabButton = (label, selected, others) => (
+
+  <Fab
+    className={`actionButton ${selected ? 'selectedActionButton' : ''}`}
+    {...others}
+  >
+    {label}
+  </Fab>
 
 );
