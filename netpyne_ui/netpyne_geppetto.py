@@ -26,10 +26,10 @@ from contextlib import redirect_stdout
 from netpyne_ui.constants import NETPYNE_WORKDIR_PATH, NUM_CONN_LIMIT
 from netpyne_ui.mod_utils import compileModMechFiles
 
-
 os.chdir(NETPYNE_WORKDIR_PATH)
 
-neuron.nrn_dll_loaded.append(os.path.join(NETPYNE_WORKDIR_PATH, 'mod')) # Avoids to load workspace modfiles twice
+neuron.nrn_dll_loaded.append(os.path.join(NETPYNE_WORKDIR_PATH, 'mod'))  # Avoids to load workspace modfiles twice
+
 
 class NetPyNEGeppetto:
 
@@ -116,8 +116,6 @@ class NetPyNEGeppetto:
                 return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
         except:
             return utils.getJSONError("Error while simulating the NetPyNE model", sys.exc_info())
-
-
 
     def loadModel(self, args):
         """ Imports a model stored as file in json format.

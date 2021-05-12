@@ -1,3 +1,4 @@
+import shutil
 import subprocess
 import os
 
@@ -30,7 +31,8 @@ def compileModMechFiles(compileMod, modFolder):
     if compileMod:
         modPath = os.path.join(str(modFolder), "x86_64")
 
-        subprocess.call(["rm", "-r", modPath])
+        if os.path.exists(modPath):
+            shutil.rmtree(modPath)
 
         os.chdir(modFolder)
         subprocess.call(["nrnivmodl"])

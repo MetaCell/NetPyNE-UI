@@ -105,7 +105,7 @@ def main(netpyne_branch, workspace_branch, pygeppetto_branch=None, jupyter_geppe
     else:
         # install requirements
         cprint("Installing UI python package...")
-        execute(cmd=['pip', 'install', '.', '--no-deps'], cwd=ROOT_DIR)
+        execute(cmd=['pip', 'install', '-e', '.', '--no-deps'], cwd=ROOT_DIR)
 
     os.chdir(ROOT_DIR)
     cprint("Cloning workspace")
