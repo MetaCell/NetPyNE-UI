@@ -28,4 +28,6 @@ RUN python install.py ${BUILD_ARGS}
 
 WORKDIR ${INSTALLATION_FOLDER}
 
+RUN pip install -r requirements-test.txt
+RUN pytest tests/backend
 CMD /bin/bash -c "jupyter notebook --NotebookApp.default_url=/geppetto --NotebookApp.token='' --library=netpyne_ui --NotebookApp.disable_check_xsrf=True"

@@ -24,8 +24,11 @@ from shutil import copyfile
 from jupyter_geppetto import jupyter_geppetto, synchronization, utils
 from contextlib import redirect_stdout
 from netpyne_ui.constants import NETPYNE_WORKDIR_PATH, NUM_CONN_LIMIT
+from netpyne_ui.mod_utils import compileModMechFiles
 
 os.chdir(NETPYNE_WORKDIR_PATH)
+
+neuron.nrn_dll_loaded.append(os.path.join(NETPYNE_WORKDIR_PATH, 'mod'))  # Avoids to load workspace modfiles twice
 
 
 class NetPyNEGeppetto:
@@ -115,21 +118,6 @@ class NetPyNEGeppetto:
         except:
             return utils.getJSONError("Error while simulating the NetPyNE model", sys.exc_info())
 
-    def compileModMechFiles(self, compileMod, modFolder):
-        # Create Symbolic link
-        if compileMod:
-            modPath = os.path.join(str(modFolder), "x86_64")
-
-            subprocess.call(["rm", "-r", modPath])
-
-            os.chdir(modFolder)
-            subprocess.call(["nrnivmodl"])
-            os.chdir('..')
-
-        # Load mechanism if mod path is passed
-        if modFolder:
-            neuron.load_mechanisms(str(modFolder))
-
     def loadModel(self, args):
         """ Imports a model stored as file in json format.
 
@@ -152,7 +140,7 @@ class NetPyNEGeppetto:
 
         try:
             owd = os.getcwd()
-            self.compileModMechFiles(args['compileMod'], args['modFolder'])
+            compileModMechFiles(args['compileMod'], args['modFolder'])
         except:
             return utils.getJSONError("Error while importing/compiling mods", sys.exc_info())
         finally:
@@ -231,7 +219,7 @@ class NetPyNEGeppetto:
             # Get Current dir
             owd = os.getcwd()
 
-            self.compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
+            compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
 
             with redirect_stdout(sys.__stdout__):
                 # NetParams
@@ -274,7 +262,7 @@ class NetPyNEGeppetto:
 
                 conds = {} if rule not in self.netParams.cellParams else self.netParams.cellParams[rule]['conds']
 
-                self.compileModMechFiles(modelParameters["compileMod"], modelParameters["modFolder"])
+                compileModMechFiles(modelParameters["compileMod"], modelParameters["modFolder"])
 
                 del modelParameters["modFolder"]
                 del modelParameters["compileMod"]
