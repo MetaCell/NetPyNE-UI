@@ -25,7 +25,7 @@ const styles = {
 };
 
 export default class NetPyNEThumbnail extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       dialogOpen: false,
@@ -34,22 +34,28 @@ export default class NetPyNEThumbnail extends React.Component {
     this.handleDialogBox = this.handleDialogBox.bind(this);
   }
 
-  handleClick() {
+  handleClick () {
     if (this.props.handleClick) {
       this.props.handleClick(this.props.name, true);
     }
   }
 
-  handleDialogBox(actionConfirmed) {
-    if (this.props.handleClick && actionConfirmed) {
+  handleDialogBox (actionConfirmed) {
+    const {
+      handleClick, paramPath, name, onDelete, deleteNetParamsObj,
+    } = this.props;
+    if (handleClick && actionConfirmed) {
       // this.props.deleteMethod(this.props.name);
-      this.props.deleteNetParamsObj({ paramPath: this.props.paramPath, paramName: this.props.name });
-      this.props.onDelete && this.props.onDelete();
+      deleteNetParamsObj({
+        paramPath,
+        paramName: name,
+      });
+      tonDelete && onDelete();
     }
     this.setState({ dialogOpen: false });
   }
 
-  getCommonProps() {
+  getCommonProps () {
     return {
       id: this.props.name,
       color: this.props.selected ? 'primary' : 'secondary',
@@ -57,7 +63,7 @@ export default class NetPyNEThumbnail extends React.Component {
     };
   }
 
-  render() {
+  render () {
     const {
       name, selected, isButton = false, isCog = false,
     } = this.props;
