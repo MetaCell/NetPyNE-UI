@@ -14,6 +14,7 @@ node_modules
 webapp/build
 webapp/geppetto-client
 workspace
+netpyne_workspace
 .idea
 k8s
 /src
