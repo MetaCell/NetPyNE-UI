@@ -6,8 +6,8 @@ export const TOP_PANEL = 'hlsPanel';
 
 export const THEMES = {
   DARK: 'gui',
-  BLACK: 'contrast',
-  LIGHT: 'light_minimal',
+  BLACK: 'guiBlack',
+  LIGHT: 'guiWhite'
 };
 
 export const MODEL_STATE = {
