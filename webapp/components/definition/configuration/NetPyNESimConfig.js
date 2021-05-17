@@ -181,7 +181,7 @@ class NetPyNESimConfig extends React.Component {
       );
     } else if (this.state.sectionId === CONFIG_SECTIONS.SAVE_CONFIGURATION) {
       contentLeft = (
-        <div>
+        <div className="scrollbar scrollchild">
           <NetPyNEField id="simConfig.simLabel">
             <NetPyNETextField
               fullWidth
@@ -222,7 +222,7 @@ class NetPyNESimConfig extends React.Component {
         </div>
       );
       contentRight = (
-        <div>
+        <div className="scrollbar scrollchild">
           <NetPyNEField id="simConfig.saveJson" className="netpyneCheckbox">
             <NetPyNECheckbox model="simConfig.saveJson" />
           </NetPyNEField>
@@ -255,6 +255,7 @@ class NetPyNESimConfig extends React.Component {
           >
             <NetPyNECheckbox model="simConfig.timestampFilename" />
           </NetPyNEField>
+
           <NetPyNEField id="simConfig.saveTiming" className="netpyneCheckbox">
             <NetPyNECheckbox model="simConfig.saveTiming" />
           </NetPyNEField>
@@ -262,7 +263,7 @@ class NetPyNESimConfig extends React.Component {
       );
     } else if (this.state.sectionId === CONFIG_SECTIONS.RECORD) {
       contentLeft = (
-        <div>
+        <div className="scrollbar scrollchild">
           <NetPyNEField id="simConfig.recordCells" className="listStyle">
             <ListComponent model="simConfig.recordCells" />
           </NetPyNEField>
@@ -285,7 +286,7 @@ class NetPyNESimConfig extends React.Component {
         </div>
       );
       contentRight = (
-        <div>
+        <div className="scrollbar scrollchild">
           <NetPyNEField
             id="simConfig.saveLFPCells"
             className="netpyneCheckbox"
@@ -305,7 +306,7 @@ class NetPyNESimConfig extends React.Component {
       );
     } else if (this.state.sectionId === CONFIG_SECTIONS.NET_PARAMS) {
       contentLeft = (
-        <div>
+        <div className="scrollbar scrollchild">
           <NetPyNEField id="netParams.scale">
             <NetPyNETextField
               fullWidth
@@ -355,7 +356,7 @@ class NetPyNESimConfig extends React.Component {
         </div>
       );
       contentRight = (
-        <div>
+        <div className="scrollbar scrollchild">
           <NetPyNEField id="netParams.sizeX">
             <NetPyNETextField
               fullWidth
@@ -397,28 +398,6 @@ class NetPyNESimConfig extends React.Component {
               fullWidth
               variant="filled"
               model="netParams.rotateCellsRandomly"
-            />
-          </NetPyNEField>
-
-          <NetPyNEField id="netParams.cellsVisualizationSpacingMultiplierX">
-            <NetPyNETextField
-              fullWidth
-              variant="filled"
-              model="netParams.cellsVisualizationSpacingMultiplierX"
-            />
-          </NetPyNEField>
-          <NetPyNEField id="netParams.cellsVisualizationSpacingMultiplierY">
-            <NetPyNETextField
-              fullWidth
-              variant="filled"
-              model="netParams.cellsVisualizationSpacingMultiplierY"
-            />
-          </NetPyNEField>
-          <NetPyNEField id="netParams.cellsVisualizationSpacingMultiplierZ">
-            <NetPyNETextField
-              fullWidth
-              variant="filled"
-              model="netParams.cellsVisualizationSpacingMultiplierZ"
             />
           </NetPyNEField>
         </div>

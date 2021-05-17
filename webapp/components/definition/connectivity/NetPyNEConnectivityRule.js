@@ -144,12 +144,6 @@ export default class NetPyNEConnectivityRule extends React.Component {
             />
           </Box>
 
-          <NetPyNEField id="netParams.connParams.sec" className="listStyle">
-            <ListComponent
-              model={`netParams.connParams['${this.props.name}']['sec']`}
-            />
-          </NetPyNEField>
-
           <NetPyNEField id="netParams.connParams.weight">
             <NetPyNETextField
               fullWidth
@@ -213,6 +207,12 @@ export default class NetPyNEConnectivityRule extends React.Component {
             />
           </NetPyNEField>
 
+          <NetPyNEField id="netParams.connParams.sec" className="listStyle">
+            <ListComponent
+              model={`netParams.connParams['${this.props.name}']['sec']`}
+            />
+          </NetPyNEField>
+
           <NetPyNEField id="netParams.connParams.loc" className="listStyle">
             <ListComponent
               model={`netParams.connParams['${this.props.name}']['loc']`}
@@ -256,19 +256,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
               multiple
             />
           </NetPyNEField>
-          <NetPyNEField id="netParams.connParams.preConds.cellModel">
-            <NetPyNESelectField
-              model={
-                `netParams.connParams['${
-                  this.props.name
-                }']['preConds']['cellModel']`
-              }
-              fullWidth
-              method="netpyne_geppetto.getAvailableCellModels"
-              postProcessItems={this.postProcessMenuItems}
-              multiple
-            />
-          </NetPyNEField>
+
           <NetPyNEField id="netParams.connParams.preConds.cellType">
             <NetPyNESelectField
               fullWidth
@@ -351,19 +339,7 @@ export default class NetPyNEConnectivityRule extends React.Component {
               multiple
             />
           </NetPyNEField>
-          <NetPyNEField id="netParams.connParams.postConds.cellModel">
-            <NetPyNESelectField
-              model={
-                `netParams.connParams['${
-                  this.props.name
-                }']['postConds']['cellModel']`
-              }
-              method="netpyne_geppetto.getAvailableCellModels"
-              postProcessItems={this.postProcessMenuItems}
-              multiple
-              fullWidth
-            />
-          </NetPyNEField>
+
           <NetPyNEField id="netParams.connParams.postConds.cellType">
             <NetPyNESelectField
               model={

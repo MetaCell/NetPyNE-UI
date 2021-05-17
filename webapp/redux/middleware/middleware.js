@@ -162,7 +162,7 @@ export default (store) => (next) => (action) => {
     case SIMULATE_NETWORK:
       simulateNetwork({
         parallelSimulation: false,
-        usePrevInst: true,
+        usePrevInst: false,
       })
         .then(toNetworkCallback(false), pythonErrorCallback);
       break;

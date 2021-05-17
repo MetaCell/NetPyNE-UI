@@ -24,12 +24,12 @@ class NetPyNEModelInterpreter(ModelInterpreter):
             name='netpynelib')
         geppetto_model.libraries.append(netpyne_geppetto_library)
 
-        self.extractPopulations(netpyne_model, netpyne_geppetto_library, geppetto_model)
-        self.extractInstances(netpyne_model, netpyne_geppetto_library, geppetto_model)
+        self.extractPopulations(netpyne_model, netpyne_geppetto_library)
+        self.extractInstances(netpyne_geppetto_library, geppetto_model)
 
         return geppetto_model
 
-    def extractPopulations(self, netpyne_model, netpyne_geppetto_library, geppetto_model):
+    def extractPopulations(self, netpyne_model, netpyne_geppetto_library):
         # Initialise network
         network = pygeppetto.CompositeType(id='network_netpyne', name='network_netpyne')
         netpyne_geppetto_library.types.append(network)
@@ -75,7 +75,7 @@ class NetPyNEModelInterpreter(ModelInterpreter):
                         if 'pt3d' in sec['geom']:
                             points = sec['geom']['pt3d']
                             for i in range(len(points) - 1):
-                                # draw soma as a cylinder, not as a sphere (more accurate representation of 3d pts)  
+                                # draw soma as a cylinder, not as a sphere (more accurate representation of 3d pts)
                                 visualType.variables.append(self.factory.createCylinder(str(sec_name),
                                                                                         bottomRadius=float(
                                                                                             points[i][3] / 2),
@@ -93,20 +93,17 @@ class NetPyNEModelInterpreter(ModelInterpreter):
             # Save the cell position and update elements in defaultValue and size
             populations[cell['tags']['pop']].size = populations[cell['tags']['pop']].size + 1
             populations[cell['tags']['pop']].defaultValue.elements.append(
-                ArrayElement(index=len(populations[cell['tags']['pop']].defaultValue.elements),
-                             position=Point(
-                                 x=float(cell['tags']['x'] * getattr(netpyne_model.net.params,
-                                                                     "cellsVisualizationSpacingMultiplierX", 1.0)),
-                                 y=-float(cell['tags']['y'] * getattr(netpyne_model.net.params,
-                                                                      "cellsVisualizationSpacingMultiplierY", 1.0)),
-                                 z=float(cell['tags']['z'] * getattr(netpyne_model.net.params,
-                                                                     "cellsVisualizationSpacingMultiplierZ", 1.0))
-                             )
-                             )
+                ArrayElement(
+                    index=len(populations[cell['tags']['pop']].defaultValue.elements),
+                    position=Point(
+                        x=float(cell['tags']['x'] * netpyne_model.net.params.cellsVisualizationSpacingMultiplier[0]),
+                        y=-float(cell['tags']['y'] * netpyne_model.net.params.cellsVisualizationSpacingMultiplier[1]),
+                        z=float(cell['tags']['z'] * netpyne_model.net.params.cellsVisualizationSpacingMultiplier[2])
+                    )
+                )
             )
 
-    def extractInstances(self, netpyne_model, netpyne_geppetto_library, geppetto_model):
+    def extractInstances(self, netpyne_geppetto_library, geppetto_model):
         instance = pygeppetto.Variable(id='network')
         instance.types.append(netpyne_geppetto_library.types[0])
         geppetto_model.variables.append(instance)
-        pass

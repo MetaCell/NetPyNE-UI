@@ -121,7 +121,7 @@ define((require) => {
               }
             }, timeInterval);
           } else {
-            console.warn(`Tried to sync default value for ${this.props.model} and failed after 3 attemps.`);
+            console.warn(`Tried to sync default value for ${this.props.model} and failed after 3 attempts.`);
           }
         }
 
@@ -188,9 +188,9 @@ define((require) => {
           if (this.props.prePythonSyncProcessing !== undefined) {
             newValue = this.props.prePythonSyncProcessing(newValue);
           }
-          // whenever we invoke syncValueWithPython we will propagate the Javascript value of the model to Python
+          // whenever we invoke syncValueWithPython we will propagate
+          // the Javascript value of the model to Python
           if (this.syncValueWithPython) {
-            // this.syncValueWithPython((event.target.type == 'number') ? parseFloat(this.state.value) : this.state.value, this.props.requirement);
             switch (this.props.realType) {
               case 'float':
                 if (!isNaN(newValue) && newValue !== '') {
@@ -200,6 +200,13 @@ define((require) => {
               case 'dict':
                 if (typeof newValue === 'string') {
                   newValue = JSON.parse(newValue);
+                }
+                break;
+              case 'func':
+                // 'func' type can be a function or a float in netpyne
+                // In case the value is a float we want to convert "1.4" -> 1.4
+                if (!isNaN(newValue) && newValue !== '') {
+                  newValue = parseFloat(newValue);
                 }
                 break;
               default:

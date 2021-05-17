@@ -5,6 +5,7 @@
   "repository": "https://github.com/MetaCell/NetPyNE-UI",
   "license": "MIT",
   "scripts": {
+    "lint": "eslint . --color --fix",
     "build": "webpack --mode development -p --progress --devtool source-map",
     "build-dev": "webpack --mode development --devtool source-map",
     "build-dev-noTest": "webpack --mode development --devtool source-map --env.noTest=true",

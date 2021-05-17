@@ -10,22 +10,17 @@ import logging
 import os
 import pickle
 import re
-import subprocess
 import sys
-from contextlib import redirect_stdout
 from shutil import copyfile, move
 
 import matplotlib.pyplot as plt
 import neuron
 import numpy as np
-from jupyter_geppetto import jupyter_geppetto, synchronization, utils
 from netpyne import specs, sim, analysis
 from netpyne.conversion.neuronPyHoc import mechVarList
 from netpyne.metadata import metadata
 from netpyne.specs.utils import validateFunction
 from netpyne.sim import utils as netpyne_utils
-from pygeppetto import ui
-from pygeppetto.model.model_serializer import GeppettoModelSerializer
 
 from netpyne_ui import experiments
 from netpyne_ui import constants
@@ -33,9 +28,16 @@ from netpyne_ui import model
 from netpyne_ui import simulations
 from netpyne_ui.netpyne_model_interpreter import NetPyNEModelInterpreter
 from netpyne_ui.simulations import InvalidConfigError
-from netpyne_ui.constants import NUM_CONN_LIMIT
+from pygeppetto.model.model_serializer import GeppettoModelSerializer
+from pygeppetto import ui
+from jupyter_geppetto import jupyter_geppetto, synchronization, utils
+from contextlib import redirect_stdout
+from netpyne_ui.constants import NETPYNE_WORKDIR_PATH, NUM_CONN_LIMIT
+from netpyne_ui.mod_utils import compileModMechFiles
 
 os.chdir(constants.NETPYNE_WORKDIR_PATH)
+
+neuron.nrn_dll_loaded.append(os.path.join(NETPYNE_WORKDIR_PATH, 'mod'))  # Avoids to load workspace modfiles twice
 
 
 class NetPyNEGeppetto:
@@ -238,21 +240,6 @@ class NetPyNEGeppetto:
 
         return save_folder_path
 
-    def compileModMechFiles(self, compileMod, modFolder):
-        # Create Symbolic link
-        if compileMod:
-            modPath = os.path.join(str(modFolder), "x86_64")
-
-            subprocess.call(["rm", "-r", modPath])
-
-            os.chdir(modFolder)
-            subprocess.call(["nrnivmodl"])
-            os.chdir('..')
-
-        # Load mechanism if mod path is passed
-        if modFolder:
-            neuron.load_mechanisms(str(modFolder))
-
     def loadModel(self, args):
         """ Imports a model stored as file in json format.
 
@@ -275,7 +262,7 @@ class NetPyNEGeppetto:
 
         try:
             owd = os.getcwd()
-            self.compileModMechFiles(args['compileMod'], args['modFolder'])
+            compileModMechFiles(args['compileMod'], args['modFolder'])
         except Exception:
             message = "Error while importing/compiling mods"
             logging.exception(message)
@@ -350,39 +337,43 @@ class NetPyNEGeppetto:
         :param modelParameters:
         :return:
         """
+        if self.doIhaveInstOrSimData()['haveInstance']:
+            # TODO: this must be integrated into the general lifecycle of "model change -> simulate"
+            #   Shouldn't be specific to Import
+            sim.clearAll()
+
         try:
             # Get Current dir
             owd = os.getcwd()
 
-            self.compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
+            compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
 
             with redirect_stdout(sys.__stdout__):
                 # NetParams
-                netParamsPath = str(modelParameters["netParamsPath"])
-                sys.path.append(netParamsPath)
-                os.chdir(netParamsPath)
-
+                net_params_path = str(modelParameters["netParamsPath"])
+                sys.path.append(net_params_path)
+                os.chdir(net_params_path)
                 # Import Module
-                netParamsModuleName = importlib.import_module(str(modelParameters["netParamsModuleName"]))
-
+                net_params_module_name = importlib.import_module(str(modelParameters["netParamsModuleName"]))
                 # Import Model attributes
-                self.netParams = getattr(netParamsModuleName, str(modelParameters["netParamsVariable"]))
+                self.netParams = getattr(net_params_module_name, str(modelParameters["netParamsVariable"]))
 
                 for key, value in self.netParams.cellParams.items():
                     if hasattr(value, 'todict'):
                         self.netParams.cellParams[key] = value.todict()
 
                 # SimConfig
-                simConfigPath = str(modelParameters["simConfigPath"])
-                sys.path.append(simConfigPath)
-                os.chdir(simConfigPath)
-
+                sim_config_path = str(modelParameters["simConfigPath"])
+                sys.path.append(sim_config_path)
+                os.chdir(sim_config_path)
                 # Import Module
-                simConfigModuleName = importlib.import_module(str(modelParameters["simConfigModuleName"]))
-
+                sim_config_module_name = importlib.import_module(str(modelParameters["simConfigModuleName"]))
                 # Import Model attributes
-                self.simConfig = getattr(simConfigModuleName, str(modelParameters["simConfigVariable"]))
+                self.simConfig = getattr(sim_config_module_name, str(modelParameters["simConfigVariable"]))
 
+                # TODO: when should sim.initialize be called?
+                #   Only on import or better before every simulation or network instantiation?
+                sim.initialize()
             return utils.getJSONReply()
         except Exception:
             message = "Error while importing the NetPyNE model"
@@ -400,7 +391,7 @@ class NetPyNEGeppetto:
 
                 conds = {} if rule not in self.netParams.cellParams else self.netParams.cellParams[rule]['conds']
 
-                self.compileModMechFiles(modelParameters["compileMod"], modelParameters["modFolder"])
+                compileModMechFiles(modelParameters["compileMod"], modelParameters["modFolder"])
 
                 del modelParameters["modFolder"]
                 del modelParameters["compileMod"]
@@ -478,6 +469,7 @@ class NetPyNEGeppetto:
         try:
             # This function fails is some keys don't exists
             # sim.clearAll()
+            # TODO: as part of #264 we should remove the method and use clearAll intstead
             self.clearSim()
         except Exception:
             logging.exception("Error while clearing simulation")
@@ -498,7 +490,11 @@ class NetPyNEGeppetto:
 
         return sim
 
-    def doIhaveInstOrSimData(self):  # return [bool, bool] telling if we have an instance and simulated data
+    def doIhaveInstOrSimData(self):
+        """ Telling if we have an instance or simulated data.
+
+        return [bool, bool]
+        """
         with redirect_stdout(sys.__stdout__):
             out = [False, False]
             if hasattr(sim, 'net'):
