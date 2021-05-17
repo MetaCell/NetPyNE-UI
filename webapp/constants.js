@@ -264,7 +264,7 @@ export const PLOT_WIDGETS = {
     disabled: true,
     method: {
       plotKey: 'granger',
-      plotMethod: 'granger',
+      plotMethod: 'iplotGranger',
       plotType: false,
     },
     pos: 11,
