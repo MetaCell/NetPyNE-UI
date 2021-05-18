@@ -71,7 +71,7 @@ export default class WidgetFactory {
       case 'D3Canvas':
         return <NetPyNEInstantiated />;
       case 'Plot': {
-        const data = window.plotCache[widgetConfig.id];
+        const data = window['plotCache'][widgetConfig.id];
         if (widgetConfig.method.plotMethod.startsWith('iplot')) {
           return (
             <div style={{

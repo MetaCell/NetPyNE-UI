@@ -26,12 +26,6 @@ export const removeExperiment = (name) => ({
 export const getExperiments = () => ({ type: GET_EXPERIMENTS });
 
 /**
- * Modify an existing experiment.
- */
-export const editExperiment = () => {
-};
-
-/**
  * Set fetched experiments.
  */
 export const setExperiments = (payload) => ({

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import Button from '@material-ui/core/Button';
-import { addExperiment, editExperiment, getParameters } from 'root/api/experiments';
+import {
+  addExperiment, editExperiment, getExperiment, getParameters,
+} from 'root/api/experiments';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -23,7 +24,19 @@ import { withStyles } from '@material-ui/core/styles';
 import { EXPERIMENT_TEXTS } from '../../constants';
 import ParameterMenu from './ParameterMenu';
 import {
-  bgDarkest, bgLight, bgRegular, secondaryColor, fontColor, radius, primaryColor, experimentInputColor, experimentFieldColor, experimentSvgColor, experimentLabelColor, experimentAutocompleteBorder, errorFieldBorder,
+  bgDarkest,
+  bgLight,
+  bgRegular,
+  secondaryColor,
+  fontColor,
+  radius,
+  primaryColor,
+  experimentInputColor,
+  experimentFieldColor,
+  experimentSvgColor,
+  experimentLabelColor,
+  experimentAutocompleteBorder,
+  errorFieldBorder,
 } from '../../theme';
 
 const RANGE_VALUE = 0;
@@ -273,7 +286,13 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
               {option}
             </>
           )}
-          renderInput={(params) => <TextField {...params} label="Type or select parameter" variant="outlined" />}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Type or select parameter"
+              variant="outlined"
+            />
+          )}
           value={parameter.mapsTo || ''}
           onChange={(e, val) => handleParamSelection(val, parameter, index)}
         />
@@ -295,27 +314,69 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
         </FormControl>
       </Grid>
       <Grid container item xs={4} spacing={1} className="editExperimentField">
-        { parameter.type === RANGE ? (
+        {parameter.type === RANGE ? (
           <>
             <Grid item xs={4}>
-              <TextField id={`${parameter.name}-from`} label="From" variant="filled" value={parameter?.minVal} onChange={(e) => handleInputText(e.target.value, index, parameter, 'min')} error={parameter?.minerror} helperText={parameter?.minhelperText} autoComplete="off" />
+              <TextField
+                id={`${parameter.name}-from`}
+                label="From"
+                variant="filled"
+                value={parameter?.minVal}
+                onChange={(e) => handleInputText(e.target.value, index, parameter, 'min')}
+                error={parameter?.minerror}
+                helperText={parameter?.minhelperText}
+                autoComplete="off"
+              />
             </Grid>
             <Grid item xs={4}>
-              <TextField id={`${parameter.name}-to`} label="To" variant="filled" value={parameter?.maxVal} onChange={(e) => handleInputText(e.target.value, index, parameter, 'max')} error={parameter?.maxerror} helperText={parameter?.maxhelperText} autoComplete="off" />
+              <TextField
+                id={`${parameter.name}-to`}
+                label="To"
+                variant="filled"
+                value={parameter?.maxVal}
+                onChange={(e) => handleInputText(e.target.value, index, parameter, 'max')}
+                error={parameter?.maxerror}
+                helperText={parameter?.maxhelperText}
+                autoComplete="off"
+              />
             </Grid>
             <Grid item xs={4}>
-              <TextField id={`${parameter.name}-step`} label="Step" variant="filled" value={parameter?.stepVal} onChange={(e) => handleInputText(e.target.value, index, parameter, 'step')} error={parameter?.steperror} helperText={parameter?.stephelperText} autoComplete="off" />
+              <TextField
+                id={`${parameter.name}-step`}
+                label="Step"
+                variant="filled"
+                value={parameter?.stepVal}
+                onChange={(e) => handleInputText(e.target.value, index, parameter, 'step')}
+                error={parameter?.steperror}
+                helperText={parameter?.stephelperText}
+                autoComplete="off"
+              />
             </Grid>
           </>
         )
           : (
             <Grid item xs={12}>
-              <TextField id={`${parameter.name}-values`} label="Values (separated with comas)" variant="filled" value={parameter?.val || ''} onChange={(e) => handleInputValues(e.target.value, index, parameter, 'val')} error={parameter.error} helperText={parameter.helperText} autoComplete="off" />
+              <TextField
+                id={`${parameter.name}-values`}
+                label="Values (separated with comas)"
+                variant="filled"
+                value={parameter?.val || ''}
+                onChange={(e) => handleInputValues(e.target.value, index, parameter, 'val')}
+                error={parameter.error}
+                helperText={parameter.helperText}
+                autoComplete="off"
+              />
             </Grid>
           )}
       </Grid>
       <Grid item xs="auto" className="editExperimentMenu">
-        <ParameterMenu parameter={parameter} index={index} addToGroup={addToGroup} removeParameter={removeParameter} removeFromGroup={removeFromGroup} />
+        <ParameterMenu
+          parameter={parameter}
+          index={index}
+          addToGroup={addToGroup}
+          removeParameter={removeParameter}
+          removeFromGroup={removeFromGroup}
+        />
       </Grid>
     </Grid>
 
@@ -323,27 +384,66 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
 };
 
 const EditExperiment = (props) => {
-  const { classes, setList } = props;
-  const experimentDetail = useSelector((state) => state.experiments.experimentDetail);
-  const { RANGE, LIST } = EXPERIMENT_TEXTS;
+  const {
+    classes,
+    setList,
+    name,
+  } = props;
+
+  const {
+    RANGE,
+    LIST,
+  } = EXPERIMENT_TEXTS;
   const rangeParam = {
-    type: RANGE, min: RANGE_VALUE, minVal: RANGE_VALUE, max: RANGE_VALUE, maxVal: RANGE_VALUE, step: RANGE_VALUE, stepVal: RANGE_VALUE,
+    type: RANGE,
+    min: RANGE_VALUE,
+    minVal: RANGE_VALUE,
+    max: RANGE_VALUE,
+    maxVal: RANGE_VALUE,
+    step: RANGE_VALUE,
+    stepVal: RANGE_VALUE,
   };
   const [parameters, setParameters] = useState([{
-    mapsTo: '', ...rangeParam, inGroup: false,
+    mapsTo: '',
+    ...rangeParam,
+    inGroup: false,
   }, {
-    mapsTo: '', type: LIST, values: [], inGroup: false, val: '',
+    mapsTo: '',
+    type: LIST,
+    values: [],
+    inGroup: false,
+    val: '',
   }]);
+
+  // TODO: combine into one experiment state?
   const [groupParameters, setGroupParameters] = useState([]);
   const [experimentName, setExperimentName] = useState('');
   const [experimentError, setExperimentError] = useState(false);
+
+  // Existing Experiment.
+  const [experiment, setExperiment] = useState(null);
+
+  useEffect(() => {
+    if (name !== null) {
+      getExperiment(name)
+        .then((exp) => {
+          console.log(exp);
+          setExperiment(exp);
+        })
+        .catch((error) => console.error(error));
+    }
+  }, [name]);
+
   const create = () => {
     // When user creates a new Experiment
     if (experimentName === '') {
       setExperimentError(true);
     } else {
       setExperimentError(false);
-      const newExperiment = { name: experimentName, params: [...parameters, ...groupParameters] };
+      const newExperiment = {
+        name: experimentName,
+        params: [...parameters, ...groupParameters],
+      };
       console.log(newExperiment);
       addExperiment(newExperiment)
         .then((result) => {
@@ -366,16 +466,18 @@ const EditExperiment = (props) => {
   const flatten = (obj, path = '') => {
     if (!(obj instanceof Object)) return { [path.replace(/\.$/g, '')]: obj };
 
-    return Object.keys(obj).reduce((output, key) => (obj instanceof Array
-      ? { ...output, ...flatten(obj[key], `${path}[${key}].`) }
-      : { ...output, ...flatten(obj[key], `${path + key}.`) }), {});
+    return Object.keys(obj)
+      .reduce((output, key) => (obj instanceof Array
+        ? { ...output, ...flatten(obj[key], `${path}[${key}].`) }
+        : { ...output, ...flatten(obj[key], `${path + key}.`) }), {});
   };
 
   const viewParameters = () => {
-    getParameters().then((parameters) => {
-      // netParams JSON dict
-      setSelectionParams(Object.keys(flatten(parameters)));
-    });
+    getParameters()
+      .then((parameters) => {
+        // netParams JSON dict
+        setSelectionParams(Object.keys(flatten(parameters)));
+      });
   };
 
   useEffect(() => {
@@ -384,27 +486,39 @@ const EditExperiment = (props) => {
 
   const handleChange = (event, parameter, index) => {
     const newParam = parameter.inGroup ? [...groupParameters] : [...parameters];
-    const newValues = event.target.value === RANGE ? { ...rangeParam } : { values: [], type: LIST, val: '' };
+    const newValues = event.target.value === RANGE ? { ...rangeParam } : {
+      values: [],
+      type: LIST,
+      val: '',
+    };
     newParam[index] = { ...parameter, ...newValues };
     parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
   };
 
   const handleParamSelection = (val, parameter, index) => {
     const newParam = parameter.inGroup ? [...groupParameters] : [...parameters];
-    newParam[index] = { ...parameter, mapsTo: val };
+    newParam[index] = {
+      ...parameter,
+      mapsTo: val,
+    };
     parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
   };
 
   const addParameter = () => {
     setParameters([...parameters, {
-      mapsTo: '', ...rangeParam, inGroup: false,
+      mapsTo: '',
+      ...rangeParam,
+      inGroup: false,
     }]);
   };
 
   const addToGroup = (index) => {
     const newParams = [...parameters];
     newParams.splice(index, 1);
-    setGroupParameters([...groupParameters, { ...parameters[index], inGroup: true }]);
+    setGroupParameters([...groupParameters, {
+      ...parameters[index],
+      inGroup: true,
+    }]);
     setParameters(newParams);
   };
 
@@ -415,7 +529,10 @@ const EditExperiment = (props) => {
   };
 
   const removeFromGroup = (index) => {
-    setParameters([...parameters, { ...groupParameters[index], inGroup: false }]);
+    setParameters([...parameters, {
+      ...groupParameters[index],
+      inGroup: false,
+    }]);
     const newGroupParams = [...groupParameters];
     newGroupParams.splice(index, 1);
     setGroupParameters(newGroupParams);
@@ -425,7 +542,11 @@ const EditExperiment = (props) => {
     const newParameters = parameter.inGroup ? [...groupParameters] : [...parameters];
     const invalidValue = isNaN(val);
     newParameters[index] = {
-      ...parameter, [`${key}Val`]: val, [key]: parseFloat(val), [`${key}error`]: invalidValue, [`${key}helperText`]: !invalidValue ? '' : EXPERIMENT_TEXTS.INPUT_ERR_MESSAGE,
+      ...parameter,
+      [`${key}Val`]: val,
+      [key]: parseFloat(val),
+      [`${key}error`]: invalidValue,
+      [`${key}helperText`]: !invalidValue ? '' : EXPERIMENT_TEXTS.INPUT_ERR_MESSAGE,
     };
     parameter.inGroup ? setGroupParameters(newParameters) : setParameters(newParameters);
   };
@@ -434,7 +555,11 @@ const EditExperiment = (props) => {
     const newParameters = parameter.inGroup ? [...groupParameters] : [...parameters];
     const validValue = regex.test(val);
     newParameters[index] = {
-      ...parameter, val, values: [...val], error: !validValue, helperText: validValue ? '' : EXPERIMENT_TEXTS.INPUT_ERR_MESSAGE,
+      ...parameter,
+      val,
+      values: [...val],
+      error: !validValue,
+      helperText: validValue ? '' : EXPERIMENT_TEXTS.INPUT_ERR_MESSAGE,
     };
     parameter.inGroup ? setGroupParameters(newParameters) : setParameters(newParameters);
   };
@@ -453,7 +578,15 @@ const EditExperiment = (props) => {
         </Box>
         <Box mb={2} className="editExperimentHead">
           <form noValidate autoComplete="off">
-            <TextField id="experiment-name" label="Experiment Name" variant="filled" value={experimentName} onChange={(e) => setExperimentNameInfo(e.target.value)} error={experimentError} helperText={experimentError ? 'Please enter experiment name' : ''} />
+            <TextField
+              id="experiment-name"
+              label="Experiment Name"
+              variant="filled"
+              value={experimentName}
+              onChange={(e) => setExperimentNameInfo(e.target.value)}
+              error={experimentError}
+              helperText={experimentError ? 'Please enter experiment name' : ''}
+            />
           </form>
           <Box mt={3}>
             <Divider />
@@ -464,7 +597,7 @@ const EditExperiment = (props) => {
             <Box mb={2} className="editExperimentBreadcrumb">
               <Typography variant="body2">Parameters</Typography>
             </Box>
-            { groupParameters.length > 0 && (
+            {groupParameters.length > 0 && (
               <Box mb={2} className="editExperimentGroup">
                 <Box mb={2} className="editExperimentBreadcrumb">
                   <Typography variant="body2">Grouped Parameters</Typography>
@@ -474,19 +607,19 @@ const EditExperiment = (props) => {
                     ParameterRow(parameter, index, handleParamSelection, handleChange, handleInputText, handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams, classes)
                   ))}
                 </Box>
-                { groupParameters.length === 1 && (
-                <Box className="editExperimentWarning">
-                  <Typography variant="caption">{EXPERIMENT_TEXTS.WARNING}</Typography>
-                </Box>
-                ) }
+                {groupParameters.length === 1 && (
+                  <Box className="editExperimentWarning">
+                    <Typography variant="caption">{EXPERIMENT_TEXTS.WARNING}</Typography>
+                  </Box>
+                )}
               </Box>
             )}
             {selectionParams.length > 0 && (
-            <Box className="editExperimentRow">
-              {parameters.map((parameter, index) => (
-                ParameterRow(parameter, index, handleParamSelection, handleChange, handleInputText, handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams, classes)
-              ))}
-            </Box>
+              <Box className="editExperimentRow">
+                {parameters.map((parameter, index) => (
+                  ParameterRow(parameter, index, handleParamSelection, handleChange, handleInputText, handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams, classes)
+                ))}
+              </Box>
             )}
           </Box>
         </Box>
