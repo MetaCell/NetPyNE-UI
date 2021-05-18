@@ -54,7 +54,7 @@ class NetPyNEGeppetto:
 
         self.experiments = experiments
 
-        model.register(metadata, self.netParams)
+        model.register(metadata)
 
         synchronization.startSynchronization(self.__dict__)
         logging.debug("Initializing the original model")

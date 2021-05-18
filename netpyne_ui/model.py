@@ -6,30 +6,7 @@ from datetime import datetime
 from typing import List
 
 
-def register(metadata, net_params):
-    # TODO: this needs to be moved into the metadata.py of netpyne repository.
-    metadata['netParams']['children']['cellsVisualizationSpacingMultiplierX'] = {
-        "label": "Cells visualization spacing multiplier X",
-        "help": "Multiplier for spacing in X axis in 3d visualization of cells (default: 1)",
-        "suggestions": "",
-        "hintText": "",
-        "type": "float"
-    }
-    metadata['netParams']['children']['cellsVisualizationSpacingMultiplierY'] = {
-        "label": "Cells visualization spacing multiplier Y",
-        "help": "Multiplier for spacing in Y axis in 3d visualization of cells (default: 1)",
-        "suggestions": "",
-        "hintText": "",
-        "type": "float"
-    }
-    metadata['netParams']['children']['cellsVisualizationSpacingMultiplierZ'] = {
-        "label": "Cells visualization spacing multiplier Z",
-        "help": "Multiplier for spacing in Z axis in 3d visualization of cells (default: 1)",
-        "suggestions": "",
-        "hintText": "",
-        "type": "float"
-    }
-
+def register(metadata):
     metadata['batch_config'] = {
         "label": "Batch configuration",
         "help": "",
@@ -110,10 +87,6 @@ def register(metadata, net_params):
             }
         }
     }
-
-    net_params.cellsVisualizationSpacingMultiplierX = 1
-    net_params.cellsVisualizationSpacingMultiplierY = 1
-    net_params.cellsVisualizationSpacingMultiplierZ = 1
 
 
 class ExperimentState:
