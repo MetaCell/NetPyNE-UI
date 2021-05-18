@@ -10,7 +10,17 @@ module.exports = {
 
     // Tweak some rules to our preferences
     'space-before-function-paren': ['error', 'always'],
+    'react/prop-types': 1,
     'no-console': 0,
+    'import/extensions': 0,
+    'max-len': ['error', { code: 140 }],
+    'no-eval': 1,
+    eqeqeq: 1,
+    'no-plusplus': 1,
+    'react/destructuring-assignment': 1,
+    'no-param-reassign': 1,
+    'vars-on-top': 1,
+    'no-use-before-define': 1,
   },
   globals: {
     page: true,
@@ -24,5 +34,9 @@ module.exports = {
     patchRequire: true,
     window: true,
     GEPPETTO: true,
+    document: true,
+    $: true,
+    IPython: true,
+    fetch: true,
   },
 };
