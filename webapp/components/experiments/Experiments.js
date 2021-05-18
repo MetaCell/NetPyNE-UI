@@ -141,15 +141,15 @@ const Experiments = (props) => {
   useInterval(getExperiments, POLL_INTERVAL);
 
   const cleanExperiment = (payload) => {
-    props.cleanExperiment(payload);
+    // TODO: reset current experiment in design
   };
 
   const deleteExperiment = (name) => {
-    props.deleteExperiment(name);
+    // TODO: show dialog, call removeExperiment api method & reload experiments
   };
 
   const viewExperiment = (payload) => {
-    props.viewExperiment(payload);
+    // TODO: show detail view of experiment
   };
 
   const formatDate = (timestamp) => {
@@ -176,60 +176,64 @@ const Experiments = (props) => {
                     <TableRow key={experiment?.name}>
                       <TableCell component="th" scope="row">
                         <Button>
-                        <Typography variant="h6" className="experimentHead">
-                          {experiment?.name}
-                        </Typography>
-                        <ChevronRightIcon className="experimentHeadIcon" onClick={() => setList(false)} />
-                      </Button>
+                          <Typography variant="h6" className="experimentHead">
+                            {experiment?.name}
+                          </Typography>
+                          <ChevronRightIcon
+                            className="experimentHeadIcon"
+                            onClick={() => setList(false)}
+                          />
+                        </Button>
                       </TableCell>
                       <TableCell align="left">
                         <Typography variant="h6" className="experimentDate">
-                        {formatDate(experiment?.timestamp)}
-                      </Typography>
+                          {formatDate(experiment?.timestamp)}
+                        </Typography>
                       </TableCell>
                       <TableCell align="left" className="experimentTableCell">
                         {(experiment?.state === EXPERIMENT_STATE.SIMULATING || experiment?.state === EXPERIMENT_STATE.INSTANTIATING)
-                        ? (
-                          <Chip
-                            icon={<Box className="MuiChipLoader" />}
-                            label={experiment?.state}
-                            deleteIcon={<CancelRoundedIcon />}
-                            onDelete={() => {}}
-                          />
-                        )
-                        : (
-                          <Chip
-                            label={experiment?.state}
-                          />
-                        )}
+                          ? (
+                            <Chip
+                              icon={<Box className="MuiChipLoader"/>}
+                              label={experiment?.state}
+                              deleteIcon={<CancelRoundedIcon/>}
+                              onDelete={() => {
+                              }}
+                            />
+                          )
+                          : (
+                            <Chip
+                              label={experiment?.state}
+                            />
+                          )}
                       </TableCell>
                       <TableCell align="right">
                         <Button
-                        className="experimentIcon"
-                        onClick={viewExperiment}
-                      >
-                        {experiment?.state === EXPERIMENT_STATE.DESIGN
-                          ? <EditIcon /> : <FileCopyOutlinedIcon />}
-                      </Button>
+                          className="experimentIcon"
+                          onClick={viewExperiment}
+                        >
+                          {experiment?.state === EXPERIMENT_STATE.DESIGN
+                            ? <EditIcon/> : <FileCopyOutlinedIcon/>}
+                        </Button>
                       </TableCell>
                       <TableCell align="center">
-                        <Divider orientation="vertical" />
+                        <Divider orientation="vertical"/>
                       </TableCell>
                       <TableCell align="right">
                         <Button
-                        className="experimentIcon"
-                        onClick={cleanExperiment}
-                      >
-                        <ReplayIcon />
-                      </Button>
+                          className="experimentIcon"
+                          onClick={cleanExperiment}
+                        >
+                          <ReplayIcon/>
+                        </Button>
                       </TableCell>
                       <TableCell align="right">
                         <Button
-                        className="experimentIcon"
-                        onClick={deleteExperiment}
-                      >
-                        <DeleteIcon />
-                      </Button>
+                          className="experimentIcon"
+                          onClick={deleteExperiment}
+                        >
+                          <DeleteIcon/>
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -248,7 +252,7 @@ const Experiments = (props) => {
           <Box>
             <Button
               color="primary"
-              startIcon={<AddIcon />}
+              startIcon={<AddIcon/>}
               onClick={() => setDialogOpen(true)}
             >
               CREATE NEW EXPERIMENT
@@ -256,7 +260,14 @@ const Experiments = (props) => {
           </Box>
         </Box>
       </GridLayout>
-      <DeleteDialogBox open={dialogOpen} onDialogResponse={createExperimentScreen} textForDialog={{ heading: EXPERIMENT_TEXTS.CREATE_EXPERIMENT, content: EXPERIMENT_TEXTS.DIALOG_MESSAGE }} />
+      <DeleteDialogBox
+        open={dialogOpen}
+        onDialogResponse={createExperimentScreen}
+        textForDialog={{
+          heading: EXPERIMENT_TEXTS.CREATE_EXPERIMENT,
+          content: EXPERIMENT_TEXTS.DIALOG_MESSAGE,
+        }}
+      />
     </>
   );
 };

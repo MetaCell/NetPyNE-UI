@@ -424,7 +424,7 @@ const EditExperiment = (props) => {
   const [experiment, setExperiment] = useState(null);
 
   useEffect(() => {
-    if (name !== null) {
+    if (name !== undefined) {
       getExperiment(name)
         .then((exp) => {
           console.log(exp);

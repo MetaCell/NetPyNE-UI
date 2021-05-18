@@ -17,12 +17,7 @@ import {
   setDefaultWidgets,
 } from '../redux/actions/general';
 
-import {
-  resetCurrentExperiment,
-  removeExperiment,
-  viewExperiment,
-  getExperiments,
-} from '../redux/actions/experiments';
+import { getExperiments } from '../redux/actions/experiments';
 
 import {
   openTopbarDialog,
@@ -109,24 +104,20 @@ export const SelectField = PythonControlledCapability.createPythonControlledCont
   _SelectField,
 );
 
-// TODO: @lrebscher use react hooks instead of connect wrapper
 export const Experiments = connect(
   (state, ownProps) => ({
     ...ownProps,
     experiments: state.experiments.experiments,
   }),
   (dispatch) => ({
-    cleanExperiment: () => dispatch(resetCurrentExperiment()),
-    deleteExperiment: (name) => dispatch(removeExperiment(name)),
-    viewExperiment: (payload) => dispatch(viewExperiment(payload)),
     getExperiments: () => dispatch(getExperiments()),
   }),
 )(_Experiments);
 
 export const Experiment = _Experiment;
-
 export const EditExperiment = _EditExperiment;
 export const ExperimentManager = _ExperimentManager;
+
 // ---------------------------------------------------------------------------------------- //
 
 // CONNECT
