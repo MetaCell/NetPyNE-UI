@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Experiments } from '../index';
-import EditExperiment from './EditExperiment';
+import EditExperiment from './ExperimentEdit';
 
 const ExperimentManager = () => {
   const [list, setList] = useState(true);

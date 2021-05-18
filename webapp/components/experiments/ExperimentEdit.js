@@ -383,7 +383,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
   );
 };
 
-const EditExperiment = (props) => {
+const ExperimentEdit = (props) => {
   const {
     classes,
     setList,
@@ -651,4 +651,4 @@ const EditExperiment = (props) => {
   );
 };
 
-export default withStyles(useStyles)(EditExperiment);
+export default withStyles(useStyles)(ExperimentEdit);
