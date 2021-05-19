@@ -420,15 +420,13 @@ const ExperimentEdit = (props) => {
   // TODO: combine into one experiment state?
   const [groupParameters, setGroupParameters] = useState([]);
   const [experimentName, setExperimentName] = useState('');
-  const [existingName, setExistingName] = useState('');
   const [experimentError, setExperimentError] = useState(false);
   const [selectionParams, setSelectionParams] = useState([]);
   // Existing Experiment.
-  // const [experiment, setExperiment] = useState(null);
+  const [experiment, setExperiment] = useState(null);
 
   const setExperimentDetail = (exp) => {
-    // setExperiment(exp);
-    setExistingName(exp?.name);
+    setExperiment(exp);
     setExperimentName(exp?.name);
     if (exp?.params.length > 0) {
       const params = [];
@@ -466,7 +464,7 @@ const ExperimentEdit = (props) => {
       };
       if (editState) {
         // When user updates an existing Experiment
-        editExperiment(existingName, newExperimentDetails)
+        editExperiment(experiment?.name, newExperimentDetails)
           .then(() => {
             setList(true);
           });
