@@ -31,7 +31,6 @@ class Filter extends Component {
         onClose={() => this.setState({ open: false })}
         onOpen={() => this.setState({ open: true })}
         className={classes.filter}
-
         clearOnEscape
         autoComplete
         openOnFocus

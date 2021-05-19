@@ -1,5 +1,4 @@
 import React from 'react';
-import Icon from '@material-ui/core/Icon';
 import { makeStyles } from '@material-ui/core/styles';
 import Tooltip from './Tooltip';
 
@@ -33,5 +32,3 @@ export default ({ handleClick, selection }) => {
     </div>
   );
 };
-
-const styles = {};

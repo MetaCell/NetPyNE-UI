@@ -11,8 +11,8 @@ import Link from '@material-ui/core/Link';
 import Icon from '@material-ui/core/Icon';
 import { withStyles } from '@material-ui/core/styles';
 import { secondaryColor, bgLight } from '../../theme';
-import logo_netpyne from '../../static/netpyne-logo_white.png';
-import logo_metacell from '../../static/metacell_new.png';
+import logoNetpyne from '../../static/netpyne-logo_white.png';
+import logoMetaCell from '../../static/metacell_new.png';
 
 const styles = (theme) => ({
   paper: {
@@ -23,7 +23,7 @@ const styles = (theme) => ({
 
 const AboutContent = withStyles(styles)(({ classes }) => (
   <Paper className={classes.paper}>
-    <img width="250" src={logo_netpyne} />
+    <img width="250" src={logoNetpyne} />
     <Box m={1}>
       <Typography variant="h5" style={{ color: secondaryColor }}>
         NetPyNE-UI v0.6.0
@@ -66,7 +66,7 @@ const AboutContent = withStyles(styles)(({ classes }) => (
             width: 150,
             padding: '10px',
           }}
-          src={logo_metacell}
+          src={logoMetaCell}
         />
       </Link>
     </Box>
