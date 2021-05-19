@@ -3,7 +3,7 @@ import random
 from dataclasses import dataclass
 from dataclasses import field
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 
 def register(metadata):
@@ -107,11 +107,11 @@ class ExplorationParameter:
     # Type can be either 'list' or 'range'
     type: str
     # List of values of different type
-    values: List = None
+    values: Optional[List] = None
     # Range fields
-    min: float = None
-    max: float = None
-    step: float = None
+    min: Optional[float] = None
+    max: Optional[float] = None
+    step: Optional[float] = None
     # If True, parameter is added to grouped parameters
     inGroup: bool = False
     # Set in cfg.py to cfg.label = <defaultValue of netParams field>
@@ -121,7 +121,7 @@ class ExplorationParameter:
 @dataclass
 class Trial:
     # [{ "paramX": 0.2, "paramY": "0.4"}]
-    params: list
+    params: list = field(default_factory=list)
 
 
 @dataclass
@@ -141,10 +141,10 @@ class Experiment:
     initConfig: dict = field(default_factory=dict)
     method: str = "grid"
     # Part of initCfg?
-    seed: int = None
+    seed: Optional[int] = None
 
     # Folder in workspace, empty in DESIGN
-    folder: str = None
+    folder: Optional[str] = None
 
 
 @dataclass
