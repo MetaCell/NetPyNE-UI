@@ -268,7 +268,8 @@ const useStyles = (theme) => ({
   },
 });
 
-const ParameterRow = (parameter, index, handleParamSelection, handleChange, handleInputText, handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams, classes) => {
+const ParameterRow = (parameter, index, handleParamSelection, handleChange, handleInputText,
+  handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams, classes) => {
   const { RANGE } = EXPERIMENT_TEXTS;
   return (
     <Grid className="editExperimentList" container spacing={1} key={`${parameter.name}-${index}`}>
@@ -321,7 +322,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
                 id={`${parameter.name}-from`}
                 label="From"
                 variant="filled"
-                value={parameter?.minVal}
+                value={parameter?.minVal || parameter?.min}
                 onChange={(e) => handleInputText(e.target.value, index, parameter, 'min')}
                 error={parameter?.minerror}
                 helperText={parameter?.minhelperText}
@@ -333,7 +334,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
                 id={`${parameter.name}-to`}
                 label="To"
                 variant="filled"
-                value={parameter?.maxVal}
+                value={parameter?.maxVal || parameter?.max}
                 onChange={(e) => handleInputText(e.target.value, index, parameter, 'max')}
                 error={parameter?.maxerror}
                 helperText={parameter?.maxhelperText}
@@ -345,7 +346,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
                 id={`${parameter.name}-step`}
                 label="Step"
                 variant="filled"
-                value={parameter?.stepVal}
+                value={parameter?.stepVal || parameter?.step}
                 onChange={(e) => handleInputText(e.target.value, index, parameter, 'step')}
                 error={parameter?.steperror}
                 helperText={parameter?.stephelperText}
@@ -360,7 +361,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
                 id={`${parameter.name}-values`}
                 label="Values (separated with comas)"
                 variant="filled"
-                value={parameter?.val || ''}
+                value={parameter?.val || parameter?.values.join('')}
                 onChange={(e) => handleInputValues(e.target.value, index, parameter, 'val')}
                 error={parameter.error}
                 helperText={parameter.helperText}
@@ -388,6 +389,7 @@ const ExperimentEdit = (props) => {
     classes,
     setList,
     name,
+    editState
   } = props;
 
   const {
@@ -418,50 +420,64 @@ const ExperimentEdit = (props) => {
   // TODO: combine into one experiment state?
   const [groupParameters, setGroupParameters] = useState([]);
   const [experimentName, setExperimentName] = useState('');
+  const [existingName, setExistingName] = useState('');
   const [experimentError, setExperimentError] = useState(false);
-
+  const [selectionParams, setSelectionParams] = useState([]);
   // Existing Experiment.
-  const [experiment, setExperiment] = useState(null);
+  // const [experiment, setExperiment] = useState(null);
+
+  const setExperimentDetail = (exp) => {
+    // setExperiment(exp);
+    setExistingName(exp?.name);
+    setExperimentName(exp?.name);
+    if (exp?.params.length > 0) {
+      const params = [];
+      const groupParams = [];
+      exp.params.forEach((param) => {
+        if (param.inGroup) {
+          groupParams.push(param);
+        } else {
+          params.push(param);
+        }
+      });
+      setParameters(params);
+      setGroupParameters(groupParams);
+    }
+  };
 
   useEffect(() => {
-    if (name !== undefined) {
+    if (name) {
       getExperiment(name)
         .then((exp) => {
-          console.log(exp);
-          setExperiment(exp);
+          setExperimentDetail(exp);
         })
         .catch((error) => console.error(error));
     }
   }, [name]);
 
-  const create = () => {
-    // When user creates a new Experiment
+  const submit = () => {
     if (experimentName === '') {
       setExperimentError(true);
     } else {
       setExperimentError(false);
-      const newExperiment = {
+      const newExperimentDetails = {
         name: experimentName,
         params: [...parameters, ...groupParameters],
       };
-      console.log(newExperiment);
-      addExperiment(newExperiment)
-        .then((result) => {
+      if (editState) {
+        // When user updates an existing Experiment
+        editExperiment(existingName, newExperimentDetails)
+          .then(() => {
+            setList(true);
+          });
+      } else {
+        // When user creates a new Experiment
+        addExperiment(newExperimentDetails).then(() => {
           setList(true);
         });
+      }
     }
   };
-
-  const update = () => {
-    // When user edits existing Experiment
-    // TODO: use name of current Experiment
-    editExperiment('EI Populations', { name: 'New Experiment' })
-      .then((result) => {
-        console.log(result);
-      });
-  };
-
-  const [selectionParams, setSelectionParams] = useState([]);
 
   const flatten = (obj, path = '') => {
     if (!(obj instanceof Object)) return { [path.replace(/\.$/g, '')]: obj };
@@ -474,15 +490,23 @@ const ExperimentEdit = (props) => {
 
   const viewParameters = () => {
     getParameters()
-      .then((parameters) => {
+      .then((params) => {
         // netParams JSON dict
-        setSelectionParams(Object.keys(flatten(parameters)));
+        setSelectionParams(Object.keys(flatten(params)));
       });
   };
 
   useEffect(() => {
     viewParameters();
   }, []);
+
+  const setParamChange = (inGroup, param) => {
+    if (inGroup) {
+      setGroupParameters(param);
+    } else {
+      setParameters(param);
+    }
+  };
 
   const handleChange = (event, parameter, index) => {
     const newParam = parameter.inGroup ? [...groupParameters] : [...parameters];
@@ -492,7 +516,7 @@ const ExperimentEdit = (props) => {
       val: '',
     };
     newParam[index] = { ...parameter, ...newValues };
-    parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
+    setParamChange(parameter.inGroup, newParam);
   };
 
   const handleParamSelection = (val, parameter, index) => {
@@ -501,7 +525,7 @@ const ExperimentEdit = (props) => {
       ...parameter,
       mapsTo: val,
     };
-    parameter.inGroup ? setGroupParameters(newParam) : setParameters(newParam);
+    setParamChange(parameter.inGroup, newParam);
   };
 
   const addParameter = () => {
@@ -525,7 +549,7 @@ const ExperimentEdit = (props) => {
   const removeParameter = (index, parameter) => {
     const selectedParameters = parameter.inGroup ? [...groupParameters] : [...parameters];
     selectedParameters.splice(index, 1);
-    parameter.inGroup ? setGroupParameters(selectedParameters) : setParameters(selectedParameters);
+    setParamChange(parameter.inGroup, selectedParameters);
   };
 
   const removeFromGroup = (index) => {
@@ -548,7 +572,7 @@ const ExperimentEdit = (props) => {
       [`${key}error`]: invalidValue,
       [`${key}helperText`]: !invalidValue ? '' : EXPERIMENT_TEXTS.INPUT_ERR_MESSAGE,
     };
-    parameter.inGroup ? setGroupParameters(newParameters) : setParameters(newParameters);
+    setParamChange(parameter.inGroup, newParameters);
   };
 
   const handleInputValues = (val, index, parameter) => {
@@ -561,7 +585,7 @@ const ExperimentEdit = (props) => {
       error: !validValue,
       helperText: validValue ? '' : EXPERIMENT_TEXTS.INPUT_ERR_MESSAGE,
     };
-    parameter.inGroup ? setGroupParameters(newParameters) : setParameters(newParameters);
+    setParamChange(parameter.inGroup, newParameters);
   };
 
   const setExperimentNameInfo = (val) => {
@@ -574,7 +598,7 @@ const ExperimentEdit = (props) => {
       <Box className="editExperimentContainer">
         <Box my={3} className="editExperimentBack">
           <ArrowBackIcon onClick={() => setList(true)} />
-          <Typography variant="body2">New Experiment</Typography>
+          <Typography variant="body2">{!editState ? 'New Experiment' : 'Edit Experiment'}</Typography>
         </Box>
         <Box mb={2} className="editExperimentHead">
           <form noValidate autoComplete="off">
@@ -604,7 +628,9 @@ const ExperimentEdit = (props) => {
                 </Box>
                 <Box className="editExperimentRow scrollbar scrollchild">
                   {groupParameters.map((parameter, index) => (
-                    ParameterRow(parameter, index, handleParamSelection, handleChange, handleInputText, handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams, classes)
+                    ParameterRow(parameter, index, handleParamSelection, handleChange,
+                      handleInputText, handleInputValues, addToGroup, removeFromGroup,
+                      removeParameter, selectionParams, classes)
                   ))}
                 </Box>
                 {groupParameters.length === 1 && (
@@ -617,7 +643,9 @@ const ExperimentEdit = (props) => {
             {selectionParams.length > 0 && (
               <Box className="editExperimentRow">
                 {parameters.map((parameter, index) => (
-                  ParameterRow(parameter, index, handleParamSelection, handleChange, handleInputText, handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams, classes)
+                  ParameterRow(parameter, index, handleParamSelection, handleChange,
+                    handleInputText, handleInputValues, addToGroup, removeFromGroup,
+                    removeParameter, selectionParams, classes)
                 ))}
               </Box>
             )}
@@ -641,8 +669,8 @@ const ExperimentEdit = (props) => {
             <Button color="secondary" onClick={() => setList(true)}>
               Cancel
             </Button>
-            <Button variant="contained" color="primary" onClick={create}>
-              Create
+            <Button variant="contained" color="primary" onClick={submit}>
+              { editState ? 'Save' : 'Create' }
             </Button>
           </Box>
         </Box>

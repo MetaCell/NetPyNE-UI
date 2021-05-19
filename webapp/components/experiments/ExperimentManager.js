@@ -4,8 +4,17 @@ import EditExperiment from './ExperimentEdit';
 
 const ExperimentManager = () => {
   const [list, setList] = useState(true);
+  const [editState, setEditState] = useState(false);
+  const [experimentName, setExperimentName] = useState(null);
   return (
-    list ? <Experiments setList={setList} /> : <EditExperiment setList={setList} />
+    list ? (
+      <Experiments
+        setList={setList}
+        setEditState={setEditState}
+        setExperimentName={setExperimentName}
+      />
+    )
+      : <EditExperiment setList={setList} editState={editState} name={experimentName} />
   );
 };
 
