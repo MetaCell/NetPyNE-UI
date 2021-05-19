@@ -34,7 +34,7 @@ export default class NetPyNEConnectivityRules extends Component {
     this.handleRenameChildren = this.handleRenameChildren.bind(this);
   }
 
-  handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
+  handleToggle = () => this.setState((prevState) => ({ drawerOpen: !prevState.drawerOpen }));
 
   selectPage (page) {
     this.setState({ page });
@@ -55,6 +55,7 @@ export default class NetPyNEConnectivityRules extends Component {
     // Get Key and Value
     const key = Object.keys(defaultConnectivityRules)[0];
     const value = defaultConnectivityRules[key];
+    // eslint-disable-next-line react/no-access-state-in-setstate
     const model = { ...this.state.value };
 
     // Get New Available ID

@@ -67,11 +67,12 @@ export default class NetPyNEInclude extends Component {
     let answer = '';
     if (include.exclusive) {
       return `${include.exclusive} -- ${data.gids} cells -- all NetStims`;
-    } if (include.groups.indexOf('allCells') > -1) {
+    }
+    if (include.groups.indexOf('allCells') > -1) {
       if (include.groups.indexOf('allNetStims') == -1) {
         return `allCells -- ${data.gids} cells`;
       }
-      return `${'all' + ' -- '}${data.gids} cells -- all NetStims`;
+      return `all -- ${data.gids} cells -- all NetStims`;
     }
     include.groups.forEach((group) => {
       if (group != 'allNetStims') {
@@ -171,15 +172,15 @@ export default class NetPyNEInclude extends Component {
       });
 
     if ((open || this.state.mainPopoverOpen) && !(open && this.state.mainPopoverOpen)) {
-      this.setState({
+      this.setState((prevState) => ({
         mainPopoverOpen: open,
         secondPopoverOpen: clone,
-        anchorEl: target || this.state.anchorEl,
-      });
+        anchorEl: target || prevState.anchorEl,
+      }));
     }
     if (!open) {
       this.sendToPython();
-      this.setState({ label: this.whoIsIncluded(this.state.include, this.state.data) });
+      this.setState((prevState) => ({ label: this.whoIsIncluded(prevState.include, prevState.data) }));
     }
   };
 
@@ -195,11 +196,10 @@ export default class NetPyNEInclude extends Component {
       });
 
     if (!this.checkEqual(clone, this.state.secondPopoverOpen)) {
-      this.setState({
+      this.setState((prevState) => ({
         secondPopoverOpen: clone,
-        anchorEl2: target || this.state.anchorEl,
-      });
-    } else {
+        anchorEl2: target || prevState.anchorEl,
+      }));
     }
   };
 
@@ -318,6 +318,7 @@ export default class NetPyNEInclude extends Component {
   };
 
   handleSecondaryMenusClick = (group, name, item) => {
+    // eslint-disable-next-line react/no-access-state-in-setstate
     const clone = { ...this.state.include };
     if (group == 'gids') {
       clone[group].indexOf(item) == -1 ? clone[group].push(item) : clone[group].splice(clone[group].indexOf(item), 1);
@@ -341,7 +342,8 @@ export default class NetPyNEInclude extends Component {
   IsSecondaryMenuChecked = (group, name, index) => {
     if (group == 'gids') {
       return this.state.include[group].indexOf(index) > -1;
-    } if (group == 'popids') {
+    }
+    if (group == 'popids') {
       if (name in this.state.include[group]) {
         return this.state.include[group][name].indexOf(index) > -1;
       }

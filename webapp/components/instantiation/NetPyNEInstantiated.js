@@ -114,6 +114,7 @@ export default class NetPyNEInstantiated extends React.Component {
     if (this.canvasRef.current === null) {
       return false;
     }
+    // eslint-disable-next-line react/no-find-dom-node
     const node = ReactDOM.findDOMNode(this);
     return node.parentNode.getBoundingClientRect();
   }

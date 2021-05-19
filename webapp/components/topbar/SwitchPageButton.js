@@ -25,6 +25,11 @@ const styles = ({
 });
 
 class SwitchPageButton extends Component {
+  constructor (props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
   handleClick = (event) => {
     const instantiate = this.props.automaticInstantiation || this.props.modelState === MODEL_STATE.NOT_INSTANTIATED;
     if (!this.props.editModelPage) {
@@ -95,7 +100,7 @@ class SwitchPageButton extends Component {
           variant="contained"
           size="small"
           className={classes.button}
-          onClick={this.handleClick.bind(this)}
+          onClick={this.handleClick}
           endIcon={<Icon name={editModelPage ? 'rocket' : 'pencil'} selected={false} />}
         >
           {editModelPage ? this.getExploreLabel() : TOPBAR_CONSTANTS.BACK_TO_EDITION}

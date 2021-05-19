@@ -18,7 +18,10 @@ const styles = ({ spacing, shape }) => ({
   listbox: { color: 'white', maxHeight: '20vh' },
 });
 class Filter extends Component {
-  state = { open: false }
+  constructor (props) {
+    super(props);
+    this.state = { open: false };
+  }
 
   render () {
     const {

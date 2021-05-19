@@ -52,6 +52,10 @@ module.exports = {
     'react/no-did-update-set-state': 1,
     'react/no-string-refs': 1,
     'no-multi-assign': 1,
+    'guard-for-in': 1,
+    'no-unused-expressions': 1,
+    'no-control-regex': 1,
+    'no-loop-func': 1,
   },
   globals: {
     page: true,
