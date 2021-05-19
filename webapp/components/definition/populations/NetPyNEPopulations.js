@@ -247,7 +247,7 @@ export default class NetPyNEPopulations extends React.Component {
           />
         ));
 
-      var selectedPopulation = undefined;
+      var selectedPopulation;
       if (
         this.state.selectedPopulation !== undefined
         && Object.keys(model)

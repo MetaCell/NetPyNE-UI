@@ -246,7 +246,7 @@ export default class NetPyNEConnectivityRules extends Component {
           />
         ));
 
-      var selectedConnectivityRule = undefined;
+      var selectedConnectivityRule;
       if (
         this.state.selectedConnectivityRule !== undefined
         && Object.keys(model)

@@ -120,14 +120,14 @@ class ImportExportHLS extends React.Component {
           newState.loadMod = true;
           break;
         default:
-          throw ('Not a valid parameter!');
+          throw Error('Not a valid parameter!');
       }
     }
     this.setState({ ...newState });
   }
 
   getDirAndModuleFromPath (fullpath) {
-    const fileName = fullpath.replace(/^.*[\\\/]/, '');
+    const fileName = fullpath.replace(/^.*[\\/]/, '');
     const moduleName = fileName.replace(/\.[^/.]+$/, '');
     const dirPath = fullpath.split(fileName)
       .slice(0, -1)

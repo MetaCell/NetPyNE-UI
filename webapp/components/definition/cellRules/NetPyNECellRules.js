@@ -804,6 +804,7 @@ export default class NetPyNECellRules extends React.Component {
         break;
       }
       default: {
+        break;
       }
     }
     return 'undefined';

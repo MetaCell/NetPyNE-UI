@@ -330,7 +330,6 @@ export default class NetPyNEInclude extends Component {
       if (clone.groups.indexOf(name) > -1) { // when selecting individuals, remove population selection
         clone.groups.splice(clone.groups.indexOf(name), 1);
       }
-    } else {
     }
     clone.exclusive = false;
     if (clone.groups.indexOf('allCells') > -1 && name != 'allNetStims') {

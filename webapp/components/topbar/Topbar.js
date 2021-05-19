@@ -32,9 +32,12 @@ const styles = () => ({
 });
 
 class Topbar extends Component {
-  state = { openSnackBar: false };
-
   snackBarMessage = '';
+
+  constructor (props) {
+    super(props);
+    this.state = { openSnackBar: false };
+  }
 
   menuHandler (click) {
     if (!click) {
@@ -171,6 +174,9 @@ class Topbar extends Component {
               mode="DOWNLOAD"
             />
           );
+          break;
+        default:
+          content = <div />;
           break;
       }
     }
