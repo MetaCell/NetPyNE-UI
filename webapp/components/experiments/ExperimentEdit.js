@@ -361,7 +361,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
                 id={`${parameter.name}-values`}
                 label="Values (separated with comas)"
                 variant="filled"
-                value={parameter?.val || parameter?.values.join('')}
+                value={parameter?.val || parameter?.values.join()}
                 onChange={(e) => handleInputValues(e.target.value, index, parameter, 'val')}
                 error={parameter.error}
                 helperText={parameter.helperText}
@@ -579,7 +579,7 @@ const ExperimentEdit = (props) => {
     newParameters[index] = {
       ...parameter,
       val,
-      values: [...val],
+      values: val.split(','),
       error: !validValue,
       helperText: validValue ? '' : EXPERIMENT_TEXTS.INPUT_ERR_MESSAGE,
     };
