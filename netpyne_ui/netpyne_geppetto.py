@@ -8,7 +8,6 @@ import importlib
 import json
 import logging
 import os
-import pickle
 import re
 import sys
 from shutil import copyfile, move
@@ -112,13 +111,14 @@ class NetPyNEGeppetto:
     def simulateNetPyNEModelInGeppetto(self, args):
         try:
             with redirect_stdout(sys.__stdout__):
-                if args.get("complete", None):
+                # if args.get("complete", None):
+                if True:
                     if simulations.local.is_running():
                         return utils.getJSONError("Simulation is already running", "")
 
                     try:
                         # TODO: Use the selected experiment
-                        experiment = model.Experiment(name="Test")
+                        experiment = experiments.model.experiments[0]
                         working_directory = self._prepare_batch_files(experiment)
                     except OSError:
                         return utils.getJSONError("The specified folder already exists", "")
@@ -137,7 +137,7 @@ class NetPyNEGeppetto:
                         return utils.getJSONError(str(e), "")
 
                     message = "Experiment started in background! " \
-                              f"Results will be stored in your workspace at ./{self.batch_config.name}"
+                              f"Results will be stored in your workspace at ./{experiment.name}"
 
                     return utils.getJSONError(message, "")
                 else:
@@ -197,7 +197,10 @@ class NetPyNEGeppetto:
         copyfile(template, f'./{constants.SIMULATION_SCRIPT_NAME}')
 
     def _prepare_batch_files(self, experiment):
-        self.simConfig.mapping = [dataclasses.asdict(p) for p in experiment.params]
+        # param path must be split: [ {'label': ['synMechParams', 'AMPA', 'gmax']} ]
+        # TODO: how do we handle array index? ['array', '[0]'] or ['array', '0']?
+        self.netParams.mapping = [{p.label: p.label.split('.')} for p in experiment.params]
+        self.simConfig.saveJson = True
 
         for param in experiment.params:
             if param.type == "range":
@@ -206,37 +209,30 @@ class NetPyNEGeppetto:
         config_dict = dataclasses.asdict(experiment)
         config_dict["runCfg"] = dataclasses.asdict(self.run_config)
 
-        save_folder_path = os.path.join(constants.BATCHES_FOLDER, experiment.name)
+        save_folder_path = os.path.join(constants.EXPERIMENTS_FOLDER, experiment.name)
         try:
             os.makedirs(save_folder_path)
         except OSError:
             raise
 
-        os.path.join(os.path.dirname(__file__), "templates", "batchConfig.json")
+        sim_config_path = os.path.join(os.path.dirname(__file__), "templates", "simConfig.json")
+        net_params_path = os.path.join(os.path.dirname(__file__), "templates", "netParams.json")
+        self.simConfig.save(sim_config_path)
+        self.netParams.save(net_params_path)
 
         # Configuration of batch.py in json format
         batch_config_json = os.path.join(os.path.dirname(__file__), "templates", "batchConfig.json")
-        json.dump(config_dict, open(batch_config_json, 'w'))
+        json.dump(config_dict, open(batch_config_json, 'w'), default=str, sort_keys=True, indent=4)
         move(batch_config_json, os.path.join(save_folder_path, 'batchConfig.json'))
-
-        # Pickle files of netParams and cfg dicts
-        net_params_pkl = os.path.join(os.path.dirname(__file__), "templates", 'netParams.pkl')
-        cfg_pkl = os.path.join(os.path.dirname(__file__), "templates", 'cfg.pkl')
-        pickle.dump(self.netParams, open(net_params_pkl, "wb"))
-        pickle.dump(self.simConfig, open(cfg_pkl, "wb"))
-        move(net_params_pkl, os.path.join(save_folder_path, 'netParams.pkl'))
-        move(cfg_pkl, os.path.join(save_folder_path, 'cfg.pkl'))
 
         # Python template files
         template_single_run = os.path.join(os.path.dirname(__file__), "templates", 'batch_run_single.py')
         template_batch = os.path.join(os.path.dirname(__file__), "templates", 'batch.py')
-        cfg = os.path.join(os.path.dirname(__file__), "templates", 'batch_cfg.py')
-        net_params = os.path.join(os.path.dirname(__file__), "templates", 'batch_netParams.py')
 
         copyfile(template_single_run, os.path.join(save_folder_path, 'run.py'))
         copyfile(template_batch, os.path.join(save_folder_path, constants.SIMULATION_SCRIPT_NAME))
-        copyfile(cfg, os.path.join(save_folder_path, 'cfg.py'))
-        copyfile(net_params, os.path.join(save_folder_path, 'netParams.py'))
+        copyfile(sim_config_path, os.path.join(save_folder_path, 'simConfig.json'))
+        copyfile(net_params_path, os.path.join(save_folder_path, 'netParams.json'))
 
         return save_folder_path
 

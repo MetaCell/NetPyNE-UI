@@ -161,11 +161,11 @@ class RunConfig:
 # Dummy data for frontend.
 experiments = [
     Experiment(
-        name="EI Populations",
+        name="EI-Populations",
         state="DESIGN",
         params=[
             ExplorationParameter(
-                label="weight",
+                label="cellParams.pyr.secs.soma.geom.L",
                 # TODO: Fix json parsing issue
                 # mapsTo="netParams.connParams['E->E']['weight']",
                 mapsTo="",
@@ -173,7 +173,7 @@ experiments = [
                 values=[1, 2, 3, 4]
             ),
             ExplorationParameter(
-                label="probability",
+                label="stimTargetParams.IClamp1->cell0.sec",
                 # mapsTo="netParams.connParams['E->E']['probability']",
                 mapsTo="",
                 type="range",

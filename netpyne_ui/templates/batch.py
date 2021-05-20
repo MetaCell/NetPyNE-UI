@@ -17,9 +17,17 @@ params = specs.ODict()
 for param in batch_config["params"]:
     params[param["label"]] = param['values']
 
+with open("netParams.json", "r") as f:
+    net_params = json.load(f)
+    net_params = specs.NetParams(net_params['net']['params'])
+
+with open("simConfig.json", "r") as f:
+    sim_config = json.load(f)
+    sim_config = specs.SimConfig(sim_config)
+
 batch = Batch(
-    cfgFile="cfg.py",
-    netParamsFile="netParams.py",
+    cfg=sim_config,
+    netParams=net_params,
     params=params,
     seed=batch_config.get("seed", None)
 )

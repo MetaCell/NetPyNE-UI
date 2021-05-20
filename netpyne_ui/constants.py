@@ -2,7 +2,7 @@ import os
 
 UPLOAD_FOLDER_NAME = 'uploads'
 NETPYNE_WORKDIR = 'workspace'
-BATCHES_FOLDER = "./batches"
+EXPERIMENTS_FOLDER = "./experiments"
 MODEL_OUTPUT_FILENAME = 'model_output'
 
 SIMULATION_SCRIPT_NAME = "init.py"
