@@ -117,9 +117,13 @@ class NetPyNEGeppetto:
                         return utils.getJSONError("Simulation is already running", "")
 
                     try:
-                        # TODO: Use the selected experiment
-                        experiment = experiments.model.experiments[0]
+                        experiment = experiments.get_current()
+                        if experiment is None:
+                            return utils.getJSONError("Experiment does not exist", "")
+
                         working_directory = self._prepare_batch_files(experiment)
+                        experiment.folder = working_directory
+
                     except OSError:
                         return utils.getJSONError("The specified folder already exists", "")
 
@@ -220,19 +224,17 @@ class NetPyNEGeppetto:
         self.simConfig.save(sim_config_path)
         self.netParams.save(net_params_path)
 
-        # Configuration of batch.py in json format
         batch_config_json = os.path.join(os.path.dirname(__file__), "templates", "batchConfig.json")
         json.dump(config_dict, open(batch_config_json, 'w'), default=str, sort_keys=True, indent=4)
-        move(batch_config_json, os.path.join(save_folder_path, 'batchConfig.json'))
 
-        # Python template files
+        move(batch_config_json, os.path.join(save_folder_path, 'batchConfig.json'))
+        move(sim_config_path, os.path.join(save_folder_path, 'simConfig.json'))
+        move(net_params_path, os.path.join(save_folder_path, 'netParams.json'))
+
         template_single_run = os.path.join(os.path.dirname(__file__), "templates", 'batch_run_single.py')
         template_batch = os.path.join(os.path.dirname(__file__), "templates", 'batch.py')
-
         copyfile(template_single_run, os.path.join(save_folder_path, 'run.py'))
         copyfile(template_batch, os.path.join(save_folder_path, constants.SIMULATION_SCRIPT_NAME))
-        copyfile(sim_config_path, os.path.join(save_folder_path, 'simConfig.json'))
-        copyfile(net_params_path, os.path.join(save_folder_path, 'netParams.json'))
 
         return save_folder_path
 

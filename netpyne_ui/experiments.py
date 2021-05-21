@@ -40,6 +40,13 @@ def edit_experiment(name: str, experiment: dict):
     _add_experiment(updated_exp)
 
 
+def get_current():
+    return next(
+        (exp for exp in model.experiments if exp.state == model.ExperimentState.DESIGN),
+        None
+    )
+
+
 def _add_experiment(experiment: model.Experiment):
     if _get_by_name(experiment.name):
         raise ExperimentsError(f"Experiment {experiment.name} already exists")
