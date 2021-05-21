@@ -1,5 +1,6 @@
 import dataclasses
 import json
+import shutil
 
 from typing import List
 from dacite import from_dict
@@ -39,6 +40,7 @@ def get_experiment(name: str) -> dict:
 def remove_experiment(name: str):
     experiment = _get_by_name(name)
     if experiment:
+        _delete_experiment_folder(experiment)
         model.experiments.remove(experiment)
 
 
@@ -114,7 +116,20 @@ def _parse_experiment(directory) -> model.Experiment:
     del batch_config['timestamp']
 
     experiment = from_dict(model.Experiment, batch_config)
+    experiment.folder = directory
 
     # TODO: how do we determine the simulation status?
     experiment.state = model.ExperimentState.SIMULATED
     return experiment
+
+
+def _delete_experiment_folder(experiment):
+    """ Recursively deletes the associated experiment folder. """
+
+    def onerror(func, path, exc_info):
+        # TODO: error handling
+        pass
+
+    if experiment.folder:
+        path = join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, experiment.folder)
+        shutil.rmtree(path, onerror=onerror)
