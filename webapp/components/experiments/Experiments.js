@@ -134,6 +134,8 @@ const Experiments = (props) => {
     getExperiments,
     classes,
     setList,
+    setEditState,
+    setExperimentName
   } = props;
 
   const POLL_INTERVAL = 1000;
@@ -161,7 +163,15 @@ const Experiments = (props) => {
 
   const createExperimentScreen = (actionConfirmed) => {
     setDialogOpen(false);
+    setEditState(false);
+    setExperimentName(null);
     setList(!actionConfirmed);
+  };
+
+  const openEditExperiment = (name) => {
+    setExperimentName(name);
+    setEditState(true);
+    setList(false);
   };
 
   return (
@@ -191,12 +201,13 @@ const Experiments = (props) => {
                         </Typography>
                       </TableCell>
                       <TableCell align="left" className="experimentTableCell">
-                        {(experiment?.state === EXPERIMENT_STATE.SIMULATING || experiment?.state === EXPERIMENT_STATE.INSTANTIATING)
+                        {(experiment?.state === EXPERIMENT_STATE.SIMULATING
+                        || experiment?.state === EXPERIMENT_STATE.INSTANTIATING)
                           ? (
                             <Chip
-                              icon={<Box className="MuiChipLoader"/>}
+                              icon={<Box className="MuiChipLoader" />}
                               label={experiment?.state}
-                              deleteIcon={<CancelRoundedIcon/>}
+                              deleteIcon={<CancelRoundedIcon />}
                               onDelete={() => {
                               }}
                             />
@@ -210,21 +221,25 @@ const Experiments = (props) => {
                       <TableCell align="right">
                         <Button
                           className="experimentIcon"
-                          onClick={viewExperiment}
+                          onClick={
+                            experiment?.state === EXPERIMENT_STATE.DESIGN
+                              ? () => openEditExperiment(experiment?.name) : viewExperiment
+                          }
                         >
                           {experiment?.state === EXPERIMENT_STATE.DESIGN
-                            ? <EditIcon/> : <FileCopyOutlinedIcon/>}
+                            ? <EditIcon />
+                            : <FileCopyOutlinedIcon />}
                         </Button>
                       </TableCell>
                       <TableCell align="center">
-                        <Divider orientation="vertical"/>
+                        <Divider orientation="vertical" />
                       </TableCell>
                       <TableCell align="right">
                         <Button
                           className="experimentIcon"
                           onClick={cleanExperiment}
                         >
-                          <ReplayIcon/>
+                          <ReplayIcon />
                         </Button>
                       </TableCell>
                       <TableCell align="right">
@@ -232,7 +247,7 @@ const Experiments = (props) => {
                           className="experimentIcon"
                           onClick={deleteExperiment}
                         >
-                          <DeleteIcon/>
+                          <DeleteIcon />
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -252,7 +267,7 @@ const Experiments = (props) => {
           <Box>
             <Button
               color="primary"
-              startIcon={<AddIcon/>}
+              startIcon={<AddIcon />}
               onClick={() => setDialogOpen(true)}
             >
               CREATE NEW EXPERIMENT
