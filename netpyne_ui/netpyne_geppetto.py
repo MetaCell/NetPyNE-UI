@@ -213,7 +213,7 @@ class NetPyNEGeppetto:
         config_dict = dataclasses.asdict(experiment)
         config_dict["runCfg"] = dataclasses.asdict(self.run_config)
 
-        save_folder_path = os.path.join(constants.EXPERIMENTS_FOLDER, experiment.name)
+        save_folder_path = os.path.join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, experiment.name)
         try:
             os.makedirs(save_folder_path)
         except OSError:
