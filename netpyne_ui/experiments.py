@@ -1,5 +1,7 @@
 import dataclasses
+import datetime
 import json
+import logging
 import shutil
 
 from typing import List
@@ -20,7 +22,7 @@ def get_experiments() -> List[dict]:
     stored_experiments = _scan()
     model.experiments = [
         e for e in model.experiments if
-        e.state in (model.ExperimentState.DESIGN, model.ExperimentState.ERROR)
+        e.state in model.ExperimentState.DESIGN
     ]
     model.experiments.extend(stored_experiments)
 
@@ -81,7 +83,15 @@ def _scan() -> [model.Experiment]:
         if isdir(join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, f))
     ])
 
-    experiments = [_parse_experiment(directory) for directory in dirs]
+    experiments = []
+    for directory in dirs:
+        try:
+            experiment = _parse_experiment(directory)
+        except ExperimentsError:
+            logging.exception(f"Failed to parse experiment {directory}")
+        else:
+            experiments.append(experiment)
+
     return experiments
 
 
@@ -95,13 +105,15 @@ def _parse_experiment(directory) -> model.Experiment:
         * json file for each trial in case of batch
         * output files for each trial (if available)
 
+    :raises ExperimentsError
     """
     path = join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, directory)
 
-    # TODO: implement error handling
-
-    with open(join(path, 'batchConfig.json'), 'r') as f:
-        batch_config = json.load(f)
+    try:
+        with open(join(path, 'batchConfig.json'), 'r') as f:
+            batch_config = json.load(f)
+    except IOError:
+        raise ExperimentsError("Could not find batchConfig.json")
 
     with open(join(path, 'netParams.json'), 'r') as f:
         net_params = json.load(f)
@@ -112,14 +124,11 @@ def _parse_experiment(directory) -> model.Experiment:
     run_cfg = batch_config['runCfg']
     del batch_config['runCfg']
 
-    # TODO: Fix timestamp parsing
-    del batch_config['timestamp']
+    # Convert timestamp to datetime
+    batch_config['timestamp'] = datetime.datetime.fromisoformat(batch_config['timestamp'])
 
     experiment = from_dict(model.Experiment, batch_config)
     experiment.folder = directory
-
-    # TODO: how do we determine the simulation status?
-    experiment.state = model.ExperimentState.SIMULATED
     return experiment
 
 

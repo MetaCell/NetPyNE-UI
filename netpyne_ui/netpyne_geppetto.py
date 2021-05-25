@@ -121,9 +121,11 @@ class NetPyNEGeppetto:
                         if experiment is None:
                             return utils.getJSONError("Experiment does not exist", "")
 
+                        # Update state to SIMULATING
+                        # User is not able to trigger further simulation of an experiment
+                        experiment.state = model.ExperimentState.SIMULATING
+                        # From hereon, experiment state is stored in filesystem.
                         working_directory = self._prepare_batch_files(experiment)
-                        experiment.folder = working_directory
-
                     except OSError:
                         return utils.getJSONError("The specified folder already exists", "")
 
@@ -203,12 +205,14 @@ class NetPyNEGeppetto:
     def _prepare_batch_files(self, experiment):
         # param path must be split: [ {'label': ['synMechParams', 'AMPA', 'gmax']} ]
         # TODO: how do we handle array index? ['array', '[0]'] or ['array', '0']?
-        self.netParams.mapping = [{p.label: p.label.split('.')} for p in experiment.params]
-        self.simConfig.saveJson = True
+        experiment.params = [p for p in experiment.params if p.label != '']
 
         for param in experiment.params:
             if param.type == "range":
                 param.values = list(np.arange(param.min, param.max, param.step))
+
+        self.netParams.mapping = [{p.label: p.label.split('.')} for p in experiment.params]
+        self.simConfig.saveJson = True
 
         config_dict = dataclasses.asdict(experiment)
         config_dict["runCfg"] = dataclasses.asdict(self.run_config)

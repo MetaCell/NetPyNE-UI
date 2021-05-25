@@ -62,4 +62,10 @@ batch.run()
 if run_cfg['type'] == 'mpi_bulletin':
     pc = h.ParallelContext()
     pc.done()
+
+    # Update simulation status
+    batch_config['state'] = 'SIMULATED'
+    with open("batchConfig.json", "w") as f:
+        json.dump(batch_config, f, default=str, sort_keys=True, indent=4)
+
     sys.exit(0)
