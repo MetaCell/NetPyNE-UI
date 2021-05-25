@@ -6,6 +6,7 @@ import {
   Table,
   TableBody,
   Button,
+  IconButton,
   TableCell,
   TableHead,
   TableRow,
@@ -110,6 +111,9 @@ const useStyles = (theme) => ({
         width: theme.spacing(0.8),
         height: theme.spacing(0.8),
       },
+      '& .MuiTableLayout-fixed': {
+        tableLayout: 'fixed',
+      },
       '& .MuiTableCell-root': {
         padding: theme.spacing(1.4, 4),
         '&:last-child': {
@@ -145,11 +149,23 @@ const useStyles = (theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-end',
-        '& *': {
-          marginLeft: theme.spacing(2.5),
+        '& .MuiIconButton-root': {
+          padding: '0.25rem',
+          marginLeft: theme.spacing(2.6),
+          color: experimentGrey,
+          '&:hover': {
+            borderRadius: theme.spacing(0.4),
+          }
+        },
+        '& .MuiDivider-root': {
+          marginLeft: theme.spacing(2.6),
         },
         '& .MuiSvgIcon-assessment': {
           color: primaryColor,
+        },
+        '& .MuiSvgIcon-replay': {
+          fontSize: '1.2rem',
+          transform: 'rotate(-65deg)',
         },
       },
       '& .MuiTableRow-head': {
@@ -281,21 +297,24 @@ const ExperimentView = (props) => {
   const filterRows = (arr, criteria) => {
     let count;
     const filterWithoutEmpties = criteria.filter((f) => f.param && f.value);
-    // Helper function to loop through the filter criteria to find matching values
-    // Each filter criteria is treated as "AND"
-    const matchesFilter = (item) => {
-      count = 0;
-      // for filtering consider only those filter criterias where both parameter
-      // and value has been provided
-      filterWithoutEmpties.forEach((f) => {
-        if (f.value.indexOf(item[f.param]) > -1) {
-          count += 1;
-        }
-      });
-      // If TRUE, then the current item in the array meets all the filter criteria
-      return count === filterWithoutEmpties.length;
-    };
-    return arr.filter((item) => matchesFilter(item));
+    if (filterWithoutEmpties.length > 0) {
+      // Helper function to loop through the filter criteria to find matching values
+      // Each filter criteria is treated as "AND"
+      const matchesFilter = (item) => {
+        count = 0;
+        // for filtering consider only those filter criterias where both parameter
+        // and value has been provided
+        filterWithoutEmpties.forEach((f) => {
+          if (Number(f.value) === item[f.param]) {
+            count += 1;
+          }
+        });
+        // If TRUE, then the current item in the array meets all the filter criteria
+        return count === filterWithoutEmpties.length;
+      };
+      return arr.filter((item) => matchesFilter(item));
+    }
+    return arr;
   };
 
   const setParameterValue = (val, index) => {
@@ -367,7 +386,7 @@ const ExperimentView = (props) => {
             <Typography variant="h5">Experiment Trials</Typography>
           </Box>
           <TableContainer>
-            <Table aria-label="simple table">
+            <Table aria-label="simple table" className="MuiTableLayout-fixed">
               <EnhancedTableHead
                 order={order}
                 orderBy={orderBy}
@@ -390,10 +409,10 @@ const ExperimentView = (props) => {
                     }
                     <TableCell align="right" className={classes.stickyRight}>
                       <Box className="MuiTableCell-actions">
-                        <AssessmentIcon className="MuiSvgIcon-assessment" />
+                        <IconButton><AssessmentIcon className="MuiSvgIcon-assessment" /></IconButton>
                         <Divider orientation="vertical" />
-                        <CodeIcon />
-                        <ReplayIcon />
+                        <IconButton><CodeIcon /></IconButton>
+                        <IconButton><ReplayIcon className="MuiSvgIcon-replay" /></IconButton>
                       </Box>
                     </TableCell>
                   </TableRow>

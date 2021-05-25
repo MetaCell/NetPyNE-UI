@@ -15,6 +15,7 @@ import AddIcon from '@material-ui/icons/Add';
 import {
   fontColor,
   primaryColor,
+  secondaryColor,
   radius,
   experimentInputColor,
   experimentLabelColor,
@@ -24,6 +25,18 @@ import {
 const useStyles = () => ({
   root: {
     '&.MuiPopover-filter': {
+      '& .MuiPopover-paper': {
+        '&::-webkit-scrollbar-thumb': {
+          background: secondaryColor,
+          height: '0.5rem',
+          borderRadius: '0.5rem',
+        },
+        '&::-webkit-scrollbar': {
+          width: '0.5rem',
+          height: '0.5rem',
+          borderRadius: '0.5rem',
+        },
+      },
       '& .popoverFormControl': {
         width: '26.25rem',
         padding: '1rem',
