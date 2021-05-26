@@ -17,7 +17,10 @@ const styles = () => ({
 });
 
 class ActionDialog extends React.Component {
-  state = { hide: !this.props.openErrorDialogBox && !this.props.openDialog };
+  constructor (props) {
+    super(props);
+    this.state = { hide: !this.props.openErrorDialogBox && !this.props.openDialog };
+  }
 
   performAction = () => {
     if (this.props.command) {

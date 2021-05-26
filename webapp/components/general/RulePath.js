@@ -25,9 +25,12 @@ const styles = ({
 });
 
 class RulePath extends Component {
-  state = { open: false };
-
   textAreaRef = createRef();
+
+  constructor (props) {
+    super(props);
+    this.state = { open: false };
+  }
 
   copyCodeToClipboard = () => {
     const el = this.textAreaRef.current;

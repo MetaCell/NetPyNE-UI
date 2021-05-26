@@ -143,7 +143,9 @@ export const NetPyNECellRule = connect(
     updates: state.general.updates,
   }),
   (dispatch) => ({
-    openTopbarDialog: (cellTemplateName) => dispatch(openTopbarDialog(TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE, { cellRuleName: cellTemplateName })),
+    openTopbarDialog: (cellTemplateName) => dispatch(
+      openTopbarDialog(TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE, { cellRuleName: cellTemplateName }),
+    ),
     updateCards: () => dispatch(updateCards),
   }),
 )(_NetPyNECellRule);
@@ -321,7 +323,11 @@ export const Dialog = connect(
 
 export const SelectCellTemplate = connect(
   null,
-  (dispatch) => ({ openTopbarDialog: (cellTemplateName) => dispatch(openTopbarDialog(TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE, { cellRuleName: cellTemplateName })) }),
+  (dispatch) => ({
+    openTopbarDialog: (cellTemplateName) => dispatch(
+      openTopbarDialog(TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE, { cellRuleName: cellTemplateName }),
+    ),
+  }),
 )(_SelectCellTemplate);
 // ---------------------------------------------------------------------------------------- //
 

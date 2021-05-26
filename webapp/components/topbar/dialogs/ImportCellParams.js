@@ -75,7 +75,7 @@ class ImportCellParams extends React.Component {
           newState.modFolder = fieldValue.path;
           break;
         default:
-          throw ('Not a valid parameter!');
+          throw Error('Not a valid parameter!');
       }
     }
     this.setState(newState);

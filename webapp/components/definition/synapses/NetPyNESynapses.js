@@ -43,6 +43,7 @@ export default class NetPyNESynapses extends Component {
     const defaultSynapses = { Synapse: { mod: 'Exp2Syn' } };
     const key = Object.keys(defaultSynapses)[0];
     const value = defaultSynapses[key];
+    // eslint-disable-next-line react/no-access-state-in-setstate
     const model = { ...this.state.value };
     const SynapseId = Utils.getAvailableKey(model, key);
     const newSynapse = { name: SynapseId, ...value };

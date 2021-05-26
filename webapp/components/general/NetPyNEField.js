@@ -138,19 +138,18 @@ export default class NetPyNEField extends Component {
         extraProps.type = type;
       }
 
-      if (name == 'PythonControlledControl') {
-        var realType = Utils.getMetadataField(this.props.id, 'type');
+      let realType;
+      if (name === 'PythonControlledControl') {
+        realType = Utils.getMetadataField(this.props.id, 'type');
         extraProps.realType = realType;
       }
 
-      const hintText = Utils.getMetadataField(this.props.id, 'hintText');
-
-      let default_value = Utils.getMetadataField(this.props.id, 'default');
-      if (default_value) {
+      let defaultValue = Utils.getMetadataField(this.props.id, 'default');
+      if (defaultValue) {
         if (realType === 'dict' || realType === 'dict(dict)') {
-          default_value = JSON.parse(default_value);
+          defaultValue = JSON.parse(defaultValue);
         }
-        extraProps.default = default_value;
+        extraProps.default = defaultValue;
       }
 
       const options = Utils.getMetadataField(this.props.id, 'options');

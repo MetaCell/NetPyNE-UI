@@ -32,9 +32,13 @@ const styles = () => ({
 });
 
 class Topbar extends Component {
-  state = { openSnackBar: false };
-
   snackBarMessage = '';
+
+  constructor (props) {
+    super(props);
+    this.state = { openSnackBar: false };
+    this.menuHandler = this.menuHandler.bind(this);
+  }
 
   menuHandler (click) {
     if (!click) {
@@ -172,6 +176,9 @@ class Topbar extends Component {
             />
           );
           break;
+        default:
+          content = <div />;
+          break;
       }
     }
 
@@ -180,7 +187,7 @@ class Topbar extends Component {
         <div className={this.props.classes.topbar}>
           <Menu
             configuration={toolbarConfig}
-            menuHandler={this.menuHandler.bind(this)}
+            menuHandler={this.menuHandler}
           />
           <div>
 

@@ -50,6 +50,7 @@ export default class NetPyNEStimulationTargets extends Component {
     };
     const key = Object.keys(defaultStimulationTargets)[0];
     const value = defaultStimulationTargets[key];
+    // eslint-disable-next-line react/no-access-state-in-setstate
     const model = { ...this.state.value };
     const StimulationTargetId = Utils.getAvailableKey(model, key);
     const newStimulationTarget = {
