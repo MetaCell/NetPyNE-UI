@@ -15,7 +15,7 @@ with open("batchConfig.json", "r") as f:
 # Map params to netpyne format
 params = specs.ODict()
 for param in batch_config["params"]:
-    params[param["label"]] = param['values']
+    params[param["mapsTo"]] = param['values']
 
 with open("netParams.json", "r") as f:
     net_params = json.load(f)

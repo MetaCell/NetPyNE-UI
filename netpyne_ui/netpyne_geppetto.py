@@ -205,13 +205,13 @@ class NetPyNEGeppetto:
     def _prepare_batch_files(self, experiment):
         # param path must be split: [ {'label': ['synMechParams', 'AMPA', 'gmax']} ]
         # TODO: how do we handle array index? ['array', '[0]'] or ['array', '0']?
-        experiment.params = [p for p in experiment.params if p.label != '']
+        experiment.params = [p for p in experiment.params if p.mapsTo != '']
 
         for param in experiment.params:
             if param.type == "range":
                 param.values = list(np.arange(param.min, param.max, param.step))
 
-        self.netParams.mapping = [{p.label: p.label.split('.')} for p in experiment.params]
+        self.netParams.mapping = {p.mapsTo: p.mapsTo.split('.') for p in experiment.params}
         self.simConfig.saveJson = True
 
         config_dict = dataclasses.asdict(experiment)
