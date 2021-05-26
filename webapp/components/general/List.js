@@ -41,11 +41,12 @@ class ListComponent extends Component {
         break;
       case 'list(list(float))':
         var valid = true;
-        value.split(',').forEach((element) => {
-          if (!element.match(/^-?\d*(\.\d+)?$/)) {
-            valid = false;
-          }
-        });
+        value.split(',')
+          .forEach((element) => {
+            if (!element.match(/^-?\d*(\.\d+)?$/)) {
+              valid = false;
+            }
+          });
         if (value.endsWith(',')) {
           valid = false;
         }
@@ -63,35 +64,36 @@ class ListComponent extends Component {
           valid = false;
         } else if (
           (value.match(/{/g) || []).length != 1
-            || (value.match(/}/g) || []).length != 1
+          || (value.match(/}/g) || []).length != 1
         ) {
           valid = false;
         } else if (
           value.indexOf('{') > value.indexOf('}')
-              || !value.endsWith('}')
+          || !value.endsWith('}')
         ) {
           valid = false;
         } else {
           const subDict = value.match(/\{(.*?)\}/)[1];
           if (
             (subDict.match(/:/g) || []).length - 1
-                != (subDict.match(/,/g) || []).length
+            != (subDict.match(/,/g) || []).length
           ) {
             valid = false;
           } else {
-            subDict.split(',').forEach((element) => {
-              if (
-                (element.match(/:/g) || []).length != 1
-                    || element.startsWith(':')
-                    || element.endsWith(':')
-              ) {
-                valid = false;
-              }
-            });
+            subDict.split(',')
+              .forEach((element) => {
+                if (
+                  (element.match(/:/g) || []).length != 1
+                  || element.startsWith(':')
+                  || element.endsWith(':')
+                ) {
+                  valid = false;
+                }
+              });
             const reminder = value.replace(`{${subDict}}`, '');
             if (
               (reminder.match(/:/g) || []).length != 1
-                  || !reminder.endsWith(':')
+              || !reminder.endsWith(':')
             ) {
               valid = false;
             }
@@ -106,28 +108,33 @@ class ListComponent extends Component {
   }
 
   getErrorMessage () {
-    switch (this.props.realType) {
+    let message;
+    const { realType } = this.props;
+    switch (realType) {
       case 'list(float)':
-        var message = 'Only float numbers are allowed.';
+        message = 'Only float numbers are allowed.';
         break;
       case 'list(list(float))':
-        var message = 'Only comma separated float numbers are allowed.';
+        message = 'Only comma separated float numbers are allowed.';
         break;
       case 'dict':
-        var message = 'Key:Value pairs must be separated by colon : ';
+        message = 'Key:Value pairs must be separated by colon : ';
         break;
       case 'dict(dict)':
-        var message = 'Incorrect format. Example -> v_soma : { sec: soma, loc: 0.5, var: v}';
+        message = 'Incorrect format. Example -> v_soma : { sec: soma, loc: 0.5, var: v}';
         break;
       default:
-        var message = 'No a valid value';
+        message = 'No a valid value';
         break;
     }
     return message;
   }
 
   handleNewItemChange (event) {
-    this.setState({ newItemValue: event.target.value, newItemErrorText: '' });
+    this.setState({
+      newItemValue: event.target.value,
+      newItemErrorText: '',
+    });
   }
 
   addChild () {
@@ -190,7 +197,10 @@ class ListComponent extends Component {
 
   convertToPython (children) {
     // Update State
-    this.setState({ children, newItemValue: '' });
+    this.setState({
+      children,
+      newItemValue: '',
+    });
 
     if (this.props.realType == 'dict' || this.props.realType == 'dict(dict)') {
       var newValue = children;
@@ -247,32 +257,33 @@ class ListComponent extends Component {
   }
 
   render () {
-    const childrenWithExtraProp = Object.keys(this.state.children).map(
-      (key, index) => {
-        key = key.toString();
-        if (this.props.realType == 'dict') {
-          var value = `${key} : ${JSON.stringify(this.state.children[key])}`;
-        } else if (this.props.realType == 'dict(dict)') {
-          var value = `${key
-          }:   ${
-            JSON.stringify(this.state.children[key])
-              .replace(/["']/g, '')
-              .replace(/[:]/g, ': ')
-              .replace(/[,]/g, ', ')}`;
-        } else {
-          var value = this.state.children[key];
-        }
-        return (
-          <Chip
-            key={key}
-            label={value}
-            style={{ margin: '0 8px 8px 0' }}
-            onDelete={() => this.removeChild(key)}
-            color="primary"
-          />
-        );
-      },
-    );
+    const childrenWithExtraProp = Object.keys(this.state.children)
+      .map(
+        (key, index) => {
+          key = key.toString();
+          if (this.props.realType == 'dict') {
+            var value = `${key} : ${JSON.stringify(this.state.children[key])}`;
+          } else if (this.props.realType == 'dict(dict)') {
+            var value = `${key
+            }:   ${
+              JSON.stringify(this.state.children[key])
+                .replace(/["']/g, '')
+                .replace(/[:]/g, ': ')
+                .replace(/[,]/g, ', ')}`;
+          } else {
+            var value = this.state.children[key];
+          }
+          return (
+            <Chip
+              key={key}
+              label={value}
+              style={{ margin: '0 8px 8px 0' }}
+              onDelete={() => this.removeChild(key)}
+              color="primary"
+            />
+          );
+        },
+      );
 
     const { classes } = this.props;
     return (

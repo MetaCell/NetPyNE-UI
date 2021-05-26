@@ -22,6 +22,11 @@ export default class NetPyNECoordsRange extends Component {
     this.updateTimer = setTimeout(updateMethod, 1000);
   }
 
+  componentDidMount () {
+    this._isMounted = true;
+    this.updateLayout();
+  }
+
   componentDidUpdate (prevProps, prevState) {
     if (this.props.name != prevProps.name) {
       this.triggerUpdate(() => {
@@ -43,20 +48,23 @@ export default class NetPyNECoordsRange extends Component {
     }
   }
 
-  componentDidMount () {
-    this._isMounted = true;
-    this.updateLayout();
-  }
-
   updateLayout () {
-    const message = `netpyne_geppetto.${this.props.model}['${this.props.name}']${(this.props.conds != undefined) ? `['${this.props.conds}']` : ''}`;
+    const {
+      items,
+      model,
+      conds,
+      name,
+    } = this.props;
+
+    const message = `netpyne_geppetto.${model}['${name}']${(conds !== undefined)
+      ? `['${conds}']` : ''}`;
     Utils
-      .evalPythonMessage(`[key in ${message} for key in ['${this.props.items[0].value}', '${this.props.items[1].value}']]`)
+      .evalPythonMessage(`[key in ${message} for key in ['${items[0].value}', '${items[1].value}']]`)
       .then((response) => {
         if (response[0] && this._isMounted === true) {
-          this.setState({ rangeType: this.props.items[0].value });
+          this.setState({ rangeType: items[0].value });
         } else if (response[1] && this._isMounted === true) {
-          this.setState({ rangeType: this.props.items[1].value });
+          this.setState({ rangeType: items[1].value });
         } else if (this._isMounted === true) {
           this.setState({ rangeType: undefined });
         }
@@ -107,7 +115,7 @@ export default class NetPyNECoordsRange extends Component {
                 convertToPython={(state) => {
                   if (!state[state.lastUpdated].toString()
                     .endsWith('.')
-                  && ((!isNaN(parseFloat(state[min]))) && (!isNaN(parseFloat(state[max]))))) {
+                    && ((!isNaN(parseFloat(state[min]))) && (!isNaN(parseFloat(state[max]))))) {
                     return [parseFloat(state[min]), parseFloat(state[max])];
                   }
                 }}

@@ -3,10 +3,10 @@ const createFileName = (name) => name + getTimeStamp();
 const getTimeStamp = () => new Date().toGMTString().replace(',', '').replace(/[ ,:]/g, '_');
 
 const unescapeText = (text) => {
-  text = text.replace(/\\\\/g, '\\').replace(/\\\'/g, "'").replace(/\\\"/g, '"').split('\\n')
+  const unescaped = text.replace(/\\\\/g, '\\').replace(/\\'/g, "'").replace(/\\"/g, '"').split('\\n')
     .join('\n')
     .substring(1);
-  return text.substring(0, text.length - 1);
+  return unescaped.substring(0, unescaped.length - 1);
 };
 
 const forceBlobDownload = (blob, filename) => {

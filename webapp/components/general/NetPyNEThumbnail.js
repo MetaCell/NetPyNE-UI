@@ -50,7 +50,9 @@ export default class NetPyNEThumbnail extends React.Component {
         paramPath,
         paramName: name,
       });
-      tonDelete && onDelete();
+      if (onDelete) {
+        onDelete();
+      }
     }
     this.setState({ dialogOpen: false });
   }

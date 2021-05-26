@@ -79,7 +79,6 @@ export default class NetPyNENewPlot extends React.Component {
             id="emptyCellTemplate"
             key="Empty"
             value="Empty"
-
             onClick={() => this.handleSelection('Empty')}
           >
             Empty cell

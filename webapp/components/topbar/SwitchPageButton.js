@@ -25,6 +25,11 @@ const styles = ({
 });
 
 class SwitchPageButton extends Component {
+  constructor (props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
   handleClick = (event) => {
     const instantiate = this.props.automaticInstantiation || this.props.modelState === MODEL_STATE.NOT_INSTANTIATED;
     if (!this.props.editModelPage) {
@@ -38,11 +43,30 @@ class SwitchPageButton extends Component {
     }
   };
 
+  getExploreLabel () {
+    const {
+      automaticInstantiation,
+      automaticSimulation,
+    } = this.props;
+    const instantiate = automaticInstantiation || this.props.modelState === MODEL_STATE.NOT_INSTANTIATED;
+    if (instantiate && automaticSimulation) {
+      return TOPBAR_CONSTANTS.CREATE_AND_SIMULATE_NETWORK;
+    }
+    if (instantiate) {
+      return TOPBAR_CONSTANTS.CREATE_NETWORK;
+    }
+    if (automaticSimulation) {
+      console.debug('Bad option combination: can\'t auto simulate without auto instantiate');
+    }
+    return TOPBAR_CONSTANTS.EXPLORE_EXISTING_NETWORK;
+  }
+
   render () {
     const {
       classes,
       modelState,
       editModelPage,
+      simulateNetwork,
     } = this.props;
     const disableSimulate = modelState === MODEL_STATE.SIMULATED;
     return (
@@ -61,7 +85,7 @@ class SwitchPageButton extends Component {
                     id="launchSimulationButton"
                     className={classes.rocket}
                     size="small"
-                    onClick={() => this.props.simulateNetwork()}
+                    onClick={() => simulateNetwork()}
                     disabled={disableSimulate}
                     style={{ opacity: disableSimulate ? 0.5 : 1 }}
                   >
@@ -76,32 +100,14 @@ class SwitchPageButton extends Component {
           variant="contained"
           size="small"
           className={classes.button}
-          onClick={this.handleClick.bind(this)}
-          endIcon={<Icon name={this.props.editModelPage ? 'rocket' : 'pencil'} selected={false} />}
+          onClick={this.handleClick}
+          endIcon={<Icon name={editModelPage ? 'rocket' : 'pencil'} selected={false} />}
         >
-          {this.props.editModelPage ? this.getExploreLabel() : TOPBAR_CONSTANTS.BACK_TO_EDITION}
+          {editModelPage ? this.getExploreLabel() : TOPBAR_CONSTANTS.BACK_TO_EDITION}
         </Button>
 
       </div>
     );
-  }
-
-  getExploreLabel () {
-    const {
-      automaticInstantiation,
-      automaticSimulation,
-    } = this.props;
-    const instantiate = automaticInstantiation || this.props.modelState === MODEL_STATE.NOT_INSTANTIATED;
-    if (instantiate && automaticSimulation) {
-      return TOPBAR_CONSTANTS.CREATE_AND_SIMULATE_NETWORK;
-    }
-    if (instantiate) {
-      return TOPBAR_CONSTANTS.CREATE_NETWORK;
-    }
-    if (automaticSimulation) {
-      console.debug('Bad option combination: can\'t auto simulate without auto instantiate');
-    }
-    return TOPBAR_CONSTANTS.EXPLORE_EXISTING_NETWORK;
   }
 }
 

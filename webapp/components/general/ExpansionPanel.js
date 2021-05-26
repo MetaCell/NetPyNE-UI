@@ -10,7 +10,10 @@ import Tooltip from './Tooltip';
 const styles = ({ spacing }) => ({ button: { marginRight: 0 } });
 
 class NetPyNEAccordion extends Component {
-  state = { expanded: false };
+  constructor (props) {
+    super(props);
+    this.state = { expanded: false };
+  }
 
   render () {
     const {
@@ -24,7 +27,7 @@ class NetPyNEAccordion extends Component {
       <Accordion expanded={this.state.expanded} {...others}>
         <AccordionSummary
           IconButtonProps={{
-            onClick: () => this.setState({ expanded: !this.state.expanded }),
+            onClick: () => this.setState((prevState) => ({ expanded: !prevState.expanded })),
             className: classes.button,
           }}
           expandIcon={(
