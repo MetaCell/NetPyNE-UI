@@ -23,7 +23,7 @@ with open("netParams.json", "r") as f:
 
 with open("simConfig.json", "r") as f:
     sim_config = json.load(f)
-    sim_config = specs.SimConfig(sim_config)
+    sim_config = specs.SimConfig(sim_config['simConfig'])
 
 batch = Batch(
     cfg=sim_config,

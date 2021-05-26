@@ -210,6 +210,10 @@ class NetPyNEGeppetto:
         for param in experiment.params:
             if param.type == "range":
                 param.values = list(np.arange(param.min, param.max, param.step))
+            elif param.type == "list":
+                # TODO: need to enforce correct type for each parameter
+                #   e.g. numCells with 10.0 fails because it requires int not float
+                param.values = [int(e) for e in param.values]
 
         self.netParams.mapping = {p.mapsTo: p.mapsTo.split('.') for p in experiment.params}
         self.simConfig.saveJson = True
