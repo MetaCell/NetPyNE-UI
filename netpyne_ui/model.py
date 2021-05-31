@@ -1,5 +1,3 @@
-import random
-
 from dataclasses import dataclass
 from dataclasses import field
 from datetime import datetime

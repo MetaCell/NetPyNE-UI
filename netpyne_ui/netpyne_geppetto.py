@@ -12,7 +12,6 @@ import re
 import sys
 from shutil import copyfile, move
 
-import matplotlib.pyplot as plt
 import neuron
 import numpy as np
 from netpyne import specs, sim, analysis
