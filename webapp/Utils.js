@@ -192,6 +192,11 @@ const Utils = {
     }
   },
 
+  formatDate (timestamp) {
+    const date = new Date(timestamp);
+    return date?.toLocaleDateString();
+  },
+
   execPythonMessage,
   evalPythonMessage,
 };

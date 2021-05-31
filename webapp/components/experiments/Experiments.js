@@ -22,10 +22,12 @@ import {
 } from 'netpyne/components';
 import { withStyles } from '@material-ui/core/styles';
 import useInterval from 'root/api/hooks';
+import { removeExperiment } from 'root/api/experiments';
+import Utils from 'root/Utils';
 import {
   EXPERIMENT_STATE, EXPERIMENT_TEXTS,
 } from '../../constants';
-import DeleteDialogBox from '../general/DeleteDialogBox';
+import DialogBox from '../general/DialogBox';
 import { experimentGrey, experimentInputColor } from '../../theme';
 
 const useStyles = (theme) => ({
@@ -135,31 +137,38 @@ const Experiments = (props) => {
     classes,
     setList,
     setEditState,
-    setExperimentName
+    setExperimentName,
   } = props;
 
   const POLL_INTERVAL = 1000;
   useEffect(getExperiments, []);
   useInterval(getExperiments, POLL_INTERVAL);
 
-  const cleanExperiment = (payload) => {
-    // TODO: reset current experiment in design
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [experimentToDelete, setExperimentToDelete] = useState(null);
+
+  const deleteExperiment = (actionConfirmed) => {
+    if (actionConfirmed) {
+      removeExperiment(experimentToDelete)
+        .then(() => {
+          setDeleteDialogOpen(false);
+          setExperimentToDelete(null);
+        })
+        .catch((err) => console.error(err));
+    } else {
+      setDeleteDialogOpen(false);
+      setExperimentToDelete(null);
+    }
   };
 
-  const deleteExperiment = (name) => {
-    // TODO: show dialog, call removeExperiment api method & reload experiments
+  const cleanExperiment = (payload) => {
+    // TODO: reset current experiment in design
   };
 
   const viewExperiment = (payload) => {
     // TODO: show detail view of experiment
   };
-
-  const formatDate = (timestamp) => {
-    const date = new Date(timestamp);
-    return date?.toLocaleDateString();
-  };
-
-  const [dialogOpen, setDialogOpen] = useState(false);
 
   const createExperimentScreen = (actionConfirmed) => {
     setDialogOpen(false);
@@ -197,17 +206,17 @@ const Experiments = (props) => {
                       </TableCell>
                       <TableCell align="left">
                         <Typography variant="h6" className="experimentDate">
-                          {formatDate(experiment?.timestamp)}
+                          {Utils.formatDate(experiment?.timestamp)}
                         </Typography>
                       </TableCell>
                       <TableCell align="left" className="experimentTableCell">
                         {(experiment?.state === EXPERIMENT_STATE.SIMULATING
-                        || experiment?.state === EXPERIMENT_STATE.INSTANTIATING)
+                          || experiment?.state === EXPERIMENT_STATE.INSTANTIATING)
                           ? (
                             <Chip
-                              icon={<Box className="MuiChipLoader" />}
+                              icon={<Box className="MuiChipLoader"/>}
                               label={experiment?.state}
-                              deleteIcon={<CancelRoundedIcon />}
+                              deleteIcon={<CancelRoundedIcon/>}
                               onDelete={() => {
                               }}
                             />
@@ -227,27 +236,30 @@ const Experiments = (props) => {
                           }
                         >
                           {experiment?.state === EXPERIMENT_STATE.DESIGN
-                            ? <EditIcon />
-                            : <FileCopyOutlinedIcon />}
+                            ? <EditIcon/>
+                            : <FileCopyOutlinedIcon/>}
                         </Button>
                       </TableCell>
                       <TableCell align="center">
-                        <Divider orientation="vertical" />
+                        <Divider orientation="vertical"/>
                       </TableCell>
                       <TableCell align="right">
                         <Button
                           className="experimentIcon"
                           onClick={cleanExperiment}
                         >
-                          <ReplayIcon />
+                          <ReplayIcon/>
                         </Button>
                       </TableCell>
                       <TableCell align="right">
                         <Button
                           className="experimentIcon"
-                          onClick={deleteExperiment}
+                          onClick={() => {
+                            setExperimentToDelete(experiment?.name);
+                            setDeleteDialogOpen(true);
+                          }}
                         >
-                          <DeleteIcon />
+                          <DeleteIcon/>
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -267,7 +279,7 @@ const Experiments = (props) => {
           <Box>
             <Button
               color="primary"
-              startIcon={<AddIcon />}
+              startIcon={<AddIcon/>}
               onClick={() => setDialogOpen(true)}
             >
               CREATE NEW EXPERIMENT
@@ -275,12 +287,20 @@ const Experiments = (props) => {
           </Box>
         </Box>
       </GridLayout>
-      <DeleteDialogBox
+      <DialogBox
         open={dialogOpen}
         onDialogResponse={createExperimentScreen}
         textForDialog={{
           heading: EXPERIMENT_TEXTS.CREATE_EXPERIMENT,
           content: EXPERIMENT_TEXTS.DIALOG_MESSAGE,
+        }}
+      />
+      <DialogBox
+        open={deleteDialogOpen}
+        onDialogResponse={deleteExperiment}
+        textForDialog={{
+          heading: EXPERIMENT_TEXTS.DELETE_EXPERIMENT,
+          content: EXPERIMENT_TEXTS.DELETE_DIALOG_MESSAGE,
         }}
       />
     </>

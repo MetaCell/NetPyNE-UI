@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
-import DeleteDialogBox from './DeleteDialogBox';
+import DialogBox from './DialogBox';
 import Tooltip from './Tooltip';
 
 const styles = {
@@ -84,7 +84,7 @@ export default class NetPyNEThumbnail extends React.Component {
         <Tooltip position="bottom" title={<HoverActions deleteAction={() => this.setState({ dialogOpen: true })} />} interactive>
           {getButton(isCog, isButton, label, selected, props)}
         </Tooltip>
-        <DeleteDialogBox
+        <DialogBox
           open={dialogOpen}
           onDialogResponse={this.handleDialogBox}
           textForDialog={{ heading: `Delete ${name}`, content: `Do you want to remove ${name} ?` }}
