@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Fab from '@material-ui/core/Fab';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
@@ -24,6 +24,16 @@ const styles = {
   },
 };
 
+const getButton = (isCogButton, isRegularButton, label, selected, tooltip, props) => {
+  if (isCogButton) {
+    return getCogButton(label, selected, tooltip, props);
+  }
+  if (isRegularButton) {
+    return getRegularButton(label, selected, tooltip, props);
+  }
+  return getFabButton(label, selected, tooltip, props);
+};
+
 export default class NetPyNEThumbnail extends React.Component {
   constructor (props) {
     super(props);
@@ -45,7 +55,6 @@ export default class NetPyNEThumbnail extends React.Component {
       handleClick, paramPath, name, onDelete, deleteNetParamsObj,
     } = this.props;
     if (handleClick && actionConfirmed) {
-      // this.props.deleteMethod(this.props.name);
       deleteNetParamsObj({
         paramPath,
         paramName: name,
@@ -93,16 +102,6 @@ export default class NetPyNEThumbnail extends React.Component {
     );
   }
 }
-
-const getButton = (isCogButton, isRegularButton, label, selected, tooltip, props) => {
-  if (isCogButton) {
-    return getCogButton(label, selected, tooltip, props);
-  }
-  if (isRegularButton) {
-    return getRegularButton(label, selected, tooltip, props);
-  }
-  return getFabButton(label, selected, tooltip, props);
-};
 
 const HoverActions = ({ deleteAction }) => (
   <Box style={styles.toolbar}>

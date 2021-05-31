@@ -1,10 +1,7 @@
 export const VIEW_EXPERIMENT = 'VIEW_EXPERIMENT';
 export const GET_EXPERIMENTS = 'GET_EXPERIMENTS';
 export const SET_EXPERIMENTS = 'SET_EXPERIMENTS';
-
 export const RESET_EXPERIMENT = 'RESET_EXPERIMENT';
-export const VIEW_TRIAL_AS_JSON = 'VIEW_AS_JSON';
-export const FILTER_TRIALS = 'FILTER_TRIALS';
 
 /**
  * Resets configuration of current Experiment.
@@ -44,13 +41,3 @@ export const viewTrialResults = () => {
 export const loadModelSpecification = () => {
 
 };
-
-export const viewAsJson = (payload) => ({
-  type: VIEW_TRIAL_AS_JSON,
-  payload,
-});
-
-export const filterTrials = (payload) => ({
-  type: FILTER_TRIALS,
-  payload,
-});
