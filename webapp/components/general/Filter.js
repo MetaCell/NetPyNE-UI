@@ -18,7 +18,10 @@ const styles = ({ spacing, shape }) => ({
   listbox: { color: 'white', maxHeight: '20vh' },
 });
 class Filter extends Component {
-  state = { open: false }
+  constructor (props) {
+    super(props);
+    this.state = { open: false };
+  }
 
   render () {
     const {
@@ -31,7 +34,6 @@ class Filter extends Component {
         onClose={() => this.setState({ open: false })}
         onOpen={() => this.setState({ open: true })}
         className={classes.filter}
-
         clearOnEscape
         autoComplete
         openOnFocus

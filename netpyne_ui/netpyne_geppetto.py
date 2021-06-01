@@ -467,12 +467,9 @@ class NetPyNEGeppetto:
             return utils.getJSONError(message, sys.exc_info())
 
         try:
-            # This function fails is some keys don't exists
-            # sim.clearAll()
-            # TODO: as part of #264 we should remove the method and use clearAll intstead
-            self.clearSim()
-        except Exception:
-            logging.exception("Error while clearing simulation")
+            sim.clearAll()
+        except:
+            logging.exception("Failed to clear simulation")
 
         return utils.getJSONReply()
 
@@ -876,50 +873,6 @@ class NetPyNEGeppetto:
                                     self.netParams.stimTargetParams[label].pop('synMech')
                                 else:
                                     self.netParams.stimTargetParams[label]['synMech'] = new
-
-    def clearSim(self):
-        # clean up
-        sim.pc.barrier()
-        sim.pc.gid_clear()  # clear previous gid settings
-
-        # clean cells and simData in all nodes
-        sim.clearObj([cell.__dict__ if hasattr(cell, '__dict__') else cell for cell in sim.net.cells])
-        if 'stims' in list(sim.simData.keys()):
-            sim.clearObj([stim for stim in sim.simData['stims']])
-
-        for key in list(sim.simData.keys()): del sim.simData[key]
-
-        if hasattr(sim, 'net'):
-            for c in sim.net.cells: del c
-            for p in sim.net.pops: del p
-            if hasattr(sim.net, 'params'):
-                del sim.net.params
-
-        # clean cells and simData gathered in master node
-        if sim.rank == 0:
-            if hasattr(sim.net, 'allCells'):
-                sim.clearObj([cell.__dict__ if hasattr(cell, '__dict__') else cell for cell in sim.net.allCells])
-            if hasattr(sim, 'allSimData'):
-                if 'stims' in list(sim.allSimData.keys()):
-                    sim.clearObj([stim for stim in sim.allSimData['stims']])
-                for key in list(sim.allSimData.keys()): del sim.allSimData[key]
-                del sim.allSimData
-
-            import matplotlib
-            matplotlib.pyplot.clf()
-            matplotlib.pyplot.close('all')
-
-        if hasattr(sim, 'net'):
-            if hasattr(sim.net, 'allCells'):
-                for c in sim.net.allCells: del c
-                del sim.net.allCells
-            if hasattr(sim.net, 'allPops'):
-                for p in sim.net.allPops: del p
-
-            del sim.net
-
-        import gc
-        gc.collect()
 
     def create_celltype_from_template(self, label="CellType", conds={}, cell_template_name="Blank"):
         try:

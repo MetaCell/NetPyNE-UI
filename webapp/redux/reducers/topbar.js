@@ -12,12 +12,6 @@ export const TOPBAR_DEFAULT_STATE = {
 };
 
 // reducer
-export default (state = { ...TOPBAR_DEFAULT_STATE }, action) => ({
-  ...state,
-  ...reduceTopbar(state, action),
-});
-
-// reducer function
 function reduceTopbar (state, action) {
   switch (action.type) {
     case OPEN_TOPBAR_DIALOG:
@@ -33,3 +27,9 @@ function reduceTopbar (state, action) {
     }
   }
 }
+
+export default (state = { ...TOPBAR_DEFAULT_STATE }, action) => ({
+  ...state,
+  ...reduceTopbar(state, action),
+});
+// reducer function
