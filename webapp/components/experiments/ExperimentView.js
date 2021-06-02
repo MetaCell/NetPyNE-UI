@@ -14,10 +14,9 @@ import {
   TableContainer,
   Divider,
   Typography,
+  TablePagination,
 } from '@material-ui/core';
-import {
-  getExperiment,
-} from 'root/api/experiments';
+import { getExperiment } from 'root/api/experiments';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import CodeIcon from '@material-ui/icons/Code';
 import ReplayIcon from '@material-ui/icons/Replay';
@@ -58,6 +57,38 @@ const useStyles = (theme) => ({
     flexDirection: 'column',
     marginLeft: -theme.spacing(1),
     marginRight: -theme.spacing(1),
+    '& .MuiTablePagination-root': {
+      overflow: 'initial',
+
+      '& .MuiTypography-body2': {
+        fontSize: '0.875rem',
+      },
+    },
+    '& .MuiTablePagination-select': {
+      fontSize: '0.875rem',
+      color: experimentGrey,
+      paddingTop: theme.spacing(0),
+      paddingBottom: theme.spacing(0),
+    },
+    '& .MuiTablePagination-selectRoot': {
+      '& .MuiSelect-icon': {
+        color: experimentGrey,
+      },
+    },
+    '& .MuiTablePagination-actions': {
+      paddingRight: theme.spacing(3),
+      '& .MuiIconButton-root': {
+        padding: '0.25rem',
+        marginLeft: theme.spacing(2.6),
+        color: experimentGrey,
+        '&.Mui-disabled': {
+          opacity: 0.3,
+        },
+        '&:hover': {
+          borderRadius: theme.spacing(0.4),
+        },
+      },
+    },
     '& .ViewExperimentHead': {
       paddingLeft: theme.spacing(4),
       paddingRight: theme.spacing(4),
@@ -155,7 +186,7 @@ const useStyles = (theme) => ({
           color: experimentGrey,
           '&:hover': {
             borderRadius: theme.spacing(0.4),
-          }
+          },
         },
         '& .MuiDivider-root': {
           marginLeft: theme.spacing(2.6),
@@ -209,11 +240,7 @@ const useStyles = (theme) => ({
 
 function EnhancedTableHead (props) {
   const {
-    order,
-    orderBy,
-    onRequestSort,
-    classes,
-    paramHeaders,
+    order, orderBy, onRequestSort, classes, paramHeaders,
   } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -244,15 +271,20 @@ function EnhancedTableHead (props) {
             align="left"
             padding={headCell.disablePadding ? 'none' : 'default'}
             sortDirection={orderBy === headCell.id ? order : false}
-            // eslint-disable-next-line no-nested-ternary
-            className={index === 0 ? classes.sticky : index === headCells.length - 1 ? classes.stickyRight : ''}
+            className={
+              // eslint-disable-next-line no-nested-ternary
+              index === 0 ? classes.sticky : index === headCells.length - 1 ? classes.stickyRight : ''
+            }
           >
             <TableSortLabel
               active={orderBy === headCell.id}
               onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}
-              <ArrowDropDownIcon className="MuiSortIcon" direction={orderBy === headCell.id ? order : 'asc'} />
+              <ArrowDropDownIcon
+                className="MuiSortIcon"
+                direction={orderBy === headCell.id ? order : 'asc'}
+              />
             </TableSortLabel>
           </TableCell>
         ))}
@@ -268,13 +300,17 @@ EnhancedTableHead.propTypes = {
 };
 
 const ExperimentView = (props) => {
-  const { classes, name, setList } = props;
+  const {
+    classes, name, setList, setJsonViewer, setViewExperiment,
+  } = props;
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('name');
   const [tableRows, setTableRows] = React.useState([]);
   const [filteredRows, setFilteredRows] = React.useState(tableRows);
   const [experiment, setExperiment] = useState(null);
   const [paramHeaders, setParamHeaders] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -337,23 +373,34 @@ const ExperimentView = (props) => {
           setExperiment(exp);
           console.log(exp);
           if (exp?.trials.length > 0) {
-            setParamHeaders(Object.keys(exp?.trials[0]?.params[0]).map((header) => (
-              {
+            setParamHeaders(
+              Object.keys(exp?.trials[0]?.params[0]).map((header) => ({
                 id: header,
                 numeric: true,
                 disablePadding: false,
                 label: header,
-              }
-            )));
-            const rows = exp?.trials.map((trial, index) => (
-              { name: `Trial ${index + 1}`, ...trial.params[0] }
-            ));
+              })),
+            );
+            const rows = exp?.trials.map((trial, index) => ({
+              name: `Trial ${index + 1}`,
+              ...trial.params[0],
+            }));
             setTableRows(rows);
             setFilteredRows(rows);
           }
-        }).catch((error) => console.error(error));
+        })
+        .catch((error) => console.error(error));
     }
   }, [name]);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   return (
     <div className={classes.root}>
@@ -377,9 +424,7 @@ const ExperimentView = (props) => {
           />
         </div>
       </Box>
-      {
-        experiment?.trials
-        && (
+      {experiment?.trials && (
         <>
           <Box className="editExperiment-trials">
             <BlurOnIcon />
@@ -394,35 +439,56 @@ const ExperimentView = (props) => {
                 classes={classes}
                 style={{ tableLayout: 'fixed' }}
                 paramHeaders={paramHeaders}
+                rowCount={filteredRows.length}
               />
               <TableBody>
-                {stableSort(filteredRows, getComparator(order, orderBy)).map((row) => (
-                  <TableRow
-                    tabIndex={-1}
-                    key={row.name}
-                  >
-                    <TableCell component="th" scope="row" padding="none" className={classes.sticky}>
-                      {row.name}
-                    </TableCell>
-                    {
-                      paramHeaders.map((header, index) => <TableCell key={`${header.label}_${index}`}>{row[header.label]}</TableCell>)
-                    }
-                    <TableCell align="right" className={classes.stickyRight}>
-                      <Box className="MuiTableCell-actions">
-                        <IconButton><AssessmentIcon className="MuiSvgIcon-assessment" /></IconButton>
-                        <Divider orientation="vertical" />
-                        <IconButton><CodeIcon /></IconButton>
-                        <IconButton><ReplayIcon className="MuiSvgIcon-replay" /></IconButton>
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {stableSort(filteredRows, getComparator(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row) => (
+                    <TableRow tabIndex={-1} key={row.name}>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        padding="none"
+                        className={classes.sticky}
+                      >
+                        {row.name}
+                      </TableCell>
+                      {paramHeaders.map((header, index) => (
+                        <TableCell key={`${header.label}_${index}`}>
+                          {row[header.label]}
+                        </TableCell>
+                      ))}
+                      <TableCell align="right" className={classes.stickyRight}>
+                        <Box className="MuiTableCell-actions">
+                          <IconButton>
+                            <AssessmentIcon className="MuiSvgIcon-assessment" />
+                          </IconButton>
+                          <Divider orientation="vertical" />
+                          <IconButton onClick={openJsonViewer}>
+                            <CodeIcon />
+                          </IconButton>
+                          <IconButton>
+                            <ReplayIcon className="MuiSvgIcon-replay" />
+                          </IconButton>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={filteredRows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+          />
         </>
-        )
-      }
+      )}
     </div>
   );
 };
