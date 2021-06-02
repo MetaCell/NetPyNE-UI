@@ -3,6 +3,7 @@ import datetime
 import json
 import logging
 import shutil
+import pathlib
 
 from typing import List
 from dacite import from_dict
@@ -78,9 +79,13 @@ def _get_by_name(name: str) -> model.Experiment:
 
 
 def _scan() -> [model.Experiment]:
+    experiments_folder = join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER)
+    if not pathlib.Path(experiments_folder).exists():
+        return []
+
     dirs = list([
-        f for f in listdir(join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER))
-        if isdir(join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, f))
+        f for f in listdir(experiments_folder)
+        if isdir(join(experiments_folder, f))
     ])
 
     experiments = []
