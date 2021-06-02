@@ -301,7 +301,7 @@ EnhancedTableHead.propTypes = {
 
 const ExperimentView = (props) => {
   const {
-    classes, name, setList, setJsonViewer, setViewExperiment,
+    classes, name, setList, setJsonViewer, setViewExperiment, setTrial,
   } = props;
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('name');
@@ -393,6 +393,12 @@ const ExperimentView = (props) => {
     }
   }, [name]);
 
+  const openJsonViewer = (trial) => {
+    setJsonViewer(true);
+    setViewExperiment(false);
+    setTrial(trial);
+  };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -465,7 +471,7 @@ const ExperimentView = (props) => {
                             <AssessmentIcon className="MuiSvgIcon-assessment" />
                           </IconButton>
                           <Divider orientation="vertical" />
-                          <IconButton onClick={openJsonViewer}>
+                          <IconButton onClick={() => openJsonViewer(row.name)}>
                             <CodeIcon />
                           </IconButton>
                           <IconButton>
@@ -496,6 +502,9 @@ const ExperimentView = (props) => {
 ExperimentView.propTypes = {
   name: PropTypes.string.isRequired,
   setList: PropTypes.func.isRequired,
+  setViewExperiment: PropTypes.func.isRequired,
+  setJsonViewer: PropTypes.func.isRequired,
+  setTrial: PropTypes.func.isRequired,
 };
 
 export default withStyles(useStyles)(ExperimentView);
