@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ReactJson from 'react-json-view';
-import { getParameters } from 'root/api/experiments';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import {
   fontColor,
@@ -45,14 +45,18 @@ const useStyles = (theme) => ({
         },
       },
     },
+    '& .pageHeading': {
+      paddingBottom: theme.spacing(2),
+      color: fontColor,
+      fontSize: '1rem',
+    },
   },
 });
 
 const JsonViewer = (props) => {
   const {
-    name, setViewExperiment, classes, setJsonViewer, trial,
+    baseTitle, setViewExperiment, classes, setJsonViewer, title, json,
   } = props;
-  const [trialJSON, setTrialJSON] = useState({});
 
   const theme = {
     scheme: 'netPyneJsonViewer',
@@ -79,23 +83,23 @@ const JsonViewer = (props) => {
     setViewExperiment(true);
   };
 
-  useEffect(() => {
-    getParameters().then((params) => {
-      setTrialJSON(params);
-    });
-  }, []);
-
   return (
     <div className={classes.root}>
-      <Breadcrumbs
-        separator={<NavigateNextIcon fontSize="small" />}
-        aria-label="breadcrumb"
-      >
-        <Button color="inherit" onClick={goBackToExperiment}>
-          {name}
-        </Button>
-        <Typography color="textPrimary">{trial}</Typography>
-      </Breadcrumbs>
+      { baseTitle ? (
+        <Breadcrumbs
+          separator={<NavigateNextIcon fontSize="small" />}
+          aria-label="breadcrumb"
+        >
+          <Button color="inherit" onClick={goBackToExperiment}>
+            {baseTitle}
+          </Button>
+          <Typography color="textPrimary">{title}</Typography>
+        </Breadcrumbs>
+      ) : (
+        <Box className="pageHeading">
+          <Typography color="textPrimary">{title}</Typography>
+        </Box>
+      )}
       <ReactJson
         name={null}
         theme={theme}
@@ -104,7 +108,7 @@ const JsonViewer = (props) => {
           fontStyle: 'normal',
           fontWeight: 'normal',
         }}
-        src={trialJSON}
+        src={json}
         displayDataTypes={false}
         displayObjectSize={false}
         enableClipboard={false}

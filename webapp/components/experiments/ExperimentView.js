@@ -16,7 +16,7 @@ import {
   Typography,
   TablePagination,
 } from '@material-ui/core';
-import { getExperiment } from 'root/api/experiments';
+import { getExperiment, getParameters } from 'root/api/experiments';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import CodeIcon from '@material-ui/icons/Code';
 import ReplayIcon from '@material-ui/icons/Replay';
@@ -301,7 +301,7 @@ EnhancedTableHead.propTypes = {
 
 const ExperimentView = (props) => {
   const {
-    classes, name, setList, setJsonViewer, setViewExperiment, setTrial,
+    classes, name, setList, setJsonViewer, setViewExperiment, setTrial, setTrialJSON,
   } = props;
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('name');
@@ -394,9 +394,12 @@ const ExperimentView = (props) => {
   }, [name]);
 
   const openJsonViewer = (trial) => {
-    setJsonViewer(true);
-    setViewExperiment(false);
-    setTrial(trial);
+    getParameters().then((params) => {
+      setTrialJSON(params);
+      setJsonViewer(true);
+      setViewExperiment(false);
+      setTrial(trial);
+    });
   };
 
   const handleChangePage = (event, newPage) => {
@@ -505,6 +508,7 @@ ExperimentView.propTypes = {
   setViewExperiment: PropTypes.func.isRequired,
   setJsonViewer: PropTypes.func.isRequired,
   setTrial: PropTypes.func.isRequired,
+  setTrialJSON: PropTypes.func.isRequired,
 };
 
 export default withStyles(useStyles)(ExperimentView);

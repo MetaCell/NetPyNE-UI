@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Experiments } from '../index';
 import EditExperiment from './ExperimentEdit';
 import ViewExperiment from './ExperimentView';
-import JsonViewer from './JsonViewer';
+import JsonViewer from '../general/JsonViewer';
 
 const ExperimentManager = () => {
   const [list, setList] = useState(true);
@@ -11,6 +11,7 @@ const ExperimentManager = () => {
   const [jsonViewer, setJsonViewer] = useState(false);
   const [experimentName, setExperimentName] = useState(null);
   const [trial, setTrial] = useState(null);
+  const [trialJSON, setTrialJSON] = useState(null);
 
   return (
     // eslint-disable-next-line no-nested-ternary
@@ -29,12 +30,14 @@ const ExperimentManager = () => {
           setTrial={setTrial}
           setJsonViewer={setJsonViewer}
           setViewExperiment={setViewExperiment}
+          setTrialJSON={setTrialJSON}
         />
       ) : jsonViewer ? (
         <JsonViewer
           setList={setList}
-          name={experimentName}
-          trial={trial}
+          baseTitle={experimentName}
+          json={trialJSON}
+          title={trial}
           setJsonViewer={setJsonViewer}
           setViewExperiment={setViewExperiment}
         />
