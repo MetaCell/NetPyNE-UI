@@ -55,7 +55,7 @@ const useStyles = (theme) => ({
 
 const JsonViewer = (props) => {
   const {
-    baseTitle, setViewExperiment, classes, setJsonViewer, title, json,
+    baseTitle, setBaseView, classes, setJsonViewer, title, json,
   } = props;
 
   const theme = {
@@ -78,9 +78,9 @@ const JsonViewer = (props) => {
     base0F: primaryColor,
   };
 
-  const goBackToExperiment = () => {
+  const goBackToBase = () => {
     setJsonViewer(false);
-    setViewExperiment(true);
+    setBaseView(true);
   };
 
   return (
@@ -90,7 +90,7 @@ const JsonViewer = (props) => {
           separator={<NavigateNextIcon fontSize="small" />}
           aria-label="breadcrumb"
         >
-          <Button color="inherit" onClick={goBackToExperiment}>
+          <Button color="inherit" onClick={goBackToBase}>
             {baseTitle}
           </Button>
           <Typography color="textPrimary">{title}</Typography>

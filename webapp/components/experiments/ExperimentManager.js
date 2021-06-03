@@ -39,7 +39,7 @@ const ExperimentManager = () => {
           json={trialJSON}
           title={trial}
           setJsonViewer={setJsonViewer}
-          setViewExperiment={setViewExperiment}
+          setBaseView={setViewExperiment}
         />
       ) : (
         <EditExperiment setList={setList} editState={editState} name={experimentName} />
