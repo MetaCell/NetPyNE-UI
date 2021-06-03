@@ -7,7 +7,11 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import {
-  fontColor, experimentLabelColor, bgDarker, bgDarkest, primaryColor,
+  fontColor,
+  experimentLabelColor,
+  bgDarker,
+  bgDarkest,
+  primaryColor,
 } from '../../theme';
 
 const useStyles = (theme) => ({
@@ -17,8 +21,8 @@ const useStyles = (theme) => ({
     backgroundColor: bgDarker,
     padding: theme.spacing(2),
     borderRadius: '0.25rem',
-    "& .MuiBreadcrumbs-separator": {
-      margin: theme.spacing(0),
+    '& .MuiBreadcrumbs-separator': {
+      marginLeft: theme.spacing(0),
     },
     '& .react-json-view': {
       padding: theme.spacing(2),
