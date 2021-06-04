@@ -142,9 +142,6 @@ const useStyles = (theme) => ({
         width: theme.spacing(0.8),
         height: theme.spacing(0.8),
       },
-      '& .MuiTableLayout-fixed': {
-        tableLayout: 'fixed',
-      },
       '& .MuiTableCell-root': {
         padding: theme.spacing(1.4, 4),
         '&:last-child': {
@@ -356,6 +353,7 @@ const ExperimentView = (props) => {
   const setParameterValue = (val, index) => {
     const newFilter = [...filter];
     newFilter[index] = { ...filter[index], value: val };
+    setPage(0);
     setFilter(newFilter);
     setFilteredRows(filterRows(tableRows, newFilter));
   };
@@ -371,7 +369,6 @@ const ExperimentView = (props) => {
       getExperiment(name)
         .then((exp) => {
           setExperiment(exp);
-          console.log(exp);
           if (exp?.trials.length > 0) {
             setParamHeaders(
               Object.keys(exp?.trials[0]?.params[0]).map((header) => ({
@@ -487,15 +484,17 @@ const ExperimentView = (props) => {
               </TableBody>
             </Table>
           </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={filteredRows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
-          />
+          {filteredRows.length > 0 && (
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={filteredRows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onChangePage={handleChangePage}
+              onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
+          )}
         </>
       )}
     </div>
