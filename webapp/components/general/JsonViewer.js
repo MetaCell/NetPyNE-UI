@@ -46,7 +46,8 @@ const useStyles = (theme) => ({
       },
     },
     '& .pageHeading': {
-      paddingBottom: theme.spacing(2),
+      padding: `${theme.spacing(0.75)}px ${theme.spacing(1)}px ${theme.spacing(2)}px`,
+      height: theme.spacing(7),
       color: fontColor,
       fontSize: '1rem',
     },
