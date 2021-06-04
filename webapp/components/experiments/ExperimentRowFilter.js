@@ -10,20 +10,42 @@ import {
   Box,
   Grid,
   TextField,
+  IconButton,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
 import {
   fontColor,
   primaryColor,
   secondaryColor,
   radius,
+  experimentGrey,
   experimentInputColor,
   experimentLabelColor,
   errorFieldBorder,
 } from '../../theme';
 
-const useStyles = () => ({
+const useStyles = (theme) => ({
   root: {
+    '& .filter-row': {
+      display: 'flex',
+      alignItems: 'center',
+      '& .MuiGrid-root': {
+        paddingRight: theme.spacing(1),
+        flexGrow: 1,
+      },
+    },
+    '& .MuiSvgIcon-delete': {
+      borderRadius: theme.spacing(0.4),
+      alignSelf: 'center',
+      color: experimentGrey,
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      padding: `${theme.spacing(0.6)}px ${theme.spacing(1)}px`,
+      '& svg': {
+        fontSize: '1.3rem',
+      },
+    },
     '&.MuiPopover-filter': {
       '& .MuiPopover-paper': {
         '&::-webkit-scrollbar-thumb': {
@@ -102,7 +124,7 @@ const ExperimentRowFilter = (props) => {
     anchorEl,
     setAnchorEl,
     classes,
-    addFilterRow
+    addFilterRow,
   } = props;
 
   const open = Boolean(anchorEl);
@@ -129,35 +151,40 @@ const ExperimentRowFilter = (props) => {
     >
       <Box className="popoverFormControl">
         {filter.map((paramFilter, index) => (
-          <Grid container spacing={2} key={`filter${index}`}>
-            <Grid item xs={6}>
-              <FormControl variant="filled" fullWidth>
-                <InputLabel id="demo-simple-select-label">Parameter</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={paramFilter.param}
-                  onChange={(e) => filterParameterChange(e.target.value, index)}
-                >
-                  {
-                    paramHeaders.map((header, menuIndex) => (
-                      <MenuItem key={`paramfilter${menuIndex}`} value={header.label}>{header.label}</MenuItem>
-                    ))
-                  }
-                </Select>
-              </FormControl>
+          <Box className="filter-row">
+            <Grid container spacing={2} key={`filter${index}`}>
+              <Grid item xs={6}>
+                <FormControl variant="filled" fullWidth>
+                  <InputLabel id="demo-simple-select-label">Parameter</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={paramFilter.param}
+                    onChange={(e) => filterParameterChange(e.target.value, index)}
+                  >
+                    {
+                      paramHeaders.map((header, menuIndex) => (
+                        <MenuItem key={`paramfilter${menuIndex}`} value={header.label}>{header.label}</MenuItem>
+                      ))
+                    }
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={6}>
+                <FormControl variant="filled" fullWidth>
+                  <TextField
+                    label="Parameter Value"
+                    variant="filled"
+                    value={paramFilter?.value}
+                    onChange={(e) => setParameterValue(e.target.value, index)}
+                  />
+                </FormControl>
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <FormControl variant="filled" fullWidth>
-                <TextField
-                  label="Parameter Value"
-                  variant="filled"
-                  value={paramFilter?.value}
-                  onChange={(e) => setParameterValue(e.target.value, index)}
-                />
-              </FormControl>
-            </Grid>
-          </Grid>
+            <IconButton className="MuiSvgIcon-delete">
+              <DeleteIcon />
+            </IconButton>
+          </Box>
         ))}
         <Box my={0.6}>
           <Link to="true" color="primary" onClick={addFilterRow}>
