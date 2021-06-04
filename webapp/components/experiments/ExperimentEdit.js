@@ -389,7 +389,7 @@ const ExperimentEdit = (props) => {
     classes,
     setList,
     name,
-    editState
+    editState,
   } = props;
 
   const {

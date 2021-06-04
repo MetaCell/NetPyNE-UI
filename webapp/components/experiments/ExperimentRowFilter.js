@@ -125,6 +125,7 @@ const ExperimentRowFilter = (props) => {
     setAnchorEl,
     classes,
     addFilterRow,
+    removeFilter,
   } = props;
 
   const open = Boolean(anchorEl);
@@ -151,8 +152,8 @@ const ExperimentRowFilter = (props) => {
     >
       <Box className="popoverFormControl">
         {filter.map((paramFilter, index) => (
-          <Box className="filter-row">
-            <Grid container spacing={2} key={`filter${index}`}>
+          <Box className="filter-row" key={`filter${index}`}>
+            <Grid container spacing={2}>
               <Grid item xs={6}>
                 <FormControl variant="filled" fullWidth>
                   <InputLabel id="demo-simple-select-label">Parameter</InputLabel>
@@ -181,7 +182,7 @@ const ExperimentRowFilter = (props) => {
                 </FormControl>
               </Grid>
             </Grid>
-            <IconButton className="MuiSvgIcon-delete">
+            <IconButton className="MuiSvgIcon-delete" onClick={() => removeFilter(index)}>
               <DeleteIcon />
             </IconButton>
           </Box>

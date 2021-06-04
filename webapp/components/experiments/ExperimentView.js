@@ -408,6 +408,14 @@ const ExperimentView = (props) => {
     setPage(0);
   };
 
+  const removeFilter = (filterIndex) => {
+    const newFilter = [...filter];
+    newFilter.splice(filterIndex, 1);
+    setPage(0);
+    setFilter(newFilter);
+    setFilteredRows(filterRows(tableRows, newFilter));
+  };
+
   return (
     <div className={classes.root}>
       <Box className="ViewExperimentHead">
@@ -427,6 +435,7 @@ const ExperimentView = (props) => {
             anchorEl={anchorEl}
             setAnchorEl={setAnchorEl}
             addFilterRow={addFilterRow}
+            removeFilter={removeFilter}
           />
         </div>
       </Box>
@@ -437,7 +446,7 @@ const ExperimentView = (props) => {
             <Typography variant="h5">Experiment Trials</Typography>
           </Box>
           <TableContainer>
-            <Table aria-label="simple table" className="MuiTableLayout-fixed">
+            <Table>
               <EnhancedTableHead
                 order={order}
                 orderBy={orderBy}
