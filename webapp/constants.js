@@ -62,7 +62,7 @@ export const TOPBAR_CONSTANTS = {
   EXPLORE_EXISTING_NETWORK: 'Explore model',
   BACK_TO_EDITION: 'Back to edit',
   NEW_PAGE: 'NEW_PAGE',
-
+  NETWORK_MODEL: 'NETWORK_MODEL',
 };
 
 /*
