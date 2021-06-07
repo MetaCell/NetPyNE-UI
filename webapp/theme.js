@@ -35,6 +35,7 @@ export const {
   experimentSvgColor,
   experimentLabelColor,
   errorFieldBorder,
+  primaryColorHover,
 } = vars;
 
 const rawTheme = {
