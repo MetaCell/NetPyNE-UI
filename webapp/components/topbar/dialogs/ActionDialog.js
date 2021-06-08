@@ -104,6 +104,7 @@ class ActionDialog extends React.Component {
         maxWidth={this.props.openErrorDialogBox ? 'md' : 'sm'}
         open={Boolean(!this.state.hide || this.props.openErrorDialogBox)}
         onClose={() => this.cancelDialog()}
+        className={classes.root}
       >
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
