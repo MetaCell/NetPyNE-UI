@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ActionDialog } from 'netpyne/components';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import {
-  Box, TextField, Typography, FormControl, InputLabel, Select, MenuItem, withStyles,
+  Box, TextField, Typography, FormControl, InputLabel, Select, MenuItem, withStyles, Radio, Accordion, AccordionSummary, AccordionDetails,
 } from '@material-ui/core';
 import InfoIcon from '@material-ui/icons/Info';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -67,6 +67,41 @@ const useStyles = (theme) => ({
       fontSize: '0.875rem',
       lineHeight: '100%',
     },
+    '& .MuiAccordion-root': {
+      background: bgLight,
+      borderRadius: radius,
+      padding: '1.25rem',
+      margin: '1.25rem 0 !important',
+      boxShadow: 'none',
+      '&:before': {
+        display: 'none',
+      },
+      '& .MuiAccordionSummary-content': {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        '& p': {
+          fontSize: '0.95rem',
+          lineHeight: 'normal',
+          display: 'flex',
+          alignItems: 'center',
+          margin: '0',
+          color: experimentLabelColor,
+          '& svg': {
+            marginRight: theme.spacing(1),
+          },
+        },
+        '& span': {
+          fontSize: '0.95rem',
+          lineHeight: 'normal',
+          color: primaryColor,
+          cursor: 'pointer',
+        },
+      },
+      '& .MuiCollapse-container:not(.MuiCollapse-hidden) .MuiCollapse-wrapper': {
+        paddingTop: '1.25rem !important',
+      },
+    },
     '& .configuration': {
       background: bgLight,
       borderRadius: radius,
@@ -124,9 +159,9 @@ const useStyles = (theme) => ({
       '& label': {
         width: 'calc((100% - 1.125rem) / 2)',
         cursor: 'pointer',
-        '& input': {
+        '& .MuiRadio-root': {
           display: 'none',
-          '&:checked': {
+          '&.Mui-checked': {
             '&+ .wrap': {
               borderColor: primaryColor,
               background: 'rgba(235, 81, 122, 0.05);',
@@ -185,12 +220,11 @@ const ModelNetworkDialog = (props) => {
 
       <Box className="custom-radio">
         <Typography component="label">
-          <input
-            type="radio"
+          <Radio
             checked={value === 'modal'}
             onChange={handleChange}
             value="modal"
-            name="radio-button-demo"
+            name="radio-button"
           />
           <Box className="wrap">
             <img src={value === 'modal' ? currentModal : currentModalUnselected} alt="currentModal" />
@@ -198,12 +232,11 @@ const ModelNetworkDialog = (props) => {
           </Box>
         </Typography>
         <Typography component="label">
-          <input
-            type="radio"
+          <Radio
             checked={value === 'experiment'}
             onChange={handleChange}
             value="experiment"
-            name="radio-button-demo"
+            name="radio-button"
           />
           <Box className="wrap">
             <img src={value === 'experiment' ? experimentSelected : experimentUnselected} alt="completeExperiment" />
@@ -212,8 +245,12 @@ const ModelNetworkDialog = (props) => {
         </Typography>
       </Box>
 
-      <Box className="configuration">
-        <Box className="configuration--head">
+      <Accordion>
+        <AccordionSummary
+          aria-label="Expand"
+          aria-controls="additional-actions-content"
+          id="additional-actions-header"
+        >
           <Typography>
             <InfoIcon />
             Run Configuration : Local Machine
@@ -221,15 +258,14 @@ const ModelNetworkDialog = (props) => {
           <Typography component="span">
             Edit
           </Typography>
-        </Box>
-        <Box className="configuration--body">
+        </AccordionSummary>
+        <AccordionDetails>
           <FormControl variant="filled">
             <InputLabel id="select-filled-label">Type</InputLabel>
             <Select
               labelId="select-filled-label"
               id="select-filled-filled"
               value="machine"
-              // onChange={(e) => handleChange(e, parameter, index)}
               IconComponent={ExpandMoreIcon}
             >
               <MenuItem value="machine">Local Machine</MenuItem>
@@ -245,8 +281,8 @@ const ModelNetworkDialog = (props) => {
             label="Field Y"
             fullWidth
           />
-        </Box>
-      </Box>
+        </AccordionDetails>
+      </Accordion>
     </ActionDialog>
   );
 };
