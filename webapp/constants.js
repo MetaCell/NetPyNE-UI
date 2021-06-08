@@ -302,6 +302,18 @@ export const DEFAULT_NETWORK_WIDGETS = {
     hideOnClose: true,
     pos: 0,
   },
+  experimentManager: {
+    id: 'experimentManager',
+    name: 'Experiment Manager',
+    status: WidgetStatus.MINIMIZED,
+    hideOnClose: true,
+    component: 'experimentManager',
+    panelName: MINIMIZED_PANEL,
+    defaultPanel: 'plotPanel',
+    enableRename: false,
+    pos: 14,
+    specification: TOOLS_LIST,
+  },
   ...PLOT_WIDGETS,
   [PYTHON_CONSOLE_WIDGET.id]: PYTHON_CONSOLE_WIDGET,
 };

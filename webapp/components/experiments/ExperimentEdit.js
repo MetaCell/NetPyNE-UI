@@ -560,11 +560,11 @@ const ExperimentEdit = (props) => {
 
   const handleInputText = (val, index, parameter, key) => {
     const newParameters = parameter.inGroup ? [...groupParameters] : [...parameters];
-    const invalidValue = isNaN(val);
+    const invalidValue = val === '' ? true : isNaN(val); // isNaN("") for empty string returns false so testing it separately
     newParameters[index] = {
       ...parameter,
       [`${key}Val`]: val,
-      [key]: parseFloat(val),
+      [key]: !invalidValue ? parseFloat(val) : val,
       [`${key}error`]: invalidValue,
       [`${key}helperText`]: !invalidValue ? '' : EXPERIMENT_TEXTS.INPUT_ERR_MESSAGE,
     };

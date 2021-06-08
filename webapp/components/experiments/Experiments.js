@@ -138,6 +138,7 @@ const Experiments = (props) => {
     setList,
     setEditState,
     setExperimentName,
+    setViewExperiment,
   } = props;
 
   const POLL_INTERVAL = 1000;
@@ -166,8 +167,11 @@ const Experiments = (props) => {
     // TODO: reset current experiment in design
   };
 
-  const viewExperiment = (payload) => {
-    // TODO: show detail view of experiment
+  const viewExperiment = (name) => {
+    setList(false);
+    setEditState(false);
+    setExperimentName(name);
+    setViewExperiment(true);
   };
 
   const createExperimentScreen = (actionConfirmed) => {
@@ -180,6 +184,7 @@ const Experiments = (props) => {
   const openEditExperiment = (name) => {
     setExperimentName(name);
     setEditState(true);
+    setViewExperiment(false);
     setList(false);
   };
 
@@ -194,13 +199,12 @@ const Experiments = (props) => {
                   {experiments.map((experiment) => (
                     <TableRow key={experiment?.name}>
                       <TableCell component="th" scope="row">
-                        <Button>
+                        <Button onClick={() => viewExperiment(experiment?.name)}>
                           <Typography variant="h6" className="experimentHead">
                             {experiment?.name}
                           </Typography>
                           <ChevronRightIcon
                             className="experimentHeadIcon"
-                            onClick={() => setList(false)}
                           />
                         </Button>
                       </TableCell>
@@ -232,7 +236,8 @@ const Experiments = (props) => {
                           className="experimentIcon"
                           onClick={
                             experiment?.state === EXPERIMENT_STATE.DESIGN
-                              ? () => openEditExperiment(experiment?.name) : viewExperiment
+                              ? () => openEditExperiment(experiment?.name)
+                              : () => viewExperiment(experiment?.name)
                           }
                         >
                           {experiment?.state === EXPERIMENT_STATE.DESIGN
