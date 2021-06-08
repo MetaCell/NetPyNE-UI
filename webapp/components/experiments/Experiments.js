@@ -177,6 +177,7 @@ const Experiments = (props) => {
   const createExperimentScreen = (actionConfirmed) => {
     setDialogOpen(false);
     setEditState(false);
+    setViewExperiment(false);
     setExperimentName(null);
     setList(!actionConfirmed);
   };
@@ -218,9 +219,9 @@ const Experiments = (props) => {
                           || experiment?.state === EXPERIMENT_STATE.INSTANTIATING)
                           ? (
                             <Chip
-                              icon={<Box className="MuiChipLoader"/>}
+                              icon={<Box className="MuiChipLoader" />}
                               label={experiment?.state}
-                              deleteIcon={<CancelRoundedIcon/>}
+                              deleteIcon={<CancelRoundedIcon />}
                               onDelete={() => {
                               }}
                             />
@@ -241,19 +242,19 @@ const Experiments = (props) => {
                           }
                         >
                           {experiment?.state === EXPERIMENT_STATE.DESIGN
-                            ? <EditIcon/>
-                            : <FileCopyOutlinedIcon/>}
+                            ? <EditIcon />
+                            : <FileCopyOutlinedIcon />}
                         </Button>
                       </TableCell>
                       <TableCell align="center">
-                        <Divider orientation="vertical"/>
+                        <Divider orientation="vertical" />
                       </TableCell>
                       <TableCell align="right">
                         <Button
                           className="experimentIcon"
                           onClick={cleanExperiment}
                         >
-                          <ReplayIcon/>
+                          <ReplayIcon />
                         </Button>
                       </TableCell>
                       <TableCell align="right">
@@ -264,7 +265,7 @@ const Experiments = (props) => {
                             setDeleteDialogOpen(true);
                           }}
                         >
-                          <DeleteIcon/>
+                          <DeleteIcon />
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -284,7 +285,7 @@ const Experiments = (props) => {
           <Box>
             <Button
               color="primary"
-              startIcon={<AddIcon/>}
+              startIcon={<AddIcon />}
               onClick={() => setDialogOpen(true)}
             >
               CREATE NEW EXPERIMENT
