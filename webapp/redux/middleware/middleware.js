@@ -1,4 +1,5 @@
 import {
+  CLONE_EXPERIMENT,
   GET_EXPERIMENTS,
   setExperiments,
 } from 'root/redux/actions/experiments';
@@ -207,15 +208,24 @@ export default (store) => (next) => (action) => {
       };
 
       pythonCall({
-        cmd: 'netpyne_geppetto.importModel',
+        cmd: NETPYNE_COMMANDS.importModel,
         args: params,
       })
         .then((response) => console.log(response));
       break;
     }
     case GET_EXPERIMENTS: {
-      Utils.evalPythonMessage('netpyne_geppetto.experiments.get_experiments', [])
+      Utils.evalPythonMessage(NETPYNE_COMMANDS.getExperiments, [])
         .then((response) => next(setExperiments(response)));
+      break;
+    }
+    case CLONE_EXPERIMENT: {
+      GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Cloning experiment ${action.payload.name}`);
+      pythonCall({
+        cmd: NETPYNE_COMMANDS.cloneExperiment,
+        args: action.payload,
+      })
+        .then((response) => console.log(response));
       break;
     }
     default: {

@@ -7,7 +7,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import DeleteIcon from '@material-ui/icons/Delete';
-import ReplayIcon from '@material-ui/icons/Replay';
 import EditIcon from '@material-ui/icons/Edit';
 import Chip from '@material-ui/core/Chip';
 import CancelRoundedIcon from '@material-ui/icons/CancelRounded';
@@ -123,13 +122,6 @@ const useStyles = (theme) => ({
   },
 });
 
-/**
- * Lists all Experiments.
- *
- * @param props
- * @return {JSX.Element}
- * @constructor
- */
 const Experiments = (props) => {
   const {
     experiments,
@@ -139,6 +131,7 @@ const Experiments = (props) => {
     setEditState,
     setExperimentName,
     setViewExperiment,
+    cloneExperiment,
   } = props;
 
   const POLL_INTERVAL = 1000;
@@ -147,24 +140,20 @@ const Experiments = (props) => {
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [experimentToDelete, setExperimentToDelete] = useState(null);
+  const [cloneDialogOpen, setCloneDialogOpen] = useState(false);
+  const [actionExperimentName, setActionExperimentName] = useState(null);
 
   const deleteExperiment = (actionConfirmed) => {
     if (actionConfirmed) {
-      removeExperiment(experimentToDelete)
+      removeExperiment(actionExperimentName)
         .then(() => {
           setDeleteDialogOpen(false);
-          setExperimentToDelete(null);
         })
         .catch((err) => console.error(err));
     } else {
       setDeleteDialogOpen(false);
-      setExperimentToDelete(null);
     }
-  };
-
-  const cleanExperiment = (payload) => {
-    // TODO: reset current experiment in design
+    setActionExperimentName(null);
   };
 
   const viewExperiment = (name) => {
@@ -187,6 +176,24 @@ const Experiments = (props) => {
     setEditState(true);
     setViewExperiment(false);
     setList(false);
+  };
+
+  const openCloneDialog = (name) => {
+    setActionExperimentName(name);
+    setCloneDialogOpen(true);
+  };
+
+  const openDeleteDialog = (name) => {
+    setActionExperimentName(name);
+    setDeleteDialogOpen(true);
+  };
+
+  const onCloneExperimentAction = (actionConfirmed) => {
+    if (actionConfirmed) {
+      cloneExperiment(actionExperimentName);
+    }
+    setCloneDialogOpen(false);
+    setActionExperimentName(null);
   };
 
   return (
@@ -238,7 +245,7 @@ const Experiments = (props) => {
                           onClick={
                             experiment?.state === EXPERIMENT_STATE.DESIGN
                               ? () => openEditExperiment(experiment?.name)
-                              : () => viewExperiment(experiment?.name)
+                              : () => openCloneDialog(experiment?.name)
                           }
                         >
                           {experiment?.state === EXPERIMENT_STATE.DESIGN
@@ -252,18 +259,7 @@ const Experiments = (props) => {
                       <TableCell align="right">
                         <Button
                           className="experimentIcon"
-                          onClick={cleanExperiment}
-                        >
-                          <ReplayIcon />
-                        </Button>
-                      </TableCell>
-                      <TableCell align="right">
-                        <Button
-                          className="experimentIcon"
-                          onClick={() => {
-                            setExperimentToDelete(experiment?.name);
-                            setDeleteDialogOpen(true);
-                          }}
+                          onClick={() => openDeleteDialog(experiment?.name)}
                         >
                           <DeleteIcon />
                         </Button>
@@ -307,6 +303,14 @@ const Experiments = (props) => {
         textForDialog={{
           heading: EXPERIMENT_TEXTS.DELETE_EXPERIMENT,
           content: EXPERIMENT_TEXTS.DELETE_DIALOG_MESSAGE,
+        }}
+      />
+      <DialogBox
+        open={cloneDialogOpen}
+        onDialogResponse={onCloneExperimentAction}
+        textForDialog={{
+          heading: EXPERIMENT_TEXTS.CLONE_EXPERIMENT,
+          content: EXPERIMENT_TEXTS.CLONE_EXPERIMENT_MESSAGE,
         }}
       />
     </>

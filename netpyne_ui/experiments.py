@@ -13,6 +13,10 @@ from os.path import isdir, join
 from netpyne_ui import constants
 from netpyne_ui import model
 
+SIM_CONFIG_FILE = "simConfig.json"
+NET_PARAMS_FILE = "netParams.json"
+BATCH_CONFIG_FILE = "batchConfig.json"
+
 
 class ExperimentsError(Exception):
     pass
@@ -59,6 +63,29 @@ def edit_experiment(name: str, experiment: dict):
     _add_experiment(updated_exp)
 
 
+def replace_current_with(name: str):
+    exp = _get_by_name(name)
+    if not exp:
+        raise ExperimentsError(f"Experiment with name {name} does not exist")
+
+    new_exp = model.Experiment(
+        # TODO: improve logic to create unique name
+        name=exp.name + "_copy",
+        state=model.ExperimentState.DESIGN,
+        params=exp.params,
+        seed=exp.seed,
+        initConfig=exp.initConfig,
+        method=exp.method
+    )
+
+    current = get_current()
+    if current:
+        remove_experiment(current.name)
+
+    _add_experiment(new_exp)
+    return
+
+
 def get_current() -> model.Experiment:
     return next(
         (exp for exp in model.experiments if exp.state == model.ExperimentState.DESIGN),
@@ -100,7 +127,7 @@ def _scan() -> [model.Experiment]:
     return experiments
 
 
-def _parse_experiment(directory) -> model.Experiment:
+def _parse_experiment(directory: str) -> model.Experiment:
     """ Finds and parses Experiments stored in `directory` on the disk.
 
     We expect the following files to be present:
@@ -115,15 +142,15 @@ def _parse_experiment(directory) -> model.Experiment:
     path = join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, directory)
 
     try:
-        with open(join(path, 'batchConfig.json'), 'r') as f:
+        with open(join(path, BATCH_CONFIG_FILE), 'r') as f:
             batch_config = json.load(f)
     except IOError:
         raise ExperimentsError("Could not find batchConfig.json")
 
-    with open(join(path, 'netParams.json'), 'r') as f:
+    with open(join(path, NET_PARAMS_FILE), 'r') as f:
         net_params = json.load(f)
 
-    with open(join(path, 'simConfig.json'), 'r') as f:
+    with open(join(path, SIM_CONFIG_FILE), 'r') as f:
         sim_config = json.load(f)
 
     run_cfg = batch_config['runCfg']
@@ -137,7 +164,7 @@ def _parse_experiment(directory) -> model.Experiment:
     return experiment
 
 
-def _delete_experiment_folder(experiment):
+def _delete_experiment_folder(experiment: model.Experiment):
     """ Recursively deletes the associated experiment folder. """
 
     def onerror(func, path, exc_info):

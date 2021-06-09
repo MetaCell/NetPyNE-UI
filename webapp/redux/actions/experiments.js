@@ -2,6 +2,7 @@ export const VIEW_EXPERIMENT = 'VIEW_EXPERIMENT';
 export const GET_EXPERIMENTS = 'GET_EXPERIMENTS';
 export const SET_EXPERIMENTS = 'SET_EXPERIMENTS';
 export const RESET_EXPERIMENT = 'RESET_EXPERIMENT';
+export const CLONE_EXPERIMENT = 'CLONE_EXPERIMENT';
 
 /**
  * Resets configuration of current Experiment.
@@ -36,8 +37,9 @@ export const viewTrialResults = () => {
 };
 
 /**
- * Replaces current model specification with selected one.
+ * Replaces experiment in design & model specification with stored experiment.
  */
-export const loadModelSpecification = () => {
-
-};
+export const cloneExperiment = (experimentName) => ({
+  type: CLONE_EXPERIMENT,
+  payload: { name: experimentName },
+});

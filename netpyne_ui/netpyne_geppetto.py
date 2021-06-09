@@ -24,6 +24,7 @@ from netpyne_ui import experiments
 from netpyne_ui import constants
 from netpyne_ui import model
 from netpyne_ui import simulations
+from netpyne_ui import utils as netpyne_ui_utils
 from netpyne_ui.netpyne_model_interpreter import NetPyNEModelInterpreter
 from netpyne_ui.simulations import InvalidConfigError
 from pygeppetto.model.model_serializer import GeppettoModelSerializer
@@ -59,13 +60,6 @@ class NetPyNEGeppetto:
 
         jupyter_geppetto.context = {'netpyne_geppetto': self}
 
-    def getModelAsJson(self):
-        # TODO: netpyne should offer a method asJSON (based on saveJSON)
-        #  that returns the JSON model without dumping to to disk.
-        obj = netpyne_utils.replaceFuncObj(self.netParams.__dict__)
-        obj = netpyne_utils.replaceDictODict(obj)
-        return obj
-
     def getData(self):
         return {
             "metadata": metadata,
@@ -76,18 +70,53 @@ class NetPyNEGeppetto:
             "tuts": self.find_tutorials()
         }
 
+    def getModelAsJson(self):
+        # TODO: netpyne should offer a method asJSON (#240)
+        #  that returns the JSON model without dumping to to disk.
+        obj = netpyne_utils.replaceFuncObj(self.netParams.__dict__)
+        obj = netpyne_utils.replaceDictODict(obj)
+        return obj
+
+    def cloneExperiment(self, payload: dict):
+        """ Loads experiment from disk and replaces experiment in design with it.
+
+        1. Replaces current experiment in design with copy of stored experiment.
+        2. Replace current model specification with spec of stored experiment.
+
+        :param payload: { name: str, replaceModelSpec: bool, replaceExperiment: bool }
+        """
+        name = payload.get('name')
+
+        # Creates new Experiment in design based on `name` experiment.
+        if payload.get('replaceExperiment', True):
+            experiments.replace_current_with(name)
+
+        # Replaces model specification
+        if payload.get('replaceModelSpec', True):
+            path = os.path.join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, name)
+            if self.doIhaveInstOrSimData()['haveInstance']:
+                sim.clearAll()
+
+            sim.initialize()
+            sim.loadNetParams(os.path.join(path, experiments.NET_PARAMS_FILE))
+            sim.loadSimData(os.path.join(path, experiments.SIM_CONFIG_FILE))
+            self.netParams = sim.net.params
+            self.simConfig = sim.cfg
+            netpyne_ui_utils.remove(self.simConfig.todict())
+            netpyne_ui_utils.remove(self.netParams.todict())
+
     def getSimulations(self):
+        # TODO: remove in a later stage
         return simulations.local.list()
 
     def stop(self):
+        # TODO: remove in a later stage
         simulations.local.stop()
         return "stopped simulation"
 
     def find_tutorials(self):
-        from os import listdir
-        from os.path import isfile, join
-        only_files = [f for f in listdir(constants.NETPYNE_WORKDIR_PATH) if
-                      isfile(join(constants.NETPYNE_WORKDIR_PATH, f))]
+        only_files = [f for f in os.listdir(constants.NETPYNE_WORKDIR_PATH) if
+                      os.path.isfile(os.path.join(constants.NETPYNE_WORKDIR_PATH, f))]
 
         def _filter(_file):
             return '.py' in _file and 'tut' in _file and 'gui' in _file
@@ -251,17 +280,6 @@ class NetPyNEGeppetto:
         :param args:
         :return:
         """
-
-        def remove(dictionary):
-            # remove reserved keys such as __dict__, __Method__, etc
-            # they appear when we do sim.loadAll(json_file)
-            if isinstance(dictionary, dict):
-                for key, value in list(dictionary.items()):
-                    if key.startswith('__'):
-                        dictionary.pop(key)
-                    else:
-                        remove(value)
-
         if not any([args[option] for option in ['loadNetParams', 'loadSimCfg', 'loadSimData', 'loadNet']]):
             return utils.getJSONError("Error while loading data", 'You have to select at least one option')
 
@@ -287,8 +305,8 @@ class NetPyNEGeppetto:
                     sim.loadAll(args['jsonModelFolder'])
                     self.netParams = sim.net.params
                     self.simConfig = sim.cfg
-                    remove(self.netParams.todict())
-                    remove(self.simConfig.todict())
+                    netpyne_ui_utils.remove(self.netParams.todict())
+                    netpyne_ui_utils.remove(self.simConfig.todict())
                 else:
                     if args['loadNet']:
                         wake_up_geppetto = True
@@ -309,14 +327,14 @@ class NetPyNEGeppetto:
                     if args['loadSimCfg']:
                         sim.loadSimCfg(args['jsonModelFolder'])
                         self.simConfig = sim.cfg
-                        remove(self.simConfig.todict())
+                        netpyne_ui_utils.remove(self.simConfig.todict())
 
                     if args['loadNetParams']:
                         if self.doIhaveInstOrSimData()['haveInstance']:
                             sim.clearAll()
                         sim.loadNetParams(args['jsonModelFolder'])
                         self.netParams = sim.net.params
-                        remove(self.netParams.todict())
+                        netpyne_ui_utils.remove(self.netParams.todict())
 
                 if wake_up_geppetto:
                     if len(sim.net.cells) > 0:

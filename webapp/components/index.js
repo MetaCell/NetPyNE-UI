@@ -17,7 +17,7 @@ import {
   setDefaultWidgets,
 } from '../redux/actions/general';
 
-import { getExperiments } from '../redux/actions/experiments';
+import { cloneExperiment, getExperiments } from '../redux/actions/experiments';
 
 import {
   openTopbarDialog,
@@ -111,6 +111,7 @@ export const Experiments = connect(
   }),
   (dispatch) => ({
     getExperiments: () => dispatch(getExperiments()),
+    cloneExperiment: (name) => dispatch(cloneExperiment(name)),
   }),
 )(_Experiments);
 
