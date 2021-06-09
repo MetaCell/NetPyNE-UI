@@ -5,6 +5,7 @@ import logging
 import shutil
 import pathlib
 import os
+import random
 
 from typing import List
 from dacite import from_dict
@@ -97,6 +98,7 @@ def _add_experiment(experiment: model.Experiment):
     if _get_by_name(experiment.name):
         raise ExperimentsError(f"Experiment {experiment.name} already exists")
 
+    _generate_trials(experiment)
     model.experiments.append(experiment)
 
 
@@ -173,3 +175,11 @@ def _delete_experiment_folder(experiment: model.Experiment):
     if experiment.folder:
         path = os.path.join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, experiment.folder)
         shutil.rmtree(path, onerror=onerror)
+
+
+def _generate_trials(experiment):
+    """ Generates dummy trial until we netpyne implements method (#240) """
+    experiment.trials = [
+        model.Trial(params=[{"weight": i, "probability": round(random.random(), 2), "cells": random.randint(1, 1000)}])
+        for i in range(0, 1000)
+    ]
