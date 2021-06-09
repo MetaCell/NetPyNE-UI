@@ -132,7 +132,7 @@ const Utils = {
     return name;
   },
 
-  // FIXME: Hack to remove scaped chars (\\ -> \ and \' -> ') manually
+  // FIXME: Hack to remove escaped chars (\\ -> \ and \' -> ') manually
   convertToJSON (data) {
     if (typeof data === 'string' || data instanceof String) {
       return JSON.parse(data.replace(/\\\\/g, '\\')
@@ -147,7 +147,7 @@ const Utils = {
 
   getErrorResponse (data) {
     const parsedData = this.convertToJSON(data);
-    if (parsedData.type && parsedData.type == 'ERROR') {
+    if (parsedData && parsedData.type && parsedData.type === 'ERROR') {
       const error = { details: parsedData.details };
       if (Object.prototype.hasOwnProperty.call(parsedData, 'message')) {
         error.message = parsedData.message;
@@ -160,7 +160,7 @@ const Utils = {
   },
 
   handleUpdate (updateCondition, newValue, originalValue, context, componentName) {
-    if ((updateCondition) && (newValue != originalValue)) {
+    if ((updateCondition) && (newValue !== originalValue)) {
       /*
        * if the new value has been changed by the function Utils.nameValidation means that the name convention
        * has not been respected, so we need to open the dialog and inform the user.
@@ -171,10 +171,10 @@ const Utils = {
         errorDetails: `Leading digits or whitespaces are not allowed in ${componentName} names.`,
       });
       return true;
-    } if ((updateCondition) && (newValue == originalValue)) {
+    } if ((updateCondition) && (newValue === originalValue)) {
       context.setState({ currentName: newValue });
       return true;
-    } if (!(updateCondition) && (newValue == originalValue)) {
+    } if (!(updateCondition) && (newValue === originalValue)) {
       context.setState({
         currentName: newValue,
         errorMessage: 'Error',
@@ -182,7 +182,7 @@ const Utils = {
         } is already used in this model, please pick another name.`,
       });
       return false;
-    } if (!(updateCondition) && (newValue != originalValue)) {
+    } if (!(updateCondition) && (newValue !== originalValue)) {
       context.setState({
         currentName: newValue,
         errorMessage: 'Error',
