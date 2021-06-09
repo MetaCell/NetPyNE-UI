@@ -19,6 +19,7 @@ import NewModelDialog from './dialogs/NewModel';
 import ImportExportHLSDialog from './dialogs/ImportExportHLS';
 import ImportCellParamsDialog from './dialogs/ImportCellParams';
 import UploadDownloadFilesDialog from './dialogs/UploadDownloadFiles';
+import ModelNetworkDialog from './dialogs/ModelNetwork';
 
 import { TOPBAR_CONSTANTS } from '../../constants';
 
@@ -173,6 +174,14 @@ class Topbar extends Component {
                 this.handleOpenSnackBar(message);
               }}
               mode="DOWNLOAD"
+            />
+          );
+          break;
+        case TOPBAR_CONSTANTS.NETWORK_MODEL:
+          content = (
+            <ModelNetworkDialog
+              open={this.props.dialogOpen}
+              onRequestClose={() => this.handleClose()}
             />
           );
           break;
