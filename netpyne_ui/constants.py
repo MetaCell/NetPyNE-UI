@@ -12,6 +12,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 UPLOAD_FOLDER_PATH = os.path.join(ROOT, NETPYNE_WORKDIR, UPLOAD_FOLDER_NAME)
 NETPYNE_WORKDIR_PATH = os.path.join(ROOT, NETPYNE_WORKDIR)
+EXPERIMENTS_FOLDER_PATH = os.path.join(ROOT, NETPYNE_WORKDIR, EXPERIMENTS_FOLDER)
 
 if not os.path.exists(NETPYNE_WORKDIR_PATH):
     NETPYNE_WORKDIR_PATH = os.path.join(os.getcwd(), NETPYNE_WORKDIR)

@@ -4,12 +4,12 @@ import json
 import logging
 import shutil
 import pathlib
+import os
 
 from typing import List
 from dacite import from_dict
-from os import listdir
-from os.path import isdir, join
 
+from netpyne_ui import utils
 from netpyne_ui import constants
 from netpyne_ui import model
 
@@ -68,9 +68,9 @@ def replace_current_with(name: str):
     if not exp:
         raise ExperimentsError(f"Experiment with name {name} does not exist")
 
+    next_name = utils.get_next_file_name(constants.EXPERIMENTS_FOLDER_PATH, name)
     new_exp = model.Experiment(
-        # TODO: improve logic to create unique name
-        name=exp.name + "_copy",
+        name=next_name,
         state=model.ExperimentState.DESIGN,
         params=exp.params,
         seed=exp.seed,
@@ -106,13 +106,12 @@ def _get_by_name(name: str) -> model.Experiment:
 
 
 def _scan() -> [model.Experiment]:
-    experiments_folder = join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER)
-    if not pathlib.Path(experiments_folder).exists():
+    if not pathlib.Path(constants.EXPERIMENTS_FOLDER_PATH).exists():
         return []
 
     dirs = list([
-        f for f in listdir(experiments_folder)
-        if isdir(join(experiments_folder, f))
+        f for f in os.listdir(constants.EXPERIMENTS_FOLDER_PATH)
+        if os.path.isdir(os.path.join(constants.EXPERIMENTS_FOLDER_PATH, f))
     ])
 
     experiments = []
@@ -139,18 +138,18 @@ def _parse_experiment(directory: str) -> model.Experiment:
 
     :raises ExperimentsError
     """
-    path = join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, directory)
+    path = os.path.join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, directory)
 
     try:
-        with open(join(path, BATCH_CONFIG_FILE), 'r') as f:
+        with open(os.path.join(path, BATCH_CONFIG_FILE), 'r') as f:
             batch_config = json.load(f)
     except IOError:
         raise ExperimentsError("Could not find batchConfig.json")
 
-    with open(join(path, NET_PARAMS_FILE), 'r') as f:
+    with open(os.path.join(path, NET_PARAMS_FILE), 'r') as f:
         net_params = json.load(f)
 
-    with open(join(path, SIM_CONFIG_FILE), 'r') as f:
+    with open(os.path.join(path, SIM_CONFIG_FILE), 'r') as f:
         sim_config = json.load(f)
 
     run_cfg = batch_config['runCfg']
@@ -172,5 +171,5 @@ def _delete_experiment_folder(experiment: model.Experiment):
         pass
 
     if experiment.folder:
-        path = join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, experiment.folder)
+        path = os.path.join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, experiment.folder)
         shutil.rmtree(path, onerror=onerror)

@@ -93,7 +93,7 @@ class NetPyNEGeppetto:
 
         # Replaces model specification
         if payload.get('replaceModelSpec', True):
-            path = os.path.join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, name)
+            path = os.path.join(constants.EXPERIMENTS_FOLDER_PATH, name)
             if self.doIhaveInstOrSimData()['haveInstance']:
                 sim.clearAll()
 
