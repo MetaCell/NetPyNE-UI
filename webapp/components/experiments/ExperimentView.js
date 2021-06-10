@@ -24,6 +24,10 @@ import AssessmentIcon from '@material-ui/icons/Assessment';
 import BlurOnIcon from '@material-ui/icons/BlurOn';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import { EXPERIMENT_TEXTS } from 'root/constants';
+import DialogBox from 'root/components/general/DialogBox';
+import { useDispatch } from 'react-redux';
+import { viewExperimentResults } from 'root/redux/actions/experiments';
 
 import {
   bgRegular,
@@ -237,7 +241,11 @@ const useStyles = (theme) => ({
 
 function EnhancedTableHead (props) {
   const {
-    order, orderBy, onRequestSort, classes, paramHeaders,
+    order,
+    orderBy,
+    onRequestSort,
+    classes,
+    paramHeaders,
   } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -298,8 +306,15 @@ EnhancedTableHead.propTypes = {
 
 const ExperimentView = (props) => {
   const {
-    classes, name, setList, setJsonViewer, setViewExperiment, setTrial, setTrialJSON,
+    classes,
+    name,
+    setList,
+    setJsonViewer,
+    setViewExperiment,
+    setTrial,
+    setTrialJSON,
   } = props;
+  const dispatch = useDispatch();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('name');
   const [tableRows, setTableRows] = React.useState([]);
@@ -308,6 +323,11 @@ const ExperimentView = (props) => {
   const [paramHeaders, setParamHeaders] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [loadResultsDialogOpen, setLoadResultsDialogOpen] = React.useState(false);
+  const [selectedTrial, setSelectedTrial] = React.useState({
+    experiment: null,
+    trial: null,
+  });
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -320,7 +340,10 @@ const ExperimentView = (props) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const filterObj = { param: '', value: '' };
+  const filterObj = {
+    param: '',
+    value: '',
+  };
   const [filter, setFilter] = useState([filterObj]);
 
   const addFilterRow = () => {
@@ -352,7 +375,10 @@ const ExperimentView = (props) => {
 
   const setParameterValue = (val, index) => {
     const newFilter = [...filter];
-    newFilter[index] = { ...filter[index], value: val };
+    newFilter[index] = {
+      ...filter[index],
+      value: val,
+    };
     setPage(0);
     setFilter(newFilter);
     setFilteredRows(filterRows(tableRows, newFilter));
@@ -360,7 +386,10 @@ const ExperimentView = (props) => {
 
   const filterParameterChange = (val, index) => {
     const newFilter = [...filter];
-    newFilter[index] = { param: val, value: '' };
+    newFilter[index] = {
+      param: val,
+      value: '',
+    };
     setFilter(newFilter);
   };
 
@@ -371,12 +400,13 @@ const ExperimentView = (props) => {
           setExperiment(exp);
           if (exp?.trials.length > 0) {
             setParamHeaders(
-              Object.keys(exp?.trials[0]?.params[0]).map((header) => ({
-                id: header,
-                numeric: true,
-                disablePadding: false,
-                label: header,
-              })),
+              Object.keys(exp?.trials[0]?.params[0])
+                .map((header) => ({
+                  id: header,
+                  numeric: true,
+                  disablePadding: false,
+                  label: header,
+                })),
             );
             const rows = exp?.trials.map((trial, index) => ({
               name: `Trial ${index + 1}`,
@@ -391,12 +421,13 @@ const ExperimentView = (props) => {
   }, [name]);
 
   const openJsonViewer = (trial) => {
-    getParameters().then((params) => {
-      setTrialJSON(params);
-      setJsonViewer(true);
-      setViewExperiment(false);
-      setTrial(trial);
-    });
+    getParameters()
+      .then((params) => {
+        setTrialJSON(params);
+        setJsonViewer(true);
+        setViewExperiment(false);
+        setTrial(trial);
+      });
   };
 
   const handleChangePage = (event, newPage) => {
@@ -414,6 +445,25 @@ const ExperimentView = (props) => {
     setPage(0);
     setFilter(newFilter);
     setFilteredRows(filterRows(tableRows, newFilter));
+  };
+
+  const openLoadResultsDialog = (experimentName, trial) => {
+    setSelectedTrial({
+      experiment: experimentName,
+      trial,
+    });
+    setLoadResultsDialogOpen(true);
+  };
+
+  const onLoadResultsAction = (actionConfirmed) => {
+    if (actionConfirmed) {
+      dispatch(viewExperimentResults({
+        name: selectedTrial.experiment,
+        trial: selectedTrial.trial,
+      }));
+    }
+    setSelectedTrial(null);
+    setLoadResultsDialogOpen(false);
   };
 
   return (
@@ -476,7 +526,9 @@ const ExperimentView = (props) => {
                       ))}
                       <TableCell align="right" className={classes.stickyRight}>
                         <Box className="MuiTableCell-actions">
-                          <IconButton>
+                          <IconButton
+                            onClick={() => openLoadResultsDialog(experiment?.name, row.name)}
+                          >
                             <AssessmentIcon className="MuiSvgIcon-assessment" />
                           </IconButton>
                           <Divider orientation="vertical" />
@@ -504,6 +556,14 @@ const ExperimentView = (props) => {
               onChangeRowsPerPage={handleChangeRowsPerPage}
             />
           )}
+          <DialogBox
+            open={loadResultsDialogOpen}
+            onDialogResponse={onLoadResultsAction}
+            textForDialog={{
+              heading: EXPERIMENT_TEXTS.VIEW_EXPERIMENTS_RESULTS,
+              content: EXPERIMENT_TEXTS.VIEW_EXPERIMENTS_RESULTS_MESSAGE,
+            }}
+          />
         </>
       )}
     </div>

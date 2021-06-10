@@ -3,6 +3,7 @@ export const GET_EXPERIMENTS = 'GET_EXPERIMENTS';
 export const SET_EXPERIMENTS = 'SET_EXPERIMENTS';
 export const RESET_EXPERIMENT = 'RESET_EXPERIMENT';
 export const CLONE_EXPERIMENT = 'CLONE_EXPERIMENT';
+export const VIEW_EXPERIMENTS_RESULTS = 'LOAD_EXPERIMENT_RESULTS';
 
 /**
  * Resets configuration of current Experiment.
@@ -30,11 +31,12 @@ export const loadTrial = () => {
 };
 
 /**
- * Opens Model>Explore view and loads results of selected trial.
+ * View results of selected experiment/trial.
  */
-export const viewTrialResults = () => {
-
-};
+export const viewExperimentResults = (payload) => ({
+  type: VIEW_EXPERIMENTS_RESULTS,
+  payload,
+});
 
 /**
  * Replaces experiment in design & model specification with stored experiment.

@@ -99,11 +99,40 @@ class NetPyNEGeppetto:
 
             sim.initialize()
             sim.loadNetParams(os.path.join(path, experiments.NET_PARAMS_FILE))
-            sim.loadSimData(os.path.join(path, experiments.SIM_CONFIG_FILE))
+            sim.loadSimCfg(os.path.join(path, experiments.SIM_CONFIG_FILE))
             self.netParams = sim.net.params
             self.simConfig = sim.cfg
             netpyne_ui_utils.remove(self.simConfig.todict())
             netpyne_ui_utils.remove(self.netParams.todict())
+
+    def viewExperimentResult(self, payload: dict):
+        """ Loads the net and simData of of a simulated experiment trial.
+
+        :param payload: {name: str, trial: str}
+        :return: geppetto model
+        """
+        name = payload.get("name", None)
+        # TODO: find output filename for trial based on parameter idx combination
+        trial = payload.get("trial", None)
+
+        path = os.path.join(constants.EXPERIMENTS_FOLDER_PATH, name)
+
+        # pattern: expName_(idx_)*idx.json
+        output_file = f"{name}_0.json"
+        output_file_path = os.path.join(path, output_file)
+
+        # TODO: Fix loading, seems to be broken for normal JSON import as well
+        if not os.path.exists(output_file_path):
+            return utils.getJSONError(f"Couldn't find output file {output_file}", "")
+
+        if not self.doIhaveInstOrSimData()['haveInstance']:
+            sim.initialize()
+            sim.loadNet(output_file_path)
+            sim.loadSimData(output_file_path)
+            sim.gatherData()
+
+        self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
+        return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
 
     def getSimulations(self):
         # TODO: remove in a later stage

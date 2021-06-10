@@ -1,7 +1,7 @@
 import {
   CLONE_EXPERIMENT,
   GET_EXPERIMENTS,
-  setExperiments,
+  setExperiments, VIEW_EXPERIMENTS_RESULTS,
 } from 'root/redux/actions/experiments';
 import { NETPYNE_COMMANDS } from 'root/constants';
 import {
@@ -226,6 +226,30 @@ export default (store) => (next) => (action) => {
         args: action.payload,
       })
         .then((response) => console.log(response));
+      break;
+    }
+    case VIEW_EXPERIMENTS_RESULTS: {
+      GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading results of ${action.payload.name} - ${action.payload.trial}`);
+      pythonCall({
+        cmd: NETPYNE_COMMANDS.viewExperimentResults,
+        args: action.payload,
+      })
+        .then((response) => {
+          // TODO: generalize, similar logic is used for createSimulateBackendCall
+          const responsePayload = processError(response);
+          if (responsePayload) {
+            throw responsePayload;
+          }
+
+          if (response) {
+            GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
+            dehydrateCanvas();
+            GEPPETTO.Manager.loadModel(response);
+            GEPPETTO.CommandController.log('Instantiation / Simulation completed.');
+          }
+          return response;
+        })
+        .then(toNetworkCallback(false), pythonErrorCallback);
       break;
     }
     default: {
