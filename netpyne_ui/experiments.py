@@ -94,6 +94,37 @@ def get_current() -> model.Experiment:
     )
 
 
+def get_model_specification(name: str, trial: str) -> dict:
+    """ Returns JSON representation of the netParams & simConfig of the requested trial.
+
+    :param name: the experiment name.
+    :param trial: the trial identifier.
+    :return: dict
+    """
+    file = get_trial_output_file(name, trial)
+    if not os.path.exists(file):
+        raise ExperimentsError(f"Trial specification file {file} not found")
+
+    with open(file, 'r') as f:
+        trial_output = json.load(f)
+        return {
+            'net': {
+                'params': trial_output['net']['params']
+            },
+            'simConfig': trial_output['simConfig']
+        }
+
+
+def get_trial_output_file(experiment_name: str, trial: str):
+    path = os.path.join(constants.EXPERIMENTS_FOLDER_PATH, experiment_name)
+    # TODO: find output filename for trial based on parameter idx combination
+
+    # pattern: expName_(idx_)*idx.json
+    output_file = f"{experiment_name}_0.json"
+    output_file_path = os.path.join(path, output_file)
+    return output_file_path
+
+
 def _add_experiment(experiment: model.Experiment):
     if _get_by_name(experiment.name):
         raise ExperimentsError(f"Experiment {experiment.name} already exists")
@@ -178,7 +209,7 @@ def _delete_experiment_folder(experiment: model.Experiment):
 
 
 def _generate_trials(experiment):
-    """ Generates dummy trial until we netpyne implements method (#240) """
+    """ Generates dummy trial until netpyne implements method (#240) """
     experiment.trials = [
         model.Trial(params=[{"weight": i, "probability": round(random.random(), 2), "cells": random.randint(1, 1000)}])
         for i in range(0, 1000)

@@ -112,24 +112,22 @@ class NetPyNEGeppetto:
         :return: geppetto model
         """
         name = payload.get("name", None)
-        # TODO: find output filename for trial based on parameter idx combination
         trial = payload.get("trial", None)
 
-        path = os.path.join(constants.EXPERIMENTS_FOLDER_PATH, name)
+        file = experiments.get_trial_output_file(name, trial)
+        if not os.path.exists(file):
+            return utils.getJSONError(f"Couldn't find output file {file}", "")
 
-        # pattern: expName_(idx_)*idx.json
-        output_file = f"{name}_0.json"
-        output_file_path = os.path.join(path, output_file)
+        if self.doIhaveInstOrSimData()['haveInstance']:
+            sim.clearAll()
 
+        sim.initialize()
+        # Only load net and simData, don't replace netParams and simConfig
         # TODO: Fix loading, seems to be broken for normal JSON import as well
-        if not os.path.exists(output_file_path):
-            return utils.getJSONError(f"Couldn't find output file {output_file}", "")
-
-        if not self.doIhaveInstOrSimData()['haveInstance']:
-            sim.initialize()
-            sim.loadNet(output_file_path)
-            sim.loadSimData(output_file_path)
-            sim.gatherData()
+        sim.loadNet(file)
+        sim.loadSimData(file)
+        sim.net.defineCellShapes()
+        sim.gatherData()
 
         self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
         return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))

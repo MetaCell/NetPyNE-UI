@@ -16,7 +16,6 @@ import {
   Typography,
   TablePagination,
 } from '@material-ui/core';
-import { getExperiment, getParameters } from 'root/api/experiments';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import CodeIcon from '@material-ui/icons/Code';
 import ReplayIcon from '@material-ui/icons/Replay';
@@ -28,7 +27,7 @@ import { EXPERIMENT_TEXTS } from 'root/constants';
 import DialogBox from 'root/components/general/DialogBox';
 import { useDispatch } from 'react-redux';
 import { viewExperimentResults } from 'root/redux/actions/experiments';
-
+import * as ExperimentsApi from 'root/api/experiments';
 import {
   bgRegular,
   bgDarker,
@@ -395,7 +394,7 @@ const ExperimentView = (props) => {
 
   useEffect(() => {
     if (name) {
-      getExperiment(name)
+      ExperimentsApi.getExperiment(name)
         .then((exp) => {
           setExperiment(exp);
           if (exp?.trials.length > 0) {
@@ -420,10 +419,10 @@ const ExperimentView = (props) => {
     }
   }, [name]);
 
-  const openJsonViewer = (trial) => {
-    getParameters()
-      .then((params) => {
-        setTrialJSON(params);
+  const openJsonViewer = (experiment, trial) => {
+    ExperimentsApi.getModelSpecification(experiment, trial)
+      .then((modelSpecification) => {
+        setTrialJSON(modelSpecification);
         setJsonViewer(true);
         setViewExperiment(false);
         setTrial(trial);
@@ -470,12 +469,12 @@ const ExperimentView = (props) => {
     <div className={classes.root}>
       <Box className="ViewExperimentHead">
         <Box mt={2} mb={3} className="editExperimentBack">
-          <ArrowBackIcon onClick={() => setList(true)} />
+          <ArrowBackIcon onClick={() => setList(true)}/>
           <Typography variant="body2">{experiment?.name}</Typography>
         </Box>
         <div className="editExperiment-filter">
           <Button onClick={popoverhandleClick}>
-            <FilterListIcon />
+            <FilterListIcon/>
           </Button>
           <ExperimentRowFilter
             filter={filter}
@@ -492,7 +491,7 @@ const ExperimentView = (props) => {
       {experiment?.trials && (
         <>
           <Box className="editExperiment-trials">
-            <BlurOnIcon />
+            <BlurOnIcon/>
             <Typography variant="h5">Experiment Trials</Typography>
           </Box>
           <TableContainer>
@@ -529,14 +528,14 @@ const ExperimentView = (props) => {
                           <IconButton
                             onClick={() => openLoadResultsDialog(experiment?.name, row.name)}
                           >
-                            <AssessmentIcon className="MuiSvgIcon-assessment" />
+                            <AssessmentIcon className="MuiSvgIcon-assessment"/>
                           </IconButton>
-                          <Divider orientation="vertical" />
-                          <IconButton onClick={() => openJsonViewer(row.name)}>
-                            <CodeIcon />
+                          <Divider orientation="vertical"/>
+                          <IconButton onClick={() => openJsonViewer(experiment?.name, row.name)}>
+                            <CodeIcon/>
                           </IconButton>
                           <IconButton>
-                            <ReplayIcon className="MuiSvgIcon-replay" />
+                            <ReplayIcon className="MuiSvgIcon-replay"/>
                           </IconButton>
                         </Box>
                       </TableCell>
