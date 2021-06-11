@@ -25,7 +25,7 @@ class ExperimentsError(Exception):
 
 def get_experiments() -> List[dict]:
     # Only update Experiments stored on filesystem
-    stored_experiments = _scan()
+    stored_experiments = _scan_experiments_directory()
     model.experiments = [
         e for e in model.experiments if
         e.state in model.ExperimentState.DESIGN
@@ -138,7 +138,7 @@ def _get_by_name(name: str) -> model.Experiment:
     return experiment
 
 
-def _scan() -> [model.Experiment]:
+def _scan_experiments_directory() -> [model.Experiment]:
     if not pathlib.Path(constants.EXPERIMENTS_FOLDER_PATH).exists():
         return []
 
