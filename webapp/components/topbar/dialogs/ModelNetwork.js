@@ -2,10 +2,23 @@ import React, { useState } from 'react';
 import { ActionDialog } from 'netpyne/components';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import {
-  Box, TextField, Typography, FormControl, InputLabel, Select, MenuItem, withStyles, Radio, Accordion, AccordionSummary, AccordionDetails,
+  Box,
+  TextField,
+  Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  withStyles,
+  Radio,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@material-ui/core';
 import InfoIcon from '@material-ui/icons/Info';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { useDispatch } from 'react-redux';
+import { simulateNetwork } from 'root/redux/actions/general';
 import currentModal from '../../../static/icons/modelSelected.png';
 import currentModalUnselected from '../../../static/icons/modelUnselected.png';
 import experimentSelected from '../../../static/icons/experimentSelected.png';
@@ -203,16 +216,16 @@ const useStyles = (theme) => ({
 
 const ModelNetworkDialog = (props) => {
   const [value, setValue] = useState('modal');
-
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
+  const dispatch = useDispatch();
+  const handleChange = (event) => setValue(event.target.value);
+  const { classes } = props;
 
   return (
     <ActionDialog
       buttonLabel="Instantiate"
       title="Instantiate"
-      classes={props.classes}
+      classes={classes}
+      onAction={() => dispatch(simulateNetwork)}
     >
       <DialogContentText>
         What do you want to instantiate ?

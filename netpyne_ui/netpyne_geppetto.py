@@ -93,6 +93,7 @@ class NetPyNEGeppetto:
 
         # Replaces model specification
         if payload.get('replaceModelSpec', True):
+            # TODO: if trial is specified, use trial output file!
             path = os.path.join(constants.EXPERIMENTS_FOLDER_PATH, name)
             if self.doIhaveInstOrSimData()['haveInstance']:
                 sim.clearAll()
@@ -132,14 +133,13 @@ class NetPyNEGeppetto:
         self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
         return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
 
-    def getSimulations(self):
-        # TODO: remove in a later stage
-        return simulations.local.list()
-
-    def stop(self):
-        # TODO: remove in a later stage
+    def stopExperiment(self, experiment_name):
+        # TODO: check in simulation pool if experiment is running
+        # TODO: once stopped, update experiment status to ERROR (?), also on file system
         simulations.local.stop()
-        return "stopped simulation"
+        return {
+            "message": f"Stopped simulation of {experiment_name}"
+        }
 
     def find_tutorials(self):
         only_files = [f for f in os.listdir(constants.NETPYNE_WORKDIR_PATH) if
@@ -163,79 +163,101 @@ class NetPyNEGeppetto:
             logging.exception(message)
             return utils.getJSONError(message, sys.exc_info())
 
-    def simulateNetPyNEModelInGeppetto(self, args):
+    def simulate_experiment_trials(self, experiment: model.Experiment):
+        if simulations.local.is_running():
+            return utils.getJSONError("Simulation is already running", "")
         try:
-            with redirect_stdout(sys.__stdout__):
-                # if args.get("complete", None):
-                if True:
-                    if simulations.local.is_running():
-                        return utils.getJSONError("Simulation is already running", "")
+            experiment.state = model.ExperimentState.SIMULATING
+            working_directory = self._prepare_batch_files(experiment)
+        except OSError:
+            return utils.getJSONError("The specified folder already exists", "")
 
-                    try:
-                        experiment = experiments.get_current()
-                        if experiment is None:
-                            return utils.getJSONError("Experiment does not exist", "")
+        try:
+            simulations.run(
+                platform="local",
+                parallel=self.run_config.parallel,
+                cores=self.run_config.cores,
+                method=self.run_config.type,
+                batch=True,
+                asynchronous=self.run_config.asynchronous,
+                working_directory=working_directory
+            )
+        except InvalidConfigError as e:
+            return utils.getJSONError(str(e), "")
 
-                        # Update state to SIMULATING
-                        # User is not able to trigger further simulation of an experiment
-                        experiment.state = model.ExperimentState.SIMULATING
-                        # From hereon, experiment state is stored in filesystem.
-                        working_directory = self._prepare_batch_files(experiment)
-                    except OSError:
-                        return utils.getJSONError("The specified folder already exists", "")
+        message = "Experiment started in background! " \
+                  f"Results will be stored in your workspace at ./{experiment.name}"
 
-                    try:
-                        simulations.run(
-                            platform="local",
-                            parallel=self.run_config.parallel,
-                            cores=self.run_config.cores,
-                            method=self.run_config.type,
-                            batch=True,
-                            asynchronous=self.run_config.asynchronous,
-                            working_directory=working_directory
-                        )
-                    except InvalidConfigError as e:
-                        return utils.getJSONError(str(e), "")
+        return utils.getJSONError(message, "")
 
-                    message = "Experiment started in background! " \
-                              f"Results will be stored in your workspace at ./{experiment.name}"
+    def simulate_single_model(self, use_prev_inst: bool = False):
+        if self.run_config.asynchronous or self.run_config.parallel:
+            # Run in different process
+            if simulations.local.is_running():
+                return utils.getJSONError("Simulation is already running", "")
 
-                    return utils.getJSONError(message, "")
+            self._prepare_simulation_files(use_prev_inst)
+            simulations.run(
+                parallel=self.run_config.parallel,
+                cores=self.run_config.cores,
+                asynchronous=self.run_config.asynchronous
+            )
+
+            if not self.run_config.asynchronous:
+                sim.load(f'{constants.MODEL_OUTPUT_FILENAME}.json')
+                self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
+
+        else:
+            # Run in same process
+            if not use_prev_inst:
+                logging.debug('Instantiating single thread simulation')
+                netpyne_model = self.instantiateNetPyNEModel()
+
+                self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
+            simulations.run()
+
+        if self.geppetto_model:
+            response = json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
+            return response
+
+    def simulateNetPyNEModelInGeppetto(self, args):
+        """ Starts simulation of the currently loaded NetPyNe model.
+
+        * runConfiguration is used to determine asynch/synch & other parameters.
+        * complete flag in args decides if we simulate single model as Experiment or complete Experiment.
+        * if Experiment in design does not exist, we create a new one & start single sim.
+        * All Simulations run in different process.
+
+        :param args: { complete: bool, usePrevInst: bool }
+        :return: geppetto model.
+        """
+        complete = args.get('complete', True)
+        use_prev_inst = args.get('usePrevInst', False)
+
+        try:
+            experiment = experiments.get_current()
+            if experiment:
+                # run config decides over asynch or synch
+                if complete:
+                    # simulate trials
+                    return self.simulate_experiment_trials(experiment)
                 else:
-                    if self.run_config.asynchronous or self.run_config.parallel:
-                        if simulations.local.is_running():
-                            return utils.getJSONError("Simulation is already running", "")
-
-                        self._prepare_simulation_files(args)
-                        simulations.run(
-                            parallel=self.run_config.parallel,
-                            cores=self.run_config.cores,
-                            asynchronous=self.run_config.asynchronous
-                        )
-
-                        if not self.run_config.asynchronous:
-                            sim.load(f'{constants.MODEL_OUTPUT_FILENAME}.json')
-                            self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
-
-                    else:
-                        if not args.get('usePrevInst', False):
-                            logging.debug('Instantiating single thread simulation')
-                            netpyne_model = self.instantiateNetPyNEModel()
-
-                            self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
-                        simulations.run()
-
-                if self.geppetto_model:
-                    response = json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
-                    return response
+                    # simulate current modelSpec
+                    return self.simulate_single_model(use_prev_inst)
+            else:
+                # TODO: create new experiment for modelSpec
+                # TODO: is synch by default, remove once it can be configured
+                self.run_config.asynchronous = False
+                self.run_config.parallel = False
+                return self.simulate_single_model(use_prev_inst)
 
         except Exception:
             message = "Error while simulating the NetPyNE model"
             logging.exception(message)
             return utils.getJSONError(message, sys.exc_info())
 
-    def _prepare_simulation_files(self, args):
-        if args.get('usePrevInst', False):
+    def _prepare_simulation_files(self, use_prev_inst: bool):
+        if use_prev_inst:
             sim.cfg.saveJson = True
             oldName = sim.cfg.filename
             sim.cfg.filename = constants.MODEL_OUTPUT_FILENAME

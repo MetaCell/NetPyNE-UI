@@ -285,6 +285,7 @@ export const Topbar = connect(
     automaticInstantiation: state.general.automaticInstantiation,
     automaticSimulation: state.general.automaticSimulation,
     theme: state.general.theme,
+    experimentInDesign: state.experiments.inDesign,
   }),
   (dispatch) => ({
     dispatchAction: (action) => dispatch(action),
