@@ -122,13 +122,25 @@ class NetPyNEGeppetto:
         if self.doIhaveInstOrSimData()['haveInstance']:
             sim.clearAll()
 
-        sim.initialize()
+        # sim.initialize()
         # Only load net and simData, don't replace netParams and simConfig
         # TODO: Fix loading, seems to be broken for normal JSON import as well
-        sim.loadNet(file)
-        sim.loadSimData(file)
-        sim.net.defineCellShapes()
-        sim.gatherData()
+        # sim.loadNet(file, instantiate=False)
+        # sim.loadSimData(file)
+
+        # Load everything since partial import throws error
+        # simData, cfg & net required for plots, don't need netParams
+        sim.load(file)
+
+        # Enables to display cells in 3D Viewer
+        section = list(sim.net.cells[0].secs.keys())[0]
+        if 'pt3d' not in list(sim.net.cells[0].secs[section].geom.keys()):
+            sim.net.defineCellShapes()
+            sim.gatherData()
+            # Load again because gatherData removed simData
+            sim.loadSimData(file)
+
+        # Don't run sim.gatherData(), will clear allSimData
 
         self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
         return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
@@ -393,6 +405,7 @@ class NetPyNEGeppetto:
                             sim.gatherData()
                             sim.loadSimData(args['jsonModelFolder'])
 
+                    # TODO: Fix me - gatherData will remove allSimData!
                     sim.gatherData()
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
                     return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
@@ -639,8 +652,14 @@ class NetPyNEGeppetto:
                     args['theme'] = theme
 
                     if plotName in ("iplotConn", "iplot2Dnet") and sim.net.allCells:
+                        def conns_length(cell) -> int:
+                            if type(cell) is dict:
+                                return len(cell.get('conns', []))
+                            else:
+                                return len(getattr(cell, 'conns', []))
+
                         # To prevent unresponsive kernel, we don't show conns if they become too many
-                        num_conn = sum([len(cell.conns) for cell in sim.net.allCells if cell.conns])
+                        num_conn = sum([conns_length(cell) for cell in sim.net.allCells])
                         if num_conn > NUM_CONN_LIMIT:
                             args["showConns"] = False
 

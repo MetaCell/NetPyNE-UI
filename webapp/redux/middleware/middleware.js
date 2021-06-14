@@ -15,6 +15,7 @@ import {
   EDIT_MODEL,
   LOAD_TUTORIAL,
   RESET_MODEL,
+  showNetwork,
 } from '../actions/general';
 import { openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
@@ -249,7 +250,10 @@ export default (store) => (next) => (action) => {
           }
           return response;
         })
-        .then(toNetworkCallback(false), pythonErrorCallback);
+        .then(() => {
+          store.dispatch(showNetwork);
+          next(action);
+        }, pythonErrorCallback);
       break;
     }
     default: {
