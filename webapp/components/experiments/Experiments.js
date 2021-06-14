@@ -7,7 +7,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import DeleteIcon from '@material-ui/icons/Delete';
-import ReplayIcon from '@material-ui/icons/Replay';
 import EditIcon from '@material-ui/icons/Edit';
 import Chip from '@material-ui/core/Chip';
 import CancelRoundedIcon from '@material-ui/icons/CancelRounded';
@@ -22,10 +21,12 @@ import {
 } from 'netpyne/components';
 import { withStyles } from '@material-ui/core/styles';
 import useInterval from 'root/api/hooks';
+import { removeExperiment } from 'root/api/experiments';
+import Utils from 'root/Utils';
 import {
   EXPERIMENT_STATE, EXPERIMENT_TEXTS,
 } from '../../constants';
-import DeleteDialogBox from '../general/DeleteDialogBox';
+import DialogBox from '../general/DialogBox';
 import { experimentGrey, experimentInputColor } from '../../theme';
 
 const useStyles = (theme) => ({
@@ -121,13 +122,6 @@ const useStyles = (theme) => ({
   },
 });
 
-/**
- * Lists all Experiments.
- *
- * @param props
- * @return {JSX.Element}
- * @constructor
- */
 const Experiments = (props) => {
   const {
     experiments,
@@ -137,18 +131,29 @@ const Experiments = (props) => {
     setEditState,
     setExperimentName,
     setViewExperiment,
+    cloneExperiment,
   } = props;
 
   const POLL_INTERVAL = 1000;
   useEffect(getExperiments, []);
   useInterval(getExperiments, POLL_INTERVAL);
 
-  const cleanExperiment = (payload) => {
-    // TODO: reset current experiment in design
-  };
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [cloneDialogOpen, setCloneDialogOpen] = useState(false);
+  const [actionExperimentName, setActionExperimentName] = useState(null);
 
-  const deleteExperiment = (name) => {
-    // TODO: show dialog, call removeExperiment api method & reload experiments
+  const deleteExperiment = (actionConfirmed) => {
+    if (actionConfirmed) {
+      removeExperiment(actionExperimentName)
+        .then(() => {
+          setDeleteDialogOpen(false);
+        })
+        .catch((err) => console.error(err));
+    } else {
+      setDeleteDialogOpen(false);
+    }
+    setActionExperimentName(null);
   };
 
   const viewExperiment = (name) => {
@@ -158,16 +163,10 @@ const Experiments = (props) => {
     setViewExperiment(true);
   };
 
-  const formatDate = (timestamp) => {
-    const date = new Date(timestamp);
-    return date?.toLocaleDateString();
-  };
-
-  const [dialogOpen, setDialogOpen] = useState(false);
-
   const createExperimentScreen = (actionConfirmed) => {
     setDialogOpen(false);
     setEditState(false);
+    setViewExperiment(false);
     setExperimentName(null);
     setList(!actionConfirmed);
   };
@@ -177,6 +176,24 @@ const Experiments = (props) => {
     setEditState(true);
     setViewExperiment(false);
     setList(false);
+  };
+
+  const openCloneDialog = (name) => {
+    setActionExperimentName(name);
+    setCloneDialogOpen(true);
+  };
+
+  const openDeleteDialog = (name) => {
+    setActionExperimentName(name);
+    setDeleteDialogOpen(true);
+  };
+
+  const onCloneExperimentAction = (actionConfirmed) => {
+    if (actionConfirmed) {
+      cloneExperiment(actionExperimentName);
+    }
+    setCloneDialogOpen(false);
+    setActionExperimentName(null);
   };
 
   return (
@@ -201,12 +218,12 @@ const Experiments = (props) => {
                       </TableCell>
                       <TableCell align="left">
                         <Typography variant="h6" className="experimentDate">
-                          {formatDate(experiment?.timestamp)}
+                          {Utils.formatDate(experiment?.timestamp)}
                         </Typography>
                       </TableCell>
                       <TableCell align="left" className="experimentTableCell">
                         {(experiment?.state === EXPERIMENT_STATE.SIMULATING
-                        || experiment?.state === EXPERIMENT_STATE.INSTANTIATING)
+                          || experiment?.state === EXPERIMENT_STATE.INSTANTIATING)
                           ? (
                             <Chip
                               icon={<Box className="MuiChipLoader" />}
@@ -228,7 +245,7 @@ const Experiments = (props) => {
                           onClick={
                             experiment?.state === EXPERIMENT_STATE.DESIGN
                               ? () => openEditExperiment(experiment?.name)
-                              : () => viewExperiment(experiment?.name)
+                              : () => openCloneDialog(experiment?.name)
                           }
                         >
                           {experiment?.state === EXPERIMENT_STATE.DESIGN
@@ -242,15 +259,7 @@ const Experiments = (props) => {
                       <TableCell align="right">
                         <Button
                           className="experimentIcon"
-                          onClick={cleanExperiment}
-                        >
-                          <ReplayIcon />
-                        </Button>
-                      </TableCell>
-                      <TableCell align="right">
-                        <Button
-                          className="experimentIcon"
-                          onClick={deleteExperiment}
+                          onClick={() => openDeleteDialog(experiment?.name)}
                         >
                           <DeleteIcon />
                         </Button>
@@ -280,12 +289,28 @@ const Experiments = (props) => {
           </Box>
         </Box>
       </GridLayout>
-      <DeleteDialogBox
+      <DialogBox
         open={dialogOpen}
         onDialogResponse={createExperimentScreen}
         textForDialog={{
           heading: EXPERIMENT_TEXTS.CREATE_EXPERIMENT,
           content: EXPERIMENT_TEXTS.DIALOG_MESSAGE,
+        }}
+      />
+      <DialogBox
+        open={deleteDialogOpen}
+        onDialogResponse={deleteExperiment}
+        textForDialog={{
+          heading: EXPERIMENT_TEXTS.DELETE_EXPERIMENT,
+          content: EXPERIMENT_TEXTS.DELETE_DIALOG_MESSAGE,
+        }}
+      />
+      <DialogBox
+        open={cloneDialogOpen}
+        onDialogResponse={onCloneExperimentAction}
+        textForDialog={{
+          heading: EXPERIMENT_TEXTS.CLONE_EXPERIMENT,
+          content: EXPERIMENT_TEXTS.CLONE_EXPERIMENT_MESSAGE,
         }}
       />
     </>

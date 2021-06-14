@@ -25,6 +25,9 @@ export const NETPYNE_COMMANDS = {
   plotFigure: 'netpyne_geppetto.getPlot',
   deleteParam: 'netpyne_geppetto.deleteParam',
   checkAvailablePlots: 'netpyne_geppetto.checkAvailablePlots',
+  getExperiments: 'netpyne_geppetto.experiments.get_experiments',
+  cloneExperiment: 'netpyne_geppetto.cloneExperiment',
+  viewExperimentResults: 'netpyne_geppetto.viewExperimentResult',
 };
 
 export const PYTHON_CONSOLE_WIDGET = {
@@ -435,6 +438,13 @@ export const EXPERIMENT_TEXTS = {
   CREATE_EXPERIMENT: 'Create New Experiment',
   DIALOG_MESSAGE: 'The new experiment will replace the current experiment in design, are you sure you want to proceed?',
   INPUT_ERR_MESSAGE: 'Please check the input',
+  DELETE_EXPERIMENT: 'Delete Experiment',
+  DELETE_DIALOG_MESSAGE: 'Are you sure you want to delete this experiment?',
+  CLONE_EXPERIMENT: 'Clone Experiment',
+  CLONE_EXPERIMENT_MESSAGE: 'Replaces the Experiment in design with the stored Experiment.',
+  VIEW_EXPERIMENTS_RESULTS: 'View simulation results',
+  VIEW_EXPERIMENTS_RESULTS_MESSAGE: 'This will replace the currently loaded results in Explore, ' +
+    'are you sure you want to proceed?',
 };
 
 export const TUTORIALS_LIST = {

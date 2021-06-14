@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
-import {
-  addExperiment, editExperiment, getExperiment, getParameters,
-} from 'root/api/experiments';
+import * as ExperimentsApi from 'root/api/experiments';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -445,7 +443,7 @@ const ExperimentEdit = (props) => {
 
   useEffect(() => {
     if (name) {
-      getExperiment(name)
+      ExperimentsApi.getExperiment(name)
         .then((exp) => {
           setExperimentDetail(exp);
         })
@@ -464,13 +462,13 @@ const ExperimentEdit = (props) => {
       };
       if (editState) {
         // When user updates an existing Experiment
-        editExperiment(experiment?.name, newExperimentDetails)
+        ExperimentsApi.editExperiment(experiment?.name, newExperimentDetails)
           .then(() => {
             setList(true);
           });
       } else {
         // When user creates a new Experiment
-        addExperiment(newExperimentDetails).then(() => {
+        ExperimentsApi.addExperiment(newExperimentDetails).then(() => {
           setList(true);
         });
       }
@@ -487,7 +485,7 @@ const ExperimentEdit = (props) => {
   };
 
   const viewParameters = () => {
-    getParameters()
+    ExperimentsApi.getParameters()
       .then((params) => {
         // netParams JSON dict
         setSelectionParams(Object.keys(flatten(params)));

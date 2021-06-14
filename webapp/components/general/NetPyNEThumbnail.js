@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Fab from '@material-ui/core/Fab';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
-import DeleteDialogBox from './DeleteDialogBox';
+import DialogBox from './DialogBox';
 import Tooltip from './Tooltip';
 
 const styles = {
@@ -22,6 +22,16 @@ const styles = {
     zIndex: 1000,
 
   },
+};
+
+const getButton = (isCogButton, isRegularButton, label, selected, tooltip, props) => {
+  if (isCogButton) {
+    return getCogButton(label, selected, tooltip, props);
+  }
+  if (isRegularButton) {
+    return getRegularButton(label, selected, tooltip, props);
+  }
+  return getFabButton(label, selected, tooltip, props);
 };
 
 export default class NetPyNEThumbnail extends React.Component {
@@ -45,7 +55,6 @@ export default class NetPyNEThumbnail extends React.Component {
       handleClick, paramPath, name, onDelete, deleteNetParamsObj,
     } = this.props;
     if (handleClick && actionConfirmed) {
-      // this.props.deleteMethod(this.props.name);
       deleteNetParamsObj({
         paramPath,
         paramName: name,
@@ -84,7 +93,7 @@ export default class NetPyNEThumbnail extends React.Component {
         <Tooltip position="bottom" title={<HoverActions deleteAction={() => this.setState({ dialogOpen: true })} />} interactive>
           {getButton(isCog, isButton, label, selected, props)}
         </Tooltip>
-        <DeleteDialogBox
+        <DialogBox
           open={dialogOpen}
           onDialogResponse={this.handleDialogBox}
           textForDialog={{ heading: `Delete ${name}`, content: `Do you want to remove ${name} ?` }}
@@ -93,16 +102,6 @@ export default class NetPyNEThumbnail extends React.Component {
     );
   }
 }
-
-const getButton = (isCogButton, isRegularButton, label, selected, tooltip, props) => {
-  if (isCogButton) {
-    return getCogButton(label, selected, tooltip, props);
-  }
-  if (isRegularButton) {
-    return getRegularButton(label, selected, tooltip, props);
-  }
-  return getFabButton(label, selected, tooltip, props);
-};
 
 const HoverActions = ({ deleteAction }) => (
   <Box style={styles.toolbar}>

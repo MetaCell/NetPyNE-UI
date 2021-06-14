@@ -17,7 +17,10 @@ import {
   setDefaultWidgets,
 } from '../redux/actions/general';
 
-import { getExperiments } from '../redux/actions/experiments';
+import {
+  cloneExperiment,
+  getExperiments,
+} from '../redux/actions/experiments';
 
 import {
   openTopbarDialog,
@@ -55,7 +58,6 @@ import _NetPyNEThumbnail from './general/NetPyNEThumbnail';
 import _Dialog from './general/Dialog';
 import _SelectCellTemplate from './definition/cellRules/SelectCellTemplate';
 import _Experiments from './experiments/Experiments';
-import _ExperimentDetail from './experiments/ExperimentDetail';
 import _ExperimentEdit from './experiments/ExperimentEdit';
 import _ExperimentManager from './experiments/ExperimentManager';
 
@@ -111,10 +113,10 @@ export const Experiments = connect(
   }),
   (dispatch) => ({
     getExperiments: () => dispatch(getExperiments()),
+    cloneExperiment: (name) => dispatch(cloneExperiment(name)),
   }),
 )(_Experiments);
 
-export const ExperimentDetail = _ExperimentDetail;
 export const ExperimentEdit = _ExperimentEdit;
 export const ExperimentManager = _ExperimentManager;
 
@@ -283,6 +285,7 @@ export const Topbar = connect(
     automaticInstantiation: state.general.automaticInstantiation,
     automaticSimulation: state.general.automaticSimulation,
     theme: state.general.theme,
+    experimentInDesign: state.experiments.inDesign,
   }),
   (dispatch) => ({
     dispatchAction: (action) => dispatch(action),

@@ -15,11 +15,19 @@ with open("batchConfig.json", "r") as f:
 # Map params to netpyne format
 params = specs.ODict()
 for param in batch_config["params"]:
-    params[param["label"]] = param['values']
+    params[param["mapsTo"]] = param['values']
+
+with open("netParams.json", "r") as f:
+    net_params = json.load(f)
+    net_params = specs.NetParams(net_params['net']['params'])
+
+with open("simConfig.json", "r") as f:
+    sim_config = json.load(f)
+    sim_config = specs.SimConfig(sim_config['simConfig'])
 
 batch = Batch(
-    cfgFile="cfg.py",
-    netParamsFile="netParams.py",
+    cfg=sim_config,
+    netParams=net_params,
     params=params,
     seed=batch_config.get("seed", None)
 )
@@ -54,4 +62,10 @@ batch.run()
 if run_cfg['type'] == 'mpi_bulletin':
     pc = h.ParallelContext()
     pc.done()
+
+    # Update simulation status
+    batch_config['state'] = 'SIMULATED'
+    with open("batchConfig.json", "w") as f:
+        json.dump(batch_config, f, default=str, sort_keys=True, indent=4)
+
     sys.exit(0)

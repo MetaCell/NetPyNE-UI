@@ -1,6 +1,7 @@
 import {
   NETPYNE_COMMANDS, NETWORK_PLOT_WIDGETS, PLOT_WIDGETS, WidgetStatus,
 } from 'root/constants';
+import { VIEW_EXPERIMENTS_RESULTS } from 'root/redux/actions/experiments';
 import { addWidget, SET_WIDGETS, UPDATE_WIDGET } from '../actions/layout';
 import Utils from '../../Utils';
 import { processError } from './middleware';
@@ -76,6 +77,19 @@ const plotFigure = async (plotId, plotMethod, plotType = false, theme) => {
   return null;
 };
 
+const updatePlots = (next) => {
+  Utils.evalPythonMessage(NETPYNE_COMMANDS.checkAvailablePlots, [])
+    .then((plots) => {
+      window.plotCache = {};
+      Object.values(PLOT_WIDGETS)
+        .forEach((widget) => {
+          widget.initialized = false;
+          widget.disabled = isDisabled(widget, plots);
+          next(addWidget(widget));
+        });
+    });
+};
+
 export default (store) => (next) => (action) => {
   async function setWidget (widget) {
     const {
@@ -134,19 +148,10 @@ export default (store) => (next) => (action) => {
       next(action);
       break;
     }
+    case VIEW_EXPERIMENTS_RESULTS:
     case SIMULATE_NETWORK:
     case CREATE_SIMULATE_NETWORK: {
-      Utils.evalPythonMessage(NETPYNE_COMMANDS.checkAvailablePlots, [])
-        .then((plots) => {
-          window.plotCache = {};
-          Object.values(PLOT_WIDGETS)
-            .forEach((widget) => {
-              widget.initialized = false;
-              widget.disabled = isDisabled(widget, plots);
-              next(addWidget(widget));
-            });
-        });
-
+      updatePlots(next);
       next(action);
       break;
     }

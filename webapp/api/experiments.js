@@ -8,4 +8,5 @@ export const addExperiment = (experiment) => Utils.evalPythonMessage('netpyne_ge
 export const editExperiment = (name, experiment) => Utils.evalPythonMessage('netpyne_geppetto.experiments.edit_experiment', [name, experiment]);
 
 export const getParameters = () => Utils.evalPythonMessage('netpyne_geppetto.getModelAsJson', []);
-export const getJsonModel = () => Utils.evalPythonMessage('netpyne_geppetto.getModelAsJson', []);
+export const getModelSpecification = (name, trial) => Utils.evalPythonMessage('netpyne_geppetto.experiments.get_model_specification',
+  [name, trial]);

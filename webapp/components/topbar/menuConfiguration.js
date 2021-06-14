@@ -318,16 +318,19 @@ export const getModelMenu = (props) => (
       className: 'topbar-menu-item',
       action: {
         handlerAction: 'redux',
-        parameters: [openTopbarDialog, TOPBAR_CONSTANTS.NETWORK_MODEL],
+        parameters: props.experimentInDesign ? [openTopbarDialog, TOPBAR_CONSTANTS.NETWORK_MODEL] : [createNetwork],
       },
     },
     {
       label: TOPBAR_CONSTANTS.SIMULATE,
+      className: 'topbar-menu-item',
       action: {
         handlerAction: 'redux',
-        // TODO: (#263) this logic causes issues by potentially simulating
-        //  old instance with modified netParams and simConfig
-        parameters: [props.modelState === MODEL_STATE.NOT_INSTANTIATED ? createAndSimulateNetwork : simulateNetwork],
+        parameters: props.experimentInDesign
+          ? [openTopbarDialog, TOPBAR_CONSTANTS.SIMULATE]
+          // TODO: (#263) this logic causes issues by potentially simulating
+          //  old instance with modified netParams and simConfig
+          : [props.modelState ? createAndSimulateNetwork : simulateNetwork],
       },
     },
     {

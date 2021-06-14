@@ -13,37 +13,49 @@ const ExperimentManager = () => {
   const [trial, setTrial] = useState(null);
   const [trialJSON, setTrialJSON] = useState(null);
 
-  return (
-    // eslint-disable-next-line no-nested-ternary
-    list ? (
+  if (list) {
+    return (
       <Experiments
         setList={setList}
         setEditState={setEditState}
         setExperimentName={setExperimentName}
         setViewExperiment={setViewExperiment}
       />
-    )// eslint-disable-next-line no-nested-ternary
-      : viewExperiment ? (
-        <ViewExperiment
-          setList={setList}
-          name={experimentName}
-          setTrial={setTrial}
-          setJsonViewer={setJsonViewer}
-          setViewExperiment={setViewExperiment}
-          setTrialJSON={setTrialJSON}
-        />
-      ) : jsonViewer ? (
-        <JsonViewer
-          setList={setList}
-          baseTitle={experimentName}
-          json={trialJSON}
-          title={trial}
-          setJsonViewer={setJsonViewer}
-          setBaseView={setViewExperiment}
-        />
-      ) : (
-        <EditExperiment setList={setList} editState={editState} name={experimentName} />
-      )
+    );
+  }
+
+  if (viewExperiment) {
+    return (
+      <ViewExperiment
+        setList={setList}
+        name={experimentName}
+        setTrial={setTrial}
+        setJsonViewer={setJsonViewer}
+        setViewExperiment={setViewExperiment}
+        setTrialJSON={setTrialJSON}
+      />
+    );
+  }
+
+  if (jsonViewer) {
+    return (
+      <JsonViewer
+        setList={setList}
+        baseTitle={experimentName}
+        json={trialJSON}
+        title={trial}
+        setJsonViewer={setJsonViewer}
+        setBaseView={setViewExperiment}
+      />
+    );
+  }
+
+  return (
+    <EditExperiment
+      setList={setList}
+      editState={editState}
+      name={experimentName}
+    />
   );
 };
 

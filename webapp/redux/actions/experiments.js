@@ -1,10 +1,8 @@
-export const VIEW_EXPERIMENT = 'VIEW_EXPERIMENT';
 export const GET_EXPERIMENTS = 'GET_EXPERIMENTS';
 export const SET_EXPERIMENTS = 'SET_EXPERIMENTS';
-
 export const RESET_EXPERIMENT = 'RESET_EXPERIMENT';
-export const VIEW_TRIAL_AS_JSON = 'VIEW_AS_JSON';
-export const FILTER_TRIALS = 'FILTER_TRIALS';
+export const CLONE_EXPERIMENT = 'CLONE_EXPERIMENT';
+export const VIEW_EXPERIMENTS_RESULTS = 'VIEW_EXPERIMENT_RESULTS';
 
 /**
  * Resets configuration of current Experiment.
@@ -32,25 +30,17 @@ export const loadTrial = () => {
 };
 
 /**
- * Opens Model>Explore view and loads results of selected trial.
+ * View results of selected experiment/trial.
  */
-export const viewTrialResults = () => {
-
-};
-
-/**
- * Replaces current model specification with selected one.
- */
-export const loadModelSpecification = () => {
-
-};
-
-export const viewAsJson = (payload) => ({
-  type: VIEW_TRIAL_AS_JSON,
+export const viewExperimentResults = (payload) => ({
+  type: VIEW_EXPERIMENTS_RESULTS,
   payload,
 });
 
-export const filterTrials = (payload) => ({
-  type: FILTER_TRIALS,
-  payload,
+/**
+ * Replaces experiment in design & model specification with stored experiment.
+ */
+export const cloneExperiment = (experimentName) => ({
+  type: CLONE_EXPERIMENT,
+  payload: { name: experimentName },
 });

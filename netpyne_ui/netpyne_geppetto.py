@@ -8,12 +8,10 @@ import importlib
 import json
 import logging
 import os
-import pickle
 import re
 import sys
 from shutil import copyfile, move
 
-import matplotlib.pyplot as plt
 import neuron
 import numpy as np
 from netpyne import specs, sim, analysis
@@ -26,6 +24,7 @@ from netpyne_ui import experiments
 from netpyne_ui import constants
 from netpyne_ui import model
 from netpyne_ui import simulations
+from netpyne_ui import utils as netpyne_ui_utils
 from netpyne_ui.netpyne_model_interpreter import NetPyNEModelInterpreter
 from netpyne_ui.simulations import InvalidConfigError
 from pygeppetto.model.model_serializer import GeppettoModelSerializer
@@ -61,13 +60,6 @@ class NetPyNEGeppetto:
 
         jupyter_geppetto.context = {'netpyne_geppetto': self}
 
-    def getModelAsJson(self):
-        # TODO: netpyne should offer a method asJSON (based on saveJSON)
-        #  that returns the JSON model without dumping to to disk.
-        obj = netpyne_utils.replaceFuncObj(self.netParams.__dict__)
-        obj = netpyne_utils.replaceDictODict(obj)
-        return obj
-
     def getData(self):
         return {
             "metadata": metadata,
@@ -78,18 +70,92 @@ class NetPyNEGeppetto:
             "tuts": self.find_tutorials()
         }
 
-    def getSimulations(self):
-        return simulations.local.list()
+    def getModelAsJson(self):
+        # TODO: netpyne should offer a method asJSON (#240)
+        #  that returns the JSON model without dumping to to disk.
+        obj = netpyne_utils.replaceFuncObj(self.netParams.__dict__)
+        obj = netpyne_utils.replaceDictODict(obj)
+        return obj
 
-    def stop(self):
+    def cloneExperiment(self, payload: dict):
+        """ Loads experiment from disk and replaces experiment in design with it.
+
+        1. Replaces current experiment in design with copy of stored experiment.
+        2. Replace current model specification with spec of stored experiment.
+
+        :param payload: { name: str, replaceModelSpec: bool, replaceExperiment: bool }
+        """
+        name = payload.get('name')
+
+        # Creates new Experiment in design based on `name` experiment.
+        if payload.get('replaceExperiment', True):
+            experiments.replace_current_with(name)
+
+        # Replaces model specification
+        if payload.get('replaceModelSpec', True):
+            # TODO: if trial is specified, use trial output file!
+            path = os.path.join(constants.EXPERIMENTS_FOLDER_PATH, name)
+            if self.doIhaveInstOrSimData()['haveInstance']:
+                sim.clearAll()
+
+            sim.initialize()
+            sim.loadNetParams(os.path.join(path, experiments.NET_PARAMS_FILE))
+            sim.loadSimCfg(os.path.join(path, experiments.SIM_CONFIG_FILE))
+            self.netParams = sim.net.params
+            self.simConfig = sim.cfg
+            netpyne_ui_utils.remove(self.simConfig.todict())
+            netpyne_ui_utils.remove(self.netParams.todict())
+
+    def viewExperimentResult(self, payload: dict):
+        """ Loads the net and simData of of a simulated experiment trial.
+
+        :param payload: {name: str, trial: str}
+        :return: geppetto model
+        """
+        name = payload.get("name", None)
+        trial = payload.get("trial", None)
+
+        file = experiments.get_trial_output_file(name, trial)
+        if not os.path.exists(file):
+            return utils.getJSONError(f"Couldn't find output file {file}", "")
+
+        if self.doIhaveInstOrSimData()['haveInstance']:
+            sim.clearAll()
+
+        # sim.initialize()
+        # Only load net and simData, don't replace netParams and simConfig
+        # TODO: Fix loading, seems to be broken for normal JSON import as well
+        # sim.loadNet(file, instantiate=False)
+        # sim.loadSimData(file)
+
+        # Load everything since partial import throws error
+        # simData, cfg & net required for plots, don't need netParams
+        sim.load(file)
+
+        # Enables to display cells in 3D Viewer
+        section = list(sim.net.cells[0].secs.keys())[0]
+        if 'pt3d' not in list(sim.net.cells[0].secs[section].geom.keys()):
+            sim.net.defineCellShapes()
+            sim.gatherData()
+            # Load again because gatherData removed simData
+            sim.loadSimData(file)
+
+        # Don't run sim.gatherData(), will clear allSimData
+
+        self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
+        return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
+
+    def stopExperiment(self, experiment_name):
+        # TODO: check in simulation pool if experiment is running
+        # TODO: once stopped, update experiment status to ERROR (?), also on file system
         simulations.local.stop()
-        return "stopped simulation"
+        return {
+            "message": f"Stopped simulation of {experiment_name}"
+        }
 
     def find_tutorials(self):
-        from os import listdir
-        from os.path import isfile, join
-        only_files = [f for f in listdir(constants.NETPYNE_WORKDIR_PATH) if
-                      isfile(join(constants.NETPYNE_WORKDIR_PATH, f))]
+        only_files = [f for f in os.listdir(constants.NETPYNE_WORKDIR_PATH) if
+                      os.path.isfile(os.path.join(constants.NETPYNE_WORKDIR_PATH, f))]
 
         def _filter(_file):
             return '.py' in _file and 'tut' in _file and 'gui' in _file
@@ -109,72 +175,101 @@ class NetPyNEGeppetto:
             logging.exception(message)
             return utils.getJSONError(message, sys.exc_info())
 
-    def simulateNetPyNEModelInGeppetto(self, args):
+    def simulate_experiment_trials(self, experiment: model.Experiment):
+        if simulations.local.is_running():
+            return utils.getJSONError("Simulation is already running", "")
         try:
-            with redirect_stdout(sys.__stdout__):
-                if args.get("complete", None):
-                    if simulations.local.is_running():
-                        return utils.getJSONError("Simulation is already running", "")
+            experiment.state = model.ExperimentState.SIMULATING
+            working_directory = self._prepare_batch_files(experiment)
+        except OSError:
+            return utils.getJSONError("The specified folder already exists", "")
 
-                    try:
-                        # TODO: Use the selected experiment
-                        experiment = model.Experiment(name="Test")
-                        working_directory = self._prepare_batch_files(experiment)
-                    except OSError:
-                        return utils.getJSONError("The specified folder already exists", "")
+        try:
+            simulations.run(
+                platform="local",
+                parallel=self.run_config.parallel,
+                cores=self.run_config.cores,
+                method=self.run_config.type,
+                batch=True,
+                asynchronous=self.run_config.asynchronous,
+                working_directory=working_directory
+            )
+        except InvalidConfigError as e:
+            return utils.getJSONError(str(e), "")
 
-                    try:
-                        simulations.run(
-                            platform="local",
-                            parallel=self.run_config.parallel,
-                            cores=self.run_config.cores,
-                            method=self.run_config.type,
-                            batch=True,
-                            asynchronous=self.run_config.asynchronous,
-                            working_directory=working_directory
-                        )
-                    except InvalidConfigError as e:
-                        return utils.getJSONError(str(e), "")
+        message = "Experiment started in background! " \
+                  f"Results will be stored in your workspace at ./{experiment.name}"
 
-                    message = "Experiment started in background! " \
-                              f"Results will be stored in your workspace at ./{self.batch_config.name}"
+        return utils.getJSONError(message, "")
 
-                    return utils.getJSONError(message, "")
+    def simulate_single_model(self, use_prev_inst: bool = False):
+        if self.run_config.asynchronous or self.run_config.parallel:
+            # Run in different process
+            if simulations.local.is_running():
+                return utils.getJSONError("Simulation is already running", "")
+
+            self._prepare_simulation_files(use_prev_inst)
+            simulations.run(
+                parallel=self.run_config.parallel,
+                cores=self.run_config.cores,
+                asynchronous=self.run_config.asynchronous
+            )
+
+            if not self.run_config.asynchronous:
+                sim.load(f'{constants.MODEL_OUTPUT_FILENAME}.json')
+                self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
+
+        else:
+            # Run in same process
+            if not use_prev_inst:
+                logging.debug('Instantiating single thread simulation')
+                netpyne_model = self.instantiateNetPyNEModel()
+
+                self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
+            simulations.run()
+
+        if self.geppetto_model:
+            response = json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
+            return response
+
+    def simulateNetPyNEModelInGeppetto(self, args):
+        """ Starts simulation of the currently loaded NetPyNe model.
+
+        * runConfiguration is used to determine asynch/synch & other parameters.
+        * complete flag in args decides if we simulate single model as Experiment or complete Experiment.
+        * if Experiment in design does not exist, we create a new one & start single sim.
+        * All Simulations run in different process.
+
+        :param args: { complete: bool, usePrevInst: bool }
+        :return: geppetto model.
+        """
+        complete = args.get('complete', True)
+        use_prev_inst = args.get('usePrevInst', False)
+
+        try:
+            experiment = experiments.get_current()
+            if experiment:
+                # run config decides over asynch or synch
+                if complete:
+                    # simulate trials
+                    return self.simulate_experiment_trials(experiment)
                 else:
-                    if self.run_config.asynchronous or self.run_config.parallel:
-                        if simulations.local.is_running():
-                            return utils.getJSONError("Simulation is already running", "")
-
-                        self._prepare_simulation_files(args)
-                        simulations.run(
-                            parallel=self.run_config.parallel,
-                            cores=self.run_config.cores,
-                            asynchronous=self.run_config.asynchronous
-                        )
-
-                        if not self.run_config.asynchronous:
-                            sim.load(f'{constants.MODEL_OUTPUT_FILENAME}.json')
-                            self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
-
-                    else:
-                        if not args.get('usePrevInst', False):
-                            logging.debug('Instantiating single thread simulation')
-                            netpyne_model = self.instantiateNetPyNEModel()
-
-                            self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
-                        simulations.run()
-
-                if self.geppetto_model:
-                    response = json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
-                    return response
+                    # simulate current modelSpec
+                    return self.simulate_single_model(use_prev_inst)
+            else:
+                # TODO: create new experiment for modelSpec
+                # TODO: is synch by default, remove once it can be configured
+                self.run_config.asynchronous = False
+                self.run_config.parallel = False
+                return self.simulate_single_model(use_prev_inst)
 
         except Exception:
             message = "Error while simulating the NetPyNE model"
             logging.exception(message)
             return utils.getJSONError(message, sys.exc_info())
 
-    def _prepare_simulation_files(self, args):
-        if args.get('usePrevInst', False):
+    def _prepare_simulation_files(self, use_prev_inst: bool):
+        if use_prev_inst:
             sim.cfg.saveJson = True
             oldName = sim.cfg.filename
             sim.cfg.filename = constants.MODEL_OUTPUT_FILENAME
@@ -197,46 +292,46 @@ class NetPyNEGeppetto:
         copyfile(template, f'./{constants.SIMULATION_SCRIPT_NAME}')
 
     def _prepare_batch_files(self, experiment):
-        self.simConfig.mapping = [dataclasses.asdict(p) for p in experiment.params]
+        # param path must be split: [ {'label': ['synMechParams', 'AMPA', 'gmax']} ]
+        # TODO: how do we handle array index? ['array', '[0]'] or ['array', '0']?
+        experiment.params = [p for p in experiment.params if p.mapsTo != '']
 
         for param in experiment.params:
             if param.type == "range":
                 param.values = list(np.arange(param.min, param.max, param.step))
+            elif param.type == "list":
+                # TODO: need to enforce correct type for each parameter
+                #   e.g. numCells with 10.0 fails because it requires int not float
+                param.values = [int(e) for e in param.values]
+
+        self.netParams.mapping = {p.mapsTo: p.mapsTo.split('.') for p in experiment.params}
+        self.simConfig.saveJson = True
 
         config_dict = dataclasses.asdict(experiment)
         config_dict["runCfg"] = dataclasses.asdict(self.run_config)
 
-        save_folder_path = os.path.join(constants.BATCHES_FOLDER, experiment.name)
+        save_folder_path = os.path.join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, experiment.name)
         try:
             os.makedirs(save_folder_path)
         except OSError:
             raise
 
-        os.path.join(os.path.dirname(__file__), "templates", "batchConfig.json")
+        sim_config_path = os.path.join(os.path.dirname(__file__), "templates", "simConfig.json")
+        net_params_path = os.path.join(os.path.dirname(__file__), "templates", "netParams.json")
+        self.simConfig.save(sim_config_path)
+        self.netParams.save(net_params_path)
 
-        # Configuration of batch.py in json format
         batch_config_json = os.path.join(os.path.dirname(__file__), "templates", "batchConfig.json")
-        json.dump(config_dict, open(batch_config_json, 'w'))
+        json.dump(config_dict, open(batch_config_json, 'w'), default=str, sort_keys=True, indent=4)
+
         move(batch_config_json, os.path.join(save_folder_path, 'batchConfig.json'))
+        move(sim_config_path, os.path.join(save_folder_path, 'simConfig.json'))
+        move(net_params_path, os.path.join(save_folder_path, 'netParams.json'))
 
-        # Pickle files of netParams and cfg dicts
-        net_params_pkl = os.path.join(os.path.dirname(__file__), "templates", 'netParams.pkl')
-        cfg_pkl = os.path.join(os.path.dirname(__file__), "templates", 'cfg.pkl')
-        pickle.dump(self.netParams, open(net_params_pkl, "wb"))
-        pickle.dump(self.simConfig, open(cfg_pkl, "wb"))
-        move(net_params_pkl, os.path.join(save_folder_path, 'netParams.pkl'))
-        move(cfg_pkl, os.path.join(save_folder_path, 'cfg.pkl'))
-
-        # Python template files
         template_single_run = os.path.join(os.path.dirname(__file__), "templates", 'batch_run_single.py')
         template_batch = os.path.join(os.path.dirname(__file__), "templates", 'batch.py')
-        cfg = os.path.join(os.path.dirname(__file__), "templates", 'batch_cfg.py')
-        net_params = os.path.join(os.path.dirname(__file__), "templates", 'batch_netParams.py')
-
         copyfile(template_single_run, os.path.join(save_folder_path, 'run.py'))
         copyfile(template_batch, os.path.join(save_folder_path, constants.SIMULATION_SCRIPT_NAME))
-        copyfile(cfg, os.path.join(save_folder_path, 'cfg.py'))
-        copyfile(net_params, os.path.join(save_folder_path, 'netParams.py'))
 
         return save_folder_path
 
@@ -246,17 +341,6 @@ class NetPyNEGeppetto:
         :param args:
         :return:
         """
-
-        def remove(dictionary):
-            # remove reserved keys such as __dict__, __Method__, etc
-            # they appear when we do sim.loadAll(json_file)
-            if isinstance(dictionary, dict):
-                for key, value in list(dictionary.items()):
-                    if key.startswith('__'):
-                        dictionary.pop(key)
-                    else:
-                        remove(value)
-
         if not any([args[option] for option in ['loadNetParams', 'loadSimCfg', 'loadSimData', 'loadNet']]):
             return utils.getJSONError("Error while loading data", 'You have to select at least one option')
 
@@ -282,8 +366,8 @@ class NetPyNEGeppetto:
                     sim.loadAll(args['jsonModelFolder'])
                     self.netParams = sim.net.params
                     self.simConfig = sim.cfg
-                    remove(self.netParams.todict())
-                    remove(self.simConfig.todict())
+                    netpyne_ui_utils.remove(self.netParams.todict())
+                    netpyne_ui_utils.remove(self.simConfig.todict())
                 else:
                     if args['loadNet']:
                         wake_up_geppetto = True
@@ -304,14 +388,14 @@ class NetPyNEGeppetto:
                     if args['loadSimCfg']:
                         sim.loadSimCfg(args['jsonModelFolder'])
                         self.simConfig = sim.cfg
-                        remove(self.simConfig.todict())
+                        netpyne_ui_utils.remove(self.simConfig.todict())
 
                     if args['loadNetParams']:
                         if self.doIhaveInstOrSimData()['haveInstance']:
                             sim.clearAll()
                         sim.loadNetParams(args['jsonModelFolder'])
                         self.netParams = sim.net.params
-                        remove(self.netParams.todict())
+                        netpyne_ui_utils.remove(self.netParams.todict())
 
                 if wake_up_geppetto:
                     if len(sim.net.cells) > 0:
@@ -321,6 +405,7 @@ class NetPyNEGeppetto:
                             sim.gatherData()
                             sim.loadSimData(args['jsonModelFolder'])
 
+                    # TODO: Fix me - gatherData will remove allSimData!
                     sim.gatherData()
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
                     return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
@@ -567,8 +652,14 @@ class NetPyNEGeppetto:
                     args['theme'] = theme
 
                     if plotName in ("iplotConn", "iplot2Dnet") and sim.net.allCells:
+                        def conns_length(cell) -> int:
+                            if type(cell) is dict:
+                                return len(cell.get('conns', []))
+                            else:
+                                return len(getattr(cell, 'conns', []))
+
                         # To prevent unresponsive kernel, we don't show conns if they become too many
-                        num_conn = sum([len(cell.conns) for cell in sim.net.allCells if cell.conns])
+                        num_conn = sum([conns_length(cell) for cell in sim.net.allCells])
                         if num_conn > NUM_CONN_LIMIT:
                             args["showConns"] = False
 

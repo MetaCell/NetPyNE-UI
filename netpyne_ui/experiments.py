@@ -1,7 +1,22 @@
 import dataclasses
+import datetime
+import json
+import logging
+import shutil
+import pathlib
+import os
+import random
+
 from typing import List
 from dacite import from_dict
+
+from netpyne_ui import utils
+from netpyne_ui import constants
 from netpyne_ui import model
+
+SIM_CONFIG_FILE = "simConfig.json"
+NET_PARAMS_FILE = "netParams.json"
+BATCH_CONFIG_FILE = "batchConfig.json"
 
 
 class ExperimentsError(Exception):
@@ -9,6 +24,14 @@ class ExperimentsError(Exception):
 
 
 def get_experiments() -> List[dict]:
+    # Only update Experiments stored on filesystem
+    stored_experiments = _scan_experiments_directory()
+    model.experiments = [
+        e for e in model.experiments if
+        e.state in model.ExperimentState.DESIGN
+    ]
+    model.experiments.extend(stored_experiments)
+
     return [dataclasses.asdict(e) for e in model.experiments]
 
 
@@ -25,6 +48,7 @@ def get_experiment(name: str) -> dict:
 def remove_experiment(name: str):
     experiment = _get_by_name(name)
     if experiment:
+        _delete_experiment_folder(experiment)
         model.experiments.remove(experiment)
 
 
@@ -40,13 +64,153 @@ def edit_experiment(name: str, experiment: dict):
     _add_experiment(updated_exp)
 
 
+def replace_current_with(name: str):
+    exp = _get_by_name(name)
+    if not exp:
+        raise ExperimentsError(f"Experiment with name {name} does not exist")
+
+    next_name = utils.get_next_file_name(constants.EXPERIMENTS_FOLDER_PATH, name)
+    new_exp = model.Experiment(
+        name=next_name,
+        state=model.ExperimentState.DESIGN,
+        params=exp.params,
+        seed=exp.seed,
+        initConfig=exp.initConfig,
+        method=exp.method
+    )
+
+    current = get_current()
+    if current:
+        remove_experiment(current.name)
+
+    _add_experiment(new_exp)
+    return
+
+
+def get_current() -> model.Experiment:
+    return next(
+        (exp for exp in model.experiments if exp.state == model.ExperimentState.DESIGN),
+        None
+    )
+
+
+def get_model_specification(name: str, trial: str) -> dict:
+    """ Returns JSON representation of the netParams & simConfig of the requested trial.
+
+    :param name: the experiment name.
+    :param trial: the trial identifier.
+    :return: dict
+    """
+    file = get_trial_output_file(name, trial)
+    if not os.path.exists(file):
+        raise ExperimentsError(f"Trial specification file {file} not found")
+
+    with open(file, 'r') as f:
+        trial_output = json.load(f)
+        return {
+            'net': {
+                'params': trial_output['net']['params']
+            },
+            'simConfig': trial_output['simConfig']
+        }
+
+
+def get_trial_output_file(experiment_name: str, trial: str):
+    path = os.path.join(constants.EXPERIMENTS_FOLDER_PATH, experiment_name)
+    # TODO: find output filename for trial based on parameter idx combination
+
+    # pattern: expName_(idx_)*idx.json
+    output_file = f"{experiment_name}_0.json"
+    output_file_path = os.path.join(path, output_file)
+    return output_file_path
+
+
 def _add_experiment(experiment: model.Experiment):
     if _get_by_name(experiment.name):
         raise ExperimentsError(f"Experiment {experiment.name} already exists")
 
+    _generate_trials(experiment)
     model.experiments.append(experiment)
 
 
 def _get_by_name(name: str) -> model.Experiment:
     experiment = next((e for e in model.experiments if e.name == name), None)
     return experiment
+
+
+def _scan_experiments_directory() -> [model.Experiment]:
+    if not pathlib.Path(constants.EXPERIMENTS_FOLDER_PATH).exists():
+        return []
+
+    dirs = list([
+        f for f in os.listdir(constants.EXPERIMENTS_FOLDER_PATH)
+        if os.path.isdir(os.path.join(constants.EXPERIMENTS_FOLDER_PATH, f))
+    ])
+
+    experiments = []
+    for directory in dirs:
+        try:
+            experiment = _parse_experiment(directory)
+        except ExperimentsError:
+            logging.exception(f"Failed to parse experiment {directory}")
+        else:
+            experiments.append(experiment)
+
+    return experiments
+
+
+def _parse_experiment(directory: str) -> model.Experiment:
+    """ Finds and parses Experiments stored in `directory` on the disk.
+
+    We expect the following files to be present:
+        * batchConfig.json (Experiment model and run config)
+        * netParams.json
+        * simConfig.json
+        * json file for each trial in case of batch
+        * output files for each trial (if available)
+
+    :raises ExperimentsError
+    """
+    path = os.path.join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, directory)
+
+    try:
+        with open(os.path.join(path, BATCH_CONFIG_FILE), 'r') as f:
+            batch_config = json.load(f)
+    except IOError:
+        raise ExperimentsError("Could not find batchConfig.json")
+
+    with open(os.path.join(path, NET_PARAMS_FILE), 'r') as f:
+        net_params = json.load(f)
+
+    with open(os.path.join(path, SIM_CONFIG_FILE), 'r') as f:
+        sim_config = json.load(f)
+
+    run_cfg = batch_config['runCfg']
+    del batch_config['runCfg']
+
+    # Convert timestamp to datetime
+    batch_config['timestamp'] = datetime.datetime.fromisoformat(batch_config['timestamp'])
+
+    experiment = from_dict(model.Experiment, batch_config)
+    experiment.folder = directory
+    return experiment
+
+
+def _delete_experiment_folder(experiment: model.Experiment):
+    """ Recursively deletes the associated experiment folder. """
+
+    def onerror(func, path, exc_info):
+        # TODO: error handling
+        pass
+
+    if experiment.folder:
+        path = os.path.join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, experiment.folder)
+        shutil.rmtree(path, onerror=onerror)
+
+
+def _generate_trials(experiment):
+    """ Generates dummy trial until netpyne implements method (#240) """
+    experiment.trials = [
+        model.Trial(params=[{"weight": i, "probability": round(random.random(), 2), "cells": random.randint(1, 1000)}])
+        for i in range(0, 1000)
+    ]
