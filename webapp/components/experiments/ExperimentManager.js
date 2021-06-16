@@ -3,59 +3,59 @@ import { Experiments } from '../index';
 import EditExperiment from './ExperimentEdit';
 import ViewExperiment from './ExperimentView';
 import JsonViewer from '../general/JsonViewer';
+import { EXPERIMENT_VIEWS } from '../../constants';
 
 const ExperimentManager = () => {
-  const [list, setList] = useState(true);
   const [editState, setEditState] = useState(false);
-  const [viewExperiment, setViewExperiment] = useState(false);
-  const [jsonViewer, setJsonViewer] = useState(false);
   const [experimentName, setExperimentName] = useState(null);
   const [trial, setTrial] = useState(null);
   const [trialJSON, setTrialJSON] = useState(null);
+  const [view, setView] = useState(EXPERIMENT_VIEWS.list);
 
-  if (list) {
-    return (
-      <Experiments
-        setList={setList}
-        setEditState={setEditState}
-        setExperimentName={setExperimentName}
-        setViewExperiment={setViewExperiment}
-      />
-    );
-  }
+  const viewHandler = () => {
+    switch (view) {
+      case EXPERIMENT_VIEWS.list: return (
+        <Experiments
+          setEditState={setEditState}
+          setExperimentName={setExperimentName}
+          setView={setView}
+        />
+      );
+      case EXPERIMENT_VIEWS.viewExperiment: return (
+        <ViewExperiment
+          name={experimentName}
+          setTrial={setTrial}
+          setTrialJSON={setTrialJSON}
+          setView={setView}
+        />
+      );
+      case EXPERIMENT_VIEWS.jsonViewer: return (
+        <JsonViewer
+          baseTitle={experimentName}
+          json={trialJSON}
+          title={trial}
+          setView={setView}
+        />
+      );
+      case EXPERIMENT_VIEWS.edit: return (
+        <EditExperiment
+          editState={editState}
+          name={experimentName}
+          setView={setView}
+        />
+      );
 
-  if (viewExperiment) {
-    return (
-      <ViewExperiment
-        setList={setList}
-        name={experimentName}
-        setTrial={setTrial}
-        setJsonViewer={setJsonViewer}
-        setViewExperiment={setViewExperiment}
-        setTrialJSON={setTrialJSON}
-      />
-    );
-  }
-
-  if (jsonViewer) {
-    return (
-      <JsonViewer
-        setList={setList}
-        baseTitle={experimentName}
-        json={trialJSON}
-        title={trial}
-        setJsonViewer={setJsonViewer}
-        setBaseView={setViewExperiment}
-      />
-    );
-  }
-
+      default: return (
+        <Experiments
+          setEditState={setEditState}
+          setExperimentName={setExperimentName}
+          setView={setView}
+        />
+      );
+    }
+  };
   return (
-    <EditExperiment
-      setList={setList}
-      editState={editState}
-      name={experimentName}
-    />
+    <>{ viewHandler() }</>
   );
 };
 
