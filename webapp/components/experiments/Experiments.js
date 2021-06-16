@@ -89,11 +89,6 @@ const useStyles = (theme) => ({
           '&:nth-child(2)': {
             width: '9.375rem',
           },
-          '&:nth-child(6)': {
-            '& .MuiButton-label': {
-              transform: 'rotate(-65deg)',
-            },
-          },
         },
         '& .MuiChip-icon': {
           color: experimentGrey,
