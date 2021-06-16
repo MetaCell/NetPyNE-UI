@@ -56,7 +56,7 @@ const useStyles = (theme) => ({
 
 const JsonViewer = (props) => {
   const {
-    baseTitle, setBaseView, classes, setJsonViewer, title, json,
+    baseTitle, classes, title, json, setView,
   } = props;
 
   const theme = {
@@ -80,8 +80,7 @@ const JsonViewer = (props) => {
   };
 
   const goBackToBase = () => {
-    setJsonViewer(false);
-    setBaseView(true);
+    setView('viewExperiment');
   };
 
   return (

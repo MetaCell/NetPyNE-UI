@@ -24,7 +24,7 @@ import useInterval from 'root/api/hooks';
 import { removeExperiment } from 'root/api/experiments';
 import Utils from 'root/Utils';
 import {
-  EXPERIMENT_STATE, EXPERIMENT_TEXTS,
+  EXPERIMENT_STATE, EXPERIMENT_TEXTS, EXPERIMENT_VIEWS,
 } from '../../constants';
 import DialogBox from '../general/DialogBox';
 import { experimentGrey, experimentInputColor } from '../../theme';
@@ -127,11 +127,10 @@ const Experiments = (props) => {
     experiments,
     getExperiments,
     classes,
-    setList,
     setEditState,
     setExperimentName,
-    setViewExperiment,
     cloneExperiment,
+    setView,
   } = props;
 
   const POLL_INTERVAL = 1000;
@@ -157,25 +156,22 @@ const Experiments = (props) => {
   };
 
   const viewExperiment = (name) => {
-    setList(false);
     setEditState(false);
     setExperimentName(name);
-    setViewExperiment(true);
+    setView(EXPERIMENT_VIEWS.viewExperiment);
   };
 
   const createExperimentScreen = (actionConfirmed) => {
     setDialogOpen(false);
     setEditState(false);
-    setViewExperiment(false);
     setExperimentName(null);
-    setList(!actionConfirmed);
+    setView(!actionConfirmed ? EXPERIMENT_VIEWS.list : EXPERIMENT_VIEWS.edit);
   };
 
   const openEditExperiment = (name) => {
     setExperimentName(name);
+    setView(EXPERIMENT_VIEWS.edit);
     setEditState(true);
-    setViewExperiment(false);
-    setList(false);
   };
 
   const openCloneDialog = (name) => {

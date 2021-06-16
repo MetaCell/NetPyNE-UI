@@ -23,7 +23,7 @@ import AssessmentIcon from '@material-ui/icons/Assessment';
 import BlurOnIcon from '@material-ui/icons/BlurOn';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import FilterListIcon from '@material-ui/icons/FilterList';
-import { EXPERIMENT_TEXTS } from 'root/constants';
+import { EXPERIMENT_TEXTS, EXPERIMENT_VIEWS } from 'root/constants';
 import DialogBox from 'root/components/general/DialogBox';
 import { useDispatch } from 'react-redux';
 import { viewExperimentResults } from 'root/redux/actions/experiments';
@@ -307,11 +307,9 @@ const ExperimentView = (props) => {
   const {
     classes,
     name,
-    setList,
-    setJsonViewer,
-    setViewExperiment,
     setTrial,
     setTrialJSON,
+    setView,
   } = props;
   const dispatch = useDispatch();
   const [order, setOrder] = React.useState('asc');
@@ -423,9 +421,8 @@ const ExperimentView = (props) => {
     ExperimentsApi.getModelSpecification(experiment, trial)
       .then((modelSpecification) => {
         setTrialJSON(modelSpecification);
-        setJsonViewer(true);
-        setViewExperiment(false);
         setTrial(trial);
+        setView(EXPERIMENT_VIEWS.jsonViewer);
       });
   };
 
@@ -469,7 +466,7 @@ const ExperimentView = (props) => {
     <div className={classes.root}>
       <Box className="ViewExperimentHead">
         <Box mt={2} mb={3} className="editExperimentBack">
-          <ArrowBackIcon onClick={() => setList(true)} />
+          <ArrowBackIcon onClick={() => setView(EXPERIMENT_VIEWS.list)} />
           <Typography variant="body2">{experiment?.name}</Typography>
         </Box>
         <div className="editExperiment-filter">
@@ -571,11 +568,9 @@ const ExperimentView = (props) => {
 
 ExperimentView.propTypes = {
   name: PropTypes.string.isRequired,
-  setList: PropTypes.func.isRequired,
-  setViewExperiment: PropTypes.func.isRequired,
-  setJsonViewer: PropTypes.func.isRequired,
   setTrial: PropTypes.func.isRequired,
   setTrialJSON: PropTypes.func.isRequired,
+  setView: PropTypes.func.isRequired,
 };
 
 export default withStyles(useStyles)(ExperimentView);

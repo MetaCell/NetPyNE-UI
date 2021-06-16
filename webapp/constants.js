@@ -455,3 +455,10 @@ export const TUTORIALS_LIST = {
   tut3_norxd: 'Tut 3c: Multiscale network (no RxD)',
   tut_osc: 'Tut 4: Simple oscillatory network',
 };
+
+export const EXPERIMENT_VIEWS = {
+  list: 'list',
+  viewExperiment: 'viewExperiment',
+  jsonViewer: 'jsonViewer',
+  edit: 'edit',
+};
