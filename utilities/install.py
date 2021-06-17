@@ -1,14 +1,12 @@
-import setuptools
-from setuptools.command.install import install
 import subprocess
 import json
-import os, sys
-from shutil import copyfile
+import os
+import sys
+import logging
 
 branch = None
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-
 
 # repos
 JUPYTER = 'https://github.com/openworm/org.geppetto.frontend.jupyter.git'
@@ -21,11 +19,16 @@ DEPS_DIR = os.path.join(ROOT_DIR, 'src')
 
 WEBAPP_DIR = os.path.join(ROOT_DIR, 'webapp')
 JUPYTER_DIR = 'jupyter-geppetto'
+NETPYNE_DIR = 'netpyne'
+
+WORKSPACE_DIR = 'workspace'
+
+os.environ['JUPYTER_CONFIG_DIR'] = os.path.join(ROOT_DIR, '.jupyter-config')
+
 
 def cprint(string):
     print(f"\033[35;4m\U0001f560 {string} \033[0m \n")
     sys.stdout.flush()
-
 
 
 def execute(cmd, cwd='.', *args, **kwargs):
@@ -34,133 +37,110 @@ def execute(cmd, cwd='.', *args, **kwargs):
         raise SystemExit('Error installing NetPyNE-UI')
 
 
-
 # by default clones branch (which can be passed as a parameter python install.py branch test_branch)
 # if branch doesnt exist clones the default_branch_or_tag
-def clone(repository, folder=None, default_branch_or_tag=None, cwdp='', recursive=False):
-    global branch
+def clone(repository, folder=None, branch_or_tag=None, cwdp=DEPS_DIR, recursive=False):
     print("Cloning " + repository)
-    default_branch_or_tag = default_branch_or_tag or branch or 'master'
+    branch_or_tag = branch_or_tag or 'master'
     folder = folder or os.path.basename(repository).replace('.git', '')
     if folder and os.path.exists(os.path.join(cwdp, folder)):
         print(f'Skipping clone of {repository}: folder exists')
     else:
         if recursive:
-            subprocess.call(['git', 'clone', '--recursive', repository], cwd='./' + cwdp)
+            subprocess.call(['git', 'clone', '--recursive', repository], cwd=cwdp)
         else:
             if folder:
-                subprocess.call(['git', 'clone', repository, folder], cwd='./' + cwdp)
+                subprocess.call(['git', 'clone', repository, folder], cwd=cwdp)
             else:
-                subprocess.call(['git', 'clone', repository], cwd='./' + cwdp)
-    checkout(folder, default_branch_or_tag, cwdp)
+                subprocess.call(['git', 'clone', repository], cwd=cwdp)
+    if branch_or_tag:
+        checkout(folder, branch_or_tag, cwdp)
 
-def checkout(folder, default_branch_or_tag, cwdp):
+
+def checkout(folder, branch_or_tag, cwdp):
     currentPath = os.getcwd()
-    print(currentPath)
     newPath = os.path.join(currentPath, cwdp, folder)
-    print(newPath)
-    os.chdir(newPath)
-    python_git = subprocess.Popen("git branch -a", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    outstd, errstd = python_git.communicate()
-    if branch and branch in str(outstd):
-        subprocess.call(['git', 'checkout', branch], cwd='./')
-    else:
-        subprocess.call(['git', 'checkout', default_branch_or_tag], cwd='./')
-    os.chdir(currentPath)
+
+    print(f'Checking out {branch_or_tag}')
+    try:
+        subprocess.call(['git', 'checkout', branch_or_tag], cwd=newPath)
+    except Exception as e:
+        logging.error('Cannot checkout branch or tag %s on %s', branch_or_tag, folder, exc_info=True)
+
 
 def compile_mod():
-    execute(['nrnivmodl', 'netpyne_workspace/mod'])
+    execute(['nrnivmodl', os.path.join(WORKSPACE_DIR, 'mod')], cwd=ROOT_DIR)
 
 
+def main(netpyne_branch, workspace_branch, pygeppetto_branch=None, jupyter_geppetto_branch=None, skipNpm=False,
+         skipTest=False, development=False):
+    cprint("Installing requirements")
+    execute(cmd=['pip', 'install', '-r', 'requirements.txt'], cwd=ROOT_DIR)
+
+    if not os.path.exists(DEPS_DIR):
+        os.mkdir(DEPS_DIR)
 
 
-def main(branch=branch, skipNpm=False, skipTest=False, development=False):
- 
-
-
-    # install pytest if needed
-    if not skipTest:
-        cprint("Installing test libraries")
-        execute(cmd=['pip', 'install', '-r', 'requirements-test.txt'], cwd=ROOT_DIR)
-
-
-
-    # clone_repo(project='openworm',
-    #            repo_name='geppetto-client',
-    #            folder='geppetto-client',
-    #            default_branch='v2.4.0',
-    #            cwdp='webapp/',
-    #            recursive=False,
-    # )
-
-    
-    clone(repository=NETPYNE, default_branch_or_tag='gui_cns')
     if development:
-        execute(cmd=['pip', 'install', '-e', '.'], cwd=ROOT_DIR)
-
-        if not os.path.exists(DEPS_DIR):
-            os.mkdir(DEPS_DIR)
         os.chdir(DEPS_DIR)
+
+        cprint("Installing netpyne")
+        clone(repository=NETPYNE, branch_or_tag=netpyne_branch)
+        execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, NETPYNE_DIR))
+
         # install pygeppetto
         cprint("Installing pygeppetto")
         clone(repository=PYGEPPETTO,
               folder='pygeppetto',
-              default_branch_or_tag='development'
+              branch_or_tag=pygeppetto_branch
               )
-        execute(cmd=['pip', 'install', '-e', '.'], cwd='pygeppetto')
+        execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, 'pygeppetto'))
 
         # install jupyter geppetto
         cprint("Installing org.geppetto.frontend.jupyter")
         clone(repository=JUPYTER,
               folder=JUPYTER_DIR,
-              default_branch_or_tag='development'
+              branch_or_tag=jupyter_geppetto_branch
               )
-        os.chdir(ROOT_DIR)
+
         execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, JUPYTER_DIR))
-        execute(['pip3', 'install', '-e', '.'], cwd='./netpyne/')
+        execute(cmd=['pip', 'install', '-e', '.'], cwd=ROOT_DIR)
+
     else:
         # install requirements
-        cprint("Installing requirements")
-        
-        execute(cmd=['pip', 'install', '-r', 'requirements.txt'], cwd=ROOT_DIR)
-        execute(['pip', 'install', '.'], cwd='./netpyne/')
-
         cprint("Installing UI python package...")
-        execute(cmd=['pip', 'install', '.', '--no-deps'], cwd=ROOT_DIR)
+        execute(cmd=['pip', 'install', '-e', '.', '--no-deps'], cwd=ROOT_DIR)
 
     os.chdir(ROOT_DIR)
     cprint("Cloning workspace")
-    clone(repository=WORKSPACE, default_branch_or_tag='gui_cns')
+    clone(repository=WORKSPACE, branch_or_tag=workspace_branch, folder=WORKSPACE_DIR, cwdp=ROOT_DIR)
     cprint("Compiling workspace modules")
     compile_mod()
 
     if not skipNpm and os.path.exists(os.path.join(DEPS_DIR, JUPYTER_DIR)):
         cprint("Building Jupyter Geppetto extension...")
-        execute(cmd=['npm', 'ci'], cwd=os.path.join(DEPS_DIR,JUPYTER_DIR, 'js'))
-        execute(cmd=['npm', 'run', 'build-dev' if development else 'build'], cwd=os.path.join(DEPS_DIR, JUPYTER_DIR, 'js'))
-
+        execute(cmd=['npm', 'ci'], cwd=os.path.join(DEPS_DIR, JUPYTER_DIR, 'js'))
+        execute(cmd=['npm', 'run', 'build-dev' if development else 'build'],
+                cwd=os.path.join(DEPS_DIR, JUPYTER_DIR, 'js'))
 
     execute(cmd=['jupyter', 'nbextension', 'install', '--py', '--symlink', '--sys-prefix', 'jupyter_geppetto'])
     execute(cmd=['jupyter', 'nbextension', 'enable', '--py', '--sys-prefix', 'jupyter_geppetto'])
     execute(cmd=['jupyter', 'nbextension', 'enable', '--py', '--sys-prefix', 'widgetsnbextension'])
     execute(cmd=['jupyter', 'serverextension', 'enable', '--py', '--sys-prefix', 'jupyter_geppetto'])
 
-
-
-    # set python console theme
-    execute(['jt', '-t', 'monokai'])
-
+    # Set python console theme
     print("Installing notebook theme")
+
     from jupyter_core import paths
     config_dir = paths.jupyter_config_dir()
     print('Jupyter configuration dir is {}'.format(config_dir))
+
     css_path = os.path.join(config_dir, 'custom')
     if not os.path.exists(css_path):
         os.makedirs(css_path)
     execute(cmd=['cp', 'custom.css', css_path], cwd=HERE)
 
-
-     # Enables Compression
+    # Enables Compression
     json_config_path = "{}/jupyter_notebook_config.json".format(config_dir)
     config = {}
     if os.path.exists(json_config_path):
@@ -189,9 +169,11 @@ def main(branch=branch, skipNpm=False, skipTest=False, development=False):
     if skipTest:
         cprint("Skipping tests")
     else:
+        # install pytest if needed
+        cprint("Installing test libraries")
+        execute(cmd=['pip', 'install', '-r', 'requirements-test.txt'], cwd=ROOT_DIR)
         cprint("Testing NetPyNE")
         # execute("python -m unittest netpyne_ui.tests.netpyne_model_interpreter_test".split())
-
 
     cprint("Installing client packages")
     if not skipNpm:
@@ -199,14 +181,11 @@ def main(branch=branch, skipNpm=False, skipTest=False, development=False):
         execute(cmd=['npm', 'run', 'build-dev'], cwd=WEBAPP_DIR)
 
 
-
 if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description='Install NetPyNE-UI and related dev libraries.')
-    parser.add_argument('--branch', '-b', dest='branch', type=str, action="store", nargs='?',
-                        help='the branch to checkout for all projects. '
-                             'The branch is checked out if exists, otherwise the default for the project will be used')
+
     parser.add_argument('--npm-skip', dest='skipNpm', action='store_true', default=False,
                         help='Skips the long npm install and build processes')
 
@@ -216,11 +195,28 @@ if __name__ == "__main__":
     parser.add_argument('--dev', dest='development', action="store_true", default=False,
                         help='Install for development.')
 
-    args = parser.parse_args([arg if arg != 'branch' else '-b' for arg in sys.argv[1:]])
-    print(args)
-    branch = args.branch
+    parser.add_argument('--netpyne', '-vn', dest='netpyne_version', action="store",
+                        default=os.getenv('NETPYNE_VERSION', 'development'),
+                        help='Specify NetPyNE library branch or tag.')
 
-    skipNpm = args.skipNpm
-    skipTest = args.skipTest
-    development = args.development
-    main(branch, skipNpm, skipTest, development)
+    parser.add_argument('--workspace', '-vw', dest='workspace_version', action="store",
+                        default=os.getenv('WORKSPACE_VERSION', 'master'),
+                        help='Specify workspace branch or tag.')
+
+    parser.add_argument('--pygeppetto', '-vp', dest='pygeppetto_version', action="store",
+                        default=os.getenv('PYGEPPETTO_VERSION', 'development'),
+                        help='Specify Pygeppetto library branch or tag (only for dev build).')
+
+    parser.add_argument('--jupyter_geppetto', '-vj', dest='jupyter_geppetto_version', action="store",
+                        default=os.getenv('JUPYTER_GEPPETTO_VERSION', 'development'),
+                        help='Specify Jupyter Geppetto library branch or tag (only for dev build).')
+
+    args = parser.parse_args(sys.argv[1:])
+    print('Install arguments:\n', args)
+
+    main(skipNpm=args.skipNpm, skipTest=args.skipTest, development=args.development,
+         netpyne_branch=args.netpyne_version,
+         workspace_branch=args.workspace_version,
+         pygeppetto_branch=args.pygeppetto_version,
+         jupyter_geppetto_branch=args.jupyter_geppetto_version
+         )

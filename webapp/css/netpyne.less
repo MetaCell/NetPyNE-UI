@@ -1,6 +1,6 @@
 @import "colors";
-@import (css) url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap');
-
+@import (css)
+  url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap");
 
 html,
 body {
@@ -29,25 +29,31 @@ body {
   overflow: auto;
   height: 100%;
 }
-#mainContainer>div {
+#mainContainer > div {
   height: 100% !important;
 }
 
 .position-toolbar {
   top: 0px;
 }
+
 #controlpanel {
   margin-top: @flexlayout-widget-border;
   // top: 0%!important;
   // width: 97%!important;
-  height: calc(100% - 24px)!important;
-  width: calc(100% - 16px)!important;
+  height: calc(100% - 24px) !important;
+  width: calc(100% - 16px) !important;
   div.griddle {
-    td, th {
+    td,
+    th {
       background-color: rgba(@bgLight, 0.7);
     }
   }
- 
+}
+#ControlPanelButton {
+  :hover {
+    color: @secondaryColor !important;
+  }
 }
 button.actionButton {
   font-size: 15px;
@@ -56,7 +62,7 @@ button.actionButton {
   height: 120px;
   float: left;
   cursor: pointer;
-  overflow: visible!important;
+  overflow: visible !important;
   color: white;
   :hover {
     border-radius: 120px;
@@ -78,7 +84,7 @@ button.actionButton {
 }
 
 .rectangularActionButton button {
-  overflow: visible!important;
+  overflow: visible !important;
   width: 120px !important;
   height: 36px !important;
   border-radius: 25px;
@@ -112,7 +118,7 @@ button.actionButton {
   height: 120px !important;
 }
 .gearThumbButton:hover {
-  background-color: inherit!important;
+  background-color: inherit !important;
 }
 .gearThumbButton button {
   overflow: visible;
@@ -164,12 +170,12 @@ button.actionButton {
   background: transparent;
   justify-content: flex-start;
   margin: 0px;
-  padding: @gutter/2;
+  padding: @gutter / 2;
   border-radius: @radius;
   flex-wrap: wrap;
   font-size: 0.8rem;
   .MuiIcon-colorDisabled {
-    color: black
+    color: black;
   }
   .breadcrumb-spacer {
     text-align: center;
@@ -178,7 +184,6 @@ button.actionButton {
     margin-left: @gutter / 2;
   }
 }
-
 
 .hiddenModal {
   position: absolute !important;
@@ -200,6 +205,20 @@ button.actionButton {
   );
   background: linear-gradient(to bottom, #eaeaea 0%, #ececec 53%, #d6d6d6 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#d6d6d6',GradientType=0 );
+  button.squareB {
+    background-color: @bgRegular;
+  }
+}
+
+.canvas-toolbar-btns-dark {
+  button {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+  }
+}
+.canvas-toolbar-btns-light {
+  button {
+    background-color: rgba(25, 25, 25, 0.1) !important;
+  }
 }
 
 .tabContainer {
@@ -248,7 +267,7 @@ button.actionButton {
   color: white !important;
 }
 
-#logoBackground{
+#logoBackground {
   background-color: #eaeaea;
 }
 
@@ -331,17 +350,17 @@ button.actionButton {
 
 .flex-row {
   display: flex;
-  flex-direction: row; 
+  flex-direction: row;
   align-items: baseline;
   width: 100%;
 }
 
 .flex-row-icon {
-  flex: 0 0 4%; 
-  margin-right: var(--m2)!important;
-  width: var(--icon-size)!important;
-  height: var(--icon-size)!important;
-  padding: 0px!important;
+  flex: 0 0 4%;
+  margin-right: var(--m2) !important;
+  width: var(--icon-size) !important;
+  height: var(--icon-size) !important;
+  padding: 0px !important;
   z-index: 1500;
 }
 
@@ -407,7 +426,7 @@ button.actionButton {
 
 .no-z-index {
   label {
-    z-index: 0!important;
+    z-index: 0 !important;
   }
 }
 
@@ -416,9 +435,9 @@ button.actionButton {
 }
 
 .simple-icon {
-  width: var(--icon-size)!important;
-  height: var(--icon-size)!important;
-  padding: 0px!important;
+  width: var(--icon-size) !important;
+  height: var(--icon-size) !important;
+  padding: 0px !important;
 }
 
 .w-80 {
@@ -426,29 +445,27 @@ button.actionButton {
 }
 
 .mrg-2 {
-  margin: var(--m2)!important;
+  margin: var(--m2) !important;
 }
 .b-4 {
   bottom: var(--m4);
 }
 
-
 .add-rule {
-  min-width: '56px';
+  min-width: "56px";
 }
 
 .MuiListItem-root.Mui-selected {
   color: @primaryColor;
 }
 
-div.flexlayout__layout{
+div.flexlayout__layout {
   top: 0;
 }
 
-#simple-popper{
+#simple-popper {
   z-index: 1500;
 }
-
 
 .image-icon {
   width: 100%;
@@ -463,12 +480,13 @@ div.flexlayout__layout{
   }
 }
 
-.menu-caret{
+.menu-caret {
   margin-left: 1em;
-  color: @bgLight;
+  color: @textColor;
 }
-.menu-item-label { min-width: 10em }
-
+.menu-item-label {
+  min-width: 10em;
+}
 
 .spinner-backdrop {
   display: flex;
@@ -482,7 +500,7 @@ div.flexlayout__layout{
   left: unset;
 }
 
-#plot > div>div>svg{
+#plot > div > div > svg {
   fill: white;
 }
 
@@ -496,4 +514,58 @@ div.flexlayout__layout{
 
 .hovered:hover {
   color: @primaryColor;
+}
+
+.dialog-folder-icon {
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  height: 24px !important;
+  margin-right: 17px;
+}
+.checkbox-unselected {
+  opacity: 0.5;
+}
+.scroll-instances {
+  max-height: calc(100vh - 216px);
+  overflow-y: auto;
+}
+.scroll-longer-instances {
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+}
+.field-start-icon {
+  .MuiFilledInput-root {
+    border-top-left-radius: 0;
+  }
+}
+.layoutVerticalFit {
+  > .MuiGrid-container,
+  > .MuiGrid-container > div,
+  > .MuiGrid-container > div > div,
+  > .MuiGrid-container > div > div > div {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  > .MuiGrid-container {
+    &.MuiGrid-root {
+      flex-direction: row;
+      height: 100%;
+      .MuiGrid-root.MuiGrid-item {
+        height: 100%;
+      }
+    }
+  }
+}
+.layoutVerticalFitInner {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.scrollchild {
+  overflow: hidden;
+  overflow-y: auto;
+  flex: 1;
 }

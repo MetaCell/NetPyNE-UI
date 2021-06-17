@@ -28,7 +28,6 @@ import {
 
 import { MINIMIZED_PANEL } from '.';
 import { TabsetPosition } from './model';
-import { Tab } from '@geppettoengine/geppetto-client/js/components/interface/flexLayout2/src/view/Tab';
 
 const styles = (theme) => createStyles({
   container: {
@@ -97,9 +96,16 @@ class LayoutManager {
   onRenderTabSet = (panel, renderValues) => {
     if (panel.getType() === "tabset" && this.enableMinimize) {
       if (panel.getId() != 'leftPanel' && panel.getChildren().length > 0) {
-        renderValues.buttons.push(<div key={panel.getId()} className="fa fa-window-minimize customIconFlexLayout" onClick={() => {
-          this.minimizeWidget(panel.getActiveNode().getId())
-        }} />);
+        renderValues.buttons.push(
+          <div
+            id={panel.getId()}
+            key={panel.getId()}
+            className="fa fa-window-minimize customIconFlexLayout"
+            onClick={() => {
+              this.minimizeWidget(panel.getActiveNode().getId())
+            }}
+          />
+        );
       }
     }
   }
@@ -120,13 +126,10 @@ class LayoutManager {
 
   getComponent = () => withStyles(styles)(this.Component(this));
 
-
   private createTabSet(tabsetID, position = TabsetPosition.RIGHT, weight = 50) {
     // In case the tabset doesn't exist
     const { model } = this;
     const rootNode = model.getNodeById("root");
-
-
 
     const tabset = new FlexLayout.TabSetNode(model, { id: tabsetID });
     tabset._setWeight(weight);
@@ -162,12 +165,9 @@ class LayoutManager {
         } else {
           hrow._addChild(tabset, 0);
         }
-
         break;
       }
-
     }
-
 
     setTimeout(() => window.dispatchEvent(new Event("resize")), 1000);
   }
@@ -207,21 +207,21 @@ class LayoutManager {
   }
 
   middleware = (store) => (next) => (action) => {
-
     console.debug(action);
     let nextAction = true;
     let nextSetLayout = true;
-
 
     switch (action.type) {
       case ADD_WIDGET: {
         this.addWidget(action.data);
         break;
       }
+
       case ADD_WIDGETS: {
         this.addWidgets(action.data);
         break;
       }
+
       case UPDATE_WIDGET: {
         this.updateWidget(action.data);
         break;
@@ -240,6 +240,7 @@ class LayoutManager {
         this.updateWidget(widget);
         break;
       }
+
       case SET_WIDGETS: {
         const newWidgets: Map<string, Widget> = action.data;
         for (let widget of this.getWidgets()) {
@@ -249,7 +250,6 @@ class LayoutManager {
         }
         this.addWidgets(Object.values(newWidgets));
         break;
-
       }
 
       case SET_LAYOUT: {
@@ -258,11 +258,11 @@ class LayoutManager {
         }
         break;
       }
+
       case General.IMPORT_APPLICATION_STATE: {
         const incomingState = action.data.redux.layout;
         this.model = FlexLayout.Model.fromJson(incomingState);
         this.importSession(action.data.sessions);
-
         nextSetLayout = false;
       }
 
@@ -277,7 +277,6 @@ class LayoutManager {
     if (nextSetLayout) {
       next(setLayout(this.model.toJson()));
     }
-
   };
 
   private addWidgets(newWidgets: Array<Widget>) {
@@ -292,7 +291,6 @@ class LayoutManager {
     for (const active of actives) {
       this.model.doAction(FlexLayout.Actions.selectTab(active));
     }
-
   }
 
   private deleteWidget(widget: any) {
@@ -300,7 +298,6 @@ class LayoutManager {
   }
 
   private getWidgets() {
-
     let nodes = [];
     this.model.visitNodes((node, level) => {
       // TODO access through public api. getConfig is hiding our data (using extraData maybe works)
@@ -347,12 +344,10 @@ class LayoutManager {
       this.model.doAction(action);
     }
 
-
     const newModel = this.model.toJson();
     if (!isEqual(oldModel, newModel)) {
       this.dispatch(setLayout(newModel));
     }
-
 
     window.dispatchEvent(new Event("resize"));
   }
@@ -363,8 +358,7 @@ class LayoutManager {
   }
 
   private minimizeWidget(widgetId) {
-
-    var updatedWidget = { ...this.getWidget(widgetId) };
+    const updatedWidget = { ...this.getWidget(widgetId) };
     if (updatedWidget === undefined) {
       return;
     }
@@ -384,8 +378,7 @@ class LayoutManager {
     if (previousWidget.status != widget.status) {
       if (previousWidget.status == WidgetStatus.MINIMIZED) {
         this.restoreWidget(widget);
-      }
-      else {
+      } else {
         this.moveWidget(widget);
       }
     }
@@ -435,8 +428,7 @@ class LayoutManager {
     const parent = model.getNodeById(widgetId).getParent() as any;
     if (parent.getId() === "border_bottom") {
       return WidgetStatus.MINIMIZED
-    }
-    else {
+    } else {
       const selectedIndex = parent.getSelected()
       if (parent.getChildren()[selectedIndex].getId() === widgetId) {
         return WidgetStatus.ACTIVE

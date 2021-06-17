@@ -1,29 +1,30 @@
-import { WidgetStatus, Widget } from './model';
+import { Widget } from './model';
 
 /**
  * Transforms a widget configutation into a flexlayout node descriptor
  */
 export function widget2Node (configuration: Widget) {
-  const { id, name, component, status, panelName, enableClose = true, ...others } = configuration;
+  const {
+    id, name, component, status, panelName, enableClose = true, ...others
+  } = configuration;
   return {
     id,
     name,
     status,
     component,
-    type: "tab",
+    type: 'tab',
     enableRename: false,
     enableClose,
     // attr defined inside config, will also be available from within flexlayout nodes.  For example:  node.getNodeById(id).getConfig()
-    config: {...configuration} ,
-    ...others
+    config: { ...configuration },
+    ...others,
   };
 }
 
-
 /**
  * Deep object comparison
- * @param {*} a 
- * @param {*} b 
+ * @param {*} a
+ * @param {*} b
  */
 export function isEqual (a: any, b: any): boolean {
   if (a === b) {
@@ -41,9 +42,9 @@ export function isEqual (a: any, b: any): boolean {
   if (a.prototype !== b.prototype) {
     return false;
   }
-  let keys = Object.keys(a);
+  const keys = Object.keys(a);
   if (keys.length !== Object.keys(b).length) {
     return false;
   }
-  return keys.every(k => isEqual(a[k], b[k]));
+  return keys.every((k) => isEqual(a[k], b[k]));
 }

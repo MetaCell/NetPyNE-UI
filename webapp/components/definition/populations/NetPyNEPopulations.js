@@ -1,5 +1,4 @@
 import React from 'react';
-import Utils from '../../../Utils';
 
 import {
   NetPyNEHome,
@@ -7,18 +6,17 @@ import {
   NetPyNEThumbnail,
   NetPyNEPopulation,
   GridLayout,
-  Filter
+  Filter,
 } from 'netpyne/components';
-
-import RulePath from '../../general/RulePath'
-import Accordion from '../../general/ExpansionPanel'
 
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
+import Box from '@material-ui/core/Box';
+import Accordion from '../../general/ExpansionPanel';
+import RulePath from '../../general/RulePath';
+import Utils from '../../../Utils';
 
 export default class NetPyNEPopulations extends React.Component {
-
   constructor (props) {
     super(props);
     this.state = {
@@ -37,17 +35,16 @@ export default class NetPyNEPopulations extends React.Component {
 
   handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
 
-
   hasSelectedPopulationBeenRenamed (prevState, currentState) {
-    var currentModel = prevState.value;
-    var model = currentState.value;
+    const currentModel = prevState.value;
+    const model = currentState.value;
     // deal with rename
     if (currentModel != undefined && model != undefined) {
-      var oldP = Object.keys(currentModel);
-      var newP = Object.keys(model);
+      const oldP = Object.keys(currentModel);
+      const newP = Object.keys(model);
       if (oldP.length == newP.length) {
         // if it's the same lenght there could be a rename
-        for (var i = 0; i < oldP.length; i++) {
+        for (let i = 0; i < oldP.length; i++) {
           if (oldP[i] != newP[i]) {
             if (prevState.selectedPopulation != undefined) {
               if (oldP[i] == prevState.selectedPopulation) {
@@ -63,35 +60,52 @@ export default class NetPyNEPopulations extends React.Component {
 
   componentDidUpdate (prevProps, prevState) {
     // we need to check if any of the three entities have been renamed and if that's the case change the state for the selection variable
-    var newPopulationName = this.hasSelectedPopulationBeenRenamed(prevState, this.state);
+    const newPopulationName = this.hasSelectedPopulationBeenRenamed(
+      prevState,
+      this.state,
+    );
     if (newPopulationName !== undefined) {
       this.setState({
         selectedPopulation: newPopulationName,
-        populationDeleted: undefined 
+        populationDeleted: undefined,
       });
-    } else if ((prevState.value !== undefined) && (Object.keys(prevState.value).length !== Object.keys(this.state.value).length)) {
+    } else if (
+      prevState.value !== undefined
+      && Object.keys(prevState.value).length
+      !== Object.keys(this.state.value).length
+    ) {
       /*
        * logic into this if to check if the user added a new object from the python backend and
        * if the name convention pass the checks, differently rename this and open dialog to inform.
        */
-      var model = this.state.value;
+      const model = this.state.value;
       for (var m in model) {
-        if ((prevState.value !== "") && (!(m in prevState.value))) {
+        if (prevState.value !== '' && !(m in prevState.value)) {
           var newValue = Utils.nameValidation(model[m].name);
           if (newValue != model[m].name) {
             newValue = Utils.getAvailableKey(model, newValue);
             model[newValue] = model[m];
             model[newValue].name = newValue;
             delete model[m];
-            this.setState({
-              value: model,
-              errorMessage: "Error",
-              errorDetails: "Leading digits or whitespaces are not allowed in Population names.\n"
-                                          + m + " has been renamed " + newValue
-            },
-            () => Utils.renameKey('netParams.popParams', m, newValue, (response, newValue) => {
-              this.props.updateCards()
-            }));
+            this.setState(
+              {
+                value: model,
+                errorMessage: 'Error',
+                errorDetails:
+                  `Leading digits or whitespaces are not allowed in Population names.\n${
+                    m
+                  } has been renamed ${
+                    newValue}`,
+              },
+              () => Utils.renameKey(
+                'netParams.popParams',
+                m,
+                newValue,
+                (response, newValue) => {
+                  this.props.updateCards();
+                },
+              ),
+            );
           }
         }
       }
@@ -99,43 +113,63 @@ export default class NetPyNEPopulations extends React.Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    var itemRenamed = this.hasSelectedPopulationBeenRenamed(this.state, nextState) !== undefined;
-    var newItemCreated = false;
-    var selectionChanged = this.state.selectedPopulation != nextState.selectedPopulation;
-    var newModel = this.state.value == undefined;
+    const itemRenamed = this.hasSelectedPopulationBeenRenamed(this.state, nextState)
+      !== undefined;
+    let newItemCreated = false;
+    const selectionChanged = this.state.selectedPopulation != nextState.selectedPopulation;
+    const newModel = this.state.value == undefined;
     if (!newModel) {
-      newItemCreated = ((Object.keys(this.state.value).length != Object.keys(nextState.value).length));
+      newItemCreated = Object.keys(this.state.value).length
+        != Object.keys(nextState.value).length;
     }
     // check if the dialog has been triggered due name convention or name collision errors.
-    var errorDialogOpen = (this.state.errorDetails !== nextState.errorDetails);
-    var filterChanged = nextState.filterPopValue !== this.state.filterPopValue
-    return filterChanged || newModel || newItemCreated || itemRenamed || selectionChanged || errorDialogOpen;
+    const errorDialogOpen = this.state.errorDetails !== nextState.errorDetails;
+    const filterChanged = nextState.filterPopValue !== this.state.filterPopValue;
+    return (
+      filterChanged
+      || newModel
+      || newItemCreated
+      || itemRenamed
+      || selectionChanged
+      || errorDialogOpen
+    );
   }
 
   handleNewPopulation () {
-    var defaultPopulationValues = { 'Population': { 'cellModel': '', 'cellType': '' } }
+    const defaultPopulationValues = {
+      Population: {
+        cellModel: '',
+        cellType: '',
+      },
+    };
     // Get Key and Value
-    var key = Object.keys(defaultPopulationValues)[0];
-    var value = defaultPopulationValues[key];
-    var model = { ...this.state.value };
+    const key = Object.keys(defaultPopulationValues)[0];
+    const value = defaultPopulationValues[key];
+    const model = { ...this.state.value };
 
     // Get New Available ID
-    var populationId = Utils.getAvailableKey(model, key);
+    const populationId = Utils.getAvailableKey(model, key);
 
     // Create Population Object
-    var newPopulation = Object.assign({ name: populationId }, value);
+    const newPopulation = { name: populationId, ...value };
 
     // Create Population Client side
-    Utils.execPythonMessage('netpyne_geppetto.netParams.popParams["' + populationId + '"] = ' + JSON.stringify(value))
+    Utils.execPythonMessage(
+      `netpyne_geppetto.netParams.popParams["${
+        populationId
+      }"] = ${
+        JSON.stringify(value)}`,
+    );
 
-    
     // Update state
     model[populationId] = newPopulation;
-    this.setState({
-      value: model,
-      selectedPopulation: populationId
-    }, () => this.props.updateCards());
-
+    this.setState(
+      {
+        value: model,
+        selectedPopulation: populationId,
+      },
+      () => this.props.updateCards(),
+    );
   }
 
   /* Method that handles button click */
@@ -144,9 +178,9 @@ export default class NetPyNEPopulations extends React.Component {
   }
 
   handleRenameChildren (childName) {
-    childName = childName.replace(/\s*$/,"");
-    var childrenList = Object.keys(this.state.value);
-    for (var i = 0 ; childrenList.length > i ; i++) {
+    childName = childName.replace(/\s*$/, '');
+    const childrenList = Object.keys(this.state.value);
+    for (let i = 0; childrenList.length > i; i++) {
       if (childName === childrenList[i]) {
         return false;
       }
@@ -155,59 +189,85 @@ export default class NetPyNEPopulations extends React.Component {
   }
 
   getPath () {
-    const { value: model, selectedPopulation } = this.state
-    return model && model[selectedPopulation] && `netParams.popParams["${selectedPopulation}"]`
+    const {
+      value: model,
+      selectedPopulation,
+    } = this.state;
+    return (
+      model
+      && model[selectedPopulation]
+      && `netParams.popParams["${selectedPopulation}"]`
+    );
   }
 
   render () {
-    var actions = [
+    const actions = [
       <Button
         variant="contained"
         color="primary"
-        label={"BACK"}
-        onTouchTap={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
-      />
+        label="BACK"
+        onTouchTap={() => this.setState({
+          errorMessage: undefined,
+          errorDetails: undefined,
+        })}
+      />,
     ];
-    var title = this.state.errorMessage;
-    var children = this.state.errorDetails;
-    var dialogPop = (this.state.errorMessage != undefined) ? <Dialog
-      title={title}
-      open={true}
-      actions={actions}
-      bodyStyle={{ overflow: 'auto' }}
-      style={{ whiteSpace: "pre-wrap" }}>
-      {children}
-    </Dialog> : undefined;
+    const title = this.state.errorMessage;
+    const children = this.state.errorDetails;
+    const dialogPop = this.state.errorMessage != undefined ? (
+      <Dialog
+        title={title}
+        open
+        actions={actions}
+        bodyStyle={{ overflow: 'auto' }}
+        style={{ whiteSpace: 'pre-wrap' }}
+      >
+        {children}
+      </Dialog>
+    ) : (
+      undefined
+    );
 
     if (this.state.value != undefined && this.state.value !== '') {
       var model = this.state.value;
-      for (var m in model) {
+      for (const m in model) {
         model[m].name = m;
       }
-      const filterName = this.state.filterPopValue === null ? '' : this.state.filterPopValue
+      const filterName = this.state.filterPopValue === null ? '' : this.state.filterPopValue;
       var populations = Object.keys(model)
-        .filter(popName => popName.toLowerCase().includes(filterName.toLowerCase()))
-        .map(popName => (
-          <NetPyNEThumbnail 
-            name={popName} key={popName} 
+        .filter((popName) => popName.toLowerCase()
+          .includes(filterName.toLowerCase()))
+        .map((popName) => (
+          <NetPyNEThumbnail
+            name={popName}
+            key={popName}
             selected={popName == this.state.selectedPopulation}
             paramPath="popParams"
-            handleClick={this.selectPopulation} />
+            handleClick={this.selectPopulation}
+          />
         ));
-      
+
       var selectedPopulation = undefined;
-      if ((this.state.selectedPopulation !== undefined) && Object.keys(model).indexOf(this.state.selectedPopulation) > -1) {
-        selectedPopulation = <NetPyNEPopulation name={this.state.selectedPopulation} model={this.state.value[this.state.selectedPopulation]} renameHandler={this.handleRenameChildren}/>;
+      if (
+        this.state.selectedPopulation !== undefined
+        && Object.keys(model)
+          .indexOf(this.state.selectedPopulation) > -1
+      ) {
+        selectedPopulation = (
+          <NetPyNEPopulation
+            name={this.state.selectedPopulation}
+            model={this.state.value[this.state.selectedPopulation]}
+            renameHandler={this.handleRenameChildren}
+          />
+        );
       }
     }
 
     return (
       <GridLayout>
         <div>
-
           <Accordion>
             <div className="breadcrumb">
-
               <div>
                 <NetPyNEHome
                   selection={this.state.selectedPopulation}
@@ -216,39 +276,41 @@ export default class NetPyNEPopulations extends React.Component {
                 <div style={{ opacity: 0 }}>H</div>
               </div>
 
-              <div >
-                <NetPyNEAddNew 
-                  id={"newPopulationButton"} 
+              <div>
+                <NetPyNEAddNew
+                  id="newPopulationButton"
                   title="Create new population"
                   handleClick={this.handleNewPopulation}
                 />
-                <div style={{ 
-                  textAlign: 'center', 
-                  fontFamily: 'Source Sans Pro', 
-                  maxWidth: 40, 
-                  overflow: 'visible',
-                  display: 'flex', 
-                  justifyContent: 'center' 
-                }}>Population</div>
+                <div
+                  style={{
+                    textAlign: 'center',
+                    fontFamily: 'Source Sans Pro',
+                    maxWidth: 40,
+                    overflow: 'visible',
+                    display: 'flex',
+                    justifyContent: 'center',
+                  }}
+                >
+                  Population
+                </div>
               </div>
-              
             </div>
-            <Divider />
-            <RulePath text={this.getPath()}/>
-            <Divider />
-            <Filter
-              value={this.state.filterPopValue}
-              label="Filter population by name..."
-              handleFilterChange={newValue => this.setState({ filterPopValue: newValue })}
-              options={model === undefined ? [] : Object.keys(model)}
-            />
+            <Box p={1}>
+              <RulePath text={this.getPath()} />
+              <Box mb={1} />
+              <Filter
+                value={this.state.filterPopValue}
+                label="Filter population by name..."
+                handleFilterChange={(newValue) => this.setState({ filterPopValue: newValue })}
+                options={model === undefined ? [] : Object.keys(model)}
+              />
+            </Box>
           </Accordion>
-          
-          
         </div>
-        
-
-        {populations}
+        <Box className="scrollbar scrollchild" mt={1}>
+          {populations}
+        </Box>
         {selectedPopulation}
         {dialogPop}
       </GridLayout>

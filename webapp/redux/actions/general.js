@@ -1,4 +1,5 @@
-import { setWidgets } from "../../components/layout/actions";
+import { setWidgets } from '../../components/layout/actions';
+import { EDIT_WIDGETS, PYTHON_CONSOLE_WIDGET, WidgetStatus } from '../../constants';
 
 // Action Types
 export const UPDATE_CARDS = 'UPDATE_CARDS';
@@ -9,15 +10,15 @@ export const CREATE_SIMULATE_NETWORK = 'CREATE_SIMULATE_NETWORK';
 export const SIMULATE_NETWORK = 'SIMULATE_NETWORK';
 export const EDIT_MODEL = 'EDIT_MODEL';
 export const RESET_MODEL = 'RESET_MODEL';
-export const PYTHON_CALL = 'PYTHON_CALL'
-export const DELETE_NETPARAMS_OBJ = 'DELETE_NETPARAMS_OBJ'
+export const PYTHON_CALL = 'PYTHON_CALL';
+export const DELETE_NETPARAMS_OBJ = 'DELETE_NETPARAMS_OBJ';
 export const CLOSE_DIALOG = 'CLOSE_DIALOG';
 export const OPEN_DIALOG = 'OPEN_DIALOG';
 export const LOAD_TUTORIAL = 'LOAD_TUTORIAL';
 export const AUTOMATIC_INSTANTIATION = 'AUTOMATIC_INSTANTIATION';
 export const AUTOMATIC_SIMULATION = 'AUTOMATIC_SIMULATION';
 export const IMPORT_APPLICATION_STATE = 'IMPORT_APPLICATION_STATE';
-import { EDIT_WIDGETS, PYTHON_CONSOLE_WIDGET, WidgetStatus } from '../../constants';
+export const SET_THEME = 'SET_THEME';
 
 // Actions
 export const updateCards = { type: UPDATE_CARDS };
@@ -33,17 +34,18 @@ export const editModel = { type: EDIT_MODEL };
 
 export const resetModel = { type: RESET_MODEL };
 
-export const pythonCall = (cmd, args) => ({ type: PYTHON_CALL, cmd, args })
+export const pythonCall = (cmd, args) => ({ type: PYTHON_CALL, cmd, args });
 
-export const deleteNetParamsObj = payload => ({ type: DELETE_NETPARAMS_OBJ, payload })
+export const deleteNetParamsObj = (payload) => ({ type: DELETE_NETPARAMS_OBJ, payload });
 
-export const closeDialog = { type: CLOSE_DIALOG }
-export const openDialog = payload => ({ type: OPEN_DIALOG, payload });
+export const closeDialog = { type: CLOSE_DIALOG };
+export const openDialog = (payload) => ({ type: OPEN_DIALOG, payload });
 
+export const setTheme = (themeName) => ({ type: SET_THEME, payload: themeName });
 
-export const loadTutorial = tutFile => ({ type: LOAD_TUTORIAL, payload: tutFile })
+export const loadTutorial = (tutFile) => ({ type: LOAD_TUTORIAL, payload: tutFile });
 
-export const changeAutomaticInstantiation = payload => ({ type: AUTOMATIC_INSTANTIATION, payload });
-export const changeAutomaticSimulation = payload => ({ type: AUTOMATIC_SIMULATION, payload });
+export const changeAutomaticInstantiation = (payload) => ({ type: AUTOMATIC_INSTANTIATION, payload });
+export const changeAutomaticSimulation = (payload) => ({ type: AUTOMATIC_SIMULATION, payload });
 
 export const setDefaultWidgets = setWidgets({ [PYTHON_CONSOLE_WIDGET.id]: { ...PYTHON_CONSOLE_WIDGET, panelName: PYTHON_CONSOLE_WIDGET.defaultPanel, status: WidgetStatus.ACTIVE } });

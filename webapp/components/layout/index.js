@@ -1,1 +1,1 @@
-export const MINIMIZED_PANEL = "border_bottom";
+export const MINIMIZED_PANEL = 'border_bottom';

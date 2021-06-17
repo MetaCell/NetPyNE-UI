@@ -7,7 +7,6 @@ import TextField from '@material-ui/core/TextField';
  * obtained through the value parameter fired on an onChange event.
  */
 export default class NetPyNESlider extends Component {
-
   constructor (props) {
     super(props);
     this.state = { value: 0.5 };
@@ -19,33 +18,40 @@ export default class NetPyNESlider extends Component {
     }
   }
 
-    handleSlider = (event, value) => {
-      this.setState({ value: value });
+  handleSlider = (event, value) => {
+    this.setState({ value });
 
-      this.props.onChange(event, null, value);
-    };
+    this.props.onChange(event, null, value);
+  };
 
-    render () {
-      return (
-        <div>
-          <p>
-            <span>{this.props.label}</span>
-          </p>
-          <Slider
-            {...this.props}
-            style={{ float: 'left', width: '220px' }}
-            value={this.state.value}
-            onChange={this.handleSlider}
-          />
+  render () {
+    return (
+      <div>
+        <p>
+          <span>{this.props.label}</span>
+        </p>
+        <Slider
+          {...this.props}
+          style={{
+            float: 'left',
+            width: '220px',
+          }}
+          value={this.state.value}
+          onChange={this.handleSlider}
+        />
 
-          <TextField
-            variant="filled" 
-            style={{ float: 'left', width: '40px', margin: '0 5px' }}
-            value={this.state.value}
-            onChange={event => this.handleSlider(event, event.target.value)}
-          />
+        <TextField
+          variant="filled"
+          style={{
+            float: 'left',
+            width: '40px',
+            margin: '0 5px',
+          }}
+          value={this.state.value}
+          onChange={(event) => this.handleSlider(event, event.target.value)}
+        />
 
-        </div>
-      );
-    }
+      </div>
+    );
+  }
 }
