@@ -250,6 +250,10 @@ class NetPyNEGeppetto:
         try:
             experiment = experiments.get_current()
             if experiment:
+                # TODO: remove once run config can be configured
+                self.run_config.asynchronous = True
+                self.run_config.parallel = True
+
                 # run config decides over asynch or synch
                 if complete:
                     # simulate trials
