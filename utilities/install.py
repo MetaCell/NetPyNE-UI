@@ -79,11 +79,15 @@ def main(netpyne_branch, workspace_branch, pygeppetto_branch=None, jupyter_geppe
 
     if not os.path.exists(DEPS_DIR):
         os.mkdir(DEPS_DIR)
-    clone(repository=NETPYNE, branch_or_tag=netpyne_branch)
-    execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, NETPYNE_DIR))
+
 
     if development:
         os.chdir(DEPS_DIR)
+
+        cprint("Installing netpyne")
+        clone(repository=NETPYNE, branch_or_tag=netpyne_branch)
+        execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, NETPYNE_DIR))
+
         # install pygeppetto
         cprint("Installing pygeppetto")
         clone(repository=PYGEPPETTO,
