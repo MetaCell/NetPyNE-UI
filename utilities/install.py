@@ -75,6 +75,7 @@ def compile_mod():
 def main(netpyne_branch, workspace_branch, pygeppetto_branch=None, jupyter_geppetto_branch=None, skipNpm=False,
          skipTest=False, development=False):
     cprint("Installing requirements")
+    print(workspace_branch)
     execute(cmd=['pip', 'install', '-r', 'requirements.txt'], cwd=ROOT_DIR)
 
     if not os.path.exists(DEPS_DIR):
@@ -112,10 +113,11 @@ def main(netpyne_branch, workspace_branch, pygeppetto_branch=None, jupyter_geppe
         execute(cmd=['pip', 'install', '-e', '.', '--no-deps'], cwd=ROOT_DIR)
 
     os.chdir(ROOT_DIR)
-    cprint("Cloning workspace")
-    clone(repository=WORKSPACE, branch_or_tag=workspace_branch, folder=WORKSPACE_DIR, cwdp=ROOT_DIR)
-    cprint("Compiling workspace modules")
-    compile_mod()
+    if workspace_branch:
+      cprint("Cloning workspace")
+      clone(repository=WORKSPACE, branch_or_tag=workspace_branch, folder=WORKSPACE_DIR, cwdp=ROOT_DIR)
+      cprint("Compiling workspace modules")
+      compile_mod()
 
     if not skipNpm and os.path.exists(os.path.join(DEPS_DIR, JUPYTER_DIR)):
         cprint("Building Jupyter Geppetto extension...")
