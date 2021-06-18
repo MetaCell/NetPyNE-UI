@@ -1,8 +1,8 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
-import Utils from '../../../../../Utils';
 import Box from '@material-ui/core/Box';
 import { NetPyNETextField } from 'netpyne/components';
+import Utils from '../../../../../Utils';
 
 export default class NetPyNEMechanism extends React.Component {
   constructor (props) {
@@ -19,15 +19,15 @@ export default class NetPyNEMechanism extends React.Component {
 
   renderMechFields = () => {
     if (this.state.mechFields === '') {
-      return <div key={'empty'}/>;
+      return <div key="empty" />;
     }
 
     const { currentName } = this.state;
     const {
       cellRule,
-      section
+      section,
     } = this.props;
-    let tag = `netParams.cellParams['${cellRule}']['secs']['${section}']['mechs']['${currentName}']`;
+    const tag = `netParams.cellParams['${cellRule}']['secs']['${section}']['mechs']['${currentName}']`;
 
     return this.state.mechFields.map((name, i) => (
       <Box mb={1} key={name}>
@@ -37,19 +37,19 @@ export default class NetPyNEMechanism extends React.Component {
           name={name}
           model={`${tag}['${name}']`}
           label={name}
-          realType={'float'}
+          realType="float"
         />
       </Box>
     ));
   };
 
   render () {
-    var content = [];
+    const content = [];
     if (this.state.currentName !== undefined && this.state.currentName !== '') {
       Utils.evalPythonMessage('netpyne_geppetto.getMechParams', [
         this.state.currentName,
       ])
-        .then(response => {
+        .then((response) => {
           if (JSON.stringify(this.state.mechFields) !== JSON.stringify(response)) {
             this.setState({ mechFields: response });
           }
@@ -58,14 +58,14 @@ export default class NetPyNEMechanism extends React.Component {
     }
 
     return (
-      <Box className={`scrollbar scrollchild`} mt={1}>
+      <Box className="scrollbar scrollchild" mt={1}>
         <Box mb={1}>
           <TextField
             variant="filled"
             fullWidth
             value={this.state.currentName}
             label="The name of the mechanism"
-            disabled={true}
+            disabled
           />
         </Box>
 

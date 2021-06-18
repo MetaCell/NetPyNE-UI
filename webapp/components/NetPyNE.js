@@ -115,21 +115,21 @@ class NetPyNE extends React.Component {
       <div className={classes.root}>
         <div className={classes.container}>
           <div className={classes.topbar}>
-            <Topbar/>
+            <Topbar />
           </div>
           <Box p={1} flex={1} display="flex" alignItems="stretch">
             <Grid container spacing={1} className={classes.content} alignItems="stretch">
               <Grid item className={classes.noGrow}>
-                <Drawer/>
+                <Drawer />
               </Grid>
               <Grid item>
-                <Layout/>
+                <Layout />
               </Grid>
             </Grid>
           </Box>
         </div>
-        <Dialog/>
-        <ErrorDialog/>
+        <Dialog />
+        <ErrorDialog />
       </div>
     );
   }

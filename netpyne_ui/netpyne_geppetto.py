@@ -24,8 +24,11 @@ from shutil import copyfile
 from jupyter_geppetto import jupyter_geppetto, synchronization, utils
 from contextlib import redirect_stdout
 from netpyne_ui.constants import NETPYNE_WORKDIR_PATH, NUM_CONN_LIMIT
+from netpyne_ui.mod_utils import compileModMechFiles
 
 os.chdir(NETPYNE_WORKDIR_PATH)
+
+neuron.nrn_dll_loaded.append(os.path.join(NETPYNE_WORKDIR_PATH, 'mod'))  # Avoids to load workspace modfiles twice
 
 
 class NetPyNEGeppetto:
@@ -41,33 +44,6 @@ class NetPyNEGeppetto:
         jupyter_geppetto.context = {'netpyne_geppetto': self}
 
     def getData(self):
-        # TODO: this needs to be moved into the metadata.py of netpyne repository.
-        metadata['netParams']['children']['cellsVisualizationSpacingMultiplierX'] = {
-            "label": "Cells visualization spacing multiplier X",
-            "help": "Multiplier for spacing in X axis in 3d visualization of cells (default: 1)",
-            "suggestions": "",
-            "hintText": "",
-            "type": "float"
-        }
-        metadata['netParams']['children']['cellsVisualizationSpacingMultiplierY'] = {
-            "label": "Cells visualization spacing multiplier Y",
-            "help": "Multiplier for spacing in Y axis in 3d visualization of cells (default: 1)",
-            "suggestions": "",
-            "hintText": "",
-            "type": "float"
-        }
-        metadata['netParams']['children']['cellsVisualizationSpacingMultiplierZ'] = {
-            "label": "Cells visualization spacing multiplier Z",
-            "help": "Multiplier for spacing in Z axis in 3d visualization of cells (default: 1)",
-            "suggestions": "",
-            "hintText": "",
-            "type": "float"
-        }
-
-        self.netParams.cellsVisualizationSpacingMultiplierX = 1
-        self.netParams.cellsVisualizationSpacingMultiplierY = 1
-        self.netParams.cellsVisualizationSpacingMultiplierZ = 1
-
         return {
             "metadata": metadata,
             "netParams": self.netParams.todict(),
@@ -127,9 +103,10 @@ class NetPyNEGeppetto:
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
                     netpyne_model = sim
 
-                else:  # single cpu computation
+                else:
                     logging.info("Starting simulation")
-                    if not 'usePrevInst' in args or not args['usePrevInst']:
+
+                    if not args.get('usePrevInst', False):
                         logging.debug('Instantiating single thread simulation')
                         netpyne_model = self.instantiateNetPyNEModel()
                         self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
@@ -141,24 +118,15 @@ class NetPyNEGeppetto:
         except:
             return utils.getJSONError("Error while simulating the NetPyNE model", sys.exc_info())
 
-    def compileModMechFiles(self, compileMod, modFolder):
-        # Create Symbolic link
-        if compileMod:
-            modPath = os.path.join(str(modFolder), "x86_64")
+    def loadModel(self, args):
+        """ Imports a model stored as file in json format.
 
-            subprocess.call(["rm", "-r", modPath])
+        :param args:
+        :return:
+        """
 
-            os.chdir(modFolder)
-            subprocess.call(["nrnivmodl"])
-            os.chdir('..')
-
-        # Load mechanism if mod path is passed
-        if modFolder:
-            neuron.load_mechanisms(str(modFolder))
-
-    def loadModel(self, args):  # handles all data coming from a .json file (default file system for Netpyne)
         def remove(dictionary):
-            # remove reserved keys such as __dict__, __Method__, etc 
+            # remove reserved keys such as __dict__, __Method__, etc
             # they appear when we do sim.loadAll(json_file)
             if isinstance(dictionary, dict):
                 for key, value in list(dictionary.items()):
@@ -172,7 +140,7 @@ class NetPyNEGeppetto:
 
         try:
             owd = os.getcwd()
-            self.compileModMechFiles(args['compileMod'], args['modFolder'])
+            compileModMechFiles(args['compileMod'], args['modFolder'])
         except:
             return utils.getJSONError("Error while importing/compiling mods", sys.exc_info())
         finally:
@@ -184,7 +152,8 @@ class NetPyNEGeppetto:
                 wake_up_geppetto = False
                 if all([args[option] for option in ['loadNetParams', 'loadSimCfg', 'loadSimData', 'loadNet']]):
                     wake_up_geppetto = True
-                    if self.doIhaveInstOrSimData()['haveInstance']: sim.clearAll()
+                    if self.doIhaveInstOrSimData()['haveInstance']:
+                        sim.clearAll()
                     sim.initialize()
                     sim.loadAll(args['jsonModelFolder'])
                     self.netParams = sim.net.params
@@ -194,7 +163,8 @@ class NetPyNEGeppetto:
                 else:
                     if args['loadNet']:
                         wake_up_geppetto = True
-                        if self.doIhaveInstOrSimData()['haveInstance']: sim.clearAll()
+                        if self.doIhaveInstOrSimData()['haveInstance']:
+                            sim.clearAll()
                         sim.initialize()
                         sim.loadNet(args['jsonModelFolder'])
 
@@ -212,7 +182,8 @@ class NetPyNEGeppetto:
                         remove(self.simConfig.todict())
 
                     if args['loadNetParams']:
-                        if self.doIhaveInstOrSimData()['haveInstance']: sim.clearAll()
+                        if self.doIhaveInstOrSimData()['haveInstance']:
+                            sim.clearAll()
                         sim.loadNetParams(args['jsonModelFolder'])
                         self.netParams = sim.net.params
                         remove(self.netParams.todict())
@@ -220,11 +191,12 @@ class NetPyNEGeppetto:
                 if wake_up_geppetto:
                     if len(sim.net.cells) > 0:
                         section = list(sim.net.cells[0].secs.keys())[0]
-                        if not 'pt3d' in list(sim.net.cells[0].secs[section].geom.keys()):
+                        if 'pt3d' not in list(sim.net.cells[0].secs[section].geom.keys()):
                             sim.net.defineCellShapes()
                             sim.gatherData()
                             sim.loadSimData(args['jsonModelFolder'])
 
+                    sim.gatherData()
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
                     return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
                 else:
@@ -233,35 +205,48 @@ class NetPyNEGeppetto:
             return utils.getJSONError("Error while loading the NetPyNE model", sys.exc_info())
 
     def importModel(self, modelParameters):
+        """ Imports a model stored in form of Python files.
+
+        :param modelParameters:
+        :return:
+        """
+        if self.doIhaveInstOrSimData()['haveInstance']:
+            # TODO: this must be integrated into the general lifecycle of "model change -> simulate"
+            #   Shouldn't be specific to Import
+            sim.clearAll()
+
         try:
             # Get Current dir
             owd = os.getcwd()
 
-            self.compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
+            compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
 
             with redirect_stdout(sys.__stdout__):
                 # NetParams
-                netParamsPath = str(modelParameters["netParamsPath"])
-                sys.path.append(netParamsPath)
-                os.chdir(netParamsPath)
-                # Import Module 
-                netParamsModuleName = importlib.import_module(str(modelParameters["netParamsModuleName"]))
+                net_params_path = str(modelParameters["netParamsPath"])
+                sys.path.append(net_params_path)
+                os.chdir(net_params_path)
+                # Import Module
+                net_params_module_name = importlib.import_module(str(modelParameters["netParamsModuleName"]))
                 # Import Model attributes
-                self.netParams = getattr(netParamsModuleName, str(modelParameters["netParamsVariable"]))
+                self.netParams = getattr(net_params_module_name, str(modelParameters["netParamsVariable"]))
 
                 for key, value in self.netParams.cellParams.items():
                     if hasattr(value, 'todict'):
                         self.netParams.cellParams[key] = value.todict()
 
                 # SimConfig
-                simConfigPath = str(modelParameters["simConfigPath"])
-                sys.path.append(simConfigPath)
-                os.chdir(simConfigPath)
-                # Import Module 
-                simConfigModuleName = importlib.import_module(str(modelParameters["simConfigModuleName"]))
+                sim_config_path = str(modelParameters["simConfigPath"])
+                sys.path.append(sim_config_path)
+                os.chdir(sim_config_path)
+                # Import Module
+                sim_config_module_name = importlib.import_module(str(modelParameters["simConfigModuleName"]))
                 # Import Model attributes
-                self.simConfig = getattr(simConfigModuleName, str(modelParameters["simConfigVariable"]))
+                self.simConfig = getattr(sim_config_module_name, str(modelParameters["simConfigVariable"]))
 
+                # TODO: when should sim.initialize be called?
+                #   Only on import or better before every simulation or network instantiation?
+                sim.initialize()
             return utils.getJSONReply()
         except:
             return utils.getJSONError("Error while importing the NetPyNE model", sys.exc_info())
@@ -277,7 +262,7 @@ class NetPyNEGeppetto:
 
                 conds = {} if rule not in self.netParams.cellParams else self.netParams.cellParams[rule]['conds']
 
-                self.compileModMechFiles(modelParameters["compileMod"], modelParameters["modFolder"])
+                compileModMechFiles(modelParameters["compileMod"], modelParameters["modFolder"])
 
                 del modelParameters["modFolder"]
                 del modelParameters["compileMod"]
@@ -334,7 +319,6 @@ class NetPyNEGeppetto:
             return utils.getJSONError("Error while exporting the NetPyNE model", sys.exc_info())
 
     def deleteModel(self, modelParams):
-
         try:
             with redirect_stdout(sys.__stdout__):
                 self.netParams = specs.NetParams()
@@ -347,8 +331,8 @@ class NetPyNEGeppetto:
         try:
             # This function fails is some keys don't exists
             # sim.clearAll()
+            # TODO: as part of #264 we should remove the method and use clearAll intstead
             self.clearSim()
-
         except:
             pass
 
@@ -372,7 +356,11 @@ class NetPyNEGeppetto:
             sim.saveData()
         return sim
 
-    def doIhaveInstOrSimData(self):  # return [bool, bool] telling if we have an instance and simulated data
+    def doIhaveInstOrSimData(self):
+        """ Telling if we have an instance or simulated data.
+
+        return [bool, bool]
+        """
         with redirect_stdout(sys.__stdout__):
             out = [False, False]
             if hasattr(sim, 'net'):
@@ -428,6 +416,9 @@ class NetPyNEGeppetto:
                     file_list.append({'title': f, 'path': ff})
         return dir_list + file_list
 
+    def checkAvailablePlots(self):
+        return analysis.checkAvailablePlots()
+
     def getPlot(self, plotName, LFPflavour, theme='gui'):
         try:
             with redirect_stdout(sys.__stdout__):
@@ -443,8 +434,8 @@ class NetPyNEGeppetto:
 
                     if plotName in ("iplotConn", "iplot2Dnet") and sim.net.allCells:
                         # To prevent unresponsive kernel, we don't show conns if they become too many
-                        numConn = sum([len(cell.conns) for cell in sim.net.allCells if cell.conns])
-                        if numConn > NUM_CONN_LIMIT:
+                        num_conn = sum([len(cell.conns) for cell in sim.net.allCells if cell.conns])
+                        if num_conn > NUM_CONN_LIMIT:
                             args["showConns"] = False
 
                     html = getattr(analysis, plotName)(**args)
@@ -452,12 +443,9 @@ class NetPyNEGeppetto:
                         return ""
 
                     # some plots return "fig", some return "(fig, data)"
-                    if plotName == 'iplotRaster':
+                    if plotName in ('iplotRaster', 'iplotRxDConcentration', 'iplot2Dnet'):
                         html = html[0]
-                    elif plotName == 'iplotRxDConcentration':
-                        html = html[0]
-                    elif plotName == 'iplot2Dnet':
-                        html = html[0]
+
                     return html
 
                 else:
@@ -479,9 +467,6 @@ class NetPyNEGeppetto:
                             return [ui.getSVG(fig)]
                     else:
                         return figData
-
-
-
         except Exception as e:
             # TODO: Extract these two lines as a function and call it in every catch clause
             err = "There was an exception in %s():" % (e.plotName)
@@ -529,8 +514,18 @@ class NetPyNEGeppetto:
         return [value[:-(len(mechanism) + 1)] for value in params]
 
     def getAvailablePlots(self):
-        plots = ["iplotRaster", "iplotSpikeHist", "plotSpikeStats", "iplotRatePSD", "iplotTraces", "iplotLFP",
-                 "plotShape", "plot2Dnet", "iplotConn", "granger"]
+        plots = [
+            "iplotRaster",
+            "iplotSpikeHist",
+            "plotSpikeStats",
+            "iplotRatePSD",
+            "iplotTraces",
+            "iplotLFP",
+            "plotShape",
+            "plot2Dnet",
+            "iplotConn",
+            "granger"
+        ]
 
         return [plot for plot in plots if plot not in list(self.simConfig.analysis.keys())]
 

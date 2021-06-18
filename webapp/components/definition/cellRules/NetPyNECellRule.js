@@ -9,25 +9,24 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Utils from '../../../Utils';
 import { withStyles } from '@material-ui/core/styles';
+import Utils from '../../../Utils';
 
 class NetPyNECellRule extends React.Component {
-
   constructor (props) {
     super(props);
     this.state = {
       currentName: props.name,
       errorMessage: undefined,
-      errorDetails: undefined
+      errorDetails: undefined,
     };
   }
 
-  handleRenameChange = event => {
-    var storedValue = this.props.name;
-    var newValue = Utils.nameValidation(event.target.value);
-    var updateCondition = this.props.renameHandler(newValue);
-    var triggerCondition = Utils.handleUpdate(updateCondition, newValue, event.target.value, this, 'CellRule');
+  handleRenameChange = (event) => {
+    const storedValue = this.props.name;
+    const newValue = Utils.nameValidation(event.target.value);
+    const updateCondition = this.props.renameHandler(newValue);
+    const triggerCondition = Utils.handleUpdate(updateCondition, newValue, event.target.value, this, 'CellRule');
 
     if (triggerCondition) {
       this.triggerUpdate(() => {
@@ -53,9 +52,9 @@ class NetPyNECellRule extends React.Component {
   }
 
   postProcessMenuItems (pythonData, selected) {
-    return pythonData.map(name => (
+    return pythonData.map((name) => (
       <MenuItem
-        id={name + 'MenuItem'}
+        id={`${name}MenuItem`}
         key={name}
         checked={selected.indexOf(name) > -1}
         value={name}
@@ -67,29 +66,32 @@ class NetPyNECellRule extends React.Component {
 
   render () {
     const { classes } = this.props;
-    var dialogPop = (this.state.errorMessage !== undefined ? (
-          <Dialog
-            open={true}
-            style={{ whiteSpace: 'pre-wrap' }}>
-            <DialogTitle id="alert-dialog-title">{this.state.errorMessage}</DialogTitle>
-            <DialogContent style={{ overflow: 'auto' }}>
-              <DialogContentText id="alert-dialog-description">
-                {this.state.errorDetails}
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => this.setState({
-                  errorMessage: undefined,
-                  errorDetails: undefined
-                })}
-              >BACK</Button>
-            </DialogActions>
-          </Dialog>
-        )
-        : undefined
+    const dialogPop = (this.state.errorMessage !== undefined ? (
+      <Dialog
+        open
+        style={{ whiteSpace: 'pre-wrap' }}
+      >
+        <DialogTitle id="alert-dialog-title">{this.state.errorMessage}</DialogTitle>
+        <DialogContent style={{ overflow: 'auto' }}>
+          <DialogContentText id="alert-dialog-description">
+            {this.state.errorDetails}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => this.setState({
+              errorMessage: undefined,
+              errorDetails: undefined,
+            })}
+          >
+            BACK
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
+      : undefined
     );
     return (
       <div>
@@ -101,7 +103,7 @@ class NetPyNECellRule extends React.Component {
             value={this.state.currentName}
             disabled={this.renaming}
             label="The name of the cell type"
-            id={'cellRuleName'}
+            id="cellRuleName"
           />
 
           <Box m={1}>
@@ -109,7 +111,9 @@ class NetPyNECellRule extends React.Component {
               variant="contained"
               color="secondary"
               onClick={() => this.props.HandleAddNewSection()}
-            >Add new section</Button>
+            >
+              Add new section
+            </Button>
           </Box>
 
         </div>
@@ -121,18 +125,18 @@ class NetPyNECellRule extends React.Component {
 
 const styles = ({
   shape,
-  spacing
+  spacing,
 }) => ({
   expandable: {
     borderRadius: shape.borderRadius,
     backgroundColor: 'inherit',
     paddingTop: spacing(2),
-    '&::before': { content: 'unset' }
+    '&::before': { content: 'unset' },
   },
   root: {
     display: 'flex',
-    flexDirection: 'column'
-  }
+    flexDirection: 'column',
+  },
 });
 
 export default withStyles(styles)(NetPyNECellRule);

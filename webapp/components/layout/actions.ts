@@ -8,73 +8,74 @@ export const ADD_WIDGET = 'ADD_WIDGET';
 export const ADD_WIDGETS = 'ADD_WIDGETS';
 export const RESET_LAYOUT = 'RESET_LAYOUT';
 export const DESTROY_WIDGET = 'DESTROY_WIDGET';
-export const ADD_PLOT_TO_EXISTING_WIDGET = 'ADD_PLOT_TO_EXISTING_WIDGET'
+export const ADD_PLOT_TO_EXISTING_WIDGET = 'ADD_PLOT_TO_EXISTING_WIDGET';
 
-
-export const newWidget = ({ path, component, panelName, ...others }) => ({
+export const newWidget = ({
+  path, component, panelName, ...others
+}) => ({
   type: ADD_WIDGET,
   data: {
     id: path,
     instancePath: path,
-    component: component,
+    component,
     name: path,
     status: WidgetStatus.ACTIVE,
-    panelName: panelName,
-    ...others
-  }
+    panelName,
+    ...others,
+  },
 });
 
-export const addWidget = widget => ({
+export const addWidget = (widget) => ({
   type: ADD_WIDGET,
-  data: widget
+  data: widget,
 });
 
-export const addWidgets = widgets => ({
+export const addWidgets = (widgets) => ({
   type: ADD_WIDGETS,
-  data: widgets
+  data: widgets,
 });
 
-export const setWidgets = widgets => ({
+export const setWidgets = (widgets) => ({
   type: SET_WIDGETS,
-  data: widgets
+  data: widgets,
 });
 
-export const updateWidget = (newConf => ({
+export const updateWidget = ((newConf) => ({
   type: UPDATE_WIDGET,
-  data: newConf
-}))
+  data: newConf,
+}));
 
-export const setLayout = (newLayout => ({
+export const setLayout = ((newLayout) => ({
   type: SET_LAYOUT,
-  data: newLayout
-}))
+  data: newLayout,
+}));
 
-export const minimizeWidget = id => ({
+export const minimizeWidget = (id) => ({
   type: UPDATE_WIDGET,
   data: {
     id,
-    status: WidgetStatus.MINIMIZED
-  }
+    status: WidgetStatus.MINIMIZED,
+  },
 
 });
 
-export const maximizeWidget = id => ({
+export const maximizeWidget = (id) => ({
   type: UPDATE_WIDGET,
   data: {
     id,
-    status: WidgetStatus.MAXIMIZED
-  }
+    status: WidgetStatus.MAXIMIZED,
+  },
 });
-export const activateWidget = id => ({
+export const activateWidget = (id) => ({
   type: ACTIVATE_WIDGET,
-  data: { id }
+  data: { id },
 
 });
 
-export const destroyWidget = id => ({
+export const destroyWidget = (id) => ({
   type: DESTROY_WIDGET,
-  data: { id }
+  data: { id },
 
 });
 
-export const resetLayout = { type: RESET_LAYOUT, };
+export const resetLayout = { type: RESET_LAYOUT };

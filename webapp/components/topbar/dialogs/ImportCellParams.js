@@ -1,9 +1,5 @@
 import React from 'react';
-import Checkbox from '../../general/Checkbox';
 import TextField from '@material-ui/core/TextField';
-import ListComponent from '../../general/List';
-import FileBrowser from '../../general/FileBrowser';
-import NetPyNEField from '../../general/NetPyNEField';
 
 import Icon from '@material-ui/core/Icon';
 import { withStyles } from '@material-ui/core/styles';
@@ -11,18 +7,22 @@ import { ActionDialog, Tooltip } from 'netpyne/components';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import NetPyNEField from '../../general/NetPyNEField';
+import FileBrowser from '../../general/FileBrowser';
+import ListComponent from '../../general/List';
+import Checkbox from '../../general/Checkbox';
 
 const styles = ({
   spacing,
   typography,
-  zIndex
+  zIndex,
 }) => ({
   container: {
     marginTop: spacing(2),
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'flex-end',
-    width: '103%'
+    width: '103%',
   },
   icon: {
     '&:hover': { backgroundColor: 'inherit' },
@@ -31,14 +31,13 @@ const styles = ({
     width: typography.h3.fontSize,
     height: typography.h3.fontSize,
     padding: '0px!important',
-    zIndex: zIndex.modal
+    zIndex: zIndex.modal,
   },
   textField: { alignItems: 'center' },
   root: { overflow: 'hidden' },
 });
 
 class ImportCellParams extends React.Component {
-
   constructor (props) {
     super(props);
     this.state = {
@@ -60,20 +59,20 @@ class ImportCellParams extends React.Component {
   showExplorerDialog (explorerParameter, exploreOnlyDirs) {
     this.setState({
       explorerDialogOpen: true,
-      explorerParameter: explorerParameter,
-      exploreOnlyDirs: exploreOnlyDirs
+      explorerParameter,
+      exploreOnlyDirs,
     });
   }
 
   closeExplorerDialog (fieldValue) {
-    var newState = { explorerDialogOpen: false };
+    const newState = { explorerDialogOpen: false };
     if (fieldValue) {
       switch (this.state.explorerParameter) {
         case 'fileName':
-          newState['fileName'] = fieldValue.path;
+          newState.fileName = fieldValue.path;
           break;
         case 'modFolder':
-          newState['modFolder'] = fieldValue.path;
+          newState.modFolder = fieldValue.path;
           break;
         default:
           throw ('Not a valid parameter!');
@@ -93,15 +92,15 @@ class ImportCellParams extends React.Component {
       importSynMechs,
       compileMod,
       explorerDialogOpen,
-      exploreOnlyDirs
+      exploreOnlyDirs,
     } = this.state;
 
     return (
       <ActionDialog
-        buttonLabel={'Import'}
-        message={'LOADING TEMPLATE'}
-        title={'Import cell template (.py or .hoc)'}
-        command={'netpyne_geppetto.importCellTemplate'}
+        buttonLabel="Import"
+        message="LOADING TEMPLATE"
+        title="Import cell template (.py or .hoc)"
+        command="netpyne_geppetto.importCellTemplate"
         args={{
           cellArgs,
           fileName,
@@ -109,7 +108,7 @@ class ImportCellParams extends React.Component {
           label,
           modFolder,
           importSynMechs,
-          compileMod
+          compileMod,
         }}
         {...this.props}
       >
@@ -119,50 +118,47 @@ class ImportCellParams extends React.Component {
             value={label}
             fullWidth
             label="Cell rule label"
-            onChange={event => this.setState({ label: event.target.value })}
+            onChange={(event) => this.setState({ label: event.target.value })}
           />
         </Box>
-
 
         <NetPyNEField id="netParams.importCellParams.cellName" className={classes.textField}>
           <TextField
             variant="filled"
             fullWidth
             value={cellName}
-            onChange={event => this.setState({ cellName: event.target.value })}
+            onChange={(event) => this.setState({ cellName: event.target.value })}
           />
         </NetPyNEField>
-
 
         <NetPyNEField id="netParams.importCellParams.fileName">
           <TextField
             variant="filled"
             fullWidth
             value={fileName}
-            onChange={event => this.setState({ fileName: event.target.value })}
+            onChange={(event) => this.setState({ fileName: event.target.value })}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
                   <Tooltip title="File explorer" placement="top">
                     <Icon
-                      className='fa fa-folder hovered'
+                      className="fa fa-folder hovered"
                       onClick={() => this.showExplorerDialog('fileName', false)}
                       style={{ cursor: 'pointer' }}
                     />
                   </Tooltip>
                 </InputAdornment>
-              )
+              ),
             }}
           />
         </NetPyNEField>
-
 
         <NetPyNEField id="netParams.importCellParams.modFolder">
           <TextField
             fullWidth
             variant="filled"
             value={modFolder}
-            onChange={event => this.setState({ modFolder: event.target.value })}
+            onChange={(event) => this.setState({ modFolder: event.target.value })}
             helperText="Important: if external mod files are required please select the mod folder path"
             InputProps={{
               startAdornment: (
@@ -175,15 +171,18 @@ class ImportCellParams extends React.Component {
                     />
                   </Tooltip>
                 </InputAdornment>
-              )
+              ),
             }}
           />
         </NetPyNEField>
 
-
-        <ListComponent id="cellArgs" realType="dict" label="argument as key:value"
-                       floatingLabelText="Cell Template Parameters (key:value pair)"
-                       ref="cellArgs"/>
+        <ListComponent
+          id="cellArgs"
+          realType="dict"
+          label="argument as key:value"
+          floatingLabelText="Cell Template Parameters (key:value pair)"
+          ref="cellArgs"
+        />
 
         <Grid container spacing={1}>
           <Grid item>
@@ -208,11 +207,10 @@ class ImportCellParams extends React.Component {
           </Grid>
         </Grid>
 
-
         <FileBrowser
           open={explorerDialogOpen}
           exploreOnlyDirs={exploreOnlyDirs}
-          onRequestClose={selection => this.closeExplorerDialog(selection)}
+          onRequestClose={(selection) => this.closeExplorerDialog(selection)}
         />
 
       </ActionDialog>

@@ -26,7 +26,7 @@ const AboutContent = withStyles(styles)(({ classes }) => (
     <img width="250" src={logo_netpyne} />
     <Box m={1}>
       <Typography variant="h5" style={{ color: secondaryColor }}>
-        NetPyNE-UI v0.6.0
+        NetPyNE-UI v0.7.0
       </Typography>
     </Box>
 

@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
 
-import Utils from '../../../Utils';
-
 import {
   NetPyNEHome,
   NetPyNEAddNew,
@@ -13,10 +11,11 @@ import {
   GridLayout,
   Filter,
 } from 'netpyne/components';
+import Box from '@material-ui/core/Box';
+import Utils from '../../../Utils';
 
 import RulePath from '../../general/RulePath';
 import Accordion from '../../general/ExpansionPanel';
-import Box from '@material-ui/core/Box';
 
 export default class NetPyNEStimulationTargets extends Component {
   constructor (props) {
@@ -31,7 +30,7 @@ export default class NetPyNEStimulationTargets extends Component {
     };
     this.selectStimulationTarget = this.selectStimulationTarget.bind(this);
     this.handleNewStimulationTarget = this.handleNewStimulationTarget.bind(
-      this
+      this,
     );
 
     this.handleRenameChildren = this.handleRenameChildren.bind(this);
@@ -43,25 +42,25 @@ export default class NetPyNEStimulationTargets extends Component {
   }
 
   handleNewStimulationTarget () {
-    var defaultStimulationTargets = {
+    const defaultStimulationTargets = {
       stim_target: {
         source: '',
-        conds: {}
-      }
+        conds: {},
+      },
     };
-    var key = Object.keys(defaultStimulationTargets)[0];
-    var value = defaultStimulationTargets[key];
-    var model = { ...this.state.value };
-    var StimulationTargetId = Utils.getAvailableKey(model, key);
-    var newStimulationTarget = Object.assign(
-      { name: StimulationTargetId },
-      value
-    );
+    const key = Object.keys(defaultStimulationTargets)[0];
+    const value = defaultStimulationTargets[key];
+    const model = { ...this.state.value };
+    const StimulationTargetId = Utils.getAvailableKey(model, key);
+    const newStimulationTarget = {
+      name: StimulationTargetId,
+      ...value,
+    };
     Utils.execPythonMessage(
-      'netpyne_geppetto.netParams.stimTargetParams["'
-      + StimulationTargetId
-      + '"] = '
-      + JSON.stringify(value)
+      `netpyne_geppetto.netParams.stimTargetParams["${
+        StimulationTargetId
+      }"] = ${
+        JSON.stringify(value)}`,
     );
     model[StimulationTargetId] = newStimulationTarget;
     this.setState({
@@ -71,15 +70,15 @@ export default class NetPyNEStimulationTargets extends Component {
   }
 
   hasSelectedStimulationTargetBeenRenamed (prevState, currentState) {
-    var currentModel = prevState.value;
-    var model = currentState.value;
+    const currentModel = prevState.value;
+    const model = currentState.value;
     // deal with rename
     if (currentModel != undefined && model != undefined) {
-      var oldP = Object.keys(currentModel);
-      var newP = Object.keys(model);
+      const oldP = Object.keys(currentModel);
+      const newP = Object.keys(model);
       if (oldP.length == newP.length) {
         // if it's the same lenght there could be a rename
-        for (var i = 0; i < oldP.length; i++) {
+        for (let i = 0; i < oldP.length; i++) {
           if (oldP[i] != newP[i]) {
             if (prevState.selectedStimulationTarget != undefined) {
               if (oldP[i] == prevState.selectedStimulationTarget) {
@@ -94,9 +93,9 @@ export default class NetPyNEStimulationTargets extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
-    var newStimulationTargetName = this.hasSelectedStimulationTargetBeenRenamed(
+    const newStimulationTargetName = this.hasSelectedStimulationTargetBeenRenamed(
       prevState,
-      this.state
+      this.state,
     );
     if (newStimulationTargetName !== undefined) {
       this.setState({
@@ -112,7 +111,7 @@ export default class NetPyNEStimulationTargets extends Component {
        * logic into this if to check if the user added a new object from the python backend and
        * if the name convention pass the checks, differently rename this and open dialog to inform.
        */
-      var model = this.state.value;
+      const model = this.state.value;
       for (var m in model) {
         if (prevState.value !== '' && !(m in prevState.value)) {
           var newValue = Utils.nameValidation(m);
@@ -125,19 +124,18 @@ export default class NetPyNEStimulationTargets extends Component {
                 value: model,
                 errorMessage: 'Error',
                 errorDetails:
-                  'Leading digits or whitespaces are not allowed in Population names.\n'
-                  + m
-                  + ' has been renamed '
-                  + newValue,
+                  `Leading digits or whitespaces are not allowed in Population names.\n${
+                    m
+                  } has been renamed ${
+                    newValue}`,
               },
-              () =>
-                Utils.renameKey(
-                  'netParams.stimTargetParams',
-                  m,
-                  newValue,
-                  (response, newValue) => {
-                  }
-                )
+              () => Utils.renameKey(
+                'netParams.stimTargetParams',
+                m,
+                newValue,
+                (response, newValue) => {
+                },
+              ),
             );
           }
         }
@@ -146,21 +144,18 @@ export default class NetPyNEStimulationTargets extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    var itemRenamed
-      = this.hasSelectedStimulationTargetBeenRenamed(this.state, nextState)
+    const itemRenamed = this.hasSelectedStimulationTargetBeenRenamed(this.state, nextState)
       !== undefined;
-    var newItemCreated = false;
-    var selectionChanged
-      = this.state.selectedStimulationTarget
+    let newItemCreated = false;
+    const selectionChanged = this.state.selectedStimulationTarget
       != nextState.selectedStimulationTarget;
-    var pageChanged = this.state.page != nextState.page;
-    var newModel = this.state.value == undefined;
+    const pageChanged = this.state.page != nextState.page;
+    const newModel = this.state.value == undefined;
     if (!newModel) {
-      newItemCreated
-        = Object.keys(this.state.value).length
+      newItemCreated = Object.keys(this.state.value).length
         != Object.keys(nextState.value).length;
     }
-    var errorDialogOpen = this.state.errorDetails !== nextState.errorDetails;
+    const errorDialogOpen = this.state.errorDetails !== nextState.errorDetails;
     const filterValueChanged = nextState.filterValue !== this.state.filterValue;
     return (
       filterValueChanged
@@ -175,8 +170,8 @@ export default class NetPyNEStimulationTargets extends Component {
 
   handleRenameChildren (childName) {
     childName = childName.replace(/\s*$/, '');
-    var childrenList = Object.keys(this.state.value);
-    for (var i = 0; childrenList.length > i; i++) {
+    const childrenList = Object.keys(this.state.value);
+    for (let i = 0; childrenList.length > i; i++) {
       if (childName === childrenList[i]) {
         return false;
       }
@@ -187,7 +182,7 @@ export default class NetPyNEStimulationTargets extends Component {
   getPath () {
     const {
       value: model,
-      selectedStimulationTarget
+      selectedStimulationTarget,
     } = this.state;
     return (
       model
@@ -197,26 +192,23 @@ export default class NetPyNEStimulationTargets extends Component {
   }
 
   render () {
-    var actions = [
+    const actions = [
       <Button
         variant="contained"
         color="primary"
-        label={'BACK'}
-        onTouchTap={() =>
-          this.setState({
-            errorMessage: undefined,
-            errorDetails: undefined
-          })
-        }
+        label="BACK"
+        onTouchTap={() => this.setState({
+          errorMessage: undefined,
+          errorDetails: undefined,
+        })}
       />,
     ];
-    var title = this.state.errorMessage;
-    var children = this.state.errorDetails;
-    var dialogPop
-      = this.state.errorMessage != undefined ? (
+    const title = this.state.errorMessage;
+    const children = this.state.errorDetails;
+    const dialogPop = this.state.errorMessage != undefined ? (
       <Dialog
         title={title}
-        open={true}
+        open
         actions={actions}
         bodyStyle={{ overflow: 'auto' }}
         style={{ whiteSpace: 'pre-wrap' }}
@@ -227,16 +219,13 @@ export default class NetPyNEStimulationTargets extends Component {
       undefined
     );
 
-    var model = this.state.value;
+    const model = this.state.value;
 
-    const filterName
-      = this.state.filterValue === null ? '' : this.state.filterValue;
-    var StimulationTargets = Object.keys(model || [])
-      .filter(stimTargetName =>
-        stimTargetName.toLowerCase()
-          .includes(filterName.toLowerCase())
-      )
-      .map(stimTargetName => (
+    const filterName = this.state.filterValue === null ? '' : this.state.filterValue;
+    const StimulationTargets = Object.keys(model || [])
+      .filter((stimTargetName) => stimTargetName.toLowerCase()
+        .includes(filterName.toLowerCase()))
+      .map((stimTargetName) => (
         <NetPyNEThumbnail
           name={stimTargetName}
           key={stimTargetName}
@@ -246,7 +235,7 @@ export default class NetPyNEStimulationTargets extends Component {
         />
       ));
 
-    var selectedStimulationTarget = undefined;
+    let selectedStimulationTarget;
     if (
       this.state.selectedStimulationTarget !== undefined
       && Object.keys(model)
@@ -268,16 +257,14 @@ export default class NetPyNEStimulationTargets extends Component {
               <div>
                 <NetPyNEHome
                   selection={this.state.selectedStimulationTarget}
-                  handleClick={() =>
-                    this.setState({ selectedStimulationTarget: undefined })
-                  }
+                  handleClick={() => this.setState({ selectedStimulationTarget: undefined })}
                 />
                 <div style={{ opacity: 0 }}>H</div>
               </div>
               <div>
                 <NetPyNEAddNew
                   title="Create new stimulation target"
-                  id={'newStimulationTargetButton'}
+                  id="newStimulationTargetButton"
                   handleClick={this.handleNewStimulationTarget}
                 />
                 <div
@@ -295,20 +282,18 @@ export default class NetPyNEStimulationTargets extends Component {
               </div>
             </div>
             <Box p={1}>
-              <RulePath text={this.getPath()}/>
-              <Box mb={1}/>
+              <RulePath text={this.getPath()} />
+              <Box mb={1} />
               <Filter
                 value={this.state.filterValue}
                 label="Filter stimulation target rule by name..."
-                handleFilterChange={newValue =>
-                  this.setState({ filterValue: newValue })
-                }
+                handleFilterChange={(newValue) => this.setState({ filterValue: newValue })}
                 options={model === undefined ? [] : Object.keys(model)}
               />
             </Box>
           </Accordion>
         </div>
-        <Box className={`scrollbar scrollchild`} mt={1}>
+        <Box className="scrollbar scrollchild" mt={1}>
           {StimulationTargets}
         </Box>
         {selectedStimulationTarget}

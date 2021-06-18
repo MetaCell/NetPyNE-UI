@@ -6,15 +6,14 @@ export const TOP_PANEL = 'hlsPanel';
 
 export const THEMES = {
   DARK: 'gui',
-  BLACK: 'contrast',
-  LIGHT: 'light_minimal',
+  BLACK: 'guiBlack',
+  LIGHT: 'guiWhite'
 };
 
 export const MODEL_STATE = {
   NOT_INSTANTIATED: 'NOT_INSTANTIATED',
   INSTANTIATED: 'INSTANTIATED',
   SIMULATED: 'SIMULATED',
-
 };
 
 export const NETPYNE_COMMANDS = {
@@ -25,6 +24,7 @@ export const NETPYNE_COMMANDS = {
   exportHLS: 'netpyne_geppetto.exportHLS',
   plotFigure: 'netpyne_geppetto.getPlot',
   deleteParam: 'netpyne_geppetto.deleteParam',
+  checkAvailablePlots: 'netpyne_geppetto.checkAvailablePlots',
 };
 
 export const PYTHON_CONSOLE_WIDGET = {
@@ -68,7 +68,7 @@ export const TOPBAR_CONSTANTS = {
  * ------------------------------------------------------------------------------ //
  * ------------------------------------------------------------------------------ //
  */
-export const PLOT_WIDGETS = {
+export const NETWORK_PLOT_WIDGETS = {
   connectionPlot: {
     id: 'connectionPlot',
     name: 'Connections Plot',
@@ -80,6 +80,7 @@ export const PLOT_WIDGETS = {
     hideOnClose: true,
     initialized: false,
     method: {
+      plotKey: 'plotConn',
       plotMethod: 'iplotConn',
       plotType: false,
     },
@@ -96,11 +97,16 @@ export const PLOT_WIDGETS = {
     hideOnClose: true,
     initialized: false,
     method: {
+      plotKey: 'plot2Dnet',
       plotMethod: 'iplot2Dnet',
       plotType: false,
     },
     pos: 2,
   },
+};
+
+export const PLOT_WIDGETS = {
+  ...NETWORK_PLOT_WIDGETS,
   tracesPlot: {
     id: 'tracesPlot',
     name: 'Cell traces',
@@ -111,7 +117,9 @@ export const PLOT_WIDGETS = {
     hideOnClose: true,
     enableRename: false,
     initialized: false,
+    disabled: true,
     method: {
+      plotKey: 'plotTraces',
       plotMethod: 'iplotTraces',
       plotType: false,
     },
@@ -127,7 +135,9 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     initialized: false,
+    disabled: true,
     method: {
+      plotKey: 'plotRaster',
       plotMethod: 'iplotRaster',
       plotType: false,
     },
@@ -143,7 +153,9 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     initialized: false,
+    disabled: true,
     method: {
+      plotKey: 'plotSpikeHist',
       plotMethod: 'iplotSpikeHist',
       plotType: false,
     },
@@ -159,7 +171,9 @@ export const PLOT_WIDGETS = {
     hideOnClose: true,
     enableRename: false,
     initialized: false,
+    disabled: true,
     method: {
+      key: 'plotSpikeStats',
       plotMethod: 'iplotSpikeStats',
       plotType: false,
     },
@@ -175,7 +189,9 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     initialized: false,
+    disabled: true,
     method: {
+      key: 'plotRatePSD',
       plotMethod: 'iplotRatePSD',
       plotType: false,
     },
@@ -191,7 +207,9 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     initialized: false,
+    disabled: true,
     method: {
+      plotKey: 'plotLFP',
       plotMethod: 'iplotLFP',
       plotType: 'timeSeries',
     },
@@ -207,7 +225,9 @@ export const PLOT_WIDGETS = {
     hideOnClose: true,
     enableRename: false,
     initialized: false,
+    disabled: true,
     method: {
+      plotKey: 'plotLFP',
       plotMethod: 'iplotLFP',
       plotType: 'PSD',
     },
@@ -223,7 +243,9 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     initialized: false,
+    disabled: true,
     method: {
+      plotKey: 'plotLFP',
       plotMethod: 'iplotLFP',
       plotType: 'spectrogram',
     },
@@ -239,8 +261,10 @@ export const PLOT_WIDGETS = {
     defaultPanel: 'plotPanel',
     enableRename: false,
     initialized: false,
+    disabled: true,
     method: {
-      plotMethod: 'granger',
+      plotKey: 'granger',
+      plotMethod: 'iplotGranger',
       plotType: false,
     },
     pos: 11,
@@ -255,7 +279,9 @@ export const PLOT_WIDGETS = {
     hideOnClose: true,
     enableRename: false,
     initialized: false,
+    disabled: true,
     method: {
+      plotKey: 'plotRxDConcentration',
       plotMethod: 'iplotRxDConcentration',
       plotType: false,
     },
@@ -361,4 +387,13 @@ export const EDIT_WIDGETS = {
     enableRename: false,
     pos: 7,
   },
+};
+
+export const TUTORIALS_LIST = {
+  tut1: 'Tut 1: Simple cell network',
+  tut2: 'Tut 2: Detailed cell network',
+  tut3: 'Tut 3a: Multiscale network (low IP3)',
+  tut3_ip3high: 'Tut 3b: Multiscale network (high IP3)',
+  tut3_norxd: 'Tut 3c: Multiscale network (no RxD)',
+  tut_osc: 'Tut 4: Simple oscillatory network',
 };

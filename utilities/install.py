@@ -21,7 +21,7 @@ WEBAPP_DIR = os.path.join(ROOT_DIR, 'webapp')
 JUPYTER_DIR = 'jupyter-geppetto'
 NETPYNE_DIR = 'netpyne'
 
-WORKSPACE_DIR = 'netpyne_workspace'
+WORKSPACE_DIR = 'workspace'
 
 os.environ['JUPYTER_CONFIG_DIR'] = os.path.join(ROOT_DIR, '.jupyter-config')
 
@@ -79,11 +79,15 @@ def main(netpyne_branch, workspace_branch, pygeppetto_branch=None, jupyter_geppe
 
     if not os.path.exists(DEPS_DIR):
         os.mkdir(DEPS_DIR)
-    clone(repository=NETPYNE, branch_or_tag=netpyne_branch)
-    execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, NETPYNE_DIR))
+
 
     if development:
         os.chdir(DEPS_DIR)
+
+        cprint("Installing netpyne")
+        clone(repository=NETPYNE, branch_or_tag=netpyne_branch)
+        execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, NETPYNE_DIR))
+
         # install pygeppetto
         cprint("Installing pygeppetto")
         clone(repository=PYGEPPETTO,
@@ -105,11 +109,11 @@ def main(netpyne_branch, workspace_branch, pygeppetto_branch=None, jupyter_geppe
     else:
         # install requirements
         cprint("Installing UI python package...")
-        execute(cmd=['pip', 'install', '.', '--no-deps'], cwd=ROOT_DIR)
+        execute(cmd=['pip', 'install', '-e', '.', '--no-deps'], cwd=ROOT_DIR)
 
     os.chdir(ROOT_DIR)
     cprint("Cloning workspace")
-    clone(repository=WORKSPACE, branch_or_tag=workspace_branch, cwdp=ROOT_DIR)
+    clone(repository=WORKSPACE, branch_or_tag=workspace_branch, folder=WORKSPACE_DIR, cwdp=ROOT_DIR)
     cprint("Compiling workspace modules")
     compile_mod()
 
