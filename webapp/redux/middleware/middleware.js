@@ -1,7 +1,9 @@
 import {
   CLONE_EXPERIMENT,
   GET_EXPERIMENTS,
-  setExperiments, VIEW_EXPERIMENTS_RESULTS,
+  setExperiments,
+  VIEW_EXPERIMENTS_RESULTS,
+  TRIAL_LOAD_MODEL_SPEC,
 } from 'root/redux/actions/experiments';
 import { NETPYNE_COMMANDS } from 'root/constants';
 import {
@@ -229,8 +231,21 @@ export default (store) => (next) => (action) => {
         .then((response) => console.log(response));
       break;
     }
+    case TRIAL_LOAD_MODEL_SPEC: {
+      const { name, trial } = action.payload;
+      GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading trial ${trial} of experiment ${name}`);
+      pythonCall({
+        cmd: NETPYNE_COMMANDS.viewExperimentResults,
+        args: action.payload,
+      })
+        .then(() => {
+          store.dispatch(editModel);
+          next(action);
+        }, pythonErrorCallback);
+      break;
+    }
     case VIEW_EXPERIMENTS_RESULTS: {
-      const { name, trial, onlyModelSpecification } = action.payload;
+      const { name, trial } = action.payload;
       GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading trial ${trial} of experiment ${name}`);
       pythonCall({
         cmd: NETPYNE_COMMANDS.viewExperimentResults,
@@ -242,9 +257,7 @@ export default (store) => (next) => (action) => {
             throw responsePayload;
           }
 
-          if (onlyModelSpecification) {
-            switchLayoutAction(true, true);
-          } else if (response) {
+          if (response) {
             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
             dehydrateCanvas();
             GEPPETTO.Manager.loadModel(response);

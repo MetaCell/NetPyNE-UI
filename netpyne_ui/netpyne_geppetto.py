@@ -124,9 +124,10 @@ class NetPyNEGeppetto:
         if self.doIhaveInstOrSimData()['haveInstance']:
             sim.clearAll()
 
+        sim.initialize()
+
         if only_model_spec:
             # Load only model specification
-            sim.initialize()
             sim.loadNetParams(file)
             sim.loadSimCfg(file)
             self.netParams = sim.net.params
@@ -136,7 +137,7 @@ class NetPyNEGeppetto:
             return
         else:
             # Load the complete simulation
-            sim.load(file)
+            sim.loadAll(file)
 
             # TODO: generalize!
             # Enables to display cells in 3D Viewer

@@ -26,7 +26,7 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import { EXPERIMENT_TEXTS, EXPERIMENT_VIEWS } from 'root/constants';
 import DialogBox from 'root/components/general/DialogBox';
 import { useDispatch } from 'react-redux';
-import { viewExperimentResults } from 'root/redux/actions/experiments';
+import { viewExperimentResults, loadTrialModelSpec } from 'root/redux/actions/experiments';
 import * as ExperimentsApi from 'root/api/experiments';
 import {
   bgRegular,
@@ -473,7 +473,7 @@ const ExperimentView = (props) => {
 
   const onLoadModelSpecificationAction = (actionConfirmed) => {
     if (actionConfirmed) {
-      dispatch(viewExperimentResults({
+      dispatch(loadTrialModelSpec({
         name: selectedTrial.experiment,
         trial: selectedTrial.trial,
         onlyModelSpecification: true,

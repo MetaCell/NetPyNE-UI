@@ -3,6 +3,7 @@ export const SET_EXPERIMENTS = 'SET_EXPERIMENTS';
 export const RESET_EXPERIMENT = 'RESET_EXPERIMENT';
 export const CLONE_EXPERIMENT = 'CLONE_EXPERIMENT';
 export const VIEW_EXPERIMENTS_RESULTS = 'VIEW_EXPERIMENT_RESULTS';
+export const TRIAL_LOAD_MODEL_SPEC = 'TRIAL_LOAD_MODEL_SPEC';
 
 /**
  * Resets configuration of current Experiment.
@@ -29,6 +30,11 @@ export const setExperiments = (payload) => ({
  */
 export const viewExperimentResults = (payload) => ({
   type: VIEW_EXPERIMENTS_RESULTS,
+  payload,
+});
+
+export const loadTrialModelSpec = (payload) => ({
+  type: TRIAL_LOAD_MODEL_SPEC,
   payload,
 });
 
