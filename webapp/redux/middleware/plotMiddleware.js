@@ -151,7 +151,9 @@ export default (store) => (next) => (action) => {
     case VIEW_EXPERIMENTS_RESULTS:
     case SIMULATE_NETWORK:
     case CREATE_SIMULATE_NETWORK: {
-      updatePlots(next);
+      if (!store.general.editMode) {
+        updatePlots(next);
+      }
       next(action);
       break;
     }

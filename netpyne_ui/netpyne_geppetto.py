@@ -108,9 +108,9 @@ class NetPyNEGeppetto:
             netpyne_ui_utils.remove(self.netParams.todict())
 
     def viewExperimentResult(self, payload: dict):
-        """ Loads the complete output file of a simulated experiment trial.
+        """ Loads the output file of a simulated experiment trial.
 
-        :param payload: {name: str, trial: str, onlySpec: bool}
+        :param payload: {name: str, trial: str, onlyModelSpecification: bool}
         :return: geppetto model
         """
         name = payload.get("name", None)
