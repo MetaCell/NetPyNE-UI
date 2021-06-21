@@ -108,13 +108,14 @@ class NetPyNEGeppetto:
             netpyne_ui_utils.remove(self.netParams.todict())
 
     def viewExperimentResult(self, payload: dict):
-        """ Loads the net and simData of of a simulated experiment trial.
+        """ Loads the complete output file of a simulated experiment trial.
 
-        :param payload: {name: str, trial: str}
+        :param payload: {name: str, trial: str, onlySpec: bool}
         :return: geppetto model
         """
         name = payload.get("name", None)
         trial = payload.get("trial", None)
+        only_model_spec = payload.get("onlyModelSpecification", False)
 
         file = experiments.get_trial_output_file(name, trial)
         if not os.path.exists(file):
@@ -123,28 +124,31 @@ class NetPyNEGeppetto:
         if self.doIhaveInstOrSimData()['haveInstance']:
             sim.clearAll()
 
-        # sim.initialize()
-        # Only load net and simData, don't replace netParams and simConfig
-        # TODO: Fix loading, seems to be broken for normal JSON import as well
-        # sim.loadNet(file, instantiate=False)
-        # sim.loadSimData(file)
+        if only_model_spec:
+            # Load only model specification
+            sim.initialize()
+            sim.loadNetParams(file)
+            sim.loadSimCfg(file)
+            self.netParams = sim.net.params
+            self.simConfig = sim.cfg
+            netpyne_ui_utils.remove(self.simConfig.todict())
+            netpyne_ui_utils.remove(self.netParams.todict())
+            return
+        else:
+            # Load the complete simulation
+            sim.load(file)
 
-        # Load everything since partial import throws error
-        # simData, cfg & net required for plots, don't need netParams
-        sim.load(file)
+            # TODO: generalize!
+            # Enables to display cells in 3D Viewer
+            section = list(sim.net.cells[0].secs.keys())[0]
+            if 'pt3d' not in list(sim.net.cells[0].secs[section].geom.keys()):
+                sim.net.defineCellShapes()
+                sim.gatherData()
+                # Load again because gatherData removed simData
+                sim.loadSimData(file)
 
-        # Enables to display cells in 3D Viewer
-        section = list(sim.net.cells[0].secs.keys())[0]
-        if 'pt3d' not in list(sim.net.cells[0].secs[section].geom.keys()):
-            sim.net.defineCellShapes()
-            sim.gatherData()
-            # Load again because gatherData removed simData
-            sim.loadSimData(file)
-
-        # Don't run sim.gatherData(), will clear allSimData
-
-        self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
-        return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
+            self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
+            return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
 
     def stopExperiment(self, experiment_name):
         # TODO: check in simulation pool if experiment is running

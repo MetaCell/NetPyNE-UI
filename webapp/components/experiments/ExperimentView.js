@@ -321,6 +321,7 @@ const ExperimentView = (props) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [loadResultsDialogOpen, setLoadResultsDialogOpen] = React.useState(false);
+  const [loadModelSpecDialogOpen, setLoadModelSpecDialogOpen] = React.useState(false);
   const [selectedTrial, setSelectedTrial] = React.useState({
     experiment: null,
     trial: null,
@@ -451,6 +452,14 @@ const ExperimentView = (props) => {
     setLoadResultsDialogOpen(true);
   };
 
+  const openLoadModelSpecificationDialog = (experimentName, trial) => {
+    setSelectedTrial({
+      experiment: experimentName,
+      trial,
+    });
+    setLoadModelSpecDialogOpen(true);
+  };
+
   const onLoadResultsAction = (actionConfirmed) => {
     if (actionConfirmed) {
       dispatch(viewExperimentResults({
@@ -460,6 +469,18 @@ const ExperimentView = (props) => {
     }
     setSelectedTrial(null);
     setLoadResultsDialogOpen(false);
+  };
+
+  const onLoadModelSpecificationAction = (actionConfirmed) => {
+    if (actionConfirmed) {
+      dispatch(viewExperimentResults({
+        name: selectedTrial.experiment,
+        trial: selectedTrial.trial,
+        onlyModelSpecification: true,
+      }));
+    }
+    setSelectedTrial(null);
+    setLoadModelSpecDialogOpen(false);
   };
 
   return (
@@ -531,7 +552,7 @@ const ExperimentView = (props) => {
                           <IconButton onClick={() => openJsonViewer(experiment?.name, row.name)}>
                             <CodeIcon />
                           </IconButton>
-                          <IconButton>
+                          <IconButton onClick={() => openLoadModelSpecificationDialog(experiment?.name, row.name)}>
                             <ReplayIcon className="MuiSvgIcon-replay" />
                           </IconButton>
                         </Box>
@@ -558,6 +579,14 @@ const ExperimentView = (props) => {
             textForDialog={{
               heading: EXPERIMENT_TEXTS.VIEW_EXPERIMENTS_RESULTS,
               content: EXPERIMENT_TEXTS.VIEW_EXPERIMENTS_RESULTS_MESSAGE,
+            }}
+          />
+          <DialogBox
+            open={loadModelSpecDialogOpen}
+            onDialogResponse={onLoadModelSpecificationAction}
+            textForDialog={{
+              heading: EXPERIMENT_TEXTS.LOAD_TRIAL_MODEL_SPEC,
+              content: EXPERIMENT_TEXTS.LOAD_TRIAL_MODEL_SPEC_MESSAGE,
             }}
           />
         </>

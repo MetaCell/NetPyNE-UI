@@ -230,28 +230,28 @@ export default (store) => (next) => (action) => {
       break;
     }
     case VIEW_EXPERIMENTS_RESULTS: {
-      GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading results of ${action.payload.name} - ${action.payload.trial}`);
+      const { name, trial, onlyModelSpecification } = action.payload;
+      GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading trial ${trial} of experiment ${name}`);
       pythonCall({
         cmd: NETPYNE_COMMANDS.viewExperimentResults,
         args: action.payload,
       })
         .then((response) => {
-          // TODO: generalize, similar logic is used for createSimulateBackendCall
           const responsePayload = processError(response);
           if (responsePayload) {
             throw responsePayload;
           }
 
-          if (response) {
+          if (onlyModelSpecification) {
+            switchLayoutAction(true, true);
+          } else if (response) {
             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
             dehydrateCanvas();
             GEPPETTO.Manager.loadModel(response);
             GEPPETTO.CommandController.log('Instantiation / Simulation completed.');
+
+            store.dispatch(showNetwork);
           }
-          return response;
-        })
-        .then(() => {
-          store.dispatch(showNetwork);
           next(action);
         }, pythonErrorCallback);
       break;

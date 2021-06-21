@@ -12,7 +12,9 @@ export const resetCurrentExperiment = () => ({
   type: RESET_EXPERIMENT,
 });
 
-export const getExperiments = () => ({ type: GET_EXPERIMENTS });
+export const getExperiments = () => ({
+  type: GET_EXPERIMENTS,
+});
 
 /**
  * Set fetched experiments.
@@ -21,13 +23,6 @@ export const setExperiments = (payload) => ({
   type: SET_EXPERIMENTS,
   payload,
 });
-
-/**
- * Replaces current experiment with selected trial.
- */
-export const loadTrial = () => {
-
-};
 
 /**
  * View results of selected experiment/trial.
