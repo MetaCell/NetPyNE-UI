@@ -6,8 +6,8 @@ export const TOP_PANEL = 'hlsPanel';
 export const TOOLS_LIST = 'tools';
 export const THEMES = {
   DARK: 'gui',
-  BLACK: 'contrast',
-  LIGHT: 'light_minimal',
+  BLACK: 'guiBlack',
+  LIGHT: 'guiWhite'
 };
 
 export const MODEL_STATE = {
@@ -268,7 +268,7 @@ export const PLOT_WIDGETS = {
     disabled: true,
     method: {
       plotKey: 'granger',
-      plotMethod: 'granger',
+      plotMethod: 'iplotGranger',
       plotType: false,
     },
     pos: 11,

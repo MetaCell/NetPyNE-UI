@@ -14,6 +14,7 @@ webapp/node_modules
 webapp/geppetto-client
 webapp/build
 workspace
+netpyne_workspace
 tests/frontend/e2e/node_modules
 Dockerfile_mini
 npm*
@@ -24,3 +25,4 @@ utilities/x86_64
 *.iml
 x86_64
 .jupyter-config
+venv
