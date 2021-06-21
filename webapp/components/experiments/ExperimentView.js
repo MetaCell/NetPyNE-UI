@@ -406,8 +406,9 @@ const ExperimentView = (props) => {
                   label: header,
                 })),
             );
-            const rows = exp?.trials.map((trial, index) => ({
-              name: `Trial ${index + 1}`,
+            const rows = exp?.trials.map((trial, _) => ({
+              id: trial.id,
+              name: trial.name,
               ...trial.params[0],
             }));
             setTableRows(rows);
@@ -419,10 +420,10 @@ const ExperimentView = (props) => {
   }, [name]);
 
   const openJsonViewer = (experiment, trial) => {
-    ExperimentsApi.getModelSpecification(experiment, trial)
+    ExperimentsApi.getModelSpecification(experiment, trial.id)
       .then((modelSpecification) => {
         setTrialJSON(modelSpecification);
-        setTrial(trial);
+        setTrial(trial.name);
         setView(EXPERIMENT_VIEWS.jsonViewer);
       });
   };
@@ -544,15 +545,15 @@ const ExperimentView = (props) => {
                       <TableCell align="right" className={classes.stickyRight}>
                         <Box className="MuiTableCell-actions">
                           <IconButton
-                            onClick={() => openLoadResultsDialog(experiment?.name, row.name)}
+                            onClick={() => openLoadResultsDialog(experiment?.name, row)}
                           >
                             <AssessmentIcon className="MuiSvgIcon-assessment" />
                           </IconButton>
                           <Divider orientation="vertical" />
-                          <IconButton onClick={() => openJsonViewer(experiment?.name, row.name)}>
+                          <IconButton onClick={() => openJsonViewer(experiment?.name, row)}>
                             <CodeIcon />
                           </IconButton>
-                          <IconButton onClick={() => openLoadModelSpecificationDialog(experiment?.name, row.name)}>
+                          <IconButton onClick={() => openLoadModelSpecificationDialog(experiment?.name, row)}>
                             <ReplayIcon className="MuiSvgIcon-replay" />
                           </IconButton>
                         </Box>

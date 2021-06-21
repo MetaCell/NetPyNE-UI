@@ -94,7 +94,6 @@ class NetPyNEGeppetto:
 
         # Replaces model specification
         if payload.get('replaceModelSpec', True):
-            # TODO: if trial is specified, use trial output file!
             path = os.path.join(constants.EXPERIMENTS_FOLDER_PATH, name)
             if self.doIhaveInstOrSimData()['haveInstance']:
                 sim.clearAll()
@@ -117,8 +116,8 @@ class NetPyNEGeppetto:
         trial = payload.get("trial", None)
         only_model_spec = payload.get("onlyModelSpecification", False)
 
-        file = experiments.get_trial_output_file(name, trial)
-        if not os.path.exists(file):
+        file = experiments.get_trial_output_path(name, trial)
+        if file is None or not os.path.exists(file):
             return utils.getJSONError(f"Couldn't find output file {file}", "")
 
         if self.doIhaveInstOrSimData()['haveInstance']:

@@ -103,11 +103,11 @@ def get_model_specification(name: str, trial: str) -> dict:
     :param trial: the trial identifier.
     :return: dict
     """
-    file = get_trial_output_file(name, trial)
-    if not os.path.exists(file):
-        raise ExperimentsError(f"Trial specification file {file} not found")
+    path = get_trial_output_path(name, trial)
+    if path is None or not os.path.exists(path):
+        raise ExperimentsError(f"Trial file {path} not found")
 
-    with open(file, 'r') as f:
+    with open(path, 'r') as f:
         trial_output = json.load(f)
         return {
             'net': {
@@ -117,14 +117,10 @@ def get_model_specification(name: str, trial: str) -> dict:
         }
 
 
-def get_trial_output_file(experiment_name: str, trial: str):
+def get_trial_output_path(experiment_name: str, trial: str) -> pathlib.PosixPath:
     path = os.path.join(constants.EXPERIMENTS_FOLDER_PATH, experiment_name)
-    # TODO: find output filename for trial based on parameter idx combination
-
-    # pattern: expName_(idx_)*idx.json
-    output_file = f"{experiment_name}_0.json"
-    output_file_path = os.path.join(path, output_file)
-    return output_file_path
+    trial_path = next(pathlib.Path(path).glob(f"*{trial}.json"), None)
+    return trial_path
 
 
 def _add_experiment(experiment: model.Experiment):
@@ -195,6 +191,7 @@ def _parse_experiment(directory: str) -> model.Experiment:
 
     experiment = from_dict(model.Experiment, batch_config)
     experiment.folder = directory
+    experiment.trials = _create_trials(experiment)
     return experiment
 
 
@@ -228,19 +225,25 @@ def _create_trials(experiment: model.Experiment) -> List[model.Trial]:
         if param.inGroup:
             grouped_params.append(param.mapsTo)
 
+    # Initialize Batch so that we can call getParamCombinations()
     batch = Batch(params=params_dict, groupedParams=grouped_params)
     batch.method = 'grid'
-    # TODO: set batchLabel, saveFolder
+    batch.saveFolder = ''
+    batch.batchLabel = ''
 
     # { indices, values, labels, filenames}
-    # values are the combinations!
     combinations = batch.getParamCombinations()
     
     trials = []
-    for idx, value in enumerate(combinations['values']):
-        # idx is used to access 'indices' entry
-        params = [{ combinations['labels'][idx]: v for idx, v in enumerate(value)}]
-        # TODO: store indices and filename pattern!
-        trials.append(model.Trial(params=params))
+    for combIdx, paramValues in enumerate(combinations['values']):
+        # index of paramValues := index of labels list
+        # value of paramValues := parameter value
+        params = [{ combinations['labels'][idx]: v for idx, v in enumerate(paramValues)}]
+
+        filename = combinations['filenames'][combIdx][1:]
+        indices = combinations['indices'][combIdx]
+        name = f'Trial {combIdx + 1}'
+        
+        trials.append(model.Trial(name=name, params=params, indices=indices, id=filename))
 
     return trials
