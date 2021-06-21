@@ -22,14 +22,9 @@ class NetPyNESimConfig extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      model: props.model,
       selectedIndex: 0,
       sectionId: CONFIG_SECTIONS.GENERAL,
     };
-  }
-
-  UNSAFE_componentWillReceiveProps (nextProps) {
-    this.setState({ model: nextProps.model });
   }
 
   select = (index, sectionId) => this.setState({
