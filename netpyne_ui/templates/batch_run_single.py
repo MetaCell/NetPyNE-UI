@@ -5,3 +5,4 @@ simConfig, netParams = sim.readCmdLineArgs(simConfigDefault='cfg.py', netParamsD
 
 # Create network and run simulation
 sim.createSimulate(netParams=netParams, simConfig=simConfig)
+sim.saveData()

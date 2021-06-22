@@ -13,6 +13,7 @@ netParams = sim.loadNetParams("./netParams.json", None, False)
 simConfig = sim.loadSimCfg("./simConfig.json", None, False)
 
 sim.createSimulate(netParams, simConfig)
+sim.saveData()
 
 with open("./experiment.json", "w") as f:
     if exp:
