@@ -455,3 +455,19 @@ export const TUTORIALS_LIST = {
   tut3_norxd: 'Tut 3c: Multiscale network (no RxD)',
   tut_osc: 'Tut 4: Simple oscillatory network',
 };
+
+export const EXPERIMENT_VIEWS = {
+  list: 'list',
+  viewExperiment: 'viewExperiment',
+  jsonViewer: 'jsonViewer',
+  edit: 'edit',
+};
+
+export const LAUNCH_MODAL = {
+  title: 'What do you want to simulate ?',
+  modelState: 'model',
+  experimentState: 'experiment',
+  actionSimulate: 'Simulate',
+  defaultResource: 'Local Machine',
+  errorText: 'Please check the input',
+};
