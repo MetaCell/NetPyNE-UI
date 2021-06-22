@@ -34,7 +34,7 @@ def cprint(string):
 def execute(cmd, cwd='.', *args, **kwargs):
     exit_code = subprocess.call(cmd, cwd=cwd, *args, **kwargs)
     if exit_code != 0:
-        raise SystemExit('Error installing NetPyNE-UI')
+        raise SystemExit(f'Error installing NetPyNE-UI - Command {cmd} failed with code {exit_code} in directory {cwd}')
 
 
 # by default clones branch (which can be passed as a parameter python install.py branch test_branch)
@@ -46,13 +46,22 @@ def clone(repository, folder=None, branch_or_tag=None, cwdp=DEPS_DIR, recursive=
     if folder and os.path.exists(os.path.join(cwdp, folder)):
         print(f'Skipping clone of {repository}: folder exists')
     else:
+        exit_code = 0
         if recursive:
-            subprocess.call(['git', 'clone', '--recursive', repository], cwd=cwdp)
+            exit_code = subprocess.call(['git', 'clone', '--recursive', repository], cwd=cwdp)
         else:
             if folder:
-                subprocess.call(['git', 'clone', repository, folder], cwd=cwdp)
+                exit_code = subprocess.call(['git', 'clone', repository, folder], cwd=cwdp)
             else:
-                subprocess.call(['git', 'clone', repository], cwd=cwdp)
+                exit_code = subprocess.call(['git', 'clone', repository], cwd=cwdp)
+
+        if exit_code != 0:
+            raise SystemExit(f'Failed to clone repository {repository} into {folder}')
+        
+    if not os.path.exists(os.path.join(cwdp, folder, '.git')):
+        print(f'Skipping checkout of {repository}: folder is not a git repository')
+        return
+
     if branch_or_tag:
         checkout(folder, branch_or_tag, cwdp)
 
@@ -79,11 +88,15 @@ def main(netpyne_branch, workspace_branch, pygeppetto_branch=None, jupyter_geppe
 
     if not os.path.exists(DEPS_DIR):
         os.mkdir(DEPS_DIR)
-    clone(repository=NETPYNE, branch_or_tag=netpyne_branch)
-    execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, NETPYNE_DIR))
+
 
     if development:
         os.chdir(DEPS_DIR)
+
+        cprint("Installing netpyne")
+        clone(repository=NETPYNE, branch_or_tag=netpyne_branch)
+        execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, NETPYNE_DIR))
+
         # install pygeppetto
         cprint("Installing pygeppetto")
         clone(repository=PYGEPPETTO,

@@ -15,7 +15,7 @@ for root, dirnames, filenames in os.walk('src/jupyter_geppetto/geppetto/src/main
 
 setuptools.setup(
     name="netpyne_ui",
-    version="0.6.0",
+    version="0.7.0",
     url="https://github.com/MetaCell/NetPyNE-UI",
     author="MetaCell",
     author_email="info@metacell.us",
@@ -39,6 +39,6 @@ setuptools.setup(
     install_requires=[
         'jupyter-geppetto>=1.0.0',
         'NEURON>=7.8.0'
-        'netpyne==0.9.6'
+        'netpyne>=1.0.0'
     ],
 )

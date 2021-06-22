@@ -3,6 +3,7 @@ netpyne_geppetto.py
 
 Initialise NetPyNE Geppetto, this class contains methods to connect NetPyNE with the Geppetto based UI
 """
+import copy
 import dataclasses
 import importlib
 import json
@@ -198,7 +199,7 @@ class NetPyNEGeppetto:
             return utils.getJSONError(str(e), "")
 
         message = "Experiment started in background! " \
-                  f"Results will be stored in your workspace at ./{experiment.name}"
+                  f"Results will be stored in your workspace at ./{os.path.join(constants.EXPERIMENTS_FOLDER, experiment.name)}"
 
         return utils.getJSONError(message, "")
 
@@ -249,6 +250,10 @@ class NetPyNEGeppetto:
         try:
             experiment = experiments.get_current()
             if experiment:
+                # TODO: remove once run config can be configured
+                self.run_config.asynchronous = True
+                self.run_config.parallel = True
+
                 # run config decides over asynch or synch
                 if complete:
                     # simulate trials
@@ -291,12 +296,13 @@ class NetPyNEGeppetto:
         template = os.path.join(os.path.dirname(__file__), "templates", template_name)
         copyfile(template, f'./{constants.SIMULATION_SCRIPT_NAME}')
 
-    def _prepare_batch_files(self, experiment):
+    def _prepare_batch_files(self, experiment: model.Experiment) -> str:
         # param path must be split: [ {'label': ['synMechParams', 'AMPA', 'gmax']} ]
         # TODO: how do we handle array index? ['array', '[0]'] or ['array', '0']?
-        experiment.params = [p for p in experiment.params if p.mapsTo != '']
+        exp =  copy.deepcopy(experiment)
+        exp.params = [p for p in exp.params if p.mapsTo != '']
 
-        for param in experiment.params:
+        for param in exp.params:
             if param.type == "range":
                 param.values = list(np.arange(param.min, param.max, param.step))
             elif param.type == "list":
@@ -304,13 +310,13 @@ class NetPyNEGeppetto:
                 #   e.g. numCells with 10.0 fails because it requires int not float
                 param.values = [int(e) for e in param.values]
 
-        self.netParams.mapping = {p.mapsTo: p.mapsTo.split('.') for p in experiment.params}
+        self.netParams.mapping = {p.mapsTo: p.mapsTo.split('.') for p in exp.params}
         self.simConfig.saveJson = True
 
-        config_dict = dataclasses.asdict(experiment)
+        config_dict = dataclasses.asdict(exp)
         config_dict["runCfg"] = dataclasses.asdict(self.run_config)
 
-        save_folder_path = os.path.join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, experiment.name)
+        save_folder_path = os.path.join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, exp.name)
         try:
             os.makedirs(save_folder_path)
         except OSError:

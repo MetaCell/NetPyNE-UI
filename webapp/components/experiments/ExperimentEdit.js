@@ -19,7 +19,7 @@ import {
   GridLayout,
 } from 'netpyne/components';
 import { withStyles } from '@material-ui/core/styles';
-import { EXPERIMENT_TEXTS } from '../../constants';
+import { EXPERIMENT_TEXTS, EXPERIMENT_VIEWS } from '../../constants';
 import ParameterMenu from './ParameterMenu';
 import {
   bgDarkest,
@@ -385,9 +385,9 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
 const ExperimentEdit = (props) => {
   const {
     classes,
-    setList,
     name,
     editState,
+    setView,
   } = props;
 
   const {
@@ -464,12 +464,12 @@ const ExperimentEdit = (props) => {
         // When user updates an existing Experiment
         ExperimentsApi.editExperiment(experiment?.name, newExperimentDetails)
           .then(() => {
-            setList(true);
+            setView(EXPERIMENT_VIEWS.list);
           });
       } else {
         // When user creates a new Experiment
         ExperimentsApi.addExperiment(newExperimentDetails).then(() => {
-          setList(true);
+          setView(EXPERIMENT_VIEWS.list);
         });
       }
     }
@@ -593,7 +593,7 @@ const ExperimentEdit = (props) => {
     <GridLayout className={classes.root}>
       <Box className="editExperimentContainer">
         <Box my={3} className="editExperimentBack">
-          <ArrowBackIcon onClick={() => setList(true)} />
+          <ArrowBackIcon onClick={() => setView(EXPERIMENT_VIEWS.list)} />
           <Typography variant="body2">{!editState ? 'New Experiment' : 'Edit Experiment'}</Typography>
         </Box>
         <Box mb={2} className="editExperimentHead">
@@ -662,7 +662,7 @@ const ExperimentEdit = (props) => {
       >
         <Box className="editExperimentFooter">
           <Box display="flex">
-            <Button color="secondary" onClick={() => setList(true)}>
+            <Button color="secondary" onClick={() => setView(EXPERIMENT_VIEWS.list)}>
               Cancel
             </Button>
             <Button variant="contained" color="primary" onClick={submit}>

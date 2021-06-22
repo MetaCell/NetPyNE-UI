@@ -1,3 +1,4 @@
+import copy
 import dataclasses
 import datetime
 import json
@@ -5,10 +6,11 @@ import logging
 import shutil
 import pathlib
 import os
-import random
 
+import numpy as np
 from typing import List
 from dacite import from_dict
+from netpyne.batch import Batch
 
 from netpyne_ui import utils
 from netpyne_ui import constants
@@ -129,7 +131,7 @@ def _add_experiment(experiment: model.Experiment):
     if _get_by_name(experiment.name):
         raise ExperimentsError(f"Experiment {experiment.name} already exists")
 
-    _generate_trials(experiment)
+    experiment.trials = _create_trials(experiment)
     model.experiments.append(experiment)
 
 
@@ -138,7 +140,7 @@ def _get_by_name(name: str) -> model.Experiment:
     return experiment
 
 
-def _scan_experiments_directory() -> [model.Experiment]:
+def _scan_experiments_directory() -> List[model.Experiment]:
     if not pathlib.Path(constants.EXPERIMENTS_FOLDER_PATH).exists():
         return []
 
@@ -206,11 +208,39 @@ def _delete_experiment_folder(experiment: model.Experiment):
     if experiment.folder:
         path = os.path.join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, experiment.folder)
         shutil.rmtree(path, onerror=onerror)
+    
+def _create_trials(experiment: model.Experiment) -> List[model.Trial]:
+    # TODO: generalize logic! Similar to _prepare_batch_files
+    params = copy.deepcopy(experiment.params)
+    params = [p for p in params if p.mapsTo != '']
+    for param in params:
+        if param.type == "range":
+            param.values = list(np.arange(param.min, param.max, param.step))
+        elif param.type == "list":
+            # TODO: need to enforce correct type for each parameter
+            #   e.g. numCells with 10.0 fails because it requires int not float
+            param.values = [int(e) for e in param.values]
 
+    params_dict = {}
+    grouped_params = []
+    for p in params:
+        params_dict[p.mapsTo] = p.values
+        if param.inGroup:
+            grouped_params.append(param.mapsTo)
 
-def _generate_trials(experiment):
-    """ Generates dummy trial until netpyne implements method (#240) """
-    experiment.trials = [
-        model.Trial(params=[{"weight": i, "probability": round(random.random(), 2), "cells": random.randint(1, 1000)}])
-        for i in range(0, 1000)
-    ]
+    batch = Batch(params=params_dict, groupedParams=grouped_params)
+    batch.method = 'grid'
+    # TODO: set batchLabel, saveFolder
+
+    # { indices, values, labels, filenames}
+    # values are the combinations!
+    combinations = batch.getParamCombinations()
+    
+    trials = []
+    for idx, value in enumerate(combinations['values']):
+        # idx is used to access 'indices' entry
+        params = [{ combinations['labels'][idx]: v for idx, v in enumerate(value)}]
+        # TODO: store indices and filename pattern!
+        trials.append(model.Trial(params=params))
+
+    return trials

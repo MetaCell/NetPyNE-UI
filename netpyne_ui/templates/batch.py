@@ -14,8 +14,11 @@ with open("batchConfig.json", "r") as f:
 
 # Map params to netpyne format
 params = specs.ODict()
+grouped_params = []
 for param in batch_config["params"]:
     params[param["mapsTo"]] = param['values']
+    if param["inGroup"]:
+        grouped_params.append(param["mapsTo"])
 
 with open("netParams.json", "r") as f:
     net_params = json.load(f)
@@ -29,6 +32,7 @@ batch = Batch(
     cfg=sim_config,
     netParams=net_params,
     params=params,
+    groupedParams=grouped_params,
     seed=batch_config.get("seed", None)
 )
 

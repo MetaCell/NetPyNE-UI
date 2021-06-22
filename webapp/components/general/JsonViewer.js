@@ -13,6 +13,7 @@ import {
   bgDarkest,
   primaryColor,
 } from '../../theme';
+import { EXPERIMENT_VIEWS } from '../../constants';
 
 const useStyles = (theme) => ({
   root: {
@@ -56,7 +57,7 @@ const useStyles = (theme) => ({
 
 const JsonViewer = (props) => {
   const {
-    baseTitle, setBaseView, classes, setJsonViewer, title, json,
+    baseTitle, classes, title, json, setView,
   } = props;
 
   const theme = {
@@ -80,8 +81,7 @@ const JsonViewer = (props) => {
   };
 
   const goBackToBase = () => {
-    setJsonViewer(false);
-    setBaseView(true);
+    setView(EXPERIMENT_VIEWS.viewExperiment);
   };
 
   return (
