@@ -41,6 +41,7 @@ import {
 import ExperimentRowFilter from './ExperimentRowFilter';
 import { stableSort, getComparator } from './utils';
 import Loader from '../general/Loader';
+import { EXPERIMENT_STATE } from '../../constants';
 
 const useStyles = (theme) => ({
   table: {
@@ -54,6 +55,10 @@ const useStyles = (theme) => ({
   stickyRight: {
     position: 'sticky',
     right: 0,
+    textAlign: 'right',
+    '& .MuiSortIcon': {
+      display: 'none',
+    },
   },
   root: {
     width: 'auto !important',
@@ -135,10 +140,6 @@ const useStyles = (theme) => ({
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(0.5),
       },
-      // '& .MuiSvgIcon-root': {
-      //   fontSize: '1rem',
-      //   color: experimentGrey,
-      // },
     },
     '& .editExperimentBack': {
       display: 'flex',
@@ -165,12 +166,6 @@ const useStyles = (theme) => ({
       },
       '& .MuiTableCell-root': {
         padding: theme.spacing(1.4, 4),
-        '&:last-child': {
-          textAlign: 'right',
-          '& .MuiSortIcon': {
-            display: 'none',
-          },
-        },
         '&:first-child': {
           '& .MuiSortIcon': {
             display: 'none',
@@ -262,6 +257,7 @@ function EnhancedTableHead (props) {
     onRequestSort,
     classes,
     paramHeaders,
+    experimentState,
   } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -275,13 +271,16 @@ function EnhancedTableHead (props) {
       label: 'TRIAL NAME',
     },
     ...paramHeaders,
-    {
+  ];
+
+  if (experimentState !== EXPERIMENT_STATE.DESIGN) {
+    headCells.push({
       id: 'status',
       numeric: false,
       disablePadding: false,
       label: 'Actions',
-    },
-  ];
+    });
+  }
 
   return (
     <TableHead>
@@ -294,7 +293,7 @@ function EnhancedTableHead (props) {
             sortDirection={orderBy === headCell.id ? order : false}
             className={
               // eslint-disable-next-line no-nested-ternary
-              index === 0 ? classes.sticky : index === headCells.length - 1 ? classes.stickyRight : ''
+              index === 0 ? classes.sticky : headCell.id === 'status' ? classes.stickyRight : ''
             }
           >
             <TableSortLabel
@@ -318,6 +317,7 @@ EnhancedTableHead.propTypes = {
   onRequestSort: PropTypes.func.isRequired,
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
+  experimentState: PropTypes.string.isRequired,
 };
 
 const ExperimentView = (props) => {
@@ -531,6 +531,7 @@ const ExperimentView = (props) => {
                   style={{ tableLayout: 'fixed' }}
                   paramHeaders={paramHeaders}
                   rowCount={filteredRows.length}
+                  experimentState={experiment?.state}
                 />
                 <TableBody>
                   {stableSort(filteredRows, getComparator(order, orderBy))
@@ -550,22 +551,24 @@ const ExperimentView = (props) => {
                             {row[header.label]}
                           </TableCell>
                         ))}
-                        <TableCell align="right" className={classes.stickyRight}>
-                          <Box className="MuiTableCell-actions">
-                            <IconButton
-                              onClick={() => openLoadResultsDialog(experiment?.name, row.name)}
-                            >
-                              <AssessmentIcon className="MuiSvgIcon-assessment" />
-                            </IconButton>
-                            <Divider orientation="vertical" />
-                            <IconButton onClick={() => openJsonViewer(experiment?.name, row.name)}>
-                              <CodeIcon />
-                            </IconButton>
-                            <IconButton>
-                              <ReplayIcon className="MuiSvgIcon-replay" />
-                            </IconButton>
-                          </Box>
-                        </TableCell>
+                        { experiment?.state !== EXPERIMENT_STATE.DESIGN && (
+                          <TableCell align="right" className={classes.stickyRight}>
+                            <Box className="MuiTableCell-actions">
+                              <IconButton
+                                onClick={() => openLoadResultsDialog(experiment?.name, row.name)}
+                              >
+                                <AssessmentIcon className="MuiSvgIcon-assessment" />
+                              </IconButton>
+                              <Divider orientation="vertical" />
+                              <IconButton onClick={() => openJsonViewer(experiment?.name, row.name)}>
+                                <CodeIcon />
+                              </IconButton>
+                              <IconButton>
+                                <ReplayIcon className="MuiSvgIcon-replay" />
+                              </IconButton>
+                            </Box>
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))}
                 </TableBody>
