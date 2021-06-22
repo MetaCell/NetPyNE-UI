@@ -309,6 +309,7 @@ class NetPyNEGeppetto:
             # Create netParams and SimConfig
             self.netParams.save(os.path.join(save_folder_path, experiments.NET_PARAMS_FILE))
             self.simConfig.saveJson = True
+            self.simConfig.filename = 'model_output'
             self.simConfig.save(os.path.join(save_folder_path, experiments.SIM_CONFIG_FILE))
 
             template_name = constants.TEMPLATE_FILENAME_SINGLE_RUN

@@ -127,7 +127,7 @@ def _add_experiment(experiment: model.Experiment):
     if _get_by_name(experiment.name):
         raise ExperimentsError(f"Experiment {experiment.name} already exists")
 
-    experiment.trials = _create_trials(experiment)
+    experiment.trials = _create_trials(experiment)    
     model.experiments.append(experiment)
 
 
@@ -205,11 +205,19 @@ def _delete_experiment_folder(experiment: model.Experiment):
     if experiment.folder:
         path = os.path.join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, experiment.folder)
         shutil.rmtree(path, onerror=onerror)
+
+def _create_base_model_trial() -> model.Trial:
+    return model.Trial(name="Base Model", id="model_output")
     
 def _create_trials(experiment: model.Experiment) -> List[model.Trial]:
     # TODO: generalize logic! Similar to _prepare_batch_files
     params = copy.deepcopy(experiment.params)
     params = [p for p in params if p.mapsTo != '']
+
+    if len(experiment.params) < 1:
+        # No params defined -> one trial representing base model
+        return [_create_base_model_trial()]
+
     for param in params:
         if param.type == "range":
             param.values = list(np.arange(param.min, param.max, param.step))
@@ -233,6 +241,8 @@ def _create_trials(experiment: model.Experiment) -> List[model.Trial]:
 
     # { indices, values, labels, filenames}
     combinations = batch.getParamCombinations()
+    if not combinations['labels']:
+        return [_create_base_model_trial()]
     
     trials = []
     for combIdx, paramValues in enumerate(combinations['values']):

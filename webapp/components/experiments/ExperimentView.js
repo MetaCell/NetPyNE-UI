@@ -397,20 +397,24 @@ const ExperimentView = (props) => {
         .then((exp) => {
           setExperiment(exp);
           if (exp?.trials.length > 0) {
-            setParamHeaders(
-              Object.keys(exp?.trials[0]?.params[0])
-                .map((header) => ({
-                  id: header,
-                  numeric: true,
-                  disablePadding: false,
-                  label: header,
-                })),
-            );
+            if (exp?.trials[0].params.length > 0) {
+              setParamHeaders(
+                Object.keys(exp?.trials[0]?.params[0])
+                  .map((header) => ({
+                    id: header,
+                    numeric: true,
+                    disablePadding: false,
+                    label: header,
+                  })),
+              );
+            }
+
             const rows = exp?.trials.map((trial, _) => ({
               id: trial.id,
               name: trial.name,
-              ...trial.params[0],
+              ...trial.params.length > 0 ? trial.params[0] : [],
             }));
+
             setTableRows(rows);
             setFilteredRows(rows);
           }
