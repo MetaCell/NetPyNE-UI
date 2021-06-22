@@ -4,4 +4,4 @@ from netpyne import sim
 simConfig, netParams = sim.readCmdLineArgs(simConfigDefault='cfg.py', netParamsDefault='netParams.py')
 
 # Create network and run simulation
-sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
+sim.createSimulate(netParams=netParams, simConfig=simConfig)
