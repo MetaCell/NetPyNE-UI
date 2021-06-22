@@ -20,7 +20,6 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import CodeIcon from '@material-ui/icons/Code';
 import ReplayIcon from '@material-ui/icons/Replay';
 import AssessmentIcon from '@material-ui/icons/Assessment';
-import BlurOnIcon from '@material-ui/icons/BlurOn';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { EXPERIMENT_TEXTS, EXPERIMENT_VIEWS } from 'root/constants';
@@ -37,10 +36,12 @@ import {
   primaryColor,
   experimentGrey,
   secondaryColor,
+  fontColor,
 } from '../../theme';
-
 import ExperimentRowFilter from './ExperimentRowFilter';
 import { stableSort, getComparator } from './utils';
+import Loader from '../general/Loader';
+import { EXPERIMENT_STATE } from '../../constants';
 
 const useStyles = (theme) => ({
   table: {
@@ -54,12 +55,40 @@ const useStyles = (theme) => ({
   stickyRight: {
     position: 'sticky',
     right: 0,
+    textAlign: 'right',
+    '& .MuiSortIcon': {
+      display: 'none',
+    },
   },
   root: {
     width: 'auto !important',
     flexDirection: 'column',
     marginLeft: -theme.spacing(1),
     marginRight: -theme.spacing(1),
+
+    '& .primary-loader': {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'column',
+      fontWeight: '500',
+      color: fontColor,
+      fontSize: '1rem',
+      height: '30rem',
+    },
+
+    '& .editExperiment-filter': {
+      display: 'flex',
+      alignItems: 'center',
+
+      '& .MuiSvgIcon-replay': {
+        transform: 'rotate(-65deg)',
+      },
+      '& .MuiButton-root': {
+        minWidth: 'inherit',
+        marginLeft: theme.spacing(1.2),
+      },
+    },
     '& .MuiTablePagination-root': {
       overflow: 'initial',
 
@@ -102,16 +131,14 @@ const useStyles = (theme) => ({
     '& .editExperiment-trials': {
       display: 'flex',
       alignItems: 'center',
+      justifyContent: 'flex-end',
       background: bgDarker,
-      padding: theme.spacing(2, 4),
+      padding: theme.spacing(1, 4),
       '& .MuiTypography-h5': {
         fontSize: '1rem',
-        color: experimentGrey,
+        color: fontColor,
         marginLeft: theme.spacing(1),
-      },
-      '& .MuiSvgIcon-root': {
-        fontSize: '1rem',
-        color: experimentGrey,
+        marginRight: theme.spacing(0.5),
       },
     },
     '& .editExperimentBack': {
@@ -119,14 +146,6 @@ const useStyles = (theme) => ({
       cursor: 'pointer',
       '& .MuiTypography-root': {
         marginLeft: theme.spacing(1),
-      },
-    },
-    '& .editExperiment-filter': {
-      display: 'flex',
-      alignItems: 'center',
-      '& .MuiButton-root': {
-        minWidth: 'inherit',
-        marginLeft: theme.spacing(1.2),
       },
     },
     '& .MuiTypography-body2': {
@@ -147,12 +166,6 @@ const useStyles = (theme) => ({
       },
       '& .MuiTableCell-root': {
         padding: theme.spacing(1.4, 4),
-        '&:last-child': {
-          textAlign: 'right',
-          '& .MuiSortIcon': {
-            display: 'none',
-          },
-        },
         '&:first-child': {
           '& .MuiSortIcon': {
             display: 'none',
@@ -200,7 +213,6 @@ const useStyles = (theme) => ({
         },
       },
       '& .MuiTableRow-head': {
-        textTransform: 'uppercase',
         '& .MuiTableSortLabel-icon': {
           display: 'none',
         },
@@ -245,6 +257,7 @@ function EnhancedTableHead (props) {
     onRequestSort,
     classes,
     paramHeaders,
+    experimentState,
   } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -258,13 +271,16 @@ function EnhancedTableHead (props) {
       label: 'TRIAL NAME',
     },
     ...paramHeaders,
-    {
+  ];
+
+  if (experimentState !== EXPERIMENT_STATE.DESIGN) {
+    headCells.push({
       id: 'status',
       numeric: false,
       disablePadding: false,
       label: 'Actions',
-    },
-  ];
+    });
+  }
 
   return (
     <TableHead>
@@ -277,7 +293,7 @@ function EnhancedTableHead (props) {
             sortDirection={orderBy === headCell.id ? order : false}
             className={
               // eslint-disable-next-line no-nested-ternary
-              index === 0 ? classes.sticky : index === headCells.length - 1 ? classes.stickyRight : ''
+              index === 0 ? classes.sticky : headCell.id === 'status' ? classes.stickyRight : ''
             }
           >
             <TableSortLabel
@@ -301,6 +317,7 @@ EnhancedTableHead.propTypes = {
   onRequestSort: PropTypes.func.isRequired,
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
+  experimentState: PropTypes.string.isRequired,
 };
 
 const ExperimentView = (props) => {
@@ -312,19 +329,20 @@ const ExperimentView = (props) => {
     setView,
   } = props;
   const dispatch = useDispatch();
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('name');
-  const [tableRows, setTableRows] = React.useState([]);
-  const [filteredRows, setFilteredRows] = React.useState(tableRows);
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('name');
+  const [tableRows, setTableRows] = useState([]);
+  const [filteredRows, setFilteredRows] = useState(tableRows);
   const [experiment, setExperiment] = useState(null);
   const [paramHeaders, setParamHeaders] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [loadResultsDialogOpen, setLoadResultsDialogOpen] = React.useState(false);
-  const [selectedTrial, setSelectedTrial] = React.useState({
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [loadResultsDialogOpen, setLoadResultsDialogOpen] = useState(false);
+  const [selectedTrial, setSelectedTrial] = useState({
     experiment: null,
     trial: null,
   });
+  const [loading, setLoading] = useState(false);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -332,7 +350,7 @@ const ExperimentView = (props) => {
     setOrderBy(property);
   };
 
-  const [anchorEl, setAnchorEl] = React.useState('');
+  const [anchorEl, setAnchorEl] = useState('');
   const popoverhandleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -392,6 +410,7 @@ const ExperimentView = (props) => {
 
   useEffect(() => {
     if (name) {
+      setLoading(true);
       ExperimentsApi.getExperiment(name)
         .then((exp) => {
           setExperiment(exp);
@@ -412,6 +431,7 @@ const ExperimentView = (props) => {
             setTableRows(rows);
             setFilteredRows(rows);
           }
+          setLoading(false);
         })
         .catch((error) => console.error(error));
     }
@@ -470,97 +490,111 @@ const ExperimentView = (props) => {
           <Typography variant="body2">{experiment?.name}</Typography>
         </Box>
         <div className="editExperiment-filter">
-          <Button onClick={popoverhandleClick}>
-            <FilterListIcon />
+          <Button>
+            <ReplayIcon className="MuiSvgIcon-replay" />
           </Button>
-          <ExperimentRowFilter
-            filter={filter}
-            paramHeaders={paramHeaders}
-            setParameterValue={setParameterValue}
-            filterParameterChange={filterParameterChange}
-            anchorEl={anchorEl}
-            setAnchorEl={setAnchorEl}
-            addFilterRow={addFilterRow}
-            removeFilter={removeFilter}
-          />
         </div>
       </Box>
-      {experiment?.trials && (
-        <>
-          <Box className="editExperiment-trials">
-            <BlurOnIcon />
-            <Typography variant="h5">Experiment Trials</Typography>
-          </Box>
-          <TableContainer>
-            <Table>
-              <EnhancedTableHead
-                order={order}
-                orderBy={orderBy}
-                onRequestSort={handleRequestSort}
-                classes={classes}
-                style={{ tableLayout: 'fixed' }}
-                paramHeaders={paramHeaders}
-                rowCount={filteredRows.length}
-              />
-              <TableBody>
-                {stableSort(filteredRows, getComparator(order, orderBy))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => (
-                    <TableRow tabIndex={-1} key={row.name}>
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        padding="none"
-                        className={classes.sticky}
-                      >
-                        {row.name}
-                      </TableCell>
-                      {paramHeaders.map((header, index) => (
-                        <TableCell key={`${header.label}_${index}`}>
-                          {row[header.label]}
+      {loading ? (
+        <Box className="primary-loader">
+          <Loader />
+          Loading ...
+        </Box>
+      ) : (
+        experiment?.trials && (
+          <>
+            <Box className="editExperiment-trials">
+              <div className="editExperiment-filter">
+                <Button onClick={popoverhandleClick}>
+                  <FilterListIcon />
+                  <Typography variant="h5">Filters</Typography>
+                </Button>
+                <ExperimentRowFilter
+                  filter={filter}
+                  paramHeaders={paramHeaders}
+                  setParameterValue={setParameterValue}
+                  filterParameterChange={filterParameterChange}
+                  anchorEl={anchorEl}
+                  setAnchorEl={setAnchorEl}
+                  addFilterRow={addFilterRow}
+                  removeFilter={removeFilter}
+                />
+              </div>
+            </Box>
+            <TableContainer>
+              <Table>
+                <EnhancedTableHead
+                  order={order}
+                  orderBy={orderBy}
+                  onRequestSort={handleRequestSort}
+                  classes={classes}
+                  style={{ tableLayout: 'fixed' }}
+                  paramHeaders={paramHeaders}
+                  rowCount={filteredRows.length}
+                  experimentState={experiment?.state}
+                />
+                <TableBody>
+                  {stableSort(filteredRows, getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row) => (
+                      <TableRow tabIndex={-1} key={row.name}>
+                        <TableCell
+                          component="th"
+                          scope="row"
+                          padding="none"
+                          className={classes.sticky}
+                        >
+                          {row.name}
                         </TableCell>
-                      ))}
-                      <TableCell align="right" className={classes.stickyRight}>
-                        <Box className="MuiTableCell-actions">
-                          <IconButton
-                            onClick={() => openLoadResultsDialog(experiment?.name, row.name)}
-                          >
-                            <AssessmentIcon className="MuiSvgIcon-assessment" />
-                          </IconButton>
-                          <Divider orientation="vertical" />
-                          <IconButton onClick={() => openJsonViewer(experiment?.name, row.name)}>
-                            <CodeIcon />
-                          </IconButton>
-                          <IconButton>
-                            <ReplayIcon className="MuiSvgIcon-replay" />
-                          </IconButton>
-                        </Box>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          {filteredRows.length > 0 && (
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
-              component="div"
-              count={filteredRows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangeRowsPerPage}
+                        {paramHeaders.map((header, index) => (
+                          <TableCell key={`${header.label}_${index}`}>
+                            {row[header.label]}
+                          </TableCell>
+                        ))}
+                        { experiment?.state !== EXPERIMENT_STATE.DESIGN && (
+                          <TableCell align="right" className={classes.stickyRight}>
+                            <Box className="MuiTableCell-actions">
+                              <IconButton
+                                onClick={() => openLoadResultsDialog(experiment?.name, row.name)}
+                              >
+                                <AssessmentIcon className="MuiSvgIcon-assessment" />
+                              </IconButton>
+                              <Divider orientation="vertical" />
+                              <IconButton onClick={() => openJsonViewer(experiment?.name, row.name)}>
+                                <CodeIcon />
+                              </IconButton>
+                              <IconButton>
+                                <ReplayIcon className="MuiSvgIcon-replay" />
+                              </IconButton>
+                            </Box>
+                          </TableCell>
+                        )}
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            {filteredRows.length > 0 && (
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={filteredRows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+              />
+            )}
+            <DialogBox
+              open={loadResultsDialogOpen}
+              onDialogResponse={onLoadResultsAction}
+              textForDialog={{
+                heading: EXPERIMENT_TEXTS.VIEW_EXPERIMENTS_RESULTS,
+                content: EXPERIMENT_TEXTS.VIEW_EXPERIMENTS_RESULTS_MESSAGE,
+              }}
             />
-          )}
-          <DialogBox
-            open={loadResultsDialogOpen}
-            onDialogResponse={onLoadResultsAction}
-            textForDialog={{
-              heading: EXPERIMENT_TEXTS.VIEW_EXPERIMENTS_RESULTS,
-              content: EXPERIMENT_TEXTS.VIEW_EXPERIMENTS_RESULTS_MESSAGE,
-            }}
-          />
-        </>
+          </>
+        )
       )}
     </div>
   );

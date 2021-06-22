@@ -60,7 +60,7 @@ const useStyles = (theme) => ({
         },
       },
       '& .popoverFormControl': {
-        width: '26.25rem',
+        width: '40rem',
         padding: '1rem',
         '& .MuiLink-root': {
           color: primaryColor,
@@ -154,7 +154,7 @@ const ExperimentRowFilter = (props) => {
         {filter.map((paramFilter, index) => (
           <Box className="filter-row" key={`filter${index}`}>
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid item xs={8}>
                 <FormControl variant="filled" fullWidth>
                   <InputLabel id="demo-simple-select-label">Parameter</InputLabel>
                   <Select
@@ -171,7 +171,7 @@ const ExperimentRowFilter = (props) => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={4}>
                 <FormControl variant="filled" fullWidth>
                   <TextField
                     label="Parameter Value"
