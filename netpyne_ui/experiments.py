@@ -18,7 +18,7 @@ from netpyne_ui import model
 
 SIM_CONFIG_FILE = "simConfig.json"
 NET_PARAMS_FILE = "netParams.json"
-BATCH_CONFIG_FILE = "batchConfig.json"
+EXPERIMENT_FILE = "experiment.json"
 
 
 class ExperimentsError(Exception):
@@ -161,7 +161,7 @@ def _parse_experiment(directory: str) -> model.Experiment:
     """ Finds and parses Experiments stored in `directory` on the disk.
 
     We expect the following files to be present:
-        * batchConfig.json (Experiment model and run config)
+        * experiment.json (Experiment model and run config)
         * netParams.json
         * simConfig.json
         * json file for each trial in case of batch
@@ -172,10 +172,10 @@ def _parse_experiment(directory: str) -> model.Experiment:
     path = os.path.join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, directory)
 
     try:
-        with open(os.path.join(path, BATCH_CONFIG_FILE), 'r') as f:
+        with open(os.path.join(path, EXPERIMENT_FILE), 'r') as f:
             batch_config = json.load(f)
     except IOError:
-        raise ExperimentsError("Could not find batchConfig.json")
+        raise ExperimentsError("Could not find experiment.json")
 
     with open(os.path.join(path, NET_PARAMS_FILE), 'r') as f:
         net_params = json.load(f)

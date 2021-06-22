@@ -59,6 +59,8 @@ class LocalSimulationPool:
                     self._run_in_subprocess(_bulletin_board_cmd(cores, working_directory), asynchronous=asynchronous)
                 else:
                     self._run_in_subprocess(_python_command(working_directory), asynchronous=asynchronous)
+            else:
+                raise InvalidConfigError(f"Unsupported method {method}")
         else:
             return self._run_in_same_process()
 

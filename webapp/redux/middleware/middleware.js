@@ -159,13 +159,13 @@ export default (store) => (next) => (action) => {
       break;
     }
     case CREATE_SIMULATE_NETWORK: {
-      simulateNetwork({ parallelSimulation: false })
+      simulateNetwork({ allTrials: false })
         .then(toNetworkCallback(false), pythonErrorCallback);
       break;
     }
     case SIMULATE_NETWORK:
       simulateNetwork({
-        parallelSimulation: false,
+        allTrials: action.payload,
         usePrevInst: false,
       })
         .then(toNetworkCallback(false), pythonErrorCallback);

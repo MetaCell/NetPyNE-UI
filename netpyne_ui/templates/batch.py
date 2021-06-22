@@ -8,7 +8,7 @@ from netpyne.batch import Batch
 
 os.chdir(os.path.dirname(__file__))
 
-with open("batchConfig.json", "r") as f:
+with open("experiment.json", "r") as f:
     batch_config = json.load(f)
     print(batch_config)
 
@@ -69,7 +69,7 @@ if run_cfg['type'] == 'mpi_bulletin':
 
     # Update simulation status
     batch_config['state'] = 'SIMULATED'
-    with open("batchConfig.json", "w") as f:
+    with open("experiment.json", "w") as f:
         json.dump(batch_config, f, default=str, sort_keys=True, indent=4)
 
     sys.exit(0)

@@ -216,6 +216,7 @@ const useStyles = (theme) => ({
 
 const ModelNetworkDialog = (props) => {
   const [value, setValue] = useState('modal');
+  const allTrials = value === 'experiment';
   const dispatch = useDispatch();
   const handleChange = (event) => setValue(event.target.value);
   const { classes } = props;
@@ -225,7 +226,7 @@ const ModelNetworkDialog = (props) => {
       buttonLabel="Instantiate"
       title="Instantiate"
       classes={classes}
-      onAction={() => dispatch(simulateNetwork)}
+      onAction={() => dispatch(simulateNetwork(allTrials))}
     >
       <DialogContentText>
         What do you want to instantiate ?

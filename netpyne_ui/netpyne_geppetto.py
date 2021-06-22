@@ -207,17 +207,20 @@ class NetPyNEGeppetto:
 
         return utils.getJSONError(message, "")
 
-    def simulate_single_model(self, use_prev_inst: bool = False):
+    def simulate_single_model(self, experiment: model.Experiment = None, use_prev_inst: bool = False):
         if self.run_config.asynchronous or self.run_config.parallel:
             # Run in different process
             if simulations.local.is_running():
                 return utils.getJSONError("Simulation is already running", "")
 
-            self._prepare_simulation_files(use_prev_inst)
+            experiment.state = model.ExperimentState.SIMULATING
+            working_directory = self._prepare_simulation_files(experiment, use_prev_inst)
             simulations.run(
                 parallel=self.run_config.parallel,
                 cores=self.run_config.cores,
-                asynchronous=self.run_config.asynchronous
+                asynchronous=self.run_config.asynchronous,
+                method=simulations.MPI_BULLETIN,
+                working_directory=working_directory,
             )
 
             if not self.run_config.asynchronous:
@@ -245,10 +248,10 @@ class NetPyNEGeppetto:
         * if Experiment in design does not exist, we create a new one & start single sim.
         * All Simulations run in different process.
 
-        :param args: { complete: bool, usePrevInst: bool }
+        :param args: { allTrials: bool, usePrevInst: bool }
         :return: geppetto model.
         """
-        complete = args.get('complete', True)
+        allTrials = args.get('allTrials', True)
         use_prev_inst = args.get('usePrevInst', False)
 
         try:
@@ -259,25 +262,36 @@ class NetPyNEGeppetto:
                 self.run_config.parallel = True
 
                 # run config decides over asynch or synch
-                if complete:
+                if allTrials:
                     # simulate trials
                     return self.simulate_experiment_trials(experiment)
                 else:
                     # simulate current modelSpec
-                    return self.simulate_single_model(use_prev_inst)
+                    return self.simulate_single_model(experiment, use_prev_inst)
             else:
                 # TODO: create new experiment for modelSpec
                 # TODO: is synch by default, remove once it can be configured
                 self.run_config.asynchronous = False
                 self.run_config.parallel = False
-                return self.simulate_single_model(use_prev_inst)
+                return self.simulate_single_model(use_prev_inst=use_prev_inst)
 
         except Exception:
             message = "Error while simulating the NetPyNE model"
             logging.exception(message)
             return utils.getJSONError(message, sys.exc_info())
 
-    def _prepare_simulation_files(self, use_prev_inst: bool):
+    def _prepare_simulation_files(self, experiment: model.Experiment = None, use_prev_inst: bool = False) -> str:
+        exp = copy.deepcopy(experiment)
+        # Remove parameter & trials for single run
+        exp.params = []
+        exp.trials = []
+
+        save_folder_path = os.path.join(constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, exp.name)
+        try:
+            os.makedirs(save_folder_path)
+        except OSError:
+            raise
+
         if use_prev_inst:
             sim.cfg.saveJson = True
             oldName = sim.cfg.filename
@@ -287,18 +301,29 @@ class NetPyNEGeppetto:
             if 'LFP' in sim.allSimData:
                 del sim.allSimData['LFP']
 
+            # TODO: store in experiments folder!
             sim.saveData()
             sim.cfg.filename = oldName
-            template_name = "run_instantiated_net.py"
+            template_name = constants.TEMPLATE_FILENAME_SINGLE_RUN_INSTANTIATED
         else:
-            # Saved in netpyne_workspace
-            self.netParams.save("netParams.json")
+            # Create netParams and SimConfig
+            self.netParams.save(os.path.join(save_folder_path, experiments.NET_PARAMS_FILE))
             self.simConfig.saveJson = True
-            self.simConfig.save("simParams.json")
-            template_name = "run.py"
+            self.simConfig.save(os.path.join(save_folder_path, experiments.SIM_CONFIG_FILE))
 
+            template_name = constants.TEMPLATE_FILENAME_SINGLE_RUN
+
+        # Create Experiment Config
+        config_dict = dataclasses.asdict(exp)
+        config_dict["runCfg"] = dataclasses.asdict(self.run_config)
+        experiment_config = os.path.join(save_folder_path, experiments.EXPERIMENT_FILE)
+        json.dump(config_dict, open(experiment_config, 'w'), default=str, sort_keys=True, indent=4)
+
+        # Copy Template
         template = os.path.join(os.path.dirname(__file__), "templates", template_name)
-        copyfile(template, f'./{constants.SIMULATION_SCRIPT_NAME}')
+        copyfile(template, os.path.join(save_folder_path, constants.SIMULATION_SCRIPT_NAME))
+
+        return save_folder_path
 
     def _prepare_batch_files(self, experiment: model.Experiment) -> str:
         # param path must be split: [ {'label': ['synMechParams', 'AMPA', 'gmax']} ]
@@ -331,10 +356,9 @@ class NetPyNEGeppetto:
         self.simConfig.save(sim_config_path)
         self.netParams.save(net_params_path)
 
-        batch_config_json = os.path.join(os.path.dirname(__file__), "templates", "batchConfig.json")
-        json.dump(config_dict, open(batch_config_json, 'w'), default=str, sort_keys=True, indent=4)
+        experiment_json = os.path.join(save_folder_path, experiments.EXPERIMENT_FILE)
+        json.dump(config_dict, open(experiment_json, 'w'), default=str, sort_keys=True, indent=4)
 
-        move(batch_config_json, os.path.join(save_folder_path, 'batchConfig.json'))
         move(sim_config_path, os.path.join(save_folder_path, 'simConfig.json'))
         move(net_params_path, os.path.join(save_folder_path, 'netParams.json'))
 

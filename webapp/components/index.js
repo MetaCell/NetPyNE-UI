@@ -233,7 +233,7 @@ export const NetWorkControlButtons = connect(
   (state) => ({ modelState: state.general.modelState }),
   (dispatch) => ({
     createAndSimulateNetwork: () => dispatch(createAndSimulateNetwork),
-    simulateNetwork: () => dispatch(simulateNetwork),
+    simulateNetwork: () => dispatch(simulateNetwork()),
   }),
 )(_NetWorkControlButtons);
 
@@ -306,7 +306,7 @@ export const SwitchPageButton = connect(
     createNetwork: () => dispatch(createNetwork),
     createAndSimulateNetwork: () => dispatch(createAndSimulateNetwork),
     showNetwork: () => dispatch(showNetwork),
-    simulateNetwork: () => dispatch(simulateNetwork),
+    simulateNetwork: () => dispatch(simulateNetwork()),
   }),
 )(_SwitchPageButton);
 
