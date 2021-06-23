@@ -41,6 +41,15 @@ class Topbar extends Component {
     this.menuHandler = this.menuHandler.bind(this);
   }
 
+  handleOpenSnackBar (message) {
+    this.snackBarMessage = message;
+    this.setState({ openSnackBar: true });
+  }
+
+  handleClose () {
+    this.props.closeDialog();
+  }
+
   menuHandler (click) {
     if (!click) {
       return;
@@ -83,18 +92,9 @@ class Topbar extends Component {
     }
   }
 
-  handleClose () {
-    this.props.closeDialog();
-  }
-
   resetModel () {
     this.props.closeDialog();
     this.props.resetModel();
-  }
-
-  handleOpenSnackBar (message) {
-    this.snackBarMessage = message;
-    this.setState({ openSnackBar: true });
   }
 
   render () {
@@ -182,17 +182,8 @@ class Topbar extends Component {
             />
           );
           break;
-        case TOPBAR_CONSTANTS.NETWORK_MODEL:
-          content = (
-            <LaunchDialog
-              open={dialogOpen}
-              onRequestClose={() => this.handleClose()}
-            />
-          );
-          break;
         case TOPBAR_CONSTANTS.SIMULATE:
           content = (
-            // TODO: @vidhya pass prop to differentiate between instantiate/simulate
             <LaunchDialog
               open={dialogOpen}
               onRequestClose={() => this.handleClose()}

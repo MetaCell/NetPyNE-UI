@@ -137,16 +137,7 @@ class NetPyNEGeppetto:
         else:
             # Load the complete simulation
             sim.loadAll(file)
-
-            # TODO: generalize!
-            # Enables to display cells in 3D Viewer
-            section = list(sim.net.cells[0].secs.keys())[0]
-            if 'pt3d' not in list(sim.net.cells[0].secs[section].geom.keys()):
-                sim.net.defineCellShapes()
-                sim.gatherData()
-                # Load again because gatherData removed simData
-                sim.loadSimData(file)
-
+            self._create3D_shapes(file)
             self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
             return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
 
@@ -223,9 +214,15 @@ class NetPyNEGeppetto:
                 working_directory=working_directory,
             )
 
-            if not self.run_config.asynchronous:
+            if self.run_config.asynchronous:
+                message = "Experiment started in background! " \
+                  f"Results will be stored in your workspace at ./{os.path.join(constants.EXPERIMENTS_FOLDER, experiment.name)}"
+                return utils.getJSONError(message, "")
+            else:
                 sim.load(f'{constants.MODEL_OUTPUT_FILENAME}.json')
                 self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
+                response = json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
+                return response
 
         else:
             # Run in same process
@@ -236,9 +233,9 @@ class NetPyNEGeppetto:
                 self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
             simulations.run()
 
-        if self.geppetto_model:
-            response = json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
-            return response
+            if self.geppetto_model:
+                response = json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
+                return response
 
     def simulateNetPyNEModelInGeppetto(self, args):
         """ Starts simulation of the currently loaded NetPyNe model.
@@ -261,15 +258,11 @@ class NetPyNEGeppetto:
                 self.run_config.asynchronous = True
                 self.run_config.parallel = True
 
-                # run config decides over asynch or synch
                 if allTrials:
-                    # simulate trials
                     return self.simulate_experiment_trials(experiment)
                 else:
-                    # simulate current modelSpec
                     return self.simulate_single_model(experiment, use_prev_inst)
             else:
-                # TODO: create new experiment for modelSpec
                 # TODO: is synch by default, remove once it can be configured
                 self.run_config.asynchronous = False
                 self.run_config.parallel = False
@@ -433,15 +426,11 @@ class NetPyNEGeppetto:
                         netpyne_ui_utils.remove(self.netParams.todict())
 
                 if wake_up_geppetto:
-                    if len(sim.net.cells) > 0:
-                        section = list(sim.net.cells[0].secs.keys())[0]
-                        if 'pt3d' not in list(sim.net.cells[0].secs[section].geom.keys()):
-                            sim.net.defineCellShapes()
-                            sim.gatherData()
-                            sim.loadSimData(args['jsonModelFolder'])
+                    self._create3D_shapes(args['jsonModelFolder'])
 
                     # TODO: Fix me - gatherData will remove allSimData!
                     sim.gatherData()
+
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
                     return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
                 else:
@@ -450,6 +439,19 @@ class NetPyNEGeppetto:
             message = "Error while loading the NetPyNE model"
             logging.exception(message)
             return utils.getJSONError(message, sys.exc_info())
+
+    def _create3D_shapes(self, json_path: str):
+        """ Creates cellShapes for 3D viewer.
+
+        Performed as final step after `json_path` was loaded.
+        """
+        if len(sim.net.cells) > 0:
+            section = list(sim.net.cells[0].secs.keys())[0]
+            if 'pt3d' not in list(sim.net.cells[0].secs[section].geom.keys()):
+                sim.net.defineCellShapes()
+                sim.gatherData()
+                # Load again because gatherData removed simData
+                sim.loadSimData(json_path)
 
     def importModel(self, modelParameters):
         """ Imports a model stored in form of Python files.
