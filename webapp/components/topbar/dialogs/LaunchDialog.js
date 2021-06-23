@@ -228,7 +228,7 @@ const useStyles = (theme) => ({
 const LaunchDialog = (props) => {
   const [value, setValue] = useState(LAUNCH_MODAL.modelState);
   const [background, setBackground] = useState(true);
-  const [cpuScore, setCpuScore] = useState({ value: 1, error: false });
+  const [cpuCores, setCpuCores] = useState(1);
   const [expandConfiguration, setExpandConfiguration] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -241,9 +241,6 @@ const LaunchDialog = (props) => {
       setLoading(false);
       setExpandConfiguration(false);
     });
-  };
-  const handleCpuScoreChange = (val) => {
-    setCpuScore({ value: val, error: val === '' ? true : isNaN(val) });
   };
 
   return (
@@ -330,11 +327,11 @@ const LaunchDialog = (props) => {
               </FormControl>
               <TextField
                 variant="filled"
-                label="CPU Scores"
-                value={cpuScore.value}
-                onChange={(e) => handleCpuScoreChange(e.target.value)}
-                error={cpuScore.error}
-                helperText={cpuScore.error ? LAUNCH_MODAL.errorText : ''}
+                label="CPU Cores"
+                type="number"
+                inputProps={{ min: 1, max: 80, step: 1 }}
+                value={cpuCores}
+                onChange={(e) => setCpuCores(e.target.value)}
                 fullWidth
               />
               <Checkbox
