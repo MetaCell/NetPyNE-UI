@@ -465,3 +465,13 @@ export const EXPERIMENT_VIEWS = {
   jsonViewer: 'jsonViewer',
   edit: 'edit',
 };
+
+export const LAUNCH_MODAL = {
+  title: 'What do you want to simulate ?',
+  modelState: 'model',
+  experimentState: 'experiment',
+  actionSimulate: 'Simulate',
+  defaultResource: 'Local Machine',
+  errorText: 'Please check the input',
+};
+
