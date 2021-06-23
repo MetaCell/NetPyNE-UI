@@ -15,6 +15,8 @@ import { withStyles } from '@material-ui/core/styles';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import FileBrowser from '../../general/FileBrowser';
 
+const ACCEPTED_EXTENSIONS = '.py .zip .gz .tar.gz .pdf .txt .xls .png .jpeg .json';
+
 const styles = ({
   spacing,
   typography,
@@ -78,7 +80,6 @@ class UploadDownloadFile extends React.Component {
   async uploadFiles () {
     const { uploadFiles } = this.state;
     const formData = new FormData();
-    const data = {};
 
     this.setState({ open: false });
     GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, 'UPLOADING FILES');
@@ -216,7 +217,6 @@ class UploadDownloadFile extends React.Component {
     this.setState({
       downloadPaths: [text],
       downloadPathsDisplayText: text,
-
     });
   }
 
@@ -251,7 +251,7 @@ class UploadDownloadFile extends React.Component {
 
               </div>
             </div>
-            <p className="mt-2">Accept: .py .zip .gz .tar.gz .pdf .txt .xls .png .jpeg</p>
+            <p className="mt-2">{`Accept: ${ACCEPTED_EXTENSIONS}`}</p>
           </div>
         );
 
