@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ActionDialog } from 'netpyne/components';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import {
+  DialogContentText,
   Box,
   TextField,
   Typography,
@@ -14,6 +14,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Button,
 } from '@material-ui/core';
 import InfoIcon from '@material-ui/icons/Info';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -23,7 +24,8 @@ import currentModal from '../../../static/icons/modelSelected.png';
 import currentModalUnselected from '../../../static/icons/modelUnselected.png';
 import experimentSelected from '../../../static/icons/experimentSelected.png';
 import experimentUnselected from '../../../static/icons/experimentUnselected.png';
-
+import Checkbox from '../../general/Checkbox';
+import { LAUNCH_MODAL } from '../../../constants';
 import {
   bgLight,
   errorFieldBorder,
@@ -34,14 +36,23 @@ import {
   primaryColor,
   primaryColorHover,
 } from '../../../theme';
+import CircularLoader from '../../general/Loader';
 
 const useStyles = (theme) => ({
   root: {
+    '& .primary-loader': {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'column',
+      fontWeight: '500',
+      color: fontColor,
+      fontSize: '1rem',
+      height: '10rem',
+    },
     '& .MuiFormControl-root': {
       width: '100%',
-      '& + .MuiFormControl-root': {
-        marginTop: theme.spacing(1),
-      },
+      marginBottom: theme.spacing(1),
     },
     '& .MuiOutlinedInput-root': {
       background: experimentInputColor,
@@ -83,7 +94,7 @@ const useStyles = (theme) => ({
     '& .MuiAccordion-root': {
       background: bgLight,
       borderRadius: radius,
-      padding: '1.25rem',
+      padding: '1rem 1.25rem',
       margin: '1.25rem 0 !important',
       boxShadow: 'none',
       '&:before': {
@@ -214,51 +225,63 @@ const useStyles = (theme) => ({
   },
 });
 
-const ModelNetworkDialog = (props) => {
-  const [value, setValue] = useState('modal');
+const LaunchDialog = (props) => {
+  const [value, setValue] = useState(LAUNCH_MODAL.modelState);
+  const [background, setBackground] = useState(true);
+  const [cpuCores, setCpuCores] = useState(1);
+  const [expandConfiguration, setExpandConfiguration] = useState(false);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const handleChange = (event) => setValue(event.target.value);
   const { classes } = props;
+  const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+  const handleConfigurationUpdate = (e) => {
+    e.stopPropagation();
+    setLoading(true);
+    wait(2000).then(() => {
+      setLoading(false);
+      setExpandConfiguration(false);
+    });
+  };
 
   return (
     <ActionDialog
-      buttonLabel="Instantiate"
-      title="Instantiate"
+      buttonLabel={LAUNCH_MODAL.actionSimulate}
+      title={LAUNCH_MODAL.actionSimulate}
       classes={classes}
       onAction={() => dispatch(simulateNetwork)}
     >
       <DialogContentText>
-        What do you want to instantiate ?
+        {LAUNCH_MODAL.title}
       </DialogContentText>
 
       <Box className="custom-radio">
         <Typography component="label">
           <Radio
-            checked={value === 'modal'}
-            onChange={handleChange}
-            value="modal"
+            checked={value === LAUNCH_MODAL.modelState}
+            onChange={(event) => setValue(event.target.value)}
+            value={LAUNCH_MODAL.modelState}
             name="radio-button"
           />
           <Box className="wrap">
-            <img src={value === 'modal' ? currentModal : currentModalUnselected} alt="currentModal" />
+            <img src={value === LAUNCH_MODAL.modelState ? currentModal : currentModalUnselected} alt="currentModal" />
             <Typography>Current Model</Typography>
           </Box>
         </Typography>
         <Typography component="label">
           <Radio
-            checked={value === 'experiment'}
-            onChange={handleChange}
-            value="experiment"
+            checked={value === LAUNCH_MODAL.experimentState}
+            onChange={(event) => setValue(event.target.value)}
+            value={LAUNCH_MODAL.experimentState}
             name="radio-button"
           />
           <Box className="wrap">
-            <img src={value === 'experiment' ? experimentSelected : experimentUnselected} alt="completeExperiment" />
+            <img src={value === LAUNCH_MODAL.experimentState ? experimentSelected : experimentUnselected} alt="completeExperiment" />
             <Typography>Complete Experiment</Typography>
           </Box>
         </Typography>
       </Box>
 
-      <Accordion>
+      <Accordion expanded={expandConfiguration}>
         <AccordionSummary
           aria-label="Expand"
           aria-controls="additional-actions-content"
@@ -266,38 +289,64 @@ const ModelNetworkDialog = (props) => {
         >
           <Typography>
             <InfoIcon />
-            Run Configuration : Local Machine
+            {`Run Configuration : ${LAUNCH_MODAL.defaultResource}`}
           </Typography>
-          <Typography component="span">
-            Edit
-          </Typography>
+          <Button onClick={expandConfiguration ? (e) => handleConfigurationUpdate(e) : () => setExpandConfiguration(true)}>
+            { expandConfiguration ? 'Save' : 'Edit' }
+          </Button>
         </AccordionSummary>
         <AccordionDetails>
-          <FormControl variant="filled">
-            <InputLabel id="select-filled-label">Type</InputLabel>
-            <Select
-              labelId="select-filled-label"
-              id="select-filled-filled"
-              value="machine"
-              IconComponent={ExpandMoreIcon}
-            >
-              <MenuItem value="machine">Local Machine</MenuItem>
-            </Select>
-          </FormControl>
-          <TextField
-            variant="filled"
-            label="Field X"
-            fullWidth
-          />
-          <TextField
-            variant="filled"
-            label="Field Y"
-            fullWidth
-          />
+          { loading ? (
+            <Box className="primary-loader">
+              <CircularLoader />
+              Loading ...
+            </Box>
+          ) : (
+            <>
+              <FormControl variant="filled">
+                <InputLabel id="select-filled-label">Resources</InputLabel>
+                <Select
+                  labelId="select-filled-label"
+                  id="select-filled-filled"
+                  value="machine"
+                  IconComponent={ExpandMoreIcon}
+                >
+                  <MenuItem value="machine">{LAUNCH_MODAL.defaultResource}</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl variant="filled">
+                <InputLabel id="method">Method</InputLabel>
+                <Select
+                  labelId="method"
+                  id="method"
+                  value="method"
+                  IconComponent={ExpandMoreIcon}
+                >
+                  <MenuItem value="method">Bulletin</MenuItem>
+                </Select>
+              </FormControl>
+              <TextField
+                variant="filled"
+                label="CPU Cores"
+                type="number"
+                inputProps={{ min: 1, max: 80, step: 1 }}
+                value={cpuCores}
+                onChange={(e) => setCpuCores(e.target.value)}
+                fullWidth
+              />
+              <Checkbox
+                fullWidth
+                checked={background}
+                onChange={() => setBackground(!background)}
+                noBackground
+                label="In Background"
+              />
+            </>
+          )}
         </AccordionDetails>
       </Accordion>
     </ActionDialog>
   );
 };
 
-export default withStyles(useStyles)(ModelNetworkDialog);
+export default withStyles(useStyles)(LaunchDialog);

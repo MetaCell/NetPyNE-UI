@@ -318,7 +318,7 @@ export const getModelMenu = (props) => (
       className: 'topbar-menu-item',
       action: {
         handlerAction: 'redux',
-        parameters: props.experimentInDesign ? [openTopbarDialog, TOPBAR_CONSTANTS.NETWORK_MODEL] : [createNetwork],
+        parameters: [createNetwork],
       },
     },
     {

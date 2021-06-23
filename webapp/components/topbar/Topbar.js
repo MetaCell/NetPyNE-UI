@@ -19,7 +19,7 @@ import NewModelDialog from './dialogs/NewModel';
 import ImportExportHLSDialog from './dialogs/ImportExportHLS';
 import ImportCellParamsDialog from './dialogs/ImportCellParams';
 import UploadDownloadFilesDialog from './dialogs/UploadDownloadFiles';
-import ModelNetworkDialog from './dialogs/ModelNetwork';
+import LaunchDialog from './dialogs/LaunchDialog';
 
 import { TOPBAR_CONSTANTS } from '../../constants';
 
@@ -184,7 +184,7 @@ class Topbar extends Component {
           break;
         case TOPBAR_CONSTANTS.NETWORK_MODEL:
           content = (
-            <ModelNetworkDialog
+            <LaunchDialog
               open={dialogOpen}
               onRequestClose={() => this.handleClose()}
             />
@@ -193,7 +193,7 @@ class Topbar extends Component {
         case TOPBAR_CONSTANTS.SIMULATE:
           content = (
             // TODO: @vidhya pass prop to differentiate between instantiate/simulate
-            <ModelNetworkDialog
+            <LaunchDialog
               open={dialogOpen}
               onRequestClose={() => this.handleClose()}
             />
