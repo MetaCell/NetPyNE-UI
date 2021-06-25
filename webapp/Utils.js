@@ -2,7 +2,6 @@ import {
   execPythonMessage,
   evalPythonMessage,
 } from '@geppettoengine/geppetto-client/js/communication/geppettoJupyter/GeppettoJupyterUtils';
-import React from 'react';
 
 const Utils = {
 
@@ -24,7 +23,7 @@ const Utils = {
   },
 
   getMetadataField (key, field) {
-    if (key == undefined) {
+    if (key === undefined) {
       return;
     }
     let currentObject;

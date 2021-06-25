@@ -48,6 +48,16 @@ class NetPyNEPopulation extends React.Component {
     });
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    return (
+      this.state.model == undefined
+      || this.state.currentName != nextState.currentName
+      || this.state.cellModelFields != nextState.cellModelFields
+      || this.state.sectionId != nextState.sectionId
+      || this.state.selectedIndex != nextState.selectedIndex
+    );
+  }
+
   getModelParameters = () => {
     const select = (index, sectionId) => this.setState({
       selectedIndex: index,
@@ -97,16 +107,6 @@ class NetPyNEPopulation extends React.Component {
 
     return modelParameters;
   };
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return (
-      this.state.model == undefined
-      || this.state.currentName != nextState.currentName
-      || this.state.cellModelFields != nextState.cellModelFields
-      || this.state.sectionId != nextState.sectionId
-      || this.state.selectedIndex != nextState.selectedIndex
-    );
-  }
 
   handleRenameChange = (event) => {
     const storedValue = this.props.name;
