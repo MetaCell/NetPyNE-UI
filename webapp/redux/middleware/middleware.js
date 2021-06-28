@@ -236,7 +236,7 @@ export default (store) => (next) => (action) => {
       GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading trial ${trial.name} of experiment ${name}`);
       pythonCall({
         cmd: NETPYNE_COMMANDS.viewExperimentResults,
-        args: { name, trial: trial.id },
+        args: { name, trial: trial.id, onlyModelSpecification: true },
       })
         .then(() => {
           store.dispatch(editModel);
