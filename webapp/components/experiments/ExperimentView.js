@@ -27,6 +27,7 @@ import DialogBox from 'root/components/general/DialogBox';
 import { useDispatch } from 'react-redux';
 import { viewExperimentResults, loadTrialModelSpec } from 'root/redux/actions/experiments';
 import * as ExperimentsApi from 'root/api/experiments';
+import Tooltip from 'root/components/general/Tooltip';
 import {
   bgRegular,
   bgDarker,
@@ -586,9 +587,11 @@ const ExperimentView = (props) => {
                                 <AssessmentIcon className="MuiSvgIcon-assessment" />
                               </IconButton>
                               <Divider orientation="vertical" />
-                              <IconButton onClick={() => openJsonViewer(experiment?.name, row)}>
-                                <CodeIcon />
-                              </IconButton>
+                              <Tooltip title="View model" aria-label="view-model">
+                                <IconButton onClick={() => openJsonViewer(experiment?.name, row)}>
+                                  <CodeIcon />
+                                </IconButton>
+                              </Tooltip>
                               <IconButton onClick={() => openLoadModelSpecificationDialog(experiment?.name, row)}>
                                 <ReplayIcon className="MuiSvgIcon-replay" />
                               </IconButton>
