@@ -6,6 +6,10 @@ EXPERIMENTS_FOLDER = "experiments"
 MODEL_OUTPUT_FILENAME = 'model_output'
 
 SIMULATION_SCRIPT_NAME = "init.py"
+TEMPLATE_FILENAME_SINGLE_RUN = "run.py"
+TEMPLATE_FILENAME_SINGLE_RUN_INSTANTIATED = "run_instantiated_net.py"
+TEMPLATE_FILENAME_BATCH_RUN = "batch_run_single.py"
+TEMPLATE_FILENAME_BATCH = "batch.py"
 
 ALLOWED_EXTENSIONS = ["py", "zip", "gz", ".tar.gz", "pdf", "txt", "xls", "png", "jpeg", "hoc"]
 HERE = os.path.dirname(os.path.abspath(__file__))

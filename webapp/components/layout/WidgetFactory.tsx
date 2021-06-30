@@ -120,7 +120,7 @@ export default class WidgetFactory {
         return <NetPyNEStimulationTargets model="netParams.stimTargetParams" />;
       }
       case 'simConfig': {
-        return <NetPyNESimConfig model="simConfig" />;
+        return <NetPyNESimConfig />;
       }
       case 'analysis': {
         return <NetPyNEPlots model="simConfig.analysis" />;

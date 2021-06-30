@@ -387,8 +387,8 @@ export const EDIT_WIDGETS = {
     id: 'simConfig',
     name: 'Configuration',
     status: WidgetStatus.HIDDEN,
-    hideOnClose: true,
     component: 'simConfig',
+    hideOnClose: true,
     panelName: TOP_PANEL,
     enableRename: false,
     pos: 7,
@@ -444,6 +444,9 @@ export const EXPERIMENT_TEXTS = {
   CLONE_EXPERIMENT_MESSAGE: 'Replaces the Experiment in design with the stored Experiment.',
   VIEW_EXPERIMENTS_RESULTS: 'View simulation results',
   VIEW_EXPERIMENTS_RESULTS_MESSAGE: 'This will replace the currently loaded results in Explore, ' +
+    'are you sure you want to proceed?',
+  LOAD_TRIAL_MODEL_SPEC: 'Load Model Specification',
+  LOAD_TRIAL_MODEL_SPEC_MESSAGE: 'This will replace the currently loaded model specification, ' +
     'are you sure you want to proceed?',
 };
 

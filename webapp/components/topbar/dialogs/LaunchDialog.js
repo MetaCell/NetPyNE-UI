@@ -248,7 +248,7 @@ const LaunchDialog = (props) => {
       buttonLabel={LAUNCH_MODAL.actionSimulate}
       title={LAUNCH_MODAL.actionSimulate}
       classes={classes}
-      onAction={() => dispatch(simulateNetwork)}
+      onAction={() => dispatch(simulateNetwork(value === LAUNCH_MODAL.experimentState))}
     >
       <DialogContentText>
         {LAUNCH_MODAL.title}

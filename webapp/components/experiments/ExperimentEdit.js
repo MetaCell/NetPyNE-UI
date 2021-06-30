@@ -487,7 +487,6 @@ const ExperimentEdit = (props) => {
   const viewParameters = () => {
     ExperimentsApi.getParameters()
       .then((params) => {
-        // netParams JSON dict
         setSelectionParams(Object.keys(flatten(params)));
       });
   };

@@ -53,12 +53,14 @@ class LocalSimulationPool:
 
         if batch or asynchronous or parallel:
             if method == MPI_DIRECT:
-                self._run_in_subprocess(_python_command(working_directory), asynchronous=asynchronous)
+                self._run_in_subprocess(_python_command(working_directory), asynchronous=asynchronous, working_directory=working_directory)
             elif method == MPI_BULLETIN:
                 if parallel:
-                    self._run_in_subprocess(_bulletin_board_cmd(cores, working_directory), asynchronous=asynchronous)
+                    self._run_in_subprocess(_bulletin_board_cmd(cores, working_directory), asynchronous=asynchronous, working_directory=working_directory)
                 else:
-                    self._run_in_subprocess(_python_command(working_directory), asynchronous=asynchronous)
+                    self._run_in_subprocess(_python_command(working_directory), asynchronous=asynchronous, working_directory=working_directory)
+            else:
+                raise InvalidConfigError(f"Unsupported method {method}")
         else:
             return self._run_in_same_process()
 
@@ -87,12 +89,16 @@ class LocalSimulationPool:
         sim.simulate()
         sim.saveData()
 
-    def _run_in_subprocess(self, cmds, asynchronous=False):
+    def _run_in_subprocess(self, cmds, asynchronous=False, working_directory: str=None):
         if self.is_running():
             logging.info("Another simulation is still running")
             return False
 
-        self.subprocess = subprocess.Popen(cmds)
+        if working_directory:
+            with open(os.path.join(working_directory, 'sim.log'), 'w') as f:
+                self.subprocess = subprocess.Popen(cmds, stdout=f, stderr=f)
+        else:
+            self.subprocess = subprocess.Popen(cmds)
 
         if not asynchronous:
             # blocking wait

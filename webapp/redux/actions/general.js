@@ -27,7 +27,11 @@ export const modelLoaded = { type: MODEL_LOADED };
 
 export const createNetwork = { type: CREATE_NETWORK };
 export const createAndSimulateNetwork = { type: CREATE_SIMULATE_NETWORK };
-export const simulateNetwork = { type: SIMULATE_NETWORK };
+export const simulateNetwork = (allTrials = false) => ({
+  type: SIMULATE_NETWORK,
+  payload: allTrials,
+});
+
 export const showNetwork = { type: SHOW_NETWORK };
 
 export const editModel = { type: EDIT_MODEL };

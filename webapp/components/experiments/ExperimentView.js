@@ -25,8 +25,9 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import { EXPERIMENT_TEXTS, EXPERIMENT_VIEWS } from 'root/constants';
 import DialogBox from 'root/components/general/DialogBox';
 import { useDispatch } from 'react-redux';
-import { viewExperimentResults } from 'root/redux/actions/experiments';
+import { viewExperimentResults, loadTrialModelSpec } from 'root/redux/actions/experiments';
 import * as ExperimentsApi from 'root/api/experiments';
+import Tooltip from 'root/components/general/Tooltip';
 import {
   bgRegular,
   bgDarker,
@@ -250,7 +251,7 @@ const useStyles = (theme) => ({
   },
 });
 
-function EnhancedTableHead (props) {
+function EnhancedTableHead(props) {
   const {
     order,
     orderBy,
@@ -338,6 +339,7 @@ const ExperimentView = (props) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loadResultsDialogOpen, setLoadResultsDialogOpen] = useState(false);
+  const [loadModelSpecDialogOpen, setLoadModelSpecDialogOpen] = useState(false);
   const [selectedTrial, setSelectedTrial] = useState({
     experiment: null,
     trial: null,
@@ -415,19 +417,24 @@ const ExperimentView = (props) => {
         .then((exp) => {
           setExperiment(exp);
           if (exp?.trials.length > 0) {
-            setParamHeaders(
-              Object.keys(exp?.trials[0]?.params[0])
-                .map((header) => ({
-                  id: header,
-                  numeric: true,
-                  disablePadding: false,
-                  label: header,
-                })),
-            );
-            const rows = exp?.trials.map((trial, index) => ({
-              name: `Trial ${index + 1}`,
-              ...trial.params[0],
+            if (exp?.trials[0].params.length > 0) {
+              setParamHeaders(
+                Object.keys(exp?.trials[0]?.params[0])
+                  .map((header) => ({
+                    id: header,
+                    numeric: true,
+                    disablePadding: false,
+                    label: header,
+                  })),
+              );
+            }
+
+            const rows = exp?.trials.map((trial, _) => ({
+              id: trial.id,
+              name: trial.name,
+              ...trial.params.length > 0 ? trial.params[0] : [],
             }));
+
             setTableRows(rows);
             setFilteredRows(rows);
           }
@@ -438,10 +445,10 @@ const ExperimentView = (props) => {
   }, [name]);
 
   const openJsonViewer = (experiment, trial) => {
-    ExperimentsApi.getModelSpecification(experiment, trial)
+    ExperimentsApi.getModelSpecification(experiment, trial.id)
       .then((modelSpecification) => {
         setTrialJSON(modelSpecification);
-        setTrial(trial);
+        setTrial(trial.name);
         setView(EXPERIMENT_VIEWS.jsonViewer);
       });
   };
@@ -471,6 +478,14 @@ const ExperimentView = (props) => {
     setLoadResultsDialogOpen(true);
   };
 
+  const openLoadModelSpecificationDialog = (experimentName, trial) => {
+    setSelectedTrial({
+      experiment: experimentName,
+      trial,
+    });
+    setLoadModelSpecDialogOpen(true);
+  };
+
   const onLoadResultsAction = (actionConfirmed) => {
     if (actionConfirmed) {
       dispatch(viewExperimentResults({
@@ -480,6 +495,18 @@ const ExperimentView = (props) => {
     }
     setSelectedTrial(null);
     setLoadResultsDialogOpen(false);
+  };
+
+  const onLoadModelSpecificationAction = (actionConfirmed) => {
+    if (actionConfirmed) {
+      dispatch(loadTrialModelSpec({
+        name: selectedTrial.experiment,
+        trial: selectedTrial.trial,
+        onlyModelSpecification: true,
+      }));
+    }
+    setSelectedTrial(null);
+    setLoadModelSpecDialogOpen(false);
   };
 
   return (
@@ -551,19 +578,21 @@ const ExperimentView = (props) => {
                             {row[header.label]}
                           </TableCell>
                         ))}
-                        { experiment?.state !== EXPERIMENT_STATE.DESIGN && (
+                        {experiment?.state !== EXPERIMENT_STATE.DESIGN && (
                           <TableCell align="right" className={classes.stickyRight}>
                             <Box className="MuiTableCell-actions">
                               <IconButton
-                                onClick={() => openLoadResultsDialog(experiment?.name, row.name)}
+                                onClick={() => openLoadResultsDialog(experiment?.name, row)}
                               >
                                 <AssessmentIcon className="MuiSvgIcon-assessment" />
                               </IconButton>
                               <Divider orientation="vertical" />
-                              <IconButton onClick={() => openJsonViewer(experiment?.name, row.name)}>
-                                <CodeIcon />
-                              </IconButton>
-                              <IconButton>
+                              <Tooltip title="View model" aria-label="view-model">
+                                <IconButton onClick={() => openJsonViewer(experiment?.name, row)}>
+                                  <CodeIcon />
+                                </IconButton>
+                              </Tooltip>
+                              <IconButton onClick={() => openLoadModelSpecificationDialog(experiment?.name, row)}>
                                 <ReplayIcon className="MuiSvgIcon-replay" />
                               </IconButton>
                             </Box>
@@ -591,6 +620,22 @@ const ExperimentView = (props) => {
               textForDialog={{
                 heading: EXPERIMENT_TEXTS.VIEW_EXPERIMENTS_RESULTS,
                 content: EXPERIMENT_TEXTS.VIEW_EXPERIMENTS_RESULTS_MESSAGE,
+              }}
+            />
+            <DialogBox
+              open={loadModelSpecDialogOpen}
+              onDialogResponse={onLoadModelSpecificationAction}
+              textForDialog={{
+                heading: EXPERIMENT_TEXTS.LOAD_TRIAL_MODEL_SPEC,
+                content: EXPERIMENT_TEXTS.LOAD_TRIAL_MODEL_SPEC_MESSAGE,
+              }}
+            />
+            <DialogBox
+              open={loadModelSpecDialogOpen}
+              onDialogResponse={onLoadModelSpecificationAction}
+              textForDialog={{
+                heading: EXPERIMENT_TEXTS.LOAD_TRIAL_MODEL_SPEC,
+                content: EXPERIMENT_TEXTS.LOAD_TRIAL_MODEL_SPEC_MESSAGE,
               }}
             />
           </>

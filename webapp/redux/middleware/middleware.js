@@ -1,7 +1,9 @@
 import {
   CLONE_EXPERIMENT,
   GET_EXPERIMENTS,
-  setExperiments, VIEW_EXPERIMENTS_RESULTS,
+  setExperiments,
+  VIEW_EXPERIMENTS_RESULTS,
+  TRIAL_LOAD_MODEL_SPEC,
 } from 'root/redux/actions/experiments';
 import { NETPYNE_COMMANDS } from 'root/constants';
 import {
@@ -157,13 +159,13 @@ export default (store) => (next) => (action) => {
       break;
     }
     case CREATE_SIMULATE_NETWORK: {
-      simulateNetwork({ parallelSimulation: false })
+      simulateNetwork({ allTrials: false })
         .then(toNetworkCallback(false), pythonErrorCallback);
       break;
     }
     case SIMULATE_NETWORK:
       simulateNetwork({
-        parallelSimulation: false,
+        allTrials: action.payload,
         usePrevInst: false,
       })
         .then(toNetworkCallback(false), pythonErrorCallback);
@@ -229,14 +231,27 @@ export default (store) => (next) => (action) => {
         .then((response) => console.log(response));
       break;
     }
-    case VIEW_EXPERIMENTS_RESULTS: {
-      GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading results of ${action.payload.name} - ${action.payload.trial}`);
+    case TRIAL_LOAD_MODEL_SPEC: {
+      const { name, trial } = action.payload;
+      GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading trial ${trial.name} of experiment ${name}`);
       pythonCall({
         cmd: NETPYNE_COMMANDS.viewExperimentResults,
-        args: action.payload,
+        args: { name, trial: trial.id, onlyModelSpecification: true },
+      })
+        .then(() => {
+          store.dispatch(editModel);
+          next(action);
+        }, pythonErrorCallback);
+      break;
+    }
+    case VIEW_EXPERIMENTS_RESULTS: {
+      const { name, trial } = action.payload;
+      GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading trial ${trial.name} of experiment ${name}`);
+      pythonCall({
+        cmd: NETPYNE_COMMANDS.viewExperimentResults,
+        args: { name, trial: trial.id },
       })
         .then((response) => {
-          // TODO: generalize, similar logic is used for createSimulateBackendCall
           const responsePayload = processError(response);
           if (responsePayload) {
             throw responsePayload;
@@ -247,11 +262,9 @@ export default (store) => (next) => (action) => {
             dehydrateCanvas();
             GEPPETTO.Manager.loadModel(response);
             GEPPETTO.CommandController.log('Instantiation / Simulation completed.');
+
+            store.dispatch(showNetwork);
           }
-          return response;
-        })
-        .then(() => {
-          store.dispatch(showNetwork);
           next(action);
         }, pythonErrorCallback);
       break;

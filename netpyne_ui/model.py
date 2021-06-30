@@ -118,9 +118,15 @@ class ExplorationParameter:
 
 @dataclass
 class Trial:
+    # Display name.
+    name: str = ''
+    # Unique id to find trial on disk.
+    # Concatenated str of indices e.g. "0_1_1" with 3 parameters.
+    id: str = ''
     # [{ "paramX": 0.2, "paramY": "0.4"}]
     params: list = field(default_factory=list)
-
+    indices: list = field(default_factory=list)
+    
 
 @dataclass
 class Experiment:
