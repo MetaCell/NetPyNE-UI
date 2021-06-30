@@ -11,7 +11,7 @@ import logging
 import os
 import re
 import sys
-from shutil import copyfile, move
+from shutil import copyfile
 
 import neuron
 import numpy as np
@@ -301,9 +301,19 @@ class NetPyNEGeppetto:
         else:
             # Create netParams and SimConfig
             self.netParams.save(os.path.join(save_folder_path, experiments.NET_PARAMS_FILE))
-            self.simConfig.saveJson = True
-            self.simConfig.filename = 'model_output'
-            self.simConfig.save(os.path.join(save_folder_path, experiments.SIM_CONFIG_FILE))
+
+            simCfg = copy.copy(self.simConfig)
+            # filename and simLabel must be set to define the output filename
+            simCfg.saveJson = True
+            simCfg.filename = 'model_output'
+            simCfg.simLabel = 'model_output'
+            simCfg.saveDataInclude = [
+                "simData",
+                "simConfig",
+                "netParams",
+                "net"
+            ]
+            simCfg.save(os.path.join(save_folder_path, experiments.SIM_CONFIG_FILE))
 
             template_name = constants.TEMPLATE_FILENAME_SINGLE_RUN
 
@@ -333,8 +343,17 @@ class NetPyNEGeppetto:
                 #   e.g. numCells with 10.0 fails because it requires int not float
                 param.values = [int(e) for e in param.values]
 
-        self.netParams.mapping = {p.mapsTo: p.mapsTo.split('.') for p in exp.params}
-        self.simConfig.saveJson = True
+        netParams = copy.deepcopy(self.netParams)
+        netParams.mapping = {p.mapsTo: p.mapsTo.split('.') for p in exp.params}
+
+        simCfg = copy.copy(self.simConfig)
+        simCfg.saveJson = True
+        simCfg.saveDataInclude = [
+            "simData",
+            "simConfig",
+            "netParams",
+            "net"
+        ]
 
         config_dict = dataclasses.asdict(exp)
         config_dict["runCfg"] = dataclasses.asdict(self.run_config)
@@ -345,20 +364,16 @@ class NetPyNEGeppetto:
         except OSError:
             raise
 
-        sim_config_path = os.path.join(os.path.dirname(__file__), "templates", "simConfig.json")
-        net_params_path = os.path.join(os.path.dirname(__file__), "templates", "netParams.json")
-        self.simConfig.save(sim_config_path)
-        self.netParams.save(net_params_path)
+        simCfg.save(os.path.join(save_folder_path, experiments.SIM_CONFIG_FILE))
+        netParams.save(os.path.join(save_folder_path, experiments.NET_PARAMS_FILE))
 
         experiment_json = os.path.join(save_folder_path, experiments.EXPERIMENT_FILE)
         json.dump(config_dict, open(experiment_json, 'w'), default=str, sort_keys=True, indent=4)
 
-        move(sim_config_path, os.path.join(save_folder_path, 'simConfig.json'))
-        move(net_params_path, os.path.join(save_folder_path, 'netParams.json'))
-
-        template_single_run = os.path.join(os.path.dirname(__file__), "templates", 'batch_run_single.py')
-        template_batch = os.path.join(os.path.dirname(__file__), "templates", 'batch.py')
+        template_single_run = os.path.join(os.path.dirname(__file__), "templates", constants.TEMPLATE_FILENAME_BATCH_RUN)
+        template_batch = os.path.join(os.path.dirname(__file__), "templates", constants.TEMPLATE_FILENAME_BATCH)
         copyfile(template_single_run, os.path.join(save_folder_path, 'run.py'))
+        # TODO: name should be batch.py not init.py
         copyfile(template_batch, os.path.join(save_folder_path, constants.SIMULATION_SCRIPT_NAME))
 
         return save_folder_path
@@ -445,6 +460,9 @@ class NetPyNEGeppetto:
 
         Performed as final step after `json_path` was loaded.
         """
+        # TODO: deactivated until https://github.com/MetaCell/NetPyNE-UI/issues/320 is fixed.
+        return
+
         if len(sim.net.cells) > 0:
             section = list(sim.net.cells[0].secs.keys())[0]
             if 'pt3d' not in list(sim.net.cells[0].secs[section].geom.keys()):
