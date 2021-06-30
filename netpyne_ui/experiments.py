@@ -119,7 +119,7 @@ def get_model_specification(name: str, trial: str) -> dict:
 
 def get_trial_output_path(experiment_name: str, trial: str) -> pathlib.PosixPath:
     path = os.path.join(constants.EXPERIMENTS_FOLDER_PATH, experiment_name)
-    trial_path = next(pathlib.Path(path).glob(f"*{trial}.json"), None)
+    trial_path = next(pathlib.Path(path).glob(f"*{trial}_data.json"), None)
     return trial_path
 
 
