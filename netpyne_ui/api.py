@@ -10,7 +10,6 @@ from jupyter_geppetto.webapi import get, post
 from notebook.base.handlers import IPythonHandler
 from netpyne_ui.constants import ALLOWED_EXTENSIONS, UPLOAD_FOLDER_PATH
 
-
 def allowed_file(filename, allowed_extensions=ALLOWED_EXTENSIONS):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in allowed_extensions
