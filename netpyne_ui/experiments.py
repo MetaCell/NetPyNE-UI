@@ -173,9 +173,9 @@ def _parse_experiment(directory: str) -> model.Experiment:
 
     try:
         with open(os.path.join(path, EXPERIMENT_FILE), 'r') as f:
-            batch_config = json.load(f)
+            experiment_config = json.load(f)
     except IOError:
-        raise ExperimentsError("Could not find experiment.json")
+        raise ExperimentsError(f"Could not find {EXPERIMENT_FILE}")
 
     with open(os.path.join(path, NET_PARAMS_FILE), 'r') as f:
         net_params = json.load(f)
@@ -183,13 +183,13 @@ def _parse_experiment(directory: str) -> model.Experiment:
     with open(os.path.join(path, SIM_CONFIG_FILE), 'r') as f:
         sim_config = json.load(f)
 
-    run_cfg = batch_config['runCfg']
-    del batch_config['runCfg']
+    run_cfg = experiment_config['runCfg']
+    del experiment_config['runCfg']
 
     # Convert timestamp to datetime
-    batch_config['timestamp'] = datetime.datetime.fromisoformat(batch_config['timestamp'])
+    experiment_config['timestamp'] = datetime.datetime.fromisoformat(experiment_config['timestamp'])
 
-    experiment = from_dict(model.Experiment, batch_config)
+    experiment = from_dict(model.Experiment, experiment_config)
     experiment.folder = directory
     experiment.trials = _create_trials(experiment)
     return experiment
@@ -207,7 +207,7 @@ def _delete_experiment_folder(experiment: model.Experiment):
         shutil.rmtree(path, onerror=onerror)
 
 def _create_base_model_trial() -> model.Trial:
-    return model.Trial(name="Base Model", id="model_output")
+    return model.Trial(name="Trial 1", id="model_output")
     
 def _create_trials(experiment: model.Experiment) -> List[model.Trial]:
     # TODO: generalize logic! Similar to _prepare_batch_files
