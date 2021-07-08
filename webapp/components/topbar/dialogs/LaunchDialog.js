@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActionDialog } from 'netpyne/components';
+import * as ExperimentsApi from 'root/api/experiments';
 import {
   DialogContentText,
   Box,
@@ -237,11 +238,20 @@ const LaunchDialog = (props) => {
   const handleConfigurationUpdate = (e) => {
     e.stopPropagation();
     setLoading(true);
+    ExperimentsApi.sendExperimentConfiguration(value);
     wait(2000).then(() => {
       setLoading(false);
       setExpandConfiguration(false);
     });
   };
+
+  useEffect(() => {
+    ExperimentsApi.getExperimentConfiguration().then((experimentConfiguration) => {
+      setValue(experimentConfiguration);
+    }).catch(() => {
+      // handle error
+    });
+  });
 
   return (
     <ActionDialog
