@@ -13,6 +13,7 @@ import re
 import sys
 from shutil import copyfile
 from dataclasses import dataclass
+from dacite import from_dict
 
 import neuron
 import numpy as np
@@ -80,18 +81,10 @@ class NetPyNEGeppetto:
         return obj
 
     def get_run_configuration(self):
-        return self.run_config.todict()
+        return dataclasses.asdict(self.run_config)
 
     def edit_run_configuration(self, configDictionary: dict):
-        @dataclass
-        class tempDataClass:
-            parallel: bool
-            asynchronous: bool
-            cores: int
-            remote: str
-            type: str
-
-        self.run_config = tempDataClass(**configDictionary)
+        self.run_config = from_dict(model.RunConfig, configDictionary)
 
     def cloneExperiment(self, payload: dict):
         """ Loads experiment from disk and replaces experiment in design with it.
