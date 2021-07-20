@@ -1,7 +1,3 @@
-const createFileName = (name) => name + getTimeStamp();
-
-const getTimeStamp = () => new Date().toGMTString().replace(',', '').replace(/[ ,:]/g, '_');
-
 const unescapeText = (text) => {
   const unescaped = text.replace(/\\\\/g, '\\').replace(/\\'/g, "'").replace(/\\"/g, '"').split('\\n')
     .join('\n')
@@ -32,8 +28,7 @@ export const downloadJsonResponse = (jsonData) => {
   forceBlobDownload(blob, filename);
 };
 
-export const downloadPythonResponse = (textData) => {
-  const filename = `${createFileName('NetPyNE_init_')}.py`;
-  const blob = new Blob([unescapeText(textData)], { type: 'text/plain;charset=utf-8' });
-  forceBlobDownload(blob, filename);
+export const downloadPythonResponse = (exportInfo) => {
+  const blob = new Blob([unescapeText(exportInfo.fileContent)], { type: 'text/plain;charset=utf-8' });
+  forceBlobDownload(blob, exportInfo.fileName);
 };
