@@ -878,39 +878,40 @@ class NetPyNEGeppetto:
             fname = args['fileName'] if args['fileName'][-3:] == '.py' else args['fileName'] + '.py'
 
             with open(fname, 'w') as script:
-                script.write('from netpyne import specs, sim\n')
-                script.write(header('documentation'))
-                script.write("''' Script generated with NetPyNE-UI. Please visit:\n")
-                script.write("    - https://www.netpyne.org\n    - https://github.com/MetaCell/NetPyNE-UI\n'''\n")
-                script.write(header('script', spacer='='))
-                script.write('netParams = specs.NetParams()\n')
-                script.write('simConfig = specs.SimConfig()\n')
-                script.write(header('single value attributes'))
+                script.write("from netpyne import specs, sim\n")
+                script.write(header("documentation"))
+                script.write("Script generated with NetPyNE-UI. Please visit:\n")
+                script.write("    - https://www.netpyne.org\n    - https://github.com/MetaCell/NetPyNE-UI\n\n")
+                script.write(header("script", spacer="="))
+                script.write("netParams = specs.NetParams()\n")
+                script.write("simConfig = specs.SimConfig()\n")
+                script.write(header("single value attributes"))
                 for attr, value in list(self.netParams.__dict__.items()):
                     if attr not in params:
                         if value != getattr(specs.NetParams(), attr):
-                            script.write('netParams.' + attr + ' = ')
-                            script.write(convert2bool(json.dumps(value, indent=4)) + '\n')
+                            script.write("netParams." + attr + " = ")
+                            script.write(convert2bool(json.dumps(value, indent=4)) + "\n")
 
-                script.write(header('network attributes'))
+                script.write(header("network attributes"))
                 for param in params:
                     for key, value in list(getattr(self.netParams, param).items()):
-                        script.write("netParams." + param + "['" + key + "'] = ")
-                        script.write(convert2bool(json.dumps(value, indent=4)) + '\n')
+                        script.write("netParams." + param + "[" + key + "] = ")
+                        script.write(convert2bool(json.dumps(value, indent=4)) + "\n")
 
-                script.write(header('network configuration'))
+                script.write(header("network configuration"))
                 for attr, value in list(self.simConfig.__dict__.items()):
                     if value != getattr(specs.SimConfig(), attr):
-                        script.write('simConfig.' + attr + ' = ')
-                        script.write(convert2bool(json.dumps(value, indent=4)) + '\n')
+                        script.write("simConfig." + attr + " = ")
+                        script.write(convert2bool(json.dumps(value, indent=4)) + "\n")
 
-                script.write(header('create simulate analyze  network'))
-                script.write('# sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)\n')
+                script.write(header("create simulate analyze  network"))
+                script.write("# sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)\n")
 
-                script.write(header('end script', spacer='='))
+                script.write(header("end script", spacer="="))
 
             with open(fname) as f:
-                return f.read()
+                exportInfo = {"fileContent": f.read(), "fileName": fname}
+                return exportInfo
 
         except Exception:
             message = "Error while exporting NetPyNE model to python"
