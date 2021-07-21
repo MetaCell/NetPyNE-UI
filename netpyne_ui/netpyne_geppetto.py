@@ -9,6 +9,7 @@ import sys
 import subprocess
 import logging
 import re
+import base64
 
 from netpyne import specs, sim, analysis
 from netpyne.specs.utils import validateFunction
@@ -593,8 +594,15 @@ class NetPyNEGeppetto:
             params = ['popParams', 'cellParams', 'synMechParams']
             params += ['connParams', 'stimSourceParams', 'stimTargetParams']
 
-            fname = args['fileName'] if args['fileName'][-3:] == '.py' else args['fileName'] + '.py'
+            fname = args['fileName']
+            if not fname:
+                # default option
+                fname = 'output.py'
+            
+            if not fname[-3:] == '.py':
+                fname = f"{fname}.py"
 
+            # TODO: use methods offered by netpyne to create this script!
             with open(fname, 'w') as script:
                 script.write("from netpyne import specs, sim\n")
                 script.write(header("documentation"))
@@ -628,8 +636,9 @@ class NetPyNEGeppetto:
                 script.write(header("end script", spacer="="))
 
             with open(fname) as f:
-                exportInfo = {"fileContent": f.read(), "fileName": fname}
-                return exportInfo
+                file_b64 = base64.b64encode(bytes(f.read(), 'utf-8')).decode()
+                export_info = {"fileContent": file_b64, "fileName": fname}
+                return export_info
 
         except:
             return utils.getJSONError("Error while importing the NetPyNE model", sys.exc_info())
