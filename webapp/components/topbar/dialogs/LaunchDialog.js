@@ -242,15 +242,12 @@ const LaunchDialog = (props) => {
   const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
   const handleConfigurationUpdate = (e) => {
     e.stopPropagation();
-
     setLoading(true);
-
-    // TODO: @Muhaddatha save runConfig in backend
-    wait(2000).then(() => {
+    ExperimentsApi.sendExperimentConfiguration(runConfig).then(() => {
       setLoading(false);
       setExpandConfiguration(false);
     }).catch((error) => {
-      //handle error
+      // handle error
     });
   };
 
@@ -329,7 +326,7 @@ const LaunchDialog = (props) => {
                   id="select-filled-filled"
                   value="machine"
                   IconComponent={ExpandMoreIcon}
-                  onChange={(e) => setRunConfig(prevState => ({...prevState, remote: e.target.value}))}
+                  onChange={(e) => setRunConfig({...runConfig, remote: e.target.value})}
                 >
                   <MenuItem value="machine">{LAUNCH_MODAL.defaultResource}</MenuItem>
                 </Select>
@@ -341,7 +338,7 @@ const LaunchDialog = (props) => {
                   id="method"
                   value="method"
                   IconComponent={ExpandMoreIcon}
-                  onChange={(e) => setRunConfig(prevState => ({...prevState, type: e.target.value}))}
+                  onChange={(e) => setRunConfig(({...runConfig, type: e.target.value}))}
                 >
                   <MenuItem value="method">Bulletin</MenuItem>
                 </Select>
@@ -352,7 +349,7 @@ const LaunchDialog = (props) => {
                 type="number"
                 inputProps={{ min: 1, max: 80, step: 1 }}
                 value={runConfig.cores}
-                onChange={(e) => setRunConfig({ ...runConfig, cores: e.target.value })}
+                onChange={(e) => setRunConfig({ ...runConfig, cores: parseInt(e.target.value) })}
                 fullWidth
               />
               <Checkbox
