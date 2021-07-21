@@ -6,7 +6,7 @@ import {
 const Utils = {
 
   getAvailableKey (model, prefix) {
-    if (model == undefined) {
+    if (model === undefined) {
       return prefix;
     }
     // Get New Available ID
@@ -22,24 +22,59 @@ const Utils = {
     return id;
   },
 
-  getMetadataField (key, field) {
+  /**
+   * Retrieves the metadata object for the passed `key`.
+   *
+   * A specific attributes can be selected by passing `field`.
+   *
+   * The algorithm will iteratively test the key for each nesting in metadata.
+   *
+   * Example key: `netParams.popParams.E.numCells`.
+   * Since 'E' is not explicitly modeled in `netpyne.metadata`
+   * this algorithm implements additional logic to skip certain levels.
+   *
+   * @param {*} key key of metadata path.
+   * @param {*} field specific object attribute.
+   * @returns metadata object or specific attribute.
+   */
+  getMetadataField (key, field = null) {
     if (key === undefined) {
-      return;
+      return null;
     }
+
     let currentObject;
     let nextObject = window.metadata;
-    key.split('.')
-      .forEach((item) => {
+    let skipped = false;
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const item of key.split('.')) {
+      if (currentObject != null && currentObject?.container === true && !(item in nextObject)) {
+        if (skipped) {
+          return null;
+        }
+
+        // skip the list element, e.g. "E"!
+        console.debug(`Skip ${item} at ${nextObject.label}`);
+        skipped = true;
+      } else {
+        skipped = false;
+
         if (item in nextObject) {
           currentObject = nextObject[item];
           if ('children' in currentObject) {
             nextObject = currentObject.children;
           }
         } else {
-          currentObject = undefined;
+          currentObject = null;
         }
-      });
-    return (currentObject == undefined) ? currentObject : currentObject[field];
+      }
+    }
+
+    if (currentObject) {
+      return field ? currentObject[field] : currentObject;
+    }
+
+    return null;
   },
 
   getHTMLType (key) {
@@ -198,6 +233,47 @@ const Utils = {
 
   execPythonMessage,
   evalPythonMessage,
+
+  flatten (obj, path = '') {
+    if (!(obj instanceof Object)) return { [path.replace(/\.$/g, '')]: obj };
+
+    return Object.keys(obj)
+      .reduce((output, key) => (obj instanceof Array
+        ? { ...output, ...Utils.flatten(obj[key], `${path}[${key}].`) }
+        : { ...output, ...Utils.flatten(obj[key], `${path + key}.`) }), {});
+  },
+
+  /**
+   * Converts a value based on `type` of the netpyne metadata `field`.
+   *
+   * @param {*} field metadata field of netpyne.
+   * @param {*} value value to be converted to proper type.
+   * @returns value converted to `type`.
+   */
+  convertFieldValue (field, value) {
+    if (field == null) {
+      return value;
+    }
+
+    switch (field.type) {
+      case 'int':
+        return Number(value);
+
+      case 'float':
+        return Number(value);
+
+      case 'str':
+        return String(value);
+
+      case 'bool':
+        return Boolean(value);
+
+      default:
+        // .. handling of more types
+        // list(float), dict, list(list(float)), func
+        return value;
+    }
+  },
 };
 
 export default Utils;

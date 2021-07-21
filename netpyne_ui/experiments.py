@@ -220,11 +220,14 @@ def _create_trials(experiment: model.Experiment) -> List[model.Trial]:
 
     for param in params:
         if param.type == "range":
-            param.values = list(np.arange(param.min, param.max, param.step))
+            if param.step > 0:
+                param.values = list(np.arange(param.min, param.max, param.step))
+            else:
+                raise ExperimentsError("Invalid step value, must be greater than 0")
+
         elif param.type == "list":
-            # TODO: need to enforce correct type for each parameter
-            #   e.g. numCells with 10.0 fails because it requires int not float
-            param.values = [int(e) for e in param.values]
+            # nothing to do here
+            pass
 
     params_dict = {}
     grouped_params = []

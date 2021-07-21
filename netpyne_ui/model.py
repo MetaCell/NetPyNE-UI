@@ -86,6 +86,15 @@ def register(metadata):
         }
     }
 
+    # Modification of metadata to enable validation of experiment parameters.
+    metadata['netParams']['children']['popParams']['container'] = True
+    metadata['netParams']['children']['cellParams']['container'] = True
+    metadata['netParams']['children']['cellParams']['children']['conds']['container'] = True
+    metadata['netParams']['children']['cellParams']['children']['secs']['container'] = True
+    metadata['netParams']['children']['synMechParams']['container'] = True
+    metadata['netParams']['children']['connParams']['container'] = True
+    metadata['netParams']['children']['stimSourceParams']['container'] = True
+    metadata['netParams']['children']['stimTargetParams']['container'] = True
 
 class ExperimentState:
     DESIGN = "DESIGN"
