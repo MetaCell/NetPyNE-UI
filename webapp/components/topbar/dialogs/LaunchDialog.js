@@ -228,9 +228,13 @@ const useStyles = (theme) => ({
 
 const LaunchDialog = (props) => {
   const [value, setValue] = useState(LAUNCH_MODAL.modelState);
-  const [runConfiguration, setRunConfiguration] = useState({});
-  const [background, setBackground] = useState(true);
-  const [cpuCores, setCpuCores] = useState(1);
+
+  // TODO: @Muhaddatha retrieve runConfig from backend when component is mounted.
+  const [runConfig, setRunConfig] = useState({
+    asynchronous: true,
+    cores: 1,
+  });
+
   const [expandConfiguration, setExpandConfiguration] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -238,12 +242,11 @@ const LaunchDialog = (props) => {
   const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
   const handleConfigurationUpdate = (e) => {
     e.stopPropagation();
+
     setLoading(true);
-    setRunConfiguration(prevState => ({
-      ...prevState,
-      "cores": cpuCores,
-    }));
-    ExperimentsApi.sendExperimentConfiguration(runConfiguration).then(() => {
+
+    // TODO: @Muhaddatha save runConfig in backend
+    wait(2000).then(() => {
       setLoading(false);
       setExpandConfiguration(false);
     }).catch((error) => {
@@ -253,8 +256,7 @@ const LaunchDialog = (props) => {
 
   useEffect(() => {
     ExperimentsApi.getExperimentConfiguration().then((experimentConfiguration) => {
-      setRunConfiguration(experimentConfiguration);
-      setCpuCores(experimentConfiguration["cores"]);
+      setRunConfig(experimentConfiguration);
     }).catch(() => {
       // handle error
     });
@@ -309,11 +311,11 @@ const LaunchDialog = (props) => {
             {`Run Configuration : ${LAUNCH_MODAL.defaultResource}`}
           </Typography>
           <Button onClick={expandConfiguration ? (e) => handleConfigurationUpdate(e) : () => setExpandConfiguration(true)}>
-            { expandConfiguration ? 'Save' : 'Edit' }
+            {expandConfiguration ? 'Save' : 'Edit'}
           </Button>
         </AccordionSummary>
         <AccordionDetails>
-          { loading ? (
+          {loading ? (
             <Box className="primary-loader">
               <CircularLoader />
               Loading ...
@@ -327,10 +329,7 @@ const LaunchDialog = (props) => {
                   id="select-filled-filled"
                   value="machine"
                   IconComponent={ExpandMoreIcon}
-                  onChange={(e) => {
-                    console.log('e in first', e);
-                    // setRunConfiguration(prevState => ({...prevState, "remote": e.target.value}))
-                  }}
+                  onChange={(e) => setRunConfig(prevState => ({...prevState, remote: e.target.value}))}
                 >
                   <MenuItem value="machine">{LAUNCH_MODAL.defaultResource}</MenuItem>
                 </Select>
@@ -342,7 +341,7 @@ const LaunchDialog = (props) => {
                   id="method"
                   value="method"
                   IconComponent={ExpandMoreIcon}
-                  onChange={(e) => setRunConfiguration(prevState => ({...prevState, "type": e.target.value}))}
+                  onChange={(e) => setRunConfig(prevState => ({...prevState, type: e.target.value}))}
                 >
                   <MenuItem value="method">Bulletin</MenuItem>
                 </Select>
@@ -352,14 +351,14 @@ const LaunchDialog = (props) => {
                 label="CPU Cores"
                 type="number"
                 inputProps={{ min: 1, max: 80, step: 1 }}
-                value={cpuCores}
-                onChange={(e) => setCpuCores(parseInt(e.target.value))}
+                value={runConfig.cores}
+                onChange={(e) => setRunConfig({ ...runConfig, cores: e.target.value })}
                 fullWidth
               />
               <Checkbox
                 fullWidth
-                checked={background}
-                onChange={() => setBackground(!background)}
+                checked={runConfig.asynchronous}
+                onChange={() => setRunConfig({ ...runConfig, asynchronous: !runConfig.asynchronous })}
                 noBackground
                 label="In Background"
               />
