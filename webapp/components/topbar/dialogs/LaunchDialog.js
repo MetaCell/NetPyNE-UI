@@ -228,6 +228,7 @@ const useStyles = (theme) => ({
 
 const LaunchDialog = (props) => {
   const [value, setValue] = useState(LAUNCH_MODAL.modelState);
+  const [runConfiguration, setRunConfiguration] = useState({});
   const [background, setBackground] = useState(true);
   const [cpuCores, setCpuCores] = useState(1);
   const [expandConfiguration, setExpandConfiguration] = useState(false);
@@ -238,20 +239,26 @@ const LaunchDialog = (props) => {
   const handleConfigurationUpdate = (e) => {
     e.stopPropagation();
     setLoading(true);
-    ExperimentsApi.sendExperimentConfiguration(value);
-    wait(2000).then(() => {
+    setRunConfiguration(prevState => ({
+      ...prevState,
+      "cores": cpuCores,
+    }));
+    ExperimentsApi.sendExperimentConfiguration(runConfiguration).then(() => {
       setLoading(false);
       setExpandConfiguration(false);
+    }).catch((error) => {
+      //handle error
     });
   };
 
   useEffect(() => {
     ExperimentsApi.getExperimentConfiguration().then((experimentConfiguration) => {
-      setValue(experimentConfiguration);
+      setRunConfiguration(experimentConfiguration);
+      setCpuCores(experimentConfiguration["cores"]);
     }).catch(() => {
       // handle error
     });
-  });
+  }, []);
 
   return (
     <ActionDialog
@@ -320,6 +327,10 @@ const LaunchDialog = (props) => {
                   id="select-filled-filled"
                   value="machine"
                   IconComponent={ExpandMoreIcon}
+                  onChange={(e) => {
+                    console.log('e in first', e);
+                    // setRunConfiguration(prevState => ({...prevState, "remote": e.target.value}))
+                  }}
                 >
                   <MenuItem value="machine">{LAUNCH_MODAL.defaultResource}</MenuItem>
                 </Select>
@@ -331,6 +342,7 @@ const LaunchDialog = (props) => {
                   id="method"
                   value="method"
                   IconComponent={ExpandMoreIcon}
+                  onChange={(e) => setRunConfiguration(prevState => ({...prevState, "type": e.target.value}))}
                 >
                   <MenuItem value="method">Bulletin</MenuItem>
                 </Select>
@@ -341,7 +353,7 @@ const LaunchDialog = (props) => {
                 type="number"
                 inputProps={{ min: 1, max: 80, step: 1 }}
                 value={cpuCores}
-                onChange={(e) => setCpuCores(e.target.value)}
+                onChange={(e) => setCpuCores(parseInt(e.target.value))}
                 fullWidth
               />
               <Checkbox
