@@ -172,12 +172,10 @@ class NetPyNEGeppetto:
             return utils.getJSONError(message, sys.exc_info())
 
     def simulate_experiment_trials(self, experiment: model.Experiment):
-        if simulations.local.is_running():
-            return utils.getJSONError("Simulation is already running", "")
         try:
-            experiment.state = model.ExperimentState.SIMULATING
             working_directory = self._prepare_batch_files(experiment)
         except OSError:
+            experiment.state = model.ExperimentState.ERROR
             return utils.getJSONError("The specified folder already exists", "")
 
         try:
@@ -191,21 +189,18 @@ class NetPyNEGeppetto:
                 working_directory=working_directory
             )
         except InvalidConfigError as e:
+            experiment.state = model.ExperimentState.ERROR
             return utils.getJSONError(str(e), "")
 
-        message = "Experiment started in background! " \
+        message = "Experiment is pending! " \
                   f"Results will be stored in your workspace at ./{os.path.join(constants.EXPERIMENTS_FOLDER, experiment.name)}"
 
         return utils.getJSONError(message, "")
 
     def simulate_single_model(self, experiment: model.Experiment = None, use_prev_inst: bool = False):
         if self.run_config.asynchronous or self.run_config.parallel:
-            # Run in different process
-            if simulations.local.is_running():
-                return utils.getJSONError("Simulation is already running", "")
-
-            experiment.state = model.ExperimentState.SIMULATING
             working_directory = self._prepare_simulation_files(experiment, use_prev_inst)
+
             simulations.run(
                 parallel=self.run_config.parallel,
                 cores=self.run_config.cores,
@@ -215,7 +210,7 @@ class NetPyNEGeppetto:
             )
 
             if self.run_config.asynchronous:
-                message = "Experiment started in background! " \
+                message = "Experiment is pending! " \
                   f"Results will be stored in your workspace at ./{os.path.join(constants.EXPERIMENTS_FOLDER, experiment.name)}"
                 return utils.getJSONError(message, "")
             else:
@@ -258,10 +253,22 @@ class NetPyNEGeppetto:
                 self.run_config.asynchronous = True
                 self.run_config.parallel = True
 
-                if allTrials:
-                    return self.simulate_experiment_trials(experiment)
-                else:
-                    return self.simulate_single_model(experiment, use_prev_inst)
+                if self.experiments.any_in_state([model.ExperimentState.PENDING, model.ExperimentState.SIMULATING]) or simulations.local.is_running():
+                    return utils.getJSONError("Experiment is already simulating or pending", "")
+
+                experiment.state = model.ExperimentState.PENDING
+
+                try:
+                    if allTrials:
+                        return self.simulate_experiment_trials(experiment)
+                    else:
+                        return self.simulate_single_model(experiment, use_prev_inst)
+                except Exception:
+                    experiment.state = model.ExperimentState.ERROR
+                    message = "Unknown error during simulation of Experiment"
+                    logging.exception(message)
+                    return utils.getJSONError("Unknown error during simulation of Experiment", sys.exc_info())
+
             else:
                 # TODO: is synch by default, remove once it can be configured
                 self.run_config.asynchronous = False

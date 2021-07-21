@@ -213,8 +213,12 @@ const Experiments = (props) => {
                         </Typography>
                       </TableCell>
                       <TableCell align="left" className="experimentTableCell">
-                        {(experiment?.state === EXPERIMENT_STATE.SIMULATING
-                          || experiment?.state === EXPERIMENT_STATE.INSTANTIATING)
+                        {(
+                          [
+                            EXPERIMENT_STATE.PENDING,
+                            EXPERIMENT_STATE.SIMULATING,
+                            EXPERIMENT_STATE.INSTANTIATING,
+                          ].includes(experiment?.state))
                           ? (
                             <Chip
                               icon={<Box className="MuiChipLoader" />}
