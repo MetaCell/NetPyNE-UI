@@ -313,7 +313,7 @@ const LaunchDialog = (props) => {
             <InfoIcon />
             {`Run Configuration : ${LAUNCH_MODAL.defaultResource}`}
           </Typography>
-          <Button onClick={expandConfiguration ? (e) => handleConfigurationUpdate(e) : () => setExpandConfiguration(true)}>
+          <Button onClick={expandConfiguration ? (e) => handleConfigurationUpdate(e) : () => setExpandConfiguration(true)} disabled={loading}>
             {expandConfiguration ? 'Save' : 'Edit'}
           </Button>
         </AccordionSummary>
