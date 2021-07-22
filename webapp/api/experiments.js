@@ -12,6 +12,6 @@ export const getParameters = () => Utils.evalPythonMessage('netpyne_geppetto.get
 export const getModelSpecification = (name, trial) => Utils.evalPythonMessage('netpyne_geppetto.experiments.get_model_specification',
   [name, trial]);
 
-export const getExperimentConfiguration = () => Utils.evalPythonMessage('netpyne_geppetto.get_run_configuration', []);
-export const sendExperimentConfiguration = (configurationDict) => Utils.evalPythonMessage('netpyne_geppetto.edit_run_configuration',
-  [configurationDict]);
+export const getRunConfiguration = () => Utils.evalPythonMessage('netpyne_geppetto.get_run_configuration', []);
+export const sendExperimentConfiguration = (runConfig) => Utils.evalPythonMessage('netpyne_geppetto.edit_run_configuration',
+  [runConfig]);

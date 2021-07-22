@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ActionDialog } from 'netpyne/components';
 import * as ExperimentsApi from 'root/api/experiments';
+import { openBackendErrorDialog } from '../../../redux/actions/errors';
 import {
   DialogContentText,
   Box,
@@ -229,7 +230,6 @@ const useStyles = (theme) => ({
 const LaunchDialog = (props) => {
   const [value, setValue] = useState(LAUNCH_MODAL.modelState);
 
-  // TODO: @Muhaddatha retrieve runConfig from backend when component is mounted.
   const [runConfig, setRunConfig] = useState({
     asynchronous: true,
     cores: 1,
@@ -239,23 +239,29 @@ const LaunchDialog = (props) => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const { classes } = props;
-  const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
   const handleConfigurationUpdate = (e) => {
     e.stopPropagation();
     setLoading(true);
     ExperimentsApi.sendExperimentConfiguration(runConfig).then(() => {
       setLoading(false);
       setExpandConfiguration(false);
-    }).catch((error) => {
-      // handle error
+    }).catch(() => {
+      setLoading(false);
+      dispatch(openBackendErrorDialog({
+        errorMessage: 'Failed to update configuration',
+        errorDetails: '',
+      }));
     });
   };
 
   useEffect(() => {
-    ExperimentsApi.getExperimentConfiguration().then((experimentConfiguration) => {
-      setRunConfig(experimentConfiguration);
+    ExperimentsApi.getRunConfiguration().then((runConfig) => {
+      setRunConfig(runConfig);
     }).catch(() => {
-      // handle error
+      dispatch(openBackendErrorDialog({
+        errorMessage: 'Failed to retrieve configuration',
+        errorDetails: '',
+      }));
     });
   }, []);
 
@@ -349,7 +355,7 @@ const LaunchDialog = (props) => {
                 type="number"
                 inputProps={{ min: 1, max: 80, step: 1 }}
                 value={runConfig.cores}
-                onChange={(e) => setRunConfig({ ...runConfig, cores: parseInt(e.target.value) })}
+                onChange={(e) => setRunConfig({ ...runConfig, cores: parseInt(e.target.value, 10)})}
                 fullWidth
               />
               <Checkbox
