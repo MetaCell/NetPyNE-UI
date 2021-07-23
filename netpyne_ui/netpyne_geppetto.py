@@ -12,6 +12,7 @@ import os
 import re
 import sys
 from shutil import copyfile
+from dacite import from_dict
 
 import neuron
 import numpy as np
@@ -68,7 +69,8 @@ class NetPyNEGeppetto:
             "simConfig": self.simConfig.todict(),
             "isDocker": os.path.isfile('/.dockerenv'),
             "currentFolder": os.getcwd(),
-            "tuts": self.find_tutorials()
+            "tuts": self.find_tutorials(),
+            "cores": simulations.local.cpus
         }
 
     def getModelAsJson(self):
@@ -77,6 +79,12 @@ class NetPyNEGeppetto:
         obj = netpyne_utils.replaceFuncObj(self.netParams.__dict__)
         obj = netpyne_utils.replaceDictODict(obj)
         return obj
+
+    def get_run_configuration(self):
+        return dataclasses.asdict(self.run_config)
+
+    def edit_run_configuration(self, configDictionary: dict):
+        self.run_config = from_dict(model.RunConfig, configDictionary)
 
     def cloneExperiment(self, payload: dict):
         """ Loads experiment from disk and replaces experiment in design with it.
