@@ -158,7 +158,7 @@ class RunConfig:
     parallel: bool = False
     asynchronous: bool = True
     cores: int = 1
-    remote: str = "local"
+    resource: str = "local"
     # or mpi_direct (doesn't support waiting for processes to finish)
     type: str = 'mpi_bulletin'
 
