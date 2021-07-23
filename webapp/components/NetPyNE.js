@@ -43,23 +43,6 @@ const styles = ({ zIndex }) => ({
 const TIMEOUT = 10000;
 
 class NetPyNE extends React.Component {
-  openPythonCallDialog (event) {
-    const payload = {
-      errorMessage: event.evalue,
-      errorDetails: event.traceback.join('\n'),
-    };
-    this.props.pythonCallErrorDialogBox(payload);
-  }
-
-  addMetadataToWindow (data) {
-    console.log('Initialising NetPyNE Tabs');
-    window.metadata = data.metadata;
-    window.currentFolder = data.currentFolder;
-    window.isDocker = data.isDocker;
-    window.pythonConsoleLoaded = true;
-    window.tuts = data.tuts;
-  }
-
   componentDidMount () {
     GEPPETTO.on(GEPPETTO.Events.Error_while_exec_python_command, this.openPythonCallDialog, this);
     this.props.setDefaultWidgets();
@@ -103,6 +86,23 @@ class NetPyNE extends React.Component {
 
   componentWillUnmount () {
     GEPPETTO.off(GEPPETTO.Events.Error_while_exec_python_command, this.openPythonCallDialog, this);
+  }
+
+  openPythonCallDialog (event) {
+    this.props.pythonCallErrorDialogBox({
+      errorMessage: event.evalue,
+      errorDetails: event.traceback.join('\n'),
+    });
+  }
+
+  addMetadataToWindow (data) {
+    console.log('Initialising NetPyNE Tabs');
+    window.metadata = data.metadata;
+    window.currentFolder = data.currentFolder;
+    window.isDocker = data.isDocker;
+    window.pythonConsoleLoaded = true;
+    window.tuts = data.tuts;
+    window.cores = data.cores;
   }
 
   render () {

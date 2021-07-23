@@ -12,7 +12,6 @@ import os
 import re
 import sys
 from shutil import copyfile
-from dataclasses import dataclass
 from dacite import from_dict
 
 import neuron
@@ -70,7 +69,8 @@ class NetPyNEGeppetto:
             "simConfig": self.simConfig.todict(),
             "isDocker": os.path.isfile('/.dockerenv'),
             "currentFolder": os.getcwd(),
-            "tuts": self.find_tutorials()
+            "tuts": self.find_tutorials(),
+            "cores": simulations.local.cpus
         }
 
     def getModelAsJson(self):

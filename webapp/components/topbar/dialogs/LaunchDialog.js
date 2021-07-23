@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ActionDialog } from 'netpyne/components';
 import * as ExperimentsApi from 'root/api/experiments';
-import { openBackendErrorDialog } from '../../../redux/actions/errors';
 import {
   DialogContentText,
   Box,
@@ -39,6 +38,7 @@ import {
   primaryColorHover,
 } from '../../../theme';
 import CircularLoader from '../../general/Loader';
+import { openBackendErrorDialog } from '../../../redux/actions/errors';
 
 const useStyles = (theme) => ({
   root: {
@@ -229,7 +229,6 @@ const useStyles = (theme) => ({
 
 const LaunchDialog = (props) => {
   const [value, setValue] = useState(LAUNCH_MODAL.modelState);
-
   const [runConfig, setRunConfig] = useState({
     asynchronous: true,
     cores: 1,
@@ -242,7 +241,7 @@ const LaunchDialog = (props) => {
   const handleConfigurationUpdate = (e) => {
     e.stopPropagation();
     setLoading(true);
-    ExperimentsApi.sendExperimentConfiguration(runConfig).then(() => {
+    ExperimentsApi.editRunConfiguration(runConfig).then(() => {
       setLoading(false);
       setExpandConfiguration(false);
     }).catch(() => {
@@ -286,7 +285,7 @@ const LaunchDialog = (props) => {
           />
           <Box className="wrap">
             <img src={value === LAUNCH_MODAL.modelState ? currentModal : currentModalUnselected} alt="currentModal" />
-            <Typography>Current Model</Typography>
+            <Typography>Base Model</Typography>
           </Box>
         </Typography>
         <Typography component="label">
@@ -298,7 +297,7 @@ const LaunchDialog = (props) => {
           />
           <Box className="wrap">
             <img src={value === LAUNCH_MODAL.experimentState ? experimentSelected : experimentUnselected} alt="completeExperiment" />
-            <Typography>Complete Experiment</Typography>
+            <Typography>All Trials</Typography>
           </Box>
         </Typography>
       </Box>
@@ -313,7 +312,10 @@ const LaunchDialog = (props) => {
             <InfoIcon />
             {`Run Configuration : ${LAUNCH_MODAL.defaultResource}`}
           </Typography>
-          <Button onClick={expandConfiguration ? (e) => handleConfigurationUpdate(e) : () => setExpandConfiguration(true)} disabled={loading}>
+          <Button
+            onClick={expandConfiguration ? (e) => handleConfigurationUpdate(e) : () => setExpandConfiguration(true)}
+            disabled={loading}
+          >
             {expandConfiguration ? 'Save' : 'Edit'}
           </Button>
         </AccordionSummary>
@@ -330,11 +332,11 @@ const LaunchDialog = (props) => {
                 <Select
                   labelId="select-filled-label"
                   id="select-filled-filled"
-                  value="machine"
+                  value="local"
                   IconComponent={ExpandMoreIcon}
-                  onChange={(e) => setRunConfig({...runConfig, remote: e.target.value})}
+                  onChange={(e) => setRunConfig({ ...runConfig, resource: e.target.value })}
                 >
-                  <MenuItem value="machine">{LAUNCH_MODAL.defaultResource}</MenuItem>
+                  <MenuItem value="local">{LAUNCH_MODAL.defaultResource}</MenuItem>
                 </Select>
               </FormControl>
               <FormControl variant="filled">
@@ -342,20 +344,20 @@ const LaunchDialog = (props) => {
                 <Select
                   labelId="method"
                   id="method"
-                  value="method"
+                  value="mpi_bulletin"
                   IconComponent={ExpandMoreIcon}
-                  onChange={(e) => setRunConfig(({...runConfig, type: e.target.value}))}
+                  onChange={(e) => setRunConfig(({ ...runConfig, type: e.target.value }))}
                 >
-                  <MenuItem value="method">Bulletin</MenuItem>
+                  <MenuItem value="mpi_bulletin">Primary/Replica (1 job per core)</MenuItem>
                 </Select>
               </FormControl>
               <TextField
                 variant="filled"
-                label="CPU Cores"
+                label={`CPU Cores - (${window.cores} available)`}
                 type="number"
-                inputProps={{ min: 1, max: 80, step: 1 }}
+                inputProps={{ min: 1, max: window.cores, step: 1 }}
                 value={runConfig.cores}
-                onChange={(e) => setRunConfig({ ...runConfig, cores: parseInt(e.target.value, 10)})}
+                onChange={(e) => setRunConfig({ ...runConfig, cores: parseInt(e.target.value, 10) })}
                 fullWidth
               />
               <Checkbox
