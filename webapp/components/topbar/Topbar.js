@@ -187,6 +187,7 @@ class Topbar extends Component {
             <LaunchDialog
               open={dialogOpen}
               onRequestClose={() => this.handleClose()}
+              experimentInDesign={this.props.experimentInDesign}
             />
           );
           break;
