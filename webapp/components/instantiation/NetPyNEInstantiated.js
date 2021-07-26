@@ -72,7 +72,7 @@ export default class NetPyNEInstantiated extends React.Component {
   };
 
   updateInstances () {
-    if (Instances.network) {
+    if (typeof Instances !== 'undefined' && Instances.network) {
       // update canvas only if there are instances to show
       this.canvasRef.current.engine.setLinesThreshold(25000);
       this.canvasRef.current.engine.updateSceneWithNewInstances(
