@@ -55,12 +55,13 @@ def remove_experiment(name: str):
 
 def edit_experiment(name: str, experiment: dict):
     exp = _get_by_name(name)
+    if not exp:
+        raise ExperimentsError(f"Experiment with name {name} does not exist")
+
     if exp.state != model.ExperimentState.DESIGN:
         raise ExperimentsError(
             f"Can only edit experiment in f{model.ExperimentState.DESIGN} state"
         )
-    if not exp:
-        raise ExperimentsError(f"Experiment with name {name} does not exist")
 
     updated_exp = from_dict(model.Experiment, experiment)
     model.experiments.remove(exp)
@@ -96,8 +97,30 @@ def get_current() -> model.Experiment:
         None,
     )
 
+def get_by_states(states: List[model.ExperimentState]) -> List[model.Experiment]:
+    return [e for e in model.experiments if e.state in states]
+
+
 def any_in_state(states: List[model.ExperimentState]) -> model.Experiment:
-    return any([e for e in model.experiments if e.state in states])
+    return any(get_by_states(states))
+
+
+def set_to_error(experiment: model.Experiment):
+    path = os.path.join(
+        constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, experiment.name
+    )
+
+    try:
+        with open(os.path.join(path, EXPERIMENT_FILE), "r") as f:
+            experiment_config = json.load(f)
+
+        with open(os.path.join(path, EXPERIMENT_FILE), "w") as f:
+            experiment_config["state"] = model.ExperimentState.ERROR
+            json.dump(experiment_config, f, default=str, sort_keys=True, indent=4)
+
+    except IOError:
+        raise ExperimentsError(f"Could not find {EXPERIMENT_FILE}")
+
 
 def get_model_specification(name: str, trial: str) -> dict:
     """Returns JSON representation of the netParams & simConfig of the requested trial.

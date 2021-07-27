@@ -63,6 +63,13 @@ class NetPyNEGeppetto:
 
         jupyter_geppetto.context = {'netpyne_geppetto': self}
 
+        # Set running experiments without any subprocess to ERRROR
+        experiments.get_experiments()
+        running_exps = experiments.get_by_states([model.ExperimentState.SIMULATING, model.ExperimentState.INSTANTIATING])
+        if not simulations.local.is_running():
+            [experiments.set_to_error(e) for e in running_exps]
+
+
     def getData(self):
         return {
             "metadata": metadata,

@@ -20,7 +20,6 @@ import {
   GridLayout,
 } from 'netpyne/components';
 import { withStyles } from '@material-ui/core/styles';
-import useInterval from 'root/api/hooks';
 import { removeExperiment } from 'root/api/experiments';
 import Utils from 'root/Utils';
 import {
@@ -128,9 +127,7 @@ const Experiments = (props) => {
     setView,
   } = props;
 
-  const POLL_INTERVAL = 1000;
   useEffect(getExperiments, []);
-  useInterval(getExperiments, POLL_INTERVAL);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
