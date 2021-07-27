@@ -89,6 +89,7 @@ def register(metadata):
 
 class ExperimentState:
     DESIGN = "DESIGN"
+    PENDING = "PENDING"
     SIMULATING = "SIMULATING"
     INSTANTIATING = "INSTANTIATING"
     SIMULATED = "SIMULATED"

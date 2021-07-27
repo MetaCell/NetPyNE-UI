@@ -20,7 +20,6 @@ import {
   GridLayout,
 } from 'netpyne/components';
 import { withStyles } from '@material-ui/core/styles';
-import useInterval from 'root/api/hooks';
 import { removeExperiment } from 'root/api/experiments';
 import Utils from 'root/Utils';
 import {
@@ -128,9 +127,7 @@ const Experiments = (props) => {
     setView,
   } = props;
 
-  const POLL_INTERVAL = 1000;
   useEffect(getExperiments, []);
-  useInterval(getExperiments, POLL_INTERVAL);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -213,8 +210,12 @@ const Experiments = (props) => {
                         </Typography>
                       </TableCell>
                       <TableCell align="left" className="experimentTableCell">
-                        {(experiment?.state === EXPERIMENT_STATE.SIMULATING
-                          || experiment?.state === EXPERIMENT_STATE.INSTANTIATING)
+                        {(
+                          [
+                            EXPERIMENT_STATE.PENDING,
+                            EXPERIMENT_STATE.SIMULATING,
+                            EXPERIMENT_STATE.INSTANTIATING,
+                          ].includes(experiment?.state))
                           ? (
                             <Chip
                               icon={<Box className="MuiChipLoader" />}

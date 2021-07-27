@@ -251,14 +251,14 @@ const useStyles = (theme) => ({
   },
 });
 
-function EnhancedTableHead(props) {
+function EnhancedTableHead (props) {
   const {
     order,
     orderBy,
     onRequestSort,
     classes,
     paramHeaders,
-    experimentState,
+    experimentFinished,
   } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -274,7 +274,7 @@ function EnhancedTableHead(props) {
     ...paramHeaders,
   ];
 
-  if (experimentState !== EXPERIMENT_STATE.DESIGN) {
+  if (experimentFinished) {
     headCells.push({
       id: 'status',
       numeric: false,
@@ -345,6 +345,8 @@ const ExperimentView = (props) => {
     trial: null,
   });
   const [loading, setLoading] = useState(false);
+
+  const experimentFinished = experiment?.state === EXPERIMENT_STATE.SIMULATED || experiment?.state === EXPERIMENT_STATE.INSTANTIATED;
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -558,7 +560,7 @@ const ExperimentView = (props) => {
                   style={{ tableLayout: 'fixed' }}
                   paramHeaders={paramHeaders}
                   rowCount={filteredRows.length}
-                  experimentState={experiment?.state}
+                  experimentFinished={experimentFinished}
                 />
                 <TableBody>
                   {stableSort(filteredRows, getComparator(order, orderBy))
@@ -578,7 +580,7 @@ const ExperimentView = (props) => {
                             {row[header.label]}
                           </TableCell>
                         ))}
-                        {experiment?.state !== EXPERIMENT_STATE.DESIGN && (
+                        {experimentFinished && (
                           <TableCell align="right" className={classes.stickyRight}>
                             <Box className="MuiTableCell-actions">
                               <IconButton

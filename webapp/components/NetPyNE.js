@@ -11,7 +11,6 @@ import {
 } from 'netpyne/components';
 
 import Utils from '../Utils';
-
 import { EDIT_WIDGETS } from '../constants';
 
 const styles = ({ zIndex }) => ({
@@ -41,11 +40,17 @@ const styles = ({ zIndex }) => ({
 });
 
 const TIMEOUT = 10000;
+const EXPERIMENT_POLL_INTERVAL = 1000;
 
 class NetPyNE extends React.Component {
   componentDidMount () {
     GEPPETTO.on(GEPPETTO.Events.Error_while_exec_python_command, this.openPythonCallDialog, this);
-    this.props.setDefaultWidgets();
+
+    const {
+      setDefaultWidgets, setWidgets, modelLoaded, getExperiments,
+    } = this.props;
+
+    setDefaultWidgets();
 
     GEPPETTO.on('jupyter_geppetto_extension_ready', (data) => {
       const project = {
@@ -69,9 +74,11 @@ class NetPyNE extends React.Component {
           GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, 'Loading NetPyNE-UI');
           const metadata = Utils.convertToJSON(response);
           this.addMetadataToWindow(metadata);
-          this.props.setWidgets(EDIT_WIDGETS);
-          this.props.modelLoaded();
+          setWidgets(EDIT_WIDGETS);
+          modelLoaded();
           GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+
+          setInterval(getExperiments, EXPERIMENT_POLL_INTERVAL);
         });
 
       setTimeout(() => {
