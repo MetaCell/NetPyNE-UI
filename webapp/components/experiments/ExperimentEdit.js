@@ -19,257 +19,21 @@ import {
   GridLayout,
 } from 'netpyne/components';
 import { withStyles } from '@material-ui/core/styles';
+import { useSelector } from 'react-redux';
 import { EXPERIMENT_TEXTS, EXPERIMENT_VIEWS } from '../../constants';
+import Utils from '../../Utils';
 import ParameterMenu from './ParameterMenu';
-import {
-  bgDarkest,
-  bgLight,
-  bgRegular,
-  secondaryColor,
-  fontColor,
-  radius,
-  primaryColor,
-  experimentInputColor,
-  experimentFieldColor,
-  experimentSvgColor,
-  experimentLabelColor,
-  experimentAutocompleteBorder,
-  errorFieldBorder,
-} from '../../theme';
+import useStyles from './ExperimentEditStyle';
 
 const RANGE_VALUE = 0;
-const regex = new RegExp(/^(\s*-?\d+(\.\d+)?)(\s*,\s*-?\d+(\.\d+)?)*$/);
 
-/**
- * Edit/Add view of a single Experiment.
- *
- * @return {JSX.Element}
- * @constructor
- */
-const useStyles = (theme) => ({
-  root: {
-    '& .editExperimentContainer': {
-      '& .editExperimentContent': {
-        overflow: 'auto',
-        maxHeight: 'calc(100vh - 400px)',
-        '& .MuiTypography-body2': {
-          opacity: '0.54',
-        },
-      },
-    },
-    '& .editExperimentBack': {
-      display: 'flex',
-      cursor: 'pointer',
-      paddingLeft: theme.spacing(1),
-      '& .MuiTypography-root': {
-        marginLeft: theme.spacing(1),
-      },
-    },
-    '& .editExperimentBreadcrumb': {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      '& .MuiButton-startIcon': {
-        marginRight: theme.spacing(0.4),
-      },
-    },
-    '& .editExperimentAutocomplete': {
-      '& .MuiInputLabel-outlined.MuiInputLabel-shrink': {
-        transform: 'translate(14px, 9px) scale(0.75)',
-      },
-      '& .MuiAutocomplete-input': {
-        padding: '1rem 0.25rem 0.188rem',
-      },
-    },
-    '& .editExperimentList': {
-      display: 'flex',
-      marginBottom: theme.spacing(1),
-      width: '100%',
-    },
-    '& .MuiTypography-body2': {
-      fontSize: '1rem',
-    },
-    '& .editExperimentDefault': {
-      paddingLeft: theme.spacing(1),
-      overflow: 'auto',
-    },
-    '& .editExperimentHead': {
-      paddingLeft: theme.spacing(1),
-    },
-    '& .editExperimentGroup': {
-      background: bgDarkest,
-      borderRadius: theme.spacing(0.4),
-      padding: theme.spacing(2, 0),
-      '& .scrollbar': {
-        '&::-webkit-scrollbar-thumb': {
-          background: secondaryColor,
-          borderLeft: `${radius} solid ${bgDarkest}`,
-          borderRight: `${radius} solid ${bgDarkest}`,
-        },
-        '&::-webkit-scrollbar': {
-          width: theme.spacing(2),
-        },
-      },
-      '& .editExperimentBreadcrumb': {
-        paddingLeft: '0.625rem',
-      },
-      '& .editExperimentRow': {
-        paddingLeft: theme.spacing(4),
-        position: 'relative',
-        overflow: 'auto',
-        maxHeight: '25vh',
-        '&:before': {
-          background: bgLight,
-          content: '""',
-          height: '100%',
-          width: '0.125rem',
-          margin: 0,
-          display: 'block',
-          position: 'absolute',
-          left: '0.875rem',
-        },
-      },
-      '& .MuiFilledInput-root': {
-        background: experimentFieldColor,
-      },
-      '& .MuiOutlinedInput-root': {
-        background: experimentFieldColor,
-      },
-    },
-    '& .MuiAutocomplete-root': {
-      width: '100% !important',
-    },
-    '& .MuiPopover-root': {
-      '& .MuiPaper-root': {
-        '& .MuiList-root': {
-          '& .MuiMenuItem-gutters': {
-            paddingLeft: theme.spacing(2),
-            paddingRight: theme.spacing(2),
-          },
-        },
-      },
-    },
-    '& .MuiPopover-experiment': {
-      width: theme.spacing(14),
-    },
-    '& .MuiFormControl-root': {
-      width: '100%',
-    },
-    '& .MuiOutlinedInput-root': {
-      background: experimentInputColor,
-    },
-    '& .MuiFilledInput-root': {
-      borderRadius: radius,
-      background: experimentInputColor,
-      border: '1px solid transparent',
-      '&.Mui-error': {
-        borderColor: errorFieldBorder,
-        boxShadow: '0 0 0 2px rgba(242, 69, 61, 0.2)',
-      },
-    },
-    '& .MuiOutlinedInput-notchedOutline': {
-      border: '0 !important',
-    },
-    '& .MuiFilledInput-underline': {
-      '&:after, &:before': {
-        display: 'none',
-      },
-    },
-    '& .MuiFormLabel-root': {
-      fontWeight: 'normal',
-      color: fontColor,
-      opacity: '0.54',
-      '&.MuiInputLabel-shrink': {
-        color: experimentLabelColor,
-        opacity: '0.87',
-      },
-    },
-    '& .MuiTypography-colorPrimary': {
-      borderBottom: `${primaryColor} 1px solid`,
-      display: 'inline-flex',
-      color: primaryColor,
-      cursor: 'pointer',
-      marginLeft: theme.spacing(1),
-      '&:hover': {
-        textDecoration: 'none',
-      },
-      '& .MuiSvgIcon-root': {
-        fontSize: '1rem',
-        marginTop: theme.spacing(0.4),
-      },
-    },
-    '& .editExperimentFooter': {
-      position: 'absolute',
-      left: 0,
-      bottom: 0,
-      right: 0,
-      display: 'flex',
-      justifyContent: 'flex-end',
-      alignItems: 'center',
-      background: bgRegular,
-      boxShadow: '0 -7px 13px -4px rgb(0, 0, 0, 0.6)',
-      padding: theme.spacing(2.5),
-      zIndex: 100,
-      '& .MuiButton-root': {
-        minWidth: theme.spacing(11),
-        padding: theme.spacing(0.4),
-        marginLeft: theme.spacing(1),
-        borderRadius: '2px',
-        cursor: 'pointer',
-        textTransform: 'uppercase',
-      },
-      '& .MuiButton-textSecondary': {
-        color: fontColor,
-      },
-    },
-    '& .editExperimentWarning': {
-      paddingLeft: '0.625rem',
-      '& .MuiTypography-root': {
-        color: experimentLabelColor,
-      },
-      '& .MuiTypography-caption': {
-        fontSize: '0.875rem',
-      },
-    },
-    '& .editExperimentField': {
-      '& .MuiFormControl-root': {
-        overflow: 'hidden',
-        '& .MuiFormLabel-root': {
-          whiteSpace: 'noWrap',
-        },
-      },
-    },
-    '& .MuiFormHelperText-contained': {
-      marginLeft: 0,
-    },
-    '& .MuiFormHelperText-root': {
-      color: errorFieldBorder,
-      fontSize: '0.875rem',
-      lineHeight: '100%',
-    },
-  },
-  popper: {
-    marginTop: -theme.spacing(1),
-    '& .MuiPaper-root': {
-      boxShadow: '0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12)',
-      borderRadius: `0 0 ${radius} ${radius}`,
-      borderTop: `1px solid ${experimentAutocompleteBorder}`,
-    },
-    '& .MuiSvgIcon-root': {
-      color: experimentSvgColor,
-    },
-    '& .MuiAutocomplete-option': {
-      paddingLeft: theme.spacing(2),
-      color: fontColor,
-      paddingRight: theme.spacing(1),
-    },
-  },
-});
+const {
+  RANGE,
+  LIST,
+} = EXPERIMENT_TEXTS;
 
 const ParameterRow = (parameter, index, handleParamSelection, handleChange, handleInputText,
-  handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams, classes) => {
-  const { RANGE } = EXPERIMENT_TEXTS;
-  return (
+  handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams, classes) => (
     <Grid className="editExperimentList" container spacing={1} key={`${parameter.name}-${index}`}>
       <Grid item xs className="editExperimentAutocomplete">
         <Autocomplete
@@ -306,9 +70,11 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
             onChange={(e) => handleChange(e, parameter, index)}
             IconComponent={ExpandMoreIcon}
           >
-
-            <MenuItem value="range">Range</MenuItem>
             <MenuItem value="list">List</MenuItem>
+            {
+            (parameter.field === undefined || (parameter?.field && ['float', 'int'].includes(parameter.field.type)))
+              && <MenuItem value="range">Range</MenuItem>
+            }
           </Select>
         </FormControl>
       </Grid>
@@ -378,9 +144,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
         />
       </Grid>
     </Grid>
-
-  );
-};
+);
 
 const ExperimentEdit = (props) => {
   const {
@@ -390,10 +154,6 @@ const ExperimentEdit = (props) => {
     setView,
   } = props;
 
-  const {
-    RANGE,
-    LIST,
-  } = EXPERIMENT_TEXTS;
   const rangeParam = {
     type: RANGE,
     min: RANGE_VALUE,
@@ -403,6 +163,7 @@ const ExperimentEdit = (props) => {
     step: RANGE_VALUE,
     stepVal: RANGE_VALUE,
   };
+
   const [parameters, setParameters] = useState([{
     mapsTo: '',
     ...rangeParam,
@@ -415,13 +176,14 @@ const ExperimentEdit = (props) => {
     val: '',
   }]);
 
-  // TODO: combine into one experiment state?
   const [groupParameters, setGroupParameters] = useState([]);
   const [experimentName, setExperimentName] = useState('');
-  const [experimentError, setExperimentError] = useState(false);
+  const [experimentNameError, setExperimentNameError] = useState('');
   const [selectionParams, setSelectionParams] = useState([]);
+
   // Existing Experiment.
   const [experiment, setExperiment] = useState(null);
+  const experiments = useSelector((state) => state.experiments.experiments);
 
   const setExperimentDetail = (exp) => {
     setExperiment(exp);
@@ -451,49 +213,62 @@ const ExperimentEdit = (props) => {
     }
   }, [name]);
 
-  const submit = () => {
-    if (experimentName === '') {
-      setExperimentError(true);
-    } else {
-      setExperimentError(false);
-      const newExperimentDetails = {
-        name: experimentName,
-        params: [...parameters, ...groupParameters],
-      };
-      if (editState) {
-        // When user updates an existing Experiment
-        ExperimentsApi.editExperiment(experiment?.name, newExperimentDetails)
-          .then(() => {
-            setView(EXPERIMENT_VIEWS.list);
-          });
-      } else {
-        // When user creates a new Experiment
-        ExperimentsApi.addExperiment(newExperimentDetails).then(() => {
-          setView(EXPERIMENT_VIEWS.list);
-        });
-      }
-    }
-  };
-
-  const flatten = (obj, path = '') => {
-    if (!(obj instanceof Object)) return { [path.replace(/\.$/g, '')]: obj };
-
-    return Object.keys(obj)
-      .reduce((output, key) => (obj instanceof Array
-        ? { ...output, ...flatten(obj[key], `${path}[${key}].`) }
-        : { ...output, ...flatten(obj[key], `${path + key}.`) }), {});
-  };
-
-  const viewParameters = () => {
+  const getParameters = () => {
     ExperimentsApi.getParameters()
       .then((params) => {
-        setSelectionParams(Object.keys(flatten(params)));
+        setSelectionParams(Object.keys(Utils.flatten(params)));
       });
   };
 
   useEffect(() => {
-    viewParameters();
+    getParameters();
   }, []);
+
+  const validateExperimentName = (name) => {
+    const isEmpty = (val) => val == null || val.trim() === '';
+
+    if (isEmpty(name)) {
+      setExperimentNameError(EXPERIMENT_TEXTS.ERROR_EXPERIMENT_EMPTY);
+      return false;
+    }
+
+    if (experiment?.name === name) {
+      // name of the existing experiment didn't change
+      return true;
+    }
+
+    if (experiments.map((exp) => exp.name).includes(name)) {
+      setExperimentNameError(EXPERIMENT_TEXTS.ERROR_EXPERIMENT_WITH_NAME_EXISTS);
+      return false;
+    }
+
+    setExperimentNameError('');
+    return true;
+  };
+
+  const submit = () => {
+    const valid = validateExperimentName(experimentName);
+    if (!valid) {
+      return;
+    }
+
+    const newExperimentDetails = {
+      name: experimentName,
+      params: [...parameters, ...groupParameters],
+    };
+
+    if (editState) {
+      ExperimentsApi.editExperiment(experiment?.name, newExperimentDetails)
+        .then(() => {
+          setView(EXPERIMENT_VIEWS.list);
+        });
+    } else {
+      ExperimentsApi.addExperiment(newExperimentDetails)
+        .then(() => {
+          setView(EXPERIMENT_VIEWS.list);
+        });
+    }
+  };
 
   const setParamChange = (inGroup, param) => {
     if (inGroup) {
@@ -515,11 +290,31 @@ const ExperimentEdit = (props) => {
   };
 
   const handleParamSelection = (val, parameter, index) => {
+    let field = null;
+    if (val !== null) {
+      // parameters are a subset of `netParams`
+      field = Utils.getMetadataField(`netParams.${val}`);
+    }
+
     const newParam = parameter.inGroup ? [...groupParameters] : [...parameters];
     newParam[index] = {
       ...parameter,
       mapsTo: val,
+      field,
     };
+
+    // don't allow range type if field type isn't int or float
+    if (parameter.type === RANGE) {
+      if (field && !['int', 'float'].includes(field.type)) {
+        newParam[index] = {
+          ...newParam[index],
+          type: LIST,
+          values: [],
+          val: '',
+        };
+      }
+    }
+
     setParamChange(parameter.inGroup, newParam);
   };
 
@@ -572,19 +367,58 @@ const ExperimentEdit = (props) => {
 
   const handleInputValues = (val, index, parameter) => {
     const newParameters = parameter.inGroup ? [...groupParameters] : [...parameters];
-    const validValue = regex.test(val);
+
+    let validator = () => true;
+    let errorText = EXPERIMENT_TEXTS.INPUT_ERR_MESSAGE;
+
+    // use parameter type to test with different validators
+    if (parameter.field) {
+      switch (parameter.field.type) {
+        case 'int':
+          validator = (el) => Number(el) && Number.isInteger(Number(el));
+          errorText = 'Only integer values are allowed';
+          break;
+
+        case 'float':
+          validator = (el) => Number(el);
+          errorText = 'Only float values are allowed';
+          break;
+
+        case 'str':
+          validator = (el) => String(el);
+          errorText = 'Only string values are allowed';
+          break;
+
+        case 'bool':
+          validator = (el) => Boolean(el);
+          errorText = 'Only bool values (true|false) are allowed';
+          break;
+
+        default:
+          // .. handling of more types
+          // list(float), dict, list(list(float)), func
+          break;
+      }
+    }
+
+    let values = val.split(',');
+    const validValue = values.every((element) => validator(element));
+    if (validValue) {
+      values = values.map((el) => Utils.convertFieldValue(parameter.field, el));
+    }
+
     newParameters[index] = {
       ...parameter,
       val,
-      values: val.split(','),
+      values,
       error: !validValue,
-      helperText: validValue ? '' : EXPERIMENT_TEXTS.INPUT_ERR_MESSAGE,
+      helperText: validValue ? '' : errorText,
     };
     setParamChange(parameter.inGroup, newParameters);
   };
 
   const setExperimentNameInfo = (val) => {
-    setExperimentError(val === '');
+    validateExperimentName(val);
     setExperimentName(val);
   };
 
@@ -603,8 +437,8 @@ const ExperimentEdit = (props) => {
               variant="filled"
               value={experimentName}
               onChange={(e) => setExperimentNameInfo(e.target.value)}
-              error={experimentError}
-              helperText={experimentError ? 'Please enter experiment name' : ''}
+              error={experimentNameError !== ''}
+              helperText={experimentNameError}
             />
           </form>
           <Box mt={3}>

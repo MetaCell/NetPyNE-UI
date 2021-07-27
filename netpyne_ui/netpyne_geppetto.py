@@ -353,18 +353,8 @@ class NetPyNEGeppetto:
         return save_folder_path
 
     def _prepare_batch_files(self, experiment: model.Experiment) -> str:
-        # param path must be split: [ {'label': ['synMechParams', 'AMPA', 'gmax']} ]
-        # TODO: how do we handle array index? ['array', '[0]'] or ['array', '0']?
-        exp =  copy.deepcopy(experiment)
-        exp.params = [p for p in exp.params if p.mapsTo != '']
-
-        for param in exp.params:
-            if param.type == "range":
-                param.values = list(np.arange(param.min, param.max, param.step))
-            elif param.type == "list":
-                # TODO: need to enforce correct type for each parameter
-                #   e.g. numCells with 10.0 fails because it requires int not float
-                param.values = [int(e) for e in param.values]
+        exp = copy.deepcopy(experiment)
+        exp.params = self.experiments.process_params(exp.params)
 
         netParams = copy.deepcopy(self.netParams)
         netParams.mapping = {p.mapsTo: p.mapsTo.split('.') for p in exp.params}

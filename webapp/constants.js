@@ -449,6 +449,8 @@ export const EXPERIMENT_TEXTS = {
   LOAD_TRIAL_MODEL_SPEC: 'Load Model Specification',
   LOAD_TRIAL_MODEL_SPEC_MESSAGE: 'This will replace the currently loaded model specification, ' +
     'are you sure you want to proceed?',
+  ERROR_EXPERIMENT_WITH_NAME_EXISTS: 'This name is already taken',
+  ERROR_EXPERIMENT_EMPTY: 'Please enter experiment name',
 };
 
 export const TUTORIALS_LIST = {
