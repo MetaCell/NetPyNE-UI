@@ -97,6 +97,7 @@ def get_current() -> model.Experiment:
         None,
     )
 
+
 def get_by_states(states: List[model.ExperimentState]) -> List[model.Experiment]:
     return [e for e in model.experiments if e.state in states]
 
