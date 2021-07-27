@@ -210,31 +210,19 @@ def _create_base_model_trial() -> model.Trial:
     return model.Trial(name="Trial 1", id="model_output")
     
 def _create_trials(experiment: model.Experiment) -> List[model.Trial]:
-    # TODO: generalize logic! Similar to _prepare_batch_files
     params = copy.deepcopy(experiment.params)
-    params = [p for p in params if p.mapsTo != '']
+    params = process_params(params)
 
     if len(experiment.params) < 1:
         # No params defined -> one trial representing base model
         return [_create_base_model_trial()]
 
-    for param in params:
-        if param.type == "range":
-            if param.step > 0:
-                param.values = list(np.arange(param.min, param.max, param.step))
-            else:
-                raise ExperimentsError("Invalid step value, must be greater than 0")
-
-        elif param.type == "list":
-            # nothing to do here
-            pass
-
     params_dict = {}
     grouped_params = []
     for p in params:
         params_dict[p.mapsTo] = p.values
-        if param.inGroup:
-            grouped_params.append(param.mapsTo)
+        if p.inGroup:
+            grouped_params.append(p.mapsTo)
 
     # Initialize Batch so that we can call getParamCombinations()
     batch = Batch(params=params_dict, groupedParams=grouped_params)
@@ -260,3 +248,21 @@ def _create_trials(experiment: model.Experiment) -> List[model.Trial]:
         trials.append(model.Trial(name=name, params=params, indices=indices, id=filename))
 
     return trials
+
+
+def process_params(params: List[model.ExplorationParameter]) -> List[model.ExplorationParameter]:
+    params = [p for p in params if p.mapsTo != '']
+
+    for param in params:
+        if param.type == "range":
+            if param.step > 0:
+                param.values = list(np.arange(param.min, param.max, param.step))
+            else:
+                raise ExperimentsError("Invalid step value, must be greater than 0")
+
+        elif param.type == "list":
+            # nothing to do here
+            pass
+
+    params = [p for p in params if p.values is not None and len(p.values) > 0]
+    return params
