@@ -237,7 +237,7 @@ const LaunchDialog = (props) => {
   const [expandConfiguration, setExpandConfiguration] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const { classes } = props;
+  const { classes, experimentName, numberOfTrials } = props;
   const handleConfigurationUpdate = (e) => {
     e.stopPropagation();
     setLoading(true);
@@ -267,7 +267,7 @@ const LaunchDialog = (props) => {
   return (
     <ActionDialog
       buttonLabel={LAUNCH_MODAL.actionSimulate}
-      title={LAUNCH_MODAL.actionSimulate + " " + props.experimentInDesign.name}
+      title={<span>{LAUNCH_MODAL.actionSimulate} <span style={{ color: primaryColor, leftMargin: '5px'}}>{experimentName}</span></span>}
       classes={classes}
       onAction={() => dispatch(simulateNetwork(value === LAUNCH_MODAL.experimentState))}
     >
@@ -297,7 +297,7 @@ const LaunchDialog = (props) => {
           />
           <Box className="wrap">
             <img src={value === LAUNCH_MODAL.experimentState ? experimentSelected : experimentUnselected} alt="completeExperiment" />
-            <Typography>All {props.experimentInDesign.trials.length} Trials</Typography>
+            <Typography>All Trials ({numberOfTrials})</Typography>
           </Box>
         </Typography>
       </Box>
