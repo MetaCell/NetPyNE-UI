@@ -136,6 +136,7 @@ export const NetPyNE = connect(
     setWidgets: (payload) => dispatch(setWidgets(payload)),
     setDefaultWidgets: () => dispatch(setDefaultWidgets),
     modelLoaded: () => dispatch(modelLoaded),
+    getExperiments: () => dispatch(getExperiments()),
   }),
 )(_NetPyNE);
 
