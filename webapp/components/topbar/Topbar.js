@@ -99,9 +99,12 @@ class Topbar extends Component {
 
   render () {
     const {
+      classes,
+      modelLoaded,
       dialogOpen,
       topbarDialogName,
       topbarDialogMetadata,
+      experimentInDesign,
     } = this.props;
     let content;
     if (dialogOpen) {
@@ -187,6 +190,8 @@ class Topbar extends Component {
             <LaunchDialog
               open={dialogOpen}
               onRequestClose={() => this.handleClose()}
+              experimentName={experimentInDesign == null ? '' : experimentInDesign.name}
+              numberOfTrials={experimentInDesign == null ? '' : experimentInDesign.trials.length}
             />
           );
           break;
@@ -198,18 +203,17 @@ class Topbar extends Component {
 
     return (
       <div>
-        <div className={this.props.classes.topbar}>
+        <div className={classes.topbar}>
           <Menu
             configuration={toolbarConfig}
             menuHandler={this.menuHandler}
           />
           <div>
-
             <SwitchPageButton />
           </div>
 
         </div>
-        {this.props.modelLoaded ? null : <Splash />}
+        {modelLoaded ? null : <Splash />}
         <Snackbar
           message={this.snackBarMessage}
           autoHideDuration={4000}
@@ -218,7 +222,6 @@ class Topbar extends Component {
         />
         {content}
       </div>
-
     );
   }
 }

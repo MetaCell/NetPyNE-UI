@@ -15,7 +15,7 @@ export default (state = EXPERIMENTS_DEFAULT_STATE, action) => {
       return {
         ...state,
         experiments: action.payload,
-        inDesign: action.payload.some((el) => el.state === EXPERIMENT_STATE.DESIGN),
+        inDesign: action.payload.find((el) => el.state === EXPERIMENT_STATE.DESIGN),
       };
     default: {
       return state;
