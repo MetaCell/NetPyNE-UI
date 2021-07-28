@@ -279,14 +279,15 @@ export default {
 };
 
 export const getViewMenu = (props) => {
-  const instantiate = props.automaticInstantiation || props.modelState === MODEL_STATE.NOT_INSTANTIATED;
   const networkAction = () => {
-    if (instantiate && props.automaticSimulation) {
+    if (props.automaticInstantiation && props.automaticSimulation) {
       return createAndSimulateNetwork;
     }
-    if (instantiate) {
+
+    if (props.automaticInstantiation) {
       return createNetwork;
     }
+
     return showNetwork;
   };
 
