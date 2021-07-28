@@ -331,6 +331,13 @@ export const getModelMenu = (props) => (
         parameters: [props.modelState === MODEL_STATE.NOT_INSTANTIATED ? createAndSimulateNetwork : simulateNetwork],
       },
     },
+    {
+      label: TOPBAR_CONSTANTS.CREATE_AND_SIMULATE_NETWORK,
+      action: {
+        handlerAction: 'redux',
+        parameters: [createAndSimulateNetwork],
+      }
+    }
   ]
 );
 
