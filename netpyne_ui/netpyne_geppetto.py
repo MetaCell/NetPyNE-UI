@@ -719,7 +719,7 @@ class NetPyNEGeppetto:
                     # This arg brings dark theme. But some plots are broken by it
                     args['theme'] = theme
 
-                    if plotName in ("iplotConn", "iplot2Dnet") and sim.net.allCells:
+                    if plotName in ("iplotConn", "iplot2Dnet") and hasattr(sim, 'net') and sim.net.allCells:
                         def conns_length(cell) -> int:
                             if type(cell) is dict:
                                 return len(cell.get('conns', []))
