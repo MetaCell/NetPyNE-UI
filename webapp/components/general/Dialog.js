@@ -25,14 +25,14 @@ const AboutContent = withStyles(styles)(({ classes }) => (
   <Paper className={classes.paper}>
     <img width="250" src={logoNetpyne} />
     <Box m={1}>
-      <Typography variant="h5" style={{ color: secondaryColor, textShadow: '0px 1px grey' }}>
+      <Typography variant="h5" style={{ color: primaryColor }}>
         NetPyNE-UI v0.7.0
       </Typography>
-      <Typography variant="h5" style={{ color: secondaryColor, textShadow: '0px 1px grey' }}>
+      <Typography variant="h5" style={{ color: primaryColor }}>
         NetPyNE v0.9.6
       </Typography>
-      <Typography variant="h5" style={{ color: secondaryColor, textShadow: '0px 1px grey' }}>
-        Neuron v8.0.0
+      <Typography variant="h5" style={{ color: primaryColor }}>
+        NEURON v8.0.0
       </Typography>
     </Box>
 
@@ -64,7 +64,7 @@ const AboutContent = withStyles(styles)(({ classes }) => (
 
     <Box m={1}>
       <Typography variant="body2" color={secondaryColor}>
-        NetPyNE-UI is being developed in collaboration with:
+        NetPyNE-UI is being developed by the State Univeristy of New York Downstate (Dura-Bernal Lab) in collaboration with:
       </Typography>
       <Link href="http://www.metacell.us" target="_blank">
         <img
