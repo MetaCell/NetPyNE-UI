@@ -331,45 +331,6 @@ export const getModelMenu = (props) => (
         parameters: [props.modelState === MODEL_STATE.NOT_INSTANTIATED ? createAndSimulateNetwork : simulateNetwork],
       },
     },
-    {
-      label: 'Explore view options',
-      list: [
-        {
-          label: 'Automatic creation',
-          icon: props.automaticInstantiation ? checkedIcon : 'fa',
-          action: {
-            handlerAction: 'redux',
-            parameters: [changeAutomaticInstantiation, true],
-          },
-        },
-        {
-          label: 'Manual creation',
-          icon: !props.automaticInstantiation ? checkedIcon : 'fa',
-          action: {
-            handlerAction: 'redux',
-            parameters: [changeAutomaticInstantiation, false],
-          },
-        },
-        <Divider />,
-        {
-          label: 'Automatic simulation',
-          icon: props.automaticSimulation ? checkedIcon : 'fa',
-          action: {
-            handlerAction: 'redux',
-            parameters: [changeAutomaticSimulation, true],
-          },
-        },
-        {
-          label: 'Manual simulation',
-          icon: !props.automaticSimulation ? checkedIcon : 'fa',
-          action: {
-            handlerAction: 'redux',
-            parameters: [changeAutomaticSimulation, false],
-          },
-        },
-      ],
-    },
-
   ]
 );
 
