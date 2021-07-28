@@ -280,6 +280,14 @@ export default {
 
 export const getViewMenu = (props) => {
   const networkAction = () => {
+    if (props.automaticInstantiation && props.automaticSimulation) {
+      return createAndSimulateNetwork;
+    }
+
+    if (props.automaticInstantiation) {
+      return createNetwork;
+    }
+
     return showNetwork;
   };
 
@@ -328,7 +336,7 @@ export const getModelMenu = (props) => (
       list: [
         {
           label: 'Automatic creation',
-          icon: !props.automaticInstantiation ? checkedIcon : 'fa',
+          icon: props.automaticInstantiation ? checkedIcon : 'fa',
           action: {
             handlerAction: 'redux',
             parameters: [changeAutomaticInstantiation, true],
@@ -336,7 +344,7 @@ export const getModelMenu = (props) => (
         },
         {
           label: 'Manual creation',
-          icon: props.automaticInstantiation ? checkedIcon : 'fa',
+          icon: !props.automaticInstantiation ? checkedIcon : 'fa',
           action: {
             handlerAction: 'redux',
             parameters: [changeAutomaticInstantiation, false],

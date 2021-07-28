@@ -12,7 +12,7 @@ export const GENERAL_DEFAULT_STATE = {
   dialogTitle: '',
   dialogMessage: '',
   automaticSimulation: false,
-  automaticInstantiation: true,
+  automaticInstantiation: false,
   theme: 'gui',
 };
 
