@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
 import { Tooltip } from 'netpyne/components';
 import Icon from '../general/NetPyNEIcons';
 import { TOPBAR_CONSTANTS, MODEL_STATE } from '../../constants';
+import SplitButton from '../general/SplitButton';
 
 const styles = ({
   palette,
@@ -24,15 +23,21 @@ const styles = ({
   icon: { color: palette.common.white },
 });
 
+const editOptions = ["Create network", "Create and simulate", "Simulate"];
+const exploreOptions = ["Simulate", "Back to edit"];
+
 class SwitchPageButton extends Component {
   constructor (props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick = (event) => {
+  handleClick = (selectedOption) => {
     const instantiate = this.props.automaticInstantiation || this.props.modelState === MODEL_STATE.NOT_INSTANTIATED;
-    if (!this.props.editModelPage) {
+    if(selectedOption === editOptions[2]){
+      this.props.simulateNetwork();
+    }
+    else if (!this.props.editModelPage) {
       this.props.switchToEditModelPage();
     } else if (instantiate && this.props.automaticSimulation) {
       this.props.createAndSimulateNetwork();
@@ -71,41 +76,20 @@ class SwitchPageButton extends Component {
     const disableSimulate = modelState === MODEL_STATE.SIMULATED;
     return (
       <div className={classes.container}>
-        {
-          editModelPage ? null
-
-            : (
+        {editModelPage ? 
+          <SplitButton options={editOptions} handleClick={(selectedOption) => this.handleClick(selectedOption)}/> :
+          <SplitButton options={exploreOptions} handleClick={(selectedOption) => this.handleClick(selectedOption)} icon={<>
               <Tooltip
                 title={disableSimulate ? 'You have already simulated the network' : 'Simulate the network'}
                 placement="left"
               >
-                <span>
-                  <IconButton
-                    color="default"
-                    id="launchSimulationButton"
-                    className={classes.rocket}
-                    size="small"
-                    onClick={() => simulateNetwork()}
-                    disabled={disableSimulate}
-                    style={{ opacity: disableSimulate ? 0.5 : 1 }}
-                  >
-                    <Icon name="rocket" />
-
-                  </IconButton>
+                <span style={{ marginLeft: '5px', opacity: (disableSimulate ? 0.5 : 1) }}>
+                  <Icon name="rocket"/>
                 </span>
               </Tooltip>
-            )
+            </>}
+          />
         }
-        <Button
-          variant="contained"
-          size="small"
-          className={classes.button}
-          onClick={this.handleClick}
-          endIcon={<Icon name={editModelPage ? 'rocket' : 'pencil'} selected={false} />}
-        >
-          {editModelPage ? this.getExploreLabel() : TOPBAR_CONSTANTS.BACK_TO_EDITION}
-        </Button>
-
       </div>
     );
   }
