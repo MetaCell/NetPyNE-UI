@@ -25,15 +25,15 @@ const AboutContent = withStyles(styles)(({ classes }) => (
   <Paper className={classes.paper}>
     <img width="250" src={logoNetpyne} />
     <Box m={1}>
-      <Typography variant="h5" style={{ color: primaryColor }}>
+      <Link variant="h5" style={{ display: 'block'}} href="https://github.com/MetaCell/NetPyNE-UI" target="_blank">
         NetPyNE-UI v0.7.0
-      </Typography>
-      <Typography variant="h5" style={{ color: primaryColor }}>
+      </Link>
+      <Link variant="h5" style={{ display: 'block'}} href="https://github.com/Neurosim-lab/netpyne" target="_blank">
         NetPyNE v0.9.6
-      </Typography>
-      <Typography variant="h5" style={{ color: primaryColor }}>
+      </Link>
+      <Link variant="h5" style={{ display: 'block'}} href="https://www.neuron.yale.edu/neuron/" target="_blank">
         NEURON v8.0.0
-      </Typography>
+      </Link>
     </Box>
 
     <Box m={1}>
@@ -64,7 +64,8 @@ const AboutContent = withStyles(styles)(({ classes }) => (
 
     <Box m={1}>
       <Typography variant="body2" color={secondaryColor}>
-        NetPyNE-UI is being developed by the State Univeristy of New York Downstate (Dura-Bernal Lab) in collaboration with:
+        NetPyNE-UI is being developed by the State Univeristy of New York Downstate (<Link href="http://dura-bernal.org/" target="_blank">Dura-Bernal Lab</Link>) 
+        in collaboration with:
       </Typography>
       <Link href="http://www.metacell.us" target="_blank">
         <img
