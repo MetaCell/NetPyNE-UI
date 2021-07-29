@@ -110,7 +110,7 @@ class LocalSimulationPool:
 
 
 def _bulletin_board_cmd(cores, working_directory=None):
-    return ["mpiexec", "-n", str(cores), "nrniv", "-python", "-mpi", _script_path(working_directory)]
+    return ["mpiexec", "-n", str(cores), "--use-hwthread-cpus", "nrniv", "-python", "-mpi", _script_path(working_directory)]
 
 
 def _script_path(working_directory=None):
