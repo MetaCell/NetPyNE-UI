@@ -65,7 +65,11 @@ class NetPyNEGeppetto:
 
         # Set running experiments without any subprocess to ERRROR
         experiments.get_experiments()
-        running_exps = experiments.get_by_states([model.ExperimentState.SIMULATING, model.ExperimentState.INSTANTIATING])
+        running_exps = experiments.get_by_states([
+            model.ExperimentState.PENDING,
+            model.ExperimentState.SIMULATING, 
+            model.ExperimentState.INSTANTIATING
+        ])
         if not simulations.local.is_running():
             [experiments.set_to_error(e) for e in running_exps]
 
@@ -473,9 +477,6 @@ class NetPyNEGeppetto:
 
         Performed as final step after `json_path` was loaded.
         """
-        # TODO: deactivated until https://github.com/MetaCell/NetPyNE-UI/issues/320 is fixed.
-        return
-
         if len(sim.net.cells) > 0:
             section = list(sim.net.cells[0].secs.keys())[0]
             if 'pt3d' not in list(sim.net.cells[0].secs[section].geom.keys()):
