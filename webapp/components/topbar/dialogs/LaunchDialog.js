@@ -358,7 +358,7 @@ const LaunchDialog = (props) => {
                   IconComponent={ExpandMoreIcon}
                   onChange={(e) => setRunConfig(({ ...runConfig, type: e.target.value }))}
                 >
-                  <MenuItem value="mpi_bulletin">Primary/Replica (1 job per core)</MenuItem>
+                  <MenuItem value="mpi_bulletin">Default - Master/Worker (1 job per core)</MenuItem>
                 </Select>
               </FormControl>
               <TextField
