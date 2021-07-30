@@ -318,7 +318,6 @@ EnhancedTableHead.propTypes = {
   onRequestSort: PropTypes.func.isRequired,
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
-  experimentState: PropTypes.string.isRequired,
 };
 
 const ExperimentView = (props) => {
@@ -583,20 +582,24 @@ const ExperimentView = (props) => {
                         {experimentFinished && (
                           <TableCell align="right" className={classes.stickyRight}>
                             <Box className="MuiTableCell-actions">
-                              <IconButton
-                                onClick={() => openLoadResultsDialog(experiment?.name, row)}
-                              >
-                                <AssessmentIcon className="MuiSvgIcon-assessment" />
-                              </IconButton>
+                              <Tooltip title="Explore results" aria-label="explore-results">
+                                <IconButton
+                                  onClick={() => openLoadResultsDialog(experiment?.name, row)}
+                                >
+                                  <AssessmentIcon className="MuiSvgIcon-assessment" />
+                                </IconButton>
+                              </Tooltip>
                               <Divider orientation="vertical" />
                               <Tooltip title="View model" aria-label="view-model">
                                 <IconButton onClick={() => openJsonViewer(experiment?.name, row)}>
                                   <CodeIcon />
                                 </IconButton>
                               </Tooltip>
-                              <IconButton onClick={() => openLoadModelSpecificationDialog(experiment?.name, row)}>
-                                <ReplayIcon className="MuiSvgIcon-replay" />
-                              </IconButton>
+                              <Tooltip title="Load model specification" aria-label="load-model-spec">
+                                <IconButton onClick={() => openLoadModelSpecificationDialog(experiment?.name, row)}>
+                                  <ReplayIcon className="MuiSvgIcon-replay" />
+                                </IconButton>
+                              </Tooltip>
                             </Box>
                           </TableCell>
                         )}
