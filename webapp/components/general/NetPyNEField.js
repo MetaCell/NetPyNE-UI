@@ -4,11 +4,12 @@ import { Tooltip } from 'netpyne/components';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Utils from '../../Utils';
+import { REAL_TYPE } from '../../constants';
 
 export default class NetPyNEField extends Component {
   setErrorMessage (value) {
     return new Promise((resolve, reject) => {
-      if (this.realType === 'func') {
+      if (this.realType === REAL_TYPE.FUNC) {
         if (value !== '' && value !== undefined) {
           Utils.evalPythonMessage('netpyne_geppetto.validateFunction', [
             value,
@@ -22,7 +23,7 @@ export default class NetPyNEField extends Component {
         } else {
           resolve({ errorMsg: '' });
         }
-      } else if (this.realType === 'float') {
+      } else if (this.realType === REAL_TYPE.FLOAT) {
         if (isNaN(value)) {
           resolve({ errorMsg: 'Only float allowed' });
         } else {
@@ -93,7 +94,7 @@ export default class NetPyNEField extends Component {
 
       let defaultValue = Utils.getMetadataField(id, 'default');
       if (defaultValue) {
-        if (realType === 'dict' || realType === 'dict(dict)') {
+        if (realType === REAL_TYPE.DICT || realType === REAL_TYPE.DICT_DICT) {
           defaultValue = JSON.parse(defaultValue);
         }
         extraProps.default = defaultValue;

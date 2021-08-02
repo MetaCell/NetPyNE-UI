@@ -30,6 +30,16 @@ export const NETPYNE_COMMANDS = {
   viewExperimentResults: 'netpyne_geppetto.viewExperimentResult',
 };
 
+export const REAL_TYPE = {
+  INT: 'int',
+  FLOAT: 'float',
+  BOOL: 'bool',
+  STR: 'str',
+  FUNC: 'func',
+  DICT: 'dict',
+  DICT_DICT: 'dict(dict)',
+}
+
 export const PYTHON_CONSOLE_WIDGET = {
   id: 'python',
   name: 'Python',

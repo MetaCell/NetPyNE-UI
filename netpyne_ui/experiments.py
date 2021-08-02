@@ -311,7 +311,9 @@ def process_params(params: List[model.ExplorationParameter]) -> List[model.Explo
     for param in params:
         if param.type == "range":
             if param.step > 0:
-                param.values = list(np.arange(param.min, param.max, param.step))
+                # Final values must be either of type int or float depending on the range parameters.
+                convert_type = int if all(type(t) == int for t in [param.min, param.max, param.step]) else float
+                param.values = [convert_type(e) for e in list(np.arange(param.min, param.max, param.step))]
             else:
                 raise ExperimentsError("Invalid step value, must be greater than 0")
 

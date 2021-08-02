@@ -20,21 +20,28 @@ import {
 } from 'netpyne/components';
 import { withStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
-import { EXPERIMENT_TEXTS, EXPERIMENT_VIEWS } from '../../constants';
+import { EXPERIMENT_TEXTS, EXPERIMENT_VIEWS, REAL_TYPE } from '../../constants';
 import Utils from '../../Utils';
 import ParameterMenu from './ParameterMenu';
 import useStyles from './ExperimentEditStyle';
+import * as ExperimentHelper from './ExperimentHelper';
 
 const RANGE_VALUE = 0;
+const SUPPORTED_TYPES = [REAL_TYPE.INT, REAL_TYPE.FLOAT, REAL_TYPE.STR, REAL_TYPE.BOOL];
 
 const {
   RANGE,
   LIST,
 } = EXPERIMENT_TEXTS;
 
-const ParameterRow = (parameter, index, handleParamSelection, handleChange, handleInputText,
+const ParameterRow = (parameter, index, handleParamSelection, handleChange, handleRangeInput,
   handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams, classes) => (
-    <Grid className="editExperimentList" container spacing={1} key={`${parameter.name}-${index}`}>
+    <Grid
+      className="editExperimentList"
+      container
+      spacing={1}
+      key={`${parameter.name}-${index}`}
+    >
       <Grid item xs className="editExperimentAutocomplete">
         <Autocomplete
           popupIcon={<ExpandMoreIcon />}
@@ -72,9 +79,9 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
           >
             <MenuItem value="list">List</MenuItem>
             {
-            (parameter.field === undefined || (parameter?.field && ['float', 'int'].includes(parameter.field.type)))
-              && <MenuItem value="range">Range</MenuItem>
-            }
+            (parameter.field === undefined || (parameter?.field && [REAL_TYPE.FLOAT, REAL_TYPE.INT].includes(parameter.field.type)))
+            && <MenuItem value="range">Range</MenuItem>
+          }
           </Select>
         </FormControl>
       </Grid>
@@ -87,7 +94,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
                 label="From"
                 variant="filled"
                 value={parameter?.minVal || parameter?.min}
-                onChange={(e) => handleInputText(e.target.value, index, parameter, 'min')}
+                onChange={(e) => handleRangeInput(e.target.value, index, parameter, 'min')}
                 error={parameter?.minerror}
                 helperText={parameter?.minhelperText}
                 autoComplete="off"
@@ -99,7 +106,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
                 label="To"
                 variant="filled"
                 value={parameter?.maxVal || parameter?.max}
-                onChange={(e) => handleInputText(e.target.value, index, parameter, 'max')}
+                onChange={(e) => handleRangeInput(e.target.value, index, parameter, 'max')}
                 error={parameter?.maxerror}
                 helperText={parameter?.maxhelperText}
                 autoComplete="off"
@@ -111,7 +118,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
                 label="Step"
                 variant="filled"
                 value={parameter?.stepVal || parameter?.step}
-                onChange={(e) => handleInputText(e.target.value, index, parameter, 'step')}
+                onChange={(e) => handleRangeInput(e.target.value, index, parameter, 'step')}
                 error={parameter?.steperror}
                 helperText={parameter?.stephelperText}
                 autoComplete="off"
@@ -168,12 +175,14 @@ const ExperimentEdit = (props) => {
     mapsTo: '',
     ...rangeParam,
     inGroup: false,
+    error: false,
   }, {
     mapsTo: '',
     type: LIST,
     values: [],
     inGroup: false,
     val: '',
+    error: false,
   }]);
 
   const [groupParameters, setGroupParameters] = useState([]);
@@ -185,6 +194,20 @@ const ExperimentEdit = (props) => {
   const [experiment, setExperiment] = useState(null);
   const experiments = useSelector((state) => state.experiments.experiments);
 
+  const validateParameter = (param) => {
+    let updatedParam = param;
+    if (param.type === LIST) {
+      updatedParam = ExperimentHelper.validateListParameter(updatedParam);
+    } else if (param.type === RANGE) {
+      if (param.mapsTo != null && param.mapsTo.length > 0) {
+        updatedParam = ExperimentHelper.validateRangeParameter(updatedParam, param.min, 'min');
+        updatedParam = ExperimentHelper.validateRangeParameter(updatedParam, param.max, 'max');
+        updatedParam = ExperimentHelper.validateRangeParameter(updatedParam, param.step, 'step');
+      }
+    }
+    return updatedParam;
+  };
+
   const setExperimentDetail = (exp) => {
     setExperiment(exp);
     setExperimentName(exp?.name);
@@ -192,12 +215,20 @@ const ExperimentEdit = (props) => {
       const params = [];
       const groupParams = [];
       exp.params.forEach((param) => {
+        let updatedParam = param;
+        const field = Utils.getMetadataField(`netParams.${param.mapsTo}`);
+        if (field) {
+          updatedParam = { ...param, field };
+          updatedParam = validateParameter(updatedParam);
+        }
+
         if (param.inGroup) {
-          groupParams.push(param);
+          groupParams.push(updatedParam);
         } else {
-          params.push(param);
+          params.push(updatedParam);
         }
       });
+
       setParameters(params);
       setGroupParameters(groupParams);
     }
@@ -216,7 +247,20 @@ const ExperimentEdit = (props) => {
   const getParameters = () => {
     ExperimentsApi.getParameters()
       .then((params) => {
-        setSelectionParams(Object.keys(Utils.flatten(params)));
+        const flattened = Utils.flatten(params);
+        const paramKeys = Object.keys(flattened);
+
+        const filteredKeys = paramKeys.filter((key) => {
+          // TODO: avoid to fetch field twice!
+          const field = Utils.getMetadataField(`netParams.${key}`);
+          if (field && SUPPORTED_TYPES.includes(field.type)) {
+            return true;
+          }
+          return false;
+        });
+
+        console.debug(`Size before ${paramKeys.length}, after: ${filteredKeys.length}`);
+        setSelectionParams(filteredKeys);
       });
   };
 
@@ -247,14 +291,34 @@ const ExperimentEdit = (props) => {
   };
 
   const submit = () => {
+    setParameters(parameters.map((p) => validateParameter(p)));
+    setGroupParameters(groupParameters.map((p) => validateParameter(p)));
+
     const valid = validateExperimentName(experimentName);
-    if (!valid) {
+
+    let params = [...parameters, ...groupParameters];
+    const validParams = !params.some((p) => p.error);
+
+    if (!valid || !validParams) {
       return;
     }
 
+    params = params
+      .filter((p) => p.mapsTo != null && p.mapsTo.length > 0)
+      .map((p) => ({
+        mapsTo: p.mapsTo,
+        type: p.type,
+        values: p.values,
+        min: p.min,
+        max: p.max,
+        step: p.step,
+        inGroup: p.inGroup,
+        label: p.label,
+      }));
+
     const newExperimentDetails = {
       name: experimentName,
-      params: [...parameters, ...groupParameters],
+      params,
     };
 
     if (editState) {
@@ -270,11 +334,11 @@ const ExperimentEdit = (props) => {
     }
   };
 
-  const setParamChange = (inGroup, param) => {
+  const setParamChange = (inGroup, parameters) => {
     if (inGroup) {
-      setGroupParameters(param);
+      setGroupParameters(parameters);
     } else {
-      setParameters(param);
+      setParameters(parameters);
     }
   };
 
@@ -297,23 +361,32 @@ const ExperimentEdit = (props) => {
     }
 
     const newParam = parameter.inGroup ? [...groupParameters] : [...parameters];
+
+    // TODO: remove range fields here, best create new param from scratch!
     newParam[index] = {
       ...parameter,
       mapsTo: val,
       field,
+      helperText: '',
+      error: false,
+      val: '',
+      values: [],
     };
 
-    // don't allow range type if field type isn't int or float
     if (parameter.type === RANGE) {
-      if (field && !['int', 'float'].includes(field.type)) {
+      if (field && ![REAL_TYPE.INT, REAL_TYPE.FLOAT].includes(field.type)) {
         newParam[index] = {
           ...newParam[index],
           type: LIST,
           values: [],
           val: '',
+          helperText: '',
+          error: false,
         };
       }
     }
+
+    // TODO: validate here as well! And reset type!
 
     setParamChange(parameter.inGroup, newParam);
   };
@@ -352,68 +425,21 @@ const ExperimentEdit = (props) => {
     setGroupParameters(newGroupParams);
   };
 
-  const handleInputText = (val, index, parameter, key) => {
+  const handleRangeInput = (val, index, parameter, key) => {
     const newParameters = parameter.inGroup ? [...groupParameters] : [...parameters];
-    const invalidValue = val === '' ? true : isNaN(val); // isNaN("") for empty string returns false so testing it separately
-    newParameters[index] = {
-      ...parameter,
-      [`${key}Val`]: val,
-      [key]: !invalidValue ? parseFloat(val) : val,
-      [`${key}error`]: invalidValue,
-      [`${key}helperText`]: !invalidValue ? '' : EXPERIMENT_TEXTS.INPUT_ERR_MESSAGE,
-    };
+    newParameters[index] = ExperimentHelper.validateRangeParameter(parameter, val, key);
     setParamChange(parameter.inGroup, newParameters);
   };
 
   const handleInputValues = (val, index, parameter) => {
     const newParameters = parameter.inGroup ? [...groupParameters] : [...parameters];
-
-    let validator = () => true;
-    let errorText = EXPERIMENT_TEXTS.INPUT_ERR_MESSAGE;
-
-    // use parameter type to test with different validators
-    if (parameter.field) {
-      switch (parameter.field.type) {
-        case 'int':
-          validator = (el) => Number(el) && Number.isInteger(Number(el));
-          errorText = 'Only integer values are allowed';
-          break;
-
-        case 'float':
-          validator = (el) => Number(el);
-          errorText = 'Only float values are allowed';
-          break;
-
-        case 'str':
-          validator = (el) => String(el);
-          errorText = 'Only string values are allowed';
-          break;
-
-        case 'bool':
-          validator = (el) => Boolean(el);
-          errorText = 'Only bool values (true|false) are allowed';
-          break;
-
-        default:
-          // .. handling of more types
-          // list(float), dict, list(list(float)), func
-          break;
-      }
-    }
-
-    let values = val.split(',');
-    const validValue = values.every((element) => validator(element));
-    if (validValue) {
-      values = values.map((el) => Utils.convertFieldValue(parameter.field, el));
-    }
-
-    newParameters[index] = {
+    const newParameter = ExperimentHelper.validateListParameter({
       ...parameter,
       val,
-      values,
-      error: !validValue,
-      helperText: validValue ? '' : errorText,
-    };
+      values: val.split(','),
+    });
+
+    newParameters[index] = { ...newParameter };
     setParamChange(parameter.inGroup, newParameters);
   };
 
@@ -458,7 +484,7 @@ const ExperimentEdit = (props) => {
                 <Box className="editExperimentRow scrollbar scrollchild">
                   {groupParameters.map((parameter, index) => (
                     ParameterRow(parameter, index, handleParamSelection, handleChange,
-                      handleInputText, handleInputValues, addToGroup, removeFromGroup,
+                      handleRangeInput, handleInputValues, addToGroup, removeFromGroup,
                       removeParameter, selectionParams, classes)
                   ))}
                 </Box>
@@ -473,7 +499,7 @@ const ExperimentEdit = (props) => {
               <Box className="editExperimentRow">
                 {parameters.map((parameter, index) => (
                   ParameterRow(parameter, index, handleParamSelection, handleChange,
-                    handleInputText, handleInputValues, addToGroup, removeFromGroup,
+                    handleRangeInput, handleInputValues, addToGroup, removeFromGroup,
                     removeParameter, selectionParams, classes)
                 ))}
               </Box>
@@ -499,7 +525,7 @@ const ExperimentEdit = (props) => {
               Cancel
             </Button>
             <Button variant="contained" color="primary" onClick={submit}>
-              { editState ? 'Save' : 'Create' }
+              {editState ? 'Save' : 'Create'}
             </Button>
           </Box>
         </Box>
