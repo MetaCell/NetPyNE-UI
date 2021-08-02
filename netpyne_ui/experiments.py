@@ -39,6 +39,11 @@ def get_experiments() -> List[dict]:
 def add_experiment(experiment: dict):
     exp = from_dict(model.Experiment, experiment)
     exp.trials = _create_trials(exp)
+
+    if exp.state == model.ExperimentState.DESIGN:
+        # Only one exp in design can exist
+        [model.experiments.remove(e) for e in get_by_states(model.ExperimentState.DESIGN)]
+
     _add_experiment(exp)
 
 
