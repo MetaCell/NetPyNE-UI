@@ -9,7 +9,6 @@ import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
-import { secondaryColor } from '../../theme';
 
 export default function SplitButton (props) {
   const { options, handleClick, icon } = props;
@@ -47,13 +46,6 @@ export default function SplitButton (props) {
           color="primary"
           ref={anchorRef}
           aria-label="split button"
-          style={{
-            borderStyle: 'outset',
-            borderTopColor: secondaryColor,
-            borderRightColor: secondaryColor,
-            borderLeftColor: 'grey',
-            borderBottomColor: 'black',
-          }}
         >
           <Button onClick={handleItemClick} size="small">
             {icon}
@@ -81,7 +73,7 @@ export default function SplitButton (props) {
                       <MenuItem
                         key={option}
                         selected={index === selectedIndex}
-                        onClick={(event) => {
+                        onClick={() => {
                           setSelectedIndex(index); handleMenuItemClick(index);
                         }}
                       >
