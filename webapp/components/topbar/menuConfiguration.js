@@ -336,8 +336,8 @@ export const getModelMenu = (props) => (
       action: {
         handlerAction: 'redux',
         parameters: [createAndSimulateNetwork],
-      }
-    }
+      },
+    },
   ]
 );
 

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 import { Tooltip } from 'netpyne/components';
 import Icon from '../general/NetPyNEIcons';
 import { TOPBAR_CONSTANTS, MODEL_STATE } from '../../constants';
@@ -12,7 +13,9 @@ const styles = ({
   spacing,
   typography,
 }) => ({
-  container: {},
+  container: {
+    display: 'flex',
+  },
   button: {
     textTransform: 'uppercase',
     letterSpacing: 2,
@@ -23,8 +26,8 @@ const styles = ({
   icon: { color: palette.common.white },
 });
 
-const editOptions = ["Create network", "Create and simulate", "Simulate"];
-const exploreOptions = ["Simulate", "Back to edit"];
+const editOptions = ['Create network', 'Create and simulate', 'Simulate'];
+const exploreOptions = ['Simulate', 'Back to edit'];
 
 class SwitchPageButton extends Component {
   constructor (props) {
@@ -34,10 +37,9 @@ class SwitchPageButton extends Component {
 
   handleClick = (selectedOption) => {
     const instantiate = this.props.automaticInstantiation || this.props.modelState === MODEL_STATE.NOT_INSTANTIATED;
-    if(selectedOption === editOptions[2]){
+    if (selectedOption === editOptions[2]) {
       this.props.simulateNetwork();
-    }
-    else if (!this.props.editModelPage) {
+    } else if (!this.props.editModelPage) {
       this.props.switchToEditModelPage();
     } else if (instantiate && this.props.automaticSimulation) {
       this.props.createAndSimulateNetwork();
@@ -76,20 +78,35 @@ class SwitchPageButton extends Component {
     const disableSimulate = modelState === MODEL_STATE.SIMULATED;
     return (
       <div className={classes.container}>
-        {editModelPage ? 
-          <SplitButton options={editOptions} handleClick={(selectedOption) => this.handleClick(selectedOption)}/> :
-          <SplitButton options={exploreOptions} handleClick={(selectedOption) => this.handleClick(selectedOption)} icon={<>
-              <Tooltip
-                title={disableSimulate ? 'You have already simulated the network' : 'Simulate the network'}
-                placement="left"
+        {editModelPage
+          ? <SplitButton options={editOptions} handleClick={(selectedOption) => this.handleClick(selectedOption)} />
+          : (
+            <>
+              <SplitButton
+                options={exploreOptions}
+                handleClick={(selectedOption) => this.handleClick(selectedOption)}
+                icon={(
+                  <>
+                    <Tooltip
+                      title={disableSimulate ? 'You have already simulated the network' : 'Simulate the network'}
+                      placement="left"
+                    >
+                      <span style={{ marginLeft: '5px', opacity: (disableSimulate ? 0.5 : 1) }}>
+                        <Icon name="rocket" />
+                      </span>
+                    </Tooltip>
+                  </>
+                )}
+              />
+              <Button
+                variant="contained"
+                onClick={this.handleClick}
+                endIcon={<Icon name="pencil" selected={false} />}
               >
-                <span style={{ marginLeft: '5px', opacity: (disableSimulate ? 0.5 : 1) }}>
-                  <Icon name="rocket"/>
-                </span>
-              </Tooltip>
-            </>}
-          />
-        }
+                {TOPBAR_CONSTANTS.BACK_TO_EDITION}
+              </Button>
+            </>
+          )}
       </div>
     );
   }
