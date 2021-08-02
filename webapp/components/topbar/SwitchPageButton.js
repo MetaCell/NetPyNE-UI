@@ -15,6 +15,9 @@ const styles = ({
 }) => ({
   container: {
     display: 'flex',
+    '& .MuiButton-root': {
+      borderRadius: 0,
+    },
   },
   button: {
     textTransform: 'uppercase',
@@ -26,8 +29,13 @@ const styles = ({
   icon: { color: palette.common.white },
 });
 
-const editOptions = ['Create network', 'Create and simulate', 'Simulate'];
-const exploreOptions = ['Simulate', 'Back to edit'];
+const CREATE_NETWORK = 'CREATE NETWORK';
+const CREATE_AND_SIMULATE = 'CREATE AND SIMULATE';
+const SIMULATE = 'SIMULATE';
+const BACK_TO_EDIT = 'BACK TO EDIT';
+
+const editOptions = [CREATE_NETWORK, CREATE_AND_SIMULATE, SIMULATE];
+const exploreOptions = [SIMULATE, CREATE_AND_SIMULATE];
 
 class SwitchPageButton extends Component {
   constructor (props) {
@@ -36,15 +44,19 @@ class SwitchPageButton extends Component {
   }
 
   handleClick = (selectedOption) => {
-    const instantiate = this.props.automaticInstantiation || this.props.modelState === MODEL_STATE.NOT_INSTANTIATED;
-    if (selectedOption === editOptions[2]) {
+    const instantiate = this.props.modelState === MODEL_STATE.NOT_INSTANTIATED;
+    if (selectedOption === CREATE_NETWORK) {
+      if (instantiate) {
+        this.props.createNetwork();
+      } else {
+        this.props.showNetwork();
+      }
+    } else if (selectedOption === SIMULATE) {
       this.props.simulateNetwork();
-    } else if (!this.props.editModelPage) {
-      this.props.switchToEditModelPage();
-    } else if (instantiate && this.props.automaticSimulation) {
+    } else if (selectedOption === CREATE_AND_SIMULATE) {
       this.props.createAndSimulateNetwork();
-    } else if (instantiate) {
-      this.props.createNetwork();
+    } else if (selectedOption === BACK_TO_EDIT) {
+      this.props.switchToEditModelPage();
     } else {
       this.props.showNetwork();
     }
@@ -82,29 +94,23 @@ class SwitchPageButton extends Component {
           ? <SplitButton options={editOptions} handleClick={(selectedOption) => this.handleClick(selectedOption)} />
           : (
             <>
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => this.handleClick(BACK_TO_EDIT)}
+                startIcon={<Icon name="pencil" selected={false} />}
+              >
+                {TOPBAR_CONSTANTS.BACK_TO_EDITION}
+              </Button>
               <SplitButton
                 options={exploreOptions}
                 handleClick={(selectedOption) => this.handleClick(selectedOption)}
                 icon={(
-                  <>
-                    <Tooltip
-                      title={disableSimulate ? 'You have already simulated the network' : 'Simulate the network'}
-                      placement="left"
-                    >
-                      <span style={{ marginLeft: '5px', opacity: (disableSimulate ? 0.5 : 1) }}>
-                        <Icon name="rocket" />
-                      </span>
-                    </Tooltip>
-                  </>
+                  <span style={{ marginRight: '5px' }}>
+                    <Icon name="rocket" />
+                  </span>
                 )}
               />
-              <Button
-                variant="contained"
-                onClick={this.handleClick}
-                endIcon={<Icon name="pencil" selected={false} />}
-              >
-                {TOPBAR_CONSTANTS.BACK_TO_EDITION}
-              </Button>
             </>
           )}
       </div>

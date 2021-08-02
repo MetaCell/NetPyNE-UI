@@ -9,6 +9,7 @@ import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
+import { secondaryColor } from '../../theme';
 
 export default function SplitButton (props) {
   const { options, handleClick, icon } = props;
@@ -41,10 +42,22 @@ export default function SplitButton (props) {
   return (
     <Grid container direction="column" alignItems="center">
       <Grid item xs={12}>
-        <ButtonGroup variant="contained" color="primary" ref={anchorRef} aria-label="split button">
-          <Button onClick={handleItemClick}>
-            {options[0]}
+        <ButtonGroup
+          variant="contained"
+          color="primary"
+          ref={anchorRef}
+          aria-label="split button"
+          style={{
+            borderStyle: 'outset',
+            borderTopColor: secondaryColor,
+            borderRightColor: secondaryColor,
+            borderLeftColor: 'grey',
+            borderBottomColor: 'black',
+          }}
+        >
+          <Button onClick={handleItemClick} size="small">
             {icon}
+            {options[0]}
           </Button>
           <Button
             color="primary"
