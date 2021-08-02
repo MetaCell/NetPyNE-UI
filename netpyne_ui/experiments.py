@@ -38,6 +38,7 @@ def get_experiments() -> List[dict]:
 
 def add_experiment(experiment: dict):
     exp = from_dict(model.Experiment, experiment)
+    exp.trials = _create_trials(exp)
     _add_experiment(exp)
 
 
@@ -64,6 +65,7 @@ def edit_experiment(name: str, experiment: dict):
         )
 
     updated_exp = from_dict(model.Experiment, experiment)
+    updated_exp.trials = _create_trials(updated_exp)
     model.experiments.remove(exp)
     _add_experiment(updated_exp)
 
@@ -87,6 +89,7 @@ def replace_current_with(name: str):
     if current:
         remove_experiment(current.name)
 
+    new_exp.trials = _create_trials(new_exp)
     _add_experiment(new_exp)
     return
 
@@ -167,7 +170,6 @@ def _add_experiment(experiment: model.Experiment):
     if _get_by_name(experiment.name):
         raise ExperimentsError(f"Experiment {experiment.name} already exists")
 
-    experiment.trials = _create_trials(experiment)
     model.experiments.append(experiment)
 
 
