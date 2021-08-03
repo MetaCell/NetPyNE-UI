@@ -15,8 +15,10 @@ const styles = ({
 }) => ({
   container: {
     display: 'flex',
+    height: '100%',
     '& .MuiButton-root': {
       borderRadius: 0,
+      marginBottom: 0,
     },
   },
   button: {
@@ -96,7 +98,6 @@ class SwitchPageButton extends Component {
             <>
               <Button
                 variant="contained"
-                size="small"
                 onClick={() => this.handleClick(BACK_TO_EDIT)}
                 startIcon={<Icon name="pencil" selected={false} />}
               >

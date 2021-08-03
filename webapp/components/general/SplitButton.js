@@ -17,14 +17,12 @@ export default function SplitButton (props) {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
 
   const handleItemClick = (event) => {
-    setSelectedIndex(0);
-    handleClick(options[0]);
+    handleClick(options[selectedIndex]);
   };
 
   const handleMenuItemClick = (index) => {
     setSelectedIndex(index);
     setOpen(false);
-    handleClick(options[index]);
   };
 
   const handleToggle = () => {
@@ -47,13 +45,12 @@ export default function SplitButton (props) {
           ref={anchorRef}
           aria-label="split button"
         >
-          <Button onClick={handleItemClick} size="small">
+          <Button onClick={handleItemClick}>
             {icon}
-            {options[0]}
+            {options[selectedIndex]}
           </Button>
           <Button
             color="primary"
-            size="small"
             aria-controls={open ? 'split-button-menu' : undefined}
             aria-expanded={open ? 'true' : undefined}
             aria-label="select merge strategy"
@@ -74,7 +71,7 @@ export default function SplitButton (props) {
                         key={option}
                         selected={index === selectedIndex}
                         onClick={() => {
-                          setSelectedIndex(index); handleMenuItemClick(index);
+                          handleMenuItemClick(index);
                         }}
                       >
                         {option}
