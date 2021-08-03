@@ -233,7 +233,7 @@ export default (store) => (next) => (action) => {
     }
     case TRIAL_LOAD_MODEL_SPEC: {
       const { name, trial } = action.payload;
-      GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading trial ${trial.name} of experiment ${name}`);
+      GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading ${trial.name} of experiment ${name}`);
       pythonCall({
         cmd: NETPYNE_COMMANDS.viewExperimentResults,
         args: { name, trial: trial.id, onlyModelSpecification: true },
@@ -246,7 +246,7 @@ export default (store) => (next) => (action) => {
     }
     case VIEW_EXPERIMENTS_RESULTS: {
       const { name, trial } = action.payload;
-      GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading trial ${trial.name} of experiment ${name}`);
+      GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading ${trial.name} of experiment ${name}`);
       pythonCall({
         cmd: NETPYNE_COMMANDS.viewExperimentResults,
         args: { name, trial: trial.id },

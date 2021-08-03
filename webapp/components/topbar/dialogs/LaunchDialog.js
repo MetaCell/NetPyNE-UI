@@ -232,6 +232,7 @@ const LaunchDialog = (props) => {
   const [runConfig, setRunConfig] = useState({
     asynchronous: true,
     cores: 1,
+    parallel: true,
   });
 
   const [expandConfiguration, setExpandConfiguration] = useState(false);

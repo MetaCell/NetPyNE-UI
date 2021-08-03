@@ -1,6 +1,8 @@
 import json
 import os
 import sys
+import tempfile
+import pathlib
 
 from neuron import h
 from netpyne import specs
@@ -10,10 +12,14 @@ os.chdir(os.path.dirname(__file__))
 
 
 def update_state(experiment, state):
-    with open("experiment.json", "w") as f:
-        experiment["state"] = state
-        json.dump(experiment, f, default=str, sort_keys=True, indent=4)
+    experiment["state"] = state
 
+    with tempfile.NamedTemporaryFile('w', dir=os.path.dirname("experiment.json"), delete=False) as tf:
+        json.dump(experiment, tf, default=str, sort_keys=True, indent=4)
+        tempname = tf.name
+        
+    os.rename(tempname, "./experiment.json")
+    
 
 def run_batch(experiment):
     # Map params to netpyne format
@@ -71,7 +77,12 @@ def run_batch(experiment):
 
 with open("experiment.json", "r") as f:
     experiment = json.load(f)
-    update_state(experiment, "SIMULATING")
+    if experiment['runCfg']['type'] == 'mpi_bulletin':
+        pc = h.ParallelContext()
+        if pc.id() == 0:
+            update_state(experiment, "SIMULATING")
+    else:
+        update_state(experiment, "SIMULATING")
 
     try:
         batch = run_batch(experiment)
@@ -79,9 +90,17 @@ with open("experiment.json", "r") as f:
             pc = h.ParallelContext()
             pc.done()
 
+            # Experiment is successful if there exists a data file for every trial (cfg file)
+            data_files = list(pathlib.Path(os.path.dirname(__file__)).glob(f"*_data.json"))
+            cfg_files = list(pathlib.Path(os.path.dirname(__file__)).glob(f"*_cfg.json"))
+            if len(data_files) != len(cfg_files):
+                update_state(experiment, "ERROR")
+                sys.exit(1)
+
             update_state(experiment, "SIMULATED")
             sys.exit(0)
     except Exception as e:
         print("Experiment failed ...")
         print(e)
         update_state(experiment, "ERROR")
+        sys.exit(1)

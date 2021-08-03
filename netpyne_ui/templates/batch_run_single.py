@@ -1,12 +1,5 @@
 import neuron
-import json
 from netpyne import sim
-
-
-def update_state(experiment, state):
-    with open("experiment.json", "w") as f:
-        experiment["state"] = state
-        json.dump(experiment, f, default=str, sort_keys=True, indent=4)
 
 
 def run():
@@ -29,7 +22,3 @@ try:
 except Exception as e:
     print("Trial failed ...")
     print(e)
-
-    with open("experiment.json", "r") as f:
-        exp = json.load(f)
-        update_state(exp, "ERROR")

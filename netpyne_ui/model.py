@@ -164,7 +164,7 @@ class Experiment:
 @dataclass
 class RunConfig:
     """ Run config for either single or batch simulation."""
-    parallel: bool = False
+    parallel: bool = True
     asynchronous: bool = True
     cores: int = 1
     resource: str = "local"

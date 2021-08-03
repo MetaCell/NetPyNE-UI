@@ -269,11 +269,8 @@ class NetPyNEGeppetto:
         try:
             experiment = experiments.get_current()
             if experiment:
-                # TODO: remove once run config can be configured
-                self.run_config.asynchronous = True
-                self.run_config.parallel = True
-
                 if self.experiments.any_in_state([model.ExperimentState.PENDING, model.ExperimentState.SIMULATING]) or simulations.local.is_running():
+                    # TODO: kill process if no experiment is in progress!
                     return utils.getJSONError("Experiment is already simulating or pending", "")
 
                 experiment.state = model.ExperimentState.PENDING
@@ -290,9 +287,6 @@ class NetPyNEGeppetto:
                     return utils.getJSONError("Unknown error during simulation of Experiment", sys.exc_info())
 
             else:
-                # TODO: is synch by default, remove once it can be configured
-                self.run_config.asynchronous = False
-                self.run_config.parallel = False
                 return self.simulate_single_model(use_prev_inst=use_prev_inst)
 
         except Exception:
