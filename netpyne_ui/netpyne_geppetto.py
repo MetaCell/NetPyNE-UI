@@ -269,9 +269,11 @@ class NetPyNEGeppetto:
         try:
             experiment = experiments.get_current()
             if experiment:
-                if self.experiments.any_in_state([model.ExperimentState.PENDING, model.ExperimentState.SIMULATING]) or simulations.local.is_running():
-                    # TODO: kill process if no experiment is in progress!
+                if self.experiments.any_in_state([model.ExperimentState.PENDING, model.ExperimentState.SIMULATING]):
                     return utils.getJSONError("Experiment is already simulating or pending", "")
+                
+                if simulations.local.is_running():
+                    simulations.local.stop()
 
                 experiment.state = model.ExperimentState.PENDING
 
