@@ -212,13 +212,16 @@ class NetPyNEGeppetto:
             experiment.state = model.ExperimentState.ERROR
             return utils.getJSONError(str(e), "")
 
-        message = "Experiment is pending! " \
-                  f"Results will be stored in your workspace at ./{os.path.join(constants.EXPERIMENTS_FOLDER, experiment.name)}"
+        if self.run_config.asynchronous:
+            message = f"Experiment {experiment.name} started. " \
+                  f"You can view the Experiment status in the Experiment Manager."
+        else:
+            message = f"Experiment {experiment.name} finished, you can view the results in the Experiment Manager."
 
         return utils.getJSONError(message, "")
 
     def simulate_single_model(self, experiment: model.Experiment = None, use_prev_inst: bool = False):
-        if self.run_config.asynchronous or self.run_config.parallel:
+        if experiment:
             working_directory = self._prepare_simulation_files(experiment, use_prev_inst)
 
             simulations.run(
@@ -279,7 +282,11 @@ class NetPyNEGeppetto:
 
                 try:
                     if allTrials:
-                        return self.simulate_experiment_trials(experiment)
+                        if len(experiment.trials) == 1 and experiment.trials[0].id == experiments.BASE_TRIAL_ID:
+                            # special case where we don't want to run a batch simulation
+                            return self.simulate_single_model(experiment, use_prev_inst)    
+                        else:
+                            return self.simulate_experiment_trials(experiment)
                     else:
                         return self.simulate_single_model(experiment, use_prev_inst)
                 except Exception:

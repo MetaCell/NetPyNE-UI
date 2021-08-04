@@ -20,6 +20,7 @@ SIM_CONFIG_FILE = "simConfig.json"
 NET_PARAMS_FILE = "netParams.json"
 EXPERIMENT_FILE = "experiment.json"
 
+BASE_TRIAL_ID = "model_output"
 
 class ExperimentsError(Exception):
     pass
@@ -266,7 +267,7 @@ def _delete_experiment_folder(experiment: model.Experiment):
 
 
 def _create_base_model_trial() -> model.Trial:
-    return model.Trial(name="Trial 1", id="model_output")
+    return model.Trial(name="Trial 1", id=BASE_TRIAL_ID)
 
 
 def _create_trials(experiment: model.Experiment) -> List[model.Trial]:
