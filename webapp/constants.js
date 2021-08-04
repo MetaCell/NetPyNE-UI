@@ -393,16 +393,6 @@ export const EDIT_WIDGETS = {
     enableRename: false,
     pos: 5,
   },
-  simConfig: {
-    id: 'simConfig',
-    name: 'Configuration',
-    status: WidgetStatus.HIDDEN,
-    component: 'simConfig',
-    hideOnClose: true,
-    panelName: TOP_PANEL,
-    enableRename: false,
-    pos: 7,
-  },
   analysis: {
     id: 'analysis',
     name: 'Plot Settings',
@@ -412,6 +402,16 @@ export const EDIT_WIDGETS = {
     panelName: TOP_PANEL,
     enableRename: false,
     pos: 6,
+  },
+  simConfig: {
+    id: 'simConfig',
+    name: 'Configuration',
+    status: WidgetStatus.HIDDEN,
+    component: 'simConfig',
+    hideOnClose: true,
+    panelName: TOP_PANEL,
+    enableRename: false,
+    pos: 7,
   },
   experimentManager: {
     id: 'experimentManager',
