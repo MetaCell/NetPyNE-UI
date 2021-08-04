@@ -11,12 +11,14 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 
 export default function SplitButton (props) {
-  const { options, handleClick, icon } = props;
+  const {
+    options, handleClick, icon, skipIconFor,
+  } = props;
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
 
-  const handleItemClick = (event) => {
+  const handleItemClick = () => {
     handleClick(options[selectedIndex]);
   };
 
@@ -46,7 +48,7 @@ export default function SplitButton (props) {
           aria-label="split button"
         >
           <Button onClick={handleItemClick}>
-            {icon}
+            {typeof skipIconFor === 'undefined' || skipIconFor !== options[selectedIndex] ? icon : null}
             {options[selectedIndex]}
           </Button>
           <Button

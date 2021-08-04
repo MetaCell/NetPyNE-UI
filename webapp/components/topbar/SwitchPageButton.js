@@ -87,7 +87,18 @@ class SwitchPageButton extends Component {
     return (
       <div className={classes.container}>
         {editModelPage
-          ? <SplitButton options={editOptions} handleClick={(selectedOption) => this.handleClick(selectedOption)} />
+          ? (
+            <SplitButton
+              options={editOptions}
+              handleClick={(selectedOption) => this.handleClick(selectedOption)}
+              icon={(
+                <span style={{ marginRight: '5px' }}>
+                  <Icon name="rocket" />
+                </span>
+              )}
+              skipIconFor={CREATE_NETWORK}
+            />
+          )
           : (
             <>
               <Button
