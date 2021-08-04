@@ -3,6 +3,7 @@ import os
 import sys
 import tempfile
 import pathlib
+import time
 
 from neuron import h
 from netpyne import specs
@@ -11,15 +12,34 @@ from netpyne.batch import Batch
 os.chdir(os.path.dirname(__file__))
 
 
+def is_error():
+    """Validates if Experiment failed or succeeded.
+
+    Experiment is successful if there exists a data file for every trial (cfg file)
+    """
+
+    data_files = list(pathlib.Path(
+        os.path.dirname(__file__)).glob(f"*_data.json"))
+    cfg_files = list(pathlib.Path(
+        os.path.dirname(__file__)).glob(f"*_cfg.json"))
+
+    if len(data_files) != len(cfg_files):
+        print(
+            f"data files don't match with cfg files {len(data_files)} - {len(cfg_files)}")
+        return True
+        
+    return False
+
+
 def update_state(experiment, state):
     experiment["state"] = state
 
     with tempfile.NamedTemporaryFile('w', dir=os.path.dirname("experiment.json"), delete=False) as tf:
         json.dump(experiment, tf, default=str, sort_keys=True, indent=4)
         tempname = tf.name
-        
+
     os.rename(tempname, "./experiment.json")
-    
+
 
 def run_batch(experiment):
     # Map params to netpyne format
@@ -88,17 +108,18 @@ with open("experiment.json", "r") as f:
         batch = run_batch(experiment)
         if batch.runCfg["type"] == "mpi_bulletin":
             pc = h.ParallelContext()
-            pc.done()
+            if pc.id() != 0:
+                sys.exit(0)
 
-            # Experiment is successful if there exists a data file for every trial (cfg file)
-            data_files = list(pathlib.Path(os.path.dirname(__file__)).glob(f"*_data.json"))
-            cfg_files = list(pathlib.Path(os.path.dirname(__file__)).glob(f"*_cfg.json"))
-            if len(data_files) != len(cfg_files):
-                update_state(experiment, "ERROR")
-                sys.exit(1)
-
+        # wait for data file writing to complete ...
+        # TODO: netpyne sim needs to wait until file exists before exiting!
+        time.sleep(10)
+        if is_error():
+            update_state(experiment, "ERROR")
+            sys.exit(1)
+        else:
             update_state(experiment, "SIMULATED")
-            sys.exit(0)
+
     except Exception as e:
         print("Experiment failed ...")
         print(e)
