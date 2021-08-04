@@ -518,9 +518,9 @@ const ExperimentView = (props) => {
           <Typography variant="body2">{experiment?.name}</Typography>
         </Box>
         <div className="editExperiment-filter">
-          <Button>
+          {/* <Button>
             <ReplayIcon className="MuiSvgIcon-replay" />
-          </Button>
+          </Button> */}
         </div>
       </Box>
       {loading ? (
