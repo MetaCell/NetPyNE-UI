@@ -305,16 +305,32 @@ const ExperimentEdit = (props) => {
 
     params = params
       .filter((p) => p.mapsTo != null && p.mapsTo.length > 0)
-      .map((p) => ({
-        mapsTo: p.mapsTo,
-        type: p.type,
-        values: p.values,
-        min: p.min,
-        max: p.max,
-        step: p.step,
-        inGroup: p.inGroup,
-        label: p.label,
-      }));
+      .map((p) => {
+        if (p.type === LIST) {
+          return {
+            mapsTo: p.mapsTo,
+            type: p.type,
+            values: p.values,
+            inGroup: p.inGroup,
+            label: p.label,
+          };
+        }
+
+        if (p.type === RANGE) {
+          return {
+            mapsTo: p.mapsTo,
+            type: p.type,
+            min: p.min,
+            max: p.max,
+            step: p.step,
+            inGroup: p.inGroup,
+            label: p.label,
+          };
+        }
+
+        return null;
+      })
+      .filter((p) => p != null);
 
     const newExperimentDetails = {
       name: experimentName,
