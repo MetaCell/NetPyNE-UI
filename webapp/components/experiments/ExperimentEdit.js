@@ -63,7 +63,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
               variant="outlined"
             />
           )}
-          value={parameter.mapsTo || ''}
+          value={parameter.mapsTo || null}
           onChange={(e, val) => handleParamSelection(val, parameter, index)}
         />
       </Grid>
@@ -172,12 +172,12 @@ const ExperimentEdit = (props) => {
   };
 
   const [parameters, setParameters] = useState([{
-    mapsTo: '',
+    mapsTo: null,
     ...rangeParam,
     inGroup: false,
     error: false,
   }, {
-    mapsTo: '',
+    mapsTo: null,
     type: LIST,
     values: [],
     inGroup: false,
@@ -216,10 +216,12 @@ const ExperimentEdit = (props) => {
       const groupParams = [];
       exp.params.forEach((param) => {
         let updatedParam = param;
-        const field = Utils.getMetadataField(`netParams.${param.mapsTo}`);
-        if (field) {
-          updatedParam = { ...param, field };
-          updatedParam = validateParameter(updatedParam);
+        if (param.mapsTo != null) {
+          const field = Utils.getMetadataField(`netParams.${param.mapsTo}`);
+          if (field) {
+            updatedParam = { ...param, field };
+            updatedParam = validateParameter(updatedParam);
+          }
         }
 
         if (param.inGroup) {
