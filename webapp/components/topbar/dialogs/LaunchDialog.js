@@ -371,13 +371,13 @@ const LaunchDialog = (props) => {
                 onChange={(e) => setRunConfig({ ...runConfig, cores: parseInt(e.target.value, 10) })}
                 fullWidth
               />
-              <Checkbox
+              {/* <Checkbox
                 fullWidth
                 checked={runConfig.asynchronous}
                 onChange={() => setRunConfig({ ...runConfig, asynchronous: !runConfig.asynchronous })}
                 noBackground
                 label="In Background"
-              />
+              /> */}
             </>
           )}
         </AccordionDetails>
