@@ -2,16 +2,13 @@ import React, { Component } from 'react';
 
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import { Tooltip } from 'netpyne/components';
 import Icon from '../general/NetPyNEIcons';
 import { TOPBAR_CONSTANTS, MODEL_STATE } from '../../constants';
 import SplitButton from '../general/SplitButton';
 
 const styles = ({
   palette,
-  shape,
   spacing,
-  typography,
 }) => ({
   container: {
     display: 'flex',
@@ -85,11 +82,8 @@ class SwitchPageButton extends Component {
   render () {
     const {
       classes,
-      modelState,
       editModelPage,
-      simulateNetwork,
     } = this.props;
-    const disableSimulate = modelState === MODEL_STATE.SIMULATED;
     return (
       <div className={classes.container}>
         {editModelPage
