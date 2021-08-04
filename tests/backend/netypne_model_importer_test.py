@@ -48,10 +48,10 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         netpyne_info['compileMod'] = False
         netpyne_info['loadMod'] = False
         netpyne_info['modFolder'] = "mod"
-        netpyne_info['netParamsPath'] = "."
+        netpyne_info['netParamsPath'] = sys.path[1] + '/models'
         netpyne_info['netParamsModuleName'] = "gui_import_dict"
         netpyne_info['netParamsVariable'] = "netParams"
-        netpyne_info['simConfigPath'] = "."
+        netpyne_info['simConfigPath'] = sys.path[1] + '/models'
         netpyne_info['simConfigModuleName'] = "gui_import_dict"
         netpyne_info['simConfigVariable'] = "simConfig"
 
