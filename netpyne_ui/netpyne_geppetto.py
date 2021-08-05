@@ -162,8 +162,6 @@ class NetPyNEGeppetto:
             return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
 
     def stopExperiment(self, experiment_name):
-        # TODO: check in simulation pool if experiment is running
-        # TODO: once stopped, update experiment status to ERROR (?), also on file system
         simulations.local.stop()
         return {
             "message": f"Stopped simulation of {experiment_name}"
