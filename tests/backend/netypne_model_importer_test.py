@@ -45,13 +45,15 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
 
         # print(type(netpyne_info['net']['params']))
 
+        path = next(filter(lambda p: os.path.join('tests', 'backend') in p, sys.path), None)
+
         netpyne_info['compileMod'] = False
         netpyne_info['loadMod'] = False
         netpyne_info['modFolder'] = "mod"
-        netpyne_info['netParamsPath'] = sys.path[1] + '/models'
+        netpyne_info['netParamsPath'] = os.path.join(path, 'models')
         netpyne_info['netParamsModuleName'] = "gui_import_dict"
         netpyne_info['netParamsVariable'] = "netParams"
-        netpyne_info['simConfigPath'] = sys.path[1] + '/models'
+        netpyne_info['simConfigPath'] = os.path.join(path, 'models')
         netpyne_info['simConfigModuleName'] = "gui_import_dict"
         netpyne_info['simConfigVariable'] = "simConfig"
 
