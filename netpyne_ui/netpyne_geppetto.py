@@ -231,6 +231,12 @@ class NetPyNEGeppetto:
                 # Import Model attributes
                 self.netParams = getattr(net_params_module_name, str(modelParameters["netParamsVariable"]))
 
+                if isinstance(self.netParams, dict):
+                  self.netParams = specs.NetParams(self.netParams)
+
+                if isinstance(self.simConfig, dict):
+                  self.simConfig = specs.SimConfig(self.simConfig)
+
                 for key, value in self.netParams.cellParams.items():
                     if hasattr(value, 'todict'):
                         self.netParams.cellParams[key] = value.todict()
