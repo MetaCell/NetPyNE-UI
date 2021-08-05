@@ -446,10 +446,12 @@ const ExperimentView = (props) => {
   }, [name]);
 
   const openJsonViewer = (experiment, trial) => {
+    setLoading(true);
     ExperimentsApi.getModelSpecification(experiment, trial.id)
       .then((modelSpecification) => {
         setTrialJSON(modelSpecification);
         setTrial(trial.name);
+        setLoading(false);
         setView(EXPERIMENT_VIEWS.jsonViewer);
       });
   };
