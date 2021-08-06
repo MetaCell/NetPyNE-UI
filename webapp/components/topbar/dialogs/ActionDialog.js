@@ -22,6 +22,19 @@ class ActionDialog extends React.Component {
     this.state = { hide: !this.props.openErrorDialogBox && !this.props.openDialog };
   }
 
+  handleClickGoBack () {
+    this.setState({ hide: true });
+    this.clearErrorDialogBox();
+  }
+
+  cancelDialog = () => {
+    this.clearErrorDialogBox();
+    this.setState({ hide: true });
+    if (this.props.onRequestClose) {
+      this.props.onRequestClose();
+    }
+  };
+
   performAction = () => {
     if (this.props.command) {
       if (this.props.isFormValid === undefined || this.props.isFormValid()) {
@@ -39,19 +52,6 @@ class ActionDialog extends React.Component {
     if (this.props.closeBackendErrorDialog) {
       this.props.closeBackendErrorDialog();
     }
-  }
-
-  cancelDialog = () => {
-    this.clearErrorDialogBox();
-    this.setState({ hide: true });
-    if (this.props.onRequestClose) {
-      this.props.onRequestClose();
-    }
-  };
-
-  handleClickGoBack () {
-    this.setState({ hide: true });
-    this.clearErrorDialogBox();
   }
 
   render () {

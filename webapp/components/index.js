@@ -20,6 +20,7 @@ import {
 import {
   cloneExperiment,
   getExperiments,
+  openLaunchDialog,
 } from '../redux/actions/experiments';
 
 import {
@@ -60,6 +61,7 @@ import _SelectCellTemplate from './definition/cellRules/SelectCellTemplate';
 import _Experiments from './experiments/Experiments';
 import _ExperimentEdit from './experiments/ExperimentEdit';
 import _ExperimentManager from './experiments/ExperimentManager';
+import _LaunchDialog from './topbar/dialogs/LaunchDialog';
 
 const updateCardsDispatch = (dispatch) => ({ updateCards: () => dispatch(updateCards) });
 
@@ -116,6 +118,18 @@ export const Experiments = connect(
     cloneExperiment: (name) => dispatch(cloneExperiment(name)),
   }),
 )(_Experiments);
+
+export const LaunchDialog = connect(
+  (state, ownProps) => {
+    const { inDesign, openLaunchDialog } = state.experiments;
+    return ({
+      ...ownProps,
+      open: openLaunchDialog,
+      experimentName: inDesign == null ? '' : inDesign.name,
+      numberOfTrials: inDesign == null ? '' : inDesign.trials.length,
+    });
+  },
+)(_LaunchDialog);
 
 export const ExperimentEdit = _ExperimentEdit;
 export const ExperimentManager = _ExperimentManager;
@@ -286,7 +300,7 @@ export const Topbar = connect(
     automaticInstantiation: state.general.automaticInstantiation,
     automaticSimulation: state.general.automaticSimulation,
     theme: state.general.theme,
-    experimentInDesign: state.experiments.inDesign,
+    experimentInDesign: state.experiments.inDesign != null,
   }),
   (dispatch) => ({
     dispatchAction: (action) => dispatch(action),
@@ -301,6 +315,7 @@ export const SwitchPageButton = connect(
     modelState: state.general.modelState,
     automaticInstantiation: state.general.automaticInstantiation,
     automaticSimulation: state.general.automaticSimulation,
+    experimentInDesign: state.experiments.inDesign != null,
   }),
   (dispatch) => ({
     switchToEditModelPage: () => dispatch(editModel),
@@ -308,6 +323,7 @@ export const SwitchPageButton = connect(
     createAndSimulateNetwork: () => dispatch(createAndSimulateNetwork),
     showNetwork: () => dispatch(showNetwork),
     simulateNetwork: () => dispatch(simulateNetwork()),
+    openLaunchDialog: () => dispatch(openLaunchDialog()),
   }),
 )(_SwitchPageButton);
 

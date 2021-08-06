@@ -4,6 +4,8 @@ export const RESET_EXPERIMENT = 'RESET_EXPERIMENT';
 export const CLONE_EXPERIMENT = 'CLONE_EXPERIMENT';
 export const VIEW_EXPERIMENTS_RESULTS = 'VIEW_EXPERIMENT_RESULTS';
 export const TRIAL_LOAD_MODEL_SPEC = 'TRIAL_LOAD_MODEL_SPEC';
+export const OPEN_LAUNCH_DIALOG = 'OPEN_LAUNCH_DIALOG';
+export const CLOSE_LAUNCH_DIALOG = 'CLOSE_LAUNCH_DIALOG';
 
 /**
  * Resets configuration of current Experiment.
@@ -45,3 +47,6 @@ export const cloneExperiment = (experimentName) => ({
   type: CLONE_EXPERIMENT,
   payload: { name: experimentName },
 });
+
+export const openLaunchDialog = () => ({ type: OPEN_LAUNCH_DIALOG });
+export const closeLaunchDialog = () => ({ type: CLOSE_LAUNCH_DIALOG });

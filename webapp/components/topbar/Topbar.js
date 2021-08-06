@@ -19,7 +19,6 @@ import NewModelDialog from './dialogs/NewModel';
 import ImportExportHLSDialog from './dialogs/ImportExportHLS';
 import ImportCellParamsDialog from './dialogs/ImportCellParams';
 import UploadDownloadFilesDialog from './dialogs/UploadDownloadFiles';
-import LaunchDialog from './dialogs/LaunchDialog';
 
 import { TOPBAR_CONSTANTS } from '../../constants';
 
@@ -104,7 +103,6 @@ class Topbar extends Component {
       dialogOpen,
       topbarDialogName,
       topbarDialogMetadata,
-      experimentInDesign,
     } = this.props;
     let content;
     if (dialogOpen) {
@@ -182,16 +180,6 @@ class Topbar extends Component {
                 this.handleOpenSnackBar(message);
               }}
               mode="DOWNLOAD"
-            />
-          );
-          break;
-        case TOPBAR_CONSTANTS.SIMULATE:
-          content = (
-            <LaunchDialog
-              open={dialogOpen}
-              onRequestClose={() => this.handleClose()}
-              experimentName={experimentInDesign == null ? '' : experimentInDesign.name}
-              numberOfTrials={experimentInDesign == null ? '' : experimentInDesign.trials.length}
             />
           );
           break;

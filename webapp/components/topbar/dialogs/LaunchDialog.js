@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { ActionDialog } from 'netpyne/components';
 import * as ExperimentsApi from 'root/api/experiments';
 import {
   DialogContentText,
@@ -21,11 +20,11 @@ import InfoIcon from '@material-ui/icons/Info';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useDispatch } from 'react-redux';
 import { simulateNetwork } from 'root/redux/actions/general';
+import { closeLaunchDialog } from '../../../redux/actions/experiments';
 import currentModal from '../../../static/icons/modelSelected.png';
 import currentModalUnselected from '../../../static/icons/modelUnselected.png';
 import experimentSelected from '../../../static/icons/experimentSelected.png';
 import experimentUnselected from '../../../static/icons/experimentUnselected.png';
-import Checkbox from '../../general/Checkbox';
 import { LAUNCH_MODAL } from '../../../constants';
 import {
   bgLight,
@@ -39,6 +38,7 @@ import {
 } from '../../../theme';
 import CircularLoader from '../../general/Loader';
 import { openBackendErrorDialog } from '../../../redux/actions/errors';
+import SimpleDialog from './SimpleDialog';
 
 const useStyles = (theme) => ({
   root: {
@@ -228,6 +228,11 @@ const useStyles = (theme) => ({
 });
 
 const LaunchDialog = (props) => {
+  const {
+    classes, experimentName, numberOfTrials, open,
+  } = props;
+  const dispatch = useDispatch();
+
   const [value, setValue] = useState(LAUNCH_MODAL.modelState);
   const [runConfig, setRunConfig] = useState({
     asynchronous: true,
@@ -237,37 +242,41 @@ const LaunchDialog = (props) => {
 
   const [expandConfiguration, setExpandConfiguration] = useState(false);
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
-  const { classes, experimentName, numberOfTrials } = props;
+
+  useEffect(() => {
+    if (open) {
+      ExperimentsApi.getRunConfiguration().then((runConfig) => {
+        setRunConfig(runConfig);
+      }).catch(() => {
+        dispatch(openBackendErrorDialog({
+          errorMessage: 'Failed to retrieve configuration',
+          errorDetails: '',
+        }));
+      });
+    }
+  }, [open]);
+
   const handleConfigurationUpdate = (e) => {
     e.stopPropagation();
     setLoading(true);
-    ExperimentsApi.editRunConfiguration(runConfig).then(() => {
-      setLoading(false);
-      setExpandConfiguration(false);
-    }).catch(() => {
-      setLoading(false);
-      dispatch(openBackendErrorDialog({
-        errorMessage: 'Failed to update configuration',
-        errorDetails: '',
-      }));
-    });
+
+    ExperimentsApi.editRunConfiguration(runConfig)
+      .then(() => {
+        setLoading(false);
+        setExpandConfiguration(false);
+      }).catch(() => {
+        setLoading(false);
+        dispatch(openBackendErrorDialog({
+          errorMessage: 'Failed to update configuration',
+          errorDetails: '',
+        }));
+      });
   };
 
-  useEffect(() => {
-    ExperimentsApi.getRunConfiguration().then((runConfig) => {
-      setRunConfig(runConfig);
-    }).catch(() => {
-      dispatch(openBackendErrorDialog({
-        errorMessage: 'Failed to retrieve configuration',
-        errorDetails: '',
-      }));
-    });
-  }, []);
-
   return (
-    <ActionDialog
-      buttonLabel={LAUNCH_MODAL.actionSimulate}
+    <SimpleDialog
+      actionLabel={LAUNCH_MODAL.actionSimulate}
+      open={open}
       title={(
         <span>
           {LAUNCH_MODAL.actionSimulate}
@@ -276,12 +285,15 @@ const LaunchDialog = (props) => {
         </span>
       )}
       classes={classes}
-      onAction={() => dispatch(simulateNetwork(value === LAUNCH_MODAL.experimentState))}
+      onAction={() => {
+        dispatch(closeLaunchDialog());
+        dispatch(simulateNetwork(value === LAUNCH_MODAL.experimentState));
+      }}
+      onClose={() => dispatch(closeLaunchDialog())}
     >
       <DialogContentText>
         {LAUNCH_MODAL.title}
       </DialogContentText>
-
       <Box className="custom-radio">
         <Typography component="label">
           <Radio
@@ -382,7 +394,7 @@ const LaunchDialog = (props) => {
           )}
         </AccordionDetails>
       </Accordion>
-    </ActionDialog>
+    </SimpleDialog>
   );
 };
 

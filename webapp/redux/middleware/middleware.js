@@ -26,6 +26,7 @@ import { downloadJsonResponse, downloadPythonResponse } from './utils';
 
 import { setWidgets, setLayout } from '../actions/layout';
 import * as Constants from '../../constants';
+import { openLaunchDialog } from '../actions/experiments';
 
 let previousLayout = {
   edit: undefined,
@@ -164,10 +165,7 @@ export default (store) => (next) => (action) => {
       break;
     }
     case SIMULATE_NETWORK:
-      simulateNetwork({
-        allTrials: action.payload,
-        usePrevInst: false,
-      })
+      simulateNetwork({ allTrials: action.payload, usePrevInst: false })
         .then(toNetworkCallback(false), pythonErrorCallback);
       break;
     case PYTHON_CALL: {
