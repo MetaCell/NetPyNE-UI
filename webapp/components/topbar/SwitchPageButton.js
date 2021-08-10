@@ -43,13 +43,8 @@ class SwitchPageButton extends Component {
   }
 
   handleClick = (selectedOption) => {
-    const instantiate = this.props.modelState === MODEL_STATE.NOT_INSTANTIATED;
     if (selectedOption === CREATE_NETWORK) {
-      if (instantiate) {
-        this.props.createNetwork();
-      } else {
-        this.props.showNetwork();
-      }
+      this.props.createNetwork();
     } else if (selectedOption === SIMULATE) {
       if (this.props.experimentInDesign) {
         this.props.openLaunchDialog();
