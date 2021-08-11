@@ -317,7 +317,11 @@ define((require) => {
               break;
             default:
               wrappedComponentProps.onChange = this.handleChange;
-              wrappedComponentProps.value = (typeof this.state.value === 'object' && this.state.value !== null && !Array.isArray(this.state.value)) ? JSON.stringify(this.state.value) : this.state.value;
+              wrappedComponentProps.value = (typeof this.state.value === 'object'
+                && this.state.value !== null
+                && !Array.isArray(this.state.value))
+                ? JSON.stringify(this.state.value)
+                : this.state.value;
               // Fix case with multiple values: need to set an empty list in case the value is undefined
               wrappedComponentProps.value = (wrappedComponentProps.multiple
                 && wrappedComponentProps.value !== undefined
@@ -452,7 +456,9 @@ define((require) => {
           wrappedComponentProps.id = cleanAttributeValue(wrappedComponentProps.id);
 
           wrappedComponentProps.onChange = this.handleChange;
-          wrappedComponentProps.value = wrappedComponentProps.multiple && this.state.value !== undefined && !this.state.value ? [] : this.state.value;
+          wrappedComponentProps.value = wrappedComponentProps.multiple
+          && this.state.value !== undefined
+          && !this.state.value ? [] : this.state.value;
           delete wrappedComponentProps.model;
           delete wrappedComponentProps.postProcessItems;
           delete wrappedComponentProps.validate;
@@ -486,5 +492,5 @@ function getNameFromWrappedComponent (WrappedComponent) {
  * Due to close integration with Python commands, characters []'". can be part of an id attribute.
  */
 function cleanAttributeValue (value) {
-  return value.replace(/[\[\]'.]+/g, '');
+  return value.replace(/[[\]'.]+/g, '');
 }

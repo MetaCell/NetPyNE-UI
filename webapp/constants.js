@@ -59,7 +59,7 @@ export const TOPBAR_CONSTANTS = {
   CREATE_AND_SIMULATE_NETWORK: 'Create and simulate network',
   SIMULATE: 'Simulate network',
   EXPLORE_EXISTING_NETWORK: 'Explore model',
-  BACK_TO_EDITION: 'Back to edit',
+  BACK_TO_EDITION: 'BACK TO EDIT',
   NEW_PAGE: 'NEW_PAGE',
 
 };
