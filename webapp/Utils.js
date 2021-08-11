@@ -242,38 +242,6 @@ const Utils = {
         ? { ...output, ...Utils.flatten(obj[key], `${path}[${key}].`) }
         : { ...output, ...Utils.flatten(obj[key], `${path + key}.`) }), {});
   },
-
-  /**
-   * Converts a value based on `type` of the netpyne metadata `field`.
-   *
-   * @param {*} field metadata field of netpyne.
-   * @param {*} value value to be converted to proper type.
-   * @returns value converted to `type`.
-   */
-  convertFieldValue (field, value) {
-    if (field == null) {
-      return value;
-    }
-
-    switch (field.type) {
-      case 'int':
-        return Number(value);
-
-      case 'float':
-        return Number(value);
-
-      case 'str':
-        return String(value);
-
-      case 'bool':
-        return Boolean(value);
-
-      default:
-        // .. handling of more types
-        // list(float), dict, list(list(float)), func
-        return value;
-    }
-  },
 };
 
 export default Utils;

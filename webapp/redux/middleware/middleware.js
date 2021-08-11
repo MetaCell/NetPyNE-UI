@@ -23,10 +23,8 @@ import { openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
 import Utils from '../../Utils';
 import { downloadJsonResponse, downloadPythonResponse } from './utils';
-
 import { setWidgets, setLayout } from '../actions/layout';
 import * as Constants from '../../constants';
-import { openLaunchDialog } from '../actions/experiments';
 
 let previousLayout = {
   edit: undefined,

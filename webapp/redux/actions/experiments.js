@@ -1,6 +1,5 @@
 export const GET_EXPERIMENTS = 'GET_EXPERIMENTS';
 export const SET_EXPERIMENTS = 'SET_EXPERIMENTS';
-export const RESET_EXPERIMENT = 'RESET_EXPERIMENT';
 export const CLONE_EXPERIMENT = 'CLONE_EXPERIMENT';
 export const VIEW_EXPERIMENTS_RESULTS = 'VIEW_EXPERIMENT_RESULTS';
 export const TRIAL_LOAD_MODEL_SPEC = 'TRIAL_LOAD_MODEL_SPEC';
@@ -8,13 +7,8 @@ export const OPEN_LAUNCH_DIALOG = 'OPEN_LAUNCH_DIALOG';
 export const CLOSE_LAUNCH_DIALOG = 'CLOSE_LAUNCH_DIALOG';
 
 /**
- * Resets configuration of current Experiment.
- * User can start now with a new Experiment.
+ * Triggers fetching the Experiments from the backend.
  */
-export const resetCurrentExperiment = () => ({
-  type: RESET_EXPERIMENT,
-});
-
 export const getExperiments = () => ({
   type: GET_EXPERIMENTS,
 });
@@ -35,6 +29,9 @@ export const viewExperimentResults = (payload) => ({
   payload,
 });
 
+/**
+ * Load the model specification of the specified trial.
+ */
 export const loadTrialModelSpec = (payload) => ({
   type: TRIAL_LOAD_MODEL_SPEC,
   payload,
