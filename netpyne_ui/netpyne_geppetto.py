@@ -302,6 +302,7 @@ class NetPyNEGeppetto:
             return utils.getJSONError(message, sys.exc_info())
 
     def _prepare_simulation_files(self, experiment: model.Experiment = None, use_prev_inst: bool = False) -> str:
+        """Prepares template files and netpyne model files for a single simulation """
         exp = copy.deepcopy(experiment)
         # Remove parameter & trials for single run
         exp.params = []
@@ -358,6 +359,13 @@ class NetPyNEGeppetto:
         return save_folder_path
 
     def _prepare_batch_files(self, experiment: model.Experiment) -> str:
+        """Creates template files and netpyne model files in the experiment folder.
+        
+        Only for an experiment consisting of many trials.
+
+        :param experiment: given experiment
+        :return: working directory path
+        """
         exp = copy.deepcopy(experiment)
         exp.params = self.experiments.process_params(exp.params)
 

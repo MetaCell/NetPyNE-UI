@@ -3,11 +3,11 @@ import subprocess
 import os
 import multiprocessing
 import platform
-from dataclasses import dataclass
 
 from netpyne import sim
 from netpyne_ui import constants
 
+# Available netpyne.batch.Batch methods.
 MPI_DIRECT = "mpi_direct"
 MPI_BULLETIN = "mpi_bulletin"
 
@@ -27,15 +27,6 @@ class InvalidConfigError(Exception):
     """ Thrown if invalid number of CPUs were specified. """
 
 
-@dataclass
-class Simulation:
-    cores: int
-    name: str
-    asynchronous: bool
-    batch: bool
-    subprocess = None
-
-
 class LocalSimulationPool:
     """ Pool that manages simulation running on the same machine as Netpyne-UI. """
 
@@ -47,18 +38,25 @@ class LocalSimulationPool:
 
     def run(self, parallel, cores, method="", batch=False, asynchronous=False, working_directory=None):
         if int(cores) > self.cpus:
-            raise InvalidConfigError(f"Specified {cores} cores, but only {self.cpus} are available")
+            raise InvalidConfigError(
+                f"Specified {cores} cores, but only {self.cpus} are available")
 
         logging.info(f"Scheduling simulation on {cores} cores ...")
 
         if batch or asynchronous or parallel:
             if method == MPI_DIRECT:
-                self._run_in_subprocess(_python_command(working_directory), asynchronous=asynchronous, working_directory=working_directory)
+                self._run_in_subprocess(
+                    _python_command(working_directory), asynchronous=asynchronous, working_directory=working_directory
+                )
             elif method == MPI_BULLETIN:
                 if parallel:
-                    self._run_in_subprocess(_bulletin_board_cmd(cores, working_directory), asynchronous=asynchronous, working_directory=working_directory)
+                    self._run_in_subprocess(
+                        _bulletin_board_cmd(cores, working_directory), asynchronous=asynchronous, working_directory=working_directory
+                    )
                 else:
-                    self._run_in_subprocess(_python_command(working_directory), asynchronous=asynchronous, working_directory=working_directory)
+                    self._run_in_subprocess(
+                        _python_command(working_directory), asynchronous=asynchronous, working_directory=working_directory
+                    )
             else:
                 raise InvalidConfigError(f"Unsupported method {method}")
         else:
@@ -89,7 +87,7 @@ class LocalSimulationPool:
         sim.simulate()
         sim.saveData()
 
-    def _run_in_subprocess(self, cmds, asynchronous=False, working_directory: str=None):
+    def _run_in_subprocess(self, cmds, asynchronous=False, working_directory: str = None):
         if self.is_running():
             logging.info("Another simulation is still running")
             return False
@@ -110,6 +108,11 @@ class LocalSimulationPool:
 
 
 def _bulletin_board_cmd(cores, working_directory=None):
+    """ Creates command to run batch or single simulations in parallel.
+
+    Uses mpiexec that implements the OpenMPI protocol to schedule simulations.
+    Uses the master/worker pattern.
+    """
     return ["mpiexec", "-n", str(cores), "--use-hwthread-cpus", "nrniv", "-python", "-mpi", _script_path(working_directory)]
 
 

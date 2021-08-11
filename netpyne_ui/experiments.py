@@ -20,13 +20,20 @@ SIM_CONFIG_FILE = "simConfig.json"
 NET_PARAMS_FILE = "netParams.json"
 EXPERIMENT_FILE = "experiment.json"
 
+# Id for the base model trial created for an Experiment without parameters.
 BASE_TRIAL_ID = "model_output"
 
+
 class ExperimentsError(Exception):
+    """ Base Exception for any specific Experiment errors. """
     pass
 
 
 def get_experiments() -> List[dict]:
+    """Returns the current list of experiments.
+
+    Scans the experiments folder to read experiments from disk and includes experiment in design.
+    """
     # Only update Experiments stored on filesystem
     stored_experiments = _scan_experiments_directory()
     model.experiments = [
@@ -77,6 +84,11 @@ def edit_experiment(name: str, experiment: dict):
 
 
 def replace_current_with(name: str):
+    """Replaces the experiment in design with a new experiment based on experiment with `name`.
+
+    :param name: name of experiment to be cloned.
+    :raises ExperimentsError: thrown if Experiment with `name` doesn't exist.
+    """
     exp = _get_by_name(name)
     if not exp:
         raise ExperimentsError(f"Experiment with name {name} does not exist")
@@ -116,6 +128,7 @@ def any_in_state(states: List[model.ExperimentState]) -> model.Experiment:
 
 
 def set_to_error(experiment: model.Experiment):
+    """Sets the state of `experiment` to ERROR. """
     path = os.path.join(
         constants.NETPYNE_WORKDIR_PATH, constants.EXPERIMENTS_FOLDER, experiment.name
     )
@@ -216,7 +229,7 @@ def _parse_experiment(directory: str) -> model.Experiment:
         * netParams.json
         * simConfig.json
         * json file for each trial in case of batch
-        * output files for each trial (if available)
+        * data files for each trial (if available)
 
     :raises ExperimentsError
     """
@@ -230,13 +243,6 @@ def _parse_experiment(directory: str) -> model.Experiment:
     except IOError:
         raise ExperimentsError(f"Could not find {EXPERIMENT_FILE}")
 
-    with open(os.path.join(path, NET_PARAMS_FILE), "r") as f:
-        net_params = json.load(f)
-
-    with open(os.path.join(path, SIM_CONFIG_FILE), "r") as f:
-        sim_config = json.load(f)
-
-    run_cfg = experiment_config["runCfg"]
     del experiment_config["runCfg"]
 
     # Convert timestamp to datetime
@@ -251,7 +257,7 @@ def _parse_experiment(directory: str) -> model.Experiment:
 
 
 def _delete_experiment_folder(experiment: model.Experiment):
-    """Recursively deletes the associated experiment folder."""
+    """Recursively deletes the associated `experiment` folder."""
 
     def onerror(func, path, exc_info):
         # TODO: error handling
@@ -271,6 +277,11 @@ def _create_base_model_trial() -> model.Trial:
 
 
 def _create_trials(experiment: model.Experiment) -> List[model.Trial]:
+    """Gerates based on `experiment.params` all possible trial combinations.
+
+    :param experiment: given experiment.
+    :return: list of generated trials.
+    """
     params = copy.deepcopy(experiment.params)
     params = process_params(params)
 
@@ -314,6 +325,12 @@ def _create_trials(experiment: model.Experiment) -> List[model.Trial]:
 
 
 def process_params(params: List[model.ExplorationParameter]) -> List[model.ExplorationParameter]:
+    """Cleaning, filtering and converting of experiment `params`.
+
+    :param params: given parameters.
+    :raises ExperimentsError: thrown for invalid parameter configuration.
+    :return: processed list of params.
+    """
     params = [p for p in params if p.mapsTo != '']
 
     for param in params:

@@ -5,87 +5,6 @@ from typing import List, Optional
 
 
 def register(metadata):
-    metadata['batch_config'] = {
-        "label": "Batch configuration",
-        "help": "",
-        "suggestions": "",
-        "hintText": "",
-        'children': {
-            'enabled': {
-                "label": "Run as batch",
-                "help": "Activates batch",
-                "suggestions": "",
-                "hintText": "",
-                "type": "bool"
-            },
-            'name': {
-                "label": "Name of the batch",
-                "help": "",
-                "suggestions": "",
-                "hintText": "",
-                "type": "str"
-            },
-            'saveFolder': {
-                "label": "Save folder",
-                "help": "",
-                "suggestions": "",
-                "hintText": "",
-                "type": "str"
-            },
-            'seed': {
-                "label": "Seed",
-                "help": "",
-                "suggestions": "",
-                "hintText": "",
-                "type": "int"
-            },
-            'method': {
-                "label": "Exploration method",
-                "help": "",
-                "suggestions": "",
-                "hintText": "",
-                "type": "str"
-            }
-        }
-    }
-
-    metadata["run_config"] = {
-        "label": "Run configuration",
-        "help": "",
-        "suggestions": "",
-        "hintText": "",
-        'children': {
-            'parallel': {
-                "label": "Parallel",
-                "help": "",
-                "suggestions": "",
-                "hintText": "",
-                "type": "bool"
-            },
-            'asynchronous': {
-                "label": "Run in background",
-                "help": "",
-                "suggestions": "",
-                "hintText": "",
-                "type": "bool"
-            },
-            'type': {
-                "label": "Execution type",
-                "help": "",
-                "suggestions": "",
-                "hintText": "",
-                "type": "str"
-            },
-            'cores': {
-                "label": "Number of cores",
-                "help": "",
-                "suggestions": "",
-                "hintText": "",
-                "type": "int"
-            }
-        }
-    }
-
     # Modification of metadata to enable validation of experiment parameters.
     metadata['netParams']['children']['popParams']['container'] = True
     metadata['netParams']['children']['cellParams']['container'] = True
@@ -95,6 +14,7 @@ def register(metadata):
     metadata['netParams']['children']['connParams']['container'] = True
     metadata['netParams']['children']['stimSourceParams']['container'] = True
     metadata['netParams']['children']['stimTargetParams']['container'] = True
+
 
 class ExperimentState:
     DESIGN = "DESIGN"
@@ -136,7 +56,7 @@ class Trial:
     # [{ "paramX": 0.2, "paramY": "0.4"}]
     params: list = field(default_factory=list)
     indices: list = field(default_factory=list)
-    
+
 
 @dataclass
 class Experiment:
