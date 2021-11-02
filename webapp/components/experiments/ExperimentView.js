@@ -269,7 +269,7 @@ function EnhancedTableHead (props) {
       id: 'name',
       numeric: false,
       disablePadding: true,
-      label: 'TRIAL NAME',
+      label: 'CONDITION NAME',
     },
     ...paramHeaders,
   ];
