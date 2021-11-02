@@ -6,7 +6,14 @@ import layout from './layout';
 import errors from './errors';
 import drawer from './drawer';
 import topbar from './topbar';
+import experiments from './experiments';
 
 export default combineReducers({
-  general, notebook, layout, errors, drawer, topbar,
+  general,
+  notebook,
+  layout,
+  errors,
+  drawer,
+  topbar,
+  experiments,
 });

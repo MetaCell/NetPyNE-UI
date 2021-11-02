@@ -18,6 +18,12 @@ import {
 } from '../redux/actions/general';
 
 import {
+  cloneExperiment,
+  getExperiments,
+  openLaunchDialog,
+} from '../redux/actions/experiments';
+
+import {
   openTopbarDialog,
   closeTopbarDialog,
 } from '../redux/actions/topbar';
@@ -52,6 +58,10 @@ import _SwitchPageButton from './topbar/SwitchPageButton';
 import _NetPyNEThumbnail from './general/NetPyNEThumbnail';
 import _Dialog from './general/Dialog';
 import _SelectCellTemplate from './definition/cellRules/SelectCellTemplate';
+import _Experiments from './experiments/Experiments';
+import _ExperimentEdit from './experiments/ExperimentEdit';
+import _ExperimentManager from './experiments/ExperimentManager';
+import _LaunchDialog from './topbar/dialogs/LaunchDialog';
 
 const updateCardsDispatch = (dispatch) => ({ updateCards: () => dispatch(updateCards) });
 
@@ -98,6 +108,32 @@ export const SelectField = PythonControlledCapability.createPythonControlledCont
   _SelectField,
 );
 
+export const Experiments = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    experiments: state.experiments.experiments,
+  }),
+  (dispatch) => ({
+    getExperiments: () => dispatch(getExperiments()),
+    cloneExperiment: (name) => dispatch(cloneExperiment(name)),
+  }),
+)(_Experiments);
+
+export const LaunchDialog = connect(
+  (state, ownProps) => {
+    const { inDesign, openLaunchDialog } = state.experiments;
+    return ({
+      ...ownProps,
+      open: openLaunchDialog,
+      experimentName: inDesign == null ? '' : inDesign.name,
+      numberOfTrials: inDesign == null ? '' : inDesign.trials.length,
+    });
+  },
+)(_LaunchDialog);
+
+export const ExperimentEdit = _ExperimentEdit;
+export const ExperimentManager = _ExperimentManager;
+
 // ---------------------------------------------------------------------------------------- //
 
 // CONNECT
@@ -114,6 +150,7 @@ export const NetPyNE = connect(
     setWidgets: (payload) => dispatch(setWidgets(payload)),
     setDefaultWidgets: () => dispatch(setDefaultWidgets),
     modelLoaded: () => dispatch(modelLoaded),
+    getExperiments: () => dispatch(getExperiments()),
   }),
 )(_NetPyNE);
 
@@ -211,7 +248,7 @@ export const NetWorkControlButtons = connect(
   (state) => ({ modelState: state.general.modelState }),
   (dispatch) => ({
     createAndSimulateNetwork: () => dispatch(createAndSimulateNetwork),
-    simulateNetwork: () => dispatch(simulateNetwork),
+    simulateNetwork: () => dispatch(simulateNetwork()),
   }),
 )(_NetWorkControlButtons);
 
@@ -263,6 +300,7 @@ export const Topbar = connect(
     automaticInstantiation: state.general.automaticInstantiation,
     automaticSimulation: state.general.automaticSimulation,
     theme: state.general.theme,
+    experimentInDesign: state.experiments.inDesign != null,
   }),
   (dispatch) => ({
     dispatchAction: (action) => dispatch(action),
@@ -277,13 +315,15 @@ export const SwitchPageButton = connect(
     modelState: state.general.modelState,
     automaticInstantiation: state.general.automaticInstantiation,
     automaticSimulation: state.general.automaticSimulation,
+    experimentInDesign: state.experiments.inDesign != null,
   }),
   (dispatch) => ({
     switchToEditModelPage: () => dispatch(editModel),
     createNetwork: () => dispatch(createNetwork),
     createAndSimulateNetwork: () => dispatch(createAndSimulateNetwork),
     showNetwork: () => dispatch(showNetwork),
-    simulateNetwork: () => dispatch(simulateNetwork),
+    simulateNetwork: () => dispatch(simulateNetwork()),
+    openLaunchDialog: () => dispatch(openLaunchDialog()),
   }),
 )(_SwitchPageButton);
 

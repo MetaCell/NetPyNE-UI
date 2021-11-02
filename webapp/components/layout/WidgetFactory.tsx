@@ -12,6 +12,7 @@ import {
   NetPyNEPopulations,
   NetPyNEPlots,
   NetPyNEPythonConsole,
+  ExperimentManager,
 } from '..';
 
 import { WidgetComponent } from './model';
@@ -119,10 +120,13 @@ export default class WidgetFactory {
         return <NetPyNEStimulationTargets model="netParams.stimTargetParams" />;
       }
       case 'simConfig': {
-        return <NetPyNESimConfig model="simConfig" />;
+        return <NetPyNESimConfig />;
       }
       case 'analysis': {
         return <NetPyNEPlots model="simConfig.analysis" />;
+      }
+      case 'experimentManager': {
+        return <ExperimentManager />;
       }
     }
   }

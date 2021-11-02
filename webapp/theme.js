@@ -28,6 +28,14 @@ export const {
   radius,
   canvasBgDark,
   canvasBgLight,
+  experimentAutocompleteBorder,
+  experimentInputColor,
+  experimentGrey,
+  experimentFieldColor,
+  experimentSvgColor,
+  experimentLabelColor,
+  errorFieldBorder,
+  primaryColorHover,
 } = vars;
 
 const rawTheme = {

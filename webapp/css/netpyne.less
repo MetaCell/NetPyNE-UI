@@ -1,7 +1,6 @@
 @import "colors";
 @import (css)
   url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap");
-
 html,
 body {
   height: 100%;
@@ -568,4 +567,24 @@ div.flexlayout__layout {
   overflow: hidden;
   overflow-y: auto;
   flex: 1;
+}
+[class*="makeStyles-closeDrawer-"] {
+  .drawerList .MuiListItemText-root {
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+body {
+  .MuiTable-root {
+    border-collapse: separate;
+  }
 }

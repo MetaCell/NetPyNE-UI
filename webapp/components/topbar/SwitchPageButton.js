@@ -46,9 +46,17 @@ class SwitchPageButton extends Component {
     if (selectedOption === CREATE_NETWORK) {
       this.props.createNetwork();
     } else if (selectedOption === SIMULATE) {
-      this.props.simulateNetwork();
+      if (this.props.experimentInDesign) {
+        this.props.openLaunchDialog();
+      } else {
+        this.props.simulateNetwork();
+      }
     } else if (selectedOption === CREATE_AND_SIMULATE) {
-      this.props.createAndSimulateNetwork();
+      if (this.props.experimentInDesign) {
+        this.props.openLaunchDialog();
+      } else {
+        this.props.createAndSimulateNetwork();
+      }
     } else if (selectedOption === BACK_TO_EDIT) {
       this.props.switchToEditModelPage();
     } else {

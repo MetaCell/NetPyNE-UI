@@ -8,10 +8,10 @@ import {
   LayoutManager,
   Drawer,
   Dialog,
+  LaunchDialog,
 } from 'netpyne/components';
 
 import Utils from '../Utils';
-
 import { EDIT_WIDGETS } from '../constants';
 
 const styles = ({ zIndex }) => ({
@@ -41,28 +41,17 @@ const styles = ({ zIndex }) => ({
 });
 
 const TIMEOUT = 10000;
+const EXPERIMENT_POLL_INTERVAL = 1000;
 
 class NetPyNE extends React.Component {
-  openPythonCallDialog (event) {
-    const payload = {
-      errorMessage: event.evalue,
-      errorDetails: event.traceback.join('\n'),
-    };
-    this.props.pythonCallErrorDialogBox(payload);
-  }
-
-  addMetadataToWindow (data) {
-    console.log('Initialising NetPyNE Tabs');
-    window.metadata = data.metadata;
-    window.currentFolder = data.currentFolder;
-    window.isDocker = data.isDocker;
-    window.pythonConsoleLoaded = true;
-    window.tuts = data.tuts;
-  }
-
   componentDidMount () {
     GEPPETTO.on(GEPPETTO.Events.Error_while_exec_python_command, this.openPythonCallDialog, this);
-    this.props.setDefaultWidgets();
+
+    const {
+      setDefaultWidgets, setWidgets, modelLoaded, getExperiments,
+    } = this.props;
+
+    setDefaultWidgets();
 
     GEPPETTO.on('jupyter_geppetto_extension_ready', (data) => {
       const project = {
@@ -86,9 +75,11 @@ class NetPyNE extends React.Component {
           GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, 'Loading NetPyNE-UI');
           const metadata = Utils.convertToJSON(response);
           this.addMetadataToWindow(metadata);
-          this.props.setWidgets(EDIT_WIDGETS);
-          this.props.modelLoaded();
+          setWidgets(EDIT_WIDGETS);
+          modelLoaded();
           GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+
+          setInterval(getExperiments, EXPERIMENT_POLL_INTERVAL);
         });
 
       setTimeout(() => {
@@ -103,6 +94,23 @@ class NetPyNE extends React.Component {
 
   componentWillUnmount () {
     GEPPETTO.off(GEPPETTO.Events.Error_while_exec_python_command, this.openPythonCallDialog, this);
+  }
+
+  openPythonCallDialog (event) {
+    this.props.pythonCallErrorDialogBox({
+      errorMessage: event.evalue,
+      errorDetails: event.traceback.join('\n'),
+    });
+  }
+
+  addMetadataToWindow (data) {
+    console.log('Initialising NetPyNE Tabs');
+    window.metadata = data.metadata;
+    window.currentFolder = data.currentFolder;
+    window.isDocker = data.isDocker;
+    window.pythonConsoleLoaded = true;
+    window.tuts = data.tuts;
+    window.cores = data.cores;
   }
 
   render () {
@@ -130,6 +138,7 @@ class NetPyNE extends React.Component {
         </div>
         <Dialog />
         <ErrorDialog />
+        <LaunchDialog />
       </div>
     );
   }

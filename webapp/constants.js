@@ -3,7 +3,7 @@ import { MINIMIZED_PANEL } from './components/layout';
 
 export { WidgetStatus };
 export const TOP_PANEL = 'hlsPanel';
-
+export const TOOLS_LIST = 'tools';
 export const THEMES = {
   DARK: 'gui',
   BLACK: 'guiBlack',
@@ -25,7 +25,20 @@ export const NETPYNE_COMMANDS = {
   plotFigure: 'netpyne_geppetto.getPlot',
   deleteParam: 'netpyne_geppetto.deleteParam',
   checkAvailablePlots: 'netpyne_geppetto.checkAvailablePlots',
+  getExperiments: 'netpyne_geppetto.experiments.get_experiments',
+  cloneExperiment: 'netpyne_geppetto.cloneExperiment',
+  viewExperimentResults: 'netpyne_geppetto.viewExperimentResult',
 };
+
+export const REAL_TYPE = {
+  INT: 'int',
+  FLOAT: 'float',
+  BOOL: 'bool',
+  STR: 'str',
+  FUNC: 'func',
+  DICT: 'dict',
+  DICT_DICT: 'dict(dict)',
+}
 
 export const PYTHON_CONSOLE_WIDGET = {
   id: 'python',
@@ -41,6 +54,7 @@ export const PYTHON_CONSOLE_WIDGET = {
   enableRename: false,
   hideOnClose: true,
   pos: 1000,
+  specification: TOOLS_LIST,
 };
 /*
  * ------------------------------------------------------------------------------ //
@@ -61,7 +75,7 @@ export const TOPBAR_CONSTANTS = {
   EXPLORE_EXISTING_NETWORK: 'Explore model',
   BACK_TO_EDITION: 'BACK TO EDIT',
   NEW_PAGE: 'NEW_PAGE',
-
+  NETWORK_MODEL: 'NETWORK_MODEL',
 };
 
 /*
@@ -301,6 +315,18 @@ export const DEFAULT_NETWORK_WIDGETS = {
     hideOnClose: true,
     pos: 0,
   },
+  experimentManager: {
+    id: 'experimentManager',
+    name: 'Experiment Manager',
+    status: WidgetStatus.MINIMIZED,
+    hideOnClose: true,
+    component: 'experimentManager',
+    panelName: MINIMIZED_PANEL,
+    defaultPanel: 'plotPanel',
+    enableRename: false,
+    pos: 14,
+    specification: TOOLS_LIST,
+  },
   ...PLOT_WIDGETS,
   [PYTHON_CONSOLE_WIDGET.id]: PYTHON_CONSOLE_WIDGET,
 };
@@ -367,16 +393,6 @@ export const EDIT_WIDGETS = {
     enableRename: false,
     pos: 5,
   },
-  simConfig: {
-    id: 'simConfig',
-    name: 'Configuration',
-    status: WidgetStatus.HIDDEN,
-    hideOnClose: true,
-    component: 'simConfig',
-    panelName: TOP_PANEL,
-    enableRename: false,
-    pos: 6,
-  },
   analysis: {
     id: 'analysis',
     name: 'Plot Settings',
@@ -385,8 +401,66 @@ export const EDIT_WIDGETS = {
     component: 'analysis',
     panelName: TOP_PANEL,
     enableRename: false,
+    pos: 6,
+  },
+  simConfig: {
+    id: 'simConfig',
+    name: 'Configuration',
+    status: WidgetStatus.HIDDEN,
+    component: 'simConfig',
+    hideOnClose: true,
+    panelName: TOP_PANEL,
+    enableRename: false,
     pos: 7,
   },
+  experimentManager: {
+    id: 'experimentManager',
+    name: 'Experiment Manager',
+    status: WidgetStatus.HIDDEN,
+    hideOnClose: true,
+    component: 'experimentManager',
+    panelName: TOP_PANEL,
+    enableRename: false,
+    pos: 8,
+    specification: TOOLS_LIST,
+  },
+};
+
+export const EXPERIMENT_STATE = {
+  DESIGN: 'DESIGN',
+  PENDING: 'PENDING',
+  SIMULATING: 'SIMULATING',
+  SIMULATED: 'SIMULATED',
+  INSTANTIATING: 'INSTANTIATING',
+  INSTANTIATED: 'INSTANTIATED',
+  ERROR: 'ERROR',
+};
+
+export const SIDEBAR_HEADINGS = {
+  MODEL: 'Model Specification',
+  TOOLS: 'Tools',
+  PLOTS: 'Plots',
+};
+
+export const EXPERIMENT_TEXTS = {
+  WARNING: 'Warning: You need at least two parameters for the grouping to work.',
+  RANGE: 'range',
+  LIST: 'list',
+  CREATE_EXPERIMENT: 'Create New Experiment',
+  DIALOG_MESSAGE: 'The new experiment will replace the current experiment in design, are you sure you want to proceed?',
+  INPUT_ERR_MESSAGE: 'Please check the input',
+  DELETE_EXPERIMENT: 'Delete Experiment',
+  DELETE_DIALOG_MESSAGE: 'Are you sure you want to delete this experiment?',
+  CLONE_EXPERIMENT: 'Clone Experiment',
+  CLONE_EXPERIMENT_MESSAGE: 'Replaces the Experiment in design with the stored Experiment.',
+  VIEW_EXPERIMENTS_RESULTS: 'View simulation results',
+  VIEW_EXPERIMENTS_RESULTS_MESSAGE: 'This will replace the currently loaded results in Explore, ' +
+    'are you sure you want to proceed?',
+  LOAD_TRIAL_MODEL_SPEC: 'Load Model Specification',
+  LOAD_TRIAL_MODEL_SPEC_MESSAGE: 'This will replace the currently loaded model specification, ' +
+    'are you sure you want to proceed?',
+  ERROR_EXPERIMENT_WITH_NAME_EXISTS: 'This name is already taken',
+  ERROR_EXPERIMENT_EMPTY: 'Please enter experiment name',
 };
 
 export const TUTORIALS_LIST = {
@@ -397,3 +471,20 @@ export const TUTORIALS_LIST = {
   tut3_norxd: 'Tut 3c: Multiscale network (no RxD)',
   tut_osc: 'Tut 4: Simple oscillatory network',
 };
+
+export const EXPERIMENT_VIEWS = {
+  list: 'list',
+  viewExperiment: 'viewExperiment',
+  jsonViewer: 'jsonViewer',
+  edit: 'edit',
+};
+
+export const LAUNCH_MODAL = {
+  title: 'What do you want to simulate ?',
+  modelState: 'model',
+  experimentState: 'experiment',
+  actionSimulate: 'Simulate',
+  defaultResource: 'Local Machine',
+  errorText: 'Please check the input',
+};
+

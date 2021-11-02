@@ -40,6 +40,15 @@ class Topbar extends Component {
     this.menuHandler = this.menuHandler.bind(this);
   }
 
+  handleOpenSnackBar (message) {
+    this.snackBarMessage = message;
+    this.setState({ openSnackBar: true });
+  }
+
+  handleClose () {
+    this.props.closeDialog();
+  }
+
   menuHandler (click) {
     if (!click) {
       return;
@@ -82,28 +91,26 @@ class Topbar extends Component {
     }
   }
 
-  handleClose () {
-    this.props.closeDialog();
-  }
-
   resetModel () {
     this.props.closeDialog();
     this.props.resetModel();
   }
 
-  handleOpenSnackBar (message) {
-    this.snackBarMessage = message;
-    this.setState({ openSnackBar: true });
-  }
-
   render () {
+    const {
+      classes,
+      modelLoaded,
+      dialogOpen,
+      topbarDialogName,
+      topbarDialogMetadata,
+    } = this.props;
     let content;
-    if (this.props.dialogOpen) {
-      switch (this.props.topbarDialogName) {
+    if (dialogOpen) {
+      switch (topbarDialogName) {
         case TOPBAR_CONSTANTS.LOAD:
           content = (
             <LoadFileDialog
-              open={this.props.dialogOpen}
+              open={dialogOpen}
               onRequestClose={() => this.handleClose()}
             />
           );
@@ -111,7 +118,7 @@ class Topbar extends Component {
         case TOPBAR_CONSTANTS.SAVE:
           content = (
             <SaveFileDialog
-              open={this.props.dialogOpen}
+              open={dialogOpen}
               onRequestClose={() => this.handleClose()}
             />
           );
@@ -119,7 +126,7 @@ class Topbar extends Component {
         case TOPBAR_CONSTANTS.IMPORT_HLS:
           content = (
             <ImportExportHLSDialog
-              open={this.props.dialogOpen}
+              open={dialogOpen}
               onRequestClose={() => this.handleClose()}
               mode="IMPORT"
             />
@@ -128,7 +135,7 @@ class Topbar extends Component {
         case TOPBAR_CONSTANTS.EXPORT_HLS:
           content = (
             <ImportExportHLSDialog
-              open={this.props.dialogOpen}
+              open={dialogOpen}
               onRequestClose={() => this.handleClose()}
               mode="EXPORT"
             />
@@ -137,8 +144,8 @@ class Topbar extends Component {
         case TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE:
           content = (
             <ImportCellParamsDialog
-              open={this.props.dialogOpen}
-              cellRuleName={this.props.topbarDialogMetadata.cellRuleName}
+              open={dialogOpen}
+              cellRuleName={topbarDialogMetadata.cellRuleName}
               onRequestClose={() => this.handleClose()}
             />
           );
@@ -146,7 +153,7 @@ class Topbar extends Component {
         case TOPBAR_CONSTANTS.NEW_MODEL:
           content = (
             <NewModelDialog
-              open={this.props.dialogOpen}
+              open={dialogOpen}
               onRequestClose={() => this.handleClose()}
               onAction={() => this.resetModel()}
             />
@@ -155,7 +162,7 @@ class Topbar extends Component {
         case TOPBAR_CONSTANTS.UPLOAD_FILES:
           content = (
             <UploadDownloadFilesDialog
-              open={this.props.dialogOpen}
+              open={dialogOpen}
               onRequestClose={() => this.handleClose()}
               openSnackBar={(message) => {
                 this.handleOpenSnackBar(message);
@@ -167,7 +174,7 @@ class Topbar extends Component {
         case TOPBAR_CONSTANTS.DOWNLOAD_FILES:
           content = (
             <UploadDownloadFilesDialog
-              open={this.props.dialogOpen}
+              open={dialogOpen}
               onRequestClose={() => this.handleClose()}
               openSnackBar={(message) => {
                 this.handleOpenSnackBar(message);
@@ -184,18 +191,17 @@ class Topbar extends Component {
 
     return (
       <div>
-        <div className={this.props.classes.topbar}>
+        <div className={classes.topbar}>
           <Menu
             configuration={toolbarConfig}
             menuHandler={this.menuHandler}
           />
           <div>
-
             <SwitchPageButton />
           </div>
 
         </div>
-        {this.props.modelLoaded ? null : <Splash />}
+        {modelLoaded ? null : <Splash />}
         <Snackbar
           message={this.snackBarMessage}
           autoHideDuration={4000}
@@ -204,7 +210,6 @@ class Topbar extends Component {
         />
         {content}
       </div>
-
     );
   }
 }

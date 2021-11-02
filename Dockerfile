@@ -15,6 +15,12 @@ ENV JUPYTER_GEPPETTO_VERSION=$JUPYTER_GEPPETTO_VERSION
 ENV PYGEPPETTO_VERSION=$PYGEPPETTO_VERSION
 ENV BUILD_ARGS=$BUILD_ARGS
 
+# Install openmpi for parallel simulations
+# Important: Have to switch to root to install a package and ensure to switch back to NB user afterwards
+USER root
+RUN apt-get update && apt-get install -y libopenmpi-dev
+USER $NB_USER
+
 WORKDIR /home/jovyan/work
 COPY --chown=1000:1000 requirements.txt ${INSTALLATION_FOLDER}/requirements.txt
 

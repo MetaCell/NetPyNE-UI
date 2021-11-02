@@ -26,12 +26,12 @@ define((require) => {
       class PythonControlledComponent extends WrappedComponent {
         constructor (props) {
           super(props);
-          if (this.state == undefined) {
+          if (this.state === undefined) {
             this.state = {};
           }
           this.state.model = props.model;
           this.state.componentType = getNameFromWrappedComponent(WrappedComponent);
-          this.id = (this.props.id == undefined) ? this.props.model : this.props.id;
+          this.id = (this.props.id === undefined) ? this.props.model : this.props.id;
 
           this._isMounted = false;
         }
@@ -56,11 +56,11 @@ define((require) => {
 
         UNSAFE_componentWillReceiveProps (nextProps) {
           this.disconnectFromPython();
-          this.id = (nextProps.id == undefined) ? nextProps.model : nextProps.id;
+          this.id = (nextProps.id === undefined) ? nextProps.model : nextProps.id;
 
           GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
           this.connectToPython(this.state.componentType, nextProps.model);
-          if (this.state.value != nextProps.value) {
+          if (this.state.value !== nextProps.value) {
             this.setState({ value: (nextProps.value === undefined) ? '' : nextProps.value });
           }
         }
@@ -68,10 +68,10 @@ define((require) => {
         componentDidMount () {
           this._isMounted = true;
           GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this, true);
-          if (this.props.model != undefined) {
+          if (this.props.model !== undefined) {
             this.connectToPython(this.state.componentType, this.props.model);
           }
-          if (this.props.value != undefined) {
+          if (this.props.value !== undefined) {
             this.setState({ value: this.props.value });
           }
         }
@@ -127,19 +127,19 @@ define((require) => {
 
         UNSAFE_componentWillReceiveProps (nextProps) {
           this.disconnectFromPython();
-          this.id = (nextProps.id == undefined) ? nextProps.model : nextProps.id;
+          this.id = (nextProps.id === undefined) ? nextProps.model : nextProps.id;
           GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
           this.connectToPython(this.state.componentType, nextProps.model);
-          if ((this.state.searchText != nextProps.searchText) && (nextProps.searchText != undefined)) {
+          if ((this.state.searchText !== nextProps.searchText) && (nextProps.searchText !== undefined)) {
             this.setState({ searchText: nextProps.searchText });
           }
-          if ((this.state.checked != nextProps.checked) && (nextProps.checked != undefined)) {
+          if ((this.state.checked !== nextProps.checked) && (nextProps.checked !== undefined)) {
             this.setState({ checked: nextProps.checked });
           }
-          if ((this.state.value != nextProps.value) && (nextProps.value != undefined)) {
+          if ((this.state.value !== nextProps.value) && (nextProps.value !== undefined)) {
             this.setState({ value: nextProps.value });
           }
-          if ((this.state.model != nextProps.model) && (nextProps.model != undefined)) {
+          if ((this.state.model !== nextProps.model) && (nextProps.model !== undefined)) {
             this.setState({ model: nextProps.model });
           }
         }
@@ -232,7 +232,7 @@ define((require) => {
 
         triggerUpdate (updateMethod) {
           // common strategy when triggering processing of a value change, delay it, every time there is a change we reset
-          if (this.updateTimer != undefined) {
+          if (this.updateTimer !== undefined) {
             clearTimeout(this.updateTimer);
           }
           this.updateTimer = setTimeout(updateMethod, 1000);
@@ -241,7 +241,7 @@ define((require) => {
         // Default handle (mainly textfields and dropdowns)
         handleChange (event, index, value) {
           let targetValue = value;
-          if (event != null && event.target.value != undefined) {
+          if (event != null && event.target.value !== undefined) {
             targetValue = event.target.value;
           }
           if (this.oldValue === undefined) {
@@ -275,10 +275,10 @@ define((require) => {
 
         render () {
           const wrappedComponentProps = { ...this.props };
-          if (wrappedComponentProps.key == undefined) {
+          if (wrappedComponentProps.key === undefined) {
             wrappedComponentProps.key = wrappedComponentProps.model;
           }
-          if (wrappedComponentProps.id == undefined) {
+          if (wrappedComponentProps.id === undefined) {
             wrappedComponentProps.id = wrappedComponentProps.model ?? '';
           }
 
@@ -294,7 +294,7 @@ define((require) => {
           delete wrappedComponentProps.prePythonSyncProcessing;
           delete wrappedComponentProps.callback;
 
-          if (wrappedComponentProps.realType == 'func' || wrappedComponentProps.realType == 'float') {
+          if (wrappedComponentProps.realType === 'func' || wrappedComponentProps.realType === 'float') {
             wrappedComponentProps.helperText = this.state.errorMsg;
           }
           if (!getNameFromWrappedComponent(WrappedComponent)
@@ -352,13 +352,13 @@ define((require) => {
             pythonData: [],
           };
           // If a handleChange method is passed as a props it will overwrite the handleChange python controlled capability
-          this.handleChange = (this.props.handleChange == undefined) ? this.handleChange.bind(this) : this.props.handleChange.bind(this);
+          this.handleChange = (this.props.handleChange === undefined) ? this.handleChange.bind(this) : this.props.handleChange.bind(this);
           this.callPythonMethod();
         }
 
         UNSAFE_componentWillReceiveProps (nextProps) {
           this.disconnectFromPython();
-          this.id = (nextProps.id == undefined) ? nextProps.model : nextProps.id;
+          this.id = (nextProps.id === undefined) ? nextProps.model : nextProps.id;
 
           GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
           this.connectToPython(this.state.componentType, nextProps.model);
@@ -381,7 +381,7 @@ define((require) => {
         // Default handle (mainly textfields and dropdowns)
         handleChange (event, index, value) {
           let targetValue = value;
-          if (event != null && event.target.value != undefined) {
+          if (event != null && event.target.value !== undefined) {
             targetValue = event.target.value;
           }
           this.setState({ value: targetValue });
@@ -395,7 +395,7 @@ define((require) => {
           }
 
           // compare lengths - can save a lot of time
-          if (array1.length != array2.length) {
+          if (array1.length !== array2.length) {
             return false;
           }
 
@@ -406,7 +406,7 @@ define((require) => {
               if (!array1[i].equals(array2[i])) {
                 return false;
               }
-            } else if (array1[i] != array2[i]) {
+            } else if (array1[i] !== array2[i]) {
               // Warning - two different object instances will never be equal: {x:20} != {x:20}
               return false;
             }
@@ -418,7 +418,7 @@ define((require) => {
           GeppettoUtils.evalPythonMessage(this.props.method, [])
             .then((response) => {
               if (this._isMounted) {
-                if (Object.keys(response).length != 0) {
+                if (Object.keys(response).length !== 0) {
                   this.setState({ pythonData: response });
                 } else {
                   this.setState({ pythonData: [] });
@@ -446,10 +446,10 @@ define((require) => {
 
         render () {
           const wrappedComponentProps = { ...this.props };
-          if (wrappedComponentProps.key == undefined) {
+          if (wrappedComponentProps.key === undefined) {
             wrappedComponentProps.key = wrappedComponentProps.model;
           }
-          if (wrappedComponentProps.id == undefined) {
+          if (wrappedComponentProps.id === undefined) {
             wrappedComponentProps.id = wrappedComponentProps.model ?? '';
           }
 
