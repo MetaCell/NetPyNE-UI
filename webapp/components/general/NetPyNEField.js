@@ -7,6 +7,10 @@ import Utils from '../../Utils';
 import { REAL_TYPE } from '../../constants';
 
 export default class NetPyNEField extends Component {
+  constructor (props) {
+    super(props);
+    this.state = { open: false };
+  }
   setErrorMessage (value) {
     return new Promise((resolve, reject) => {
       if (this.realType === REAL_TYPE.FUNC) {
@@ -45,6 +49,10 @@ export default class NetPyNEField extends Component {
       }
     }
     return value;
+  }
+
+  handleTooltip (action) {
+    this.setState({ open:  action});
   }
 
   render () {
@@ -126,8 +134,12 @@ export default class NetPyNEField extends Component {
                 leaveTouchDelay={0}
                 disableTouchListener
                 disableFocusListener
+                open={this.state.open}
               >
-                <Box mb={1} width="100%">
+                <Box mb={1} width="100%"
+                  onMouseEnter= {() => { this.handleTooltip(true) }}
+                  onMouseLeave = { () => { this.handleTooltip(false) }}
+                  onClick={ () => { this.handleTooltip(false) }}>
                   {childWithProp}
                 </Box>
               </Tooltip>
