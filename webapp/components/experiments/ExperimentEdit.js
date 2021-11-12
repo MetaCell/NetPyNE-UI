@@ -268,7 +268,7 @@ const ExperimentEdit = (props) => {
 
   useEffect(() => {
     getParameters();
-  }, []);
+  });
 
   const validateExperimentName = (name) => {
     const isEmpty = (val) => val == null || val.trim() === '';
