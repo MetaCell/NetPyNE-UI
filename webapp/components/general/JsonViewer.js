@@ -117,6 +117,7 @@ const JsonViewer = (props) => {
         enableDelete={false}
         enableEdit={false}
         enableAdd={false}
+        collapsed={7}
       />
     </div>
   );
