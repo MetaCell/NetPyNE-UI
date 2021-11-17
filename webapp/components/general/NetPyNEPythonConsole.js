@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import PythonConsole
-  from '@geppettoengine/geppetto-client/js/components/interface/pythonConsole/PythonConsole';
+  from '@metacell/geppetto-meta-ui/python-console/PythonConsole';
 
 export class NetPyNEPythonConsole extends Component {
   componentDidMount () {

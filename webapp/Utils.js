@@ -1,7 +1,7 @@
 import {
   execPythonMessage,
   evalPythonMessage,
-} from '@geppettoengine/geppetto-client/js/communication/geppettoJupyter/GeppettoJupyterUtils';
+} from '@metacell/geppetto-meta-client/communication/geppettoJupyter/GeppettoJupyterUtils';
 
 const Utils = {
 

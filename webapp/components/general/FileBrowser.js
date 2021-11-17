@@ -1,5 +1,5 @@
 import React from 'react';
-import Tree from '@geppettoengine/geppetto-client/js/components/interface/tree/Tree';
+import Tree from '@metacell/geppetto-meta-ui/tree-viewer/Tree';
 import Button from '@material-ui/core/Button';
 import { changeNodeAtPath, walk } from 'react-sortable-tree';
 import Dialog from '@material-ui/core/Dialog';

@@ -15,7 +15,7 @@ try {
   // Failed to load config file
   console.error('\nFailed to load Geppetto Configuration');
 }
-const geppettoClientPath = 'node_modules/@geppettoengine/geppetto-client';
+const geppettoClientPath = 'node_modules/@metacell/geppetto-meta-client';
 
 const publicPath = path.join('/', geppettoConfig.contextPath, 'geppetto/build/');
 console.log(`\nThe public path (used by the main bundle when including split bundles) is: ${publicPath}`);
@@ -128,8 +128,8 @@ module.exports = function (env) {
       alias: {
         root: path.resolve(__dirname),
         'geppetto-client': path.resolve(__dirname, geppettoClientPath),
-        geppetto: path.resolve(__dirname, geppettoClientPath, 'js/pages/geppetto/GEPPETTO.js'),
-        'geppetto-client-initialization': path.resolve(__dirname, geppettoClientPath, 'js/pages/geppetto/main'),
+        geppetto: path.resolve(__dirname, geppettoClientPath, 'pages/geppetto/GEPPETTO.js'),
+        'geppetto-client-initialization': path.resolve(__dirname, geppettoClientPath, 'pages/geppetto/main'),
         handlebars: 'handlebars/dist/handlebars.js',
         netpyne: path.resolve(__dirname),
       },
@@ -140,7 +140,7 @@ module.exports = function (env) {
       rules: [
         {
           test: /\.(js|jsx)$/,
-          exclude: [/ami.min.js/, /node_modules\/(?!(@geppettoengine\/geppetto-client)\/).*/],
+          exclude: [/ami.min.js/, /node_modules\/(?!(@metacell)\/).*/],
           loader: 'babel-loader',
           query: { presets: [['@babel/preset-env', { modules: false }], '@babel/preset-react'] },
         },

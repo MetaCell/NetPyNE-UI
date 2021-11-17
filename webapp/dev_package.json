@@ -14,9 +14,9 @@
     },
     "dependencies": {
       "@babel/plugin-proposal-class-properties": "^7.8.3",
-      "@metacell/geppetto-meta-client": "^0.0.6",
-      "@metacell/geppetto-meta-core": "^0.0.6",
-      "@metacell/geppetto-meta-ui": "^0.0.6",
+      "@metacell/geppetto-meta-client": "file:.yalc/@metacell/geppetto-meta-client",
+      "@metacell/geppetto-meta-core": "file:.yalc/@metacell/geppetto-meta-core",
+      "@metacell/geppetto-meta-ui": "file:.yalc/@metacell/geppetto-meta-ui",
       "@material-ui/core": "^4.11.4",
       "@material-ui/icons": "^4.9.1",
       "@material-ui/lab": "^4.0.0-alpha.51",

@@ -1,39 +1,34 @@
-global.jQuery = require('jquery');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Provider from 'react-redux';
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import { NetPyNE } from './components';
+import theme from './theme';
+
 global.GEPPETTO_CONFIGURATION = require('./GeppettoConfiguration.json');
+const configureStore = require('./redux/store').default;
 
-jQuery(() => {
-  require('geppetto-client-initialization');
-  const ReactDOM = require('react-dom');
-  const React = require('react');
-  const { MuiThemeProvider } = require('@material-ui/core/styles');
-  const { NetPyNE } = require('./components');
+require('geppetto-client-initialization');
+require('./css/netpyne.less');
+require('./css/material.less');
+require('./css/traceback.less');
+require('./css/flexlayout.less');
+require('./css/tree.less');
 
-  const theme = require('./theme').default;
+const store = configureStore();
 
-  const { Provider } = require('react-redux');
-  const configureStore = require('./redux/store').default;
+ReactDOM.render(
+  <div>
+    <MuiThemeProvider theme={theme}>
+      <Provider store={store}>
+        <NetPyNE />
+      </Provider>
+    </MuiThemeProvider>
+  </div>,
+  document.querySelector('#mainContainer'),
+);
 
-  require('./css/netpyne.less');
-  require('./css/material.less');
-  require('./css/traceback.less');
-  require('./css/flexlayout.less');
-  require('./css/tree.less');
-
-  const store = configureStore();
-
-  ReactDOM.render(
-    <div>
-      <MuiThemeProvider theme={theme}>
-        <Provider store={store}>
-          <NetPyNE />
-        </Provider>
-      </MuiThemeProvider>
-
-    </div>,
-    document.querySelector('#mainContainer'),
-  );
-
-  GEPPETTO.G.setIdleTimeOut(-1);
-  GEPPETTO.Resources.COLORS.DEFAULT = '#6f54aa';
-  GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, 'Initialising NetPyNE');
-});
+// TODO: look into how to call/set stuff in the global space
+// GEPPETTO.G.setIdleTimeOut(-1);
+// GEPPETTO.Resources.COLORS.DEFAULT = '#6f54aa';
+// GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, 'Initialising NetPyNE');

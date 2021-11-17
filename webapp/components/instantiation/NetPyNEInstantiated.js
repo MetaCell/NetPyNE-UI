@@ -1,6 +1,6 @@
 import React, { createRef } from 'react';
 import ReactDOM from 'react-dom';
-import Canvas from '@geppettoengine/geppetto-client/js/components/interface/3dCanvas/Canvas';
+import Canvas from '@metacell/geppetto-meta-ui/3d-canvas/Canvas';
 import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
 
 import { NetWorkControlButtons } from 'netpyne/components';
@@ -153,8 +153,9 @@ export default class NetPyNEInstantiated extends React.Component {
           update={update}
         />
         <div id="controlpanel" style={{ top: 0 }}>
-          {controlPanelInitialized
-          && <ControlPanel icon={null} useBuiltInFilters={false} />}
+          {/* TODO: refactor the control panel with the list viewer
+          * {controlPanelInitialized
+          && <ControlPanel icon={null} useBuiltInFilters={false} />} */}
         </div>
       </div>
     );
