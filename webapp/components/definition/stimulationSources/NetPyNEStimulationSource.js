@@ -12,69 +12,84 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-
 import {
   NetPyNEField,
   NetPyNETextField,
-  ListComponent
+  ListComponent,
 } from 'netpyne/components';
 import Utils from '../../../Utils';
 import Select from '../../general/Select';
 
 const styles = ({ spacing }) => ({
-  selectField: { 
+  selectField: {
     marginTop: spacing(3),
-    width: '100%'
+    width: '100%',
   },
-})
+});
 
 class NetPyNEStimulationSource extends React.Component {
-
   constructor (props) {
     super(props);
     this.state = {
       currentName: props.name,
-      sourceType: 'IClamp',
+      sourceType: 'NetStim',
       errorMessage: undefined,
-      errorDetails: undefined
+      errorDetails: undefined,
     };
     this.stimSourceTypeOptions = [
+      { type: 'NetStim' },
       { type: 'IClamp' },
       { type: 'VClamp' },
       { type: 'SEClamp' },
-      { type: 'NetStim' },
-      { type: 'AlphaSynapse' }
+      { type: 'AlphaSynapse' },
     ];
     this.handleStimSourceTypeChange = this.handleStimSourceTypeChange.bind(this);
   }
 
   UNSAFE_componentWillReceiveProps (nextProps) {
     if (this.state.currentName != nextProps.name) {
-      Utils.evalPythonMessage("netpyne_geppetto.netParams.stimSourceParams['" + nextProps.name + "']['type']")
-        .then(response => {
+      Utils.evalPythonMessage(
+        `netpyne_geppetto.netParams.stimSourceParams['${
+          nextProps.name
+        }']['type']`,
+      )
+        .then((response) => {
           if (response !== this.state.sourceType) {
-            this.setState({ sourceType: response })
-            this.props.updateCards()
+            this.setState({ sourceType: response });
+            this.props.updateCards();
           }
-        })
+        });
 
-      this.setState({ currentName: nextProps.name, sourceType: '' });
-      
+      this.setState({
+        currentName: nextProps.name,
+        sourceType: '',
+      });
     }
   }
 
-  handleRenameChange = event => {
-    var storedValue = this.props.name;
-    var newValue = Utils.nameValidation(event.target.value);
-    var updateCondition = this.props.renameHandler(newValue);
-    var triggerCondition = Utils.handleUpdate(updateCondition, newValue, event.target.value, this, "StimulationSource");
+  handleRenameChange = (event) => {
+    const storedValue = this.props.name;
+    const newValue = Utils.nameValidation(event.target.value);
+    const updateCondition = this.props.renameHandler(newValue);
+    const triggerCondition = Utils.handleUpdate(
+      updateCondition,
+      newValue,
+      event.target.value,
+      this,
+      'StimulationSource',
+    );
 
     if (triggerCondition) {
       this.triggerUpdate(() => {
-        Utils.renameKey('netParams.stimSourceParams', storedValue, newValue, (response, newValue) => {
-          this.renaming = false
-          this.props.updateCards()
-        });
+        Utils.renameKey(
+          'netParams.stimSourceParams',
+          storedValue,
+          newValue,
+          (response, newValue) => {
+            this.renaming = false;
+            this.props.updateCards();
+          },
+        );
         this.renaming = true;
         /*
          * Update layout has been inserted in the triggerUpdate since this will have to query the backend
@@ -97,34 +112,45 @@ class NetPyNEStimulationSource extends React.Component {
   }
 
   updateLayout () {
-    var opts = this.stimSourceTypeOptions.map(option => option.type);
-    Utils
-      .evalPythonMessage("[value == netpyne_geppetto.netParams.stimSourceParams['" + this.state.currentName + "']['type'] for value in " + JSON.stringify(opts) + "]")
-      .then(responses => {
-        if (responses.constructor.name == "Array"){
-          responses.forEach( (response, index) => {
+    const opts = this.stimSourceTypeOptions.map((option) => option.type);
+    Utils.evalPythonMessage(
+      `[value == netpyne_geppetto.netParams.stimSourceParams['${
+        this.state.currentName
+      }']['type'] for value in ${
+        JSON.stringify(opts)
+      }]`,
+    )
+      .then((responses) => {
+        if (responses.constructor.name == 'Array') {
+          responses.forEach((response, index) => {
             if (response && this.state.sourceType != opts[index]) {
-              this.setState({ sourceType: opts[index] })
-              this.props.updateCards()
+              this.setState({ sourceType: opts[index] });
+              this.props.updateCards();
             }
-          })
+          });
         }
       });
   }
 
   handleStimSourceTypeChange (event) {
-    Utils.execPythonMessage("netpyne_geppetto.netParams.stimSourceParams['" + this.state.currentName + "']['type'] = '" + event.target.value + "'");
+    Utils.execPythonMessage(
+      `netpyne_geppetto.netParams.stimSourceParams['${
+        this.state.currentName
+      }']['type'] = '${
+        event.target.value
+      }'`,
+    );
     this.setState({ sourceType: event.target.value });
-    this.props.updateCards()
+    this.props.updateCards();
   }
 
   render () {
-    const { classes } = this.props
-    var dialogPop = (this.state.errorMessage != undefined) ? (
-      <Dialog
-        open={true}
-        style={{ whiteSpace: "pre-wrap" }}>
-        <DialogTitle id="alert-dialog-title">{this.state.errorMessage}</DialogTitle>
+    const { classes } = this.props;
+    const dialogPop = this.state.errorMessage != undefined ? (
+      <Dialog open style={{ whiteSpace: 'pre-wrap' }}>
+        <DialogTitle id="alert-dialog-title">
+          {this.state.errorMessage}
+        </DialogTitle>
         <DialogContent style={{ overflow: 'auto' }}>
           <DialogContentText id="alert-dialog-description">
             {this.state.errorDetails}
@@ -134,21 +160,29 @@ class NetPyNEStimulationSource extends React.Component {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => this.setState({ errorMessage: undefined, errorDetails: undefined })}
-          >BACK</Button>
+            onClick={() => this.setState({
+              errorMessage: undefined,
+              errorDetails: undefined,
+            })}
+          >
+            BACK
+          </Button>
         </DialogActions>
       </Dialog>
-    )
-      : undefined
+    ) : (
+      undefined
+    );
 
     if (this.state.sourceType == 'IClamp') {
       var variableContent = (
-        <div>
+        <div className="scrollbar scrollchild">
           <NetPyNEField id="netParams.stimSourceParams.del">
             <NetPyNETextField
               variant="filled"
               fullWidth
-              model={"netParams.stimSourceParams['" + this.props.name + "']['del']"}
+              model={
+                `netParams.stimSourceParams['${this.props.name}']['del']`
+              }
             />
           </NetPyNEField>
 
@@ -156,7 +190,9 @@ class NetPyNEStimulationSource extends React.Component {
             <NetPyNETextField
               variant="filled"
               fullWidth
-              model={"netParams.stimSourceParams['" + this.props.name + "']['dur']"}
+              model={
+                `netParams.stimSourceParams['${this.props.name}']['dur']`
+              }
             />
           </NetPyNEField>
 
@@ -164,40 +200,55 @@ class NetPyNEStimulationSource extends React.Component {
             <NetPyNETextField
               variant="filled"
               fullWidth
-              model={"netParams.stimSourceParams['" + this.props.name + "']['amp']"}
+              model={
+                `netParams.stimSourceParams['${this.props.name}']['amp']`
+              }
             />
           </NetPyNEField>
-
         </div>
       );
     } else if (this.state.sourceType == 'VClamp') {
       var variableContent = (
-        <div>
+        <div className="scrollbar scrollchild">
           <NetPyNEField id="netParams.stimSourceParams.tau1">
             <NetPyNETextField
               variant="filled"
               fullWidth
-              model={"netParams.stimSourceParams['" + this.props.name + "']['tau1']"}
+              model={
+                `netParams.stimSourceParams['${this.props.name}']['tau1']`
+              }
             />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.stimSourceParams.tau2">
             <NetPyNETextField
               variant="filled"
-              fullWidth 
-              model={"netParams.stimSourceParams['" + this.props.name + "']['tau2']"}
+              fullWidth
+              model={
+                `netParams.stimSourceParams['${this.props.name}']['tau2']`
+              }
             />
           </NetPyNEField>
 
-          <NetPyNEField id="netParams.stimSourceParams.vClampDur" className="listStyle">
+          <NetPyNEField
+            id="netParams.stimSourceParams.vClampDur"
+            className="listStyle"
+          >
             <ListComponent
-              model={"netParams.stimSourceParams['" + this.props.name + "']['dur']"}
+              model={
+                `netParams.stimSourceParams['${this.props.name}']['dur']`
+              }
             />
           </NetPyNEField>
 
-          <NetPyNEField id="netParams.stimSourceParams.vClampAmp" className="listStyle">
+          <NetPyNEField
+            id="netParams.stimSourceParams.vClampAmp"
+            className="listStyle"
+          >
             <ListComponent
-              model={"netParams.stimSourceParams['" + this.props.name + "']['amp']"}
+              model={
+                `netParams.stimSourceParams['${this.props.name}']['amp']`
+              }
             />
           </NetPyNEField>
 
@@ -205,7 +256,9 @@ class NetPyNEStimulationSource extends React.Component {
             <NetPyNETextField
               variant="filled"
               fullWidth
-              model={"netParams.stimSourceParams['" + this.props.name + "']['gain']"}
+              model={
+                `netParams.stimSourceParams['${this.props.name}']['gain']`
+              }
             />
           </NetPyNEField>
 
@@ -213,27 +266,33 @@ class NetPyNEStimulationSource extends React.Component {
             <NetPyNETextField
               variant="filled"
               fullWidth
-              model={"netParams.stimSourceParams['" + this.props.name + "']['rstim']"}
+              model={
+                `netParams.stimSourceParams['${this.props.name}']['rstim']`
+              }
             />
           </NetPyNEField>
         </div>
       );
     } else if (this.state.sourceType == 'AlphaSynapse') {
       var variableContent = (
-        <div>
+        <div className="scrollbar scrollchild">
           <NetPyNEField id="netParams.stimSourceParams.onset">
             <NetPyNETextField
               variant="filled"
               fullWidth
-              model={"netParams.stimSourceParams['" + this.props.name + "']['onset']"}
+              model={
+                `netParams.stimSourceParams['${this.props.name}']['onset']`
+              }
             />
           </NetPyNEField>
 
           <NetPyNEField id="netParams.stimSourceParams.tau">
             <NetPyNETextField
               variant="filled"
-              fullWidth 
-              model={"netParams.stimSourceParams['" + this.props.name + "']['tau']"}
+              fullWidth
+              model={
+                `netParams.stimSourceParams['${this.props.name}']['tau']`
+              }
             />
           </NetPyNEField>
 
@@ -241,7 +300,9 @@ class NetPyNEStimulationSource extends React.Component {
             <NetPyNETextField
               variant="filled"
               fullWidth
-              model={"netParams.stimSourceParams['" + this.props.name + "']['gmax']"}
+              model={
+                `netParams.stimSourceParams['${this.props.name}']['gmax']`
+              }
             />
           </NetPyNEField>
 
@@ -249,28 +310,35 @@ class NetPyNEStimulationSource extends React.Component {
             <NetPyNETextField
               variant="filled"
               fullWidth
-              model={"netParams.stimSourceParams['" + this.props.name + "']['e']"}
+              model={
+                `netParams.stimSourceParams['${this.props.name}']['e']`
+              }
             />
           </NetPyNEField>
-
         </div>
       );
     } else if (this.state.sourceType == 'NetStim') {
       var variableContent = (
-        <div>
+        <div className="scrollbar scrollchild">
           <NetPyNEField id="netParams.stimSourceParams.rate">
             <NetPyNETextField
               variant="filled"
               fullWidth
-              model={"netParams.stimSourceParams['" + this.props.name + "']['rate']"}
+              model={
+                `netParams.stimSourceParams['${this.props.name}']['rate']`
+              }
             />
           </NetPyNEField>
-          
+
           <NetPyNEField id="netParams.stimSourceParams.interval">
             <NetPyNETextField
               variant="filled"
               fullWidth
-              model={"netParams.stimSourceParams['" + this.props.name + "']['interval']"}
+              model={
+                `netParams.stimSourceParams['${
+                  this.props.name
+                }']['interval']`
+              }
             />
           </NetPyNEField>
 
@@ -278,7 +346,11 @@ class NetPyNEStimulationSource extends React.Component {
             <NetPyNETextField
               variant="filled"
               fullWidth
-              model={"netParams.stimSourceParams['" + this.props.name + "']['number']"}
+              model={
+                `netParams.stimSourceParams['${
+                  this.props.name
+                }']['number']`
+              }
             />
           </NetPyNEField>
 
@@ -286,7 +358,9 @@ class NetPyNEStimulationSource extends React.Component {
             <NetPyNETextField
               variant="filled"
               fullWidth
-              model={"netParams.stimSourceParams['" + this.props.name + "']['start']"}
+              model={
+                `netParams.stimSourceParams['${this.props.name}']['start']`
+              }
             />
           </NetPyNEField>
 
@@ -294,85 +368,99 @@ class NetPyNEStimulationSource extends React.Component {
             <NetPyNETextField
               variant="filled"
               fullWidth
-              model={"netParams.stimSourceParams['" + this.props.name + "']['noise']"}
+              model={
+                `netParams.stimSourceParams['${this.props.name}']['noise']`
+              }
             />
           </NetPyNEField>
         </div>
       );
     } else if (this.state.sourceType == 'SEClamp') {
       var variableContent = (
-        <div>
-          <NetPyNEField id="netParams.stimSourceParams.vClampDur" className="listStyle">
+        <div className="scrollbar scrollchild">
+          <NetPyNEField
+            id="netParams.stimSourceParams.vClampDur"
+            className="listStyle"
+          >
             <ListComponent
-              model={"netParams.stimSourceParams['" + this.props.name + "']['dur']"}
+              model={
+                `netParams.stimSourceParams['${this.props.name}']['dur']`
+              }
             />
           </NetPyNEField>
-          
-          <NetPyNEField id="netParams.stimSourceParams.vClampAmp" className="listStyle">
+
+          <NetPyNEField
+            id="netParams.stimSourceParams.vClampAmp"
+            className="listStyle"
+          >
             <ListComponent
-              model={"netParams.stimSourceParams['" + this.props.name + "']['amp']"}
+              model={
+                `netParams.stimSourceParams['${this.props.name}']['amp']`
+              }
             />
           </NetPyNEField>
-          
+
           <NetPyNEField id="netParams.stimSourceParams.rs">
             <NetPyNETextField
               variant="filled"
               fullWidth
-              model={"netParams.stimSourceParams['" + this.props.name + "']['rs']"}
+              model={
+                `netParams.stimSourceParams['${this.props.name}']['rs']`
+              }
             />
           </NetPyNEField>
-
         </div>
-      )
+      );
     } else {
-      var variableContent = <div />
+      var variableContent = <div />;
     }
 
     return (
-      <div>
+      <Box className="scrollbar scrollchild" mt={1}>
         <div>
           <Box mb={1}>
             <TextField
               fullWidth
-              variant="filled" 
+              variant="filled"
               onChange={this.handleRenameChange}
               value={this.state.currentName}
               disabled={this.renaming}
               label="The name of the stimulation source"
             />
           </Box>
-          
 
-          <NetPyNEField id="netParams.stimSourceParams.type" className={classes.selectField}>
+          <NetPyNEField
+            id="netParams.stimSourceParams.type"
+            className={classes.selectField}
+          >
             <Select
               fullWidth
-              id={"stimSourceSelect"}
+              id="stimSourceSelect"
               label="stimulation type"
               value={this.state.sourceType}
               onChange={this.handleStimSourceTypeChange}
             >
-              {(this.stimSourceTypeOptions != undefined)
-                ? this.stimSourceTypeOptions.map(function (stimSourceTypeOption) {
-                  return (
-                    <MenuItem
-                      id={stimSourceTypeOption.type + "MenuItem"}
-                      key={stimSourceTypeOption.type}
-                      value={stimSourceTypeOption.type}
-                    >
-                      {stimSourceTypeOption.type}
-                    </MenuItem>
-                  )
-                }) : null
-              }
+              {this.stimSourceTypeOptions != undefined
+                ? this.stimSourceTypeOptions.map((
+                  stimSourceTypeOption,
+                ) => (
+                  <MenuItem
+                    id={`${stimSourceTypeOption.type}MenuItem`}
+                    key={stimSourceTypeOption.type}
+                    value={stimSourceTypeOption.type}
+                  >
+                    {stimSourceTypeOption.type}
+                  </MenuItem>
+                ))
+                : null}
             </Select>
           </NetPyNEField>
         </div>
         {variableContent}
         {dialogPop}
-      </div>
+      </Box>
     );
   }
 }
 
-
-export default withStyles(styles)(NetPyNEStimulationSource)
+export default withStyles(styles)(NetPyNEStimulationSource);

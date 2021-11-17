@@ -4,6 +4,7 @@ python:
   - "3.7"
 node_js:
   - "12"
+cache: pip
 env:
   global:
     - secure: dn0FPQ5IG4M/3kdwnyI78ElQ308Vc3QnKAvkWfwMFb8QxDqxQdnTo7AV1qTMtbLrDNkeEWIgi4nc7jmXNtvGTwOfhAULVh6606Qs5B+ezTdwzajbbFMI8SKQx/pnTojOMu8dx7V4lMoR/YWcojR0VC1IWVC62TGbSB1k5BDGgH0=
@@ -14,13 +15,13 @@ notifications:
 install:
   - sudo apt-get install libgnutls28-dev
   - sudo apt install libcurl4-openssl-dev libssl-dev
-  - sudo apt-get install python3-dev  
+  - sudo apt-get install python3-dev
 script:
-
-  - python utilities/install.py 
+  - python utilities/install.py
   - ./NetPyNE-UI &
   - http_status=$(curl -s -I $1 $LANDING_PAGE | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status"
-  - cd webapp
-  - travis_retry npm run test -- --verbose --colors
+  - cd tests/frontend/e2e
+  - npm ci
+  - sleep 10 && travis_retry npm run test
   - exit 0

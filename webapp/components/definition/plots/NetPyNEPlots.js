@@ -1,5 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 
+import { GridLayout } from 'netpyne/components';
+import Box from '@material-ui/core/Box';
 import Utils from '../../../Utils';
 import PlotLFP from './plotTypes/PlotLFP';
 import PlotConn from './plotTypes/PlotConn';
@@ -13,17 +15,15 @@ import PlotSpikeStats from './plotTypes/PlotSpikeStats';
 import NetPyNENewPlot from './NetPyNENewPlot';
 import NetPyNEPlotThumbnail from './NetPyNEPlotThumbnail';
 
-import { GridLayout } from 'netpyne/components';
+import RulePath from '../../general/RulePath';
+import Accordion from '../../general/ExpansionPanel';
 
-import RulePath from '../../general/RulePath'
-import Accordion from '../../general/ExpansionPanel'
 export default class NetPyNEPlots extends React.Component {
-
   constructor (props) {
     super(props);
     this.state = {
       selectedPlot: undefined,
-      page: "main"
+      page: 'main',
     };
     this.selectPlot = this.selectPlot.bind(this);
     this.handleNewPlot = this.handleNewPlot.bind(this);
@@ -38,76 +38,91 @@ export default class NetPyNEPlots extends React.Component {
       var model = this.state.value;
       model[plot] = true;
     } else {
-      var model = { plot: true }
+      var model = { plot: true };
     }
-    Utils
-      .evalPythonMessage("netpyne_geppetto.getAvailablePlots", [])
-      .then(response => {
-        if (response.includes(plot)) {
-          if (plot == "plotLFP") {
-            var include = { 'electrodes': ['all'] }
-          } else if (plot == "granger") {
-            var include = {
-              'cells1': ['allCells'],
-              'cells2': ['allCells']
+    Utils.evalPythonMessage('netpyne_geppetto.getAvailablePlots', [])
+      .then(
+        (response) => {
+          if (response.includes(plot)) {
+            if (plot === 'plotLFP') {
+              var include = { electrodes: ['all'] };
+            } else if (plot === 'granger') {
+              var include = {
+                cells1: ['allCells'],
+                cells2: ['allCells'],
+              };
+            } else {
+              var include = { include: ['all'] };
             }
-          } else {
-            var include = { 'include': ['all'] }
+            Utils.execPythonMessage(
+              `netpyne_geppetto.simConfig.analysis['${
+                plot
+              }'] = ${
+                JSON.stringify(include)}`,
+            );
           }
-          Utils.execPythonMessage("netpyne_geppetto.simConfig.analysis['" + plot + "'] = " + JSON.stringify(include));
-        }
-      });
+        },
+      );
     this.setState({
       value: model,
-      selectedPlot: plot
+      selectedPlot: plot,
     });
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    var newItemCreated = false;
-    var selectionChanged = this.state.selectedPlot != nextState.selectedPlot;
-    var pageChanged = this.state.page != nextState.page;
-    var newModel = this.state.value == undefined;
+    let newItemCreated = false;
+    const selectionChanged = this.state.selectedPlot != nextState.selectedPlot;
+    const pageChanged = this.state.page != nextState.page;
+    const newModel = this.state.value == undefined;
     if (!newModel) {
-      newItemCreated = Object.keys(this.state.value).length != Object.keys(nextState.value).length;
+      newItemCreated = Object.keys(this.state.value).length
+        != Object.keys(nextState.value).length;
     }
     return newModel || newItemCreated || selectionChanged || pageChanged;
   }
 
   render () {
-    var plots = [];
-    for (var c in this.state.value) {
-      plots.push(<NetPyNEPlotThumbnail name={c} key={c} selected={c == this.state.selectedPlot} handleClick={this.selectPlot} />);
+    let selectedPlot;
+    const plots = [];
+    for (const c in this.state.value) {
+      plots.push(
+        <NetPyNEPlotThumbnail
+          name={c}
+          key={c}
+          selected={c === this.state.selectedPlot}
+          handleClick={this.selectPlot}
+        />,
+      );
     }
 
     switch (this.state.selectedPlot) {
-    case "iplotRaster":
-      var selectedPlot = <PlotRaster />
-      break;
-    case "iplotSpikeHist":
-      var selectedPlot = <PlotSpikeHist />
-      break;
-    case "iplotSpikeStats":
-      var selectedPlot = <PlotSpikeStats />
-      break;
-    case "iplotRatePSD":
-      var selectedPlot = <PlotRatePSD />
-      break;
-    case "iplotTraces":
-      var selectedPlot = <PlotTraces />
-      break;
-    case "iplotLFP":
-      var selectedPlot = <PlotLFP />
-      break;
-    case "iplotConn":
-      var selectedPlot = <PlotConn />
-      break;
-    case "iplot2Dnet":
-      var selectedPlot = <Plot2Dnet />
-      break;
-    case "granger":
-      var selectedPlot = <PlotGranger />
-      break;
+      case 'iplotRaster':
+        selectedPlot = <PlotRaster />;
+        break;
+      case 'iplotSpikeHist':
+        selectedPlot = <PlotSpikeHist />;
+        break;
+      case 'iplotSpikeStats':
+        selectedPlot = <PlotSpikeStats />;
+        break;
+      case 'iplotRatePSD':
+        selectedPlot = <PlotRatePSD />;
+        break;
+      case 'iplotTraces':
+        selectedPlot = <PlotTraces />;
+        break;
+      case 'iplotLFP':
+        selectedPlot = <PlotLFP />;
+        break;
+      case 'iplotConn':
+        selectedPlot = <PlotConn />;
+        break;
+      case 'iplot2Dnet':
+        selectedPlot = <Plot2Dnet />;
+        break;
+      case 'granger':
+        selectedPlot = <PlotGranger />;
+        break;
     }
 
     return (
@@ -117,13 +132,18 @@ export default class NetPyNEPlots extends React.Component {
             <div className="breadcrumb">
               <NetPyNENewPlot handleClick={this.handleNewPlot} />
             </div>
-            <RulePath style={{ paddingBottom: 8 }} text={`simConfig.analysis["${this.state.selectedPlot}"]`}/>
+            <Box p={1}>
+              <RulePath
+                style={{ paddingBottom: 8 }}
+                text={`simConfig.analysis["${this.state.selectedPlot}"]`}
+              />
+              <Box mb={1} />
+            </Box>
           </Accordion>
-          
         </div>
-        
-
-        {plots}
+        <Box className="scrollbar scrollchild" mt={1}>
+          {plots}
+        </Box>
         {selectedPlot}
         {null}
       </GridLayout>

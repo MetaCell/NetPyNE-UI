@@ -1,23 +1,23 @@
 import React from 'react';
 
-import { ActionDialog } from 'netpyne/components'
-export default class NewModel extends React.Component {
-  constructor (props) {
-    super(props);
-  }
+import { ActionDialog } from 'netpyne/components';
 
-  render () { 
+export default class NewModel extends React.Component {
+  render () {
     return (
       <ActionDialog
-        message = {"Creating new model..."}
-        style={{ textAlign: "center" }}
-        args = {{ tab: 'define', action: 'deleteModel' }}
-        buttonLabel={"CREATE"}
-        title={"Create new model"}
+        message="Creating new model..."
+        style={{ textAlign: 'center' }}
+        args={{
+          tab: 'define',
+          action: 'deleteModel',
+        }}
+        buttonLabel="CREATE"
+        title="Create new model"
         {...this.props}
       >
-        <h4 style={{ color: 'white' }}>The current model will be deleted</h4> 
+        <h4 style={{ color: 'white' }}>The current model will be deleted</h4>
       </ActionDialog>
-    )
+    );
   }
 }

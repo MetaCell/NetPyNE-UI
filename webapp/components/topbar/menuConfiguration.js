@@ -1,23 +1,27 @@
 import React from 'react';
 
 import Divider from '@material-ui/core/Divider';
-import { bgRegular, bgDark, font, primaryColor, gutter, radius } from '../../theme'
-
-import { openTopbarDialog, changePageTransitionMode } from '../../redux/actions/topbar'
 import {
-  openDialog, loadTutorial, 
-  changeAutomaticInstantiation, 
-  changeAutomaticSimulation, 
-  createAndSimulateNetwork, 
-  createNetwork, 
-  simulateNetwork, 
-  editModel, 
-  showNetwork 
-} from '../../redux/actions/general'
-import { TOPBAR_CONSTANTS, MODEL_STATE } from '../../constants'
+  bgRegular, bgDark, font, primaryColor, gutter, radius,
+} from '../../theme';
 
-const checkedIcon = "fa fa-check secondary";
-const unCheckedIcon = "fa fa-check color-dark";
+import { openTopbarDialog } from '../../redux/actions/topbar';
+import {
+  openDialog, loadTutorial,
+  changeAutomaticInstantiation,
+  changeAutomaticSimulation,
+  createAndSimulateNetwork,
+  createNetwork,
+  simulateNetwork,
+  editModel,
+  showNetwork,
+  setTheme,
+} from '../../redux/actions/general';
+import {
+  TOPBAR_CONSTANTS, MODEL_STATE, THEMES, TUTORIALS_LIST,
+} from '../../constants';
+
+const checkedIcon = 'fa fa-check secondary';
 
 const style = {
   standard: {
@@ -40,78 +44,78 @@ const style = {
     textAlign: 'left',
     justifyContent: 'start',
 
-    'hr': {}
+    hr: {},
 
   },
   lighter: { background: primaryColor },
   padding: {
     fontSize: 16,
     paddingTop: `calc(${gutter} / 2)`,
-    paddingBottom: `calc(${gutter} / 2)`
-  }
+    paddingBottom: `calc(${gutter} / 2)`,
+  },
 
-}
+};
 
 const topLevelMenuItemStyle = {
-  standard: { background: 'transparent', },
+  standard: { background: 'transparent' },
   hover: {},
 };
 
-const firstItemCustom = { fontWeight: 'bold', paddingLeft: `calc(${gutter} / 2)` }
+const firstItemCustom = {
+  fontWeight: 'bold',
+  paddingLeft: `calc(${gutter} / 2)`,
+};
 
-const firstItemStyle = { standard: { ...topLevelMenuItemStyle.standard, ...firstItemCustom }, hover: { ...topLevelMenuItemStyle.hover, ...firstItemCustom } }
-
-
-const tutorialsList = {
-  "tut1": "Tut 1: Simple cell network",
-  "tut2": "Tut 2: Detailed cell network",
-  "tut3": "Tut 3: Multiscale network",
-  "tut3_ip3high": "Tut 3: Multiscale network (high IP3)"
-}
+const firstItemStyle = {
+  standard: { ...topLevelMenuItemStyle.standard, ...firstItemCustom },
+  hover: { ...topLevelMenuItemStyle.hover, ...firstItemCustom },
+};
 
 export const getTutorials = () => {
-  const { tuts } = window
+  const { tuts } = window;
   if (!tuts) {
-    return []
+    return [];
   }
-  return tuts.sort().map(tutFile => {
-    let tutName = tutFile.replace(".py", "").replace("gui", '').replace("_", "");
-    let tutLabel = tutorialsList[tutName] !== undefined ? tutorialsList[tutName] : tutName;
-    return {
-      label: tutLabel,
-      icon: "",
-      action: {
-        handlerAction: "redux",
-        parameters: [loadTutorial, tutFile]
-      }
-    }
-  })
-  
-}
+  return tuts.sort()
+    .map((tutFile) => {
+      const tutName = tutFile.replace('.py', '')
+        .replace('gui', '')
+        .replace('_', '');
+      const tutLabel = TUTORIALS_LIST[tutName] !== undefined ? TUTORIALS_LIST[tutName] : tutName;
+      return {
+        label: tutLabel,
+        icon: '',
+        action: {
+          handlerAction: 'redux',
+          parameters: [loadTutorial, tutFile],
+        },
+      };
+    });
+};
 
 export default {
   global: {
-    color: "white",
+    color: 'white',
     subMenuOpenOnHover: true,
     menuOpenOnClick: true,
     menuPadding: 0,
     fontFamily: font,
-    menuFontSize: "14",
-    subMenuFontSize: "12",
+    menuFontSize: '14',
+    subMenuFontSize: '12',
     background: bgRegular,
     buttonsStyle: {
       standard: style.standard,
       hover: {
         ...style.standard,
-        ...style.lighter
-      }
+        ...style.lighter,
+      },
     },
     labelsStyle: {
-      standard: { ...style.padding, },
+      standard: { ...style.padding },
       hover: {
         ...style.lighter,
-        ...style.padding
-      }
+        ...style.padding,
+      },
     },
     drawersStyle: {
       standard: {
@@ -127,261 +131,298 @@ export default {
         borderBottom: 0,
         borderBottomLeftRadius: radius,
         borderBottomRightRadius: radius,
-      }
+      },
     },
   },
   itemOptions: { customArrow: <i className="fa fa-caret-right menu-caret" /> },
   buttons: [
     {
-      label: "NetPyNE",
-      position: "bottom-start",
-      icon: "",
-      list: [
-        {
-          label: "About",
-          icon: "",
-          action: {
-            handlerAction: "redux",
-            parameters: [openDialog, { title: "About", message: "This is about tab" }]
-          }
-        },
-        {
-          label: "Contribute",
-          icon: "",
-          action: {
-            handlerAction: "redux",
-            parameters: [openDialog, { title: "Contribute", message: "This is Contribute tab" }]
-          }
-        },
-      ],
-      style: firstItemStyle
+      label: 'NetPyNE',
+      icon: '',
+      position: 'bottom-start',
+      style: firstItemStyle,
+      dynamicListInjector: {
+        handlerAction: 'menuInjector',
+        parameters: ['NetPYNE'],
+      },
     },
     {
-      label: "File",
-      position: "bottom-start",
-      icon: "",
+      label: 'File',
+      position: 'bottom-start',
+      icon: '',
       style: topLevelMenuItemStyle,
       list: [
         {
-          label: "New",
-          icon: "",
-          list: [
-            {
-              label: "Blank",
-              icon: "",
-              action: {
-                handlerAction: "redux",
-                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.NEW_MODEL]
-              }
-            }
-          ]
-        },
-        {
-          label: "Open...",
-          icon: "",
+          label: 'New',
+          icon: '',
           action: {
             handlerAction: 'redux',
-            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.LOAD]
-          }
+            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.NEW_MODEL],
+          },
         },
         {
-          label: "Save...",
-          icon: "",
+          label: 'Open...',
+          icon: '',
           action: {
             handlerAction: 'redux',
-            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.SAVE]
-          }
+            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.LOAD],
+          },
         },
         {
-          label: "Import",
-          icon: "",
-          list: [
-            {
-              label: "From python...",
-              icon: "",
-              action: {
-                handlerAction: "redux",
-                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.IMPORT_HLS]
-              }
-            }
-          ]
+          label: 'Save...',
+          icon: '',
+          action: {
+            handlerAction: 'redux',
+            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.SAVE],
+          },
         },
         {
-          label: "Export",
-          icon: "",
+          label: 'Import',
+          icon: '',
           list: [
             {
-              label: "To python...",
-              icon: "",
+              label: 'From python...',
+              icon: '',
               action: {
                 handlerAction: 'redux',
-                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.EXPORT_HLS]
-              }
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.IMPORT_HLS],
+              },
             },
-          ]
+          ],
         },
         {
-          label: "Workspace",
-          icon: "",
+          label: 'Export',
+          icon: '',
           list: [
             {
-              label: "Upload...",
-              icon: "",
+              label: 'To python...',
+              icon: '',
               action: {
-                handlerAction: "redux",
-                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.UPLOAD_FILES]
-              }
+                handlerAction: 'redux',
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.EXPORT_HLS],
+              },
+            },
+          ],
+        },
+        {
+          label: 'Workspace',
+          icon: '',
+          list: [
+            {
+              label: 'Upload...',
+              icon: '',
+              action: {
+                handlerAction: 'redux',
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.UPLOAD_FILES],
+              },
             },
             {
-              label: "Download...",
-              icon: "",
+              label: 'Download...',
+              icon: '',
               action: {
-                handlerAction: "redux",
-                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.DOWNLOAD_FILES]
-              }
-            }
-          ]
+                handlerAction: 'redux',
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.DOWNLOAD_FILES],
+              },
+            },
+          ],
         },
-      ]
+      ],
     },
     {
-      label: "View",
-      icon: "",
-      position: "bottom-start",
+      label: 'View',
+      icon: '',
+      position: 'bottom-start',
       style: topLevelMenuItemStyle,
       dynamicListInjector: {
-        handlerAction: "menuInjector",
-        parameters: ["View"]
-      }
+        handlerAction: 'menuInjector',
+        parameters: ['View'],
+      },
     },
-    
+
     {
-      label: "Model",
-      icon: "",
-      position: "bottom-start",
+      label: 'Model',
+      icon: '',
+      position: 'bottom-start',
       style: topLevelMenuItemStyle,
       dynamicListInjector: {
-        handlerAction: "menuInjector",
-        parameters: ["Model"]
-      }
+        handlerAction: 'menuInjector',
+        parameters: ['Model'],
+      },
     },
     {
-      label: "Tutorials",
-      icon: "",
-      position: "bottom-start",
+      label: 'Tutorials',
+      icon: '',
+      position: 'bottom-start',
       style: topLevelMenuItemStyle,
       dynamicListInjector: {
-        handlerAction: "menuInjector",
-        parameters: ["Tutorials"]
-      }
+        handlerAction: 'menuInjector',
+        parameters: ['Tutorials'],
+      },
     },
     {
-      label: "Help",
-      icon: "",
-      position: "bottom-start",
+      label: 'Help',
+      icon: '',
+      position: 'bottom-start',
       style: topLevelMenuItemStyle,
       list: [
         {
-          label: "Documentation",
-          icon: "",
+          label: 'Documentation',
+          icon: '',
           action: {
             handlerAction: TOPBAR_CONSTANTS.NEW_PAGE,
-            parameters: ["http://netpyne.org/"]
-          }
-        }
-      ]
+            parameters: ['http://netpyne.org/'],
+          },
+        },
+      ],
     },
-  ]
-}
+  ],
+};
 
-export const getViewMenu = props => {
-  const instantiate = props.automaticInstantiation || props.modelState == MODEL_STATE.NOT_INSTANTIATED;
+export const getViewMenu = (props) => {
+  const instantiate = props.automaticInstantiation || props.modelState === MODEL_STATE.NOT_INSTANTIATED;
   const networkAction = () => {
     if (instantiate && props.automaticSimulation) {
       return createAndSimulateNetwork;
-    } else if (instantiate) {
-      return createNetwork;
-    } else {
-      return showNetwork;
     }
-  }
-  
+    if (instantiate) {
+      return createNetwork;
+    }
+    return showNetwork;
+  };
+
   return [
     {
-      label: "Edit",
+      label: 'Edit',
       icon: props.editMode ? checkedIcon : 'fa',
       action: {
-        handlerAction: "redux",
-        parameters: [editModel]
-      }
-      
+        handlerAction: 'redux',
+        parameters: [editModel],
+      },
+
     },
     {
-      label: "Explore",
+      label: 'Explore',
       icon: !props.editMode ? checkedIcon : 'fa',
       action: {
-        handlerAction: "redux",
-        parameters: [networkAction()]
-      }
+        handlerAction: 'redux',
+        parameters: [networkAction()],
+      },
     },
   ];
-}
+};
 
-export const getModelMenu = props => (
+export const getModelMenu = (props) => (
   [
     {
       label: TOPBAR_CONSTANTS.CREATE_NETWORK,
-      className: "topbar-menu-item",
+      className: 'topbar-menu-item',
       action: {
-        handlerAction: "redux",
-        parameters: [createNetwork]
-      }
+        handlerAction: 'redux',
+        parameters: [createNetwork],
+      },
     },
     {
       label: TOPBAR_CONSTANTS.SIMULATE,
       action: {
-        handlerAction: "redux",
-        parameters: [props.modelState == MODEL_STATE.NOT_INSTANTIATED ? createAndSimulateNetwork : simulateNetwork]
-      }
+        handlerAction: 'redux',
+        // TODO: (#263) this logic causes issues by potentially simulating
+        //  old instance with modified netParams and simConfig
+        parameters: [props.modelState === MODEL_STATE.NOT_INSTANTIATED ? createAndSimulateNetwork : simulateNetwork],
+      },
     },
     {
-      label: "Explore view options",
+      label: 'Explore view options',
       list: [
         {
-          label: "Automatic creation",
+          label: 'Automatic creation',
           icon: props.automaticInstantiation ? checkedIcon : 'fa',
           action: {
-            handlerAction: "redux",
-            parameters: [changeAutomaticInstantiation, true]
-          }
+            handlerAction: 'redux',
+            parameters: [changeAutomaticInstantiation, true],
+          },
         },
         {
-          label: "Manual creation",
+          label: 'Manual creation',
           icon: !props.automaticInstantiation ? checkedIcon : 'fa',
           action: {
-            handlerAction: "redux",
-            parameters: [changeAutomaticInstantiation, false]
-          }
+            handlerAction: 'redux',
+            parameters: [changeAutomaticInstantiation, false],
+          },
         },
         <Divider />,
         {
-          label: "Automatic simulation",
+          label: 'Automatic simulation',
           icon: props.automaticSimulation ? checkedIcon : 'fa',
           action: {
-            handlerAction: "redux",
-            parameters: [changeAutomaticSimulation, true]
-          }
+            handlerAction: 'redux',
+            parameters: [changeAutomaticSimulation, true],
+          },
         },
         {
-          label: "Manual simulation",
+          label: 'Manual simulation',
           icon: !props.automaticSimulation ? checkedIcon : 'fa',
           action: {
-            handlerAction: "redux",
-            parameters: [changeAutomaticSimulation, false]
-          }
+            handlerAction: 'redux',
+            parameters: [changeAutomaticSimulation, false],
+          },
         },
-      ]
+      ],
     },
-    
+
   ]
-)
+);
+
+export const getNetPyNEMenu = (props) => (
+  [
+    {
+      label: 'About',
+      icon: '',
+      action: {
+        handlerAction: 'redux',
+        parameters: [openDialog, {
+          title: 'About',
+          message: 'This is about tab',
+        }],
+      },
+    },
+    {
+      label: 'Contribute',
+      icon: '',
+      action: {
+        handlerAction: 'redux',
+        parameters: [openDialog, {
+          title: 'Contribute',
+          message: 'This is Contribute tab',
+        }],
+      },
+    },
+    {
+      label: 'Color preferences',
+      icon: '',
+      list: [
+        {
+          label: 'Dark Background (default)',
+          icon: props.theme === THEMES.DARK ? checkedIcon : 'fa',
+          action: {
+            handlerAction: 'redux',
+            parameters: [setTheme, THEMES.DARK],
+          },
+        }, {
+          label: 'Black Background',
+          icon: props.theme === THEMES.BLACK ? checkedIcon : 'fa',
+          action: {
+            handlerAction: 'redux',
+            parameters: [setTheme, THEMES.BLACK],
+          },
+        }, {
+          label: 'Light Background',
+          icon: props.theme === THEMES.LIGHT ? checkedIcon : 'fa',
+          action: {
+            handlerAction: 'redux',
+            parameters: [setTheme, THEMES.LIGHT],
+          },
+        },
+      ],
+    },
+  ]
+);

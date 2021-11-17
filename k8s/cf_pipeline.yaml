@@ -10,41 +10,33 @@ steps:
     repo: "MetaCell/NetPyNE-UI"
     revision: "${{CF_BRANCH}}"
     stage: "clone"
-    when:
-      branch:
-        only:
-          - "${{CF_BRANCH}}"
   BuildingNetPyNE-UI:
     title: Building NetPyNE-UI
     type: build
     stage: build
     image_name: netpyne-ui
     working_directory: ${{main_clone}}
-    tag: '${{CF_SHORT_REVISION}}'
+    tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}-${{CF_BUILD_TIMESTAMP}}'
     build_arguments:
-      - branch=${{CF_BRANCH}}
+      - NETPYNE_VERSION=${{NETPYNE_VERSION}}
+      - WORKSPACE_VERSION=${{WORKSPACE_VERSION}}
+      - PYGEPPETTO_VERSION=${{PYGEPPETTO_VERSION}}
+      - JUPYTER_GEPPETTO_VERSION=${{JUPYTER_GEPPETTO_VERSION}}
+      - BUILD_ARGS=${{BUILD_ARGS}}
     registry: ${{REGISTRY}}
-    when:
-      branch:
-        only:
-          - "${{CF_BRANCH}}"
   BuildingHub:
     title: Building Hub
     type: build
     stage: "build"
     image_name: netpyne-hub
     working_directory: k8s
-    tag: '${{CF_SHORT_REVISION}}'
+    tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}-${{CF_BUILD_TIMESTAMP}}'
     registry: ${{REGISTRY}}
-    when:
-      branch:
-        only:
-          - "${{CF_BRANCH}}"
   installing_chart:
     type: helm
     stage: deploy
     title: "Deploy chart"
-    working_directory: NetPyNE-UI/k8s
+    working_directory: k8s
     arguments:
       action: install
       chart_name: jupyterhub
@@ -57,6 +49,8 @@ steps:
       custom_value_files: 
         - 'cf_values.yaml'
       custom_values:
-        - 'hub_image_tag=${{CF_SHORT_REVISION}}'
-        - 'singleuser_image_tag=${{CF_SHORT_REVISION}}'
+        - 'hub_image_tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}-${{CF_BUILD_TIMESTAMP}}'
+        - 'singleuser_image_tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}-${{CF_BUILD_TIMESTAMP}}'
+        - 'singleuser_memory_limit=${{MEMORY_MAX}}'
+        - 'singleuser_memory_guarantee=${{MEMORY_MIN}}'
         - 'proxy_secretToken=${{SECRET_TOKEN}}'
