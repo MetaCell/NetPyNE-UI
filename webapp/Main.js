@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Provider from 'react-redux';
+import { Provider } from 'react-redux';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import { NetPyNE } from './components';
 import theme from './theme';

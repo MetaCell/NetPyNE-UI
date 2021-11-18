@@ -1,4 +1,4 @@
-import { setWidgets } from '../../components/layout/actions';
+import { setWidgets } from '@metacell/geppetto-meta-client/common/actions';
 import { PYTHON_CONSOLE_WIDGET, WidgetStatus } from '../../constants';
 
 // Action Types

@@ -9,7 +9,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import { withStyles } from '@material-ui/core/styles';
-import { WidgetStatus } from '../layout/model';
+import { getLayoutManagerInstance } from '@metacell/geppetto-meta-client/common/layout/LayoutManager';
+import { WidgetStatus } from '@metacell/geppetto-meta-client/common/layout/model';
 
 import {
   EDIT_WIDGETS, DEFAULT_NETWORK_WIDGETS, TOP_PANEL, TOOLS_LIST, SIDEBAR_HEADINGS,
@@ -101,8 +102,7 @@ const DrawerList = ({
     width: expand ? drawerOpenWidth : drawerCloseWidth,
     expand,
   });
-  const layoutManager = require('../layout/LayoutManager')
-    .getLayoutManagerInstance();
+  const layoutManager = getLayoutManagerInstance();
 
   function createOrFocusWidget (widgetId) {
     const widget = { ...layoutManager.getWidget(widgetId) };

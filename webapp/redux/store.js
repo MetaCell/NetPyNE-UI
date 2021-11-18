@@ -1,4 +1,3 @@
-import { applyMiddleware, compose } from 'redux';
 import { createStore } from '@metacell/geppetto-meta-client/common';
 import all from './reducers/all';
 
@@ -9,7 +8,6 @@ import { NOTEBOOK_DEFAULT_STATE } from './reducers/notebook';
 import middleware from './middleware/middleware';
 import plotMiddleware from './middleware/plotMiddleware';
 import rulesMiddleware from './middleware/rulesOperationsMiddleware';
-import { initLayoutManager } from '../components/layout/LayoutManager';
 
 import defaultLayout from '../components/layout/defaultLayout';
 import componentMap from '../components/layout/componentsMap';

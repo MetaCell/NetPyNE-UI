@@ -1,7 +1,8 @@
 import React, { createRef } from 'react';
 import ReactDOM from 'react-dom';
 import Canvas from '@metacell/geppetto-meta-ui/3d-canvas/Canvas';
-import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
+// TODO: replace this with the list viewer during refactoring
+// import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
 
 import { NetWorkControlButtons } from 'netpyne/components';
 import { primaryColor, canvasBgDark, canvasBgLight } from '../../theme';

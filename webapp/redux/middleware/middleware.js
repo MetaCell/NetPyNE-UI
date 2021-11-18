@@ -6,6 +6,7 @@ import {
   TRIAL_LOAD_MODEL_SPEC,
 } from 'root/redux/actions/experiments';
 import { NETPYNE_COMMANDS } from 'root/constants';
+import { setWidgets, setLayout } from '@metacell/geppetto-meta-client/common/actions';
 import {
   UPDATE_CARDS,
   CREATE_NETWORK,
@@ -23,7 +24,6 @@ import { openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
 import Utils from '../../Utils';
 import { downloadJsonResponse, downloadPythonResponse } from './utils';
-import { setWidgets, setLayout } from '../actions/layout';
 import * as Constants from '../../constants';
 
 let previousLayout = {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
-import Menu from '@geppettoengine/geppetto-client/js/components/interface/menu/Menu';
+import Menu from '@metacell/geppetto-meta-ui/menu/Menu';
 
 import { withStyles } from '@material-ui/core/styles';
 import { SwitchPageButton } from 'netpyne/components';

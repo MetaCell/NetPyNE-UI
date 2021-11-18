@@ -14,10 +14,10 @@
     },
     "dependencies": {
       "@babel/plugin-proposal-class-properties": "^7.8.3",
-      "@metacell/geppetto-meta-client": "^0.0.6",
-      "@metacell/geppetto-meta-core": "^0.0.6",
-      "@metacell/geppetto-meta-ui": "^0.0.6",
-      "@material-ui/core": "^4.11.4",
+      "@metacell/geppetto-meta-client": "file:.yalc/@metacell/geppetto-meta-client",
+      "@metacell/geppetto-meta-core": "file:.yalc/@metacell/geppetto-meta-core",
+      "@metacell/geppetto-meta-ui": "file:.yalc/@metacell/geppetto-meta-ui",
+      "@material-ui/core": "4.11.4",
       "@material-ui/icons": "^4.9.1",
       "@material-ui/lab": "^4.0.0-alpha.51",
       "jquery": "^3.6.0",
@@ -30,6 +30,9 @@
       "react-redux": "^7.2.0",
       "react-sortable-tree": "^2.8.0",
       "redux": "^4.1.0"
+    },
+    "resolutions": {
+      "@material-ui/core": "4.11.4"
     },
     "devDependencies": {
       "@babel/core": "^7.4.5",

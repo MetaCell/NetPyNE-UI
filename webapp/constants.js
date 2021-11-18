@@ -1,6 +1,6 @@
-import { WidgetStatus } from './components/layout/model';
-import { MINIMIZED_PANEL } from './components/layout';
+import { WidgetStatus } from '@metacell/geppetto-meta-client/common/layout/model';
 
+export const MINIMIZED_PANEL = 'border_bottom';
 export { WidgetStatus };
 export const TOP_PANEL = 'hlsPanel';
 export const TOOLS_LIST = 'tools';

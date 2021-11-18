@@ -1,15 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
-import PythonControlledCapability from './general/PythonControlledCapability';
-import { TOPBAR_CONSTANTS } from '../constants';
-
+import { getLayoutManagerInstance } from '@metacell/geppetto-meta-client/common/layout/LayoutManager';
 import {
   activateWidget,
   setWidgets,
   updateWidget,
   newWidget,
-} from '../redux/actions/layout';
+} from '@metacell/geppetto-meta-client/common/actions';
+import { TOPBAR_CONSTANTS } from '../constants';
+import PythonControlledCapability from './general/PythonControlledCapability';
 import { openBackendErrorDialog, closeBackendErrorDialog } from '../redux/actions/errors';
 import {
   updateCards, editModel, simulateNetwork, createNetwork, closeDialog,
@@ -37,9 +37,8 @@ import Checkbox from './general/Checkbox';
 import _NetPyNEStimulationTargets from './definition/stimulationTargets/NetPyNEStimulationTargets';
 import _Dimensions from './definition/populations/Dimensions';
 import _NetPyNE from './NetPyNE';
-import _NetPyNECellRule from './definition/cellRules/NetPyNECellRule';
 import _NetPyNESection from './definition/cellRules/sections/NetPyNESection';
-import { getLayoutManagerInstance } from './layout/LayoutManager';
+import _NetPyNECellRule from './definition/cellRules/NetPyNECellRule';
 import _NetPyNEPopulation from './definition/populations/NetPyNEPopulation';
 import _NetPyNEPopulations from './definition/populations/NetPyNEPopulations';
 import _NetPyNEStimulationSource from './definition/stimulationSources/NetPyNEStimulationSource';
