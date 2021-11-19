@@ -28,6 +28,19 @@ export default class NetPyNEInstantiated extends React.Component {
     this.controlPanelToggle = this.controlPanelToggle.bind(this);
   }
 
+  componentDidMount () {
+    this.canvasRef.current.engine.setLinesThreshold(10000);
+    this.canvasRef.current.displayAllInstances();
+    this.updateBtnsWithTheme('', this.state.canvasBtnCls);
+    window.addEventListener('resize', this.delayedResize.bind(this));
+    this.resizeIfNeeded();
+    this.updateInstances();
+
+    GEPPETTO.on(GEPPETTO.Events.Control_panel_close, () => {
+      this.setState({ bringItToFront: 0 });
+    });
+  }
+
   componentDidUpdate (prevProps, prevState) {
     this.resizeIfNeeded();
     const { theme } = this.props;
@@ -43,27 +56,23 @@ export default class NetPyNEInstantiated extends React.Component {
     }
   }
 
-  componentDidMount () {
-    this.canvasRef.current.engine.setLinesThreshold(10000);
-    this.canvasRef.current.displayAllInstances();
-    this.updateBtnsWithTheme('', this.state.canvasBtnCls);
-    window.addEventListener('resize', this.delayedResize.bind(this));
-    this.resizeIfNeeded();
-    this.updateInstances();
-
-    GEPPETTO.on(GEPPETTO.Events.Control_panel_close, () => {
-      this.setState({ bringItToFront: 0 });
-    });
-  }
-
   componentWillUnmount () {
     GEPPETTO.off(GEPPETTO.Events.Control_panel_close);
     clearTimeout(this.timer);
     window.removeEventListener('resize', this.delayedResize);
   }
 
+  updateBtnsWithTheme = (removeClass, addClass) => {
+    const element = document.getElementById('CanvasContainer_component');
+    if (removeClass) {
+      element.classList.remove(removeClass);
+    }
+    element.classList.add(addClass);
+    this.setState({ canvasBtnCls: addClass });
+  };
+
   updateInstances () {
-    if (Instances.network) {
+    if (window.Instances != null && window.Instances.network) {
       // update canvas only if there are instances to show
       this.canvasRef.current.engine.setLinesThreshold(25000);
       this.canvasRef.current.engine.updateSceneWithNewInstances(
@@ -82,7 +91,7 @@ export default class NetPyNEInstantiated extends React.Component {
   }
 
   resizeCanvas () {
-    this.setState({ update: this.state.update++ });
+    this.setState((prevState) => ({ update: prevState.update + 1 }));
   }
 
   resizeIfNeeded () {
@@ -105,16 +114,10 @@ export default class NetPyNEInstantiated extends React.Component {
     if (this.canvasRef.current === null) {
       return false;
     }
+    // eslint-disable-next-line react/no-find-dom-node
     const node = ReactDOM.findDOMNode(this);
     return node.parentNode.getBoundingClientRect();
   }
-
-  updateBtnsWithTheme = (removeClass, addClass) => {
-    const element = document.getElementById('CanvasContainer_component');
-    removeClass && element.classList.remove(removeClass);
-    element.classList.add(addClass);
-    this.setState({ canvasBtnCls: addClass });
-  };
 
   controlPanelToggle () {
     if (!this.state.controlPanelInitialized) {

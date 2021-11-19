@@ -34,7 +34,7 @@ def cprint(string):
 def execute(cmd, cwd='.', *args, **kwargs):
     exit_code = subprocess.call(cmd, cwd=cwd, *args, **kwargs)
     if exit_code != 0:
-        raise SystemExit('Error installing NetPyNE-UI')
+        raise SystemExit(f'Error installing NetPyNE-UI - Command {cmd} failed with code {exit_code} in directory {cwd}')
 
 
 # by default clones branch (which can be passed as a parameter python install.py branch test_branch)
@@ -46,13 +46,22 @@ def clone(repository, folder=None, branch_or_tag=None, cwdp=DEPS_DIR, recursive=
     if folder and os.path.exists(os.path.join(cwdp, folder)):
         print(f'Skipping clone of {repository}: folder exists')
     else:
+        exit_code = 0
         if recursive:
-            subprocess.call(['git', 'clone', '--recursive', repository], cwd=cwdp)
+            exit_code = subprocess.call(['git', 'clone', '--recursive', repository], cwd=cwdp)
         else:
             if folder:
-                subprocess.call(['git', 'clone', repository, folder], cwd=cwdp)
+                exit_code = subprocess.call(['git', 'clone', repository, folder], cwd=cwdp)
             else:
-                subprocess.call(['git', 'clone', repository], cwd=cwdp)
+                exit_code = subprocess.call(['git', 'clone', repository], cwd=cwdp)
+
+        if exit_code != 0:
+            raise SystemExit(f'Failed to clone repository {repository} into {folder}')
+        
+    if not os.path.exists(os.path.join(cwdp, folder, '.git')):
+        print(f'Skipping checkout of {repository}: folder is not a git repository')
+        return
+
     if branch_or_tag:
         checkout(folder, branch_or_tag, cwdp)
 
@@ -75,6 +84,7 @@ def compile_mod():
 def main(netpyne_branch, workspace_branch, pygeppetto_branch=None, jupyter_geppetto_branch=None, skipNpm=False,
          skipTest=False, development=False):
     cprint("Installing requirements")
+    print(workspace_branch)
     execute(cmd=['pip', 'install', '-r', 'requirements.txt'], cwd=ROOT_DIR)
 
     if not os.path.exists(DEPS_DIR):
@@ -107,15 +117,25 @@ def main(netpyne_branch, workspace_branch, pygeppetto_branch=None, jupyter_geppe
         execute(cmd=['pip', 'install', '-e', '.'], cwd=ROOT_DIR)
 
     else:
+
+        if netpyne_branch and netpyne_branch != 'master':
+          cprint("Installing netpyne")
+          clone(repository=NETPYNE, branch_or_tag=netpyne_branch)
+          execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, NETPYNE_DIR))
         # install requirements
+        if netpyne_branch and netpyne_branch != 'master':
+          cprint("Installing netpyne")
+          clone(repository=NETPYNE, branch_or_tag=netpyne_branch)
+          execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, NETPYNE_DIR))
         cprint("Installing UI python package...")
         execute(cmd=['pip', 'install', '-e', '.', '--no-deps'], cwd=ROOT_DIR)
 
     os.chdir(ROOT_DIR)
-    cprint("Cloning workspace")
-    clone(repository=WORKSPACE, branch_or_tag=workspace_branch, folder=WORKSPACE_DIR, cwdp=ROOT_DIR)
-    cprint("Compiling workspace modules")
-    compile_mod()
+    if workspace_branch:
+      cprint("Cloning workspace")
+      clone(repository=WORKSPACE, branch_or_tag=workspace_branch, folder=WORKSPACE_DIR, cwdp=ROOT_DIR)
+      cprint("Compiling workspace modules")
+      compile_mod()
 
     if not skipNpm and os.path.exists(os.path.join(DEPS_DIR, JUPYTER_DIR)):
         cprint("Building Jupyter Geppetto extension...")

@@ -74,8 +74,8 @@ class DimensionsComponent extends Component {
   updateLayout () {
     const requests = this.popDimensionsOptions.map((popDimensionsOption) =>
       // FIXME Better to wrap calls rather than directly accessing objects
-      Utils
-        .evalPythonMessage(`'${popDimensionsOption.value}' in netpyne_geppetto.netParams.popParams['${this.state.modelName}']`));
+      // eslint-disable-next-line implicit-arrow-linebreak
+      Utils.evalPythonMessage(`'${popDimensionsOption.value}' in netpyne_geppetto.netParams.popParams['${this.state.modelName}']`));
 
     // Get population dimension by asking each for each key
     Promise.all(requests)

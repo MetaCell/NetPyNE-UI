@@ -4,19 +4,22 @@ import PythonConsole
   from '@geppettoengine/geppetto-client/js/components/interface/pythonConsole/PythonConsole';
 
 export class NetPyNEPythonConsole extends Component {
-  componentDidMount () {
-  }
 
-  shouldComponentUpdate () {
+  shouldComponentUpdate() {
     return false;
   }
 
-  componentWillUnmount () {
-    console.info('unmounting python console');
+  componentWillUnmount() {
+    console.info("unmounting python console");
   }
 
-  render () {
-    return <PythonConsole pythonNotebookPath="notebooks/notebook.ipynb" />;
+  componentDidMount() {
+
+  }
+
+  render() {
+    const notebookName = GEPPETTO_CONFIGURATION.notebookName || "notebook.ipynb";
+    return <PythonConsole pythonNotebookPath={`notebooks/${notebookName}`} />
   }
 }
 

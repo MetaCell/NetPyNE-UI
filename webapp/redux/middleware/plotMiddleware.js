@@ -18,6 +18,64 @@ window.plotCache = {};
 
 const isDisabled = (widget, plots) => !plots[widget.method.plotKey] ?? true;
 
+const setPlotToWindow = (plotId, data) => {
+  if (data === '') {
+    console.log('No plot to show');
+    return;
+  }
+  window.plotCache[plotId] = data;
+};
+
+const plotFigure = async (plotId, plotMethod, plotType = false, theme) => {
+  try {
+    let response = await Promise.race([
+      Utils.evalPythonMessage(NETPYNE_COMMANDS.plotFigure, [plotMethod, plotType, theme], false),
+      new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve(null);
+        }, 30000);
+      })]);
+
+    console.log('Plot response received for', plotId);
+    if (!response) {
+      return null;
+    }
+
+    // TODO Fix this, use just JSON
+    if (typeof response === 'string') {
+      if (response.startsWith('{') && response.endsWith('}')) {
+        if (processError(response, plotId)) {
+          console.error(processError(response, plotId));
+          return null;
+        }
+      }
+      if (response.startsWith('[') && response.endsWith(']')) {
+        response = eval(response);
+      }
+    }
+    if (plotMethod.startsWith('iplot')) {
+      let htmlText = response.replace ? response.replace(/\\n/g, '')
+        .replace(/\\/g, '') : '';
+      if (plotId === 'rxdConcentrationPlot') {
+        // FIXME: How can we center the bokeh plots when sizing_mode='scale_height'
+        htmlText = htmlText.replace('<head>', '<head><style>.bk {margin: 0 auto!important;}</style>');
+      }
+      return htmlText;
+    }
+    if (response?.length !== undefined) {
+      return response[0];
+    }
+    if (response === -1) {
+      return null;
+    }
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+
+  return null;
+};
+
 export default (store) => (next) => (action) => {
   async function setWidget (widget) {
     const {
@@ -46,7 +104,7 @@ export default (store) => (next) => (action) => {
         && widget.status === WidgetStatus.ACTIVE
         && !widget.initialized) {
         setWidget(widget)
-          .then((widget) => (widget ? next(action) : null));
+          .then((w) => (w ? next(action) : null));
       }
       next(action);
       break;
@@ -97,7 +155,7 @@ export default (store) => (next) => (action) => {
       if (!store.getState().general.editMode) {
         for (const widget of Object.values(PLOT_WIDGETS)) {
           setWidget(widget)
-            .then((widget) => (widget ? next(addWidget(widget)) : null));
+            .then((w) => (w ? next(addWidget(w)) : null));
         }
       }
       break;
@@ -106,60 +164,4 @@ export default (store) => (next) => (action) => {
       next(action);
     }
   }
-};
-
-const plotFigure = async (plotId, plotMethod, plotType = false, theme) => {
-  try {
-    let response = await Promise.race([
-      Utils.evalPythonMessage(NETPYNE_COMMANDS.plotFigure, [plotMethod, plotType, theme], false),
-      new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve(null);
-        }, 30000);
-      })]);
-
-    console.log('Plot response received for', plotId);
-    if (!response) {
-      return null;
-    }
-
-    // TODO Fix this, use just JSON
-    if (typeof response === 'string') {
-      if (response.startsWith('{') && response.endsWith('}')) {
-        if (processError(response, plotId)) {
-          console.error(processError(response, plotId));
-          return;
-        }
-      }
-      if (response.startsWith('[') && response.endsWith(']')) {
-        response = eval(response);
-      }
-    }
-    if (plotMethod.startsWith('iplot')) {
-      let htmlText = response.replace ? response.replace(/\\n/g, '')
-        .replace(/\\/g, '') : '';
-      if (plotId === 'rxdConcentrationPlot') {
-        // FIXME: How can we center the bokeh plots when sizing_mode='scale_height'
-        htmlText = htmlText.replace('<head>', '<head><style>.bk {margin: 0 auto!important;}</style>');
-      }
-      return htmlText;
-    }
-    if (response?.length !== undefined) {
-      return response[0];
-    }
-    if (response === -1) {
-      return null;
-    }
-    return response;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const setPlotToWindow = (plotId, data) => {
-  if (data === '') {
-    console.log('No plot to show');
-    return;
-  }
-  window.plotCache[plotId] = data;
 };

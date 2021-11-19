@@ -37,7 +37,6 @@ const DrawerItem = ({
       button
       key={id}
       dense
-
       disableGutters
       disabled={disabled}
       className={widget ? classes.selected : classes.unselected}

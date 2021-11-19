@@ -9,6 +9,7 @@ import sys
 import subprocess
 import logging
 import re
+import base64
 
 from netpyne import specs, sim, analysis
 from netpyne.specs.utils import validateFunction
@@ -16,7 +17,6 @@ from netpyne.conversion.neuronPyHoc import mechVarList
 from netpyne.metadata import metadata
 from netpyne_ui.netpyne_model_interpreter import NetPyNEModelInterpreter
 from pygeppetto.model.model_serializer import GeppettoModelSerializer
-import matplotlib.pyplot as plt
 from pygeppetto import ui
 import numpy as np
 import neuron
@@ -231,6 +231,12 @@ class NetPyNEGeppetto:
                 # Import Model attributes
                 self.netParams = getattr(net_params_module_name, str(modelParameters["netParamsVariable"]))
 
+                if isinstance(self.netParams, dict):
+                  self.netParams = specs.NetParams(self.netParams)
+
+                if isinstance(self.simConfig, dict):
+                  self.simConfig = specs.SimConfig(self.simConfig)
+
                 for key, value in self.netParams.cellParams.items():
                     if hasattr(value, 'todict'):
                         self.netParams.cellParams[key] = value.todict()
@@ -329,12 +335,9 @@ class NetPyNEGeppetto:
             return utils.getJSONError("Error while exporting the NetPyNE model", sys.exc_info())
 
         try:
-            # This function fails is some keys don't exists
-            # sim.clearAll()
-            # TODO: as part of #264 we should remove the method and use clearAll intstead
-            self.clearSim()
+            sim.clearAll()
         except:
-            pass
+            logging.exception("Failed to clear simulation")
 
         return utils.getJSONReply()
 
@@ -432,7 +435,7 @@ class NetPyNEGeppetto:
                     # This arg brings dark theme. But some plots are broken by it
                     args['theme'] = theme
 
-                    if plotName in ("iplotConn", "iplot2Dnet") and sim.net.allCells:
+                    if plotName in ("iplotConn", "iplot2Dnet") and hasattr(sim, 'net') and sim.net.allCells:
                         # To prevent unresponsive kernel, we don't show conns if they become too many
                         num_conn = sum([len(cell.conns) for cell in sim.net.allCells if cell.conns])
                         if num_conn > NUM_CONN_LIMIT:
@@ -597,42 +600,51 @@ class NetPyNEGeppetto:
             params = ['popParams', 'cellParams', 'synMechParams']
             params += ['connParams', 'stimSourceParams', 'stimTargetParams']
 
-            fname = args['fileName'] if args['fileName'][-3:] == '.py' else args['fileName'] + '.py'
+            fname = args['fileName']
+            if not fname:
+                # default option
+                fname = 'output.py'
+            
+            if not fname[-3:] == '.py':
+                fname = f"{fname}.py"
 
+            # TODO: use methods offered by netpyne to create this script!
             with open(fname, 'w') as script:
-                script.write('from netpyne import specs, sim\n')
-                script.write(header('documentation'))
-                script.write("''' Script generated with NetPyNE-UI. Please visit:\n")
-                script.write("    - https://www.netpyne.org\n    - https://github.com/MetaCell/NetPyNE-UI\n'''\n")
-                script.write(header('script', spacer='='))
-                script.write('netParams = specs.NetParams()\n')
-                script.write('simConfig = specs.SimConfig()\n')
-                script.write(header('single value attributes'))
+                script.write("from netpyne import specs, sim\n")
+                script.write(header("documentation"))
+                script.write("Script generated with NetPyNE-UI. Please visit:\n")
+                script.write("    - https://www.netpyne.org\n    - https://github.com/MetaCell/NetPyNE-UI\n\n")
+                script.write(header("script", spacer="="))
+                script.write("netParams = specs.NetParams()\n")
+                script.write("simConfig = specs.SimConfig()\n")
+                script.write(header("single value attributes"))
                 for attr, value in list(self.netParams.__dict__.items()):
                     if attr not in params:
                         if value != getattr(specs.NetParams(), attr):
-                            script.write('netParams.' + attr + ' = ')
-                            script.write(convert2bool(json.dumps(value, indent=4)) + '\n')
+                            script.write("netParams." + attr + " = ")
+                            script.write(convert2bool(json.dumps(value, indent=4)) + "\n")
 
-                script.write(header('network attributes'))
+                script.write(header("network attributes"))
                 for param in params:
                     for key, value in list(getattr(self.netParams, param).items()):
-                        script.write("netParams." + param + "['" + key + "'] = ")
-                        script.write(convert2bool(json.dumps(value, indent=4)) + '\n')
+                        script.write("netParams." + param + "[" + key + "] = ")
+                        script.write(convert2bool(json.dumps(value, indent=4)) + "\n")
 
-                script.write(header('network configuration'))
+                script.write(header("network configuration"))
                 for attr, value in list(self.simConfig.__dict__.items()):
                     if value != getattr(specs.SimConfig(), attr):
-                        script.write('simConfig.' + attr + ' = ')
-                        script.write(convert2bool(json.dumps(value, indent=4)) + '\n')
+                        script.write("simConfig." + attr + " = ")
+                        script.write(convert2bool(json.dumps(value, indent=4)) + "\n")
 
-                script.write(header('create simulate analyze  network'))
-                script.write('# sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)\n')
+                script.write(header("create simulate analyze  network"))
+                script.write("# sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)\n")
 
-                script.write(header('end script', spacer='='))
+                script.write(header("end script", spacer="="))
 
             with open(fname) as f:
-                return f.read()
+                file_b64 = base64.b64encode(bytes(f.read(), 'utf-8')).decode()
+                export_info = {"fileContent": file_b64, "fileName": fname}
+                return export_info
 
         except:
             return utils.getJSONError("Error while importing the NetPyNE model", sys.exc_info())
@@ -739,50 +751,6 @@ class NetPyNEGeppetto:
                                     self.netParams.stimTargetParams[label].pop('synMech')
                                 else:
                                     self.netParams.stimTargetParams[label]['synMech'] = new
-
-    def clearSim(self):
-        # clean up
-        sim.pc.barrier()
-        sim.pc.gid_clear()  # clear previous gid settings
-
-        # clean cells and simData in all nodes
-        sim.clearObj([cell.__dict__ if hasattr(cell, '__dict__') else cell for cell in sim.net.cells])
-        if 'stims' in list(sim.simData.keys()):
-            sim.clearObj([stim for stim in sim.simData['stims']])
-
-        for key in list(sim.simData.keys()): del sim.simData[key]
-
-        if hasattr(sim, 'net'):
-            for c in sim.net.cells: del c
-            for p in sim.net.pops: del p
-            if hasattr(sim.net, 'params'):
-                del sim.net.params
-
-        # clean cells and simData gathered in master node
-        if sim.rank == 0:
-            if hasattr(sim.net, 'allCells'):
-                sim.clearObj([cell.__dict__ if hasattr(cell, '__dict__') else cell for cell in sim.net.allCells])
-            if hasattr(sim, 'allSimData'):
-                if 'stims' in list(sim.allSimData.keys()):
-                    sim.clearObj([stim for stim in sim.allSimData['stims']])
-                for key in list(sim.allSimData.keys()): del sim.allSimData[key]
-                del sim.allSimData
-
-            import matplotlib
-            matplotlib.pyplot.clf()
-            matplotlib.pyplot.close('all')
-
-        if hasattr(sim, 'net'):
-            if hasattr(sim.net, 'allCells'):
-                for c in sim.net.allCells: del c
-                del sim.net.allCells
-            if hasattr(sim.net, 'allPops'):
-                for p in sim.net.allPops: del p
-
-            del sim.net
-
-        import gc;
-        gc.collect()
 
     def create_celltype_from_template(self, label="CellType", conds={}, cell_template_name="Blank"):
         try:

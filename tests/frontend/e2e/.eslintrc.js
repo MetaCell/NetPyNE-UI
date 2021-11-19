@@ -17,6 +17,6 @@ module.exports = {
     pvdr: true,
     net1: true,
     CanvasContainer: true,
-    patchRequire: true
+    patchRequire: true,
   }
 };
