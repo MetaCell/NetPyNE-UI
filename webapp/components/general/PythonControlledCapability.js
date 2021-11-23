@@ -1,3 +1,8 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable react/prefer-stateless-function */
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable max-classes-per-file */
+/* eslint-disable max-len */
 /**
  *
  * Synched capability
@@ -46,7 +51,7 @@ define((require) => {
 
         disconnectFromPython () {
           GeppettoUtils.execPythonMessage(`jupyter_geppetto.remove_component_sync(componentType="${this.state.componentType}",model="${this.id}")`);
-          GEPPETTO.ComponentFactory.removeExistingComponent(this.state.componentType, this);
+          // GEPPETTO.ComponentFactory.removeExistingComponent(this.state.componentType, this);
         }
 
         componentWillUnmount () {
@@ -58,7 +63,7 @@ define((require) => {
           this.disconnectFromPython();
           this.id = (nextProps.id === undefined) ? nextProps.model : nextProps.id;
 
-          GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
+          // GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
           this.connectToPython(this.state.componentType, nextProps.model);
           if (this.state.value !== nextProps.value) {
             this.setState({ value: (nextProps.value === undefined) ? '' : nextProps.value });
@@ -67,7 +72,7 @@ define((require) => {
 
         componentDidMount () {
           this._isMounted = true;
-          GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this, true);
+          // GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this, true);
           if (this.props.model !== undefined) {
             this.connectToPython(this.state.componentType, this.props.model);
           }
@@ -128,7 +133,7 @@ define((require) => {
         UNSAFE_componentWillReceiveProps (nextProps) {
           this.disconnectFromPython();
           this.id = (nextProps.id === undefined) ? nextProps.model : nextProps.id;
-          GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
+          // GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
           this.connectToPython(this.state.componentType, nextProps.model);
           if ((this.state.searchText !== nextProps.searchText) && (nextProps.searchText !== undefined)) {
             this.setState({ searchText: nextProps.searchText });
@@ -360,7 +365,7 @@ define((require) => {
           this.disconnectFromPython();
           this.id = (nextProps.id === undefined) ? nextProps.model : nextProps.id;
 
-          GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
+          // GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
           this.connectToPython(this.state.componentType, nextProps.model);
           this.callPythonMethod();
         }

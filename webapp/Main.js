@@ -7,8 +7,11 @@ import theme from './theme';
 import store from './redux/store';
 
 global.GEPPETTO_CONFIGURATION = require('./GeppettoConfiguration.json');
+const { initGeppetto } = require('@metacell/geppetto-meta-client/GEPPETTO');
 
-require('geppetto-client-initialization');
+GEPPETTO.Resources.COLORS.DEFAULT = '#6f54aa';
+
+initGeppetto();
 require('./css/netpyne.less');
 require('./css/material.less');
 require('./css/traceback.less');
@@ -25,9 +28,3 @@ ReactDOM.render(
   </div>,
   document.querySelector('#mainContainer'),
 );
-
-// TODO: look into how to call/set stuff in the global space
-// GEPPETTO.G.setIdleTimeOut(-1);
-// GEPPETTO.Resources.COLORS.DEFAULT = '#6f54aa';
-// GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, 'Initialising NetPyNE');
-global.GEPPETTO = require('@metacell/geppetto-meta-client/pages/geppetto/GEPPETTO');

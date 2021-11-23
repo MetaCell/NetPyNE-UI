@@ -92,6 +92,7 @@ const drawerStyles = ({ spacing }) => ({
 const DrawerList = ({
   newWidget,
   editMode,
+  widgets,
   activateWidget,
   updateWidget,
   classes,
@@ -136,7 +137,8 @@ const DrawerList = ({
 
   function getMenu () {
     const [modelDrawerItems, toolsDrawerItems] = [[], []];
-    layoutManager.getWidgets().sort((w1, w2) => w1.pos - w2.pos).filter((widget) => {
+    // eslint-disable-next-line array-callback-return
+    Object.values(widgets).sort((w1, w2) => w1.pos - w2.pos).filter((widget) => {
       widget.specification !== TOOLS_LIST
         ? modelDrawerItems.push(widget) : toolsDrawerItems.push(widget);
     });
@@ -147,8 +149,8 @@ const DrawerList = ({
     name,
     id,
   }) => {
-    const widget = layoutManager.getWidget(id);
-    const status = layoutManager.getWidgetStatus(id);
+    const widget = widgets[id];
+    const status = widget.status;
 
     return (
       <DrawerItem

@@ -139,10 +139,23 @@ module.exports = function (env) {
     module: {
       rules: [
         {
-          test: /\.(js|jsx)$/,
-          exclude: [/ami.min.js/, /node_modules\/(?!(@metacell)\/).*/],
-          loader: 'babel-loader',
-          query: { presets: [['@babel/preset-env', { modules: false }], '@babel/preset-react'] },
+          test: /\.(js|jsx|ts|tsx)$/,
+          exclude: [/ami.min.js/, /node_modules\/(?!(@metacell\/geppetto-meta-client)\/).*/],
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                '@babel/preset-env',
+                '@babel/preset-react',
+              ],
+              plugins: [
+                '@babel/plugin-syntax-dynamic-import',
+                '@babel/plugin-proposal-class-properties',
+                '@babel/plugin-transform-runtime',
+              ],
+              sourceType: 'unambiguous',
+            },
+          },
         },
         // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
         {

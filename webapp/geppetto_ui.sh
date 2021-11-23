@@ -13,7 +13,7 @@ app=$(pwd)
 
 cd $app/../src/geppetto-meta/geppetto.js/geppetto-core
 rm -rf node_modules
-yarn && yarn build && yarn publish:yalc
+yarn && yarn build:dev && yarn publish:yalc
 
 cd $app/../src/geppetto-meta/geppetto.js/geppetto-ui
 rm -rf node_modules
@@ -21,7 +21,7 @@ yarn && yarn build:dev && yarn publish:yalc
 
 cd $app/../src/geppetto-meta/geppetto.js/geppetto-client
 rm -rf node_modules
-yarn && yarn build && yarn publish:yalc
+yarn && yarn build:dev && yarn publish:yalc
 
 cd $app
 

@@ -171,7 +171,7 @@ export const NetPyNESection = connect(
   (dispatch) => ({ openTopbarDialog: () => dispatch(openTopbarDialog(TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE)) }),
 )(_NetPyNESection);
 
-export const LayoutManager = () => connect((state) => ({ layout: state.layout }))(getLayoutManagerInstance()
+export const LayoutManager = () => connect((state) => ({ ...state }))(getLayoutManagerInstance()
   .getComponent());
 
 export const NetPyNEPopulation = connect(
@@ -278,7 +278,7 @@ export { NetPyNEPythonConsole } from './general/NetPyNEPythonConsole';
 export const Drawer = connect(
   (state) => ({
     editMode: state.general.editMode,
-    layout: state.layout,
+    widgets: state.widgets,
   }),
   (dispatch) => ({
     updateWidget: (newConf) => dispatch(updateWidget(newConf)),

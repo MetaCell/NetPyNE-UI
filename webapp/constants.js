@@ -7,7 +7,7 @@ export const TOOLS_LIST = 'tools';
 export const THEMES = {
   DARK: 'gui',
   BLACK: 'guiBlack',
-  LIGHT: 'guiWhite'
+  LIGHT: 'guiWhite',
 };
 
 export const MODEL_STATE = {
