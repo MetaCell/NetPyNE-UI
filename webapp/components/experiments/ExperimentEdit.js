@@ -30,7 +30,6 @@ import DialogBox from '../general/DialogBox';
 const RANGE_VALUE = 0;
 const SUPPORTED_TYPES = [REAL_TYPE.INT, REAL_TYPE.FLOAT, REAL_TYPE.STR, REAL_TYPE.BOOL];
 const MAX_TRIALS = 100;
-let numberOfTrials = 1;
 
 const {
   RANGE,
@@ -197,6 +196,8 @@ const ExperimentEdit = (props) => {
   // Existing Experiment.
   const [experiment, setExperiment] = useState(null);
   const experiments = useSelector((state) => state.experiments.experiments);
+
+  let numberOfTrials = 1;
 
   const validateParameter = (param) => {
     let updatedParam = param;
