@@ -6,7 +6,7 @@ import {
   TRIAL_LOAD_MODEL_SPEC,
 } from 'root/redux/actions/experiments';
 import { NETPYNE_COMMANDS } from 'root/constants';
-import { setWidgets, setLayout } from '@metacell/geppetto-meta-client/common/actions';
+import * as GeppettoActions from '@metacell/geppetto-meta-client/common/actions';
 import {
   UPDATE_CARDS,
   CREATE_NETWORK,
@@ -19,6 +19,7 @@ import {
   LOAD_TUTORIAL,
   RESET_MODEL,
   showNetwork,
+  MODEL_LOADED,
 } from '../actions/general';
 import { openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
@@ -114,8 +115,8 @@ export default (store) => (next) => (action) => {
       };
     }
     return next(edit
-      ? previousLayout.edit ? setLayout(previousLayout.edit) : setWidgets({ ...Constants.EDIT_WIDGETS })
-      : previousLayout.network ? setLayout(previousLayout.network) : setWidgets({ ...Constants.DEFAULT_NETWORK_WIDGETS }));
+      ? previousLayout.edit ? GeppettoActions.setLayout(previousLayout.edit) : GeppettoActions.setWidgets({ ...Constants.EDIT_WIDGETS })
+      : previousLayout.network ? GeppettoActions.setLayout(previousLayout.network) : GeppettoActions.setWidgets({ ...Constants.DEFAULT_NETWORK_WIDGETS }));
   };
 
   const toNetworkCallback = (reset) => () => {
@@ -129,6 +130,10 @@ export default (store) => (next) => (action) => {
   };
 
   switch (action.type) {
+    case MODEL_LOADED:
+      next(GeppettoActions.waitData('Loading the NetPyNE Model', GeppettoActions.clientActions.MODEL_LOADED));
+      next(action);
+      break;
     case UPDATE_CARDS:
       console.log('Triggered card update');
       next(action);

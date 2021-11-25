@@ -9,7 +9,6 @@ import store from './redux/store';
 global.GEPPETTO_CONFIGURATION = require('./GeppettoConfiguration.json');
 const { initGeppetto } = require('@metacell/geppetto-meta-client/GEPPETTO');
 
-GEPPETTO.Resources.COLORS.DEFAULT = '#6f54aa';
 
 initGeppetto();
 require('./css/netpyne.less');
@@ -28,3 +27,5 @@ ReactDOM.render(
   </div>,
   document.querySelector('#mainContainer'),
 );
+
+GEPPETTO.Resources.COLORS.DEFAULT = '#6f54aa';

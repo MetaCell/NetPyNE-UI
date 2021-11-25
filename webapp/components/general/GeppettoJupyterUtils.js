@@ -32,8 +32,8 @@ const execPythonMessage = function (command, callback = handle_output) {
   const messageID = kernel.execute(command, { iopub: { output: callback } }, { silent: false, stop_on_error: true, store_history: true });
 
   return new Promise((resolve, reject) => GEPPETTO.on(GEPPETTO.Events.Receive_Python_Message, (data) => {
-    if (data.id == messageID) {
-      resolve(data.response);
+    if (data.data.id == messageID) {
+      resolve(data.data.response);
     }
   }));
 };

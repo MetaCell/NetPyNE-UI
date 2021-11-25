@@ -53,7 +53,6 @@ class NetPyNE extends React.Component {
     } = this.props;
 
     setDefaultWidgets();
-
     GEPPETTO.on('jupyter_geppetto_extension_ready', (data) => {
       const project = {
         id: 1,
@@ -79,7 +78,8 @@ class NetPyNE extends React.Component {
           const metadata = Utils.convertToJSON(response);
           this.addMetadataToWindow(metadata);
           setWidgets(EDIT_WIDGETS);
-          GeppettoActions.modelLoaded();
+          modelLoaded();
+          // GeppettoActions.modelLoaded();
           GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
 
           setInterval(getExperiments, EXPERIMENT_POLL_INTERVAL);
