@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@sentry/react": "^6.15.0",
+    "@sentry/tracing": "^6.15.0"
+  }
+}

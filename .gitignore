@@ -26,3 +26,4 @@ utilities/x86_64
 x86_64
 .jupyter-config
 venv
+node_modules

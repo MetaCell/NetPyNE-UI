@@ -22,6 +22,11 @@ const Utils = {
     return id;
   },
 
+  captureSentryException (e) {
+    Sentry.captureException(e);
+    console.error(e);
+  },
+
   /**
    * Retrieves the metadata object for the passed `key`.
    *
