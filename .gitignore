@@ -13,6 +13,7 @@ init.py
 webapp/node_modules
 webapp/geppetto-client
 webapp/build
+webapp/.yalc
 workspace
 netpyne_workspace
 tests/frontend/e2e/node_modules

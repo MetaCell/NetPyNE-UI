@@ -35,6 +35,7 @@ let previousLayout = {
 export const processError = (response) => {
   const parsedResponse = Utils.getErrorResponse(response);
   if (parsedResponse) {
+    Utils.captureSentryException(parsedResponse);
     return {
       errorMessage: parsedResponse.message,
       errorDetails: parsedResponse.details,

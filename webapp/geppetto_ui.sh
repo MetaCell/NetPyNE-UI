@@ -25,6 +25,8 @@ yarn && yarn build:dev && yarn publish:yalc
 
 cd $app
 
+#rm -Rf .yalc
+
 yalc add @metacell/geppetto-meta-client
 yalc add @metacell/geppetto-meta-core
 yalc add @metacell/geppetto-meta-ui

@@ -3,6 +3,8 @@ import {
   evalPythonMessage,
 } from './components/general/GeppettoJupyterUtils';
 
+import * as Sentry from "@sentry/react";
+
 const Utils = {
 
   getAvailableKey (model, prefix) {
