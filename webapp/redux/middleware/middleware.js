@@ -70,7 +70,7 @@ const dehydrateCanvas = () => {
 };
 
 const createSimulateBackendCall = async (cmd, payload, consoleMessage, spinnerType) => {
-  GEPPETTO.CommandController.log(consoleMessage);
+  //GEPPETTO.CommandController.log(consoleMessage);
   GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, spinnerType);
 
   const response = await Utils.evalPythonMessage(cmd, [payload]);
