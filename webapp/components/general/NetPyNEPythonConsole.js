@@ -6,7 +6,10 @@ export class NetPyNEPythonConsole extends Component {
   componentDidMount () {
   }
 
-  shouldComponentUpdate () {
+  shouldComponentUpdate (nextProps) {
+    if (this.props.extensionLoaded !== nextProps.extensionLoaded) {
+      return true;
+    }
     return false;
   }
 
@@ -15,7 +18,7 @@ export class NetPyNEPythonConsole extends Component {
   }
 
   render () {
-    return <PythonConsole pythonNotebookPath="notebooks/notebook.ipynb" />;
+    return <PythonConsole pythonNotebookPath="notebooks/notebook.ipynb" extensionLoaded={this.props.extensionLoaded} />;
   }
 }
 

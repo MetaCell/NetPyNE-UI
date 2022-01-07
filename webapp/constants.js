@@ -336,6 +336,7 @@ export const EDIT_WIDGETS = {
   cellParams: {
     id: 'cellParams',
     name: 'Cell Types',
+    model: 'netParams.cellParams',
     status: WidgetStatus.ACTIVE,
     component: 'cellParams',
     panelName: TOP_PANEL,
@@ -346,6 +347,7 @@ export const EDIT_WIDGETS = {
   popParams: {
     id: 'popParams',
     name: 'Populations',
+    model: 'netParams.popParams',
     status: WidgetStatus.HIDDEN,
     component: 'popParams',
     panelName: TOP_PANEL,
@@ -356,6 +358,7 @@ export const EDIT_WIDGETS = {
   synMechParams: {
     id: 'synMechParams',
     name: 'Synaptic Mechanisms',
+    model: 'netParams.synMechParams',
     status: WidgetStatus.HIDDEN,
     component: 'synMechParams',
     panelName: TOP_PANEL,
@@ -366,6 +369,7 @@ export const EDIT_WIDGETS = {
   connParams: {
     id: 'connParams',
     name: 'Connectivity Rules',
+    model: 'netParams.connParams',
     status: WidgetStatus.HIDDEN,
     component: 'connParams',
     panelName: TOP_PANEL,
@@ -376,6 +380,7 @@ export const EDIT_WIDGETS = {
   stimSourceParams: {
     id: 'stimSourceParams',
     name: 'Stim. sources',
+    model: 'netParams.stimSourceParams',
     status: WidgetStatus.HIDDEN,
     component: 'stimSourceParams',
     hideOnClose: true,
@@ -386,6 +391,7 @@ export const EDIT_WIDGETS = {
   stimTargetParams: {
     id: 'stimTargetParams',
     name: 'Stim. targets',
+    model: 'netParams.stimTargetParams',
     status: WidgetStatus.HIDDEN,
     component: 'stimTargetParams',
     hideOnClose: true,
@@ -396,6 +402,7 @@ export const EDIT_WIDGETS = {
   analysis: {
     id: 'analysis',
     name: 'Plot Settings',
+    model: 'simConfig.analysis',
     status: WidgetStatus.HIDDEN,
     hideOnClose: true,
     component: 'analysis',

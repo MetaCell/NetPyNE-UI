@@ -59,8 +59,10 @@ import _Dialog from './general/Dialog';
 import _SelectCellTemplate from './definition/cellRules/SelectCellTemplate';
 import _Experiments from './experiments/Experiments';
 import _ExperimentEdit from './experiments/ExperimentEdit';
+// eslint-disable-next-line import/no-cycle
 import _ExperimentManager from './experiments/ExperimentManager';
 import _LaunchDialog from './topbar/dialogs/LaunchDialog';
+import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole';
 
 const updateCardsDispatch = (dispatch) => ({ updateCards: () => dispatch(updateCards) });
 
@@ -273,7 +275,12 @@ export const ErrorDialog = connect(
   }),
 )(_ActionDialog);
 
-export { NetPyNEPythonConsole } from './general/NetPyNEPythonConsole';
+export const NetPyNEPythonConsole = connect(
+  (state) => ({
+    extensionLoaded: state.client.jupyter_geppetto_extension.loaded,
+  }),
+  null,
+)(_NetPyNEPythonConsole);
 
 export const Drawer = connect(
   (state) => ({

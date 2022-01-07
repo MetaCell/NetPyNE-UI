@@ -1,9 +1,9 @@
+import * as Sentry from '@sentry/react';
+
 import {
   execPythonMessage,
   evalPythonMessage,
 } from './components/general/GeppettoJupyterUtils';
-
-import * as Sentry from "@sentry/react";
 
 const Utils = {
 

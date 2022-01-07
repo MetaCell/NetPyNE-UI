@@ -12,8 +12,12 @@ import { THEMES } from '../../constants';
 
 const CANVAS_LIGHT = 'canvas-toolbar-btns-light';
 const CANVAS_DARK = 'canvas-toolbar-btns-dark';
-const SELECTION_COLOR = { r: 0.8, g: 0.8, b: 0, a: 1 };
-const DEFAULT_COLOR = { r: 1, g: 0, b: 0, a: 0.5 };
+const SELECTION_COLOR = {
+  r: 0.8, g: 0.8, b: 0, a: 1,
+};
+const DEFAULT_COLOR = {
+  r: 1, g: 0, b: 0, a: 0.5,
+};
 
 const styles = () => ({
   container: {
@@ -162,13 +166,13 @@ class NetPyNEInstantiated extends React.Component {
     }
   }
 
-  mapToCanvasData (data){
-    return data.map(item => (
+  mapToCanvasData (data) {
+    return data.map((item) => (
       {
         color: item.selected ? SELECTION_COLOR : DEFAULT_COLOR,
-        instancePath: item.instancePath
+        instancePath: item.instancePath,
       }
-    ))
+    ));
   }
 
   render () {
@@ -183,7 +187,7 @@ class NetPyNEInstantiated extends React.Component {
 
     const { data, cameraOptions } = this.state;
 
-    const canvasData = this.mapToCanvasData(data)
+    const canvasData = this.mapToCanvasData(data);
 
     let camOptions = cameraOptions;
     if (this.lastCameraUpdate) {
@@ -216,9 +220,9 @@ class NetPyNEInstantiated extends React.Component {
         <Canvas
           ref={this.canvasRef}
           cameraOptions={camOptions}
-          key={"CanvasContainer"}
+          key="CanvasContainer"
           data={canvasData}
-          backgroundColor={bgColor}
+          backgroundColor={'#000000'}
         />
         <div id="controlpanel" style={{ top: 0 }}>
           {/* TODO: refactor the control panel with the list viewer

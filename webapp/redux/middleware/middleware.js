@@ -70,7 +70,7 @@ const dehydrateCanvas = () => {
 };
 
 const createSimulateBackendCall = async (cmd, payload, consoleMessage, spinnerType) => {
-  //GEPPETTO.CommandController.log(consoleMessage);
+  console.log(consoleMessage);
   GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, spinnerType);
 
   const response = await Utils.evalPythonMessage(cmd, [payload]);
@@ -87,7 +87,7 @@ const createSimulateBackendCall = async (cmd, payload, consoleMessage, spinnerTy
     dehydrateCanvas();
 
     GEPPETTO.Manager.loadModel(response);
-    GEPPETTO.CommandController.log('Instantiation / Simulation completed.');
+    console.log('Instantiation / Simulation completed.');
   }
   return response;
 };
