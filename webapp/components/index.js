@@ -63,6 +63,7 @@ import _ExperimentEdit from './experiments/ExperimentEdit';
 import _ExperimentManager from './experiments/ExperimentManager';
 import _LaunchDialog from './topbar/dialogs/LaunchDialog';
 import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole';
+import _PlotViewer from './general/PlotViewer';
 
 const updateCardsDispatch = (dispatch) => ({ updateCards: () => dispatch(updateCards) });
 
@@ -355,6 +356,11 @@ export const SelectCellTemplate = connect(
     ),
   }),
 )(_SelectCellTemplate);
+
+export const PlotViewer = connect(
+  null,
+  null,
+)(_PlotViewer);
 // ---------------------------------------------------------------------------------------- //
 
 // DEFAULTS

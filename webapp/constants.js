@@ -93,12 +93,16 @@ export const NETWORK_PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     initialized: false,
-    method: {
-      plotKey: 'plotConn',
-      plotMethod: 'iplotConn',
-      plotType: false,
-    },
     pos: 1,
+    config: {
+      id: 'connectionPlot',
+      name: 'Connections Plot',
+      method: {
+        plotKey: 'plotConn',
+        plotMethod: 'iplotConn',
+        plotType: false,
+      },
+    },
   },
   d2NetPlot: {
     id: 'd2NetPlot',
@@ -110,12 +114,16 @@ export const NETWORK_PLOT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     initialized: false,
-    method: {
-      plotKey: 'plot2Dnet',
-      plotMethod: 'iplot2Dnet',
-      plotType: false,
-    },
     pos: 2,
+    config: {
+      id: 'd2NetPlot',
+      name: '2D Net Plot',
+      method: {
+        plotKey: 'plot2Dnet',
+        plotMethod: 'iplot2Dnet',
+        plotType: false,
+      },
+    },
   },
 };
 
@@ -132,12 +140,16 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     initialized: false,
     disabled: true,
-    method: {
-      plotKey: 'plotTraces',
-      plotMethod: 'iplotTraces',
-      plotType: false,
-    },
     pos: 3,
+    config: {
+      id: 'tracesPlot',
+      name: 'Cell traces',
+      method: {
+        plotKey: 'plotTraces',
+        plotMethod: 'iplotTraces',
+        plotType: false,
+      },
+    },
   },
   rasterPlot: {
     id: 'rasterPlot',
@@ -150,12 +162,16 @@ export const PLOT_WIDGETS = {
     hideOnClose: true,
     initialized: false,
     disabled: true,
-    method: {
-      plotKey: 'plotRaster',
-      plotMethod: 'iplotRaster',
-      plotType: false,
-    },
     pos: 4,
+    config: {
+      id: 'rasterPlot',
+      name: 'Raster plot',
+      method: {
+        plotKey: 'plotRaster',
+        plotMethod: 'iplotRaster',
+        plotType: false,
+      },
+    },
   },
   spikePlot: {
     id: 'spikePlot',
@@ -168,12 +184,17 @@ export const PLOT_WIDGETS = {
     hideOnClose: true,
     initialized: false,
     disabled: true,
-    method: {
-      plotKey: 'plotSpikeHist',
-      plotMethod: 'iplotSpikeHist',
-      plotType: false,
-    },
     pos: 5,
+    config: {
+      id: 'spikePlot',
+      name: 'Spike Hist Plot',
+      method: {
+        plotKey: 'plotSpikeHist',
+        plotMethod: 'iplotSpikeHist',
+        plotType: false,
+      },
+      pos: 5,
+    },
   },
   spikeStatsPlot: {
     id: 'spikeStatsPlot',
@@ -186,12 +207,16 @@ export const PLOT_WIDGETS = {
     enableRename: false,
     initialized: false,
     disabled: true,
-    method: {
-      key: 'plotSpikeStats',
-      plotMethod: 'iplotSpikeStats',
-      plotType: false,
-    },
     pos: 6,
+    config: {
+      id: 'spikeStatsPlot',
+      name: 'Spike Stats Plot',
+      method: {
+        key: 'plotSpikeStats',
+        plotMethod: 'iplotSpikeStats',
+        plotType: false,
+      },
+    },
   },
   ratePSDPlot: {
     id: 'ratePSDPlot',
@@ -210,6 +235,15 @@ export const PLOT_WIDGETS = {
       plotType: false,
     },
     pos: 7,
+    config: {
+      id: 'ratePSDPlot',
+      name: 'Rate PSD Plot',
+      method: {
+        key: 'plotRatePSD',
+        plotMethod: 'iplotRatePSD',
+        plotType: false,
+      },
+    },
   },
   LFPTimeSeriesPlot: {
     id: 'LFPTimeSeriesPlot',
@@ -228,6 +262,15 @@ export const PLOT_WIDGETS = {
       plotType: 'timeSeries',
     },
     pos: 8,
+    config: {
+      id: 'LFPTimeSeriesPlot',
+      name: 'LFP Time Series Plot',
+      method: {
+        plotKey: 'plotLFP',
+        plotMethod: 'iplotLFP',
+        plotType: 'timeSeries',
+      },
+    },
   },
   LFPPSDPlot: {
     id: 'LFPPSDPlot',
@@ -246,6 +289,15 @@ export const PLOT_WIDGETS = {
       plotType: 'PSD',
     },
     pos: 9,
+    config: {
+      id: 'LFPPSDPlot',
+      name: 'LFP PSD Plot',
+      method: {
+        plotKey: 'plotLFP',
+        plotMethod: 'iplotLFP',
+        plotType: 'PSD',
+      },
+    },
   },
   LFPSpectrogramPlot: {
     id: 'LFPSpectrogramPlot',
@@ -264,6 +316,15 @@ export const PLOT_WIDGETS = {
       plotType: 'spectrogram',
     },
     pos: 10,
+    config: {
+      id: 'LFPSpectrogramPlot',
+      name: 'LFP Spectrogram Plot',
+      method: {
+        plotKey: 'plotLFP',
+        plotMethod: 'iplotLFP',
+        plotType: 'spectrogram',
+      },
+    },
   },
   grangerPlot: {
     id: 'grangerPlot',
@@ -282,6 +343,15 @@ export const PLOT_WIDGETS = {
       plotType: false,
     },
     pos: 11,
+    config: {
+      id: 'grangerPlot',
+      name: 'Granger Plot',
+      method: {
+        plotKey: 'granger',
+        plotMethod: 'iplotGranger',
+        plotType: false,
+      },
+    },
   },
   rxdConcentrationPlot: {
     id: 'rxdConcentrationPlot',
@@ -300,6 +370,15 @@ export const PLOT_WIDGETS = {
       plotType: false,
     },
     pos: 12,
+    config: {
+      id: 'rxdConcentrationPlot',
+      name: 'RxD concentration plot',
+      method: {
+        plotKey: 'plotRxDConcentration',
+        plotMethod: 'iplotRxDConcentration',
+        plotType: false,
+      },
+    },
   },
 };
 

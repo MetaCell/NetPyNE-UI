@@ -222,7 +222,7 @@ class NetPyNEInstantiated extends React.Component {
           cameraOptions={camOptions}
           key="CanvasContainer"
           data={canvasData}
-          backgroundColor={'#000000'}
+          backgroundColor="#000000"
         />
         <div id="controlpanel" style={{ top: 0 }}>
           {/* TODO: refactor the control panel with the list viewer

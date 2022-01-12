@@ -1,7 +1,6 @@
 /* eslint-disable quote-props */
 import * as React from 'react';
 import {
-  HTMLViewer,
   NetPyNEInstantiated,
   NetPyNESynapses,
   NetPyNEConnectivityRules,
@@ -15,6 +14,8 @@ import {
   ExperimentManager,
 } from '..';
 
+import PlotViewer from '../general/PlotViewer';
+
 /**
  * Key of the component is the `component` attribute of the widgetConfiguration.
  * This map is used inside the LayoutManager to know which component to display for a given widget.
@@ -23,7 +24,7 @@ import {
 const componentMap = {
   'PythonConsole': NetPyNEPythonConsole,
   'D3Canvas': NetPyNEInstantiated,
-  'Plot': HTMLViewer,
+  'Plot': PlotViewer,
   'popParams': NetPyNEPopulations,
   'cellParams': NetPyNECellRules,
   'synMechParams': NetPyNESynapses,

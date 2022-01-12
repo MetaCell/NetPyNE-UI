@@ -17,7 +17,7 @@ import {
 // and ensured that plot data doesn't lead to performance issues due to possible deep-copy in reducers.
 window.plotCache = {};
 
-const isDisabled = (widget, plots) => !plots[widget.method.plotKey] ?? true;
+const isDisabled = (widget, plots) => !plots[widget.config.method.plotKey] ?? true;
 
 const setPlotToWindow = (plotId, data) => {
   if (data === '') {
@@ -95,7 +95,7 @@ export default (store) => (next) => (action) => {
     const {
       plotMethod,
       plotType,
-    } = widget.method;
+    } = widget.config.method;
     return plotFigure(widget.id, plotMethod, plotType, store.getState().general.theme)
       .then((data) => {
         setPlotToWindow(widget.id, data);
@@ -110,7 +110,7 @@ export default (store) => (next) => (action) => {
   }
 
   switch (action.type) {
-    case GeppettoActions.UPDATE_WIDGET: {
+    case GeppettoActions.layoutActions.UPDATE_WIDGET: {
       // Triggered on tab of widget icon in sidebar
       // and refreshes widget data if widget wasn't initialized before.
       const widget = action.data;
@@ -123,7 +123,7 @@ export default (store) => (next) => (action) => {
       next(action);
       break;
     }
-    case GeppettoActions.SET_WIDGETS: {
+    case GeppettoActions.layoutActions.SET_WIDGETS: {
       // This is triggered once when we change the layout from Edit > Explore.
       // We add the widgets (back) to the sidebar but without fetching any data.
       Object.values(action.data)
