@@ -115,9 +115,11 @@ export default (store) => (next) => (action) => {
         network: undefined,
       };
     }
+    // TO FIX: I am not sure the one below is to fix, previously we were setting layout or widgets but I don't understand
+    // how the widgets where making it back into the redux store without the set widgets
     return next(edit
-      ? previousLayout.edit ? GeppettoActions.setLayout(previousLayout.edit) : GeppettoActions.setWidgets({ ...Constants.EDIT_WIDGETS })
-      : previousLayout.network ? GeppettoActions.setLayout(previousLayout.network) : GeppettoActions.setWidgets({ ...Constants.DEFAULT_NETWORK_WIDGETS }));
+      ? GeppettoActions.setLayout(previousLayout.edit) && GeppettoActions.setWidgets({ ...Constants.EDIT_WIDGETS })
+      : GeppettoActions.setLayout(previousLayout.network) && GeppettoActions.setWidgets({ ...Constants.DEFAULT_NETWORK_WIDGETS }));
   };
 
   const toNetworkCallback = (reset) => () => {
