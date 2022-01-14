@@ -2,11 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { MuiThemeProvider } from '@material-ui/core/styles';
+import * as Sentry from '@sentry/react';
+import { Integrations } from '@sentry/tracing';
 import { NetPyNE } from './components';
 import theme from './theme';
 import store from './redux/store';
-import * as Sentry from "@sentry/react";
-import { Integrations } from "@sentry/tracing";
+import '@metacell/geppetto-meta-ui/flex-layout/style/dark.scss';
 
 global.GEPPETTO_CONFIGURATION = require('./GeppettoConfiguration.json');
 const { initGeppetto } = require('@metacell/geppetto-meta-client/GEPPETTO');
