@@ -422,6 +422,9 @@ export const EDIT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     pos: 0,
+    props: {
+      model: 'netParams.cellParams',
+    },
   },
   popParams: {
     id: 'popParams',
@@ -433,6 +436,9 @@ export const EDIT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     pos: 1,
+    props: {
+      model: 'netParams.popParams',
+    },
   },
   synMechParams: {
     id: 'synMechParams',
@@ -444,6 +450,9 @@ export const EDIT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     pos: 2,
+    props: {
+      model: 'netParams.synMechParams',
+    },
   },
   connParams: {
     id: 'connParams',
@@ -455,6 +464,9 @@ export const EDIT_WIDGETS = {
     hideOnClose: true,
     enableRename: false,
     pos: 3,
+    props: {
+      model: 'netParams.connParams',
+    },
   },
   stimSourceParams: {
     id: 'stimSourceParams',
@@ -466,6 +478,9 @@ export const EDIT_WIDGETS = {
     panelName: TOP_PANEL,
     enableRename: false,
     pos: 4,
+    props: {
+      model: 'netParams.stimSourceParams',
+    },
   },
   stimTargetParams: {
     id: 'stimTargetParams',
@@ -477,6 +492,9 @@ export const EDIT_WIDGETS = {
     panelName: TOP_PANEL,
     enableRename: false,
     pos: 5,
+    props: {
+      model: 'netParams.stimTargetParams',
+    },
   },
   analysis: {
     id: 'analysis',
@@ -488,6 +506,9 @@ export const EDIT_WIDGETS = {
     panelName: TOP_PANEL,
     enableRename: false,
     pos: 6,
+    props: {
+      model: 'simConfig.analysis',
+    },
   },
   simConfig: {
     id: 'simConfig',
