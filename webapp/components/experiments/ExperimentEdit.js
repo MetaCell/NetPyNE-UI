@@ -191,7 +191,7 @@ const ExperimentEdit = (props) => {
   const [experimentName, setExperimentName] = useState('');
   const [experimentNameError, setExperimentNameError] = useState('');
   const [selectionParams, setSelectionParams] = useState([]);
-  const [trialNumberErrorDialogOpen, setTrialNumberErrorDialogOpen] = useState(false);
+  const [trialNumberErrorDialogOpen, setTrialNumberErrorDialogOpen] = useState({ condition: false, number: 1 });
 
   // Existing Experiment.
   const [experiment, setExperiment] = useState(null);
@@ -355,7 +355,7 @@ const ExperimentEdit = (props) => {
     });
 
     if (numberOfTrials > MAX_TRIALS) {
-      setTrialNumberErrorDialogOpen(true);
+      setTrialNumberErrorDialogOpen({ condition: true, number: numberOfTrials });
     } else if (editState) {
       ExperimentsApi.editExperiment(experiment?.name, newExperimentDetails)
         .then(() => {
@@ -568,12 +568,12 @@ const ExperimentEdit = (props) => {
         </Box>
       </GridLayout>
       <DialogBox
-        open={trialNumberErrorDialogOpen}
-        onDialogResponse={() => setTrialNumberErrorDialogOpen(false)}
+        open={trialNumberErrorDialogOpen.condition}
+        onDialogResponse={() => setTrialNumberErrorDialogOpen({ condition: false, number: 1 })}
         textForDialog={{
-          heading: 'Error - Number of trials is too large',
-          content: `Please adjust your exploration parameters to
-          reduce the  number of experiment trials to less than 100. Current number of trials: ${numberOfTrials}`,
+          heading: 'Error - Number of conditions is too large',
+          content: `Please change your exploration parameters to
+          reduce the number of experimental conditions to less than 100. Last number of conditions: ${trialNumberErrorDialogOpen.number}`,
         }}
       />
     </>
