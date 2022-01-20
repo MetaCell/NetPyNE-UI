@@ -25,7 +25,7 @@ const styles = () => ({
     width: '1240px',
     display: 'flex',
     alignItems: 'stretch',
-  }
+  },
 });
 
 class NetPyNEInstantiated extends React.Component {
@@ -204,7 +204,6 @@ class NetPyNEInstantiated extends React.Component {
 
     return (
       <div className="instantiatedContainer">
-        <NetWorkControlButtons canvasBtnCls={canvasBtnCls} controlPanelShow={controlPanelToggle} />
         {/* <Canvas
           id="CanvasContainer"
           name="Canvas"
@@ -224,11 +223,6 @@ class NetPyNEInstantiated extends React.Component {
           data={canvasData}
           backgroundColor="#000000"
         />
-        <div id="controlpanel" style={{ top: 0 }}>
-          {/* TODO: refactor the control panel with the list viewer
-          * {controlPanelInitialized
-          && <ControlPanel icon={null} useBuiltInFilters={false} />} */}
-        </div>
       </div>
     );
   }

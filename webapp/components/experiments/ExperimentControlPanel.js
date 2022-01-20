@@ -5,9 +5,9 @@ const ExperimentControlPanel = (props) => {
   const [state, setState] = React.useState(true);
 
   return (
-    <Box>
+    <div>
       Control panel
-    </Box>
+    </div>
   );
 };
 

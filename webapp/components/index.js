@@ -359,10 +359,6 @@ export const SelectCellTemplate = connect(
   }),
 )(_SelectCellTemplate);
 
-export const PlotViewer = connect(
-  null,
-  null,
-)(_PlotViewer);
 // ---------------------------------------------------------------------------------------- //
 
 // DEFAULTS

@@ -154,7 +154,7 @@ def get_model_specification(name: str, trial: str) -> dict:
     """
     path = get_trial_output_path(name, trial, fallback=True)
     if path is None or not os.path.exists(path):
-        raise ExperimentsError(f"Trial file {path} not found")
+        raise ExperimentsError(f"Condition file {path} not found")
 
     with open(path, "r") as f:
         trial_output = json.load(f)
@@ -273,7 +273,7 @@ def _delete_experiment_folder(experiment: model.Experiment):
 
 
 def _create_base_model_trial() -> model.Trial:
-    return model.Trial(name="Trial 1", id=BASE_TRIAL_ID)
+    return model.Trial(name="Condition 1", id=BASE_TRIAL_ID)
 
 
 def _create_trials(experiment: model.Experiment) -> List[model.Trial]:
@@ -315,7 +315,7 @@ def _create_trials(experiment: model.Experiment) -> List[model.Trial]:
 
         filename = combinations["filenames"][combIdx][1:]
         indices = combinations["indices"][combIdx]
-        name = f"Trial {combIdx + 1}"
+        name = f"Condition {combIdx + 1}"
 
         trials.append(
             model.Trial(name=name, params=params, indices=indices, id=filename)

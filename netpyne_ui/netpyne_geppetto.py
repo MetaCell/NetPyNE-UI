@@ -138,7 +138,7 @@ class NetPyNEGeppetto:
 
         file = experiments.get_trial_output_path(name, trial)
         if file is None or not os.path.exists(file):
-            return utils.getJSONError(f"Couldn't find output file of trial. Please take a look at the simulation log.", "")
+            return utils.getJSONError(f"Couldn't find output file of condition. Please take a look at the simulation log.", "")
 
         if self.doIhaveInstOrSimData()['haveInstance']:
             sim.clearAll()
