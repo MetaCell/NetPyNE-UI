@@ -7,7 +7,7 @@ import CameraControls from '@metacell/geppetto-meta-ui/camera-controls/CameraCon
 // import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
 
 import { NetWorkControlButtons } from 'netpyne/components';
-import { primaryColor, canvasBgDark, canvasBgLight } from '../../theme';
+import { primaryColor, canvasBgDark, canvasBgLight, bgRegular } from '../../theme';
 import { THEMES } from '../../constants';
 
 const CANVAS_LIGHT = 'canvas-toolbar-btns-light';
@@ -222,7 +222,7 @@ class NetPyNEInstantiated extends React.Component {
           cameraOptions={camOptions}
           key="CanvasContainer"
           data={canvasData}
-          backgroundColor="#000000"
+          backgroundColor={bgRegular}
         />
         <div id="controlpanel" style={{ top: 0 }}>
           {/* TODO: refactor the control panel with the list viewer
