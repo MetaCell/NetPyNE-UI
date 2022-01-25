@@ -34,7 +34,7 @@
     "react-dom": "^16.4.0",
     "react-json-view": "^1.21.3",
     "react-redux": "^7.2.0",
-    "react-sortable-tree": "^2.6.2",
+    "react-sortable-tree": "^2.8.0",
     "redux": "^4.1.0",
     "sass": "^1.49.0",
     "sass-loader": "^7.2.0",
