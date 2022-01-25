@@ -184,7 +184,7 @@ class NetPyNEGeppetto:
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
 
                 return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
-        except Exception:
+        except Exception as e:
             message = "Error while instantiating the NetPyNE model"
             logging.exception(message)
             return utils.getJSONError(message, sys.exc_info())
