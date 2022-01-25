@@ -63,7 +63,7 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
 
     def test_netpyne_exported_model_1(self):
       print("------------------------------------")
-      print("Netpyne export model")
+      print("Netpyne exported model sim run")
       print("------------------------------------")
 
       params = {}
