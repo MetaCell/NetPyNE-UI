@@ -1,11 +1,41 @@
 @import "variables";
 
-.flexlayout__layout {
+div.flexlayout__layout {
   border-left: none !important;
   border-right: none !important;
   background-color: transparent;
   top: 0px;
   border-top: none;
+
+  .flexlayout__tab_button {
+    &:hover {
+      .flexlayout__tab_button_trailing {
+        background: none;
+      }
+    }
+
+    &.flexlayout__tab_button--selected {
+      .flexlayout__tab_button_trailing {
+        background: none;
+      }
+    }
+  }
+
+  .flexlayout__tab_button_top {
+    box-shadow: none;
+  }
+
+  .flexlayout__tabset_tabbar_outer {
+    background-color: transparent;
+  }
+
+  .flexlayout__tabset_tabbar_outer_top {
+    border-bottom: none;
+  }
+
+  .flexlayout__tabset_tabbar_inner_tab_container_top {
+    border-top: none;
+  }
 
   a {
     color: @colorLink;

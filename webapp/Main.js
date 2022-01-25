@@ -19,9 +19,8 @@ Sentry.init({
     new CaptureConsole({
       levels: ['error']
     })
-    , new Integrations.BrowserTracing()
   ],
-  tracesSampleRate: 1.0,
+  tracesSampleRate: 1.0
 });
 
 initGeppetto();
