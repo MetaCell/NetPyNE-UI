@@ -1082,7 +1082,7 @@
   dependencies:
     "@babel/runtime" "^7.4.4"
 
-"@material-ui/lab@^4.0.0-alpha.51":
+"@material-ui/lab@^4.0.0-alpha.60":
   version "4.0.0-alpha.60"
   resolved "https://registry.yarnpkg.com/@material-ui/lab/-/lab-4.0.0-alpha.60.tgz#5ad203aed5a8569b0f1753945a21a05efa2234d2"
   integrity sha512-fadlYsPJF+0fx2lRuyqAuJj7hAS1tLDdIEEdov5jlrpb5pp4b+mRDUqQTUxi4inRZHS1bEXpU8QWUhO6xX88aA==
@@ -1219,6 +1219,7 @@
     "@sentry/utils" "6.17.2"
     tslib "^1.9.3"
 
+<<<<<<< HEAD
 "@sentry/integrations@^6.17.0":
   version "6.17.2"
   resolved "https://registry.yarnpkg.com/@sentry/integrations/-/integrations-6.17.2.tgz#09fa2411cb0aeabe8d6b30b15f9723d0c64cc6cb"
@@ -1234,6 +1235,13 @@
   resolved "https://registry.yarnpkg.com/@sentry/minimal/-/minimal-6.17.2.tgz#3b482a0d76aa33b6c9441dd21acbcc3a113e5120"
   integrity sha512-Cdh+iM6QhLKfxwUWWP4mk2K7+EsQj4tuF2dGQke4Zcbp7zQ7wbcMruUcZHiZfvg5kiSYxwNVkH7cXMzcO7AJsg==
   dependencies:
+=======
+"@sentry/minimal@6.17.2":
+  version "6.17.2"
+  resolved "https://registry.yarnpkg.com/@sentry/minimal/-/minimal-6.17.2.tgz#3b482a0d76aa33b6c9441dd21acbcc3a113e5120"
+  integrity sha512-Cdh+iM6QhLKfxwUWWP4mk2K7+EsQj4tuF2dGQke4Zcbp7zQ7wbcMruUcZHiZfvg5kiSYxwNVkH7cXMzcO7AJsg==
+  dependencies:
+>>>>>>> ce81456cf800e023d14b00de1020509e3b6da76c
     "@sentry/hub" "6.17.2"
     "@sentry/types" "6.17.2"
     tslib "^1.9.3"
@@ -2383,9 +2391,9 @@ camelcase@^5.0.0, camelcase@^5.3.1:
   integrity sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==
 
 caniuse-lite@^1.0.30001286:
-  version "1.0.30001300"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001300.tgz#11ab6c57d3eb6f964cba950401fd00a146786468"
-  integrity sha512-cVjiJHWGcNlJi8TZVKNMnvMid3Z3TTdDHmLDzlOdIiZq138Exvo0G+G0wTdVYolxKb4AYwC+38pxodiInVtJSA==
+  version "1.0.30001301"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001301.tgz#ebc9086026534cab0dab99425d9c3b4425e5f450"
+  integrity sha512-csfD/GpHMqgEL3V3uIgosvh+SVIQvCh43SNu9HRbP1lnxkKm1kjDG4f32PP571JplkLjfS+mg2p1gxR7MYrrIA==
 
 casperjs@^1.1.4:
   version "1.1.4"
@@ -2755,7 +2763,7 @@ cross-fetch@^3.0.4:
   resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.5.tgz#e1389f44d9e7ba767907f7af8454787952ab534f"
   integrity sha512-lvb1SBsI0Z7GDwmuid+mU3kWVBwTVUbe7S0H52yaaAdQOXq2YktTCZdlAcNKFzE6QtRz0snpw9bNiPeOIkkQvw==
   dependencies:
-    node-fetch "2.6.1"
+    node-fetch "2.6.7"
 
 cross-spawn@^6.0.0, cross-spawn@^6.0.5:
   version "6.0.5"
@@ -6675,9 +6683,9 @@ resolve-url@^0.2.1:
   integrity sha1-LGN/53yJOv0qZj/iGqkIAGjiBSo=
 
 resolve@^1.1.6, resolve@^1.12.0, resolve@^1.14.2, resolve@^1.20.0:
-  version "1.21.0"
-  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.21.0.tgz#b51adc97f3472e6a5cf4444d34bc9d6b9037591f"
-  integrity sha512-3wCbTpk5WJlyE4mSOtDLhqQmGFi0/TD9VPwmiolnk8U0wRgMEktqCXd3vy5buTO3tljvalNvKrjHEfrd2WpEKA==
+  version "1.22.0"
+  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.22.0.tgz#5e0b8c67c15df57a89bdbabe603a002f21731198"
+  integrity sha512-Hhtrw0nLeSrFQ7phPp4OOcVjLPIeMnRlr5mcnVuMe7M/7eBn98A3hmFRLoFo3DLZkivSYwhRUJTyPyWAk56WLw==
   dependencies:
     is-core-module "^2.8.1"
     path-parse "^1.0.7"
@@ -7488,6 +7496,11 @@ toposort@^1.0.0:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/toposort/-/toposort-1.0.7.tgz#2e68442d9f64ec720b8cc89e6443ac6caa950029"
   integrity sha1-LmhELZ9k7HILjMieZEOsbKqVACk=
+
+tr46@~0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
+  integrity sha1-gYT9NH2snNwYWZLzpmIuFLnZq2o=
 
 tsconfig-paths@^3.12.0:
   version "3.12.0"
