@@ -1,5 +1,5 @@
 import React from 'react';
-import HTMLViewer from '../index';
+import HTMLViewer from './HTMLViewer';
 
 const PlotViewer = ({ key, id, method }) => {
   const data = window.plotCache[id];

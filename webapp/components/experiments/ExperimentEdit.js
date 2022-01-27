@@ -25,9 +25,11 @@ import Utils from '../../Utils';
 import ParameterMenu from './ParameterMenu';
 import useStyles from './ExperimentEditStyle';
 import * as ExperimentHelper from './ExperimentHelper';
+import DialogBox from '../general/DialogBox';
 
 const RANGE_VALUE = 0;
 const SUPPORTED_TYPES = [REAL_TYPE.INT, REAL_TYPE.FLOAT, REAL_TYPE.STR, REAL_TYPE.BOOL];
+const MAX_TRIALS = 100;
 
 const {
   RANGE,
@@ -189,10 +191,13 @@ const ExperimentEdit = (props) => {
   const [experimentName, setExperimentName] = useState('');
   const [experimentNameError, setExperimentNameError] = useState('');
   const [selectionParams, setSelectionParams] = useState([]);
+  const [trialNumberErrorDialogOpen, setTrialNumberErrorDialogOpen] = useState({ condition: false, number: 1 });
 
   // Existing Experiment.
   const [experiment, setExperiment] = useState(null);
   const experiments = useSelector((state) => state.experiments.experiments);
+
+  let numberOfTrials = 1;
 
   const validateParameter = (param) => {
     let updatedParam = param;
@@ -339,7 +344,19 @@ const ExperimentEdit = (props) => {
       params,
     };
 
-    if (editState) {
+    numberOfTrials = 1;
+
+    params.forEach((param) => {
+      if (param.type === LIST) {
+        numberOfTrials *= param.values.length;
+      } else if (param.type === RANGE) {
+        numberOfTrials *= Math.ceil((param.max - param.min) / param.step);
+      }
+    });
+
+    if (numberOfTrials > MAX_TRIALS) {
+      setTrialNumberErrorDialogOpen({ condition: true, number: numberOfTrials });
+    } else if (editState) {
       ExperimentsApi.editExperiment(experiment?.name, newExperimentDetails)
         .then(() => {
           setView(EXPERIMENT_VIEWS.list);
@@ -467,34 +484,35 @@ const ExperimentEdit = (props) => {
   };
 
   return (
-    <GridLayout className={classes.root}>
-      <Box className="editExperimentContainer">
-        <Box my={3} className="editExperimentBack">
-          <ArrowBackIcon onClick={() => setView(EXPERIMENT_VIEWS.list)} />
-          <Typography variant="body2">{!editState ? 'New Experiment' : 'Edit Experiment'}</Typography>
-        </Box>
-        <Box mb={2} className="editExperimentHead">
-          <form noValidate autoComplete="off">
-            <TextField
-              id="experiment-name"
-              label="Experiment Name"
-              variant="filled"
-              value={experimentName}
-              onChange={(e) => setExperimentNameInfo(e.target.value)}
-              error={experimentNameError !== ''}
-              helperText={experimentNameError}
-            />
-          </form>
-          <Box mt={3}>
-            <Divider />
+    <>
+      <GridLayout className={classes.root}>
+        <Box className="editExperimentContainer">
+          <Box my={3} className="editExperimentBack">
+            <ArrowBackIcon onClick={() => setView(EXPERIMENT_VIEWS.list)} />
+            <Typography variant="body2">{!editState ? 'New Experiment' : 'Edit Experiment'}</Typography>
           </Box>
-        </Box>
-        <Box className="editExperimentContent">
-          <Box mb={1} className="editExperimentDefault">
-            <Box mb={2} className="editExperimentBreadcrumb">
-              <Typography variant="body2">Parameters</Typography>
+          <Box mb={2} className="editExperimentHead">
+            <form noValidate autoComplete="off">
+              <TextField
+                id="experiment-name"
+                label="Experiment Name"
+                variant="filled"
+                value={experimentName}
+                onChange={(e) => setExperimentNameInfo(e.target.value)}
+                error={experimentNameError !== ''}
+                helperText={experimentNameError}
+              />
+            </form>
+            <Box mt={3}>
+              <Divider />
             </Box>
-            {groupParameters.length > 0 && (
+          </Box>
+          <Box className="editExperimentContent">
+            <Box mb={1} className="editExperimentDefault">
+              <Box mb={2} className="editExperimentBreadcrumb">
+                <Typography variant="body2">Parameters</Typography>
+              </Box>
+              {groupParameters.length > 0 && (
               <Box mb={2} className="editExperimentGroup">
                 <Box mb={2} className="editExperimentBreadcrumb">
                   <Typography variant="body2">Grouped Parameters</Typography>
@@ -512,8 +530,8 @@ const ExperimentEdit = (props) => {
                   </Box>
                 )}
               </Box>
-            )}
-            {selectionParams.length > 0 && (
+              )}
+              {selectionParams.length > 0 && (
               <Box className="editExperimentRow">
                 {parameters.map((parameter, index) => (
                   ParameterRow(parameter, index, handleParamSelection, handleChange,
@@ -521,34 +539,44 @@ const ExperimentEdit = (props) => {
                     removeParameter, selectionParams, classes)
                 ))}
               </Box>
-            )}
+              )}
+            </Box>
+          </Box>
+          <Box>
+            <Link to="true" color="primary" onClick={addParameter}>
+              <AddIcon />
+              Add parameter
+            </Link>
           </Box>
         </Box>
-        <Box>
-          <Link to="true" color="primary" onClick={addParameter}>
-            <AddIcon />
-            Add parameter
-          </Link>
-        </Box>
-      </Box>
-      <Box
-        className="scrollbar scrollchild"
-        mt={1}
-        display="flex"
-        flexWrap="wrap"
-      >
-        <Box className="editExperimentFooter">
-          <Box display="flex">
-            <Button color="secondary" onClick={() => setView(EXPERIMENT_VIEWS.list)}>
-              Cancel
-            </Button>
-            <Button variant="contained" color="primary" onClick={submit}>
-              {editState ? 'Save' : 'Create'}
-            </Button>
+        <Box
+          className="scrollbar scrollchild"
+          mt={1}
+          display="flex"
+          flexWrap="wrap"
+        >
+          <Box className="editExperimentFooter">
+            <Box display="flex">
+              <Button color="secondary" onClick={() => setView(EXPERIMENT_VIEWS.list)}>
+                Cancel
+              </Button>
+              <Button variant="contained" color="primary" onClick={submit}>
+                {editState ? 'Save' : 'Create'}
+              </Button>
+            </Box>
           </Box>
         </Box>
-      </Box>
-    </GridLayout>
+      </GridLayout>
+      <DialogBox
+        open={trialNumberErrorDialogOpen.condition}
+        onDialogResponse={() => setTrialNumberErrorDialogOpen({ condition: false, number: 1 })}
+        textForDialog={{
+          heading: 'Error - Number of conditions is too large',
+          content: `Please change your exploration parameters to
+          reduce the number of experimental conditions to less than 100. Last number of conditions: ${trialNumberErrorDialogOpen.number}`,
+        }}
+      />
+    </>
   );
 };
 
