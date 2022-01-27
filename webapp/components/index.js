@@ -64,7 +64,7 @@ import _ExperimentManager from './experiments/ExperimentManager';
 import _LaunchDialog from './topbar/dialogs/LaunchDialog';
 import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole';
 import _PlotViewer from './general/PlotViewer';
-import _ExperimentControlPanel from './experiments/ExperimentControlPanel';
+import _ExperimentControlPanel from './general/ExperimentControlPanel';
 
 const updateCardsDispatch = (dispatch) => ({ updateCards: () => dispatch(updateCards) });
 

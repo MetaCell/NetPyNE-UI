@@ -408,11 +408,12 @@ export const DEFAULT_NETWORK_WIDGETS = {
   },
   experimentControlPanel: {
     id: 'experimentControlPanel',
-    name: 'Experiment Control Panel',
+    name: 'Control Panel',
     status: WidgetStatus.MINIMIZED,
     hideOnClose: true,
     component: 'experimentControlPanel',
     panelName: MINIMIZED_PANEL,
+    defaultPanel: 'plotPanel',
     enableRename: false,
     pos: 13,
     specification: TOOLS_LIST,
