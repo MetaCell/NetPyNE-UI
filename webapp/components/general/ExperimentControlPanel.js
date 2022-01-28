@@ -7,42 +7,49 @@ import TreeView from '@material-ui/lab/TreeView';
 import TreeItem from '@material-ui/lab/TreeItem';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import Visibility from '@material-ui/icons/Visibility';
-import ColorLens from '@material-ui/icons/ColorLens';
+import ControlPanelTreeItem from './ControlPanelTreeItem';
 
 import { MODEL_STATE } from '../../constants';
 
-const useStyles = makeStyles(() => ({
-  networkItem: {
-    '&:hover': {
-      '& .MuiSvgIcon-root': {
-        display: 'block',
-      },
-    },
-  },
-}));
-
 const ExperimentControlPanel = (props) => {
-  const classes = useStyles();
-  const [state, setState] = React.useState(true);
   const [filter, setFilter] = React.useState('');
-  console.log('Instances from control panel', window.Instances);
+  const onNodeSelect = (event, nodeId) => {
+    console.log(`Node with id ${nodeId} clicked`);
+  };
 
-  const NetworkItem = (props) => (
-    <Box className={classes.networkItem} display="flex" flexDirection="row" justifyContent="space-between">
-      <Box>{props.name}</Box>
-      <Box>{props.type}</Box>
-      <Box display="none">
-        <span><Visibility /></span>
-        <span><ColorLens /></span>
-      </Box>
-    </Box>
-  );
+  const onVisibilityClick = (event, nodeId) => {
+    console.log(`Visibility of node with id of ${nodeId} clicked.`);
+  };
+
+  const onColorClick = (event, nodeId) => {
+    console.log(`Color of node with id of ${nodeId} clicked`);
+  };
+
+  const getTreeItemsFromData = (treeItems) => treeItems.map((treeItemData) => {
+    let children;
+    if (treeItemData.getChildren() && treeItemData.getChildren().length > 0) {
+      children = getTreeItemsFromData(treeItemData.getChildren());
+    }
+
+    console.log('inside getTreeItemsFromData');
+
+    return (
+      <ControlPanelTreeItem
+        nodeId={treeItemData.id}
+        label={treeItemData.getPath()}
+        type={treeItemData.id}
+        onNodeSelect={onNodeSelect}
+        onVisibilityClick={onVisibilityClick}
+      >
+        {children}
+      </ControlPanelTreeItem>
+    );
+  });
 
   return (
     <>
       {
-        window.Instances // temporary, change to props.modelState === MODEL_STATE.INSTANTIATED
+        window.Instances // temporary change to -> props.modelState === MODEL_STATE.INSTANTIATED
           ? (
             window.Instances
               ? (
@@ -57,8 +64,9 @@ const ExperimentControlPanel = (props) => {
                     defaultCollapseIcon={<ExpandMoreIcon />}
                     defaultExpandIcon={<ChevronRightIcon />}
                   >
-                    {/* <NetworkItem name="network_name" type="network_type" /> */}
-                    <TreeItem label="test tree item" />
+                    <TreeItem nodeId="network" label="network_netpyne">
+                      {getTreeItemsFromData(window.Instances.network.getChildren())}
+                    </TreeItem>
                   </TreeView>
                 </Box>
               )
