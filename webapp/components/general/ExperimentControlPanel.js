@@ -21,20 +21,15 @@ const ExperimentControlPanel = (props) => {
     console.log(`Visibility of node with id of ${nodeId} clicked.`);
   };
 
-  const onColorClick = (event, nodeId) => {
-    console.log(`Color of node with id of ${nodeId} clicked`);
-  };
-
   const getTreeItemsFromData = (treeItems) => treeItems.map((treeItemData) => {
     let children;
     if (treeItemData.getChildren() && treeItemData.getChildren().length > 0) {
       children = getTreeItemsFromData(treeItemData.getChildren());
     }
 
-    console.log('inside getTreeItemsFromData');
-
     return (
       <ControlPanelTreeItem
+        key={treeItemData.id}
         nodeId={treeItemData.id}
         label={treeItemData.getPath()}
         type={treeItemData.id}
@@ -53,9 +48,9 @@ const ExperimentControlPanel = (props) => {
           ? (
             window.Instances
               ? (
-                <Box display="flex" flexDirection="column">
+                <Box display="flex" flexDirection="column" p={1}>
                   <TextField label="Filter results" variant="outlined" fullWidth onChange={(e) => setFilter(e.target.value)} />
-                  <Box display="flex" justifyContent="space-between">
+                  <Box display="flex" justifyContent="space-between" mt={1}>
                     <Typography>Name</Typography>
                     <Typography>Type(s)</Typography>
                   </Box>
