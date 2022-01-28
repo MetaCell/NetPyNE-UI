@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import TreeItem from '@material-ui/lab/TreeItem';
 import Visibility from '@material-ui/icons/Visibility';
 import ColorLens from '@material-ui/icons/ColorLens';
 import { ChromePicker } from 'react-color';
-import { bgInputs } from '../../theme';
+import { experimentLabelColor } from '../../theme';
 
 const useStyles = makeStyles((theme) => ({
   networkItem: {
@@ -18,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiIconButton-root': {
       padding: 0,
       marginLeft: '0.5rem',
-      color: bgInputs,
+      color: experimentLabelColor,
       '&:hover': {
         color: 'white',
       },
@@ -39,7 +40,6 @@ const ControlPanelTreeItem = (props) => {
 
   const handleColorSelection = (color) => {
     setColor(color.hex);
-    console.log('color changed', color.hex);
   };
 
   const {
@@ -56,7 +56,8 @@ const ControlPanelTreeItem = (props) => {
     <TreeItem
       nodeId={nodeId}
       label={(
-        <Box
+        <Grid
+          container
           className={classes.networkItem}
           onMouseEnter={() => setIsHoveredOver(true)}
           onMouseLeave={() => setIsHoveredOver(false)}
@@ -64,29 +65,31 @@ const ControlPanelTreeItem = (props) => {
           flexDirection="row"
           justifyContent="space-between"
         >
-          <Typography onClick={(event) => onNodeSelect(event, nodeId)}>{label}</Typography>
-          <Typography>{type}</Typography>
-          {
-            isHoveredOver
+          <Grid item xs={4}><Typography onClick={(event) => onNodeSelect(event, nodeId)}>{label}</Typography></Grid>
+          <Grid item xs={4} justifyContent="center"><Typography>{type}</Typography></Grid>
+          <Grid item xs={4} justifyContent="flex-end" className={classes.controls}>
+            {isHoveredOver
               ? (
-                <Box className={classes.controls}>
+                <>
+
                   <IconButton onClick={(event) => onVisibilityClick(event, nodeId)}><Visibility /></IconButton>
                   <IconButton onClick={() => setShowColorPicker(!showColorPicker)}><ColorLens /></IconButton>
                   {
-                    showColorPicker
-                      ? (
-                        <ChromePicker
-                          className={classes.colorPicker}
-                          color={color}
-                          onChangeComplete={handleColorSelection}
-                        />
-                      ) : null
+              showColorPicker
+                ? (
+                  <ChromePicker
+                    className={classes.colorPicker}
+                    color={color}
+                    onChangeComplete={handleColorSelection}
+                  />
+                ) : null
             }
-                </Box>
+
+                </>
               )
-              : null
-          }
-        </Box>
+              : null}
+          </Grid>
+        </Grid>
         )}
     >
       {children}

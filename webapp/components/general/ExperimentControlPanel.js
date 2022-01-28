@@ -8,10 +8,21 @@ import TreeItem from '@material-ui/lab/TreeItem';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ControlPanelTreeItem from './ControlPanelTreeItem';
+import { experimentLabelColor } from '../../theme';
 
 import { MODEL_STATE } from '../../constants';
 
+const useStyles = makeStyles(() => ({
+  header: {
+    '& .MuiTypography-root': {
+      color: experimentLabelColor,
+      fontWeight: 'bold',
+    },
+  },
+}));
+
 const ExperimentControlPanel = (props) => {
+  const classes = useStyles();
   const [filter, setFilter] = React.useState('');
   const onNodeSelect = (event, nodeId) => {
     console.log(`Node with id ${nodeId} clicked`);
@@ -50,9 +61,10 @@ const ExperimentControlPanel = (props) => {
               ? (
                 <Box display="flex" flexDirection="column" p={1}>
                   <TextField label="Filter results" variant="outlined" fullWidth onChange={(e) => setFilter(e.target.value)} />
-                  <Box display="flex" justifyContent="space-between" mt={1}>
+                  <Box className={classes.header} display="flex" justifyContent="space-between" mt={1}>
                     <Typography>Name</Typography>
                     <Typography>Type(s)</Typography>
+                    <Typography />
                   </Box>
                   <TreeView
                     aria-label="Network data navigator"
