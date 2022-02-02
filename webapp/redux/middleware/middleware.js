@@ -106,6 +106,33 @@ const simulateNetwork = (payload) => createSimulateBackendCall(
   GEPPETTO.Resources.RUNNING_SIMULATION,
 );
 
+class ErrorDialogManager {
+  errorTag = 'SimulationId ';
+  errorIds = [];
+  addId(id){ this.errorIds.push(id); }
+  getErrorId(s) {
+    let errorId = 0 ;
+    const i = s.indexOf(this.errorTag);
+    if (i > -1)
+      errorId = parseFloat(s.substring(i + this.errorTag.length, s.length-1));
+    return errorId ;
+  }
+  shouldLaunch(s) {
+    const errorId = this.getErrorId(s);
+    if (this.errorIds.indexOf(errorId) == -1 && errorId > 0)
+    {
+      this.errorIds.push(errorId);
+      return true ;
+    }
+    if (errorId == 0)
+      return true ;
+    if (this.errorIds.indexOf(errorId) >= 0)
+      return false;
+  }
+}
+
+const errorDialogManager = new ErrorDialogManager();
+
 export default (store) => (next) => (action) => {
   const switchLayoutAction = (edit = true, reset = true) => {
     previousLayout[store.getState().general.editMode ? 'edit' : 'network'] = store.getState().layout;
@@ -129,7 +156,10 @@ export default (store) => (next) => (action) => {
 
   const pythonErrorCallback = (error) => {
     console.debug(Utils.getPlainStackTrace(error.errorDetails));
-    return next(openBackendErrorDialog(error));
+    if (errorDialogManager.shouldLaunch(error.errorMessage))
+      return next(openBackendErrorDialog(error));
+    else  
+      return next(action);
   };
 
   switch (action.type) {
@@ -166,12 +196,14 @@ export default (store) => (next) => (action) => {
       break;
     }
     case CREATE_SIMULATE_NETWORK: {
-      simulateNetwork({ allTrials: false })
+      const payload = { allTrials: false, simId: new Date().getTime() }
+      simulateNetwork(payload)
         .then(toNetworkCallback(false), pythonErrorCallback);
       break;
     }
     case SIMULATE_NETWORK:
-      simulateNetwork({ allTrials: action.payload, usePrevInst: false })
+      const payload = { allTrials: action.payload, simId: new Date().getTime(), usePrevInst: false }
+      simulateNetwork(payload)
         .then(toNetworkCallback(false), pythonErrorCallback);
       break;
     case PYTHON_CALL: {

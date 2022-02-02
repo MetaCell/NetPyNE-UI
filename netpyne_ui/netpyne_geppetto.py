@@ -14,6 +14,7 @@ import sys
 from shutil import copyfile
 from dacite import from_dict
 import base64
+import jsonpickle
 
 import neuron
 import numpy as np
@@ -266,6 +267,7 @@ class NetPyNEGeppetto:
         """
         allTrials = args.get('allTrials', True)
         use_prev_inst = args.get('usePrevInst', False)
+        sim_id = args.get('simId', 0)
 
         try:
             experiment = experiments.get_current()
@@ -289,15 +291,15 @@ class NetPyNEGeppetto:
                         return self.simulate_single_model(experiment, use_prev_inst)
                 except Exception:
                     experiment.state = model.ExperimentState.ERROR
-                    message = "Unknown error during simulation of Experiment"
+                    message = ("Unknown error during simulation of Experiment. SimulationId %i" % sim_id)
                     logging.exception(message)
                     return utils.getJSONError("Unknown error during simulation of Experiment", sys.exc_info())
 
             else:
                 return self.simulate_single_model(use_prev_inst=use_prev_inst)
 
-        except Exception:
-            message = "Error while simulating the NetPyNE model"
+        except Exception as e :
+            message = ("Error while simulating the NetPyNE model: %s. SimulationId %f" % (e, sim_id))
             logging.exception(message)
             return utils.getJSONError(message, sys.exc_info())
 
@@ -647,6 +649,8 @@ class NetPyNEGeppetto:
             saveData = sim.allSimData if hasattr(sim, 'allSimData') and 'spkt' in sim.allSimData.keys() and len(
                 sim.allSimData['spkt']) > 0 else False
 
+            #netcoded = jsonpickle.encode(self.netParams, unpicklable=False)
+            #simcoded = jsonpickle.encode(self.simConfig, unpicklable=False)
             sim.create(self.netParams, self.simConfig)
             sim.net.defineCellShapes()  # creates 3d pt for cells with stylized geometries
             sim.gatherData(gatherLFP=False)
