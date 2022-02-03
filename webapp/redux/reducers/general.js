@@ -50,6 +50,9 @@ export default function reduceGeneral (state = GENERAL_DEFAULT_STATE, action) {
     case Actions.SET_THEME: {
       return { ...state, theme: action.payload };
     }
+    case Actions.CHANGE_INSTANCE_COLOR: {
+      return { ...state };
+    }
     default: {
       return state;
     }

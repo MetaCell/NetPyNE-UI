@@ -38,7 +38,9 @@ const ControlPanelTreeItem = (props) => {
   const [isHoveredOver, setIsHoveredOver] = React.useState(false);
   const [color, setColor] = React.useState('#ff0000');
 
-  const handleColorSelection = (color) => {
+  const handleColorSelection = (color, event, nodeId) => {
+    event.preventDefault();
+    event.stopPropagation();
     setColor(color.hex);
   };
 
@@ -80,7 +82,7 @@ const ControlPanelTreeItem = (props) => {
                   <ChromePicker
                     className={classes.colorPicker}
                     color={color}
-                    onChangeComplete={handleColorSelection}
+                    onChangeComplete={(e, color) => handleColorSelection(e, color, nodeId)}
                   />
                 ) : null
             }

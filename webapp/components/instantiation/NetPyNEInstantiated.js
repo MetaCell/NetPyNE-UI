@@ -7,7 +7,9 @@ import CameraControls from '@metacell/geppetto-meta-ui/camera-controls/CameraCon
 // import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
 
 import { NetWorkControlButtons } from 'netpyne/components';
-import { primaryColor, canvasBgDark, canvasBgLight, bgRegular } from '../../theme';
+import {
+  primaryColor, canvasBgDark, canvasBgLight, bgRegular,
+} from '../../theme';
 import { THEMES } from '../../constants';
 
 const CANVAS_LIGHT = 'canvas-toolbar-btns-light';
@@ -39,6 +41,9 @@ class NetPyNEInstantiated extends React.Component {
       data: [
         {
           instancePath: 'network',
+          color: {
+            g: 0.50, b: 0.60, r: 1, a: 0.80,
+          },
         },
       ],
       selected: {},
@@ -48,56 +53,24 @@ class NetPyNEInstantiated extends React.Component {
         far: 2000000,
         baseZoom: 1,
         position: { x: -97.349, y: 53.797, z: 387.82 },
-        rotation: { rx: 0.051, ry: -0.192, rz: -0.569, radius: 361.668 },
+        rotation: {
+          rx: 0.051, ry: -0.192, rz: -0.569, radius: 361.668,
+        },
         autoRotate: false,
         movieFilter: true,
         reset: false,
-        cameraControls: { 
+        cameraControls: {
           instance: CameraControls,
-          props: {}
+          props: {},
         },
       },
     };
     this.dimensions = {
-      width: 200,
-      height: 200,
+      width: '1980px',
+      height: '1900px',
     };
     this.canvasRef = React.createRef();
     this.controlPanelToggle = this.controlPanelToggle.bind(this);
-  }
-
-  componentDidMount () {
-    // this.canvasRef.current.engine.setLinesThreshold(10000);
-    // this.canvasRef.current.displayAllInstances();
-    // this.updateBtnsWithTheme('', this.state.canvasBtnCls);
-    // window.addEventListener('resize', this.delayedResize.bind(this));
-    // this.resizeIfNeeded();
-    // this.updateInstances();
-
-    // GEPPETTO.on(GEPPETTO.Events.Control_panel_close, () => {
-    //   this.setState({ bringItToFront: 0 });
-    // });
-  }
-
-  componentDidUpdate (prevProps, prevState) {
-    // this.resizeIfNeeded();
-    // const { theme } = this.props;
-    // if (prevProps.theme !== this.props.theme) {
-    //   theme === THEMES.LIGHT ? this.updateBtnsWithTheme(CANVAS_DARK, CANVAS_LIGHT)
-    //     : this.updateBtnsWithTheme(CANVAS_LIGHT, CANVAS_DARK);
-    // }
-    // if (prevState.controlPanelInitialized !== this.state.controlPanelInitialized) {
-    //   if (this.state.controlPanelInitialized) {
-    //     $('#controlpanel')
-    //       .show();
-    //   }
-    // }
-  }
-
-  componentWillUnmount () {
-    // GEPPETTO.off(GEPPETTO.Events.Control_panel_close);
-    // clearTimeout(this.timer);
-    // window.removeEventListener('resize', this.delayedResize);
   }
 
   updateBtnsWithTheme = (removeClass, addClass) => {
@@ -108,25 +81,6 @@ class NetPyNEInstantiated extends React.Component {
     element.classList.add(addClass);
     this.setState({ canvasBtnCls: addClass });
   };
-
-  // updateInstances () {
-  //   if (window.Instances != null && window.Instances.network) {
-  //     // update canvas only if there are instances to show
-  //     this.canvasRef.current.engine.setLinesThreshold(25000);
-  //     this.canvasRef.current.engine.updateSceneWithNewInstances(
-  //       window.Instances,
-  //     );
-  //     this.canvasRef.current.resetCamera();
-
-  //     this.canvasRef.current.setColor('network', primaryColor, true);
-  //     const spotLight = this.canvasRef.current.engine.scene.children.find(
-  //       (child) => child.type === 'SpotLight',
-  //     );
-  //     if (spotLight) {
-  //       this.canvasRef.current.engine.scene.remove(spotLight);
-  //     }
-  //   }
-  // }
 
   resizeCanvas () {
     this.setState((prevState) => ({ update: prevState.update + 1 }));
@@ -169,7 +123,7 @@ class NetPyNEInstantiated extends React.Component {
   mapToCanvasData (data) {
     return data.map((item) => (
       {
-        color: item.selected ? SELECTION_COLOR : DEFAULT_COLOR,
+        color: item.selected ? SELECTION_COLOR : item.color,
         instancePath: item.instancePath,
       }
     ));
@@ -204,18 +158,6 @@ class NetPyNEInstantiated extends React.Component {
 
     return (
       <div className="instantiatedContainer">
-        {/* <Canvas
-          id="CanvasContainer"
-          name="Canvas"
-          componentType="Canvas"
-          ref={this.canvasRef}
-          style={{
-            height: '100%',
-            width: '100%',
-            background: bgColor,
-          }}
-          update={update}
-        /> */}
         <Canvas
           ref={this.canvasRef}
           cameraOptions={camOptions}

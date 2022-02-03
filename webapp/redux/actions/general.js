@@ -20,6 +20,8 @@ export const AUTOMATIC_SIMULATION = 'AUTOMATIC_SIMULATION';
 export const IMPORT_APPLICATION_STATE = 'IMPORT_APPLICATION_STATE';
 export const SET_THEME = 'SET_THEME';
 
+export const CHANGE_INSTANCE_COLOR = 'CHANGE_INSTANCE_COLOR';
+
 // Actions
 export const updateCards = { type: UPDATE_CARDS };
 
@@ -79,5 +81,13 @@ export const setDefaultWidgets = setWidgets({
     ...PYTHON_CONSOLE_WIDGET,
     panelName: PYTHON_CONSOLE_WIDGET.defaultPanel,
     status: WidgetStatus.ACTIVE,
+  },
+});
+
+export const changeInstanceColor = (instance, color) => ({
+  type: CHANGE_INSTANCE_COLOR,
+  data: {
+    instance,
+    color,
   },
 });

@@ -41,9 +41,9 @@ const ExperimentControlPanel = (props) => {
     return (
       <ControlPanelTreeItem
         key={treeItemData.id}
-        nodeId={treeItemData.id}
-        label={treeItemData.getPath()}
-        type={treeItemData.id}
+        nodeId={treeItemData.getPath()}
+        label={treeItemData.id}
+        type={treeItemData.getType().getId()}
         onNodeSelect={onNodeSelect}
         onVisibilityClick={onVisibilityClick}
       >
