@@ -195,6 +195,9 @@ const Utils = {
       } else if (Object.prototype.hasOwnProperty.call(parsedData, 'websocket')) {
         error.message = parsedData.websocket;
       }
+      if (Object.prototype.hasOwnProperty.call(parsedData, 'additional_info')) {
+        error.additionalInfo = parsedData.additional_info ;
+      }
       return error;
     }
     return null;

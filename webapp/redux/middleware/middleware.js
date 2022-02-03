@@ -39,6 +39,7 @@ export const processError = (response) => {
     return {
       errorMessage: parsedResponse.message,
       errorDetails: parsedResponse.details,
+      additionalInfo: parsedResponse.additionalInfo
     };
   }
   return false;
@@ -106,32 +107,25 @@ const simulateNetwork = (payload) => createSimulateBackendCall(
   GEPPETTO.Resources.RUNNING_SIMULATION,
 );
 
-class ErrorDialogManager {
-  errorTag = 'SimulationId ';
-  errorIds = [];
-  addId(id){ this.errorIds.push(id); }
-  getErrorId(s) {
-    let errorId = 0 ;
-    const i = s.indexOf(this.errorTag);
-    if (i > -1)
-      errorId = parseFloat(s.substring(i + this.errorTag.length, s.length-1));
-    return errorId ;
-  }
-  shouldLaunch(s) {
-    const errorId = this.getErrorId(s);
-    if (this.errorIds.indexOf(errorId) == -1 && errorId > 0)
+class PythonMessageFilter {
+  errorIds = new Set();
+  shouldLaunch(e) {    
+    const errorId = e.additionalInfo?.sim_id ;
+    if (!errorId)
+      return true ;
+    if (errorId)
     {
-      this.errorIds.push(errorId);
-      return true ;
+      if(this.errorIds.has(errorId))
+        return false ;
+      else {
+        this.errorIds.add(errorId);
+        return true ;
+      }
     }
-    if (errorId == 0)
-      return true ;
-    if (this.errorIds.indexOf(errorId) >= 0)
-      return false;
   }
 }
 
-const errorDialogManager = new ErrorDialogManager();
+const errorMessageFilter = new PythonMessageFilter();
 
 export default (store) => (next) => (action) => {
   const switchLayoutAction = (edit = true, reset = true) => {
@@ -156,7 +150,7 @@ export default (store) => (next) => (action) => {
 
   const pythonErrorCallback = (error) => {
     console.debug(Utils.getPlainStackTrace(error.errorDetails));
-    if (errorDialogManager.shouldLaunch(error.errorMessage))
+    if (errorMessageFilter.shouldLaunch(error))
       return next(openBackendErrorDialog(error));
     else  
       return next(action);
