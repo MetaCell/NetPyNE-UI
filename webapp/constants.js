@@ -16,6 +16,10 @@ export const MODEL_STATE = {
   SIMULATED: 'SIMULATED',
 };
 
+export const DEFAULT_COLOR = {
+  g: 0.50, b: 0.60, r: 1, a: 0.80,
+};
+
 export const NETPYNE_COMMANDS = {
   instantiateModel: 'netpyne_geppetto.instantiateNetPyNEModelInGeppetto',
   simulateModel: 'netpyne_geppetto.simulateNetPyNEModelInGeppetto',

@@ -20,7 +20,9 @@ export const AUTOMATIC_SIMULATION = 'AUTOMATIC_SIMULATION';
 export const IMPORT_APPLICATION_STATE = 'IMPORT_APPLICATION_STATE';
 export const SET_THEME = 'SET_THEME';
 
+export const ADD_CANVAS_INSTANCES = 'ADD_CANVAS_INSTANCES';
 export const CHANGE_INSTANCE_COLOR = 'CHANGE_INSTANCE_COLOR';
+export const REMOVE_CANVAS_INSTANCES = 'REMOVE_CANVAS_INSTANCES';
 
 // Actions
 export const updateCards = { type: UPDATE_CARDS };
@@ -90,4 +92,14 @@ export const changeInstanceColor = (instance, color) => ({
     instance,
     color,
   },
+});
+
+export const addInstancesToCanvas = (instances) => ({
+  type: ADD_CANVAS_INSTANCES,
+  instances,
+});
+
+export const removeInstancesFromCanvas = (instances) => ({
+  type: REMOVE_CANVAS_INSTANCES,
+  instances,
 });

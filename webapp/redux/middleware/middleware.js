@@ -20,6 +20,9 @@ import {
   RESET_MODEL,
   showNetwork,
   MODEL_LOADED,
+  changeInstanceColor,
+  addInstancesToCanvas,
+  removeInstancesFromCanvas,
 } from '../actions/general';
 import { openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
@@ -135,6 +138,18 @@ export default (store) => (next) => (action) => {
   switch (action.type) {
     case MODEL_LOADED:
       next(GeppettoActions.waitData('Loading the NetPyNE Model', GeppettoActions.clientActions.MODEL_LOADED));
+      next(action);
+      break;
+    case GeppettoActions.clientActions.MODEL_LOADED:
+      if (store.getState()?.general?.modelState === Constants.MODEL_STATE.NOT_INSTANTIATED) {
+        const networkPath = window.Instances.getInstance('network');
+        if (networkPath) {
+          store.dispatch(addInstancesToCanvas([{
+            instancePath: networkPath.getInstancePath(),
+            color: Constants.DEFAULT_COLOR,
+          }]));
+        }
+      }
       next(action);
       break;
     case UPDATE_CARDS:
@@ -265,7 +280,7 @@ export default (store) => (next) => (action) => {
             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
             dehydrateCanvas();
             GEPPETTO.Manager.loadModel(response);
-            GEPPETTO.CommandController.log('Instantiation / Simulation completed.');
+            console.log('Instantiation / Simulation completed.');
 
             store.dispatch(showNetwork);
           }

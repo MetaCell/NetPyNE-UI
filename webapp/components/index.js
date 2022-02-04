@@ -14,7 +14,7 @@ import { openBackendErrorDialog, closeBackendErrorDialog } from '../redux/action
 import {
   updateCards, editModel, simulateNetwork, createNetwork, closeDialog,
   createAndSimulateNetwork, showNetwork, pythonCall, modelLoaded, deleteNetParamsObj, resetModel,
-  setDefaultWidgets,
+  setDefaultWidgets, changeInstanceColor,
 } from '../redux/actions/general';
 
 import {
@@ -244,8 +244,11 @@ export const NetPyNEInstantiated = connect(
   (state) => ({
     modelState: state.general.modelState,
     theme: state.general.theme,
+    data: state.general.instances,
   }),
-  null,
+  (dispatch) => ({
+    selectInstances: (instances) => dispatch(changeInstanceColor(instances)),
+  }),
 )(_NetPyNEInstantiated);
 
 export const NetWorkControlButtons = connect(

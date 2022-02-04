@@ -14,6 +14,7 @@ export const GENERAL_DEFAULT_STATE = {
   automaticSimulation: false,
   automaticInstantiation: false,
   theme: 'gui',
+  instances: [],
 };
 
 // reducer function
@@ -51,6 +52,12 @@ export default function reduceGeneral (state = GENERAL_DEFAULT_STATE, action) {
       return { ...state, theme: action.payload };
     }
     case Actions.CHANGE_INSTANCE_COLOR: {
+      return { ...state, instances: [...action.instances] };
+    }
+    case Actions.ADD_CANVAS_INSTANCES: {
+      return { ...state, instances: [...state.instances, ...action.instances] };
+    }
+    case Actions.REMOVE_CANVAS_INSTANCES: {
       return { ...state };
     }
     default: {
