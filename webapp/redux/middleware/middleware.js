@@ -26,7 +26,9 @@ import { closeDrawerDialogBox } from '../actions/drawer';
 import Utils from '../../Utils';
 import { downloadJsonResponse, downloadPythonResponse } from './utils';
 import * as Constants from '../../constants';
-
+import * as ExperimentsApi from 'root/api/experiments';
+import { setExperimentParameters } from 'root/redux/actions/experiments';
+const SUPPORTED_TYPES = [Constants.REAL_TYPE.INT, Constants.REAL_TYPE.FLOAT, Constants.REAL_TYPE.STR, Constants.REAL_TYPE.BOOL];
 let previousLayout = {
   edit: undefined,
   network: undefined,
@@ -161,18 +163,90 @@ export default (store) => (next) => (action) => {
       break;
     }
     case CREATE_NETWORK: {
-      instantiateNetwork({})
-        .then(toNetworkCallback(false), pythonErrorCallback);
+      ExperimentsApi.getParameters()
+      .then((params) => {
+        const flattened = Utils.flatten(params);
+        const paramKeys = Object.keys(flattened);
+
+        const filteredKeys = paramKeys.filter((key) => {
+          // TODO: avoid to fetch field twice!
+          const field = Utils.getMetadataField(`netParams.${key}`);
+          if (field && SUPPORTED_TYPES.includes(field.type)) {
+            return true;
+          }
+          return false;
+        });
+        next(setExperimentParameters({
+          parameters: filteredKeys,
+        }));
+        const expData = store.getState().experiments;
+        expData?.inDesign?.params?.map((param) => {
+          if(filteredKeys.includes(param.mapsTo)) {
+            instantiateNetwork({})
+            .then(toNetworkCallback(false), pythonErrorCallback);
+          } else {
+            pythonErrorCallback({errorDetails: 'Missing Parameters', errorMessage: 'Error'})
+          }
+        })
+      });
       break;
     }
     case CREATE_SIMULATE_NETWORK: {
-      simulateNetwork({ allTrials: false })
-        .then(toNetworkCallback(false), pythonErrorCallback);
+      ExperimentsApi.getParameters()
+      .then((params) => {
+        const flattened = Utils.flatten(params);
+        const paramKeys = Object.keys(flattened);
+
+        const filteredKeys = paramKeys.filter((key) => {
+          // TODO: avoid to fetch field twice!
+          const field = Utils.getMetadataField(`netParams.${key}`);
+          if (field && SUPPORTED_TYPES.includes(field.type)) {
+            return true;
+          }
+          return false;
+        });
+        next(setExperimentParameters({
+          parameters: filteredKeys,
+        }));
+        const expData = store.getState().experiments;
+        expData?.inDesign?.params?.map((param) => {
+          if(filteredKeys.includes(param.mapsTo)) {
+            simulateNetwork({ allTrials: false })
+            .then(toNetworkCallback(false), pythonErrorCallback);
+          } else {
+            pythonErrorCallback({errorDetails: 'Missing Parameters', errorMessage: 'Error'})
+          }
+        })
+      });
       break;
     }
     case SIMULATE_NETWORK:
-      simulateNetwork({ allTrials: action.payload, usePrevInst: false })
-        .then(toNetworkCallback(false), pythonErrorCallback);
+      ExperimentsApi.getParameters()
+      .then((params) => {
+        const flattened = Utils.flatten(params);
+        const paramKeys = Object.keys(flattened);
+
+        const filteredKeys = paramKeys.filter((key) => {
+          // TODO: avoid to fetch field twice!
+          const field = Utils.getMetadataField(`netParams.${key}`);
+          if (field && SUPPORTED_TYPES.includes(field.type)) {
+            return true;
+          }
+          return false;
+        });
+        next(setExperimentParameters({
+          parameters: filteredKeys,
+        }));
+        const expData = store.getState().experiments;
+        expData?.inDesign?.params?.map((param) => {
+          if(filteredKeys.includes(param.mapsTo)) {
+            simulateNetwork({ allTrials: action.payload, usePrevInst: false })
+            .then(toNetworkCallback(false), pythonErrorCallback);
+          } else {
+            pythonErrorCallback({errorDetails: 'Missing Parameters', errorMessage: 'Error'})
+          }
+        })
+      });
       break;
     case PYTHON_CALL: {
       const callback = (response) => {

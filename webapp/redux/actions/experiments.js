@@ -5,6 +5,7 @@ export const VIEW_EXPERIMENTS_RESULTS = 'VIEW_EXPERIMENT_RESULTS';
 export const TRIAL_LOAD_MODEL_SPEC = 'TRIAL_LOAD_MODEL_SPEC';
 export const OPEN_LAUNCH_DIALOG = 'OPEN_LAUNCH_DIALOG';
 export const CLOSE_LAUNCH_DIALOG = 'CLOSE_LAUNCH_DIALOG';
+export const SET_EXPERIMENT_PARAMETERS = 'SET_EXPERIMENT_PARAMETERS';
 
 /**
  * Triggers fetching the Experiments from the backend.
@@ -18,6 +19,14 @@ export const getExperiments = () => ({
  */
 export const setExperiments = (payload) => ({
   type: SET_EXPERIMENTS,
+  payload,
+});
+
+/**
+ * Set fetched experiments.
+ */
+ export const setExperimentParameters = (payload) => ({
+  type: SET_EXPERIMENT_PARAMETERS,
   payload,
 });
 
