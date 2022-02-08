@@ -7,6 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import TreeItem from '@material-ui/lab/TreeItem';
 import Visibility from '@material-ui/icons/Visibility';
 import ColorLens from '@material-ui/icons/ColorLens';
+import Shuffle from '@material-ui/icons/Shuffle';
 import { ChromePicker } from 'react-color';
 import { experimentLabelColor } from '../../theme';
 
@@ -44,6 +45,17 @@ const ControlPanelTreeItem = (props) => {
     setColor(color.hex);
   };
 
+  const generateRandomColor = () => {
+    const randomColor = {
+      r: parseFloat((Math.random() * 1.00).toFixed(2)),
+      g: parseFloat((Math.random() * 1.00).toFixed(2)),
+      b: parseFloat((Math.random() * 1.00).toFixed(2)),
+      a: 1,
+    };
+    console.log('random color rgba', randomColor);
+    setColor(randomColor);
+  };
+
   const {
     label,
     type,
@@ -62,7 +74,7 @@ const ControlPanelTreeItem = (props) => {
           container
           className={classes.networkItem}
           onMouseEnter={() => setIsHoveredOver(true)}
-          onMouseLeave={() => setIsHoveredOver(false)}
+          onMouseLeave={() => { setIsHoveredOver(false); setShowColorPicker(false); }}
           display="flex"
           flexDirection="row"
           justifyContent="space-between"
@@ -75,6 +87,7 @@ const ControlPanelTreeItem = (props) => {
                 <>
 
                   <IconButton onClick={(event) => onVisibilityClick(event, nodeId)}><Visibility /></IconButton>
+                  <IconButton onClick={generateRandomColor}><Shuffle /></IconButton>
                   <IconButton onClick={() => setShowColorPicker(!showColorPicker)}><ColorLens /></IconButton>
                   {
               showColorPicker
