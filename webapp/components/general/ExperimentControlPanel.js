@@ -25,6 +25,8 @@ const ExperimentControlPanel = (props) => {
   const classes = useStyles();
   const [filter, setFilter] = React.useState('');
   const onNodeSelect = (event, nodeId) => {
+    event.preventDefault();
+    event.stopPropagation();
     console.log(`Node with id ${nodeId} clicked`);
   };
 

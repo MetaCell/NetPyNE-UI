@@ -40,8 +40,6 @@ const ControlPanelTreeItem = (props) => {
   const [color, setColor] = React.useState('#ff0000');
 
   const handleColorSelection = (color, event, nodeId) => {
-    event.preventDefault();
-    event.stopPropagation();
     setColor(color.hex);
   };
 
@@ -52,7 +50,6 @@ const ControlPanelTreeItem = (props) => {
       b: parseFloat((Math.random() * 1.00).toFixed(2)),
       a: 1,
     };
-    console.log('random color rgba', randomColor);
     setColor(randomColor);
   };
 
