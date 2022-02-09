@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
@@ -39,7 +38,7 @@ const ControlPanelTreeItem = (props) => {
   const [isHoveredOver, setIsHoveredOver] = React.useState(false);
   const [color, setColor] = React.useState('#ff0000');
 
-  const handleColorSelection = (color, event, nodeId) => {
+  const handleColorSelection = (color, nodeId) => {
     setColor(color.hex);
   };
 
@@ -66,6 +65,7 @@ const ControlPanelTreeItem = (props) => {
   return (
     <TreeItem
       nodeId={nodeId}
+      onLabelClick={(e) => { e.stopPropagation(); e.preventDefault(); }}
       label={(
         <Grid
           container
@@ -76,7 +76,7 @@ const ControlPanelTreeItem = (props) => {
           flexDirection="row"
           justifyContent="space-between"
         >
-          <Grid item xs={4}><Typography onClick={(event) => onNodeSelect(event, nodeId)}>{label}</Typography></Grid>
+          <Grid item xs={4}><Typography onClick={() => onNodeSelect(nodeId)}>{label}</Typography></Grid>
           <Grid item xs={4} justifyContent="center"><Typography>{type}</Typography></Grid>
           <Grid item xs={4} justifyContent="flex-end" className={classes.controls}>
             {isHoveredOver
@@ -92,7 +92,7 @@ const ControlPanelTreeItem = (props) => {
                   <ChromePicker
                     className={classes.colorPicker}
                     color={color}
-                    onChangeComplete={(e, color) => handleColorSelection(e, color, nodeId)}
+                    onChangeComplete={(color) => handleColorSelection(color, nodeId)}
                   />
                 ) : null
             }
