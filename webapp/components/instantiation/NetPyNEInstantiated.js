@@ -131,10 +131,10 @@ class NetPyNEInstantiated extends React.Component {
     return (
       <div className="instantiatedContainer">
         <Canvas
-          ref={this.canvasRef}
-          cameraOptions={camOptions}
-          key="CanvasContainer"
           data={canvasData}
+          ref={this.canvasRef}
+          key="CanvasContainer"
+          cameraOptions={camOptions}
           backgroundColor={bgRegular}
           onSelection={this.onSelection}
         />

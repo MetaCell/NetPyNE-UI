@@ -39,9 +39,9 @@ const ControlPanelTreeItem = (props) => {
   const [color, setColor] = React.useState('#ff0000');
 
   const handleColorSelection = (color, event, nodeId) => {
+    setColor(color.hex);
     event.preventDefault();
     event.stopPropagation();
-    setColor(color.hex);
   };
 
   const {

@@ -204,8 +204,8 @@ const DrawerList = ({
                 setTimeout(() => window.dispatchEvent(new Event('resize')), 400);
               }}
             >
-              {expand ? <DrawerIcon name="arrow-left" fontSize="inherit" />
-                : <DrawerIcon name="arrow-right" fontSize="inherit" />}
+              {expand ? <DrawerIcon style={{ padding: '12px !important' }} name="arrow-left" fontSize="inherit" />
+                : <DrawerIcon style={{ padding: '12px !important' }} name="arrow-right" fontSize="inherit" />}
             </IconButton>
           </Tooltip>
         </div>
