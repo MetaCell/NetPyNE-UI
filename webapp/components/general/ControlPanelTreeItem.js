@@ -2,6 +2,7 @@ import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
 import TreeItem from '@material-ui/lab/TreeItem';
 import Visibility from '@material-ui/icons/Visibility';
@@ -71,7 +72,7 @@ const ControlPanelTreeItem = (props) => {
           container
           className={classes.networkItem}
           onMouseEnter={() => setIsHoveredOver(true)}
-          onMouseLeave={() => { setIsHoveredOver(false); setShowColorPicker(false); }}
+          onMouseLeave={() => setIsHoveredOver(false)}
           display="flex"
           flexDirection="row"
           justifyContent="space-between"
@@ -85,15 +86,19 @@ const ControlPanelTreeItem = (props) => {
 
                   <IconButton onClick={(event) => onVisibilityClick(event, nodeId)}><Visibility /></IconButton>
                   <IconButton onClick={generateRandomColor}><Shuffle /></IconButton>
-                  <IconButton onClick={() => setShowColorPicker(!showColorPicker)}><ColorLens /></IconButton>
+                  <IconButton onClick={() => setShowColorPicker(true)}><ColorLens /></IconButton>
                   {
               showColorPicker
                 ? (
-                  <ChromePicker
-                    className={classes.colorPicker}
-                    color={color}
-                    onChangeComplete={(color) => handleColorSelection(color, nodeId)}
-                  />
+                  <Box
+                    onMouseLeave={() => setShowColorPicker(false)}
+                  >
+                    <ChromePicker
+                      className={classes.colorPicker}
+                      color={color}
+                      onChangeComplete={(color) => handleColorSelection(color, nodeId)}
+                    />
+                  </Box>
                 ) : null
             }
 
