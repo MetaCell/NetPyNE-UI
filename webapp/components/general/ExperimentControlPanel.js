@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => ({
 const ExperimentControlPanel = (props) => {
   const classes = useStyles();
   const [filter, setFilter] = React.useState('');
-  const onNodeSelect = (event, nodeId) => {
+  const onNodeSelect = (nodeId) => {
     console.log(`Node with id ${nodeId} clicked`);
   };
 

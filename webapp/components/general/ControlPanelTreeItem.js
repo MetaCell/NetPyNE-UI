@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
 import TreeItem from '@material-ui/lab/TreeItem';
 import Visibility from '@material-ui/icons/Visibility';
 import ColorLens from '@material-ui/icons/ColorLens';
+import Shuffle from '@material-ui/icons/Shuffle';
 import { ChromePicker } from 'react-color';
 import { experimentLabelColor } from '../../theme';
 
@@ -44,6 +45,16 @@ const ControlPanelTreeItem = (props) => {
     event.stopPropagation();
   };
 
+  const generateRandomColor = () => {
+    const randomColor = {
+      r: parseFloat((Math.random() * 1.00).toFixed(2)),
+      g: parseFloat((Math.random() * 1.00).toFixed(2)),
+      b: parseFloat((Math.random() * 1.00).toFixed(2)),
+      a: 1,
+    };
+    setColor(randomColor);
+  };
+
   const {
     label,
     type,
@@ -57,6 +68,7 @@ const ControlPanelTreeItem = (props) => {
   return (
     <TreeItem
       nodeId={nodeId}
+      onLabelClick={(e) => { e.stopPropagation(); e.preventDefault(); }}
       label={(
         <Grid
           container
@@ -67,7 +79,7 @@ const ControlPanelTreeItem = (props) => {
           flexDirection="row"
           justifyContent="space-between"
         >
-          <Grid item xs={4}><Typography onClick={(event) => onNodeSelect(event, nodeId)}>{label}</Typography></Grid>
+          <Grid item xs={4}><Typography onClick={() => onNodeSelect(nodeId)}>{label}</Typography></Grid>
           <Grid item xs={4} justifyContent="center"><Typography>{type}</Typography></Grid>
           <Grid item xs={4} justifyContent="flex-end" className={classes.controls}>
             {isHoveredOver
@@ -75,15 +87,20 @@ const ControlPanelTreeItem = (props) => {
                 <>
 
                   <IconButton onClick={(event) => onVisibilityClick(event, nodeId)}><Visibility /></IconButton>
-                  <IconButton onClick={() => setShowColorPicker(!showColorPicker)}><ColorLens /></IconButton>
+                  <IconButton onClick={generateRandomColor}><Shuffle /></IconButton>
+                  <IconButton onClick={() => setShowColorPicker(true)}><ColorLens /></IconButton>
                   {
               showColorPicker
                 ? (
-                  <ChromePicker
-                    className={classes.colorPicker}
-                    color={color}
-                    onChangeComplete={(e, color) => handleColorSelection(e, color, nodeId)}
-                  />
+                  <Box
+                    onMouseLeave={() => setShowColorPicker(false)}
+                  >
+                    <ChromePicker
+                      className={classes.colorPicker}
+                      color={color}
+                      onChangeComplete={(color, event) => handleColorSelection(color, event, nodeId)}
+                    />
+                  </Box>
                 ) : null
             }
 
