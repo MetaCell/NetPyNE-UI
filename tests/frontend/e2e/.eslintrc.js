@@ -1,8 +1,5 @@
 module.exports = {
-  extends: [
-    "./node_modules/@geppettoengine/geppetto-client/.eslintrc.js",
-    "plugin:jest/recommended"
-  ],
+  extends: ["plugin:jest/recommended"],
   rules: {
     'multiline-comment-style': 0,
   },

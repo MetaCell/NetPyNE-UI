@@ -1,15 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
-import PythonControlledCapability from './general/PythonControlledCapability';
-import { TOPBAR_CONSTANTS } from '../constants';
-
+import { getLayoutManagerInstance } from '@metacell/geppetto-meta-client/common/layout/LayoutManager';
 import {
   activateWidget,
   setWidgets,
   updateWidget,
   newWidget,
-} from '../redux/actions/layout';
+} from '@metacell/geppetto-meta-client/common/actions';
+import { TOPBAR_CONSTANTS } from '../constants';
+import PythonControlledCapability from './general/PythonControlledCapability';
 import { openBackendErrorDialog, closeBackendErrorDialog } from '../redux/actions/errors';
 import {
   updateCards, editModel, simulateNetwork, createNetwork, closeDialog,
@@ -37,9 +37,8 @@ import Checkbox from './general/Checkbox';
 import _NetPyNEStimulationTargets from './definition/stimulationTargets/NetPyNEStimulationTargets';
 import _Dimensions from './definition/populations/Dimensions';
 import _NetPyNE from './NetPyNE';
-import _NetPyNECellRule from './definition/cellRules/NetPyNECellRule';
 import _NetPyNESection from './definition/cellRules/sections/NetPyNESection';
-import { getLayoutManagerInstance } from './layout/LayoutManager';
+import _NetPyNECellRule from './definition/cellRules/NetPyNECellRule';
 import _NetPyNEPopulation from './definition/populations/NetPyNEPopulation';
 import _NetPyNEPopulations from './definition/populations/NetPyNEPopulations';
 import _NetPyNEStimulationSource from './definition/stimulationSources/NetPyNEStimulationSource';
@@ -60,8 +59,11 @@ import _Dialog from './general/Dialog';
 import _SelectCellTemplate from './definition/cellRules/SelectCellTemplate';
 import _Experiments from './experiments/Experiments';
 import _ExperimentEdit from './experiments/ExperimentEdit';
+// eslint-disable-next-line import/no-cycle
 import _ExperimentManager from './experiments/ExperimentManager';
 import _LaunchDialog from './topbar/dialogs/LaunchDialog';
+import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole';
+import _PlotViewer from './general/PlotViewer';
 
 const updateCardsDispatch = (dispatch) => ({ updateCards: () => dispatch(updateCards) });
 
@@ -172,7 +174,7 @@ export const NetPyNESection = connect(
   (dispatch) => ({ openTopbarDialog: () => dispatch(openTopbarDialog(TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE)) }),
 )(_NetPyNESection);
 
-export const LayoutManager = () => connect((state) => ({ layout: state.layout }))(getLayoutManagerInstance()
+export const LayoutManager = () => connect((state) => ({ ...state }))(getLayoutManagerInstance()
   .getComponent());
 
 export const NetPyNEPopulation = connect(
@@ -274,12 +276,17 @@ export const ErrorDialog = connect(
   }),
 )(_ActionDialog);
 
-export { NetPyNEPythonConsole } from './general/NetPyNEPythonConsole';
+export const NetPyNEPythonConsole = connect(
+  (state) => ({
+    extensionLoaded: state.client.jupyter_geppetto_extension.loaded,
+  }),
+  null,
+)(_NetPyNEPythonConsole);
 
 export const Drawer = connect(
   (state) => ({
     editMode: state.general.editMode,
-    layout: state.layout,
+    widgets: state.widgets,
   }),
   (dispatch) => ({
     updateWidget: (newConf) => dispatch(updateWidget(newConf)),
@@ -349,6 +356,7 @@ export const SelectCellTemplate = connect(
     ),
   }),
 )(_SelectCellTemplate);
+
 // ---------------------------------------------------------------------------------------- //
 
 // DEFAULTS

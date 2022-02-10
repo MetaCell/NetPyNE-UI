@@ -60,6 +60,7 @@ const rawTheme = {
       main: secondaryColor,
       dark: primaryColor,
     },
+    button: { main: primaryColor },
   },
   overrides: {
     MuiInput: {

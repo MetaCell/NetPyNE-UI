@@ -1,7 +1,9 @@
+import * as Sentry from '@sentry/react';
+
 import {
   execPythonMessage,
   evalPythonMessage,
-} from '@geppettoengine/geppetto-client/js/communication/geppettoJupyter/GeppettoJupyterUtils';
+} from './components/general/GeppettoJupyterUtils';
 
 const Utils = {
 
@@ -20,6 +22,11 @@ const Utils = {
       id = prefix + i++;
     }
     return id;
+  },
+
+  captureSentryException (e) {
+    Sentry.captureException(e);
+    console.error(e);
   },
 
   /**

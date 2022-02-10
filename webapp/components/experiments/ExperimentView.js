@@ -269,7 +269,7 @@ function EnhancedTableHead (props) {
       id: 'name',
       numeric: false,
       disablePadding: true,
-      label: 'CONDITION NAME',
+      label: 'EXPERIMENTAL CONDITIONS',
     },
     ...paramHeaders,
   ];
@@ -564,7 +564,7 @@ const ExperimentView = (props) => {
                   experimentFinished={experimentFinished}
                 />
                 <TableBody>
-                  {stableSort(filteredRows, getComparator(order, orderBy))
+                  {stableSort(filteredRows, getComparator(order, 'indices'))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => (
                       <TableRow tabIndex={-1} key={row.name}>

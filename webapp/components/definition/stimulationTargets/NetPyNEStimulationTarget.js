@@ -44,6 +44,17 @@ export default class NetPyNEStimulationTarget extends React.Component {
     this.isStimSourceTypeNetStim();
   }
 
+  // eslint-disable-next-line camelcase
+  UNSAFE_componentWillReceiveProps (nextProps) {
+    if (this.state.currentName != nextProps.name) {
+      this.setState({
+        currentName: nextProps.name,
+        selectedIndex: 0,
+        sectionId: 'General',
+      });
+    }
+  }
+
   componentDidUpdate (prevProps, prevState) {
     if (
       this.props.name !== prevProps.name
@@ -91,15 +102,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
     }
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps) {
-    if (this.state.currentName != nextProps.name) {
-      this.setState({
-        currentName: nextProps.name,
-        selectedIndex: 0,
-        sectionId: 'General',
-      });
-    }
-  }
+
 
   handleRenameChange = (event) => {
     const storedValue = this.props.name;

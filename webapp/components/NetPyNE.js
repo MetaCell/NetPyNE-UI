@@ -11,6 +11,7 @@ import {
   LaunchDialog,
 } from 'netpyne/components';
 
+import * as GeppettoActions from '@metacell/geppetto-meta-client/common/actions';
 import Utils from '../Utils';
 import { EDIT_WIDGETS } from '../constants';
 
@@ -52,7 +53,6 @@ class NetPyNE extends React.Component {
     } = this.props;
 
     setDefaultWidgets();
-
     GEPPETTO.on('jupyter_geppetto_extension_ready', (data) => {
       const project = {
         id: 1,
@@ -63,8 +63,10 @@ class NetPyNE extends React.Component {
           status: 'DESIGN',
         }],
       };
+      // to move to redux action, if not working create tech debt card and we do it later.
       GEPPETTO.Manager.loadProject(project, false);
-      GEPPETTO.Manager.loadExperiment(1, [], []);
+      // to remove the experiment.
+      // GEPPETTO.Manager.loadExperiment(1, [], []);
 
       let responded = false;
       Utils.execPythonMessage('from netpyne_ui.netpyne_geppetto import netpyne_geppetto');
@@ -77,6 +79,7 @@ class NetPyNE extends React.Component {
           this.addMetadataToWindow(metadata);
           setWidgets(EDIT_WIDGETS);
           modelLoaded();
+          // GeppettoActions.modelLoaded();
           GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
 
           setInterval(getExperiments, EXPERIMENT_POLL_INTERVAL);

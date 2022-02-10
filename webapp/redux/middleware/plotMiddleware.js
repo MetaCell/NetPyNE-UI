@@ -2,7 +2,7 @@ import {
   NETPYNE_COMMANDS, NETWORK_PLOT_WIDGETS, PLOT_WIDGETS, WidgetStatus,
 } from 'root/constants';
 import { VIEW_EXPERIMENTS_RESULTS } from 'root/redux/actions/experiments';
-import { addWidget, SET_WIDGETS, UPDATE_WIDGET } from '../actions/layout';
+import * as GeppettoActions from '@metacell/geppetto-meta-client/common/actions';
 import Utils from '../../Utils';
 import { processError } from './middleware';
 import {
@@ -17,7 +17,7 @@ import {
 // and ensured that plot data doesn't lead to performance issues due to possible deep-copy in reducers.
 window.plotCache = {};
 
-const isDisabled = (widget, plots) => !plots[widget.method.plotKey] ?? true;
+const isDisabled = (widget, plots) => !plots[widget.config.method.plotKey] ?? true;
 
 const setPlotToWindow = (plotId, data) => {
   if (data === '') {
@@ -85,7 +85,7 @@ const updatePlots = (next) => {
         .forEach((widget) => {
           widget.initialized = false;
           widget.disabled = isDisabled(widget, plots);
-          next(addWidget(widget));
+          next(GeppettoActions.addWidget(widget));
         });
     });
 };
@@ -95,7 +95,7 @@ export default (store) => (next) => (action) => {
     const {
       plotMethod,
       plotType,
-    } = widget.method;
+    } = widget.config.method;
     return plotFigure(widget.id, plotMethod, plotType, store.getState().general.theme)
       .then((data) => {
         setPlotToWindow(widget.id, data);
@@ -110,7 +110,7 @@ export default (store) => (next) => (action) => {
   }
 
   switch (action.type) {
-    case UPDATE_WIDGET: {
+    case GeppettoActions.layoutActions.UPDATE_WIDGET: {
       // Triggered on tab of widget icon in sidebar
       // and refreshes widget data if widget wasn't initialized before.
       const widget = action.data;
@@ -123,12 +123,12 @@ export default (store) => (next) => (action) => {
       next(action);
       break;
     }
-    case SET_WIDGETS: {
+    case GeppettoActions.layoutActions.SET_WIDGETS: {
       // This is triggered once when we change the layout from Edit > Explore.
       // We add the widgets (back) to the sidebar but without fetching any data.
       Object.values(action.data)
         .filter((widget) => widget.id in PLOT_WIDGETS)
-        .forEach((widget) => next(addWidget(widget)));
+        .forEach((widget) => next(GeppettoActions.addWidget(widget)));
       next(action);
       break;
     }
@@ -141,7 +141,7 @@ export default (store) => (next) => (action) => {
               delete window.plotCache[widget.id];
               widget.initialized = false;
               widget.disabled = isDisabled(widget, plots);
-              next(addWidget(widget));
+              next(GeppettoActions.addWidget(widget));
             });
         });
 
@@ -160,7 +160,7 @@ export default (store) => (next) => (action) => {
       if (!store.getState().general.editMode) {
         for (const widget of Object.values(PLOT_WIDGETS)) {
           setWidget(widget)
-            .then((w) => (w ? next(addWidget(w)) : null));
+            .then((w) => (w ? next(GeppettoActions.addWidget(w)) : null));
         }
       }
       break;

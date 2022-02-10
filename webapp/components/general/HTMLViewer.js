@@ -1,7 +1,6 @@
 import React, { Component, createRef } from 'react';
 
-import HTMLViewer
-  from '@geppettoengine/geppetto-client/js/components/interface/htmlViewer/HTMLViewer';
+import HTMLViewer from '@metacell/geppetto-meta-ui/html-viewer/HTMLViewer';
 
 import { withStyles } from '@material-ui/core/styles';
 

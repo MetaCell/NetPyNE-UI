@@ -6,6 +6,7 @@ import {
   TRIAL_LOAD_MODEL_SPEC,
 } from 'root/redux/actions/experiments';
 import { NETPYNE_COMMANDS } from 'root/constants';
+import * as GeppettoActions from '@metacell/geppetto-meta-client/common/actions';
 import {
   UPDATE_CARDS,
   CREATE_NETWORK,
@@ -18,12 +19,12 @@ import {
   LOAD_TUTORIAL,
   RESET_MODEL,
   showNetwork,
+  MODEL_LOADED,
 } from '../actions/general';
 import { openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
 import Utils from '../../Utils';
 import { downloadJsonResponse, downloadPythonResponse } from './utils';
-import { setWidgets, setLayout } from '../actions/layout';
 import * as Constants from '../../constants';
 
 let previousLayout = {
@@ -34,6 +35,7 @@ let previousLayout = {
 export const processError = (response) => {
   const parsedResponse = Utils.getErrorResponse(response);
   if (parsedResponse) {
+    Utils.captureSentryException(parsedResponse);
     return {
       errorMessage: parsedResponse.message,
       errorDetails: parsedResponse.details,
@@ -68,7 +70,7 @@ const dehydrateCanvas = () => {
 };
 
 const createSimulateBackendCall = async (cmd, payload, consoleMessage, spinnerType) => {
-  GEPPETTO.CommandController.log(consoleMessage);
+  console.log(consoleMessage);
   GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, spinnerType);
 
   const response = await Utils.evalPythonMessage(cmd, [payload]);
@@ -85,7 +87,7 @@ const createSimulateBackendCall = async (cmd, payload, consoleMessage, spinnerTy
     dehydrateCanvas();
 
     GEPPETTO.Manager.loadModel(response);
-    GEPPETTO.CommandController.log('Instantiation / Simulation completed.');
+    console.log('Instantiation / Simulation completed.');
   }
   return response;
 };
@@ -113,9 +115,11 @@ export default (store) => (next) => (action) => {
         network: undefined,
       };
     }
+    // TO FIX: I am not sure the one below is to fix, previously we were setting layout or widgets but I don't understand
+    // how the widgets where making it back into the redux store without the set widgets
     return next(edit
-      ? previousLayout.edit ? setLayout(previousLayout.edit) : setWidgets({ ...Constants.EDIT_WIDGETS })
-      : previousLayout.network ? setLayout(previousLayout.network) : setWidgets({ ...Constants.DEFAULT_NETWORK_WIDGETS }));
+      ? GeppettoActions.setLayout(previousLayout.edit) && GeppettoActions.setWidgets({ ...Constants.EDIT_WIDGETS })
+      : GeppettoActions.setLayout(previousLayout.network) && GeppettoActions.setWidgets({ ...Constants.DEFAULT_NETWORK_WIDGETS }));
   };
 
   const toNetworkCallback = (reset) => () => {
@@ -129,6 +133,10 @@ export default (store) => (next) => (action) => {
   };
 
   switch (action.type) {
+    case MODEL_LOADED:
+      next(GeppettoActions.waitData('Loading the NetPyNE Model', GeppettoActions.clientActions.MODEL_LOADED));
+      next(action);
+      break;
     case UPDATE_CARDS:
       console.log('Triggered card update');
       next(action);

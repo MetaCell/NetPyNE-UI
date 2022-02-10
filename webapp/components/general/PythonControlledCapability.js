@@ -1,3 +1,8 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable react/prefer-stateless-function */
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable max-classes-per-file */
+/* eslint-disable max-len */
 /**
  *
  * Synched capability

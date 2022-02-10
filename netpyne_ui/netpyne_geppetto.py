@@ -138,7 +138,7 @@ class NetPyNEGeppetto:
 
         file = experiments.get_trial_output_path(name, trial)
         if file is None or not os.path.exists(file):
-            return utils.getJSONError(f"Couldn't find output file of trial. Please take a look at the simulation log.", "")
+            return utils.getJSONError(f"Couldn't find output file of condition. Please take a look at the simulation log.", "")
 
         if self.doIhaveInstOrSimData()['haveInstance']:
             sim.clearAll()
@@ -184,7 +184,7 @@ class NetPyNEGeppetto:
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
 
                 return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
-        except Exception:
+        except Exception as e:
             message = "Error while instantiating the NetPyNE model"
             logging.exception(message)
             return utils.getJSONError(message, sys.exc_info())
