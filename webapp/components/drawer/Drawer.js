@@ -19,6 +19,7 @@ import {
 import DrawerIcon from '../general/NetPyNEIcons';
 import useStyles from './useStyles';
 import Tooltip from '../general/Tooltip';
+import { maximizeWidget } from '@metacell/geppetto-meta-client/common/layout/actions';
 
 const drawerOpenWidth = 'auto';
 const drawerCloseWidth = 55;
@@ -94,7 +95,9 @@ const DrawerList = ({
   editMode,
   widgets,
   activateWidget,
+  maximiseWidget,
   updateWidget,
+  addWidget,
   classes,
 }) => {
   const [expand, setExpand] = useState(false);
@@ -110,10 +113,8 @@ const DrawerList = ({
     if (!widget) {
       const widgetConf = getNewWidgetConf(widgetId);
       newWidget({ path: widgetConf.id, ...widgetConf });
-    } else if (widget.status === WidgetStatus.MINIMIZED) {
-      updateBorderWidget(widgetId);
     } else {
-      activateWidget(widgetId);
+      updateBorderWidget(widgetId);
     }
   }
 
@@ -204,8 +205,8 @@ const DrawerList = ({
                 setTimeout(() => window.dispatchEvent(new Event('resize')), 400);
               }}
             >
-              {expand ? <DrawerIcon style={{ padding: '12px !important' }} name="arrow-left" fontSize="inherit" />
-                : <DrawerIcon style={{ padding: '12px !important' }} name="arrow-right" fontSize="inherit" />}
+              {expand ? <DrawerIcon name="arrow-left" fontSize="inherit" />
+                : <DrawerIcon name="arrow-right" fontSize="inherit" />}
             </IconButton>
           </Tooltip>
         </div>

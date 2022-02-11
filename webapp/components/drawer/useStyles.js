@@ -24,7 +24,7 @@ export default makeStyles(({
 
   closeDrawer: drawerCss(false, transitions, palette, spacing),
 
-  buttonContainerOpen: { textAlign: 'end' },
+  buttonContainerOpen: { textAlign: 'end', padding: '12px' },
   buttonContainerClosed: { textAlign: 'center', padding: '12px' },
   button: {
     color: 'white',

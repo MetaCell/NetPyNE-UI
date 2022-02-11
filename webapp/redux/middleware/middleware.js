@@ -35,6 +35,11 @@ let previousLayout = {
   network: undefined,
 };
 
+let previousWidgets = {
+  edit: undefined,
+  network: undefined,
+};
+
 export const processError = (response) => {
   const parsedResponse = Utils.getErrorResponse(response);
   if (parsedResponse) {
@@ -112,8 +117,13 @@ const simulateNetwork = (payload) => createSimulateBackendCall(
 export default (store) => (next) => (action) => {
   const switchLayoutAction = (edit = true, reset = true) => {
     previousLayout[store.getState().general.editMode ? 'edit' : 'network'] = store.getState().layout;
+    previousWidgets[store.getState().general.editMode ? 'edit' : 'network'] = store.getState().widgets;
     if (reset) {
       previousLayout = {
+        edit: undefined,
+        network: undefined,
+      };
+      previousWidgets = {
         edit: undefined,
         network: undefined,
       };
@@ -121,8 +131,12 @@ export default (store) => (next) => (action) => {
     // TO FIX: I am not sure the one below is to fix, previously we were setting layout or widgets but I don't understand
     // how the widgets where making it back into the redux store without the set widgets
     return next(edit
-      ? GeppettoActions.setLayout(previousLayout.edit) && GeppettoActions.setWidgets({ ...Constants.EDIT_WIDGETS })
-      : GeppettoActions.setLayout(previousLayout.network) && GeppettoActions.setWidgets({ ...Constants.DEFAULT_NETWORK_WIDGETS }));
+      ? previousLayout.edit
+        ? GeppettoActions.setLayout(previousLayout.edit) && GeppettoActions.setWidgets(previousWidgets.edit)
+        : GeppettoActions.setWidgets({ ...Constants.EDIT_WIDGETS })
+      : previousLayout.network
+        ? GeppettoActions.setLayout(previousLayout.network) && GeppettoActions.setWidgets(previousWidgets.network)
+        : GeppettoActions.setWidgets({ ...Constants.DEFAULT_NETWORK_WIDGETS }));
   };
 
   const toNetworkCallback = (reset) => () => {

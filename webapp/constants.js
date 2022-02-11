@@ -387,7 +387,6 @@ export const PLOT_WIDGETS = {
 };
 
 export const DEFAULT_NETWORK_WIDGETS = {
-  PYTHON_CONSOLE_WIDGET,
   D3Canvas: {
     id: 'D3Canvas',
     name: '3D Representation',
@@ -405,7 +404,7 @@ export const DEFAULT_NETWORK_WIDGETS = {
     hideOnClose: true,
     component: 'experimentManager',
     panelName: MINIMIZED_PANEL,
-    defaultPanel: 'plotPanel',
+    defaultPanel: TOP_PANEL,
     enableRename: false,
     pos: 14,
     specification: TOOLS_LIST,

@@ -3,10 +3,12 @@ import { connect } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
 import { getLayoutManagerInstance } from '@metacell/geppetto-meta-client/common/layout/LayoutManager';
 import {
+  addWidget,
   activateWidget,
   setWidgets,
   updateWidget,
   newWidget,
+  maximiseWidget,
 } from '@metacell/geppetto-meta-client/common/actions';
 import { TOPBAR_CONSTANTS } from '../constants';
 import PythonControlledCapability from './general/PythonControlledCapability';
@@ -297,6 +299,8 @@ export const Drawer = connect(
     updateWidget: (newConf) => dispatch(updateWidget(newConf)),
     newWidget: (widget) => dispatch(newWidget(widget)),
     activateWidget: (widgetId) => dispatch(activateWidget(widgetId)),
+    maximiseWidget: (widgetId) => dispatch(maximiseWidget(widgetId)),
+    addWidget: (widgetConf) => dispatch(addWidget(widgetConf)),
   }),
 )(_Drawer);
 
