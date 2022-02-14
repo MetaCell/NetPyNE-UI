@@ -26,8 +26,6 @@ import ParameterMenu from './ParameterMenu';
 import useStyles from './ExperimentEditStyle';
 import * as ExperimentHelper from './ExperimentHelper';
 import DialogBox from '../general/DialogBox';
-// import { useDispatch } from 'react-redux';
-// import { setExperimentParameters } from 'root/redux/actions/experiments';
 const RANGE_VALUE = 0;
 const SUPPORTED_TYPES = [REAL_TYPE.INT, REAL_TYPE.FLOAT, REAL_TYPE.STR, REAL_TYPE.BOOL];
 const MAX_TRIALS = 100;
@@ -268,9 +266,6 @@ const ExperimentEdit = (props) => {
         });
 
         console.debug(`Size before ${paramKeys.length}, after: ${filteredKeys.length}`);
-        // dispatch(setExperimentParameters({
-        //   parameters: filteredKeys,
-        // }));
         setSelectionParams(filteredKeys);
       });
   };
