@@ -163,6 +163,7 @@ export default (store) => (next) => (action) => {
       break;
     }
     case CREATE_NETWORK: {
+      let allParams = true;
       ExperimentsApi.getParameters()
       .then((params) => {
         const flattened = Utils.flatten(params);
@@ -176,22 +177,23 @@ export default (store) => (next) => (action) => {
           }
           return false;
         });
-        next(setExperimentParameters({
-          parameters: filteredKeys,
-        }));
         const expData = store.getState().experiments;
         expData?.inDesign?.params?.map((param) => {
-          if(filteredKeys.includes(param.mapsTo)) {
-            instantiateNetwork({})
-            .then(toNetworkCallback(false), pythonErrorCallback);
-          } else {
+          if(!filteredKeys.includes(param.mapsTo)) {
             pythonErrorCallback({errorDetails: 'Missing Parameters', errorMessage: 'Error'})
+            allParams = false;
+            return;
           }
-        })
-      });
+        });
+        if(allParams) {
+          instantiateNetwork({})
+            .then(toNetworkCallback(false), pythonErrorCallback);
+        }
+      }, pythonErrorCallback);
       break;
     }
     case CREATE_SIMULATE_NETWORK: {
+      let allParams = true;
       ExperimentsApi.getParameters()
       .then((params) => {
         const flattened = Utils.flatten(params);
@@ -205,22 +207,23 @@ export default (store) => (next) => (action) => {
           }
           return false;
         });
-        next(setExperimentParameters({
-          parameters: filteredKeys,
-        }));
         const expData = store.getState().experiments;
         expData?.inDesign?.params?.map((param) => {
-          if(filteredKeys.includes(param.mapsTo)) {
-            simulateNetwork({ allTrials: false })
-            .then(toNetworkCallback(false), pythonErrorCallback);
-          } else {
+          if(!filteredKeys.includes(param.mapsTo)) {
             pythonErrorCallback({errorDetails: 'Missing Parameters', errorMessage: 'Error'})
+            allParams = false;
+            return;
           }
-        })
-      });
+        });
+        if(allParams) {
+          simulateNetwork({ allTrials: false })
+              .then(toNetworkCallback(false), pythonErrorCallback);
+        }
+      }, pythonErrorCallback);
       break;
     }
     case SIMULATE_NETWORK:
+      let allParams = true;
       ExperimentsApi.getParameters()
       .then((params) => {
         const flattened = Utils.flatten(params);
@@ -234,19 +237,19 @@ export default (store) => (next) => (action) => {
           }
           return false;
         });
-        next(setExperimentParameters({
-          parameters: filteredKeys,
-        }));
         const expData = store.getState().experiments;
         expData?.inDesign?.params?.map((param) => {
-          if(filteredKeys.includes(param.mapsTo)) {
-            simulateNetwork({ allTrials: action.payload, usePrevInst: false })
-            .then(toNetworkCallback(false), pythonErrorCallback);
-          } else {
+          if(!filteredKeys.includes(param.mapsTo)) {
             pythonErrorCallback({errorDetails: 'Missing Parameters', errorMessage: 'Error'})
+            allParams = false;
+            return;
           }
-        })
-      });
+        });
+        if(allParams) {
+          simulateNetwork({ allTrials: action.payload, usePrevInst: false })
+            .then(toNetworkCallback(false), pythonErrorCallback);
+        }
+      }, pythonErrorCallback);
       break;
     case PYTHON_CALL: {
       const callback = (response) => {
