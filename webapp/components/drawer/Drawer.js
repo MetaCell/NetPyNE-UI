@@ -19,7 +19,6 @@ import {
 import DrawerIcon from '../general/NetPyNEIcons';
 import useStyles from './useStyles';
 import Tooltip from '../general/Tooltip';
-import { maximizeWidget } from '@metacell/geppetto-meta-client/common/layout/actions';
 
 const drawerOpenWidth = 'auto';
 const drawerCloseWidth = 55;

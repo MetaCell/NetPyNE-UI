@@ -68,6 +68,7 @@ const ExperimentControlPanel = (props) => {
                   </Box>
                   <TreeView
                     aria-label="Network data navigator"
+                    defaultExpanded={['network']}
                     defaultCollapseIcon={<ExpandMoreIcon />}
                     defaultExpandIcon={<ChevronRightIcon />}
                   >
