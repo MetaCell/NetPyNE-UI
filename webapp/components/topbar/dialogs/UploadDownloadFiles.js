@@ -15,6 +15,8 @@ import { withStyles } from '@material-ui/core/styles';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import FileBrowser from '../../general/FileBrowser';
 
+const ACCEPTED_EXTENSIONS = '.py .zip .gz .tar.gz .pdf .txt .xls .png .jpeg .json';
+
 const styles = ({
   spacing,
   typography,
@@ -57,6 +59,13 @@ class UploadDownloadFile extends React.Component {
     this.message = '';
   }
 
+  onUploadFileArrayChange = (event) => {
+    const { files } = event.target;
+    if (this.maxSelectFile(files) && this.checkMimeType(files) && this.checkFileSize(files)) {
+      this.setState({ uploadFiles: files });
+    }
+  };
+
   initialState () {
     return {
       open: true,
@@ -71,7 +80,6 @@ class UploadDownloadFile extends React.Component {
   async uploadFiles () {
     const { uploadFiles } = this.state;
     const formData = new FormData();
-    const data = {};
 
     this.setState({ open: false });
     GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, 'UPLOADING FILES');
@@ -185,13 +193,6 @@ class UploadDownloadFile extends React.Component {
     return true;
   }
 
-  onUploadFileArrayChange = (event) => {
-    const { files } = event.target;
-    if (this.maxSelectFile(files) && this.checkMimeType(files) && this.checkFileSize(files)) {
-      this.setState({ uploadFiles: files });
-    }
-  };
-
   closeExplorerDialog (selectedNodes) {
     const state = { explorerDialogOpen: false };
     if (selectedNodes) {
@@ -216,17 +217,28 @@ class UploadDownloadFile extends React.Component {
     this.setState({
       downloadPaths: [text],
       downloadPathsDisplayText: text,
-
     });
   }
 
   render () {
+    let buttonLabel;
+    let title;
+    let content;
     const { classes } = this.props;
     const { mode } = this.props;
 
+    const {
+      open,
+      explorerDialogOpen,
+      uploadFiles: uploadFiles1,
+      downloadPathsDisplayText,
+      downloadPaths,
+      filterFiles,
+    } = this.state;
+
     switch (mode) {
       case 'UPLOAD':
-        var content = (
+        content = (
           <div className={classes.root}>
             <div className={classes.container}>
               <div>
@@ -239,20 +251,19 @@ class UploadDownloadFile extends React.Component {
 
               </div>
             </div>
-            <p className="mt-2">Accept: .py .zip .gz .tar.gz .pdf .txt .xls .png .jpeg</p>
+            <p className="mt-2">{`Accept: ${ACCEPTED_EXTENSIONS}`}</p>
           </div>
         );
 
-        var buttonLabel = 'Upload';
-        var title = 'Upload files';
+        buttonLabel = 'Upload';
+        title = 'Upload files';
         break;
       case 'DOWNLOAD':
-        var content = (
-
+        content = (
           <TextField
             fullWidth
             variant="filled"
-            value={this.state.downloadPathsDisplayText}
+            value={downloadPathsDisplayText}
             onChange={(event) => this.changeDownloadFilePathsDisplayText(event.target.value)}
             label="Files:"
             helperText="Select files to download"
@@ -272,8 +283,11 @@ class UploadDownloadFile extends React.Component {
           />
         );
 
-        var buttonLabel = 'DOWNLOAD';
-        var title = 'Download files';
+        buttonLabel = 'DOWNLOAD';
+        title = 'Download files';
+        break;
+
+      default:
         break;
     }
 
@@ -282,7 +296,7 @@ class UploadDownloadFile extends React.Component {
         <Dialog
           fullWidth
           maxWidth="sm"
-          open={this.state.open}
+          open={open}
           onClose={() => this.closeDialog()}
         >
           <DialogTitle>{title}</DialogTitle>
@@ -294,7 +308,9 @@ class UploadDownloadFile extends React.Component {
             <Button
               color="primary"
               id="appBarPerformActionButton"
-              disabled={mode === 'UPLOAD' ? !this.state.uploadFiles : this.state.downloadPaths.lenght === 0 || !this.state.downloadPathsDisplayText}
+              disabled={mode === 'UPLOAD'
+                ? !uploadFiles1
+                : downloadPaths.lenght === 0 || !downloadPathsDisplayText}
               onClick={() => (mode === 'UPLOAD' ? this.uploadFiles() : this.downloadFiles())}
             >
               {buttonLabel}
@@ -303,9 +319,9 @@ class UploadDownloadFile extends React.Component {
         </Dialog>
 
         <FileBrowser
-          open={this.state.explorerDialogOpen}
+          open={explorerDialogOpen}
           exploreOnlyDirs={false}
-          filterFiles={this.state.filterFiles}
+          filterFiles={filterFiles}
           toggleMode
           onRequestClose={(multiSelection) => this.closeExplorerDialog(multiSelection)}
         />

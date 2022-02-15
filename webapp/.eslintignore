@@ -7,3 +7,4 @@ META-INF/*
 **/*min.js
 geppetto-client/**
 node_modules/**
+webpack.*.js

@@ -1,6 +1,4 @@
 import React from 'react';
-
-import Divider from '@material-ui/core/Divider';
 import {
   bgRegular, bgDark, font, primaryColor, gutter, radius,
 } from '../../theme';
@@ -8,8 +6,6 @@ import {
 import { openTopbarDialog } from '../../redux/actions/topbar';
 import {
   openDialog, loadTutorial,
-  changeAutomaticInstantiation,
-  changeAutomaticSimulation,
   createAndSimulateNetwork,
   createNetwork,
   simulateNetwork,
@@ -18,8 +14,9 @@ import {
   setTheme,
 } from '../../redux/actions/general';
 import {
-  TOPBAR_CONSTANTS, MODEL_STATE, THEMES, TUTORIALS_LIST,
+  TOPBAR_CONSTANTS, THEMES, TUTORIALS_LIST,
 } from '../../constants';
+import { openLaunchDialog } from '../../redux/actions/experiments';
 
 const checkedIcon = 'fa fa-check secondary';
 
@@ -279,14 +276,15 @@ export default {
 };
 
 export const getViewMenu = (props) => {
-  const instantiate = props.automaticInstantiation || props.modelState === MODEL_STATE.NOT_INSTANTIATED;
   const networkAction = () => {
-    if (instantiate && props.automaticSimulation) {
+    if (props.automaticInstantiation && props.automaticSimulation) {
       return createAndSimulateNetwork;
     }
-    if (instantiate) {
+
+    if (props.automaticInstantiation) {
       return createNetwork;
     }
+
     return showNetwork;
   };
 
@@ -323,52 +321,25 @@ export const getModelMenu = (props) => (
     },
     {
       label: TOPBAR_CONSTANTS.SIMULATE,
+      className: 'topbar-menu-item',
       action: {
         handlerAction: 'redux',
-        // TODO: (#263) this logic causes issues by potentially simulating
-        //  old instance with modified netParams and simConfig
-        parameters: [props.modelState === MODEL_STATE.NOT_INSTANTIATED ? createAndSimulateNetwork : simulateNetwork],
+        parameters: props.experimentInDesign
+          ? [openLaunchDialog()]
+          // TODO: (#263) this logic causes issues by potentially simulating
+          //  old instance with modified netParams and simConfig
+          : [props.modelState ? createAndSimulateNetwork : simulateNetwork],
       },
     },
     {
-      label: 'Explore view options',
-      list: [
-        {
-          label: 'Automatic creation',
-          icon: props.automaticInstantiation ? checkedIcon : 'fa',
-          action: {
-            handlerAction: 'redux',
-            parameters: [changeAutomaticInstantiation, true],
-          },
-        },
-        {
-          label: 'Manual creation',
-          icon: !props.automaticInstantiation ? checkedIcon : 'fa',
-          action: {
-            handlerAction: 'redux',
-            parameters: [changeAutomaticInstantiation, false],
-          },
-        },
-        <Divider />,
-        {
-          label: 'Automatic simulation',
-          icon: props.automaticSimulation ? checkedIcon : 'fa',
-          action: {
-            handlerAction: 'redux',
-            parameters: [changeAutomaticSimulation, true],
-          },
-        },
-        {
-          label: 'Manual simulation',
-          icon: !props.automaticSimulation ? checkedIcon : 'fa',
-          action: {
-            handlerAction: 'redux',
-            parameters: [changeAutomaticSimulation, false],
-          },
-        },
-      ],
+      label: TOPBAR_CONSTANTS.CREATE_AND_SIMULATE_NETWORK,
+      action: {
+        handlerAction: 'redux',
+        parameters: props.experimentInDesign
+          ? [openLaunchDialog()]
+          : [createAndSimulateNetwork],
+      },
     },
-
   ]
 );
 

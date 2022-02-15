@@ -17,7 +17,23 @@ const styles = () => ({
 });
 
 class ActionDialog extends React.Component {
-  state = { hide: !this.props.openErrorDialogBox && !this.props.openDialog };
+  constructor (props) {
+    super(props);
+    this.state = { hide: !this.props.openErrorDialogBox && !this.props.openDialog };
+  }
+
+  handleClickGoBack () {
+    this.setState({ hide: true });
+    this.clearErrorDialogBox();
+  }
+
+  cancelDialog = () => {
+    this.clearErrorDialogBox();
+    this.setState({ hide: true });
+    if (this.props.onRequestClose) {
+      this.props.onRequestClose();
+    }
+  };
 
   performAction = () => {
     if (this.props.command) {
@@ -36,19 +52,6 @@ class ActionDialog extends React.Component {
     if (this.props.closeBackendErrorDialog) {
       this.props.closeBackendErrorDialog();
     }
-  }
-
-  cancelDialog = () => {
-    this.clearErrorDialogBox();
-    this.setState({ hide: true });
-    if (this.props.onRequestClose) {
-      this.props.onRequestClose();
-    }
-  };
-
-  handleClickGoBack () {
-    this.setState({ hide: true });
-    this.clearErrorDialogBox();
   }
 
   render () {
@@ -101,6 +104,7 @@ class ActionDialog extends React.Component {
         maxWidth={this.props.openErrorDialogBox ? 'md' : 'sm'}
         open={Boolean(!this.state.hide || this.props.openErrorDialogBox)}
         onClose={() => this.cancelDialog()}
+        className={classes.root}
       >
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>

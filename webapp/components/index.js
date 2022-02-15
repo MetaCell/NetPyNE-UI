@@ -1,21 +1,27 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
-import PythonControlledCapability from './general/PythonControlledCapability';
-import { TOPBAR_CONSTANTS } from '../constants';
-
+import { getLayoutManagerInstance } from '@metacell/geppetto-meta-client/common/layout/LayoutManager';
 import {
   activateWidget,
   setWidgets,
   updateWidget,
   newWidget,
-} from '../redux/actions/layout';
+} from '@metacell/geppetto-meta-client/common/actions';
+import { TOPBAR_CONSTANTS } from '../constants';
+import PythonControlledCapability from './general/PythonControlledCapability';
 import { openBackendErrorDialog, closeBackendErrorDialog } from '../redux/actions/errors';
 import {
   updateCards, editModel, simulateNetwork, createNetwork, closeDialog,
   createAndSimulateNetwork, showNetwork, pythonCall, modelLoaded, deleteNetParamsObj, resetModel,
   setDefaultWidgets,
 } from '../redux/actions/general';
+
+import {
+  cloneExperiment,
+  getExperiments,
+  openLaunchDialog,
+} from '../redux/actions/experiments';
 
 import {
   openTopbarDialog,
@@ -31,9 +37,8 @@ import Checkbox from './general/Checkbox';
 import _NetPyNEStimulationTargets from './definition/stimulationTargets/NetPyNEStimulationTargets';
 import _Dimensions from './definition/populations/Dimensions';
 import _NetPyNE from './NetPyNE';
-import _NetPyNECellRule from './definition/cellRules/NetPyNECellRule';
 import _NetPyNESection from './definition/cellRules/sections/NetPyNESection';
-import { getLayoutManagerInstance } from './layout/LayoutManager';
+import _NetPyNECellRule from './definition/cellRules/NetPyNECellRule';
 import _NetPyNEPopulation from './definition/populations/NetPyNEPopulation';
 import _NetPyNEPopulations from './definition/populations/NetPyNEPopulations';
 import _NetPyNEStimulationSource from './definition/stimulationSources/NetPyNEStimulationSource';
@@ -52,6 +57,13 @@ import _SwitchPageButton from './topbar/SwitchPageButton';
 import _NetPyNEThumbnail from './general/NetPyNEThumbnail';
 import _Dialog from './general/Dialog';
 import _SelectCellTemplate from './definition/cellRules/SelectCellTemplate';
+import _Experiments from './experiments/Experiments';
+import _ExperimentEdit from './experiments/ExperimentEdit';
+// eslint-disable-next-line import/no-cycle
+import _ExperimentManager from './experiments/ExperimentManager';
+import _LaunchDialog from './topbar/dialogs/LaunchDialog';
+import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole';
+import _PlotViewer from './general/PlotViewer';
 
 const updateCardsDispatch = (dispatch) => ({ updateCards: () => dispatch(updateCards) });
 
@@ -98,6 +110,32 @@ export const SelectField = PythonControlledCapability.createPythonControlledCont
   _SelectField,
 );
 
+export const Experiments = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    experiments: state.experiments.experiments,
+  }),
+  (dispatch) => ({
+    getExperiments: () => dispatch(getExperiments()),
+    cloneExperiment: (name) => dispatch(cloneExperiment(name)),
+  }),
+)(_Experiments);
+
+export const LaunchDialog = connect(
+  (state, ownProps) => {
+    const { inDesign, openLaunchDialog } = state.experiments;
+    return ({
+      ...ownProps,
+      open: openLaunchDialog,
+      experimentName: inDesign == null ? '' : inDesign.name,
+      numberOfTrials: inDesign == null ? '' : inDesign.trials.length,
+    });
+  },
+)(_LaunchDialog);
+
+export const ExperimentEdit = _ExperimentEdit;
+export const ExperimentManager = _ExperimentManager;
+
 // ---------------------------------------------------------------------------------------- //
 
 // CONNECT
@@ -114,6 +152,7 @@ export const NetPyNE = connect(
     setWidgets: (payload) => dispatch(setWidgets(payload)),
     setDefaultWidgets: () => dispatch(setDefaultWidgets),
     modelLoaded: () => dispatch(modelLoaded),
+    getExperiments: () => dispatch(getExperiments()),
   }),
 )(_NetPyNE);
 
@@ -123,7 +162,9 @@ export const NetPyNECellRule = connect(
     updates: state.general.updates,
   }),
   (dispatch) => ({
-    openTopbarDialog: (cellTemplateName) => dispatch(openTopbarDialog(TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE, { cellRuleName: cellTemplateName })),
+    openTopbarDialog: (cellTemplateName) => dispatch(
+      openTopbarDialog(TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE, { cellRuleName: cellTemplateName }),
+    ),
     updateCards: () => dispatch(updateCards),
   }),
 )(_NetPyNECellRule);
@@ -133,7 +174,7 @@ export const NetPyNESection = connect(
   (dispatch) => ({ openTopbarDialog: () => dispatch(openTopbarDialog(TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE)) }),
 )(_NetPyNESection);
 
-export const LayoutManager = () => connect((state) => ({ layout: state.layout }))(getLayoutManagerInstance()
+export const LayoutManager = () => connect((state) => ({ ...state }))(getLayoutManagerInstance()
   .getComponent());
 
 export const NetPyNEPopulation = connect(
@@ -209,7 +250,7 @@ export const NetWorkControlButtons = connect(
   (state) => ({ modelState: state.general.modelState }),
   (dispatch) => ({
     createAndSimulateNetwork: () => dispatch(createAndSimulateNetwork),
-    simulateNetwork: () => dispatch(simulateNetwork),
+    simulateNetwork: () => dispatch(simulateNetwork()),
   }),
 )(_NetWorkControlButtons);
 
@@ -235,12 +276,17 @@ export const ErrorDialog = connect(
   }),
 )(_ActionDialog);
 
-export { NetPyNEPythonConsole } from './general/NetPyNEPythonConsole';
+export const NetPyNEPythonConsole = connect(
+  (state) => ({
+    extensionLoaded: state.client.jupyter_geppetto_extension.loaded,
+  }),
+  null,
+)(_NetPyNEPythonConsole);
 
 export const Drawer = connect(
   (state) => ({
     editMode: state.general.editMode,
-    layout: state.layout,
+    widgets: state.widgets,
   }),
   (dispatch) => ({
     updateWidget: (newConf) => dispatch(updateWidget(newConf)),
@@ -261,6 +307,7 @@ export const Topbar = connect(
     automaticInstantiation: state.general.automaticInstantiation,
     automaticSimulation: state.general.automaticSimulation,
     theme: state.general.theme,
+    experimentInDesign: state.experiments.inDesign != null,
   }),
   (dispatch) => ({
     dispatchAction: (action) => dispatch(action),
@@ -275,13 +322,15 @@ export const SwitchPageButton = connect(
     modelState: state.general.modelState,
     automaticInstantiation: state.general.automaticInstantiation,
     automaticSimulation: state.general.automaticSimulation,
+    experimentInDesign: state.experiments.inDesign != null,
   }),
   (dispatch) => ({
     switchToEditModelPage: () => dispatch(editModel),
     createNetwork: () => dispatch(createNetwork),
     createAndSimulateNetwork: () => dispatch(createAndSimulateNetwork),
     showNetwork: () => dispatch(showNetwork),
-    simulateNetwork: () => dispatch(simulateNetwork),
+    simulateNetwork: () => dispatch(simulateNetwork()),
+    openLaunchDialog: () => dispatch(openLaunchDialog()),
   }),
 )(_SwitchPageButton);
 
@@ -301,8 +350,13 @@ export const Dialog = connect(
 
 export const SelectCellTemplate = connect(
   null,
-  (dispatch) => ({ openTopbarDialog: (cellTemplateName) => dispatch(openTopbarDialog(TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE, { cellRuleName: cellTemplateName })) }),
+  (dispatch) => ({
+    openTopbarDialog: (cellTemplateName) => dispatch(
+      openTopbarDialog(TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE, { cellRuleName: cellTemplateName }),
+    ),
+  }),
 )(_SelectCellTemplate);
+
 // ---------------------------------------------------------------------------------------- //
 
 // DEFAULTS

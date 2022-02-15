@@ -15,7 +15,7 @@ try {
   // Failed to load config file
   console.error('\nFailed to load Geppetto Configuration');
 }
-const geppettoClientPath = 'node_modules/@geppettoengine/geppetto-client';
+const geppettoClientPath = 'node_modules/@metacell/geppetto-meta-client';
 
 const publicPath = path.join('/', geppettoConfig.contextPath, 'geppetto/build/');
 console.log(`\nThe public path (used by the main bundle when including split bundles) is: ${publicPath}`);
@@ -128,8 +128,8 @@ module.exports = function (env) {
       alias: {
         root: path.resolve(__dirname),
         'geppetto-client': path.resolve(__dirname, geppettoClientPath),
-        geppetto: path.resolve(__dirname, geppettoClientPath, 'js/pages/geppetto/GEPPETTO.js'),
-        'geppetto-client-initialization': path.resolve(__dirname, geppettoClientPath, 'js/pages/geppetto/main'),
+        geppetto: path.resolve(__dirname, geppettoClientPath, 'pages/geppetto/GEPPETTO.js'),
+        'geppetto-client-initialization': path.resolve(__dirname, geppettoClientPath, 'pages/geppetto/main.js'),
         handlebars: 'handlebars/dist/handlebars.js',
         netpyne: path.resolve(__dirname),
       },
@@ -139,10 +139,23 @@ module.exports = function (env) {
     module: {
       rules: [
         {
-          test: /\.(js|jsx)$/,
-          exclude: [/ami.min.js/, /node_modules\/(?!(@geppettoengine\/geppetto-client)\/).*/],
-          loader: 'babel-loader',
-          query: { presets: [['@babel/preset-env', { modules: false }], '@babel/preset-react'] },
+          test: /\.(js|jsx|ts|tsx)$/,
+          exclude: [/ami.min.js/, /node_modules\/(?!(@metacell\/geppetto-meta-client)\/).*/],
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                '@babel/preset-env',
+                '@babel/preset-react',
+              ],
+              plugins: [
+                '@babel/plugin-syntax-dynamic-import',
+                '@babel/plugin-proposal-class-properties',
+                '@babel/plugin-transform-runtime',
+              ],
+              sourceType: 'unambiguous',
+            },
+          },
         },
         // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
         {
@@ -168,7 +181,14 @@ module.exports = function (env) {
             { loader: 'css-loader' },
           ],
         },
-
+        {
+          test: /\.s[a|c]ss$/,
+          use: [
+            'style-loader', // 3. Inject styles into DOM
+            'css-loader', // 2. Turns css into commonjs
+            'sass-loader', // 1. Turns sass into css
+          ],
+        },
         {
           test: /\.less$/,
           use: [

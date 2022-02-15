@@ -1,9 +1,9 @@
-import { setWidgets } from '../../components/layout/actions';
-import { EDIT_WIDGETS, PYTHON_CONSOLE_WIDGET, WidgetStatus } from '../../constants';
+import { setWidgets } from '@metacell/geppetto-meta-client/common/actions';
+import { PYTHON_CONSOLE_WIDGET, WidgetStatus } from '../../constants';
 
 // Action Types
 export const UPDATE_CARDS = 'UPDATE_CARDS';
-export const MODEL_LOADED = 'MODEL_LOADED';
+export const MODEL_LOADED = 'NETPYNE_MODEL_LOADED';
 export const SHOW_NETWORK = 'SHOW_NETWORK';
 export const CREATE_NETWORK = 'CREATE_NETWORK';
 export const CREATE_SIMULATE_NETWORK = 'CREATE_SIMULATE_NETWORK';
@@ -27,25 +27,57 @@ export const modelLoaded = { type: MODEL_LOADED };
 
 export const createNetwork = { type: CREATE_NETWORK };
 export const createAndSimulateNetwork = { type: CREATE_SIMULATE_NETWORK };
-export const simulateNetwork = { type: SIMULATE_NETWORK };
+export const simulateNetwork = (allTrials = false) => ({
+  type: SIMULATE_NETWORK,
+  payload: allTrials,
+});
+
 export const showNetwork = { type: SHOW_NETWORK };
 
 export const editModel = { type: EDIT_MODEL };
 
 export const resetModel = { type: RESET_MODEL };
 
-export const pythonCall = (cmd, args) => ({ type: PYTHON_CALL, cmd, args });
+export const pythonCall = (cmd, args) => ({
+  type: PYTHON_CALL,
+  cmd,
+  args,
+});
 
-export const deleteNetParamsObj = (payload) => ({ type: DELETE_NETPARAMS_OBJ, payload });
+export const deleteNetParamsObj = (payload) => ({
+  type: DELETE_NETPARAMS_OBJ,
+  payload,
+});
 
 export const closeDialog = { type: CLOSE_DIALOG };
-export const openDialog = (payload) => ({ type: OPEN_DIALOG, payload });
+export const openDialog = (payload) => ({
+  type: OPEN_DIALOG,
+  payload,
+});
 
-export const setTheme = (themeName) => ({ type: SET_THEME, payload: themeName });
+export const setTheme = (themeName) => ({
+  type: SET_THEME,
+  payload: themeName,
+});
 
-export const loadTutorial = (tutFile) => ({ type: LOAD_TUTORIAL, payload: tutFile });
+export const loadTutorial = (tutFile) => ({
+  type: LOAD_TUTORIAL,
+  payload: tutFile,
+});
 
-export const changeAutomaticInstantiation = (payload) => ({ type: AUTOMATIC_INSTANTIATION, payload });
-export const changeAutomaticSimulation = (payload) => ({ type: AUTOMATIC_SIMULATION, payload });
+export const changeAutomaticInstantiation = (payload) => ({
+  type: AUTOMATIC_INSTANTIATION,
+  payload,
+});
+export const changeAutomaticSimulation = (payload) => ({
+  type: AUTOMATIC_SIMULATION,
+  payload,
+});
 
-export const setDefaultWidgets = setWidgets({ [PYTHON_CONSOLE_WIDGET.id]: { ...PYTHON_CONSOLE_WIDGET, panelName: PYTHON_CONSOLE_WIDGET.defaultPanel, status: WidgetStatus.ACTIVE } });
+export const setDefaultWidgets = setWidgets({
+  [PYTHON_CONSOLE_WIDGET.id]: {
+    ...PYTHON_CONSOLE_WIDGET,
+    panelName: PYTHON_CONSOLE_WIDGET.defaultPanel,
+    status: WidgetStatus.ACTIVE,
+  },
+});

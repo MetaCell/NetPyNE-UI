@@ -44,6 +44,17 @@ export default class NetPyNEStimulationTarget extends React.Component {
     this.isStimSourceTypeNetStim();
   }
 
+  // eslint-disable-next-line camelcase
+  UNSAFE_componentWillReceiveProps (nextProps) {
+    if (this.state.currentName != nextProps.name) {
+      this.setState({
+        currentName: nextProps.name,
+        selectedIndex: 0,
+        sectionId: 'General',
+      });
+    }
+  }
+
   componentDidUpdate (prevProps, prevState) {
     if (
       this.props.name !== prevProps.name
@@ -57,7 +68,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
   }
 
   async handleStimSourceSelection (selectedStimSourceName) {
-    return await Utils.evalPythonMessage(
+    return Utils.evalPythonMessage(
       `'NetStim' == netpyne_geppetto.netParams.stimSourceParams['${
         selectedStimSourceName
       }']['type']`,
@@ -91,15 +102,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
     }
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps) {
-    if (this.state.currentName != nextProps.name) {
-      this.setState({
-        currentName: nextProps.name,
-        selectedIndex: 0,
-        sectionId: 'General',
-      });
-    }
-  }
+
 
   handleRenameChange = (event) => {
     const storedValue = this.props.name;
@@ -147,7 +150,7 @@ export default class NetPyNEStimulationTarget extends React.Component {
   };
 
   postProcessMenuItems = (pythonData, selectedStimSourceName) => {
-    if ((selectedStimSourceName != Object) & (selectedStimSourceName != '')) {
+    if ((selectedStimSourceName != Object) && (selectedStimSourceName != '')) {
       this.isStimSourceTypeNetStim(selectedStimSourceName);
     }
     return pythonData.map((name) => (

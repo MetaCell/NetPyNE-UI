@@ -7,13 +7,18 @@
 
 ![Screenshot](https://github.com/MetaCell/NetPyNE-UI/raw/documentation/docs/netpyneui.png)
 
-This repository hosts the User Interface for [NetPyNE](http://www.neurosimlab.org/netpyne/). NetPyNE is a python package to facilitate the development, parallel simulation and analysis of biological neuronal networks using the NEURON simulator.
+This repository hosts the User Interface for [NetPyNE](http://www.neurosimlab.org/netpyne/). NetPyNE is a python package
+to facilitate the development, parallel simulation and analysis of biological neuronal networks using the NEURON
+simulator.
 
 ## Install NetPyNE User Interface
 
-Select one option to install the NetPyNE User Interface. 
+Select one option to install the NetPyNE User Interface.
 
-If you are familiar with NEURON and have already NEURON installed in your machine you can proceed using Pip. If you want a container which comes with everything preinstalled including NEURON you can use the Docker image. Using docker you will still be able to mount a local folder which will be your NetPyNE workspace. If you don't have docker installed in your system and you have had troubles installing it you can opt for the Virtual Machine installation.
+If you are familiar with NEURON and have already NEURON installed in your machine you can proceed using Pip. If you want
+a container which comes with everything preinstalled including NEURON you can use the Docker image. Using docker you
+will still be able to mount a local folder which will be your NetPyNE workspace. If you don't have docker installed in
+your system and you have had troubles installing it you can opt for the Virtual Machine installation.
 
 <p align="center">
     <a href="https://github.com/MetaCell/NetPyNE-UI/wiki/Pip-installation"><img src="https://raw.githubusercontent.com/MetaCell/NetPyNE-UI/master/docs/pip_logo.png" alt="Pip" width="70px"/></a>
@@ -57,7 +62,6 @@ For debugging you can use `run.py` instead
 python run.py
 ```
 
-
 ## Run NetPyNE User Interface in Docker
 
 Ensure that you have Docker installed on your system.
@@ -65,7 +69,7 @@ Ensure that you have Docker installed on your system.
 Build the image
 
 ```bash
-docker build -t netpyne-ui
+docker build -t netpyne-ui .
 ```
 
 Run the image
@@ -76,8 +80,8 @@ docker run -p 8888:8888 netpyne-ui
 
 ## End-to-end tests
 
-End-to-end tests are located in `tests/deployment/frontend/e2e`. 
-Ensure that the application is running in a blank state, since end-to-end tests interact with the running application.
+End-to-end tests are located in `tests/deployment/frontend/e2e`. Ensure that the application is running in a blank
+state, since end-to-end tests interact with the running application.
 
 Install packages
 
@@ -92,11 +96,9 @@ Start tests
 npm run test
 ```
 
-
 #### Containerized tests
 
-You can also use `docker-compose` to run the tests. 
-Ensure that you have Docker installed on your system.
+You can also use `docker-compose` to run the tests. Ensure that you have Docker installed on your system.
 
 Build the images
 
@@ -111,8 +113,7 @@ Run the tests
 docker-compose up --abort-on-container-exit --exit-code-from netpyne-ui-e2e
 ```
 
-
 ## Additional Notes
 
-NetPyNE-UI is being developed in collaboration with the [Neurosim Lab](http://neurosimlab.org/).
-See the [Wiki](https://github.com/MetaCell/NetPyNE-UI/wiki) for more info!
+NetPyNE-UI is being developed in collaboration with the [Neurosim Lab](http://neurosimlab.org/). See
+the [Wiki](https://github.com/MetaCell/NetPyNE-UI/wiki) for more info!

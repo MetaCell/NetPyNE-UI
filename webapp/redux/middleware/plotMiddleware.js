@@ -1,7 +1,8 @@
 import {
   NETPYNE_COMMANDS, NETWORK_PLOT_WIDGETS, PLOT_WIDGETS, WidgetStatus,
 } from 'root/constants';
-import { addWidget, SET_WIDGETS, UPDATE_WIDGET } from '../actions/layout';
+import { VIEW_EXPERIMENTS_RESULTS } from 'root/redux/actions/experiments';
+import * as GeppettoActions from '@metacell/geppetto-meta-client/common/actions';
 import Utils from '../../Utils';
 import { processError } from './middleware';
 import {
@@ -16,96 +17,14 @@ import {
 // and ensured that plot data doesn't lead to performance issues due to possible deep-copy in reducers.
 window.plotCache = {};
 
-const isDisabled = (widget, plots) => !plots[widget.method.plotKey] ?? true;
+const isDisabled = (widget, plots) => !plots[widget.config.method.plotKey] ?? true;
 
-export default (store) => (next) => (action) => {
-  async function setWidget (widget) {
-    const {
-      plotMethod,
-      plotType,
-    } = widget.method;
-    return plotFigure(widget.id, plotMethod, plotType, store.getState().general.theme)
-      .then((data) => {
-        setPlotToWindow(widget.id, data);
-        widget.initialized = true;
-        if (data) {
-          console.debug('Plot retrieved:', widget.id);
-          return widget;
-        }
-        console.warn('Plot not retrieved:', widget.id);
-        return widget;
-      });
+const setPlotToWindow = (plotId, data) => {
+  if (data === '') {
+    console.log('No plot to show');
+    return;
   }
-
-  switch (action.type) {
-    case UPDATE_WIDGET: {
-      // Triggered on tab of widget icon in sidebar
-      // and refreshes widget data if widget wasn't initialized before.
-      const widget = action.data;
-      if (widget.id in PLOT_WIDGETS
-        && widget.status === WidgetStatus.ACTIVE
-        && !widget.initialized) {
-        setWidget(widget)
-          .then((widget) => (widget ? next(action) : null));
-      }
-      next(action);
-      break;
-    }
-    case SET_WIDGETS: {
-      // This is triggered once when we change the layout from Edit > Explore.
-      // We add the widgets (back) to the sidebar but without fetching any data.
-      Object.values(action.data)
-        .filter((widget) => widget.id in PLOT_WIDGETS)
-        .forEach((widget) => next(addWidget(widget)));
-      next(action);
-      break;
-    }
-    case CREATE_NETWORK: {
-      Utils.evalPythonMessage(NETPYNE_COMMANDS.checkAvailablePlots, [])
-        .then((plots) => {
-          // Only reset network plots
-          Object.values(NETWORK_PLOT_WIDGETS)
-            .forEach((widget) => {
-              delete window.plotCache[widget.id];
-              widget.initialized = false;
-              widget.disabled = isDisabled(widget, plots);
-              next(addWidget(widget));
-            });
-        });
-
-      next(action);
-      break;
-    }
-    case SIMULATE_NETWORK:
-    case CREATE_SIMULATE_NETWORK: {
-      Utils.evalPythonMessage(NETPYNE_COMMANDS.checkAvailablePlots, [])
-        .then((plots) => {
-          window.plotCache = {};
-          Object.values(PLOT_WIDGETS)
-            .forEach((widget) => {
-              widget.initialized = false;
-              widget.disabled = isDisabled(widget, plots);
-              next(addWidget(widget));
-            });
-        });
-
-      next(action);
-      break;
-    }
-    case SET_THEME: {
-      next(action);
-      if (!store.getState().general.editMode) {
-        for (const widget of Object.values(PLOT_WIDGETS)) {
-          setWidget(widget)
-            .then((widget) => (widget ? next(addWidget(widget)) : null));
-        }
-      }
-      break;
-    }
-    default: {
-      next(action);
-    }
-  }
+  window.plotCache[plotId] = data;
 };
 
 const plotFigure = async (plotId, plotMethod, plotType = false, theme) => {
@@ -128,7 +47,7 @@ const plotFigure = async (plotId, plotMethod, plotType = false, theme) => {
       if (response.startsWith('{') && response.endsWith('}')) {
         if (processError(response, plotId)) {
           console.error(processError(response, plotId));
-          return;
+          return null;
         }
       }
       if (response.startsWith('[') && response.endsWith(']')) {
@@ -154,12 +73,100 @@ const plotFigure = async (plotId, plotMethod, plotType = false, theme) => {
   } catch (error) {
     console.error(error);
   }
+
+  return null;
 };
 
-const setPlotToWindow = (plotId, data) => {
-  if (data === '') {
-    console.log('No plot to show');
-    return;
+const updatePlots = (next) => {
+  Utils.evalPythonMessage(NETPYNE_COMMANDS.checkAvailablePlots, [])
+    .then((plots) => {
+      window.plotCache = {};
+      Object.values(PLOT_WIDGETS)
+        .forEach((widget) => {
+          widget.initialized = false;
+          widget.disabled = isDisabled(widget, plots);
+          next(GeppettoActions.addWidget(widget));
+        });
+    });
+};
+
+export default (store) => (next) => (action) => {
+  async function setWidget (widget) {
+    const {
+      plotMethod,
+      plotType,
+    } = widget.config.method;
+    return plotFigure(widget.id, plotMethod, plotType, store.getState().general.theme)
+      .then((data) => {
+        setPlotToWindow(widget.id, data);
+        widget.initialized = true;
+        if (data) {
+          console.debug('Plot retrieved:', widget.id);
+          return widget;
+        }
+        console.warn('Plot not retrieved:', widget.id);
+        return widget;
+      });
   }
-  window.plotCache[plotId] = data;
+
+  switch (action.type) {
+    case GeppettoActions.layoutActions.UPDATE_WIDGET: {
+      // Triggered on tab of widget icon in sidebar
+      // and refreshes widget data if widget wasn't initialized before.
+      const widget = action.data;
+      if (widget.id in PLOT_WIDGETS
+        && widget.status === WidgetStatus.ACTIVE
+        && !widget.initialized) {
+        setWidget(widget)
+          .then((w) => (w ? next(action) : null));
+      }
+      next(action);
+      break;
+    }
+    case GeppettoActions.layoutActions.SET_WIDGETS: {
+      // This is triggered once when we change the layout from Edit > Explore.
+      // We add the widgets (back) to the sidebar but without fetching any data.
+      Object.values(action.data)
+        .filter((widget) => widget.id in PLOT_WIDGETS)
+        .forEach((widget) => next(GeppettoActions.addWidget(widget)));
+      next(action);
+      break;
+    }
+    case CREATE_NETWORK: {
+      Utils.evalPythonMessage(NETPYNE_COMMANDS.checkAvailablePlots, [])
+        .then((plots) => {
+          // Only reset network plots
+          Object.values(NETWORK_PLOT_WIDGETS)
+            .forEach((widget) => {
+              delete window.plotCache[widget.id];
+              widget.initialized = false;
+              widget.disabled = isDisabled(widget, plots);
+              next(GeppettoActions.addWidget(widget));
+            });
+        });
+
+      next(action);
+      break;
+    }
+    case VIEW_EXPERIMENTS_RESULTS:
+    case SIMULATE_NETWORK:
+    case CREATE_SIMULATE_NETWORK: {
+      updatePlots(next);
+      next(action);
+      break;
+    }
+    case SET_THEME: {
+      next(action);
+      if (!store.getState().general.editMode) {
+        for (const widget of Object.values(PLOT_WIDGETS)) {
+          setWidget(widget)
+            .then((w) => (w ? next(GeppettoActions.addWidget(w)) : null));
+        }
+      }
+      break;
+    }
+    default: {
+      next(action);
+    }
+  }
 };

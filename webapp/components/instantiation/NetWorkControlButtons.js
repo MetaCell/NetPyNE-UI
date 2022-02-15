@@ -1,8 +1,8 @@
 import React from 'react';
-import IconButton
-  from '@geppettoengine/geppetto-client/js/components/controls/iconButton/IconButton';
 import { Tooltip } from 'netpyne/components';
 import { withStyles } from '@material-ui/core/styles';
+// TODO: this button replaced the old iconbutton from the geppetto-client, probably to fix
+import Button from '@material-ui/core/Button';
 
 const styles = ({ spacing }) => ({
   container: {
@@ -38,7 +38,7 @@ class NetWorkControlButtons extends React.Component {
             className={canvasBtnCls}
           >
             <div>
-              <IconButton
+              <Button
                 className={classes.buttons}
                 onClick={controlPanelShow}
                 icon="fa-list"

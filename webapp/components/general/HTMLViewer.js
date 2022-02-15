@@ -1,7 +1,6 @@
 import React, { Component, createRef } from 'react';
 
-import HTMLViewer
-  from '@geppettoengine/geppetto-client/js/components/interface/htmlViewer/HTMLViewer';
+import HTMLViewer from '@metacell/geppetto-meta-ui/html-viewer/HTMLViewer';
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -27,17 +26,13 @@ class CustomHTMLViewer extends Component {
     this.resizeIfNeeded();
   }
 
-  componentWillUnmount () {
-    clearTimeout(this.timer);
-    window.removeEventListener('resize', this.delayedResize);
-  }
-
   componentDidUpdate () {
     this.resizeIfNeeded();
   }
 
-  wasParentResized (dimensions) {
-    return dimensions.width !== this.dimensions.width || dimensions.height !== this.dimensions.height;
+  componentWillUnmount () {
+    clearTimeout(this.timer);
+    window.removeEventListener('resize', this.delayedResize);
   }
 
   getParentSize () {
@@ -50,6 +45,10 @@ class CustomHTMLViewer extends Component {
   getSvgComponent () {
     // svg element
     return this.containerRef.current.children[0].children[0].children[0];
+  }
+
+  wasParentResized (dimensions) {
+    return dimensions.width !== this.dimensions.width || dimensions.height !== this.dimensions.height;
   }
 
   adjustSVGSize () {

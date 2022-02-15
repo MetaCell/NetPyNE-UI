@@ -28,6 +28,14 @@ export const {
   radius,
   canvasBgDark,
   canvasBgLight,
+  experimentAutocompleteBorder,
+  experimentInputColor,
+  experimentGrey,
+  experimentFieldColor,
+  experimentSvgColor,
+  experimentLabelColor,
+  errorFieldBorder,
+  primaryColorHover,
 } = vars;
 
 const rawTheme = {
@@ -52,6 +60,7 @@ const rawTheme = {
       main: secondaryColor,
       dark: primaryColor,
     },
+    button: { main: primaryColor },
   },
   overrides: {
     MuiInput: {

@@ -20,8 +20,7 @@ class NetPyNEModelInterpreter(ModelInterpreter):
         # We create a GeppettoModel instance and we set a name a assign a lib
         geppetto_model = self.factory.createGeppettoModel('NetPyNEModel')
         self.factory.geppetto_common_library = geppetto_model.libraries[0]
-        netpyne_geppetto_library = pygeppetto.GeppettoLibrary(
-            name='netpynelib')
+        netpyne_geppetto_library = pygeppetto.GeppettoLibrary(name='netpynelib')
         geppetto_model.libraries.append(netpyne_geppetto_library)
 
         self.extractPopulations(netpyne_model, netpyne_geppetto_library)
@@ -34,9 +33,12 @@ class NetPyNEModelInterpreter(ModelInterpreter):
         network = pygeppetto.CompositeType(id='network_netpyne', name='network_netpyne')
         netpyne_geppetto_library.types.append(network)
 
+        if not hasattr(netpyne_model.net, 'allCells'):
+            return
+        
         # Create intermediate population structure for easy access (by key)
         populations = {}
-        for index, cell in enumerate(netpyne_model.net.allCells):
+        for _, cell in enumerate(netpyne_model.net.allCells):
             # This will be only executed the first time for each population
             if cell['tags']['pop'] not in populations:
                 # Create CellType, VisualType, ArrayType, ArrayVariable and append to netpyne library
@@ -67,10 +69,9 @@ class NetPyNEModelInterpreter(ModelInterpreter):
                 populations[cell['tags']['pop']] = arrayType
 
                 # Note: no need to check if pt3d since already done via netpyne sim.net.defineCellShapes() in instantiateNetPyNEModel
-                secs = cell['secs']
-
                 # Iterate sections creating spheres and cylinders
-                if hasattr(secs, 'items'):
+                if 'secs' in cell and hasattr(cell['secs'], 'items'):
+                    secs = cell['secs']
                     for sec_name, sec in list(secs.items()):
                         if 'pt3d' in sec['geom']:
                             points = sec['geom']['pt3d']
