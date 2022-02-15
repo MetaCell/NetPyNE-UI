@@ -1,13 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { withStyles } from '@material-ui/core';
 import Canvas from '@metacell/geppetto-meta-ui/3d-canvas/Canvas';
 import CameraControls from '@metacell/geppetto-meta-ui/camera-controls/CameraControls';
 import { applySelection, mapToCanvasData } from '@metacell/geppetto-meta-ui/3d-canvas/showcase/utils/SelectionUtils';
-// TODO: replace this with the list viewer during refactoring
-// import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
-
-import { NetWorkControlButtons } from 'netpyne/components';
 import {
   primaryColor, canvasBgDark, canvasBgLight, bgRegular,
 } from '../../theme';
@@ -25,7 +20,7 @@ const DEFAULT_COLOR = {
 const styles = () => ({
   container: {
     height: '800px',
-    width: '1240px',
+    width: '1940px',
     display: 'flex',
     alignItems: 'stretch',
   },
@@ -35,11 +30,6 @@ class NetPyNEInstantiated extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      showLoader: false,
-      hasModelLoaded: false,
-      intersected: [],
-      tooltipVisible: false,
-      selected: {},
       cameraOptions: {
         angle: 60,
         near: 10,
@@ -58,10 +48,6 @@ class NetPyNEInstantiated extends React.Component {
         },
       },
     };
-    this.dimensions = {
-      width: '100%',
-      height: '100%',
-    };
     this.canvasRef = React.createRef();
 
     this.onSelection = this.onSelection.bind(this);
@@ -72,15 +58,6 @@ class NetPyNEInstantiated extends React.Component {
     selectInstances(applySelection(data, selectedInstances));
   }
 
-  getParentSize () {
-    if (this.canvasRef.current === null) {
-      return false;
-    }
-    // eslint-disable-next-line react/no-find-dom-node
-    const node = ReactDOM.findDOMNode(this);
-    return node.parentNode.getBoundingClientRect();
-  }
-
   updateBtnsWithTheme = (removeClass, addClass) => {
     const element = document.getElementById('CanvasContainer_component');
     if (removeClass) {
@@ -89,26 +66,6 @@ class NetPyNEInstantiated extends React.Component {
     element.classList.add(addClass);
     this.setState({ canvasBtnCls: addClass });
   };
-
-  resizeCanvas () {
-    this.setState((prevState) => ({ update: prevState.update + 1 }));
-  }
-
-  resizeIfNeeded () {
-    const dimensions = this.getParentSize();
-    if (dimensions !== false && this.wasParentResized(dimensions)) {
-      this.dimensions = dimensions;
-      this.resizeCanvas();
-    }
-  }
-
-  wasParentResized (dimensions) {
-    return dimensions.width !== this.dimensions.width || dimensions.height !== this.dimensions.height;
-  }
-
-  delayedResize () {
-    this.timer = setTimeout(() => this.resizeIfNeeded(), 100);
-  }
 
   render () {
     const { cameraOptions } = this.state;
@@ -129,7 +86,7 @@ class NetPyNEInstantiated extends React.Component {
     }
 
     return (
-      <div className="instantiatedContainer">
+      <div>
         <Canvas
           data={canvasData}
           ref={this.canvasRef}
