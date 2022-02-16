@@ -18,6 +18,7 @@ export const {
   secondaryColor,
   font,
   fontColor,
+  textColor,
   bgLight,
   bgRegular,
   bgDark,

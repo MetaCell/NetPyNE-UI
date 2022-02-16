@@ -258,6 +258,7 @@ export const ActionDialog = connect(
   (state) => ({
     ...state.errors,
     openDialog: true,
+    modelState: state.general.modelState,
   }),
   (dispatch) => ({
     pythonCall: (cmd, args) => dispatch(pythonCall(cmd, args)),
