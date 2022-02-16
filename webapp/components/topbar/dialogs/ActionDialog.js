@@ -149,7 +149,7 @@ class ActionDialog extends React.Component {
         >
           <DialogTitle>Warning</DialogTitle>
           <DialogContent style={{ color: textColor }}>
-            A NetPyNE model has already been instantiated ot simulated. Continuing this import action will use the old values of
+            A NetPyNE model has already been instantiated or simulated. Continuing this import action will use the old values of
             netParams and simConfig for the new model. Do you want to continue?
           </DialogContent>
           <DialogActions>
