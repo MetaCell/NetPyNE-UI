@@ -9,7 +9,9 @@ import Visibility from '@material-ui/icons/Visibility';
 import ColorLens from '@material-ui/icons/ColorLens';
 import Shuffle from '@material-ui/icons/Shuffle';
 import { ChromePicker } from 'react-color';
+import { useDispatch, useSelector } from 'react-redux';
 import { experimentLabelColor } from '../../theme';
+import { changeInstanceColor } from '../../redux/actions/general';
 
 const useStyles = makeStyles((theme) => ({
   networkItem: {
@@ -35,14 +37,26 @@ const useStyles = makeStyles((theme) => ({
 
 const ControlPanelTreeItem = (props) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [showColorPicker, setShowColorPicker] = React.useState(false);
   const [isHoveredOver, setIsHoveredOver] = React.useState(false);
   const [color, setColor] = React.useState('#ff0000');
+  const instances = useSelector((state) => state.general.instances);
 
   const handleColorSelection = (color, event, nodeId) => {
+    const newInstances = instances.filter((instance) => !(instance.instancePath.startsWith(nodeId)));
+    newInstances.push({
+      instancePath: nodeId,
+      color: {
+        r: color.rgb.r / 255,
+        g: color.rgb.g / 255,
+        b: color.rgb.b / 255,
+        a: color.rgb.a,
+      },
+    });
+    dispatch(changeInstanceColor(newInstances));
+    console.log(color);
     setColor(color.hex);
-    event.preventDefault();
-    event.stopPropagation();
   };
 
   const generateRandomColor = () => {
