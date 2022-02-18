@@ -92,7 +92,10 @@ export default (store) => (next) => (action) => {
       break;
     }
     case LOAD_TUTORIAL: {
-      const tutName = action.payload.replace('.py', '');
+      const path = action.payload.split("/");
+      const filename  = path.pop()
+      const dirname = path.join("/")
+      const tutName = filename.replace('.py', '');
       GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading tutorial ${tutName}`);
 
       const params = {
@@ -100,11 +103,11 @@ export default (store) => (next) => (action) => {
         loadMod: false,
         compileMod: false,
 
-        netParamsPath: '.',
+        netParamsPath: dirname,
         netParamsModuleName: tutName,
         netParamsVariable: 'netParams',
 
-        simConfigPath: '.',
+        simConfigPath: dirname,
         simConfigModuleName: tutName,
         simConfigVariable: 'simConfig',
       };

@@ -4,6 +4,8 @@ Initialise NetPyNE Geppetto, this class contains methods to connect NetPyNE with
 """
 import json
 import os
+from os.path import join, dirname
+from glob import glob
 import importlib
 import sys
 import subprocess
@@ -54,14 +56,9 @@ class NetPyNEGeppetto:
         }
 
     def find_tutorials(self):
-        from os import listdir
-        from os.path import isfile, join
-        onlyfiles = [f for f in listdir(NETPYNE_WORKDIR_PATH) if isfile(join(NETPYNE_WORKDIR_PATH, f))]
+        
 
-        def _filter(_file):
-            return '.py' in _file and 'tut' in _file and 'gui' in _file
-
-        return list(filter(_filter, onlyfiles))
+        return glob(join(NETPYNE_WORKDIR_PATH, "**/gui_tut*.py"), recursive=True)
 
     def instantiateNetPyNEModelInGeppetto(self, args):
         try:
