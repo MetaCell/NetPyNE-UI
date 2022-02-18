@@ -24,8 +24,8 @@ export default makeStyles(({
 
   closeDrawer: drawerCss(false, transitions, palette, spacing),
 
-  buttonContainerOpen: { textAlign: 'end', padding: '12px' },
-  buttonContainerClosed: { textAlign: 'center', padding: '12px' },
+  buttonContainerOpen: { textAlign: 'end', padding: '0' },
+  buttonContainerClosed: { textAlign: 'center', padding: '0' },
   button: {
     color: 'white',
     fontSize: '1em',
@@ -37,6 +37,11 @@ export default makeStyles(({
     flexDirection: 'column',
     flex: 1,
     width: '100%',
+
+    '& > .MuiBox-root': {
+      overflow: 'auto',
+      maxHeight: 'calc(100vh - 96px)',
+    },
   },
 
   selected: { color: palette.primary.main },
