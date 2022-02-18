@@ -44,6 +44,7 @@ class NetPyNEGeppetto:
         logging.debug("Initializing the original model")
 
         jupyter_geppetto.context = {'netpyne_geppetto': self}
+        self.loaded_mods=set()
 
     def getData(self):
         return {
@@ -215,8 +216,9 @@ class NetPyNEGeppetto:
         try:
             # Get Current dir
             owd = os.getcwd()
-
+            
             compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
+
 
             with redirect_stdout(sys.__stdout__):
                 # NetParams

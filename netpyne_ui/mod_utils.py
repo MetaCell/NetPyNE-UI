@@ -25,10 +25,11 @@ def is_loaded_mechanisms():
     else:
         return True
 
+loaded_mods = set()
 
 def compileModMechFiles(compileMod, modFolder):
     # Create Symbolic link
-    if compileMod:
+    if compileMod and modFolder not in loaded_mods:
         modPath = os.path.join(str(modFolder), "x86_64")
 
         if os.path.exists(modPath):
@@ -42,3 +43,4 @@ def compileModMechFiles(compileMod, modFolder):
             neuron.load_mechanisms(str(modFolder))
         except:
             raise
+    loaded_mods.add(modFolder)

@@ -99,9 +99,9 @@ export default (store) => (next) => (action) => {
       GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading tutorial ${tutName}`);
 
       const params = {
-        modFolder: 'mod',
+        modFolder: dirname + '/mod',
         loadMod: false,
-        compileMod: false,
+        compileMod: true,
 
         netParamsPath: dirname,
         netParamsModuleName: tutName,
