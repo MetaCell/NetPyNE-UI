@@ -5,8 +5,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { withStyles } from '@material-ui/core/styles';
-import { bgDarkest, fontColor, textColor } from 'root/theme';
-import { MODEL_STATE, NETPYNE_COMMANDS } from '../../../constants';
+import { bgDarkest, fontColor } from 'root/theme';
 
 const styles = () => ({
   cancel: { marginRight: 10 },
@@ -20,10 +19,7 @@ const styles = () => ({
 class ActionDialog extends React.Component {
   constructor (props) {
     super(props);
-    this.state = {
-      hide: !this.props.openErrorDialogBox && !this.props.openDialog,
-      showConfirmationDialog: false,
-    };
+    this.state = { hide: !this.props.openErrorDialogBox && !this.props.openDialog };
   }
 
   handleClickGoBack () {
@@ -39,24 +35,11 @@ class ActionDialog extends React.Component {
     }
   };
 
-  continueImportAction = () => {
-    GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, this.props.message);
-    this.props.pythonCall(this.props.command, this.props.args);
-    this.setState({ hide: true });
-    if (this.props.onAction) {
-      this.props.onAction();
-    }
-  }
-
   performAction = () => {
     if (this.props.command) {
       if (this.props.isFormValid === undefined || this.props.isFormValid()) {
-        if (this.props.command === NETPYNE_COMMANDS.importModel && (this.props.modelState === MODEL_STATE.INSTANTIATED || this.props.modelState === MODEL_STATE.SIMULATED)) {
-          this.setState({ showConfirmationDialog: true });
-        } else {
-          GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, this.props.message);
-          this.props.pythonCall(this.props.command, this.props.args);
-        }
+        GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, this.props.message);
+        this.props.pythonCall(this.props.command, this.props.args);
       }
     }
     this.setState({ hide: true });
@@ -116,54 +99,28 @@ class ActionDialog extends React.Component {
     }
 
     return (
-      <>
-        <Dialog
-          fullWidth
-          maxWidth={this.props.openErrorDialogBox ? 'md' : 'sm'}
-          open={Boolean(!this.state.hide || this.props.openErrorDialogBox)}
-          onClose={() => this.cancelDialog()}
-          className={classes.root}
-        >
-          <DialogTitle>{title}</DialogTitle>
-          <DialogContent>
-            {content}
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={this.cancelDialog}
-              style={styles.cancel}
-              key="CANCEL"
-            >
-              CANCEL
-            </Button>
-            {action}
-          </DialogActions>
-        </Dialog>
-
-        <Dialog
-          fullWidth
-          maxWidth={this.props.openErrorDialogBox ? 'md' : 'sm'}
-          open={this.state.showConfirmationDialog}
-          onClose={() => this.setState({ showConfirmationDialog: false })}
-          className={classes.root}
-        >
-          <DialogTitle>Warning</DialogTitle>
-          <DialogContent style={{ color: textColor }}>
-            A NetPyNE model has already been instantiated ot simulated. Continuing this import action will use the old values of
-            netParams and simConfig for the new model. Do you want to continue?
-          </DialogContent>
-          <DialogActions>
-            <Button
-              style={styles.cancel}
-              onClick={() => this.setState({ showConfirmationDialog: false })}
-            >
-              CANCEL
-            </Button>
-            <Button variant="contained" color="primary" onClick={this.continueImportAction}>CONTINUE</Button>
-          </DialogActions>
-
-        </Dialog>
-      </>
+      <Dialog
+        fullWidth
+        maxWidth={this.props.openErrorDialogBox ? 'md' : 'sm'}
+        open={Boolean(!this.state.hide || this.props.openErrorDialogBox)}
+        onClose={() => this.cancelDialog()}
+        className={classes.root}
+      >
+        <DialogTitle>{title}</DialogTitle>
+        <DialogContent>
+          {content}
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={this.cancelDialog}
+            style={styles.cancel}
+            key="CANCEL"
+          >
+            CANCEL
+          </Button>
+          {action}
+        </DialogActions>
+      </Dialog>
     );
   }
 }
