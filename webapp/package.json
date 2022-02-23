@@ -36,7 +36,6 @@
     "react-dom": "^16.4.0",
     "react-json-view": "^1.21.3",
     "react-redux": "^7.2.0",
-    "react-resize-detector": "^6.7.4",
     "react-sortable-tree": "^2.8.0",
     "redux": "^4.1.0",
     "sass": "^1.49.0",
