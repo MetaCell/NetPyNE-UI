@@ -39,6 +39,7 @@ export const processError = (response) => {
     return {
       errorMessage: parsedResponse.message,
       errorDetails: parsedResponse.details,
+      additionalInfo: parsedResponse.additionalInfo
     };
   }
   return false;
@@ -106,6 +107,26 @@ const simulateNetwork = (payload) => createSimulateBackendCall(
   GEPPETTO.Resources.RUNNING_SIMULATION,
 );
 
+class PythonMessageFilter {
+  errorIds = new Set();
+  shouldLaunch(e) {    
+    const errorId = e.additionalInfo?.sim_id ;
+    if (!errorId)
+      return true ;
+    if (errorId)
+    {
+      if(this.errorIds.has(errorId))
+        return false ;
+      else {
+        this.errorIds.add(errorId);
+        return true ;
+      }
+    }
+  }
+}
+
+const errorMessageFilter = new PythonMessageFilter();
+
 export default (store) => (next) => (action) => {
   const switchLayoutAction = (edit = true, reset = true) => {
     previousLayout[store.getState().general.editMode ? 'edit' : 'network'] = store.getState().layout;
@@ -129,7 +150,10 @@ export default (store) => (next) => (action) => {
 
   const pythonErrorCallback = (error) => {
     console.debug(Utils.getPlainStackTrace(error.errorDetails));
-    return next(openBackendErrorDialog(error));
+    if (errorMessageFilter.shouldLaunch(error))
+      return next(openBackendErrorDialog(error));
+    else  
+      return next(action);
   };
 
   switch (action.type) {
@@ -166,12 +190,14 @@ export default (store) => (next) => (action) => {
       break;
     }
     case CREATE_SIMULATE_NETWORK: {
-      simulateNetwork({ allTrials: false })
+      const payload = { allTrials: false, simId: new Date().getTime() }
+      simulateNetwork(payload)
         .then(toNetworkCallback(false), pythonErrorCallback);
       break;
     }
     case SIMULATE_NETWORK:
-      simulateNetwork({ allTrials: action.payload, usePrevInst: false })
+      const payload = { allTrials: action.payload, simId: new Date().getTime(), usePrevInst: false }
+      simulateNetwork(payload)
         .then(toNetworkCallback(false), pythonErrorCallback);
       break;
     case PYTHON_CALL: {
