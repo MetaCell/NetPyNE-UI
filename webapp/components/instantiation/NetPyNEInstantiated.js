@@ -81,7 +81,7 @@ class NetPyNEInstantiated extends React.Component {
   }
 
   applySelection (data, selectedInstances) {
-    const smap = new Map(selectedInstances.map((i) => [i, true]))
+    const smap = new Map(selectedInstances.map((i) => [i, true]));
     const newData = data.map((item) => {
       if (smap.get(item.instancePath)) {
         return {
@@ -94,7 +94,8 @@ class NetPyNEInstantiated extends React.Component {
     const dmap = new Map(newData.map((i) => [i.instancePath, true]));
 
     smap.forEach((value, key) => {
-      if (!dmap.get(key)) {
+      const item = dmap.get(key);
+      if (!item) {
         newData.push({
           instancePath: key,
           color: undefined,

@@ -28,9 +28,46 @@ const ExperimentControlPanel = (props) => {
   const onNodeSelect = (nodeId) => {
     console.log(`Node with id ${nodeId} clicked`);
   };
+  const instancesMap = new Map();
 
   const onVisibilityClick = (event, nodeId) => {
     console.log(`Visibility of node with id of ${nodeId} clicked.`);
+  };
+
+  const traverseInstances = (instance) => {
+    if (instance.getPath().includes(filter)) {
+      instancesMap.set(
+        instance.getPath(),
+        (
+          <ControlPanelTreeItem
+            key={instance.id}
+            nodeId={instance.getPath()}
+            label={instance.id}
+            type={instance.getType().getId()}
+            onNodeSelect={onNodeSelect}
+            onVisibilityClick={onVisibilityClick}
+          />
+        ),
+      );
+    }
+
+    if (instance.getChildren() && instance.getChildren().length > 0) {
+      const children = instance.getChildren();
+      for (let i = 0; i < children.length; i += 1) {
+        traverseInstances(children[i]);
+      }
+    }
+  };
+
+  const getFlatFilteredList = (instances) => {
+    instancesMap.clear();
+    instances.forEach((instance) => traverseInstances(instance));
+
+    const flatList = [];
+    instancesMap.forEach((value, key) => {
+      flatList.push(value);
+    });
+    return flatList;
   };
 
   const getTreeItemsFromData = (treeItems) => treeItems.map((treeItemData) => {
@@ -74,7 +111,10 @@ const ExperimentControlPanel = (props) => {
                     defaultExpandIcon={<ChevronRightIcon />}
                   >
                     <TreeItem nodeId="network" label="network_netpyne">
-                      {getTreeItemsFromData(window.Instances.network.getChildren())}
+                      {filter === ''
+                        ? getTreeItemsFromData(window.Instances.network.getChildren())
+                        : getFlatFilteredList(window.Instances.network.getChildren())
+                      }
                     </TreeItem>
                   </TreeView>
                 </Box>
