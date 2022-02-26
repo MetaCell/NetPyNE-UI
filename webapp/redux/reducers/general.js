@@ -13,6 +13,7 @@ export const GENERAL_DEFAULT_STATE = {
   dialogMessage: '',
   automaticSimulation: false,
   automaticInstantiation: false,
+  confirmationDialogOpen: false,
   theme: 'gui',
 };
 
@@ -41,6 +42,12 @@ export default function reduceGeneral (state = GENERAL_DEFAULT_STATE, action) {
       };
     case Actions.CLOSE_DIALOG:
       return { ...state, dialogOpen: false };
+    case Actions.OPEN_CONFIRMATION_DIALOG:
+      return {
+        ...state, confirmationDialogOpen: true, dialogTitle: action.payload.title, dialogMessage: action.payload.message,
+      };
+    case Actions.CLOSE_CONFIRMATION_DIALOG:
+      return { ...state, confirmationDialogOpen: false };
     case Actions.AUTOMATIC_INSTANTIATION: {
       return { ...state, automaticInstantiation: action.payload, automaticSimulation: state.automaticSimulation && action.payload };
     }

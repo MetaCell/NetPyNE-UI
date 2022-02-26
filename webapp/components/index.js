@@ -14,7 +14,7 @@ import { openBackendErrorDialog, closeBackendErrorDialog } from '../redux/action
 import {
   updateCards, editModel, simulateNetwork, createNetwork, closeDialog,
   createAndSimulateNetwork, showNetwork, pythonCall, modelLoaded, deleteNetParamsObj, resetModel,
-  setDefaultWidgets,
+  setDefaultWidgets, openConfirmationDialog, closeConfirmationDialog,
 } from '../redux/actions/general';
 
 import {
