@@ -53,6 +53,7 @@ import _NetWorkControlButtons from './instantiation/NetWorkControlButtons';
 import _ActionDialog from './topbar/dialogs/ActionDialog';
 import _Drawer from './drawer/Drawer';
 import _Topbar from './topbar/Topbar';
+import _ImportExportHLSDialog from './topbar/dialogs/ImportExportHLS';
 import _SwitchPageButton from './topbar/SwitchPageButton';
 import _NetPyNEThumbnail from './general/NetPyNEThumbnail';
 import _Dialog from './general/Dialog';
@@ -264,6 +265,18 @@ export const ActionDialog = connect(
     closeBackendErrorDialog: () => dispatch(closeBackendErrorDialog),
   }),
 )(_ActionDialog);
+
+export const ImportExportHLSDialog = connect(
+  (state) => ({
+    modelState: state.general.modelState,
+    confirmationDialogOpen: state.general.confirmationDialogOpen,
+  }),
+  (dispatch) => ({
+    openConfirmationDialog: (payload) => dispatch(openConfirmationDialog(payload)),
+    closeConfirmationDialog: () => dispatch(closeConfirmationDialog),
+    pythonCall: (cmd, args) => dispatch(pythonCall(cmd, args)),
+  }),
+)(_ImportExportHLSDialog);
 
 export const ErrorDialog = connect(
   (state) => ({

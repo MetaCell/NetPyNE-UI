@@ -16,7 +16,9 @@ import Splash from '../general/Splash';
 import LoadFileDialog from './dialogs/LoadFile';
 import SaveFileDialog from './dialogs/SaveFile';
 import NewModelDialog from './dialogs/NewModel';
-import ImportExportHLSDialog from './dialogs/ImportExportHLS';
+// eslint-disable-next-line import/no-cycle
+import ImportExportHLSDialog from '../index';
+// import ImportExportHLSDialog from './dialogs/ImportExportHLS';
 import ImportCellParamsDialog from './dialogs/ImportCellParams';
 import UploadDownloadFilesDialog from './dialogs/UploadDownloadFiles';
 

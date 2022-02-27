@@ -7,7 +7,7 @@ import Box from '@material-ui/core/Box';
 import { withStyles } from '@material-ui/core/styles';
 
 import { ActionDialog, Tooltip } from 'netpyne/components';
-import { NETPYNE_COMMANDS } from '../../../constants';
+import { NETPYNE_COMMANDS, MODEL_STATE } from '../../../constants';
 import FileBrowser from '../../general/FileBrowser';
 import Checkbox from '../../general/Checkbox';
 
@@ -124,6 +124,16 @@ class ImportExportHLS extends React.Component {
       }
     }
     this.setState({ ...newState });
+  }
+
+  handleLoadFile () {
+    // ModleState was instantiated or simulated
+    this.props.openConfirmationDialog({
+      dialogTitle: 'Warning',
+      dialogMessage: 'A model has already been instantiated or simulated.'
+      + 'Continuing this action will use the old values for NetParams and SimConfig. Would you like to continue?',
+    });
+    console.log('INSIDE LOAD FILE, SHOW CONFIRMATION DIALOG');
   }
 
   getDirAndModuleFromPath (fullpath) {
@@ -309,6 +319,7 @@ class ImportExportHLS extends React.Component {
         var title = 'Export as Python script';
         break;
     }
+    console.log('modelState', this.props.modelState);
     return (
       <ActionDialog
         command={command}
@@ -317,6 +328,9 @@ class ImportExportHLS extends React.Component {
         args={this.state}
         title={title}
         isFormValid={this.isFormValid}
+        handleLoadFile={this.handleLoadFile}
+        preventAction={this.props.modelState === MODEL_STATE.INSTANTIATED || this.props.modelState === MODEL_STATE.SIMULATED}
+        // preventAction
         {...this.props}
       >
         {content}
