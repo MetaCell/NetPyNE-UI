@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import * as Sentry from '@sentry/react';
-import { Integrations } from '@sentry/tracing';
 import { CaptureConsole } from '@sentry/integrations';
 import { NetPyNE } from './components';
 import theme from './theme';
