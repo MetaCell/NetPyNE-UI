@@ -10,7 +10,6 @@ const handle_output = function (data) {
       GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
       break;
     case 'execute_result':
-      console.log(data.content.data['text/plain'].trim(), true);
       try {
         var response = JSON.parse(data.content.data['text/plain'].replace(/^'(.*)'$/, '$1'));
       } catch (error) {
@@ -27,7 +26,6 @@ const handle_output = function (data) {
 };
 
 const execPythonMessage = function (command, callback = handle_output) {
-  console.log(`Executing Python command: ${command}`, true);
   const { kernel } = IPython.notebook;
   const messageID = kernel.execute(command, { iopub: { output: callback } }, { silent: false, stop_on_error: true, store_history: true });
 
