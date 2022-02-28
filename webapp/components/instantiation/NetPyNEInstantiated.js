@@ -7,8 +7,6 @@ import {
 } from '../../theme';
 import { THEMES } from '../../constants';
 
-require('source-map-support').install();
-
 const CANVAS_LIGHT = 'canvas-toolbar-btns-light';
 const CANVAS_DARK = 'canvas-toolbar-btns-dark';
 const SELECTION_COLOR = {

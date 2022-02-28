@@ -1,3 +1,4 @@
+/* eslint-disable lines-between-class-members */
 import {
   CLONE_EXPERIMENT,
   GET_EXPERIMENTS,
@@ -47,7 +48,7 @@ export const processError = (response) => {
     return {
       errorMessage: parsedResponse.message,
       errorDetails: parsedResponse.details,
-      additionalInfo: parsedResponse.additionalInfo
+      additionalInfo: parsedResponse.additionalInfo,
     };
   }
   return false;
@@ -117,18 +118,17 @@ const simulateNetwork = (payload) => createSimulateBackendCall(
 
 class PythonMessageFilter {
   errorIds = new Set();
-  shouldLaunch(e) {    
+  shouldLaunch (e) {
     const errorId = e.additionalInfo?.sim_id ;
-    if (!errorId)
-      return true ;
-    if (errorId)
-    {
-      if(this.errorIds.has(errorId))
-        return false ;
-      else {
-        this.errorIds.add(errorId);
-        return true ;
+    if (!errorId) {
+      return true;
+    }
+    if (errorId) {
+      if (this.errorIds.has(errorId)) {
+        return false;
       }
+      this.errorIds.add(errorId);
+      return true;
     }
   }
 }
@@ -167,10 +167,10 @@ export default (store) => (next) => (action) => {
 
   const pythonErrorCallback = (error) => {
     console.debug(Utils.getPlainStackTrace(error.errorDetails));
-    if (errorMessageFilter.shouldLaunch(error))
+    if (errorMessageFilter.shouldLaunch(error)) {
       return next(openBackendErrorDialog(error));
-    else  
-      return next(action);
+    }
+    return next(action);
   };
 
   switch (action.type) {
@@ -219,13 +219,18 @@ export default (store) => (next) => (action) => {
       break;
     }
     case CREATE_SIMULATE_NETWORK: {
-      const payload = { allTrials: false, simId: new Date().getTime() }
+      const payload = { allTrials: false, simId: new Date().getTime() };
       simulateNetwork(payload)
         .then(toNetworkCallback(false), pythonErrorCallback);
       break;
     }
     case SIMULATE_NETWORK:
-      const payload = { allTrials: action.payload, simId: new Date().getTime(), usePrevInst: false }
+      // eslint-disable-next-line no-case-declarations
+      const payload = {
+        allTrials: action.payload,
+        simId: new Date().getTime(),
+        usePrevInst: false,
+      };
       simulateNetwork(payload)
         .then(toNetworkCallback(false), pythonErrorCallback);
       break;
