@@ -67,6 +67,7 @@ import _LaunchDialog from './topbar/dialogs/LaunchDialog';
 import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole';
 import _PlotViewer from './general/PlotViewer';
 import _ExperimentControlPanel from './general/ExperimentControlPanel';
+import _Rxd from './rxd/Rxd';
 
 const updateCardsDispatch = (dispatch) => ({ updateCards: () => dispatch(updateCards) });
 
@@ -139,6 +140,7 @@ export const LaunchDialog = connect(
 export const ExperimentEdit = _ExperimentEdit;
 export const ExperimentManager = _ExperimentManager;
 export const ExperimentControlPanel = _ExperimentControlPanel;
+export const Rxd = _Rxd;
 
 // ---------------------------------------------------------------------------------------- //
 
