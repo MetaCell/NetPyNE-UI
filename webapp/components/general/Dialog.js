@@ -29,7 +29,7 @@ const AboutContent = withStyles(styles)(({ classes }) => (
         NetPyNE-UI v0.7.0
       </Link>
       <Link variant="h5" style={{ display: 'block' }} href="https://github.com/Neurosim-lab/netpyne" target="_blank">
-        NetPyNE v01.0.0.2
+        NetPyNE v1.0.1
       </Link>
       <Link variant="h5" style={{ display: 'block' }} href="https://www.neuron.yale.edu/neuron/" target="_blank">
         NEURON v8.0.0
