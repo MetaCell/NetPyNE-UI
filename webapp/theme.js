@@ -38,6 +38,7 @@ export const {
   primaryColorHover,
   fabDisableColor,
   fabDisableBg,
+  navShadow,
 } = vars;
 
 const rawTheme = {
