@@ -14,7 +14,7 @@ import { openBackendErrorDialog, closeBackendErrorDialog } from '../redux/action
 import {
   updateCards, editModel, simulateNetwork, createNetwork, closeDialog,
   createAndSimulateNetwork, showNetwork, pythonCall, modelLoaded, deleteNetParamsObj, resetModel,
-  setDefaultWidgets,
+  setDefaultWidgets, openConfirmationDialog, closeConfirmationDialog,
 } from '../redux/actions/general';
 
 import {
@@ -56,6 +56,7 @@ import _Topbar from './topbar/Topbar';
 import _SwitchPageButton from './topbar/SwitchPageButton';
 import _NetPyNEThumbnail from './general/NetPyNEThumbnail';
 import _Dialog from './general/Dialog';
+import _ConfirmationDialog from './general/ConfirmationDialog';
 import _SelectCellTemplate from './definition/cellRules/SelectCellTemplate';
 import _Experiments from './experiments/Experiments';
 import _ExperimentEdit from './experiments/ExperimentEdit';
@@ -347,6 +348,19 @@ export const Dialog = connect(
   }),
   (dispatch) => ({ handleClose: () => dispatch(closeDialog) }),
 )(_Dialog);
+
+export const ConfirmationDialog = connect(
+  (state) => ({
+    confirmationDialogOpen: state.general.confirmationDialogOpen,
+    confirmationDialogTitle: state.general.confirmationDialogTitle,
+    confirmationDialogMessage: state.general.confirmationDialogMessage,
+    confirmationDialogOnConfirm: state.general.confirmationDialogOnConfirm,
+  }),
+  (dispatch) => ({
+    closeConfirmationDialog: () => dispatch(closeConfirmationDialog),
+    pythonCall: (cmd, args) => dispatch(pythonCall(cmd, args)),
+  }),
+)(_ConfirmationDialog);
 
 export const SelectCellTemplate = connect(
   null,

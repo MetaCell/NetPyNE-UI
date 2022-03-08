@@ -8,6 +8,7 @@ import {
   LayoutManager,
   Drawer,
   Dialog,
+  ConfirmationDialog,
   LaunchDialog,
 } from 'netpyne/components';
 
@@ -140,6 +141,7 @@ class NetPyNE extends React.Component {
           </Box>
         </div>
         <Dialog />
+        <ConfirmationDialog />
         <ErrorDialog />
         <LaunchDialog />
       </div>
