@@ -2,15 +2,15 @@
   "version": "v1",
   "packages": {
     "@metacell/geppetto-meta-client": {
-      "signature": "0b89acbd0446b4c00b9c4e99ba1ce30d",
+      "signature": "a0171fc644b3674cd27880ca00e850b8",
       "file": true
     },
     "@metacell/geppetto-meta-core": {
-      "signature": "5151317afcaa8e7cb590e0fc4cf90f00",
+      "signature": "bf6a7a5ab599826730a94b6c2b9f2566",
       "file": true
     },
     "@metacell/geppetto-meta-ui": {
-      "signature": "210075d0d76db15d9c0ead02e200e2e3",
+      "signature": "1b6f4e2cf23bdc7fcafb3631d5546729",
       "file": true
     }
   }
