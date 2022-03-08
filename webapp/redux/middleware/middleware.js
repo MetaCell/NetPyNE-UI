@@ -22,6 +22,9 @@ import {
   RESET_MODEL,
   showNetwork,
   MODEL_LOADED,
+  changeInstanceColor,
+  addInstancesToCanvas,
+  removeInstancesFromCanvas,
 } from '../actions/general';
 import { openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
@@ -31,6 +34,11 @@ import * as Constants from '../../constants';
 
 const SUPPORTED_TYPES = [Constants.REAL_TYPE.INT, Constants.REAL_TYPE.FLOAT, Constants.REAL_TYPE.STR, Constants.REAL_TYPE.BOOL];
 let previousLayout = {
+  edit: undefined,
+  network: undefined,
+};
+
+let previousWidgets = {
   edit: undefined,
   network: undefined,
 };
@@ -133,8 +141,13 @@ const errorMessageFilter = new PythonMessageFilter();
 export default (store) => (next) => (action) => {
   const switchLayoutAction = (edit = true, reset = true) => {
     previousLayout[store.getState().general.editMode ? 'edit' : 'network'] = store.getState().layout;
+    previousWidgets[store.getState().general.editMode ? 'edit' : 'network'] = store.getState().widgets;
     if (reset) {
       previousLayout = {
+        edit: undefined,
+        network: undefined,
+      };
+      previousWidgets = {
         edit: undefined,
         network: undefined,
       };
@@ -142,8 +155,12 @@ export default (store) => (next) => (action) => {
     // TO FIX: I am not sure the one below is to fix, previously we were setting layout or widgets but I don't understand
     // how the widgets where making it back into the redux store without the set widgets
     return next(edit
-      ? GeppettoActions.setLayout(previousLayout.edit) && GeppettoActions.setWidgets({ ...Constants.EDIT_WIDGETS })
-      : GeppettoActions.setLayout(previousLayout.network) && GeppettoActions.setWidgets({ ...Constants.DEFAULT_NETWORK_WIDGETS }));
+      ? previousLayout.edit
+        ? GeppettoActions.setLayout(previousLayout.edit) && GeppettoActions.setWidgets(previousWidgets.edit)
+        : GeppettoActions.setWidgets({ ...Constants.EDIT_WIDGETS })
+      : previousLayout.network
+        ? GeppettoActions.setLayout(previousLayout.network) && GeppettoActions.setWidgets(previousWidgets.network)
+        : GeppettoActions.setWidgets({ ...Constants.DEFAULT_NETWORK_WIDGETS }));
   };
 
   const toNetworkCallback = (reset) => () => {
@@ -162,6 +179,18 @@ export default (store) => (next) => (action) => {
   switch (action.type) {
     case MODEL_LOADED:
       next(GeppettoActions.waitData('Loading the NetPyNE Model', GeppettoActions.clientActions.MODEL_LOADED));
+      next(action);
+      break;
+    case GeppettoActions.clientActions.MODEL_LOADED:
+      if (store.getState()?.general?.modelState === Constants.MODEL_STATE.NOT_INSTANTIATED) {
+        const networkPath = window.Instances.getInstance('network');
+        if (networkPath) {
+          store.dispatch(addInstancesToCanvas([{
+            instancePath: networkPath.getInstancePath(),
+            color: Constants.DEFAULT_COLOR,
+          }]));
+        }
+      }
       next(action);
       break;
     case UPDATE_CARDS:
@@ -380,7 +409,7 @@ export default (store) => (next) => (action) => {
             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
             dehydrateCanvas();
             GEPPETTO.Manager.loadModel(response);
-            GEPPETTO.CommandController.log('Instantiation / Simulation completed.');
+            console.log('Instantiation / Simulation completed.');
 
             store.dispatch(showNetwork);
           }

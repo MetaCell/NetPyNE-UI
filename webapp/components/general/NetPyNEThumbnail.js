@@ -150,6 +150,7 @@ const getFabButton = (label, selected, others) => (
   <Fab
     className={`actionButton ${selected ? 'selectedActionButton' : ''}`}
     {...others}
+    style={{ borderRadius: '50%' }}
   >
     {label}
   </Fab>

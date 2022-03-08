@@ -3,20 +3,23 @@ import ReactDOM from 'react-dom';
 import { withStyles } from '@material-ui/core';
 import Canvas from '@metacell/geppetto-meta-ui/3d-canvas/Canvas';
 import CameraControls from '@metacell/geppetto-meta-ui/camera-controls/CameraControls';
+import { applySelection, mapToCanvasData } from '@metacell/geppetto-meta-ui/3d-canvas/showcase/utils/SelectionUtils';
 // TODO: replace this with the list viewer during refactoring
 // import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
 
 import { NetWorkControlButtons } from 'netpyne/components';
-import { primaryColor, canvasBgDark, canvasBgLight, bgRegular } from '../../theme';
+import {
+  primaryColor, canvasBgDark, canvasBgLight, bgRegular,
+} from '../../theme';
 import { THEMES } from '../../constants';
 
 const CANVAS_LIGHT = 'canvas-toolbar-btns-light';
 const CANVAS_DARK = 'canvas-toolbar-btns-dark';
 const SELECTION_COLOR = {
-  r: 0.8, g: 0.8, b: 0, a: 1,
+  r: 0, g: 0.8, b: 0.8, a: 1,
 };
 const DEFAULT_COLOR = {
-  r: 1, g: 0, b: 0, a: 0.5,
+  g: 0.50, b: 0.60, r: 1, a: 0.80,
 };
 
 const styles = () => ({
@@ -25,7 +28,7 @@ const styles = () => ({
     width: '1240px',
     display: 'flex',
     alignItems: 'stretch',
-  }
+  },
 });
 
 class NetPyNEInstantiated extends React.Component {
@@ -36,11 +39,6 @@ class NetPyNEInstantiated extends React.Component {
       hasModelLoaded: false,
       intersected: [],
       tooltipVisible: false,
-      data: [
-        {
-          instancePath: 'network',
-        },
-      ],
       selected: {},
       cameraOptions: {
         angle: 60,
@@ -48,56 +46,39 @@ class NetPyNEInstantiated extends React.Component {
         far: 2000000,
         baseZoom: 1,
         position: { x: -97.349, y: 53.797, z: 387.82 },
-        rotation: { rx: 0.051, ry: -0.192, rz: -0.569, radius: 361.668 },
+        rotation: {
+          rx: 0.051, ry: -0.192, rz: -0.569, radius: 361.668,
+        },
         autoRotate: false,
         movieFilter: true,
         reset: false,
-        cameraControls: { 
+        cameraControls: {
           instance: CameraControls,
-          props: {}
+          props: {},
         },
       },
     };
     this.dimensions = {
-      width: 200,
-      height: 200,
+      width: '100%',
+      height: '100%',
     };
     this.canvasRef = React.createRef();
-    this.controlPanelToggle = this.controlPanelToggle.bind(this);
+
+    this.onSelection = this.onSelection.bind(this);
   }
 
-  componentDidMount () {
-    // this.canvasRef.current.engine.setLinesThreshold(10000);
-    // this.canvasRef.current.displayAllInstances();
-    // this.updateBtnsWithTheme('', this.state.canvasBtnCls);
-    // window.addEventListener('resize', this.delayedResize.bind(this));
-    // this.resizeIfNeeded();
-    // this.updateInstances();
-
-    // GEPPETTO.on(GEPPETTO.Events.Control_panel_close, () => {
-    //   this.setState({ bringItToFront: 0 });
-    // });
+  onSelection (selectedInstances) {
+    const { selectInstances, data } = this.props;
+    selectInstances(applySelection(data, selectedInstances));
   }
 
-  componentDidUpdate (prevProps, prevState) {
-    // this.resizeIfNeeded();
-    // const { theme } = this.props;
-    // if (prevProps.theme !== this.props.theme) {
-    //   theme === THEMES.LIGHT ? this.updateBtnsWithTheme(CANVAS_DARK, CANVAS_LIGHT)
-    //     : this.updateBtnsWithTheme(CANVAS_LIGHT, CANVAS_DARK);
-    // }
-    // if (prevState.controlPanelInitialized !== this.state.controlPanelInitialized) {
-    //   if (this.state.controlPanelInitialized) {
-    //     $('#controlpanel')
-    //       .show();
-    //   }
-    // }
-  }
-
-  componentWillUnmount () {
-    // GEPPETTO.off(GEPPETTO.Events.Control_panel_close);
-    // clearTimeout(this.timer);
-    // window.removeEventListener('resize', this.delayedResize);
+  getParentSize () {
+    if (this.canvasRef.current === null) {
+      return false;
+    }
+    // eslint-disable-next-line react/no-find-dom-node
+    const node = ReactDOM.findDOMNode(this);
+    return node.parentNode.getBoundingClientRect();
   }
 
   updateBtnsWithTheme = (removeClass, addClass) => {
@@ -108,25 +89,6 @@ class NetPyNEInstantiated extends React.Component {
     element.classList.add(addClass);
     this.setState({ canvasBtnCls: addClass });
   };
-
-  // updateInstances () {
-  //   if (window.Instances != null && window.Instances.network) {
-  //     // update canvas only if there are instances to show
-  //     this.canvasRef.current.engine.setLinesThreshold(25000);
-  //     this.canvasRef.current.engine.updateSceneWithNewInstances(
-  //       window.Instances,
-  //     );
-  //     this.canvasRef.current.resetCamera();
-
-  //     this.canvasRef.current.setColor('network', primaryColor, true);
-  //     const spotLight = this.canvasRef.current.engine.scene.children.find(
-  //       (child) => child.type === 'SpotLight',
-  //     );
-  //     if (spotLight) {
-  //       this.canvasRef.current.engine.scene.remove(spotLight);
-  //     }
-  //   }
-  // }
 
   resizeCanvas () {
     this.setState((prevState) => ({ update: prevState.update + 1 }));
@@ -148,46 +110,11 @@ class NetPyNEInstantiated extends React.Component {
     this.timer = setTimeout(() => this.resizeIfNeeded(), 100);
   }
 
-  getParentSize () {
-    if (this.canvasRef.current === null) {
-      return false;
-    }
-    // eslint-disable-next-line react/no-find-dom-node
-    const node = ReactDOM.findDOMNode(this);
-    return node.parentNode.getBoundingClientRect();
-  }
-
-  controlPanelToggle () {
-    if (!this.state.controlPanelInitialized) {
-      this.setState({ controlPanelInitialized: true });
-    } else {
-      $('#controlpanel')
-        .show();
-    }
-  }
-
-  mapToCanvasData (data) {
-    return data.map((item) => (
-      {
-        color: item.selected ? SELECTION_COLOR : DEFAULT_COLOR,
-        instancePath: item.instancePath,
-      }
-    ));
-  }
-
   render () {
-    const {
-      update,
-      canvasBtnCls,
-      controlPanelInitialized,
-    } = this.state;
-    const { theme } = this.props;
-    const { controlPanelToggle } = this;
-    const bgColor = theme === THEMES.LIGHT ? canvasBgLight : theme === THEMES.BLACK ? canvasBgDark : 'transparent';
+    const { cameraOptions } = this.state;
+    const { data } = this.props;
 
-    const { data, cameraOptions } = this.state;
-
-    const canvasData = this.mapToCanvasData(data);
+    const canvasData = mapToCanvasData(data);
 
     let camOptions = cameraOptions;
     if (this.lastCameraUpdate) {
@@ -201,34 +128,16 @@ class NetPyNEInstantiated extends React.Component {
       };
     }
 
-
     return (
       <div className="instantiatedContainer">
-        <NetWorkControlButtons canvasBtnCls={canvasBtnCls} controlPanelShow={controlPanelToggle} />
-        {/* <Canvas
-          id="CanvasContainer"
-          name="Canvas"
-          componentType="Canvas"
-          ref={this.canvasRef}
-          style={{
-            height: '100%',
-            width: '100%',
-            background: bgColor,
-          }}
-          update={update}
-        /> */}
         <Canvas
-          ref={this.canvasRef}
-          cameraOptions={camOptions}
-          key="CanvasContainer"
           data={canvasData}
+          ref={this.canvasRef}
+          key="CanvasContainer"
+          cameraOptions={camOptions}
           backgroundColor={bgRegular}
+          onSelection={this.onSelection}
         />
-        <div id="controlpanel" style={{ top: 0 }}>
-          {/* TODO: refactor the control panel with the list viewer
-          * {controlPanelInitialized
-          && <ControlPanel icon={null} useBuiltInFilters={false} />} */}
-        </div>
       </div>
     );
   }
