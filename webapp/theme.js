@@ -1,4 +1,4 @@
-import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+import { createTheme } from '@material-ui/core/styles';
 import lessToJs from 'less-vars-to-js';
 
 // Read the less file in as string: using the raw-loader to override the default loader
@@ -180,4 +180,4 @@ const rawTheme = {
   },
 };
 
-export default createMuiTheme(rawTheme);
+export default createTheme(rawTheme);
