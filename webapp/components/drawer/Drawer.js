@@ -94,7 +94,9 @@ const DrawerList = ({
   editMode,
   widgets,
   activateWidget,
+  maximiseWidget,
   updateWidget,
+  addWidget,
   classes,
 }) => {
   const [expand, setExpand] = useState(false);
@@ -110,10 +112,8 @@ const DrawerList = ({
     if (!widget) {
       const widgetConf = getNewWidgetConf(widgetId);
       newWidget({ path: widgetConf.id, ...widgetConf });
-    } else if (widget.status === WidgetStatus.MINIMIZED) {
-      updateBorderWidget(widgetId);
     } else {
-      activateWidget(widgetId);
+      updateBorderWidget(widgetId);
     }
   }
 
@@ -170,13 +170,13 @@ const DrawerList = ({
   return (
     <Paper elevation={0} className={paperClasses}>
       <div className={drawerClasses.container}>
-        <Box p={2}>
+        <Box px={1} py={2}>
           { expand && (
             <Box className="drawerListBox">
               <Typography variant="body2">{editMode ? SIDEBAR_HEADINGS.MODEL : SIDEBAR_HEADINGS.PLOTS}</Typography>
             </Box>
           )}
-          <List dense disablePadding>
+          <List disablePadding>
             {getMenu()[0]
               .map(mapItem)}
           </List>
@@ -186,7 +186,7 @@ const DrawerList = ({
               <Typography variant="body2">{SIDEBAR_HEADINGS.TOOLS}</Typography>
             )}
           </Box>
-          <List dense disablePadding>
+          <List disablePadding>
             {getMenu()[1]
               .map(mapItem)}
           </List>

@@ -12,6 +12,7 @@ import {
   NetPyNEPlots,
   NetPyNEPythonConsole,
   ExperimentManager,
+  ExperimentControlPanel,
 } from '..';
 
 import PlotViewer from '../general/PlotViewer';
@@ -34,6 +35,7 @@ const componentMap = {
   'simConfig': NetPyNESimConfig,
   'analysis': NetPyNEPlots,
   'experimentManager': ExperimentManager,
+  'experimentControlPanel': ExperimentControlPanel,
 };
 
 export default componentMap;
