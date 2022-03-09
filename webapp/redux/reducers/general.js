@@ -55,7 +55,7 @@ export default function reduceGeneral (state = GENERAL_DEFAULT_STATE, action) {
       };
     case Actions.CLOSE_CONFIRMATION_DIALOG:
       return {
-        ...state, confirmationDialogOpen: false, dialogTitle: '', dialogMessage: '',
+        ...state, confirmationDialogOpen: false, dialogTitle: '', dialogMessage: '', confirmationDialogOnConfirm: {},
       };
     case Actions.AUTOMATIC_INSTANTIATION: {
       return { ...state, automaticInstantiation: action.payload, automaticSimulation: state.automaticSimulation && action.payload };

@@ -314,6 +314,7 @@ export const Topbar = connect(
     dispatchAction: (action) => dispatch(action),
     closeDialog: () => dispatch(closeTopbarDialog),
     resetModel: () => dispatch(resetModel),
+    openConfirmationDialog: (payload) => dispatch(openConfirmationDialog(payload)),
   }),
 )(_Topbar);
 
@@ -357,6 +358,7 @@ export const ConfirmationDialog = connect(
     confirmationDialogOnConfirm: state.general.confirmationDialogOnConfirm,
   }),
   (dispatch) => ({
+    dispatchAction: (action) => dispatch(action),
     closeConfirmationDialog: () => dispatch(closeConfirmationDialog),
     pythonCall: (cmd, args) => dispatch(pythonCall(cmd, args)),
   }),

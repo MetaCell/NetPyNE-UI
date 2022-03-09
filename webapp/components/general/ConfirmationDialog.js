@@ -5,7 +5,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { withStyles } from '@material-ui/core/styles';
-import { PYTHON_CALL } from '../../redux/actions/general';
+import { PYTHON_CALL, LOAD_TUTORIAL } from '../../redux/actions/general';
 
 const styles = () => ({
   cancel: { marginRight: 10 },
@@ -18,14 +18,21 @@ class ConfirmationDialog extends React.Component {
   }
 
   handleConfirmation = () => {
-    if (this.props.confirmationDialogOnConfirm
-        && this.props.confirmationDialogOnConfirm.type === PYTHON_CALL) {
-      this.props.pythonCall({
-        cmd: this.props.confirmationDialogOnConfirm.cmd,
-        args: this.props.confirmationDialogOnConfirm.args,
-      });
+    if (this.props.confirmationDialogOnConfirm) {
+      if (this.props.confirmationDialogOnConfirm.type === PYTHON_CALL) {
+        this.props.pythonCall({
+          cmd: this.props.confirmationDialogOnConfirm.cmd,
+          args: this.props.confirmationDialogOnConfirm.args,
+        });
+      } else if (this.props.confirmationDialogOnConfirm.type === LOAD_TUTORIAL) {
+        if (this.props.confirmationDialogOnConfirm.payload !== undefined) {
+          this.props.dispatchAction(this.props.confirmationDialogOnConfirm.action(this.props.confirmationDialogOnConfirm.payload));
+        } else {
+          this.props.dispatchAction(this.props.confirmationDialogOnConfirm.action);
+        }
+      }
     } else {
-      console.log('confirmationAction not passed or it is not a python call');
+      console.log('Command/desired behaviour not passed to confirmation dialog');
     }
   }
 
