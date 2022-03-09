@@ -20,10 +20,7 @@ class ConfirmationDialog extends React.Component {
   handleConfirmation = () => {
     if (this.props.confirmationDialogOnConfirm) {
       if (this.props.confirmationDialogOnConfirm.type === PYTHON_CALL) {
-        this.props.pythonCall({
-          cmd: this.props.confirmationDialogOnConfirm.cmd,
-          args: this.props.confirmationDialogOnConfirm.args,
-        });
+        this.props.pythonCall(this.props.confirmationDialogOnConfirm.cmd, this.props.confirmationDialogOnConfirm.args);
       } else if (this.props.confirmationDialogOnConfirm.type === LOAD_TUTORIAL) {
         if (this.props.confirmationDialogOnConfirm.payload !== undefined) {
           this.props.dispatchAction(this.props.confirmationDialogOnConfirm.action(this.props.confirmationDialogOnConfirm.payload));
@@ -38,7 +35,6 @@ class ConfirmationDialog extends React.Component {
 
   render () {
     const {
-      classes,
       confirmationDialogOpen,
       confirmationDialogTitle,
       confirmationDialogMessage,
@@ -51,10 +47,9 @@ class ConfirmationDialog extends React.Component {
         maxWidth="sm"
         open={confirmationDialogOpen}
         onClose={() => closeConfirmationDialog()}
-        className={classes.root}
       >
         <DialogTitle>{confirmationDialogTitle}</DialogTitle>
-        <DialogContent>
+        <DialogContent style={{ color: 'white' }}>
           {confirmationDialogMessage}
         </DialogContent>
         <DialogActions>

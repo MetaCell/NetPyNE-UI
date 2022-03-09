@@ -92,7 +92,7 @@ class Topbar extends Component {
           this.props.openConfirmationDialog({
             title: 'Warning',
             message: 'A NetPyNE model has already been instantiated or simulated.'
-            + 'Continuing with this action will use the old value of netParams and simConfig for the new model. Do you want to continue?',
+            + ' Continuing with this action will use the old value of netParams and simConfig for the new model. Do you want to continue?',
             onConfirm: {
               type: LOAD_TUTORIAL,
               action,
@@ -123,9 +123,12 @@ class Topbar extends Component {
       classes,
       modelLoaded,
       dialogOpen,
+      modelState,
       topbarDialogName,
       topbarDialogMetadata,
+      openConfirmationDialog,
     } = this.props;
+
     let content;
     if (dialogOpen) {
       switch (topbarDialogName) {
@@ -151,6 +154,8 @@ class Topbar extends Component {
               open={dialogOpen}
               onRequestClose={() => this.handleClose()}
               mode="IMPORT"
+              modelState={modelState}
+              openConfirmationDialog={(payload) => openConfirmationDialog(payload)}
             />
           );
           break;
