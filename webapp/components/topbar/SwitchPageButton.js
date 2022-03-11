@@ -32,7 +32,7 @@ const CREATE_NETWORK = 'CREATE NETWORK';
 const CREATE_AND_SIMULATE = 'CREATE AND SIMULATE';
 const SIMULATE = 'SIMULATE';
 const BACK_TO_EDIT = 'BACK TO EDIT';
-const BACK_TO_EXPLORER = 'BACK TO EXPLORER';
+const BACK_TO_EXPLORER = 'GO TO EXPLORER';
 const UPDATE_NETWORK = 'UPDATE NETWORK';
 
 const editOptions = [CREATE_NETWORK, CREATE_AND_SIMULATE, SIMULATE];
@@ -80,11 +80,11 @@ class SwitchPageButton extends Component {
           ? (
             <>
               <Button
-                  variant="contained"
-                  onClick={() => this.handleClick(BACK_TO_EXPLORER)}
-                  startIcon={<Icon name="pencil" selected={false} />}
-                  disabled={!instantiated}
-                >
+                variant="contained"
+                onClick={() => this.handleClick(BACK_TO_EXPLORER)}
+                startIcon={<Icon name="screen" selected={false} />}
+                disabled={!instantiated}
+              >
                 { BACK_TO_EXPLORER }
               </Button>
               <SplitButton
