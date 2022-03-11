@@ -1,83 +1,88 @@
 @import 'variables';
 
 label {
-  margin-top: 0px;
-  margin-bottom: 0px;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 input[type="text"], input[type="number"]{
   box-shadow: none!important;
-  border-radius:0px!important;
-  color: white!important;
+  border-radius:0!important;
+  color: @fontColor !important;
   font-size: inherit;
 }
 
-div.MuiAccordionSummary-root {	
-  h2 {	
-    font-size: 1em;	
-  }	
+div.MuiAccordionSummary-root {
+  margin: 0;
+  display: flex;
+  padding: 0 !important;
+  min-height: unset !important;
+  transition: min-height 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 
-  .MuiTypography-subtitle1 {	
-    font-size: 1em;	
-    color    : grey;	
-  }	
+  h2 {
+    font-size: 1em;
+  }
+
+  .MuiTypography-subtitle1 {
+    font-size: 1em;
+    color: grey;
+  }
 }
 
-div.MuiCollapse-container .MuiCollapse-wrapper,	
-div.MuiAccordionSummary-root {	
-  padding: @tabSpacing;	
-}	
-div.MuiAccordion-root.Mui-expanded {	
-  margin: 2px;	
-}	
-.MuiAccordion-root {	
-  margin: 2px;	
+div.MuiCollapse-container .MuiCollapse-wrapper,
+div.MuiAccordionSummary-root {
+  padding: @tabSpacing;
+}
+div.MuiAccordion-root.Mui-expanded {
+  margin: 0.125rem;
+}
+.MuiAccordion-root {
+  margin: 0.125rem;
 }
 
 label.MuiInputLabel-root
-.MuiInput-root {	
-  color      : #fff;	
-  cursor     : text;	
-  display    : inline-flex;	
-  position   : relative;	
-  font-size  : 1rem;	
-  box-sizing : border-box;	
-  align-items: center;	
-  font-family: Roboto, Helvetica, Arial, sans-serif;	
-  line-height: 1.1875em;	
+.MuiInput-root {
+  color: @fontColor;
+  cursor: text;
+  display: inline-flex;
+  position: relative;
+  font-size: 1rem;
+  box-sizing: border-box;
+  align-items: center;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.1875em;
 
-  input {	
-    line-height: 24px;	
-    position                   : relative;	
-    width                      : 100%;	
-    border                     : none;	
-    outline                    : none;	
-    background-color           : rgba(0, 0, 0, 0);	
-    color                      : rgba(255, 255, 255, 0.87);	
-    cursor                     : inherit;	
-    font                       : inherit;	
-    opacity                    : 1;	
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);	
-    height                     : 100%;	
-  }	
+  input {
+    line-height: 1.5rem;
+    position: relative;
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: rgba(0, 0, 0, 0);
+    color: rgba(255, 255, 255, 0.87);
+    cursor: inherit;
+    font: inherit;
+    opacity: 1;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    height: 100%;
+  }
 
-}	
+}
 
-.MuiButton-root,	
-.MuiFab-root {	
-  font-size: 1em;	
+.MuiButton-root,
+.MuiFab-root {
+  font-size: 1em;
+}
 
-}	
+.MuiFab-root{
+  text-transform: none;
+}
 
-.MuiFab-root{	
-  text-transform: none;	
-}	
+label.MuiInputLabel-root, label.MuiFormLabel-root{
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.7);
+}
 
-label.MuiInputLabel-root, label.MuiFormLabel-root{	
-  font-weight: bold;	
-  color: rgba(255, 255, 255, 0.7);	
-}	
-
-.MuiSelect-select{	
-  min-width: 72px;	
-} 
+.MuiSelect-select{
+  min-width: 4.5rem;
+}

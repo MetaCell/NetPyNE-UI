@@ -14,6 +14,7 @@ html {
   }
   body {
     background: @bgDarker;
+    line-height: 1.42857143;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   }
 }
@@ -46,24 +47,6 @@ html {
   top: 0px;
 }
 
-#controlpanel {
-  margin-top: @flexlayout-widget-border;
-  // top: 0%!important;
-  // width: 97%!important;
-  height: calc(100% - 24px) !important;
-  width: calc(100% - 16px) !important;
-  div.griddle {
-    td,
-    th {
-      background-color: rgba(@bgLight, 0.7);
-    }
-  }
-}
-#ControlPanelButton {
-  :hover {
-    color: @secondaryColor !important;
-  }
-}
 button.actionButton {
   font-size: 15px;
   margin: 10px;

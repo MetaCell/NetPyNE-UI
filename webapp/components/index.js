@@ -3,10 +3,12 @@ import { connect } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
 import { getLayoutManagerInstance } from '@metacell/geppetto-meta-client/common/layout/LayoutManager';
 import {
+  addWidget,
   activateWidget,
   setWidgets,
   updateWidget,
   newWidget,
+  maximiseWidget,
 } from '@metacell/geppetto-meta-client/common/actions';
 import { TOPBAR_CONSTANTS } from '../constants';
 import PythonControlledCapability from './general/PythonControlledCapability';
@@ -14,7 +16,7 @@ import { openBackendErrorDialog, closeBackendErrorDialog } from '../redux/action
 import {
   updateCards, editModel, simulateNetwork, createNetwork, closeDialog,
   createAndSimulateNetwork, showNetwork, pythonCall, modelLoaded, deleteNetParamsObj, resetModel,
-  setDefaultWidgets, openConfirmationDialog, closeConfirmationDialog,
+  setDefaultWidgets, changeInstanceColor, openConfirmationDialog, closeConfirmationDialog,
 } from '../redux/actions/general';
 
 import {
@@ -65,6 +67,7 @@ import _ExperimentManager from './experiments/ExperimentManager';
 import _LaunchDialog from './topbar/dialogs/LaunchDialog';
 import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole';
 import _PlotViewer from './general/PlotViewer';
+import _ExperimentControlPanel from './general/ExperimentControlPanel';
 
 const updateCardsDispatch = (dispatch) => ({ updateCards: () => dispatch(updateCards) });
 
@@ -136,6 +139,7 @@ export const LaunchDialog = connect(
 
 export const ExperimentEdit = _ExperimentEdit;
 export const ExperimentManager = _ExperimentManager;
+export const ExperimentControlPanel = _ExperimentControlPanel;
 
 // ---------------------------------------------------------------------------------------- //
 
@@ -243,8 +247,11 @@ export const NetPyNEInstantiated = connect(
   (state) => ({
     modelState: state.general.modelState,
     theme: state.general.theme,
+    data: state.general.instances,
   }),
-  null,
+  (dispatch) => ({
+    selectInstances: (instances) => dispatch(changeInstanceColor(instances)),
+  }),
 )(_NetPyNEInstantiated);
 
 export const NetWorkControlButtons = connect(
@@ -293,6 +300,8 @@ export const Drawer = connect(
     updateWidget: (newConf) => dispatch(updateWidget(newConf)),
     newWidget: (widget) => dispatch(newWidget(widget)),
     activateWidget: (widgetId) => dispatch(activateWidget(widgetId)),
+    maximiseWidget: (widgetId) => dispatch(maximiseWidget(widgetId)),
+    addWidget: (widgetConf) => dispatch(addWidget(widgetConf)),
   }),
 )(_Drawer);
 
