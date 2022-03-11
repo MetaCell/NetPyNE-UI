@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import * as Sentry from '@sentry/react';
 import { CaptureConsole } from '@sentry/integrations';
+import { LoadingSpinner } from '@metacell/geppetto-meta-client/components';
 import { NetPyNE } from './components';
 import theme from './theme';
 import store from './redux/store';
@@ -33,6 +34,7 @@ ReactDOM.render(
   <div>
     <MuiThemeProvider theme={theme}>
       <Provider store={store}>
+        <LoadingSpinner />
         <NetPyNE />
       </Provider>
     </MuiThemeProvider>
