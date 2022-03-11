@@ -101,7 +101,13 @@ class NetPyNEInstantiated extends React.Component {
         });
       }
     });
-    return newData;
+    const canvasData = newData.filter((item) => {
+      if ((item?.selected !== undefined && item?.selected === false) && item?.color === undefined) {
+        return false;
+      }
+      return true;
+    });
+    return canvasData;
   }
 
   render () {
