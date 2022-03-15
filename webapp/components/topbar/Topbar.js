@@ -20,7 +20,7 @@ import ImportExportHLSDialog from './dialogs/ImportExportHLS';
 import ImportCellParamsDialog from './dialogs/ImportCellParams';
 import UploadDownloadFilesDialog from './dialogs/UploadDownloadFiles';
 
-import { TOPBAR_CONSTANTS, MODEL_STATE } from '../../constants';
+import { TOPBAR_CONSTANTS, MODEL_STATE, DEFAULT_CONFIRMATION_DIALOG_MESSAGE } from '../../constants';
 import { LOAD_TUTORIAL } from '../../redux/actions/general';
 
 const styles = () => ({
@@ -91,8 +91,7 @@ class Topbar extends Component {
         if (this.props.modelState === MODEL_STATE.INSTANTIATED || this.props.modelState === MODEL_STATE.SIMULATED) {
           this.props.openConfirmationDialog({
             title: 'Warning',
-            message: 'A NetPyNE model has already been instantiated or simulated.'
-            + ' Continuing with this action will use the old value of netParams and simConfig for the new model. Do you want to continue?',
+            message: DEFAULT_CONFIRMATION_DIALOG_MESSAGE,
             onConfirm: {
               type: LOAD_TUTORIAL,
               action,

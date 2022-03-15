@@ -4,6 +4,10 @@ export const MINIMIZED_PANEL = 'border_bottom';
 export { WidgetStatus };
 export const TOP_PANEL = 'hlsPanel';
 export const TOOLS_LIST = 'tools';
+
+export const DEFAULT_CONFIRMATION_DIALOG_MESSAGE = 'A NetPyNE model has already been instantiated or simulated.'
++ ' Continuing with this action will use the old value of netParams and simConfig for the new model. Do you want to continue?';
+
 export const THEMES = {
   DARK: 'gui',
   BLACK: 'guiBlack',

@@ -7,7 +7,7 @@ import Box from '@material-ui/core/Box';
 import { withStyles } from '@material-ui/core/styles';
 
 import { ActionDialog, Tooltip } from 'netpyne/components';
-import { NETPYNE_COMMANDS, MODEL_STATE } from '../../../constants';
+import { NETPYNE_COMMANDS, MODEL_STATE, DEFAULT_CONFIRMATION_DIALOG_MESSAGE } from '../../../constants';
 import { PYTHON_CALL } from '../../../redux/actions/general';
 import FileBrowser from '../../general/FileBrowser';
 import Checkbox from '../../general/Checkbox';
@@ -183,8 +183,7 @@ class ImportExportHLS extends React.Component {
   handleConfirmation (command, args) {
     this.props.openConfirmationDialog({
       title: 'Warning',
-      message: 'A NetPyNE model has already been instantiated or simulated.'
-      + ' Continuing with this import action will use the old value of netParams and simConfig for the new model. Do you want to continue?',
+      message: DEFAULT_CONFIRMATION_DIALOG_MESSAGE,
       onConfirm: {
         type: PYTHON_CALL,
         cmd: command,
