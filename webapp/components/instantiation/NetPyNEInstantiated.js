@@ -1,13 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { withStyles } from '@material-ui/core';
 import Canvas from '@metacell/geppetto-meta-ui/3d-canvas/Canvas';
 import CameraControls from '@metacell/geppetto-meta-ui/camera-controls/CameraControls';
-import { applySelection, mapToCanvasData } from '@metacell/geppetto-meta-ui/3d-canvas/showcase/utils/SelectionUtils';
-// TODO: replace this with the list viewer during refactoring
-// import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
-
-import { NetWorkControlButtons } from 'netpyne/components';
 import {
   primaryColor, canvasBgDark, canvasBgLight, bgRegular,
 } from '../../theme';
@@ -25,7 +19,7 @@ const DEFAULT_COLOR = {
 const styles = () => ({
   container: {
     height: '800px',
-    width: '1240px',
+    width: '1940px',
     display: 'flex',
     alignItems: 'stretch',
   },
@@ -35,11 +29,6 @@ class NetPyNEInstantiated extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      showLoader: false,
-      hasModelLoaded: false,
-      intersected: [],
-      tooltipVisible: false,
-      selected: {},
       cameraOptions: {
         angle: 60,
         near: 10,
@@ -58,27 +47,16 @@ class NetPyNEInstantiated extends React.Component {
         },
       },
     };
-    this.dimensions = {
-      width: '100%',
-      height: '100%',
-    };
     this.canvasRef = React.createRef();
 
     this.onSelection = this.onSelection.bind(this);
+    this.applySelection = this.applySelection.bind(this);
+    this.mapToCanvasData = this.mapToCanvasData.bind(this);
   }
 
   onSelection (selectedInstances) {
     const { selectInstances, data } = this.props;
-    selectInstances(applySelection(data, selectedInstances));
-  }
-
-  getParentSize () {
-    if (this.canvasRef.current === null) {
-      return false;
-    }
-    // eslint-disable-next-line react/no-find-dom-node
-    const node = ReactDOM.findDOMNode(this);
-    return node.parentNode.getBoundingClientRect();
+    selectInstances(this.applySelection(data, selectedInstances));
   }
 
   updateBtnsWithTheme = (removeClass, addClass) => {
@@ -90,31 +68,53 @@ class NetPyNEInstantiated extends React.Component {
     this.setState({ canvasBtnCls: addClass });
   };
 
-  resizeCanvas () {
-    this.setState((prevState) => ({ update: prevState.update + 1 }));
+  mapToCanvasData (data) {
+    return data.map((item) => (
+      {
+        visibility: item?.visibility !== undefined ? item.visibility : true,
+        color: item.selected ? SELECTION_COLOR : item.color,
+        instancePath: item.instancePath,
+      }
+    ));
   }
 
-  resizeIfNeeded () {
-    const dimensions = this.getParentSize();
-    if (dimensions !== false && this.wasParentResized(dimensions)) {
-      this.dimensions = dimensions;
-      this.resizeCanvas();
-    }
-  }
+  applySelection (data, selectedInstances) {
+    const smap = new Map(selectedInstances.map((i) => [i, true]));
+    const newData = data.map((item) => {
+      if (smap.get(item.instancePath)) {
+        return {
+          ...item,
+          selected: !item.selected,
+        };
+      }
+      return { ...item };
+    });
+    const dmap = new Map(newData.map((i) => [i.instancePath, true]));
 
-  wasParentResized (dimensions) {
-    return dimensions.width !== this.dimensions.width || dimensions.height !== this.dimensions.height;
-  }
-
-  delayedResize () {
-    this.timer = setTimeout(() => this.resizeIfNeeded(), 100);
+    smap.forEach((value, key) => {
+      const item = dmap.get(key);
+      if (!item) {
+        newData.push({
+          instancePath: key,
+          color: undefined,
+          selected: true,
+        });
+      }
+    });
+    const canvasData = newData.filter((item) => {
+      if ((item?.selected !== undefined && item?.selected === false) && item?.color === undefined) {
+        return false;
+      }
+      return true;
+    });
+    return canvasData;
   }
 
   render () {
     const { cameraOptions } = this.state;
     const { data } = this.props;
 
-    const canvasData = mapToCanvasData(data);
+    const canvasData = this.mapToCanvasData(data);
 
     let camOptions = cameraOptions;
     if (this.lastCameraUpdate) {
@@ -129,7 +129,7 @@ class NetPyNEInstantiated extends React.Component {
     }
 
     return (
-      <div className="instantiatedContainer">
+      <div>
         <Canvas
           data={canvasData}
           ref={this.canvasRef}

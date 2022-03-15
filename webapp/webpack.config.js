@@ -16,6 +16,8 @@ try {
   console.error('\nFailed to load Geppetto Configuration');
 }
 const geppettoClientPath = 'node_modules/@metacell/geppetto-meta-client';
+const geppettoCorePath = 'node_modules/@metacell/geppetto-meta-core';
+const geppettoUIPath = 'node_modules/@metacell/geppetto-meta-ui';
 
 const publicPath = path.join('/', geppettoConfig.contextPath, 'geppetto/build/');
 console.log(`\nThe public path (used by the main bundle when including split bundles) is: ${publicPath}`);
@@ -34,6 +36,16 @@ if (isWin) {
 const availableExtensions = [
   {
     from: path.resolve(__dirname, geppettoClientPath, 'static/*'),
+    to: 'static',
+    flatten: true,
+  },
+  {
+    from: path.resolve(__dirname, geppettoCorePath, 'static/*'),
+    to: 'static',
+    flatten: true,
+  },
+  {
+    from: path.resolve(__dirname, geppettoUIPath, 'static/*'),
     to: 'static',
     flatten: true,
   },
@@ -128,6 +140,8 @@ module.exports = function (env) {
       alias: {
         root: path.resolve(__dirname),
         'geppetto-client': path.resolve(__dirname, geppettoClientPath),
+        'geppetto-core': path.resolve(__dirname, geppettoCorePath),
+        'geppetto-ui': path.resolve(__dirname, geppettoUIPath),
         geppetto: path.resolve(__dirname, geppettoClientPath, 'pages/geppetto/GEPPETTO.js'),
         'geppetto-client-initialization': path.resolve(__dirname, geppettoClientPath, 'pages/geppetto/main.js'),
         handlebars: 'handlebars/dist/handlebars.js',
@@ -140,7 +154,10 @@ module.exports = function (env) {
       rules: [
         {
           test: /\.(js|jsx|ts|tsx)$/,
-          exclude: [/ami.min.js/, /node_modules\/(?!(@metacell\/geppetto-meta-client)\/).*/],
+          exclude: [
+            /ami.min.js/,
+            /node_modules\/(?!(@metacell\/geppetto-meta-client)|(@metacell\/geppetto-meta-core)|(@metacell\/geppetto-meta-ui)\/).*/,
+          ],
           use: {
             loader: 'babel-loader',
             options: {

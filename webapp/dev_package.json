@@ -24,7 +24,7 @@
     "@metacell/geppetto-meta-core": "file:.yalc/@metacell/geppetto-meta-core",
     "@metacell/geppetto-meta-ui": "file:.yalc/@metacell/geppetto-meta-ui",
     "@nosferatu500/react-sortable-tree": "3.0.5",
-    "@sentry/integrations": "^6.17.0",
+    "@sentry/integrations": "^6.16.1",
     "@sentry/react": "^6.16.1",
     "@sentry/tracing": "^6.16.1",
     "jquery": "^3.6.0",
