@@ -8,15 +8,16 @@ import {
   Chip,
   Button,
 } from '@material-ui/core';
-import {
-  NetPyNEField,
-  NetPyNETextField,
-  SelectField,
-  ListComponent,
-  GridLayout,
-} from 'netpyne/components';
 import AddIcon from '@material-ui/icons/Add';
-import { NoData, RxdBlurOn, RxdBlur } from '../Icons';
+import { NoData, RxdBlurOn, RxdBlur } from '../icons';
+import RxdRegions from './RxdRegions';
+import RxdSpecies from './RxdSpecies';
+import RxdStates from './RxdStates';
+import RxdParameters from './RxdParameters';
+import RxdReactions from './RxdReactions';
+import RxdMulticompartmentReactions from './RxdMulticompartmentReactions';
+import RxdRates from './RxdRates';
+import RxdExtracellular from './RxdExtracellular';
 import { primaryColor, navShadow, tabsTextColor } from '../../theme';
 
 function TabPanel (props) {
@@ -112,21 +113,23 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 
-  layout: {
-    height: '100%',
-    display: 'flex',
-    overflow: 'hidden',
-    flexDirection: 'column',
-    alignItems: 'stretch',
-    padding: '0.375rem 0.375rem 0',
+  tabPanel: {
+    '& .gridLayout': {
+      height: '100%',
+      display: 'flex',
+      overflow: 'hidden',
+      flexDirection: 'column',
+      alignItems: 'stretch',
+      padding: '0.375rem 0.375rem 0',
 
-    '& .MuiCard-root': {
-      backgroundColor: 'transparent !important',
+      '& .MuiCard-root': {
+        backgroundColor: 'transparent !important',
 
-      '& .MuiCardContent-root': {
-        paddingLeft: '0.375rem',
-        paddingRight: '0.375rem',
-        paddingTop: '0.375rem',
+        '& .MuiCardContent-root': {
+          paddingLeft: '0.375rem',
+          paddingRight: '0.375rem',
+          paddingTop: '0.375rem',
+        },
       },
     },
   },
@@ -161,388 +164,24 @@ const Rxd = () => {
     setValue(newValue);
   };
 
-  let contentLeft = <div className="layoutVerticalFitInner" />;
-  let contentRight = <div className="layoutVerticalFitInner" />;
+  let tabPanelContent = <div className="layoutVerticalFitInner" />;
 
   if (value === 0) {
-    contentLeft = (
-      <div className="scrollbar scrollchild">
-        <NetPyNEField id="simConfig.duration">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="simConfig.duration"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="simConfig.hParams" className="listStyle">
-          <ListComponent model="simConfig.hParams" />
-        </NetPyNEField>
-      </div>
-    );
-    contentRight = (
-      <div className="scrollbar scrollchild">
-        <NetPyNEField id="netParams.shape">
-          <SelectField variant="filled" model="netParams.shape" />
-        </NetPyNEField>
-
-        <NetPyNEField id="netParams.shape">
-          <SelectField variant="filled" model="netParams.shape" />
-        </NetPyNEField>
-
-        <NetPyNEField id="netParams.shape">
-          <SelectField variant="filled" model="netParams.shape" />
-        </NetPyNEField>
-
-        <NetPyNEField id="netParams.shape">
-          <SelectField variant="filled" model="netParams.shape" />
-        </NetPyNEField>
-      </div>
-    );
+    tabPanelContent = (<RxdRegions />);
   } else if (value === 1) {
-    contentLeft = (
-      <div className="scrollbar scrollchild">
-        <NetPyNEField id="simConfig.simLabel">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="simConfig.simLabel"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="netParams.shape">
-          <SelectField variant="filled" model="netParams.shape" />
-        </NetPyNEField>
-
-        <NetPyNEField id="simConfig.simLabel">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="simConfig.simLabel"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="simConfig.simLabel">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="simConfig.simLabel"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="simConfig.simLabel">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="simConfig.simLabel"
-          />
-        </NetPyNEField>
-      </div>
-    );
-    contentRight = (
-      <div className="scrollbar scrollchild">
-        <NetPyNEField id="simConfig.simLabel">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="simConfig.simLabel"
-          />
-        </NetPyNEField>
-      </div>
-    );
+    tabPanelContent = (<RxdSpecies />);
   } else if (value === 2) {
-    contentLeft = (
-      <div className="scrollbar scrollchild">
-        <NetPyNEField id="simConfig.simLabel">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="simConfig.simLabel"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="netParams.shape">
-          <SelectField variant="filled" model="netParams.shape" />
-        </NetPyNEField>
-      </div>
-    );
-    contentRight = (
-      <div className="scrollbar scrollchild">
-        <NetPyNEField id="simConfig.simLabel">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="simConfig.simLabel"
-          />
-        </NetPyNEField>
-      </div>
-    );
+    tabPanelContent = (<RxdStates />);
   } else if (value === 3) {
-    contentLeft = (
-      <div className="scrollbar scrollchild">
-        <NetPyNEField id="simConfig.simLabel">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="simConfig.simLabel"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="netParams.shape">
-          <SelectField variant="filled" model="netParams.shape" />
-        </NetPyNEField>
-      </div>
-    );
-    contentRight = (
-      <div className="scrollbar scrollchild">
-        <NetPyNEField id="simConfig.simLabel">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="simConfig.simLabel"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="simConfig.simLabel">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="simConfig.simLabel"
-          />
-        </NetPyNEField>
-      </div>
-    );
+    tabPanelContent = (<RxdParameters />);
   } else if (value === 4) {
-    contentLeft = (
-      <div className="scrollbar scrollchild">
-        <NetPyNEField id="simConfig.simLabel">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="simConfig.simLabel"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="netParams.shape">
-          <SelectField variant="filled" model="netParams.shape" />
-        </NetPyNEField>
-      </div>
-    );
-    contentRight = (
-      <div className="scrollbar scrollchild">
-        <NetPyNEField id="simConfig.simLabel">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="simConfig.simLabel"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="simConfig.simLabel">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="simConfig.simLabel"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="simConfig.simLabel">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="simConfig.simLabel"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="netParams.shape">
-          <SelectField variant="filled" model="netParams.shape" />
-        </NetPyNEField>
-
-        <NetPyNEField id="simConfig.simLabel">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="simConfig.simLabel"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="netParams.shape">
-          <SelectField variant="filled" model="netParams.shape" />
-        </NetPyNEField>
-      </div>
-    );
+    tabPanelContent = (<RxdReactions />);
   } else if (value === 5) {
-    contentLeft = (
-      <div className="scrollbar scrollchild">
-        <NetPyNEField id="simConfig.simLabel">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="simConfig.simLabel"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="netParams.shape">
-          <SelectField variant="filled" model="netParams.shape" />
-        </NetPyNEField>
-      </div>
-    );
-    contentRight = (
-      <div className="scrollbar scrollchild">
-        <NetPyNEField id="simConfig.simLabel">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="simConfig.simLabel"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="simConfig.simLabel">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="simConfig.simLabel"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="simConfig.simLabel">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="simConfig.simLabel"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="netParams.shape">
-          <SelectField variant="filled" model="netParams.shape" />
-        </NetPyNEField>
-
-        <NetPyNEField id="simConfig.simLabel">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="simConfig.simLabel"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="netParams.shape">
-          <SelectField variant="filled" model="netParams.shape" />
-        </NetPyNEField>
-      </div>
-    );
+    tabPanelContent = (<RxdMulticompartmentReactions />);
   } else if (value === 6) {
-    contentLeft = (
-      <div className="scrollbar scrollchild">
-        <NetPyNEField id="simConfig.simLabel">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="simConfig.simLabel"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="netParams.shape">
-          <SelectField variant="filled" model="netParams.shape" />
-        </NetPyNEField>
-      </div>
-    );
-    contentRight = (
-      <div className="scrollbar scrollchild">
-        <NetPyNEField id="simConfig.simLabel">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="simConfig.simLabel"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="netParams.shape">
-          <SelectField variant="filled" model="netParams.shape" />
-        </NetPyNEField>
-      </div>
-    );
+    tabPanelContent = (<RxdRates />);
   } else if (value === 7) {
-    contentLeft = (
-      <div className="scrollbar scrollchild">
-        <NetPyNEField id="netParams.shape">
-          <SelectField variant="filled" model="netParams.shape" />
-        </NetPyNEField>
-
-        <NetPyNEField id="netParams.scale">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="netParams.scale"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="netParams.defaultWeight">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="netParams.defaultWeight"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="netParams.defaultDelay">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="netParams.defaultDelay"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="netParams.scaleConnWeight">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="netParams.scaleConnWeight"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="netParams.scaleConnWeightNetStims">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="netParams.scaleConnWeightNetStims"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="netParams.scaleConnWeightNetStims">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="netParams.scaleConnWeightNetStims"
-          />
-        </NetPyNEField>
-      </div>
-    );
-    contentRight = (
-      <div className="scrollbar scrollchild">
-        <NetPyNEField
-          id="netParams.scaleConnWeightModels"
-          className="listStyle"
-        >
-          <ListComponent model="netParams.scaleConnWeightModels" />
-        </NetPyNEField>
-
-        <NetPyNEField id="netParams.sizeX">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="netParams.sizeX"
-          />
-        </NetPyNEField>
-
-        <NetPyNEField id="netParams.sizeY">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model="netParams.sizeY"
-          />
-        </NetPyNEField>
-      </div>
-    );
+    tabPanelContent = (<RxdExtracellular />);
   }
 
   return (
@@ -571,17 +210,11 @@ const Rxd = () => {
         </Button>
       </Box>
 
-      { CONFIG_SECTIONS.map((section, index) => {
-        return (
-          <TabPanel value={value} index={index} key={`section${index}`}>
-            <GridLayout className={classes.layout}>
-              <div />
-              {contentLeft}
-              {contentRight}
-            </GridLayout>
-          </TabPanel>
-        )
-      })}
+      { CONFIG_SECTIONS.map((section, index) => (
+        <TabPanel value={value} index={index} key={`section${index}`} className={classes.tabPanel}>
+          {tabPanelContent}
+        </TabPanel>
+      ))}
       {/* NO DATA */}
       {/* <Box className={classes.noData}>
         <NoData />
