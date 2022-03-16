@@ -86,33 +86,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 
-  subHeader: {
-    borderBottom: `0.0625rem solid ${navShadow}`,
-    color: primaryColor,
-    '& .MuiChip-root': {
-      height: '100%',
-      padding: '0 1rem',
-      marginBottom: '-0.125rem',
-      fontSize: '1rem',
-      textTransform: 'uppercase',
-      position: 'relative',
-      borderBottom: `0.0625rem solid ${primaryColor}`,
-      '&:hover': {
-        background: 'transparent',
-      },
-      '&:focus': {
-        background: 'transparent',
-      },
-    },
-    '& .MuiChip-deleteIcon': {
-      margin: 0,
-      width: '1rem',
-      height: '1rem',
-      fontSize: '1rem',
-      color: primaryColor,
-    },
-  },
-
   tabPanel: {
     '& .gridLayout': {
       height: '100%',
@@ -132,26 +105,90 @@ const useStyles = makeStyles((theme) => ({
         },
       },
     },
+    '& .subHeader': {
+      borderBottom: `0.0625rem solid ${navShadow}`,
+      color: primaryColor,
+      display: 'flex',
+      '& .MuiChip-root': {
+        height: '100%',
+        padding: '0 1rem',
+        marginBottom: '-0.125rem',
+        fontSize: '1rem',
+        textTransform: 'uppercase',
+        position: 'relative',
+        borderBottom: `0.0625rem solid ${primaryColor}`,
+        '&:hover': {
+          background: 'transparent',
+        },
+        '&:focus': {
+          background: 'transparent',
+        },
+      },
+      '& .MuiChip-deleteIcon': {
+        margin: 0,
+        width: '1rem',
+        height: '1rem',
+        fontSize: '1rem',
+        color: primaryColor,
+      },
+    },
+    '& .button': {
+      textTransform: 'uppercase',
+      padding: '.5rem 1rem',
+      '& .MuiSvgIcon-root': {
+        marginRight: theme.spacing(0.5),
+      },
+    },
+    '& .MuiTab-wrapper': {
+      height: '100%',
+    },
   },
 
-  noData: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    height: 'calc(100% - 5.3125rem)',
+  // subHeader: {
+  //   borderBottom: `0.0625rem solid ${navShadow}`,
+  //   color: primaryColor,
+  //   '& .MuiChip-root': {
+  //     height: '100%',
+  //     padding: '0 1rem',
+  //     marginBottom: '-0.125rem',
+  //     fontSize: '1rem',
+  //     textTransform: 'uppercase',
+  //     position: 'relative',
+  //     borderBottom: `0.0625rem solid ${primaryColor}`,
+  //     '&:hover': {
+  //       background: 'transparent',
+  //     },
+  //     '&:focus': {
+  //       background: 'transparent',
+  //     },
+  //   },
+  //   '& .MuiChip-deleteIcon': {
+  //     margin: 0,
+  //     width: '1rem',
+  //     height: '1rem',
+  //     fontSize: '1rem',
+  //     color: primaryColor,
+  //   },
+  // },
 
-    '& > svg': {
-      marginBottom: theme.spacing(2),
-      width: '8rem',
-      height: '8rem',
-    },
+  // noData: {
+  //   display: 'flex',
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   flexDirection: 'column',
+  //   height: 'calc(100% - 5.3125rem)',
 
-    '& p': {
-      marginBottom: theme.spacing(2),
-      fontSize: '1.2rem',
-    },
-  },
+  //   '& > svg': {
+  //     marginBottom: theme.spacing(2),
+  //     width: '8rem',
+  //     height: '8rem',
+  //   },
+
+  //   '& p': {
+  //     marginBottom: theme.spacing(2),
+  //     fontSize: '1.2rem',
+  //   },
+  // },
 }));
 
 const CONFIG_SECTIONS = ['Regions', 'Species', 'States', 'Parameters', 'Reactions', 'Multicompartment reactions', 'Rates', 'Extracellular'];
@@ -159,29 +196,187 @@ const CONFIG_SECTIONS = ['Regions', 'Species', 'States', 'Parameters', 'Reaction
 const Rxd = () => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+  const [regions, setRegions] = React.useState([{
+    id: 0,
+    label: 'Region 0',
+  },
+  {
+    id: 1,
+    label: 'Region 1',
+  },
+  ]);
+  const [species, setSpecies] = React.useState([{
+    id: 0,
+    label: 'Species 0',
+  }]);
+  const [states, setStates] = React.useState([{
+    id: 0,
+    label: 'State 0',
+  }]);
+  const [parameters, setParameters] = React.useState([{
+    id: 0,
+    label: 'Parameter 0',
+  }]);
+  const [reactions, setReactions] = React.useState([{
+    id: 0,
+    label: 'Reaction 0',
+  }]);
+  const [multicompartments, setMulticompartments] = React.useState([{
+    id: 0,
+    label: 'Multicompartment 0',
+  }]);
+  const [rates, setRates] = React.useState([{
+    id: 0,
+    label: 'Rate 0',
+  }]);
+  const [extraCellulars, setExtraCellulars] = React.useState([{
+    id: 0,
+    label: 'Extracellular 0',
+  }]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   let tabPanelContent = <div className="layoutVerticalFitInner" />;
+  // let subHeader = <div className="layoutVerticalFitInner" />;
+  const disableAdd = regions.length === 0 || species.length === 0;
 
   if (value === 0) {
-    tabPanelContent = (<RxdRegions />);
+    tabPanelContent = (<RxdRegions regions={regions} setRegions={(newRegions) => setRegions(newRegions)} />);
   } else if (value === 1) {
     tabPanelContent = (<RxdSpecies />);
+    // subHeader = (
+    //   <Box className={classes.subHeader}>
+    //     {species.map((specieItem) => (
+    //       <Chip
+    //         key={specieItem.id}
+    //         label={specieItem.label}
+    //         deleteIcon={<FontIcon className="fa fa-minus-circle" />}
+    //         onClick={() => null}
+    //         onDelete={() => null}
+    //       />
+    //     ))}
+    //     <Button className={classes.button}>
+    //       <AddIcon />
+    //       Add new species
+    //     </Button>
+    //   </Box>
+    // );
   } else if (value === 2) {
-    tabPanelContent = (<RxdStates />);
+    tabPanelContent = (<RxdStates disableAdd={disableAdd} />);
+    // subHeader = (
+    //   <Box className={classes.subHeader}>
+    //     {states.map((state) => (
+    //       <Chip
+    //         key={state.id}
+    //         label={state.label}
+    //         deleteIcon={<FontIcon className="fa fa-minus-circle" />}
+    //         onClick={() => null}
+    //         onDelete={() => null}
+    //       />
+    //     ))}
+    //     <Button className={classes.button}>
+    //       <AddIcon />
+    //       Add new state
+    //     </Button>
+    //   </Box>
+    // );
   } else if (value === 3) {
-    tabPanelContent = (<RxdParameters />);
+    tabPanelContent = (<RxdParameters disableAdd={disableAdd} />);
+    // subHeader = (
+    //   <Box className={classes.subHeader}>
+    //     {parameters.map((parameter) => (
+    //       <Chip
+    //         key={parameter.id}
+    //         label={parameter.label}
+    //         deleteIcon={<FontIcon className="fa fa-minus-circle" />}
+    //         onClick={() => null}
+    //         onDelete={() => null}
+    //       />
+    //     ))}
+    //     <Button className={classes.button}>
+    //       <AddIcon />
+    //       Add new parameter
+    //     </Button>
+    //   </Box>
+    // );
   } else if (value === 4) {
-    tabPanelContent = (<RxdReactions />);
+    tabPanelContent = (<RxdReactions disableAdd={disableAdd} />);
+    // subHeader = (
+    //   <Box className={classes.subHeader}>
+    //     {reactions.map((reaction) => (
+    //       <Chip
+    //         key={reaction.id}
+    //         label={reaction.label}
+    //         deleteIcon={<FontIcon className="fa fa-minus-circle" />}
+    //         onClick={() => null}
+    //         onDelete={() => null}
+    //       />
+    //     ))}
+    //     <Button className={classes.button}>
+    //       <AddIcon />
+    //       Add new reaction
+    //     </Button>
+    //   </Box>
+    // );
   } else if (value === 5) {
-    tabPanelContent = (<RxdMulticompartmentReactions />);
+    tabPanelContent = (<RxdMulticompartmentReactions disableAdd={disableAdd} />);
+    // subHeader = (
+    //   <Box className={classes.subHeader}>
+    //     {multicompartments.map((multicompartment) => (
+    //       <Chip
+    //         key={multicompartment.id}
+    //         label={multicompartment.label}
+    //         deleteIcon={<FontIcon className="fa fa-minus-circle" />}
+    //         onClick={() => null}
+    //         onDelete={() => null}
+    //       />
+    //     ))}
+    //     <Button className={classes.button}>
+    //       <AddIcon />
+    //       Add new multicompartment
+    //     </Button>
+    //   </Box>
+    // );
   } else if (value === 6) {
-    tabPanelContent = (<RxdRates />);
+    tabPanelContent = (<RxdRates disableAdd={disableAdd} />);
+    // subHeader = (
+    //   <Box className={classes.subHeader}>
+    //     {rates.map((rate) => (
+    //       <Chip
+    //         key={rate.id}
+    //         label={rate.label}
+    //         deleteIcon={<FontIcon className="fa fa-minus-circle" />}
+    //         onClick={() => null}
+    //         onDelete={() => null}
+    //       />
+    //     ))}
+    //     <Button className={classes.button}>
+    //       <AddIcon />
+    //       Add new rate
+    //     </Button>
+    //   </Box>
+    // );
   } else if (value === 7) {
-    tabPanelContent = (<RxdExtracellular />);
+    tabPanelContent = (<RxdExtracellular disableAdd={disableAdd} />);
+    // subHeader = (
+    //   <Box className={classes.subHeader}>
+    //     {extraCellulars.map((extraCellular) => (
+    //       <Chip
+    //         key={extraCellular.id}
+    //         label={extraCellular.label}
+    //         deleteIcon={<FontIcon className="fa fa-minus-circle" />}
+    //         onClick={() => null}
+    //         onDelete={() => null}
+    //       />
+    //     ))}
+    //     <Button className={classes.button}>
+    //       <AddIcon />
+    //       Add new extracellular
+    //     </Button>
+    //   </Box>
+    // );
   }
 
   return (
@@ -197,33 +392,13 @@ const Rxd = () => {
         { CONFIG_SECTIONS.map((section, index) => <Tab key={section} icon={value === index ? <RxdBlurOn /> : <RxdBlur />} label={section} {...a11yProps(index)} />)}
       </Tabs>
 
-      <Box className={classes.subHeader}>
-        <Chip
-          label="Region 0"
-          deleteIcon={<FontIcon className="fa fa-minus-circle" />}
-          onClick={() => null}
-          onDelete={() => null}
-        />
-        <Button className={classes.button}>
-          <AddIcon />
-          Add a region
-        </Button>
-      </Box>
+      {/* {subHeader} */}
 
       { CONFIG_SECTIONS.map((section, index) => (
         <TabPanel value={value} index={index} key={`section${index}`} className={classes.tabPanel}>
           {tabPanelContent}
         </TabPanel>
       ))}
-      {/* NO DATA */}
-      {/* <Box className={classes.noData}>
-        <NoData />
-        <Typography>There are no Region yet.</Typography>
-        <Button className={classes.button} variant="outlined">
-          <AddIcon />
-          Add new region
-        </Button>
-      </Box> */}
     </Box>
   );
 };
