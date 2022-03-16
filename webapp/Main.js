@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import * as Sentry from '@sentry/react';
-import { Integrations } from '@sentry/tracing';
+import { CaptureConsole } from '@sentry/integrations';
 import { NetPyNE } from './components';
 import theme from './theme';
 import store from './redux/store';
@@ -13,8 +13,12 @@ global.GEPPETTO_CONFIGURATION = require('./GeppettoConfiguration.json');
 const { initGeppetto } = require('@metacell/geppetto-meta-client/GEPPETTO');
 
 Sentry.init({
-  dsn: "https://d8bf7e40eec34cb9891f6dd8207b5e83@sentry.metacell.us/6",
-  integrations: [new Integrations.BrowserTracing()],
+  dsn: 'https://d8bf7e40eec34cb9891f6dd8207b5e83@sentry.metacell.us/6',
+  integrations: [
+    new CaptureConsole({
+      levels: ['error'],
+    }),
+  ],
   tracesSampleRate: 1.0,
 });
 

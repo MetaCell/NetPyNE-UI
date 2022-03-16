@@ -30,6 +30,7 @@ class NetPyNEAddNew extends React.Component {
           id={this.props.id}
           className={classes.root}
           onClick={this.handleClick}
+          style={{ borderRadius: '50%' }}
         >
           <ContentAdd className={classes.plus} />
         </Fab>

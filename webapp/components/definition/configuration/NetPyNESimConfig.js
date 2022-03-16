@@ -71,19 +71,6 @@ class NetPyNESimConfig extends React.Component {
             <ListComponent model="simConfig.seeds" />
           </NetPyNEField>
 
-          <NetPyNEField
-            id="simConfig.checkErrors"
-            className="netpyneCheckbox"
-          >
-            <NetPyNECheckbox model="simConfig.checkErrors" />
-          </NetPyNEField>
-
-          <NetPyNEField
-            id="simConfig.checkErrorsVerbose"
-            className="netpyneCheckbox"
-          >
-            <NetPyNECheckbox model="simConfig.checkErrorsVerbose" />
-          </NetPyNEField>
         </div>
       );
       contentRight = (

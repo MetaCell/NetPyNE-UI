@@ -36,6 +36,7 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
             logging.error("Error loading mechanisms", exc_info=True)
 
     def test_dict_import_1(self):
+        assert 0
         print("------------------------------------")
         print("Dictionary transform importModel:")
         print("------------------------------------")
@@ -59,6 +60,40 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
 
         netpyne = NetPyNEGeppetto()
         netpyne.importModel(netpyne_info)
+
+    def test_netpyne_exported_model_1(self):
+      print("------------------------------------")
+      print("Netpyne exported model sim run")
+      print("------------------------------------")
+
+      params = {}
+
+      HERE = os.path.dirname(os.path.realpath(__file__))
+      ROOT = os.path.dirname(HERE)
+
+      params["areModFieldsRequired"] = False
+      params["compileMod"] = False
+      params["exploreOnlyDirs"] = False
+      params["explorerDialogOpen"] = False
+      params["explorerParameter"] = ""
+      params["freezeInstance"] = True
+      params["freezeSimulation"] = True
+      params["jsonModelFolder"] = ROOT + "/workspace/HHCellNetwork.txt_data.json"
+      params["jsonPath"] = ""
+      params["loadNet"] = True
+      params["loadNetParams"] = True
+      params["loadSimCfg"] = True
+      params["loadSimData"] = True
+      params["modFolder"] = ""
+      params["modPath"] = ""
+      params["tab"] = "simulate"
+
+      netpyne = NetPyNEGeppetto()
+
+      netpyne.loadModel(params)
+      netpyne.instantiateNetPyNEModel()
+
+      return False
 
 if __name__ == '__main__':
     try:

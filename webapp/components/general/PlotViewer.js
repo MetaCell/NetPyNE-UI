@@ -1,32 +1,39 @@
 import React from 'react';
-import HTMLViewer from '../index';
+import ReactResizeDetector from 'react-resize-detector';
+import HTMLViewer from './HTMLViewer';
 
 const PlotViewer = ({ key, id, method }) => {
   const data = window.plotCache[id];
 
   if (method.plotMethod.startsWith('iplot')) {
     return (
-      <div
-        style={{
-          width: '100%',
-          height: '100%',
-          textAlign: 'center',
-        }}
-      >
-        <iframe
-          title="plot"
-          name="dipole"
-          srcDoc={data}
+      <ReactResizeDetector>
+        <div
           style={{
-            border: 0,
             width: '100%',
             height: '100%',
+            textAlign: 'center',
           }}
-        />
-      </div>
+        >
+          <iframe
+            title="plot"
+            name="dipole"
+            srcDoc={data}
+            style={{
+              border: 0,
+              width: '100%',
+              height: '100%',
+            }}
+          />
+        </div>
+      </ReactResizeDetector>
     );
   }
-  return <HTMLViewer content={data} id={id} />;
+  return (
+    <ReactResizeDetector>
+      <HTMLViewer content={data} id={id} />
+    </ReactResizeDetector>
+  );
 };
 
 export default PlotViewer;

@@ -1,3 +1,6 @@
+/* eslint-disable no-nested-ternary */
+/* eslint-disable lines-between-class-members */
+/* eslint-disable consistent-return */
 import {
   CLONE_EXPERIMENT,
   GET_EXPERIMENTS,
@@ -7,6 +10,7 @@ import {
 } from 'root/redux/actions/experiments';
 import { NETPYNE_COMMANDS } from 'root/constants';
 import * as GeppettoActions from '@metacell/geppetto-meta-client/common/actions';
+import * as ExperimentsApi from 'root/api/experiments';
 import {
   UPDATE_CARDS,
   CREATE_NETWORK,
@@ -20,6 +24,7 @@ import {
   RESET_MODEL,
   showNetwork,
   MODEL_LOADED,
+  addInstancesToCanvas,
 } from '../actions/general';
 import { openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
@@ -27,7 +32,13 @@ import Utils from '../../Utils';
 import { downloadJsonResponse, downloadPythonResponse } from './utils';
 import * as Constants from '../../constants';
 
+const SUPPORTED_TYPES = [Constants.REAL_TYPE.INT, Constants.REAL_TYPE.FLOAT, Constants.REAL_TYPE.STR, Constants.REAL_TYPE.BOOL];
 let previousLayout = {
+  edit: undefined,
+  network: undefined,
+};
+
+let previousWidgets = {
   edit: undefined,
   network: undefined,
 };
@@ -39,6 +50,7 @@ export const processError = (response) => {
     return {
       errorMessage: parsedResponse.message,
       errorDetails: parsedResponse.details,
+      additionalInfo: parsedResponse.additionalInfo,
     };
   }
   return false;
@@ -106,11 +118,35 @@ const simulateNetwork = (payload) => createSimulateBackendCall(
   GEPPETTO.Resources.RUNNING_SIMULATION,
 );
 
+class PythonMessageFilter {
+  errorIds = new Set();
+  shouldLaunch (e) {
+    const errorId = e.additionalInfo?.sim_id;
+    if (!errorId) {
+      return true;
+    }
+    if (errorId) {
+      if (this.errorIds.has(errorId)) {
+        return false;
+      }
+      this.errorIds.add(errorId);
+      return true;
+    }
+  }
+}
+
+const errorMessageFilter = new PythonMessageFilter();
+
 export default (store) => (next) => (action) => {
   const switchLayoutAction = (edit = true, reset = true) => {
     previousLayout[store.getState().general.editMode ? 'edit' : 'network'] = store.getState().layout;
+    previousWidgets[store.getState().general.editMode ? 'edit' : 'network'] = store.getState().widgets;
     if (reset) {
       previousLayout = {
+        edit: undefined,
+        network: undefined,
+      };
+      previousWidgets = {
         edit: undefined,
         network: undefined,
       };
@@ -118,8 +154,12 @@ export default (store) => (next) => (action) => {
     // TO FIX: I am not sure the one below is to fix, previously we were setting layout or widgets but I don't understand
     // how the widgets where making it back into the redux store without the set widgets
     return next(edit
-      ? GeppettoActions.setLayout(previousLayout.edit) && GeppettoActions.setWidgets({ ...Constants.EDIT_WIDGETS })
-      : GeppettoActions.setLayout(previousLayout.network) && GeppettoActions.setWidgets({ ...Constants.DEFAULT_NETWORK_WIDGETS }));
+      ? previousLayout.edit
+        ? GeppettoActions.setLayout(previousLayout.edit) && GeppettoActions.setWidgets(previousWidgets.edit)
+        : GeppettoActions.setWidgets({ ...Constants.EDIT_WIDGETS })
+      : previousLayout.network
+        ? GeppettoActions.setLayout(previousLayout.network) && GeppettoActions.setWidgets(previousWidgets.network)
+        : GeppettoActions.setWidgets({ ...Constants.DEFAULT_NETWORK_WIDGETS }));
   };
 
   const toNetworkCallback = (reset) => () => {
@@ -129,12 +169,27 @@ export default (store) => (next) => (action) => {
 
   const pythonErrorCallback = (error) => {
     console.debug(Utils.getPlainStackTrace(error.errorDetails));
-    return next(openBackendErrorDialog(error));
+    if (errorMessageFilter.shouldLaunch(error)) {
+      return next(openBackendErrorDialog(error));
+    }
+    return next(action);
   };
 
   switch (action.type) {
     case MODEL_LOADED:
       next(GeppettoActions.waitData('Loading the NetPyNE Model', GeppettoActions.clientActions.MODEL_LOADED));
+      next(action);
+      break;
+    case GeppettoActions.clientActions.MODEL_LOADED:
+      if (store.getState()?.general?.modelState === Constants.MODEL_STATE.NOT_INSTANTIATED) {
+        const networkPath = window.Instances.getInstance('network');
+        if (networkPath) {
+          store.dispatch(addInstancesToCanvas([{
+            instancePath: networkPath.getInstancePath(),
+            color: Constants.DEFAULT_COLOR,
+          }]));
+        }
+      }
       next(action);
       break;
     case UPDATE_CARDS:
@@ -161,19 +216,107 @@ export default (store) => (next) => (action) => {
       break;
     }
     case CREATE_NETWORK: {
-      instantiateNetwork({})
-        .then(toNetworkCallback(false), pythonErrorCallback);
+      let allParams = true;
+      ExperimentsApi.getParameters()
+        .then((params) => {
+          const flattened = Utils.flatten(params);
+          const paramKeys = Object.keys(flattened);
+
+          const filteredKeys = paramKeys.filter((key) => {
+          // TODO: avoid to fetch field twice!
+            const field = Utils.getMetadataField(`netParams.${key}`);
+            if (field && SUPPORTED_TYPES.includes(field.type)) {
+              return true;
+            }
+            return false;
+          });
+          const expData = store.getState().experiments;
+          expData?.inDesign?.params?.forEach((param) => {
+            if (!filteredKeys.includes(param.mapsTo)) {
+              pythonErrorCallback(
+                {
+                  errorDetails: 'Missing Parameters',
+                  errorMessage: 'Error',
+                },
+              );
+              allParams = false;
+            }
+          });
+          if (allParams) {
+            instantiateNetwork({})
+              .then(toNetworkCallback(false), pythonErrorCallback);
+          }
+        }, pythonErrorCallback);
       break;
     }
     case CREATE_SIMULATE_NETWORK: {
-      simulateNetwork({ allTrials: false })
-        .then(toNetworkCallback(false), pythonErrorCallback);
+      let allParams = true;
+      ExperimentsApi.getParameters()
+        .then((params) => {
+          const flattened = Utils.flatten(params);
+          const paramKeys = Object.keys(flattened);
+
+          const filteredKeys = paramKeys.filter((key) => {
+          // TODO: avoid to fetch field twice!
+            const field = Utils.getMetadataField(`netParams.${key}`);
+            if (field && SUPPORTED_TYPES.includes(field.type)) {
+              return true;
+            }
+            return false;
+          });
+          const expData = store.getState().experiments;
+          expData?.inDesign?.params?.forEach((param) => {
+            if (!filteredKeys.includes(param.mapsTo)) {
+              pythonErrorCallback(
+                {
+                  errorDetails: 'Missing Parameters',
+                  errorMessage: 'Error',
+                },
+              );
+              allParams = false;
+            }
+          });
+          if (allParams) {
+            simulateNetwork({ allTrials: false })
+              .then(toNetworkCallback(false), pythonErrorCallback);
+          }
+        }, pythonErrorCallback);
       break;
     }
-    case SIMULATE_NETWORK:
-      simulateNetwork({ allTrials: action.payload, usePrevInst: false })
-        .then(toNetworkCallback(false), pythonErrorCallback);
+    case SIMULATE_NETWORK: {
+      let allParams = true;
+      ExperimentsApi.getParameters()
+        .then((params) => {
+          const flattened = Utils.flatten(params);
+          const paramKeys = Object.keys(flattened);
+
+          const filteredKeys = paramKeys.filter((key) => {
+          // TODO: avoid to fetch field twice!
+            const field = Utils.getMetadataField(`netParams.${key}`);
+            if (field && SUPPORTED_TYPES.includes(field.type)) {
+              return true;
+            }
+            return false;
+          });
+          const expData = store.getState().experiments;
+          expData?.inDesign?.params?.forEach((param) => {
+            if (!filteredKeys.includes(param.mapsTo)) {
+              pythonErrorCallback(
+                {
+                  errorDetails: 'Missing Parameters',
+                  errorMessage: 'Error',
+                },
+              );
+              allParams = false;
+            }
+          });
+          if (allParams) {
+            simulateNetwork({ allTrials: action.payload, usePrevInst: false })
+              .then(toNetworkCallback(false), pythonErrorCallback);
+          }
+        }, pythonErrorCallback);
       break;
+    }
     case PYTHON_CALL: {
       const callback = (response) => {
         switch (action.cmd) {
@@ -265,7 +408,7 @@ export default (store) => (next) => (action) => {
             GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
             dehydrateCanvas();
             GEPPETTO.Manager.loadModel(response);
-            GEPPETTO.CommandController.log('Instantiation / Simulation completed.');
+            console.log('Instantiation / Simulation completed.');
 
             store.dispatch(showNetwork);
           }

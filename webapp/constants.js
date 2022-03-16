@@ -16,6 +16,10 @@ export const MODEL_STATE = {
   SIMULATED: 'SIMULATED',
 };
 
+export const DEFAULT_COLOR = {
+  g: 0.50, b: 0.60, r: 1, a: 0.80,
+};
+
 export const NETPYNE_COMMANDS = {
   instantiateModel: 'netpyne_geppetto.instantiateNetPyNEModelInGeppetto',
   simulateModel: 'netpyne_geppetto.simulateNetPyNEModelInGeppetto',
@@ -38,7 +42,7 @@ export const REAL_TYPE = {
   FUNC: 'func',
   DICT: 'dict',
   DICT_DICT: 'dict(dict)',
-}
+};
 
 export const PYTHON_CONSOLE_WIDGET = {
   id: 'python',
@@ -383,7 +387,6 @@ export const PLOT_WIDGETS = {
 };
 
 export const DEFAULT_NETWORK_WIDGETS = {
-  PYTHON_CONSOLE_WIDGET,
   D3Canvas: {
     id: 'D3Canvas',
     name: '3D Representation',
@@ -401,9 +404,21 @@ export const DEFAULT_NETWORK_WIDGETS = {
     hideOnClose: true,
     component: 'experimentManager',
     panelName: MINIMIZED_PANEL,
-    defaultPanel: 'plotPanel',
+    defaultPanel: TOP_PANEL,
     enableRename: false,
     pos: 14,
+    specification: TOOLS_LIST,
+  },
+  experimentControlPanel: {
+    id: 'experimentControlPanel',
+    name: 'Control Panel',
+    status: WidgetStatus.MINIMIZED,
+    hideOnClose: true,
+    component: 'experimentControlPanel',
+    panelName: MINIMIZED_PANEL,
+    defaultPanel: 'plotPanel',
+    enableRename: false,
+    pos: 13,
     specification: TOOLS_LIST,
   },
   ...PLOT_WIDGETS,
@@ -422,6 +437,9 @@ export const EDIT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     pos: 0,
+    props: {
+      model: 'netParams.cellParams',
+    },
   },
   popParams: {
     id: 'popParams',
@@ -433,6 +451,9 @@ export const EDIT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     pos: 1,
+    props: {
+      model: 'netParams.popParams',
+    },
   },
   synMechParams: {
     id: 'synMechParams',
@@ -444,6 +465,9 @@ export const EDIT_WIDGETS = {
     enableRename: false,
     hideOnClose: true,
     pos: 2,
+    props: {
+      model: 'netParams.synMechParams',
+    },
   },
   connParams: {
     id: 'connParams',
@@ -455,6 +479,9 @@ export const EDIT_WIDGETS = {
     hideOnClose: true,
     enableRename: false,
     pos: 3,
+    props: {
+      model: 'netParams.connParams',
+    },
   },
   stimSourceParams: {
     id: 'stimSourceParams',
@@ -466,6 +493,9 @@ export const EDIT_WIDGETS = {
     panelName: TOP_PANEL,
     enableRename: false,
     pos: 4,
+    props: {
+      model: 'netParams.stimSourceParams',
+    },
   },
   stimTargetParams: {
     id: 'stimTargetParams',
@@ -477,6 +507,9 @@ export const EDIT_WIDGETS = {
     panelName: TOP_PANEL,
     enableRename: false,
     pos: 5,
+    props: {
+      model: 'netParams.stimTargetParams',
+    },
   },
   analysis: {
     id: 'analysis',
@@ -488,6 +521,9 @@ export const EDIT_WIDGETS = {
     panelName: TOP_PANEL,
     enableRename: false,
     pos: 6,
+    props: {
+      model: 'simConfig.analysis',
+    },
   },
   simConfig: {
     id: 'simConfig',
@@ -540,11 +576,11 @@ export const EXPERIMENT_TEXTS = {
   CLONE_EXPERIMENT: 'Clone Experiment',
   CLONE_EXPERIMENT_MESSAGE: 'Replaces the Experiment in design with the stored Experiment.',
   VIEW_EXPERIMENTS_RESULTS: 'View simulation results',
-  VIEW_EXPERIMENTS_RESULTS_MESSAGE: 'This will replace the currently loaded results in Explore, ' +
-    'are you sure you want to proceed?',
+  VIEW_EXPERIMENTS_RESULTS_MESSAGE: 'This will replace the currently loaded results in Explore, '
+    + 'are you sure you want to proceed?',
   LOAD_TRIAL_MODEL_SPEC: 'Load Model Specification',
-  LOAD_TRIAL_MODEL_SPEC_MESSAGE: 'This will replace the currently loaded model specification, ' +
-    'are you sure you want to proceed?',
+  LOAD_TRIAL_MODEL_SPEC_MESSAGE: 'This will replace the currently loaded model specification, '
+    + 'are you sure you want to proceed?',
   ERROR_EXPERIMENT_WITH_NAME_EXISTS: 'This name is already taken',
   ERROR_EXPERIMENT_EMPTY: 'Please enter experiment name',
 };
@@ -573,4 +609,3 @@ export const LAUNCH_MODAL = {
   defaultResource: 'Local Machine',
   errorText: 'Please check the input',
 };
-
