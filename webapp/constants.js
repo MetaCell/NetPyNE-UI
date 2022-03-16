@@ -384,6 +384,60 @@ export const PLOT_WIDGETS = {
       },
     },
   },
+  plotDipole: {
+    id: 'plotDipole',
+    name: 'Dipole plot',
+    status: WidgetStatus.MINIMIZED,
+    component: 'Plot',
+    panelName: MINIMIZED_PANEL,
+    defaultPanel: 'plotPanel',
+    hideOnClose: true,
+    enableRename: false,
+    initialized: false,
+    disabled: true,
+    method: {
+      plotKey: 'plotDipole',
+      plotMethod: 'plotDipole',
+      plotType: false,
+    },
+    pos: 13,
+    config: {
+      id: 'plotDipole',
+      name: 'Dipole plot',
+      method: {
+        plotKey: 'plotDipole',
+        plotMethod: 'plotDipole',
+        plotType: false,
+      },
+    },
+  },
+  plotEEG: {
+    id: 'plotEEG',
+    name: 'EEG plot',
+    status: WidgetStatus.MINIMIZED,
+    component: 'Plot',
+    panelName: MINIMIZED_PANEL,
+    defaultPanel: 'plotPanel',
+    hideOnClose: true,
+    enableRename: false,
+    initialized: false,
+    disabled: true,
+    method: {
+      plotKey: 'plotEEG',
+      plotMethod: 'plotEEG',
+      plotType: false,
+    },
+    pos: 14,
+    config: {
+      id: 'plotEEG',
+      name: 'EEG plot',
+      method: {
+        plotKey: 'plotEEG',
+        plotMethod: 'plotEEG',
+        plotType: false,
+      },
+    },
+  },
 };
 
 export const DEFAULT_NETWORK_WIDGETS = {
