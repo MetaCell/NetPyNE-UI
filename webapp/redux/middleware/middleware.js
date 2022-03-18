@@ -23,7 +23,6 @@ import {
   LOAD_TUTORIAL,
   RESET_MODEL,
   showNetwork,
-  MODEL_LOADED,
   addInstancesToCanvas,
 } from '../actions/general';
 import { openBackendErrorDialog } from '../actions/errors';
@@ -62,7 +61,7 @@ const pythonCall = async ({
 }) => {
   const response = await Utils.evalPythonMessage(cmd, [args]);
   const errorPayload = processError(response);
-  GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+  // GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
 
   if (errorPayload) {
     throw errorPayload;
@@ -83,7 +82,7 @@ const dehydrateCanvas = () => {
 
 const createSimulateBackendCall = async (cmd, payload, consoleMessage, spinnerType) => {
   console.log(consoleMessage);
-  GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, spinnerType);
+  // GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, spinnerType);
 
   const response = await Utils.evalPythonMessage(cmd, [payload]);
   console.log('Python response', response);
@@ -94,7 +93,7 @@ const createSimulateBackendCall = async (cmd, payload, consoleMessage, spinnerTy
   if (responsePayload) {
     throw responsePayload;
   } else {
-    GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
+    // GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
 
     dehydrateCanvas();
 
@@ -176,10 +175,10 @@ export default (store) => (next) => (action) => {
   };
 
   switch (action.type) {
-    case MODEL_LOADED:
-      next(GeppettoActions.waitData('Loading the NetPyNE Model', GeppettoActions.clientActions.MODEL_LOADED));
-      next(action);
-      break;
+    // case MODEL_LOADED:
+    //   next(GeppettoActions.waitData('Loading the NetPyNE Model', GeppettoActions.clientActions.MODEL_LOADED));
+    //   next(action);
+    //   break;
     case GeppettoActions.clientActions.MODEL_LOADED:
       if (store.getState()?.general?.modelState === Constants.MODEL_STATE.NOT_INSTANTIATED) {
         const networkPath = window.Instances.getInstance('network');
@@ -206,7 +205,7 @@ export default (store) => (next) => (action) => {
       break;
     }
     case RESET_MODEL: {
-      GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, 'Reloading Python Kernel');
+      // GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, 'Reloading Python Kernel');
       IPython.notebook.restart_kernel({ confirm: false })
         .then(
           () => {
@@ -216,6 +215,7 @@ export default (store) => (next) => (action) => {
       break;
     }
     case CREATE_NETWORK: {
+      next(GeppettoActions.waitData('Instantiating the NetPyNE Model', GeppettoActions.layoutActions.SET_WIDGETS));
       let allParams = true;
       ExperimentsApi.getParameters()
         .then((params) => {
@@ -250,6 +250,7 @@ export default (store) => (next) => (action) => {
       break;
     }
     case CREATE_SIMULATE_NETWORK: {
+      next(GeppettoActions.waitData('Simulating the NetPyNE Model', GeppettoActions.layoutActions.SET_WIDGETS));
       let allParams = true;
       ExperimentsApi.getParameters()
         .then((params) => {
@@ -284,6 +285,7 @@ export default (store) => (next) => (action) => {
       break;
     }
     case SIMULATE_NETWORK: {
+      next(GeppettoActions.waitData('Simulating the NetPyNE Model', GeppettoActions.layoutActions.SET_WIDGETS));
       let allParams = true;
       ExperimentsApi.getParameters()
         .then((params) => {
@@ -341,7 +343,7 @@ export default (store) => (next) => (action) => {
     }
     case LOAD_TUTORIAL: {
       const tutName = action.payload.replace('.py', '');
-      GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading tutorial ${tutName}`);
+      // GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading tutorial ${tutName}`);
 
       const params = {
         modFolder: 'mod',
@@ -370,7 +372,7 @@ export default (store) => (next) => (action) => {
       break;
     }
     case CLONE_EXPERIMENT: {
-      GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Cloning experiment ${action.payload.name}`);
+      // GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Cloning experiment ${action.payload.name}`);
       pythonCall({
         cmd: NETPYNE_COMMANDS.cloneExperiment,
         args: action.payload,
@@ -380,7 +382,7 @@ export default (store) => (next) => (action) => {
     }
     case TRIAL_LOAD_MODEL_SPEC: {
       const { name, trial } = action.payload;
-      GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading ${trial.name} of experiment ${name}`);
+      // GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading ${trial.name} of experiment ${name}`);
       pythonCall({
         cmd: NETPYNE_COMMANDS.viewExperimentResults,
         args: { name, trial: trial.id, onlyModelSpecification: true },
@@ -393,7 +395,7 @@ export default (store) => (next) => (action) => {
     }
     case VIEW_EXPERIMENTS_RESULTS: {
       const { name, trial } = action.payload;
-      GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading ${trial.name} of experiment ${name}`);
+      // GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading ${trial.name} of experiment ${name}`);
       pythonCall({
         cmd: NETPYNE_COMMANDS.viewExperimentResults,
         args: { name, trial: trial.id },
@@ -405,7 +407,7 @@ export default (store) => (next) => (action) => {
           }
 
           if (response) {
-            GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
+            // GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
             dehydrateCanvas();
             GEPPETTO.Manager.loadModel(response);
             console.log('Instantiation / Simulation completed.');
