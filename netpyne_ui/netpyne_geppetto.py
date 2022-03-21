@@ -248,6 +248,7 @@ class NetPyNEGeppetto:
                 netpyne_model = self.instantiateNetPyNEModel()
 
                 self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
+            
             simulations.run()
 
             if self.geppetto_model:

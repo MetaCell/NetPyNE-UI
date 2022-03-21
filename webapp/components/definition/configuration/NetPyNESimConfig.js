@@ -278,12 +278,53 @@ class NetPyNESimConfig extends React.Component {
           </NetPyNEField>
 
           <NetPyNEField
+            id="simConfig.saveLFPPops"
+            className="netpyneCheckbox"
+            style={{ marginTop: 25 }}
+          >
+            <NetPyNECheckbox model="simConfig.saveLFPPops" />
+          </NetPyNEField>
+
+          <NetPyNEField
             id="simConfig.recordStim"
             className="netpyneCheckbox"
             style={{ marginTop: 25 }}
           >
             <NetPyNECheckbox model="simConfig.recordStim" />
           </NetPyNEField>
+
+          <NetPyNEField
+            id="simConfig.recordDipole"
+            className="netpyneCheckbox"
+            style={{ marginTop: 25 }}
+          >
+            <NetPyNECheckbox model="simConfig.recordDipole" />
+          </NetPyNEField>
+
+          <NetPyNEField
+            id="simConfig.recordDipolesHNN"
+            className="netpyneCheckbox"
+            style={{ marginTop: 25 }}
+          >
+            <NetPyNECheckbox model="simConfig.recordDipolesHNN" />
+          </NetPyNEField>
+
+
+          <NetPyNEField
+            id="simConfig.saveDipoleCells"
+            className="netpyneCheckbox"
+            style={{ marginTop: 25 }}
+          >
+            <NetPyNECheckbox model="simConfig.saveDipoleCells" />
+          </NetPyNEField>
+
+          <NetPyNEField
+            id="simConfig.saveDipolePops"
+            className="netpyneCheckbox"
+            style={{ marginTop: 25 }}
+          >
+            <NetPyNECheckbox model="simConfig.saveDipolePops" />
+          </NetPyNEField>        
         </div>
       );
     } else if (this.state.sectionId === CONFIG_SECTIONS.NET_PARAMS) {
