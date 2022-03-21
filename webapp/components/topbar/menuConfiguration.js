@@ -83,7 +83,7 @@ export const getTutorials = () => {
         label: tutLabel,
         icon: '',
         action: {
-          handlerAction: 'redux',
+          handlerAction: 'handleTutorial',
           parameters: [loadTutorial, tutFile],
         },
       };
