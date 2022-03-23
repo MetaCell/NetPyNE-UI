@@ -404,6 +404,7 @@ export const PLOT_WIDGETS = {
     config: {
       id: 'plotDipole',
       name: 'Dipole plot',
+      uri: 'downloads?uri=workspace/model_output_dipole.png',
       method: {
         plotKey: 'plotDipole',
         plotMethod: 'plotDipole',
@@ -431,6 +432,7 @@ export const PLOT_WIDGETS = {
     config: {
       id: 'plotEEG',
       name: 'EEG plot',
+      uri: 'downloads?uri=workspace/model_output_EEG.png',
       method: {
         plotKey: 'plotEEG',
         plotMethod: 'plotEEG',
