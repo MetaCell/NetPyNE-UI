@@ -29,6 +29,8 @@ RUN pip install -r requirements.txt
 COPY --chown=1000:1000 . .
 WORKDIR ${INSTALLATION_FOLDER}/utilities
 
+RUN echo 'DEBUG'
+RUN echo ${GEPPETTO_VERSION}
 RUN python install.py ${BUILD_ARGS} --geppetto ${GEPPETTO_VERSION}
 
 WORKDIR ${INSTALLATION_FOLDER}
