@@ -135,7 +135,11 @@ class NetPyNEInstantiated extends React.Component {
           ref={this.canvasRef}
           key="CanvasContainer"
           cameraOptions={camOptions}
-          backgroundColor={bgRegular}
+          backgroundColor={
+            this.props.theme === THEMES.BLACK
+              ? canvasBgDark
+              : (this.props.theme === THEMES.LIGHT ? canvasBgLight : bgRegular)
+          }
           onSelection={this.onSelection}
         />
       </div>
