@@ -29,6 +29,7 @@ COPY --chown=1000:1000 . .
 WORKDIR ${INSTALLATION_FOLDER}/utilities
 
 RUN npm install --global yarn
+RUN npm install --global yalc
 RUN python install.py ${BUILD_ARGS} --geppetto ${GEPPETTO_VERSION}
 
 WORKDIR ${INSTALLATION_FOLDER}
