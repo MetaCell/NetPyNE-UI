@@ -13,7 +13,7 @@ const SELECTION_COLOR = {
   r: 0, g: 0.8, b: 0.8, a: 1,
 };
 const DEFAULT_COLOR = {
-  g: 0.50, b: 0.60, r: 1, a: 0.80,
+  g: 0.50, b: 0.60, r: 1, a: 1,
 };
 
 const styles = () => ({
@@ -141,6 +141,7 @@ class NetPyNEInstantiated extends React.Component {
               : (this.props.theme === THEMES.LIGHT ? canvasBgLight : bgRegular)
           }
           onSelection={this.onSelection}
+          linesThreshold="5000"
         />
       </div>
     );
