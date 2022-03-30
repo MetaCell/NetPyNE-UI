@@ -966,7 +966,7 @@ class NetPyNEGeppetto:
                 for plot in analysis.keys():
                     if cond in analysis[plot].keys():
                         for index, item in enumerate(analysis[plot][cond]):
-                            if isinstance(item, str):
+                            if isinstance(item, str) or isinstance(item, int):
                                 if item == old:
                                     if new == None:
                                         analysis[plot][cond].remove(item)
@@ -984,11 +984,11 @@ class NetPyNEGeppetto:
             else:
                 obj = getattr(self.netParams, model)
                 for key in obj.keys():
-                    if label in list(obj[key][cond].keys()):
+                    if cond in obj[key] and label in list(obj[key][cond].keys()):
                         if isinstance(obj[key][cond][label], str):
                             if old == obj[key][cond][label]:
                                 if new == '' or new == None:
-                                    obj[key].pop(label)
+                                    obj[key][cond].pop(label)
                                 else:
                                     obj[key][cond][label] = new
                         elif isinstance(obj[key][cond][label], list):
