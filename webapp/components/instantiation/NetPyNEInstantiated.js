@@ -141,7 +141,7 @@ class NetPyNEInstantiated extends React.Component {
               : (this.props.theme === THEMES.LIGHT ? canvasBgLight : bgRegular)
           }
           onSelection={this.onSelection}
-          linesThreshold="5000"
+          linesThreshold="10000"
         />
       </div>
     );
