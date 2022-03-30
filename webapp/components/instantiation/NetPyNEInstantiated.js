@@ -50,13 +50,12 @@ class NetPyNEInstantiated extends React.Component {
     this.canvasRef = React.createRef();
 
     this.onSelection = this.onSelection.bind(this);
-    this.applySelection = this.applySelection.bind(this);
     this.mapToCanvasData = this.mapToCanvasData.bind(this);
   }
 
   onSelection (selectedInstances) {
     const { selectInstances, data } = this.props;
-    selectInstances(this.applySelection(data, selectedInstances));
+    selectInstances(data, selectedInstances);
   }
 
   updateBtnsWithTheme = (removeClass, addClass) => {
@@ -76,38 +75,6 @@ class NetPyNEInstantiated extends React.Component {
         instancePath: item.instancePath,
       }
     ));
-  }
-
-  applySelection (data, selectedInstances) {
-    const smap = new Map(selectedInstances.map((i) => [i, true]));
-    const newData = data.map((item) => {
-      if (smap.get(item.instancePath)) {
-        return {
-          ...item,
-          selected: !item.selected,
-        };
-      }
-      return { ...item };
-    });
-    const dmap = new Map(newData.map((i) => [i.instancePath, true]));
-
-    smap.forEach((value, key) => {
-      const item = dmap.get(key);
-      if (!item) {
-        newData.push({
-          instancePath: key,
-          color: undefined,
-          selected: true,
-        });
-      }
-    });
-    const canvasData = newData.filter((item) => {
-      if ((item?.selected !== undefined && item?.selected === false) && item?.color === undefined) {
-        return false;
-      }
-      return true;
-    });
-    return canvasData;
   }
 
   render () {

@@ -1,17 +1,16 @@
 /* eslint-disable no-nested-ternary */
 import * as React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import TreeView from '@material-ui/lab/TreeView';
-import TreeItem from '@material-ui/lab/TreeItem';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ControlPanelTreeItem from './ControlPanelTreeItem';
 import { experimentLabelColor } from '../../theme';
-
-import { MODEL_STATE } from '../../constants';
+import { selectInstances } from '../../redux/actions/general';
 
 const useStyles = makeStyles(() => ({
   header: {
@@ -24,9 +23,11 @@ const useStyles = makeStyles(() => ({
 
 const ExperimentControlPanel = (props) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const instances = useSelector((state) => state.general.instances);
   const [filter, setFilter] = React.useState('');
   const onNodeSelect = (nodeId) => {
-    console.log(`Node with id ${nodeId} clicked`);
+    dispatch(selectInstances(instances, [nodeId]));
   };
   const instancesMap = new Map();
 
@@ -71,7 +72,7 @@ const ExperimentControlPanel = (props) => {
   };
 
   const getTreeItemsFromData = (treeItems) => treeItems.map((treeItemData) => {
-    let children;
+    let children = [];
     if (treeItemData.getChildren() && treeItemData.getChildren().length > 0) {
       children = getTreeItemsFromData(treeItemData.getChildren());
     }
@@ -84,6 +85,7 @@ const ExperimentControlPanel = (props) => {
         type={treeItemData.getType().getId()}
         onNodeSelect={onNodeSelect}
         onVisibilityClick={onVisibilityClick}
+        disableRandom={children.length === 0}
       >
         {children}
       </ControlPanelTreeItem>
@@ -110,12 +112,9 @@ const ExperimentControlPanel = (props) => {
                     defaultCollapseIcon={<ExpandMoreIcon />}
                     defaultExpandIcon={<ChevronRightIcon />}
                   >
-                    <TreeItem nodeId="network" label="network_netpyne">
-                      {filter === ''
-                        ? getTreeItemsFromData(window.Instances.network.getChildren())
-                        : getFlatFilteredList(window.Instances.network.getChildren())
-                      }
-                    </TreeItem>
+                    {filter === ''
+                      ? getTreeItemsFromData([window.Instances.getInstance('network')])
+                      : getFlatFilteredList([window.Instances.getInstance('network')])}
                   </TreeView>
                 </Box>
               )
