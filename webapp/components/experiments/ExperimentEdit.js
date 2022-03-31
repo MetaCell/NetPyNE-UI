@@ -26,6 +26,8 @@ import ParameterMenu from './ParameterMenu';
 import useStyles from './ExperimentEditStyle';
 import * as ExperimentHelper from './ExperimentHelper';
 import DialogBox from '../general/DialogBox';
+import workerCode from './workers/processExperimentData';
+
 const RANGE_VALUE = 0;
 const SUPPORTED_TYPES = [REAL_TYPE.INT, REAL_TYPE.FLOAT, REAL_TYPE.STR, REAL_TYPE.BOOL];
 const MAX_TRIALS = 100;
@@ -191,13 +193,13 @@ const ExperimentEdit = (props) => {
   const [experimentNameError, setExperimentNameError] = useState('');
   const [selectionParams, setSelectionParams] = useState([]);
   const [trialNumberErrorDialogOpen, setTrialNumberErrorDialogOpen] = useState({ condition: false, number: 1 });
+  const [paramsCounter, setParamsCounter] = useState(0);
 
   // Existing Experiment.
   const [experiment, setExperiment] = useState(null);
   const experiments = useSelector((state) => state.experiments.experiments);
 
   let numberOfTrials = 1;
-  // const dispatch = useDispatch();
   const validateParameter = (param) => {
     let updatedParam = param;
     if (param.type === LIST) {
@@ -253,20 +255,20 @@ const ExperimentEdit = (props) => {
   const getParameters = () => {
     ExperimentsApi.getParameters()
       .then((params) => {
-        const flattened = Utils.flatten(params);
-        const paramKeys = Object.keys(flattened);
-
-        const filteredKeys = paramKeys.filter((key) => {
-          // TODO: avoid to fetch field twice!
-          const field = Utils.getMetadataField(`netParams.${key}`);
-          if (field && SUPPORTED_TYPES.includes(field.type)) {
-            return true;
+        // eslint-disable-next-line prefer-template
+        // eslint-disable-next-line no-undef
+        const worker = new Worker(workerCode);
+        worker.onmessage = function (e) {
+          switch (e.data.resultMessage) {
+            case 'OK':
+              setSelectionParams(e.data.params.results);
+              worker.terminate();
+              break;
+            default:
+              console.error('worker processing metadata for autocomplete not working.');
           }
-          return false;
-        });
-
-        console.debug(`Size before ${paramKeys.length}, after: ${filteredKeys.length}`);
-        setSelectionParams(filteredKeys);
+        };
+        worker.postMessage({ message: 'process', params: { data: params, metadata: window.metadata } });
       });
   };
 
