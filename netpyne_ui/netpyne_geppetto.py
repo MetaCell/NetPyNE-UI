@@ -879,8 +879,10 @@ class NetPyNEGeppetto:
                 # side effect on other rules
                 if "popParams" in model:
                     self.propagate_field_rename("pop", None, label)
-                    self.propagate_field_rename("cellModel", None, rule['cellModel'])
-                    self.propagate_field_rename("cellType", None, rule['cellType'])
+                    if 'cellModel' in rule:
+                      self.propagate_field_rename("cellModel", None, rule['cellModel'])
+                    if 'cellType' in rule:
+                      self.propagate_field_rename("cellType", None, rule['cellType'])
 
                 elif "stimSourceParams" in model:
 
@@ -888,7 +890,7 @@ class NetPyNEGeppetto:
                 elif "synMechParams" in model:
                     self.propagate_field_rename("synMech", None, label)
             return True
-        except Exception:
+        except Exception as e :
             logging.exception(f"Error while deleting parameter: {label}")
             return False
 
