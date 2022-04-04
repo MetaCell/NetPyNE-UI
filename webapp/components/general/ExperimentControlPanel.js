@@ -102,7 +102,7 @@ const ExperimentControlPanel = (props) => {
                   <Box className={classes.header} display="flex" justifyContent="space-between" mt={1}>
                     <Typography>Name</Typography>
                     <Typography>Type(s)</Typography>
-                    <Typography />
+                    <Typography>Controls</Typography>
                   </Box>
                   <TreeView
                     aria-label="Network data navigator"
@@ -113,8 +113,7 @@ const ExperimentControlPanel = (props) => {
                     <TreeItem nodeId="network" label="network_netpyne">
                       {filter === ''
                         ? getTreeItemsFromData(window.Instances.network.getChildren())
-                        : getFlatFilteredList(window.Instances.network.getChildren())
-                      }
+                        : getFlatFilteredList(window.Instances.network.getChildren())}
                     </TreeItem>
                   </TreeView>
                 </Box>

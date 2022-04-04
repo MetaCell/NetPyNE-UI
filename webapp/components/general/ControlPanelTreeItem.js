@@ -7,21 +7,31 @@ import IconButton from '@material-ui/core/IconButton';
 import TreeItem from '@material-ui/lab/TreeItem';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import ColorLens from '@material-ui/icons/ColorLens';
-import Shuffle from '@material-ui/icons/Shuffle';
 import { ChromePicker } from 'react-color';
 import { useDispatch, useSelector } from 'react-redux';
-import { experimentLabelColor } from '../../theme';
+import {
+  experimentLabelColor,
+  bgDarker,
+  bgLight,
+  radius,
+} from '../../theme';
+import { RandomColorLensIcon, ColorLensIcon, TriangleIcon } from './NetPyNEIcons';
 import { changeInstanceColor } from '../../redux/actions/general';
 
 const useStyles = makeStyles((theme) => ({
   networkItem: {
     paddingTop: '2px',
     paddingBottom: '2px',
+    paddingLeft: '8px',
+    paddingRight: '8px',
+    borderRadius: radius,
+    '&:hover': {
+      backgroundColor: '#333333',
+    },
   },
   controls: {
     '& .MuiIconButton-root': {
-      padding: 0,
+      padding: '0 !important',
       marginLeft: '0.5rem',
       color: experimentLabelColor,
       '&:hover': {
@@ -29,10 +39,34 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  colorPickerBox: {
+    position: 'absolute',
+    top: '1rem',
+  },
+  triangleIcon: {
+    marginBottom: '-7px',
+    color: bgDarker,
+  },
   colorPicker: {
     position: 'absolute',
     zIndex: 1000,
     right: 0,
+    backgroundColor: `${bgDarker} !important`,
+    padding: '0.2rem',
+    '& label': {
+      color: '#ffffff !important',
+    },
+    '& input': {
+      backgroundColor: `${bgLight} !important`,
+      color: '#ffffff !important',
+      boxShadow: 'none !important',
+    },
+    '& svg': {
+      fill: '#ffffff !important',
+    },
+    '& svg:hover': {
+      background: 'transparent !important',
+    },
   },
 }));
 
@@ -153,14 +187,18 @@ const ControlPanelTreeItem = (props) => {
                   <IconButton onClick={(event) => changeVisibility(event, nodeId)}>
                     { visibility ? <Visibility /> : <VisibilityOff /> }
                   </IconButton>
-                  <IconButton onClick={(event) => generateRandomColor(event, nodeId)}><Shuffle /></IconButton>
-                  <IconButton onClick={() => setShowColorPicker(true)}><ColorLens /></IconButton>
+                  <IconButton onClick={(event) => generateRandomColor(event, nodeId)}>
+                    <RandomColorLensIcon />
+                  </IconButton>
+                  <IconButton onClick={() => setShowColorPicker(true)}><ColorLensIcon /></IconButton>
                   {
               showColorPicker
                 ? (
                   <Box
+                    className={classes.colorPickerBox}
                     onMouseLeave={() => setShowColorPicker(false)}
                   >
+                    <TriangleIcon className={classes.triangleIcon} />
                     <ChromePicker
                       className={classes.colorPicker}
                       color={color}
