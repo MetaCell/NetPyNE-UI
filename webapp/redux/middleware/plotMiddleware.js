@@ -65,7 +65,8 @@ const plotFigure = async (plotId, plotMethod, plotType = false, uri = null, them
       return htmlText;
     }
     if ((plotMethod == 'plotDipole' || plotMethod == 'plotEEG' )) { //uri is available here
-      return (`<img src="${uri}"></img>`) ;
+      const plotUri = uri.replace('{name}', response);
+      return (`<img src="${plotUri}"></img>`) ;
     }
     if (response?.length !== undefined) {
       return response[0];
