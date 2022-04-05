@@ -41,7 +41,8 @@ const useStyles = makeStyles((theme) => ({
   },
   colorPickerBox: {
     position: 'absolute',
-    top: '1rem',
+    top: '1.25rem',
+    right: '2.5rem',
   },
   triangleIcon: {
     marginBottom: '-7px',
@@ -66,6 +67,11 @@ const useStyles = makeStyles((theme) => ({
     },
     '& svg:hover': {
       background: 'transparent !important',
+    },
+  },
+  activeColorPicker: {
+    '& path': {
+      fill: '#ffffff',
     },
   },
 }));
@@ -183,14 +189,15 @@ const ControlPanelTreeItem = (props) => {
             {isHoveredOver
               ? (
                 <>
-
                   <IconButton onClick={(event) => changeVisibility(event, nodeId)}>
                     { visibility ? <Visibility /> : <VisibilityOff /> }
+                  </IconButton>
+                  <IconButton onClick={() => setShowColorPicker(true)}>
+                    <ColorLensIcon className={showColorPicker ? classes.activeColorPicker : ''} />
                   </IconButton>
                   <IconButton onClick={(event) => generateRandomColor(event, nodeId)}>
                     <RandomColorLensIcon />
                   </IconButton>
-                  <IconButton onClick={() => setShowColorPicker(true)}><ColorLensIcon /></IconButton>
                   {
               showColorPicker
                 ? (
@@ -207,7 +214,6 @@ const ControlPanelTreeItem = (props) => {
                   </Box>
                 ) : null
             }
-
                 </>
               )
               : null}
