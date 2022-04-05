@@ -10,6 +10,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ControlPanelTreeItem from './ControlPanelTreeItem';
 import { experimentLabelColor } from '../../theme';
+import { TreeItemExpandIcon } from './NetPyNEIcons';
 
 import { MODEL_STATE } from '../../constants';
 
@@ -110,7 +111,7 @@ const ExperimentControlPanel = (props) => {
                     defaultCollapseIcon={<ExpandMoreIcon />}
                     defaultExpandIcon={<ChevronRightIcon />}
                   >
-                    <TreeItem nodeId="network" label="network_netpyne">
+                    <TreeItem nodeId="network" label="network_netpyne" expandIcon={<TreeItemExpandIcon />}>
                       {filter === ''
                         ? getTreeItemsFromData(window.Instances.network.getChildren())
                         : getFlatFilteredList(window.Instances.network.getChildren())}

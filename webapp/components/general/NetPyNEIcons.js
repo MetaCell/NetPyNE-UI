@@ -58,3 +58,28 @@ export function TriangleIcon (props) {
     </SvgIcon>
   );
 }
+
+export function TreeItemExpandIcon (props) {
+  return (
+    <SvgIcon viewBox="0 0 4 8" {...props}>
+      <path d="M0.666504 7.33332L3.99984 3.99999L0.666504 0.666656V7.33332Z" fill="#989898" />
+    </SvgIcon>
+  );
+}
+
+export function TreeItemCurveIcon (props) {
+  return (
+    <SvgIcon viewBox="0 0 12 6" {...props}>
+      <path d="M6 6C2.68629 6 0 3.31371 0 0H1C1 2.80391 3.19609 5 6 5V6Z" fill="#ffffff" />
+      <path d="M6 5H11.5C11.7761 5 12 5.22386 12 5.5C12 5.77614 11.7761 6 11.5 6H6V5Z" fill="#ffffff" />
+    </SvgIcon>
+  );
+}
+
+export function TreeItemLineWithRadiusIcon (props) {
+  return (
+    <SvgIcon viewBox="0 0 6 6" {...props}>
+      <path d="M0 0H1V8H0V0Z" fill="#ffffff" />
+    </SvgIcon>
+  );
+}

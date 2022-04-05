@@ -15,13 +15,19 @@ import {
   bgLight,
   radius,
 } from '../../theme';
-import { RandomColorLensIcon, ColorLensIcon, TriangleIcon } from './NetPyNEIcons';
+import {
+  RandomColorLensIcon,
+  ColorLensIcon,
+  TriangleIcon,
+  TreeItemCurveIcon,
+  TreeItemLineWithRadiusIcon,
+} from './NetPyNEIcons';
 import { changeInstanceColor } from '../../redux/actions/general';
 
 const useStyles = makeStyles((theme) => ({
   networkItem: {
-    paddingTop: '2px',
-    paddingBottom: '2px',
+    paddingTop: '0px',
+    paddingBottom: '0px',
     paddingLeft: '8px',
     paddingRight: '8px',
     borderRadius: radius,
@@ -41,8 +47,9 @@ const useStyles = makeStyles((theme) => ({
   },
   colorPickerBox: {
     position: 'absolute',
-    top: '1.25rem',
+    top: '1.2rem',
     right: '2.5rem',
+    height: '3rem',
   },
   triangleIcon: {
     marginBottom: '-7px',
@@ -73,6 +80,15 @@ const useStyles = makeStyles((theme) => ({
     '& path': {
       fill: '#ffffff',
     },
+  },
+  treeItemCurveIcon: {
+    position: 'relative',
+  },
+  treeItemLineWithRadiusIcon: {
+    position: 'relative',
+    right: '1.85rem',
+    bottom: '1rem',
+    height: '35%',
   },
 }));
 
@@ -183,7 +199,16 @@ const ControlPanelTreeItem = (props) => {
           flexDirection="row"
           justifyContent="space-between"
         >
-          <Grid item xs={4}><Typography onClick={() => onNodeSelect(nodeId)}>{label}</Typography></Grid>
+
+          <Grid item xs={4}>
+            <Typography onClick={() => onNodeSelect(nodeId)}>
+              <span>
+                <TreeItemCurveIcon className={classes.treeItemCurveIcon} />
+                <TreeItemLineWithRadiusIcon className={classes.treeItemLineWithRadiusIcon} />
+              </span>
+              {label}
+            </Typography>
+          </Grid>
           <Grid item xs={4} justifyContent="center"><Typography>{type}</Typography></Grid>
           <Grid item xs={4} justifyContent="flex-end" className={classes.controls}>
             {isHoveredOver
@@ -219,7 +244,7 @@ const ControlPanelTreeItem = (props) => {
               : null}
           </Grid>
         </Grid>
-        )}
+      )}
     >
       {children}
     </TreeItem>
