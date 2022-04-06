@@ -25,10 +25,14 @@ import {
 import { changeInstanceColor } from '../../redux/actions/general';
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    '& .MuiTreeItem-label': {
+      paddingLeft: '0px !important',
+    },
+  },
   networkItem: {
-    paddingTop: '0px',
-    paddingBottom: '0px',
-    paddingLeft: '8px',
+    paddingTop: '2px',
+    paddingBottom: '2px',
     paddingRight: '8px',
     borderRadius: radius,
     '&:hover': {
@@ -80,15 +84,6 @@ const useStyles = makeStyles((theme) => ({
     '& path': {
       fill: '#ffffff',
     },
-  },
-  treeItemCurveIcon: {
-    position: 'relative',
-  },
-  treeItemLineWithRadiusIcon: {
-    position: 'relative',
-    right: '1.85rem',
-    bottom: '1rem',
-    height: '35%',
   },
 }));
 
@@ -202,10 +197,6 @@ const ControlPanelTreeItem = (props) => {
 
           <Grid item xs={4}>
             <Typography onClick={() => onNodeSelect(nodeId)}>
-              <span>
-                <TreeItemCurveIcon className={classes.treeItemCurveIcon} />
-                <TreeItemLineWithRadiusIcon className={classes.treeItemLineWithRadiusIcon} />
-              </span>
               {label}
             </Typography>
           </Grid>
@@ -215,7 +206,7 @@ const ControlPanelTreeItem = (props) => {
               ? (
                 <>
                   <IconButton onClick={(event) => changeVisibility(event, nodeId)}>
-                    { visibility ? <Visibility /> : <VisibilityOff /> }
+                    { visibility ? <Visibility style={{ marginRight: '0.5rem' }} /> : <VisibilityOff style={{ marginRight: '0.5rem' }} /> }
                   </IconButton>
                   <IconButton onClick={() => setShowColorPicker(true)}>
                     <ColorLensIcon className={showColorPicker ? classes.activeColorPicker : ''} />
@@ -228,7 +219,7 @@ const ControlPanelTreeItem = (props) => {
                 ? (
                   <Box
                     className={classes.colorPickerBox}
-                    onMouseLeave={() => setShowColorPicker(false)}
+                    onMouseLeave={() => setTimeout(setShowColorPicker(false), 1000)}
                   >
                     <TriangleIcon className={classes.triangleIcon} />
                     <ChromePicker

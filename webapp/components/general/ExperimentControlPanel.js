@@ -10,11 +10,55 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ControlPanelTreeItem from './ControlPanelTreeItem';
 import { experimentLabelColor } from '../../theme';
-import { TreeItemExpandIcon } from './NetPyNEIcons';
-
 import { MODEL_STATE } from '../../constants';
 
 const useStyles = makeStyles(() => ({
+  root: {
+    '& ul': {
+      position: 'relative',
+      '&::before': {
+        content: '""',
+        height: 'calc(100% - 0.85rem)',
+        width: '0.0625rem',
+        position: 'absolute',
+        left: '-0.65rem',
+        borderRadius: '3.125rem',
+        top: '0rem',
+        backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'1\' height=\'8\' viewBox=\'0 0 1 8\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 0H1V8H0V0Z\' fill=\'%23ffffff\'/%3E%3C/svg%3E")',
+        backgroundRepeat: 'repeat',
+      },
+      '& .MuiTreeItem-root': {
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          height: '0.875rem',
+          width: '1.4375rem',
+          backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'6\' viewBox=\'0 0 12 6\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M6 6C2.68629 6 0 3.31371 0 0H1C1 2.80391 3.19609 5 6 5V6Z\' fill=\'%23ffffff\'/%3E%3Cpath d=\'M6 5H11.5C11.7761 5 12 5.22386 12 5.5C12 5.77614 11.7761 6 11.5 6H6V5Z\' fill=\'%23ffffff\'/%3E%3C/svg%3E")',
+          position: 'absolute',
+          top: '0.75rem',
+          backgroundRepeat: 'no-repeat',
+          left: '-0.65rem',
+        },
+        '&::after': {
+          content: '""',
+          height: '0.0625rem',
+          borderRadius: '3.125rem',
+          width: '0.5rem',
+          backgroundColor: '#ffffff',
+          position: 'absolute',
+          left: '0',
+          top: '1.0625rem',
+          display: 'none',
+        },
+        '&:hover': {
+          background: 'transparent',
+        },
+        '&:focus > .MuiTreeItem-content': {
+          backgroundColor: 'transparent',
+        },
+      },
+    },
+  },
   header: {
     '& .MuiTypography-root': {
       color: experimentLabelColor,
@@ -102,7 +146,7 @@ const ExperimentControlPanel = (props) => {
                   <TextField label="Filter results" variant="outlined" fullWidth onChange={(e) => setFilter(e.target.value)} />
                   <Box className={classes.header} display="flex" justifyContent="space-between" mt={1}>
                     <Typography>Name</Typography>
-                    <Typography>Type(s)</Typography>
+                    <Typography style={{ marginLeft: '3rem' }}>Type(s)</Typography>
                     <Typography>Controls</Typography>
                   </Box>
                   <TreeView
@@ -111,7 +155,14 @@ const ExperimentControlPanel = (props) => {
                     defaultCollapseIcon={<ExpandMoreIcon />}
                     defaultExpandIcon={<ChevronRightIcon />}
                   >
-                    <TreeItem nodeId="network" label="network_netpyne" expandIcon={<TreeItemExpandIcon />}>
+                    <TreeItem
+                      className={classes.root}
+                      nodeId="network"
+                      label="network_netpyne"
+                      defaultCollapseIcon={false}
+                      defaultExpandIcon={false}
+                      defaultEndIcon={false}
+                    >
                       {filter === ''
                         ? getTreeItemsFromData(window.Instances.network.getChildren())
                         : getFlatFilteredList(window.Instances.network.getChildren())}
