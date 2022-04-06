@@ -20,7 +20,8 @@ import ImportExportHLSDialog from './dialogs/ImportExportHLS';
 import ImportCellParamsDialog from './dialogs/ImportCellParams';
 import UploadDownloadFilesDialog from './dialogs/UploadDownloadFiles';
 
-import { TOPBAR_CONSTANTS } from '../../constants';
+import { TOPBAR_CONSTANTS, MODEL_STATE, DEFAULT_CONFIRMATION_DIALOG_MESSAGE } from '../../constants';
+import { LOAD_TUTORIAL } from '../../redux/actions/general';
 
 const styles = () => ({
   topbar: {
@@ -85,6 +86,26 @@ class Topbar extends Component {
         }
         break;
       }
+      case 'handleTutorial': {
+        const [action, payload] = click.parameters;
+        if (this.props.modelState === MODEL_STATE.INSTANTIATED || this.props.modelState === MODEL_STATE.SIMULATED) {
+          this.props.openConfirmationDialog({
+            title: 'Warning',
+            message: DEFAULT_CONFIRMATION_DIALOG_MESSAGE,
+            onConfirm: {
+              type: LOAD_TUTORIAL,
+              action,
+              payload,
+            },
+          });
+        } else if (payload !== undefined) {
+          this.props.dispatchAction(action(payload));
+        } else {
+          this.props.dispatchAction(action);
+        }
+
+        break;
+      }
 
       default:
         console.log(`Menu action not mapped, it is ${click}`);
@@ -101,9 +122,12 @@ class Topbar extends Component {
       classes,
       modelLoaded,
       dialogOpen,
+      modelState,
       topbarDialogName,
       topbarDialogMetadata,
+      openConfirmationDialog,
     } = this.props;
+
     let content;
     if (dialogOpen) {
       switch (topbarDialogName) {
@@ -129,6 +153,8 @@ class Topbar extends Component {
               open={dialogOpen}
               onRequestClose={() => this.handleClose()}
               mode="IMPORT"
+              modelState={modelState}
+              openConfirmationDialog={(payload) => openConfirmationDialog(payload)}
             />
           );
           break;

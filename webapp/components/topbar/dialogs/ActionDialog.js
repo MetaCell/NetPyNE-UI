@@ -38,8 +38,12 @@ class ActionDialog extends React.Component {
   performAction = () => {
     if (this.props.command) {
       if (this.props.isFormValid === undefined || this.props.isFormValid()) {
-        GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, this.props.message);
-        this.props.pythonCall(this.props.command, this.props.args);
+        if (typeof this.props.callback !== 'undefined' || this.props.callback !== null) {
+          this.props.callback(this.props.command, this.props.args);
+        } else {
+          // GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, this.props.message);
+          this.props.pythonCall(this.props.command, this.props.args);
+        }
       }
     }
     this.setState({ hide: true });

@@ -7,7 +7,8 @@ import Box from '@material-ui/core/Box';
 import { withStyles } from '@material-ui/core/styles';
 
 import { ActionDialog, Tooltip } from 'netpyne/components';
-import { NETPYNE_COMMANDS } from '../../../constants';
+import { NETPYNE_COMMANDS, MODEL_STATE, DEFAULT_CONFIRMATION_DIALOG_MESSAGE } from '../../../constants';
+import { PYTHON_CALL } from '../../../redux/actions/general';
 import FileBrowser from '../../general/FileBrowser';
 import Checkbox from '../../general/Checkbox';
 
@@ -179,8 +180,20 @@ class ImportExportHLS extends React.Component {
     }
   }
 
+  handleConfirmation (command, args) {
+    this.props.openConfirmationDialog({
+      title: 'Warning',
+      message: DEFAULT_CONFIRMATION_DIALOG_MESSAGE,
+      onConfirm: {
+        type: PYTHON_CALL,
+        cmd: command,
+        args,
+      },
+    });
+  }
+
   render () {
-    const { classes } = this.props;
+    const { classes, modelState } = this.props;
     switch (this.props.mode) {
       case 'IMPORT':
         var content = (
@@ -309,18 +322,34 @@ class ImportExportHLS extends React.Component {
         var title = 'Export as Python script';
         break;
     }
+
     return (
-      <ActionDialog
-        command={command}
-        message={message}
-        buttonLabel={buttonLabel}
-        args={this.state}
-        title={title}
-        isFormValid={this.isFormValid}
-        {...this.props}
-      >
-        {content}
-      </ActionDialog>
+      this.props.mode === 'IMPORT' ? (
+        <ActionDialog
+          command={command}
+          message={message}
+          buttonLabel={buttonLabel}
+          args={this.state}
+          title={title}
+          isFormValid={this.isFormValid}
+          callback={modelState === MODEL_STATE.INSTANTIATED || modelState === MODEL_STATE.SIMULATED ? (command, args) => { this.handleConfirmation(command, args); } : undefined}
+          {...this.props}
+        >
+          {content}
+        </ActionDialog>
+      ) : (
+        <ActionDialog
+          command={command}
+          message={message}
+          buttonLabel={buttonLabel}
+          args={this.state}
+          title={title}
+          isFormValid={this.isFormValid}
+          {...this.props}
+        >
+          {content}
+        </ActionDialog>
+      )
     );
   }
 }
