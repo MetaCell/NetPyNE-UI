@@ -778,7 +778,12 @@ class NetPyNEGeppetto:
                         else:
                             return [ui.getSVG(fig)]
                     else:
-                        return fig_data
+                        if plotName == 'plotEEG':
+                          return self.simConfig.filename + '_EEG.png'
+                        elif plotName == 'plotDipole':
+                          return self.simConfig.filename + '_dipole.png'
+                        else:
+                          return fig_data
         except Exception as e:
             err = "There was an exception in %s():" % (e.plotName)
             logging.exception(("%s \n %s \n%s" % (err, e, sys.exc_info())))
