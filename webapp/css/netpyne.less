@@ -1,12 +1,22 @@
 @import "colors";
 @import (css)
   url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap");
-
 html,
 body {
   height: 100%;
   background: @bgDarker;
   font-size: 16px;
+}
+
+html {
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    background: @bgDarker;
+    line-height: 1.42857143;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
 }
 
 :root {
@@ -37,24 +47,6 @@ body {
   top: 0px;
 }
 
-#controlpanel {
-  margin-top: @flexlayout-widget-border;
-  // top: 0%!important;
-  // width: 97%!important;
-  height: calc(100% - 24px) !important;
-  width: calc(100% - 16px) !important;
-  div.griddle {
-    td,
-    th {
-      background-color: rgba(@bgLight, 0.7);
-    }
-  }
-}
-#ControlPanelButton {
-  :hover {
-    color: @secondaryColor !important;
-  }
-}
 button.actionButton {
   font-size: 15px;
   margin: 10px;
@@ -143,6 +135,7 @@ button.actionButton {
   color: white;
   left: 22px;
   pointer-events: none;
+  word-wrap: break-word;
   z-index: 10;
 }
 .breadcrumbButtony button {
@@ -568,4 +561,42 @@ div.flexlayout__layout {
   overflow: hidden;
   overflow-y: auto;
   flex: 1;
+}
+[class*="makeStyles-closeDrawer-"] {
+  .drawerList .MuiListItemText-root {
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+body {
+  .MuiTable-root {
+    border-collapse: separate;
+  }
+}
+
+.instantiatedContainer {
+  .position-toolbar {
+    button {
+      background-color: rgba(255, 255, 255, 0.2);
+      font-size: 0.875rem;
+      border-radius: 0;
+    }
+  }
 }

@@ -484,7 +484,7 @@ export default class NetPyNECellRules extends React.Component {
       if (page === 'main') {
         event.preventDefault();
         this.setState({ anchorEl: event.currentTarget });
-        // this.handleNewCellRule({ 'CellType': { 'conds':{}, 'secs':{} } });
+        // this.handleNewCellRule({ CellType: { conds: {}, secs: {} } });
       } else if (page === 'sections') {
         this.handleNewSection({
           Section: {

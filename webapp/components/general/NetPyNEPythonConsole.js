@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 
-import PythonConsole
-  from '@geppettoengine/geppetto-client/js/components/interface/pythonConsole/PythonConsole';
+import { PythonConsole } from '@metacell/geppetto-meta-ui/python-console/PythonConsole';
 
 export class NetPyNEPythonConsole extends Component {
 
-  shouldComponentUpdate() {
+  shouldComponentUpdate (nextProps) {
+    if (this.props.extensionLoaded !== nextProps.extensionLoaded) {
+      return true;
+    }
     return false;
   }
 

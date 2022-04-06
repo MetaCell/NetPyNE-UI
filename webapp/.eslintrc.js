@@ -80,5 +80,6 @@ module.exports = {
     // geppetto
     Instances: true,
     GEPPETTO: true,
+    IPython: true,
   },
 };

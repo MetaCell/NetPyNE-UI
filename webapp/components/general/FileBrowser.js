@@ -1,5 +1,4 @@
 import React from 'react';
-import Tree from '@geppettoengine/geppetto-client/js/components/interface/tree/Tree';
 import Button from '@material-ui/core/Button';
 import { changeNodeAtPath, walk } from 'react-sortable-tree';
 import Dialog from '@material-ui/core/Dialog';
@@ -10,6 +9,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import { Tooltip } from 'netpyne/components';
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
+import Tree from './tree/Tree';
 
 import Utils from '../../Utils';
 import { bgLight, fontColor } from '../../theme';

@@ -134,6 +134,7 @@ const ContributeContent = withStyles(styles)(({ classes }) => (
     </Box>
   </Paper>
 ));
+
 export default function Dialog ({
   open,
   title,

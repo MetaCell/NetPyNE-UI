@@ -1,13 +1,14 @@
+import * as Sentry from '@sentry/react';
+
 import {
   execPythonMessage,
   evalPythonMessage,
-} from '@geppettoengine/geppetto-client/js/communication/geppettoJupyter/GeppettoJupyterUtils';
-import React from 'react';
+} from './components/general/GeppettoJupyterUtils';
 
 const Utils = {
 
   getAvailableKey (model, prefix) {
-    if (model == undefined) {
+    if (model === undefined) {
       return prefix;
     }
     // Get New Available ID
@@ -23,24 +24,64 @@ const Utils = {
     return id;
   },
 
-  getMetadataField (key, field) {
-    if (key == undefined) {
-      return;
+  captureSentryException (e) {
+    Sentry.captureException(e);
+    console.error(e);
+  },
+
+  /**
+   * Retrieves the metadata object for the passed `key`.
+   *
+   * A specific attributes can be selected by passing `field`.
+   *
+   * The algorithm will iteratively test the key for each nesting in metadata.
+   *
+   * Example key: `netParams.popParams.E.numCells`.
+   * Since 'E' is not explicitly modeled in `netpyne.metadata`
+   * this algorithm implements additional logic to skip certain levels.
+   *
+   * @param {*} key key of metadata path.
+   * @param {*} field specific object attribute.
+   * @returns metadata object or specific attribute.
+   */
+  getMetadataField (key, field = null) {
+    if (key === undefined) {
+      return null;
     }
+
     let currentObject;
     let nextObject = window.metadata;
-    key.split('.')
-      .forEach((item) => {
+    let skipped = false;
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const item of key.split('.')) {
+      if (currentObject != null && currentObject?.container === true && !(item in nextObject)) {
+        if (skipped) {
+          return null;
+        }
+
+        // skip the list element, e.g. "E"!
+        console.debug(`Skip ${item} at ${nextObject.label}`);
+        skipped = true;
+      } else {
+        skipped = false;
+
         if (item in nextObject) {
           currentObject = nextObject[item];
           if ('children' in currentObject) {
             nextObject = currentObject.children;
           }
         } else {
-          currentObject = undefined;
+          currentObject = null;
         }
-      });
-    return (currentObject == undefined) ? currentObject : currentObject[field];
+      }
+    }
+
+    if (currentObject) {
+      return field ? currentObject[field] : currentObject;
+    }
+
+    return null;
   },
 
   getHTMLType (key) {
@@ -132,7 +173,7 @@ const Utils = {
     return name;
   },
 
-  // FIXME: Hack to remove scaped chars (\\ -> \ and \' -> ') manually
+  // FIXME: Hack to remove escaped chars (\\ -> \ and \' -> ') manually
   convertToJSON (data) {
     if (typeof data === 'string' || data instanceof String) {
       return JSON.parse(data.replace(/\\\\/g, '\\')
@@ -147,12 +188,15 @@ const Utils = {
 
   getErrorResponse (data) {
     const parsedData = this.convertToJSON(data);
-    if (parsedData.type && parsedData.type == 'ERROR') {
+    if (parsedData && parsedData.type && parsedData.type === 'ERROR') {
       const error = { details: parsedData.details };
       if (Object.prototype.hasOwnProperty.call(parsedData, 'message')) {
         error.message = parsedData.message;
       } else if (Object.prototype.hasOwnProperty.call(parsedData, 'websocket')) {
         error.message = parsedData.websocket;
+      }
+      if (Object.prototype.hasOwnProperty.call(parsedData, 'additional_info')) {
+        error.additionalInfo = parsedData.additional_info ;
       }
       return error;
     }
@@ -160,7 +204,7 @@ const Utils = {
   },
 
   handleUpdate (updateCondition, newValue, originalValue, context, componentName) {
-    if ((updateCondition) && (newValue != originalValue)) {
+    if ((updateCondition) && (newValue !== originalValue)) {
       /*
        * if the new value has been changed by the function Utils.nameValidation means that the name convention
        * has not been respected, so we need to open the dialog and inform the user.
@@ -171,10 +215,10 @@ const Utils = {
         errorDetails: `Leading digits or whitespaces are not allowed in ${componentName} names.`,
       });
       return true;
-    } if ((updateCondition) && (newValue == originalValue)) {
+    } if ((updateCondition) && (newValue === originalValue)) {
       context.setState({ currentName: newValue });
       return true;
-    } if (!(updateCondition) && (newValue == originalValue)) {
+    } if (!(updateCondition) && (newValue === originalValue)) {
       context.setState({
         currentName: newValue,
         errorMessage: 'Error',
@@ -182,7 +226,7 @@ const Utils = {
         } is already used in this model, please pick another name.`,
       });
       return false;
-    } if (!(updateCondition) && (newValue != originalValue)) {
+    } if (!(updateCondition) && (newValue !== originalValue)) {
       context.setState({
         currentName: newValue,
         errorMessage: 'Error',
@@ -192,8 +236,22 @@ const Utils = {
     }
   },
 
+  formatDate (timestamp) {
+    const date = new Date(timestamp);
+    return date?.toLocaleDateString();
+  },
+
   execPythonMessage,
   evalPythonMessage,
+
+  flatten (obj, path = '') {
+    if (!(obj instanceof Object)) return { [path.replace(/\.$/g, '')]: obj };
+
+    return Object.keys(obj)
+      .reduce((output, key) => (obj instanceof Array
+        ? { ...output, ...Utils.flatten(obj[key], `${path}[${key}].`) }
+        : { ...output, ...Utils.flatten(obj[key], `${path + key}.`) }), {});
+  },
 };
 
 export default Utils;

@@ -84,26 +84,21 @@ class NetPyNEController:  # pytest: no cover
                     with gzip.open(file_path, "rb") as gz, open(file_path.replace('.gz', ''), 'wb') as ff:
                         shutil.copyfileobj(gz, ff)
 
-            handler.set_status(
-                200, f"Number of files saved: {files_saved}. Number of files sent: {len(files['file'])}")
+            handler.set_status(200, f"Number of files saved: {files_saved}. Number of files sent: {len(files['file'])}")
 
         handler.finish()
 
     @get('/downloads')
     def downloads(handler: IPythonHandler):
-
         file_paths = get_file_paths(handler)
-
         if file_paths:
-
             if len(file_paths) == 0:
                 handler.set_status(400, f"Files not found.")
                 handler.finish()
                 return
 
             if len(file_paths) == 1:
-                send_files(handler, file_paths[0],
-                           file_paths[0].split('/')[-1])
+                send_files(handler, file_paths[0], file_paths[0].split('/')[-1])
 
             else:
                 with TemporaryDirectory() as dir_path:
