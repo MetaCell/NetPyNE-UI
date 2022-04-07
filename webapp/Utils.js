@@ -61,7 +61,7 @@ const Utils = {
         }
 
         // skip the list element, e.g. "E"!
-        console.debug(`Skip ${item} at ${nextObject.label}`);
+        // console.debug(`Skip ${item} at ${nextObject.label}`);
         skipped = true;
       } else {
         skipped = false;

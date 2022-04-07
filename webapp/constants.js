@@ -21,7 +21,7 @@ export const MODEL_STATE = {
 };
 
 export const DEFAULT_COLOR = {
-  g: 0.50, b: 0.60, r: 1, a: 0.80,
+  g: 0.50, b: 0.60, r: 1, a: 1,
 };
 
 export const NETPYNE_COMMANDS = {
