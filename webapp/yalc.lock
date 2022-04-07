@@ -1,0 +1,17 @@
+{
+  "version": "v1",
+  "packages": {
+    "@metacell/geppetto-meta-client": {
+      "signature": "166fa14f576cedf2bd1682cf75961e6f",
+      "file": true
+    },
+    "@metacell/geppetto-meta-core": {
+      "signature": "7383d36fcf8f1dacc8ff40f10a3c1f14",
+      "file": true
+    },
+    "@metacell/geppetto-meta-ui": {
+      "signature": "bd156a1157253e3b25912557d4b5623e",
+      "file": true
+    }
+  }
+}
