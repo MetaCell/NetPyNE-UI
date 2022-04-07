@@ -589,6 +589,20 @@ body {
   .MuiTable-root {
     border-collapse: separate;
   }
+
+  .MuiBackdrop-root {
+    .MuiGrid-root {
+      display: block;
+      width: auto;
+      margin: 0;
+      flex: none;
+      text-align: center;
+
+      .MuiCircularProgress-root {
+        color: @textColor;
+      }
+    }
+  }
 }
 
 .instantiatedContainer {
