@@ -12,7 +12,7 @@ import Shuffle from '@material-ui/icons/Shuffle';
 import { ChromePicker } from 'react-color';
 import { useDispatch, useSelector } from 'react-redux';
 import { experimentLabelColor } from '../../theme';
-import { changeInstanceColor } from '../../redux/actions/general';
+import { changeInstanceColor, selectInstances } from '../../redux/actions/general';
 
 const useStyles = makeStyles((theme) => ({
   networkItem: {
@@ -62,26 +62,39 @@ const ControlPanelTreeItem = (props) => {
     setColor(_color.rgb);
   };
 
-  const generateRandomColor = (event, nodeId) => {
-    const newInstances = instances.filter((instance) => !(instance.instancePath.startsWith(nodeId)));
-    const randomColor = {
-      r: parseFloat((Math.random() * 255).toFixed(2)),
-      g: parseFloat((Math.random() * 255).toFixed(2)),
-      b: parseFloat((Math.random() * 255).toFixed(2)),
-      a: 1,
-    };
+  const getRandomColor = () => ({
+    r: parseFloat((Math.random() * 255).toFixed(2)),
+    g: parseFloat((Math.random() * 255).toFixed(2)),
+    b: parseFloat((Math.random() * 255).toFixed(2)),
+    a: 1,
+  });
 
-    newInstances.push({
-      instancePath: nodeId,
-      color: {
-        r: randomColor.r / 255,
-        g: randomColor.g / 255,
-        b: randomColor.b / 255,
-        a: randomColor.a,
-      },
+  const generateRandomColor = (event, nodeId) => {
+    const children = window.Instances.getInstance(nodeId).getChildren().map((instance) => instance.getInstancePath());
+    // const newInstances = instances.filter((instance) => !(instance.instancePath.startsWith(nodeId)));
+    const newInstances = instances.filter((instance) => {
+      let condition = true;
+      children.forEach((child) => {
+        if (instance.instancePath.startsWith(child)) {
+          condition = false;
+        }
+      });
+      return condition;
+    });
+
+    children.forEach((child) => {
+      const randomColor = getRandomColor();
+      newInstances.push({
+        instancePath: child,
+        color: {
+          r: randomColor.r / 255,
+          g: randomColor.g / 255,
+          b: randomColor.b / 255,
+          a: randomColor.a,
+        },
+      });
     });
     dispatch(changeInstanceColor(newInstances));
-    setColor(randomColor);
   };
 
   const changeVisibility = (event, nodeId) => {
@@ -126,6 +139,7 @@ const ControlPanelTreeItem = (props) => {
     onNodeSelect,
     onVisibilityClick,
     children,
+    disableRandom,
     ...other
   } = props;
 
@@ -153,7 +167,7 @@ const ControlPanelTreeItem = (props) => {
                   <IconButton onClick={(event) => changeVisibility(event, nodeId)}>
                     { visibility ? <Visibility /> : <VisibilityOff /> }
                   </IconButton>
-                  <IconButton onClick={(event) => generateRandomColor(event, nodeId)}><Shuffle /></IconButton>
+                  <IconButton disabled={disableRandom} onClick={(event) => generateRandomColor(event, nodeId)}><Shuffle /></IconButton>
                   <IconButton onClick={() => setShowColorPicker(true)}><ColorLens /></IconButton>
                   {
               showColorPicker
