@@ -1,16 +1,17 @@
 /* eslint-disable no-nested-ternary */
 import * as React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import TreeView from '@material-ui/lab/TreeView';
-import TreeItem from '@material-ui/lab/TreeItem';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ControlPanelTreeItem from './ControlPanelTreeItem';
 import { experimentLabelColor } from '../../theme';
 import { MODEL_STATE } from '../../constants';
+import { selectInstances } from '../../redux/actions/general';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -18,7 +19,7 @@ const useStyles = makeStyles(() => ({
       position: 'relative',
       '&::before': {
         content: '""',
-        height: 'calc(100% - 0.85rem)',
+        height: 'calc(100% - 1.1rem)',
         width: '0.0625rem',
         position: 'absolute',
         left: '-0.65rem',
@@ -35,7 +36,7 @@ const useStyles = makeStyles(() => ({
           width: '1.4375rem',
           backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'6\' viewBox=\'0 0 12 6\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M6 6C2.68629 6 0 3.31371 0 0H1C1 2.80391 3.19609 5 6 5V6Z\' fill=\'%23ffffff\'/%3E%3Cpath d=\'M6 5H11.5C11.7761 5 12 5.22386 12 5.5C12 5.77614 11.7761 6 11.5 6H6V5Z\' fill=\'%23ffffff\'/%3E%3C/svg%3E")',
           position: 'absolute',
-          top: '0.75rem',
+          top: '0.5rem',
           backgroundRepeat: 'no-repeat',
           left: '-0.65rem',
         },
@@ -69,9 +70,11 @@ const useStyles = makeStyles(() => ({
 
 const ExperimentControlPanel = (props) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const instances = useSelector((state) => state.general.instances);
   const [filter, setFilter] = React.useState('');
   const onNodeSelect = (nodeId) => {
-    console.log(`Node with id ${nodeId} clicked`);
+    dispatch(selectInstances(instances, [nodeId]));
   };
   const instancesMap = new Map();
 
@@ -116,7 +119,7 @@ const ExperimentControlPanel = (props) => {
   };
 
   const getTreeItemsFromData = (treeItems) => treeItems.map((treeItemData) => {
-    let children;
+    let children = [];
     if (treeItemData.getChildren() && treeItemData.getChildren().length > 0) {
       children = getTreeItemsFromData(treeItemData.getChildren());
     }
@@ -129,6 +132,7 @@ const ExperimentControlPanel = (props) => {
         type={treeItemData.getType().getId()}
         onNodeSelect={onNodeSelect}
         onVisibilityClick={onVisibilityClick}
+        disableRandom={children.length === 0}
       >
         {children}
       </ControlPanelTreeItem>
@@ -138,7 +142,7 @@ const ExperimentControlPanel = (props) => {
   return (
     <>
       {
-        window.Instances // temporary change to -> props.modelState === MODEL_STATE.INSTANTIATED
+        props.modelState === MODEL_STATE.INSTANTIATED || props.modelState === MODEL_STATE.SIMULATED
           ? (
             window.Instances
               ? (
@@ -150,23 +154,15 @@ const ExperimentControlPanel = (props) => {
                     <Typography>Controls</Typography>
                   </Box>
                   <TreeView
+                    className={classes.root}
                     aria-label="Network data navigator"
                     defaultExpanded={['network']}
                     defaultCollapseIcon={<ExpandMoreIcon />}
                     defaultExpandIcon={<ChevronRightIcon />}
                   >
-                    <TreeItem
-                      className={classes.root}
-                      nodeId="network"
-                      label="network_netpyne"
-                      defaultCollapseIcon={false}
-                      defaultExpandIcon={false}
-                      defaultEndIcon={false}
-                    >
-                      {filter === ''
-                        ? getTreeItemsFromData(window.Instances.network.getChildren())
-                        : getFlatFilteredList(window.Instances.network.getChildren())}
-                    </TreeItem>
+                    {filter === ''
+                      ? getTreeItemsFromData([window.Instances.getInstance('network')])
+                      : getFlatFilteredList([window.Instances.getInstance('network')])}
                   </TreeView>
                 </Box>
               )

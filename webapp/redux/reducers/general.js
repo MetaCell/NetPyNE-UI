@@ -21,6 +21,33 @@ export const GENERAL_DEFAULT_STATE = {
   instances: [],
 };
 
+const applySelection = (data, selectedInstances) => {
+  const smap = new Map(selectedInstances.map((i) => [i, true]));
+  const newData = data.map((item) => ({
+    ...item,
+    selected: false,
+  }));
+  const dmap = new Map(newData.map((i) => [i.instancePath, true]));
+
+  smap.forEach((value, key) => {
+    const item = dmap.get(key);
+    if (!item) {
+      newData.push({
+        instancePath: key,
+        color: undefined,
+        selected: true,
+      });
+    }
+  });
+  const canvasData = newData.filter((item) => {
+    if ((item?.selected !== undefined && item?.selected === false) && item?.color === undefined) {
+      return false;
+    }
+    return true;
+  });
+  return canvasData;
+};
+
 // reducer function
 export default function reduceGeneral (state = GENERAL_DEFAULT_STATE, action) {
   switch (action.type) {
@@ -75,6 +102,10 @@ export default function reduceGeneral (state = GENERAL_DEFAULT_STATE, action) {
     }
     case Actions.REMOVE_CANVAS_INSTANCES: {
       return { ...state };
+    }
+    case Actions.SELECT_INSTANCE: {
+      const newData = applySelection(action.data.instance, action.data.selectedInstances);
+      return { ...state, instances: [...newData] };
     }
     default: {
       return state;
