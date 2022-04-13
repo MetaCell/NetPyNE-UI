@@ -70,17 +70,39 @@ const useStyles = makeStyles((theme) => ({
     padding: '0.2rem',
     '& label': {
       color: '#ffffff !important',
+      fontFamily: 'Roboto, arial',
+      fontSize: '11px',
+      fontWeight: 400,
     },
     '& input': {
       backgroundColor: `${bgLight} !important`,
       color: '#ffffff !important',
       boxShadow: 'none !important',
+      fontFamily: 'Roboto, arial',
+      fontSize: '11px',
+      fontWeight: 400,
     },
     '& svg': {
       fill: '#ffffff !important',
     },
     '& svg:hover': {
       background: 'transparent !important',
+    },
+    '& .hue-horizontal': {
+      borderRadius: '10px',
+    },
+    '& :nth-child(2)': {
+      '& :nth-child(1)': {
+        '& :nth-child(2)': {
+          '& :nth-child(2)': {
+            '& :nth-child(1)': {
+              '& :nth-child(2)': {
+                borderRadius: '10px',
+              },
+            },
+          },
+        },
+      },
     },
   },
   activeColorPicker: {

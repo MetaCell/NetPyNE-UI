@@ -6,12 +6,11 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import TreeView from '@material-ui/lab/TreeView';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ControlPanelTreeItem from './ControlPanelTreeItem';
 import { experimentLabelColor } from '../../theme';
 import { MODEL_STATE } from '../../constants';
 import { selectInstances } from '../../redux/actions/general';
+import { TreeItemArrowRightIcon, TreeItemArrowDownIcon } from './NetPyNEIcons';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -25,7 +24,7 @@ const useStyles = makeStyles(() => ({
         left: '-0.65rem',
         borderRadius: '3.125rem',
         top: '0rem',
-        backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'1\' height=\'8\' viewBox=\'0 0 1 8\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 0H1V8H0V0Z\' fill=\'%23ffffff\'/%3E%3C/svg%3E")',
+        backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'1\' height=\'8\' viewBox=\'0 0 1 8\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 0H1V8H0V0Z\' fill=\'%23989898\'/%3E%3C/svg%3E")',
         backgroundRepeat: 'repeat',
       },
       '& .MuiTreeItem-root': {
@@ -34,7 +33,7 @@ const useStyles = makeStyles(() => ({
           content: '""',
           height: '0.875rem',
           width: '1.4375rem',
-          backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'6\' viewBox=\'0 0 12 6\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M6 6C2.68629 6 0 3.31371 0 0H1C1 2.80391 3.19609 5 6 5V6Z\' fill=\'%23ffffff\'/%3E%3Cpath d=\'M6 5H11.5C11.7761 5 12 5.22386 12 5.5C12 5.77614 11.7761 6 11.5 6H6V5Z\' fill=\'%23ffffff\'/%3E%3C/svg%3E")',
+          backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'6\' viewBox=\'0 0 12 6\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M6 6C2.68629 6 0 3.31371 0 0H1C1 2.80391 3.19609 5 6 5V6Z\' fill=\'%23989898\'/%3E%3Cpath d=\'M6 5H11.5C11.7761 5 12 5.22386 12 5.5C12 5.77614 11.7761 6 11.5 6H6V5Z\' fill=\'%23989898\'/%3E%3C/svg%3E")',
           position: 'absolute',
           top: '0.5rem',
           backgroundRepeat: 'no-repeat',
@@ -65,6 +64,11 @@ const useStyles = makeStyles(() => ({
       color: experimentLabelColor,
       fontWeight: 'bold',
     },
+  },
+  svgContainer: {
+    fontSize: '12px',
+    width: '10px',
+    height: '10px',
   },
 }));
 
@@ -157,8 +161,8 @@ const ExperimentControlPanel = (props) => {
                     className={classes.root}
                     aria-label="Network data navigator"
                     defaultExpanded={['network']}
-                    defaultCollapseIcon={<ExpandMoreIcon />}
-                    defaultExpandIcon={<ChevronRightIcon />}
+                    defaultCollapseIcon={<TreeItemArrowDownIcon className={classes.svgContainer} />}
+                    defaultExpandIcon={<TreeItemArrowRightIcon className={classes.svgContainer} />}
                   >
                     {filter === ''
                       ? getTreeItemsFromData([window.Instances.getInstance('network')])

@@ -59,10 +59,18 @@ export function TriangleIcon (props) {
   );
 }
 
-export function TreeItemExpandIcon (props) {
+export function TreeItemArrowRightIcon (props) {
   return (
     <SvgIcon viewBox="0 0 4 8" {...props}>
       <path d="M0.666504 7.33332L3.99984 3.99999L0.666504 0.666656V7.33332Z" fill="#989898" />
+    </SvgIcon>
+  );
+}
+
+export function TreeItemArrowDownIcon (props) {
+  return (
+    <SvgIcon viewBox="0 0 8 4" {...props}>
+      <path d="M0.65625 0.65625H7.34375L4 4L0.65625 0.65625Z" fill="#989898" />
     </SvgIcon>
   );
 }

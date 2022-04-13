@@ -137,9 +137,15 @@ export const LaunchDialog = connect(
   },
 )(_LaunchDialog);
 
+export const ExperimentControlPanel = connect(
+  (state) => ({
+    modelState: state.general.modelState,
+  }),
+  null,
+)(_ExperimentControlPanel);
+
 export const ExperimentEdit = _ExperimentEdit;
 export const ExperimentManager = _ExperimentManager;
-export const ExperimentControlPanel = _ExperimentControlPanel;
 
 // ---------------------------------------------------------------------------------------- //
 
