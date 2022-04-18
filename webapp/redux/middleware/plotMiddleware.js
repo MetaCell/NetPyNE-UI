@@ -11,6 +11,7 @@ import {
   SET_THEME,
   CREATE_NETWORK,
 } from '../actions/general';
+import { hideSpinner, showSpinner } from '@metacell/geppetto-meta-client/common/actions/actions';
 
 // A simple cache for plots coming from the backend.
 // This is a temporary solution until we have a proper strategy to store the plot data in redux
@@ -27,7 +28,7 @@ const setPlotToWindow = (plotId, data) => {
   window.plotCache[plotId] = data;
 };
 
-const plotFigure = async (plotId, plotMethod, plotType = false, theme) => {
+const plotFigure = async (plotId, plotMethod, plotType = false, uri = null, theme) => {
   try {
     let response = await Promise.race([
       Utils.evalPythonMessage(NETPYNE_COMMANDS.plotFigure, [plotMethod, plotType, theme], false),
@@ -38,7 +39,7 @@ const plotFigure = async (plotId, plotMethod, plotType = false, theme) => {
       })]);
 
     console.log('Plot response received for', plotId);
-    if (!response) {
+    if (!response && !uri) { //png plots return null response but they provide a uri so they can be grabbed from the workspace
       return null;
     }
 
@@ -62,6 +63,10 @@ const plotFigure = async (plotId, plotMethod, plotType = false, theme) => {
         htmlText = htmlText.replace('<head>', '<head><style>.bk {margin: 0 auto!important;}</style>');
       }
       return htmlText;
+    }
+    if ((plotMethod == 'plotDipole' || plotMethod == 'plotEEG' )) { //uri is available here
+      const plotUri = uri.replace('{name}', response);
+      return (`<img src="${plotUri}"></img>`) ;
     }
     if (response?.length !== undefined) {
       return response[0];
@@ -93,13 +98,15 @@ const updatePlots = (next) => {
 export default (store) => (next) => (action) => {
   async function setWidget (widget) {
     const {
-      plotMethod,
-      plotType,
-    } = widget.config.method;
-    return plotFigure(widget.id, plotMethod, plotType, store.getState().general.theme)
+      method,
+      uri,
+    } = widget.config;
+    showSpinner("Loading plot...");
+    return plotFigure(widget.id, method.plotMethod, method.plotType, uri, store.getState().general.theme)
       .then((data) => {
         setPlotToWindow(widget.id, data);
         widget.initialized = true;
+        hideSpinner();
         if (data) {
           console.debug('Plot retrieved:', widget.id);
           return widget;

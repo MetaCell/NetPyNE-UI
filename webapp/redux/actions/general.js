@@ -15,6 +15,8 @@ export const DELETE_NETPARAMS_OBJ = 'DELETE_NETPARAMS_OBJ';
 export const CLOSE_DIALOG = 'CLOSE_DIALOG';
 export const OPEN_DIALOG = 'OPEN_DIALOG';
 export const LOAD_TUTORIAL = 'LOAD_TUTORIAL';
+export const OPEN_CONFIRMATION_DIALOG = 'OPEN_CONFIRMATION_DIALOG';
+export const CLOSE_CONFIRMATION_DIALOG = 'CLOSE_CONFIRMATION_DIALOG';
 export const AUTOMATIC_INSTANTIATION = 'AUTOMATIC_INSTANTIATION';
 export const AUTOMATIC_SIMULATION = 'AUTOMATIC_SIMULATION';
 export const IMPORT_APPLICATION_STATE = 'IMPORT_APPLICATION_STATE';
@@ -58,6 +60,13 @@ export const openDialog = (payload) => ({
   type: OPEN_DIALOG,
   payload,
 });
+
+export const openConfirmationDialog = (payload) => ({
+  type: OPEN_CONFIRMATION_DIALOG,
+  payload,
+});
+
+export const closeConfirmationDialog = { type: CLOSE_CONFIRMATION_DIALOG };
 
 export const setTheme = (themeName) => ({
   type: SET_THEME,
