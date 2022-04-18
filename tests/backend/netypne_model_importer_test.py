@@ -17,6 +17,9 @@ from netpyne_ui.netpyne_geppetto import NetPyNEGeppetto
 netpyne.__gui__ = False
 sys.path.insert(0, NETPYNE_WORKDIR_PATH)
 
+import sentry_sdk
+sentry_sdk.init()
+
 class TestNetPyNEModelInterpreter(unittest.TestCase):
 
     @classmethod
