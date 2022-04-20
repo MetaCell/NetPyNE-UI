@@ -8,7 +8,7 @@ import {
   VIEW_EXPERIMENTS_RESULTS,
   TRIAL_LOAD_MODEL_SPEC,
 } from 'root/redux/actions/experiments';
-import { NETPYNE_COMMANDS } from 'root/constants';
+import { NETPYNE_COMMANDS, EDIT_WIDGETS } from 'root/constants';
 import * as GeppettoActions from '@metacell/geppetto-meta-client/common/actions';
 import * as ExperimentsApi from 'root/api/experiments';
 import {
@@ -285,7 +285,11 @@ export default (store) => (next) => (action) => {
       break;
     }
     case SIMULATE_NETWORK: {
-      next(GeppettoActions.waitData('Simulating the NetPyNE Model', GeppettoActions.layoutActions.SET_WIDGETS));
+      if (!action.payload) {
+        next(GeppettoActions.waitData('Simulating the NetPyNE Model', GeppettoActions.layoutActions.SET_WIDGETS));
+      } else {
+        next(GeppettoActions.activateWidget(EDIT_WIDGETS.experimentManager.id));
+      }
       let allParams = true;
       ExperimentsApi.getParameters()
         .then((params) => {
