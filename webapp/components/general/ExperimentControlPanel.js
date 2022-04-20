@@ -117,7 +117,9 @@ const ExperimentControlPanel = (props) => {
 
     const flatList = [];
     instancesMap.forEach((value, key) => {
-      flatList.push(value);
+      if (value.key.includes(filter)) {
+        flatList.push(value);
+      }
     });
     return flatList;
   };
