@@ -54,8 +54,8 @@ const useStyles = makeStyles((theme) => ({
   },
   colorPickerBox: {
     position: 'absolute',
-    top: '1.2rem',
-    right: '2.5rem',
+    top: '1.6rem',
+    right: '2.7rem',
     height: '3rem',
   },
   triangleIcon: {
@@ -232,8 +232,8 @@ const ControlPanelTreeItem = (props) => {
       label={(
         <Grid
           container
-          onMouseEnter={() => setIsHoveredOver(true)}
-          onMouseLeave={() => setIsHoveredOver(false)}
+          onMouseEnter={() => setTimeout(setIsHoveredOver(true), 10000)}
+          onMouseLeave={() => setTimeout(setIsHoveredOver(false), 10000)}
           display="flex"
           flexDirection="row"
           justifyContent="space-between"
@@ -273,9 +273,9 @@ const ControlPanelTreeItem = (props) => {
                 ? (
                   <Box
                     className={classes.colorPickerBox}
-                    onMouseLeave={() => setTimeout(setShowColorPicker(false), 1000)}
+                    onMouseLeave={() => setTimeout(setShowColorPicker(false), 30000)}
                   >
-                    <TriangleIcon className={classes.triangleIcon} />
+                    {/* <TriangleIcon className={classes.triangleIcon} /> */}
                     <ChromePicker
                       className={classes.colorPicker}
                       color={color}
