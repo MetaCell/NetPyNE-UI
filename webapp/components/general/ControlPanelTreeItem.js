@@ -227,7 +227,7 @@ const ControlPanelTreeItem = (props) => {
 
   return (
     <TreeItem
-      className={`${classes.treeItem} ${children.length == 0 ? classes.leafTreeItem : ''}`}
+      className={`${classes.treeItem} ${children?.length === 0 ? classes.leafTreeItem : ''}`}
       nodeId={nodeId}
       label={(
         <Grid
