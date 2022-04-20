@@ -20,7 +20,7 @@ import {
   ColorLensIcon,
   TriangleIcon,
 } from './NetPyNEIcons';
-import { changeInstanceColor, selectInstances } from '../../redux/actions/general';
+import { changeInstanceColor } from '../../redux/actions/general';
 
 const useStyles = makeStyles((theme) => ({
   treeItem: {
@@ -136,6 +136,8 @@ const ControlPanelTreeItem = (props) => {
     });
     dispatch(changeInstanceColor(newInstances));
     setColor(_color.rgb);
+    event.stopPropagation();
+    event.preventDefault();
   };
 
   const getRandomColor = () => ({
@@ -146,6 +148,8 @@ const ControlPanelTreeItem = (props) => {
   });
 
   const generateRandomColor = (event, nodeId) => {
+    event.stopPropagation();
+    event.preventDefault();
     const children = window.Instances.getInstance(nodeId).getChildren().map((instance) => instance.getInstancePath());
     // const newInstances = instances.filter((instance) => !(instance.instancePath.startsWith(nodeId)));
     const newInstances = instances.filter((instance) => {
@@ -174,6 +178,8 @@ const ControlPanelTreeItem = (props) => {
   };
 
   const changeVisibility = (event, nodeId) => {
+    event.stopPropagation();
+    event.preventDefault();
     const copiedInstances = instances.slice();
     let oldIndex = null;
     let oldInstance = copiedInstances.find((pInstance, index) => {
@@ -223,7 +229,6 @@ const ControlPanelTreeItem = (props) => {
     <TreeItem
       className={`${classes.treeItem} ${children.length == 0 ? classes.leafTreeItem : ''}`}
       nodeId={nodeId}
-      onLabelClick={(e) => { e.stopPropagation(); e.preventDefault(); }}
       label={(
         <Grid
           container
@@ -235,7 +240,12 @@ const ControlPanelTreeItem = (props) => {
         >
 
           <Grid item xs={4}>
-            <Typography onClick={() => onNodeSelect(nodeId)}>
+            <Typography onClick={(event) => {
+              onNodeSelect(nodeId);
+              event.stopPropagation();
+              event.preventDefault();
+            }}
+            >
               {label}
             </Typography>
           </Grid>
@@ -247,7 +257,12 @@ const ControlPanelTreeItem = (props) => {
                   <IconButton onClick={(event) => changeVisibility(event, nodeId)}>
                     { visibility ? <Visibility style={{ marginRight: '0.5rem' }} /> : <VisibilityOff style={{ marginRight: '0.5rem' }} /> }
                   </IconButton>
-                  <IconButton onClick={() => setShowColorPicker(true)}>
+                  <IconButton onClick={(event) => {
+                    event.stopPropagation();
+                    event.preventDefault();
+                    setShowColorPicker(true);
+                  }}
+                  >
                     <ColorLensIcon className={showColorPicker ? classes.activeColorPicker : ''} />
                   </IconButton>
                   <IconButton disabled={disableRandom} onClick={(event) => generateRandomColor(event, nodeId)}>
@@ -264,7 +279,9 @@ const ControlPanelTreeItem = (props) => {
                     <ChromePicker
                       className={classes.colorPicker}
                       color={color}
-                      onChangeComplete={(color, event) => handleColorSelection(color, event, nodeId)}
+                      onChangeComplete={(color, event) => {
+                        handleColorSelection(color, event, nodeId);
+                      }}
                     />
                   </Box>
                 ) : null
