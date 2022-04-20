@@ -13,7 +13,7 @@ const SELECTION_COLOR = {
   r: 0, g: 0.8, b: 0.8, a: 1,
 };
 const DEFAULT_COLOR = {
-  g: 0.50, b: 0.60, r: 1, a: 0.80,
+  g: 0.50, b: 0.60, r: 1, a: 1,
 };
 
 const styles = () => ({
@@ -50,13 +50,12 @@ class NetPyNEInstantiated extends React.Component {
     this.canvasRef = React.createRef();
 
     this.onSelection = this.onSelection.bind(this);
-    this.applySelection = this.applySelection.bind(this);
     this.mapToCanvasData = this.mapToCanvasData.bind(this);
   }
 
   onSelection (selectedInstances) {
     const { selectInstances, data } = this.props;
-    selectInstances(this.applySelection(data, selectedInstances));
+    selectInstances(data, selectedInstances);
   }
 
   updateBtnsWithTheme = (removeClass, addClass) => {
@@ -76,38 +75,6 @@ class NetPyNEInstantiated extends React.Component {
         instancePath: item.instancePath,
       }
     ));
-  }
-
-  applySelection (data, selectedInstances) {
-    const smap = new Map(selectedInstances.map((i) => [i, true]));
-    const newData = data.map((item) => {
-      if (smap.get(item.instancePath)) {
-        return {
-          ...item,
-          selected: !item.selected,
-        };
-      }
-      return { ...item };
-    });
-    const dmap = new Map(newData.map((i) => [i.instancePath, true]));
-
-    smap.forEach((value, key) => {
-      const item = dmap.get(key);
-      if (!item) {
-        newData.push({
-          instancePath: key,
-          color: undefined,
-          selected: true,
-        });
-      }
-    });
-    const canvasData = newData.filter((item) => {
-      if ((item?.selected !== undefined && item?.selected === false) && item?.color === undefined) {
-        return false;
-      }
-      return true;
-    });
-    return canvasData;
   }
 
   render () {
@@ -135,8 +102,13 @@ class NetPyNEInstantiated extends React.Component {
           ref={this.canvasRef}
           key="CanvasContainer"
           cameraOptions={camOptions}
-          backgroundColor={bgRegular}
+          backgroundColor={
+            this.props.theme === THEMES.BLACK
+              ? canvasBgDark
+              : (this.props.theme === THEMES.LIGHT ? canvasBgLight : bgRegular)
+          }
           onSelection={this.onSelection}
+          linesThreshold="10000"
         />
       </div>
     );

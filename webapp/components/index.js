@@ -16,7 +16,7 @@ import { openBackendErrorDialog, closeBackendErrorDialog } from '../redux/action
 import {
   updateCards, editModel, simulateNetwork, createNetwork, closeDialog,
   createAndSimulateNetwork, showNetwork, pythonCall, modelLoaded, deleteNetParamsObj, resetModel,
-  setDefaultWidgets, changeInstanceColor, openConfirmationDialog, closeConfirmationDialog,
+  setDefaultWidgets, changeInstanceColor, openConfirmationDialog, closeConfirmationDialog, selectInstances,
 } from '../redux/actions/general';
 
 import {
@@ -137,9 +137,15 @@ export const LaunchDialog = connect(
   },
 )(_LaunchDialog);
 
+export const ExperimentControlPanel = connect(
+  (state) => ({
+    modelState: state.general.modelState,
+  }),
+  null,
+)(_ExperimentControlPanel);
+
 export const ExperimentEdit = _ExperimentEdit;
 export const ExperimentManager = _ExperimentManager;
-export const ExperimentControlPanel = _ExperimentControlPanel;
 
 // ---------------------------------------------------------------------------------------- //
 
@@ -250,7 +256,7 @@ export const NetPyNEInstantiated = connect(
     data: state.general.instances,
   }),
   (dispatch) => ({
-    selectInstances: (instances) => dispatch(changeInstanceColor(instances)),
+    selectInstances: (instances, selectedInstances) => dispatch(selectInstances(instances, selectedInstances)),
   }),
 )(_NetPyNEInstantiated);
 

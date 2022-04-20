@@ -194,7 +194,10 @@ def main(netpyne_branch, workspace_branch, geppetto_branch=None, skipNpm=False,
         if development:
             # install geppetto meta
             if os.path.exists(os.path.join(WEBAPP_DIR, '.yalc')):
-               execute(cmd=['ln', '-s', os.path.expanduser('~') + '/.yalc', '.yalc'], cwd=WEBAPP_DIR)
+                execute(cmd=['rm', '-rf', '.yalc'], cwd=WEBAPP_DIR)
+                execute(cmd=['ln', '-s', os.path.expanduser('~') + '/.yalc', '.yalc'], cwd=WEBAPP_DIR)
+            else:
+                execute(cmd=['ln', '-s', os.path.expanduser('~') + '/.yalc', '.yalc'], cwd=WEBAPP_DIR)
             execute(cmd=['ls'], cwd=WEBAPP_DIR)
             execute(cmd=['bash', 'geppetto_ui.sh'], cwd=WEBAPP_DIR)
             execute(cmd=['yarn'], cwd=WEBAPP_DIR)
