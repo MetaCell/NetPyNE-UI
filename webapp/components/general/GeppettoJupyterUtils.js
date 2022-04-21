@@ -6,8 +6,12 @@ const handle_output = function (data) {
       console.log(data.content.evalue.trim());
       console.error('ERROR while executing a Python command:');
       console.error(data.content.traceback);
+      if (data.content.evalue === "name 'utils' is not defined") {
+        execPythonMessage('from jupyter_geppetto import synchronization, utils, synchronization as jupyter_geppetto');
+        execPythonMessage('from netpyne_ui.netpyne_geppetto import netpyne_geppetto');
+      }
+      // dispatch(GeppettoActions.geppettoError);
       GEPPETTO.trigger(GEPPETTO.Events.Error_while_exec_python_command, data.content);
-      GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
       break;
     case 'execute_result':
       try {
