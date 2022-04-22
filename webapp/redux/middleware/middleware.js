@@ -25,7 +25,7 @@ import {
   showNetwork,
   addInstancesToCanvas,
 } from '../actions/general';
-import { openBackendErrorDialog } from '../actions/errors';
+import { OPEN_BACKEND_ERROR_DIALOG, openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
 import Utils from '../../Utils';
 import { downloadJsonResponse, downloadPythonResponse } from './utils';
@@ -179,6 +179,10 @@ export default (store) => (next) => (action) => {
     //   next(GeppettoActions.waitData('Loading the NetPyNE Model', GeppettoActions.clientActions.MODEL_LOADED));
     //   next(action);
     //   break;
+    case OPEN_BACKEND_ERROR_DIALOG:
+      next(GeppettoActions.setWidgets(store.getState().widgets));
+      next(action);
+      break;
     case GeppettoActions.clientActions.MODEL_LOADED:
       if (store.getState()?.general?.modelState === Constants.MODEL_STATE.NOT_INSTANTIATED) {
         const networkPath = window.Instances.getInstance('network');

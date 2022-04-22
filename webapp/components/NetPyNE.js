@@ -107,7 +107,6 @@ class NetPyNE extends React.Component {
 
   openPythonCallDialog (event) {
     if (event?.evalue && event?.traceback) {
-      this.props.geppettoError();
       this.props.pythonCallErrorDialogBox({
         errorMessage: event.evalue,
         errorDetails: event.traceback.join('\n'),

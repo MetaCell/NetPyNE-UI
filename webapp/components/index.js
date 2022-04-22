@@ -9,7 +9,6 @@ import {
   updateWidget,
   newWidget,
   maximiseWidget,
-  hideSpinner,
 } from '@metacell/geppetto-meta-client/common/actions';
 import { TOPBAR_CONSTANTS } from '../constants';
 import PythonControlledCapability from './general/PythonControlledCapability';
@@ -159,7 +158,6 @@ export const NetPyNE = connect(
     setDefaultWidgets: () => dispatch(setDefaultWidgets),
     modelLoaded: () => dispatch(modelLoaded),
     getExperiments: () => dispatch(getExperiments()),
-    geppettoError: () => dispatch(hideSpinner()),
   }),
 )(_NetPyNE);
 
