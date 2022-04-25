@@ -199,11 +199,7 @@ const Rxd = () => {
   const [regions, setRegions] = React.useState([{
     id: 0,
     label: 'Region 0',
-  },
-  {
-    id: 1,
-    label: 'Region 1',
-  },
+  }
   ]);
   const [species, setSpecies] = React.useState([{
     id: 0,
