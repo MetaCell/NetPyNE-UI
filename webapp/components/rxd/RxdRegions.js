@@ -8,13 +8,7 @@ import {
   Button,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import {
-  NetPyNEField,
-  NetPyNETextField,
-  SelectField,
-  ListComponent,
-  GridLayout,
-} from 'netpyne/components';
+import RxdRegion from './RxdRegion'
 import RxdNoData from './RxdNoData';
 
 function TabPanel (props) {
@@ -49,11 +43,14 @@ function a11yProps (index) {
 
 const RxdRegions = (props) => {
   const [tab, setTab] = React.useState(0);
-  const { regions, setRegions } = props;
+  const [regions, setRegions] = React.useState([]) ; 
 
   const addRegion = () => {
-    console.log('Add region clicked');
+    const newRegion = <RxdRegion></RxdRegion> ;
+    setRegions([...regions, newRegion]);
   };
+
+  const activeRegion = regions[0] ;
 
   return (
     <>
@@ -71,13 +68,13 @@ const RxdRegions = (props) => {
             {
                 regions.map((region, index) => (
                   <Tab
-                    key={region.id}
+                    key={region.name}
                     label={(
                       <Chip
                         label={region.label}
                         deleteIcon={<FontIcon className="fa fa-minus-circle" />}
-                        onClick={() => setTab(region.id)}
-                        onDelete={() => setRegions(regions.filter((regionItem) => regionItem.id !== region.id))}
+                        onClick={() => setTab(region.name)}
+                        onDelete={() => setRegions(regions.filter((regionItem) => regionItem.name !== region.name))}
                       />
                     )}
                     {...a11yProps(index)}
@@ -86,53 +83,14 @@ const RxdRegions = (props) => {
               }
           </Tabs>
           <Button className="button">
-            <AddIcon onClick={addRegion} />
-            Add a region
+            <AddIcon onClick={ () => { addRegion() } }>Add a region</AddIcon>
+            
           </Button>
         </Box>
-        {
-          regions.map((region, index) => (
-            <TabPanel value={tab} index={index} key={region.id}>
-              <GridLayout className="gridLayout">
-                <div />
-                <div className="scrollbar scrollchild">
-                  <NetPyNEField id="simConfig.duration">
-                    <NetPyNETextField
-                      fullWidth
-                      variant="filled"
-                      model="simConfig.duration"
-                    />
-                  </NetPyNEField>
-
-                  <NetPyNEField id="simConfig.hParams" className="listStyle">
-                    <ListComponent model="simConfig.hParams" />
-                  </NetPyNEField>
-                </div>
-
-                <div className="scrollbar scrollchild">
-                  <NetPyNEField id="netParams.shape">
-                    <SelectField variant="filled" model="netParams.shape" />
-                  </NetPyNEField>
-
-                  <NetPyNEField id="netParams.shape">
-                    <SelectField variant="filled" model="netParams.shape" />
-                  </NetPyNEField>
-
-                  <NetPyNEField id="netParams.shape">
-                    <SelectField variant="filled" model="netParams.shape" />
-                  </NetPyNEField>
-
-                  <NetPyNEField id="netParams.shape">
-                    <SelectField variant="filled" model="netParams.shape" />
-                  </NetPyNEField>
-                </div>
-              </GridLayout>
-            </TabPanel>
-          ))
-        }
+        <>{activeRegion}</>
       </>
     )
-      : <RxdNoData message="There are no Regions yet." callbackText="Add new region" callback={addRegion} />
+      : <RxdNoData message="There are no Regions yet." callbackText="Add new region" callback={ ()=> { addRegion(); }} />
     }
     </>
   );

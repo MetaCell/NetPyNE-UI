@@ -196,39 +196,6 @@ const CONFIG_SECTIONS = ['Regions', 'Species', 'States', 'Parameters', 'Reaction
 const Rxd = () => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
-  const [regions, setRegions] = React.useState([{
-    id: 0,
-    label: 'Region 0',
-  }
-  ]);
-  const [species, setSpecies] = React.useState([{
-    id: 0,
-    label: 'Species 0',
-  }]);
-  const [states, setStates] = React.useState([{
-    id: 0,
-    label: 'State 0',
-  }]);
-  const [parameters, setParameters] = React.useState([{
-    id: 0,
-    label: 'Parameter 0',
-  }]);
-  const [reactions, setReactions] = React.useState([{
-    id: 0,
-    label: 'Reaction 0',
-  }]);
-  const [multicompartments, setMulticompartments] = React.useState([{
-    id: 0,
-    label: 'Multicompartment 0',
-  }]);
-  const [rates, setRates] = React.useState([{
-    id: 0,
-    label: 'Rate 0',
-  }]);
-  const [extraCellulars, setExtraCellulars] = React.useState([{
-    id: 0,
-    label: 'Extracellular 0',
-  }]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -236,10 +203,10 @@ const Rxd = () => {
 
   let tabPanelContent = <div className="layoutVerticalFitInner" />;
   // let subHeader = <div className="layoutVerticalFitInner" />;
-  const disableAdd = regions.length === 0 || species.length === 0;
+  const disableAdd = false ; //regions.length === 0 || species.length === 0;
 
   if (value === 0) {
-    tabPanelContent = (<RxdRegions regions={regions} setRegions={(newRegions) => setRegions(newRegions)} />);
+    tabPanelContent = (<RxdRegions/>);
   } else if (value === 1) {
     tabPanelContent = (<RxdSpecies />);
     // subHeader = (
