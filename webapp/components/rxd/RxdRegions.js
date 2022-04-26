@@ -50,7 +50,7 @@ const RxdRegions = (props) => {
     setRegions([...regions, newRegion]);
   };
 
-  const activeRegion = regions[0] ;
+const activeRegion = regions[0] ;
 
   return (
     <>
