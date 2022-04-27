@@ -203,10 +203,12 @@ const Rxd = () => {
 
   let tabPanelContent = <div className="layoutVerticalFitInner" />;
   // let subHeader = <div className="layoutVerticalFitInner" />;
-  const disableAdd = false ; //regions.length === 0 || species.length === 0;
-
+  const [regions, setRegions] = React.useState([]) ;
+  const [species, setSpecies] = React.useState([]) ;
+  const disableAdd = regions.length === 0 || species.length === 0;
+  
   if (value === 0) {
-    tabPanelContent = (<RxdRegions/>);
+    tabPanelContent = (<RxdRegions regions={regions} setRegions={setRegions} />);
   } else if (value === 1) {
     tabPanelContent = (<RxdSpecies />);
     // subHeader = (

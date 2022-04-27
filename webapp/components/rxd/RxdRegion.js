@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Utils from '../../Utils' 
 
-const RxdRegion = () => {
+const RxdRegion = (props) => {
   const [custom_dynamics, set_custom_dynamics] = useState(false);
   const [region_id, set_region_id] = useState("");
   const [region_id_created, set_region_id_created] = useState(false);
@@ -22,7 +22,9 @@ const RxdRegion = () => {
             label="Region name"
             disabled={region_id_created}
             value={region_id}
-            onChange={(event) => set_region_id(event.target.value)}
+            onChange={(event) => { 
+              set_region_id(event.target.value)
+            }}
           />
           <Button
             variant="contained"
@@ -33,6 +35,7 @@ const RxdRegion = () => {
                   region_id
                 }\'] = {}`);
               set_region_id_created(true);
+              props.onAddRegionName(region_id);
             }}
           >
             CREATE
