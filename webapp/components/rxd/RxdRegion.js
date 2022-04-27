@@ -4,26 +4,22 @@ import {
   NetPyNETextField,
   SelectField
 } from 'netpyne/components';
-import Checkbox from '../general/Checkbox';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Utils from '../../Utils' 
 
 const RxdRegion = (props) => {
-  const [region_id, set_region_id] = useState(props.id);
-  const base_tag = `netParams.rxdParams[\'regions\'][\'${region_id}\']`;
+  const [regionId, setRegionId] = useState(props.id);
+  const base_tag = `netParams.rxdParams[\'regions\'][\'${regionId}\']`;
   return(
       <div className="scrollbar scrollchild">
-        { !region_id && <>
+        { !regionId && <>
           <TextField
             variant="filled"
             fullWidth
             label="Region name"
-            disabled={region_id_created}
-            value={region_id}
-            onChange={(event) => { 
-              set_region_id(event.target.value)
-            }}
+            disabled={!!regionId}
+            value={regionId}
           />
           <Button
             variant="contained"
@@ -31,18 +27,18 @@ const RxdRegion = (props) => {
             onClick={() => {
               Utils.execPythonMessage(
                 `netpyne_geppetto.netParams.rxdParams[\'regions\'][\'${
-                  region_id
+                  regionId
                 }\'] = {}`);
-              set_region_id_created(true);
-              props.onAddRegionName(region_id);
+              setRegionId(regionId);
+              props.onAddRegion(regionId);
             }}
           >
             CREATE
         </Button>
         </> 
         }
-        { region_id && <> 
-        <NetPyNEField id={`netParams.rxdParams.regions[${region_id}].extracellular`}>
+        { regionId && <> 
+        <NetPyNEField id={`netParams.rxdParams.regions[${regionId}].extracellular`}>
           {/* <Checkbox
             fullWidth
             noBackground

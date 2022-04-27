@@ -201,6 +201,10 @@ const Rxd = () => {
   const [species, setSpecies] = React.useState([]);
 
   useEffect(()=>{
+    refreshState();
+  })
+
+  const refreshState = () => {
     Utils.evalPythonMessage(
       `netpyne_geppetto.netParams.rxdParams.regions`,
     ).then((response) => { 
@@ -211,20 +215,28 @@ const Rxd = () => {
     ).then((response) => { 
       setSpecies(Object.keys(response));
     });
-  })
+  }
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const onAddRegion = (regionId) => {
+    refreshState();
+  }
+
+  const onAddSpecie = (regionId) => {
+    refreshState();
+  }
 
   let tabPanelContent = <div className="layoutVerticalFitInner" />;
   // let subHeader = <div className="layoutVerticalFitInner" />;
   const disableAdd = regions.length === 0 || species.length === 0;
   
   if (value === 0) {
-    tabPanelContent = (<RxdRegions regions={regions} activeRegionIndex={0}/>);
+    tabPanelContent = (<RxdRegions regions={regions} activeRegionIndex={0} onAddRegion={onAddRegion} />);
   } else if (value === 1) {
-    tabPanelContent = (<RxdSpecies species={species} activeSpecieIndex={0} />);
+    tabPanelContent = (<RxdSpecies species={species} activeSpecieIndex={0} onAddSpecie={onAddSpecie} />);
     // subHeader = (
     //   <Box className={classes.subHeader}>
     //     {species.map((specieItem) => (

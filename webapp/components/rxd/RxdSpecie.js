@@ -13,30 +13,21 @@ import TextField from '@material-ui/core/TextField';
 import Utils from '../../Utils' 
 
 const RxdSpecie = (props) => {
-  const [custom_dynamics, set_custom_dynamics] = useState(false);
-  const [specie_id, set_specie_id] = useState("");
-  const [selected_region, set_selected_region] = useState("");
-  const [specie_id_created, set_specie_id_created] = useState(false);
-  const base_tag = `netParams.rxdParams[\'species\'][\'${specie_id}\']`;
-  const regions = props.regions ;
+  const [specieId, setSpecieId] = useState(props.id);
+  const base_tag = `netParams.rxdParams[\'regions\'][\'${specieId}\']`;
 
-  const handleRegionChange =(r) => {
-    set_selected_region(r);
-  }
 
   return(
     <GridLayout className="gridLayout">
       <div />
       <div className="scrollbar scrollchild">
+      { !specieId && <>
         <TextField
             variant="filled"
             fullWidth
             label="Specie name"
-            disabled={specie_id_created}
-            value={specie_id}
-            onChange={(event) => { 
-              set_specie_id(event.target.value)
-            }}
+            disabled={!!specieId}
+            value={specieId}
           />
           <Button
             variant="contained"
@@ -44,15 +35,17 @@ const RxdSpecie = (props) => {
             onClick={() => {
               Utils.execPythonMessage(
                 `netpyne_geppetto.netParams.rxdParams[\'species\'][\'${
-                  specie_id
+                  specieId
                 }\'] = {}`);
-              set_specie_id_created(true);
-              props.onAddSpecieName(specie_id);
+                setSpecieId(specieId);
+                props.onAddSpecie(specieId);
             }}
           >
             CREATE
         </Button>
-        { specie_id_created && <> 
+        </> 
+        }
+        { specieId && <> 
         <NetPyNEField id="netParams.rxdParams.regions">
           <SelectField variant="filled" model={`${base_tag}['regions']`} mulitple={true} ></SelectField>
         </NetPyNEField>

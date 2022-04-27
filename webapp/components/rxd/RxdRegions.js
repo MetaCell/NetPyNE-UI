@@ -65,8 +65,12 @@ const RxdRegions = (props) => {
                       <Chip
                         label={region}
                         deleteIcon={<FontIcon className="fa fa-minus-circle" />}
-                        onClick={() => { setActiveRegion(region)} }
-                        onDelete={() => { deleteRegion(index) }}
+                        onClick={() => { 
+                          //no point as there's only 1 
+                        }}
+                        onDelete={() => { 
+                          //no point as there's only 1
+                        }}
                       />
                     )}
                     {...a11yProps(index)}
@@ -79,7 +83,9 @@ const RxdRegions = (props) => {
             
           </Button>
         </Box>
-        <><RxdRegion id={props.regions[props.activeRegionIndex]}></RxdRegion></>
+        <>
+          <RxdRegion id={props.regions[props.activeRegionIndex]} onAddRegion={props.onAddRegion}></RxdRegion>
+        </>
       </>
     )
       : <RxdNoData message="There are no Regions yet." callbackText="Add new region" callback={ ()=> { addRegion(); }} />
