@@ -210,7 +210,7 @@ const Rxd = () => {
   if (value === 0) {
     tabPanelContent = (<RxdRegions regions={regions} setRegions={setRegions} />);
   } else if (value === 1) {
-    tabPanelContent = (<RxdSpecies />);
+    tabPanelContent = (<RxdSpecies species={species} setSpecies={setSpecies} />);
     // subHeader = (
     //   <Box className={classes.subHeader}>
     //     {species.map((specieItem) => (

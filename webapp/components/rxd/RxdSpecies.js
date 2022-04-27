@@ -1,66 +1,115 @@
-import React, {useState} from 'react';
+import React from 'react';
+import FontIcon from '@material-ui/core/Icon';
 import {
-  NetPyNEField,
-  NetPyNETextField,
-  GridLayout,
-  SelectField
-} from 'netpyne/components';
-import Checkbox from '../general/Checkbox';
+  Box,
+  Tabs,
+  Tab,
+  Chip,
+  Button,
+} from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import RxdSpecie from './RxdSpecie'
+import RxdNoData from './RxdNoData';
 
-const Rxdreactions = () => {
-  const base_tag = 'netParams.rxdParams[\'species\']';
-  const [custom_dynamics, set_custom_dynamics] = useState(false);
-  return(
-    <GridLayout className="gridLayout">
-      <div />
-      <div className="scrollbar scrollchild">
-        <NetPyNEField id="netParams.rxdParams.species.regions">
-          <SelectField variant="filled" model="netParams.rxdParams.species.regions" />
-        </NetPyNEField>
-        <NetPyNEField id="netParams.rxdParams.species.d">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model={`${base_tag}['d']`}
-          />
-        </NetPyNEField>
-        <NetPyNEField id="netParams.rxdParams.species.charge">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model={`${base_tag}['charge']`}
-          />
-        </NetPyNEField>
-        <NetPyNEField id="netParams.rxdParams.species.initial">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model={`${base_tag}['initial']`}
-          />
-        </NetPyNEField>
-        <NetPyNEField id="netParams.rxdParams.species.esc_boundary_conditions">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model={`${base_tag}['esc_boundary_conditions']`}
-          />
-        </NetPyNEField>
-        <NetPyNEField id="netParams.rxdParams.species.atolscale">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model={`${base_tag}['atolscale']`}
-          />
-        </NetPyNEField>
-        <NetPyNEField id="netParams.rxdParams.species.name">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model={`${base_tag}['name']`}
-          />
-        </NetPyNEField>        
-      </div>
-    </GridLayout>
-  )
+function TabPanel (props) {
+  const {
+    children,
+    value,
+    index,
+    ...other
+  } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <>{children}</>
+      )}
+    </div>
+  );
 }
-export default Rxdreactions;
+
+function a11yProps (index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
+
+const RxdSpecies = (props) => {
+  const [tab, setTab] = React.useState(0);
+  const [speciesNames, setSpeciesNames] = React.useState([]);
+  const species = props.species ; 
+  const [activeSpecie , setActiveSpecie] = React.useState(null);
+
+  const addSpecieName = (name) => {
+    setSpeciesNames([...speciesNames, name]);
+  }
+
+  const addSpecie = () => {
+    if (props.species.length == 1)
+    {
+      alert('only 1 specie is allowed');
+      return ;
+    }
+    const newSpecie = <RxdSpecie onAddSpecieName={addSpecieName} key={Math.random()} ></RxdSpecie> ;
+    props.setSpecies([...species, newSpecie]);
+    setActiveSpecie(newSpecie);
+  }
+
+  const deleteSpecie = (index) => {
+    speciesNames.splice(index);
+    species.splice(index);
+    props.setSpecies(species);
+    setSpeciesNames(speciesNames);
+  }
+
+    return (
+      <>
+        {
+      species.length !== 0 ? (
+        <>
+          <Box className="subHeader">
+            <Tabs
+              value={tab}
+              vairant="scrollable"
+              onChange={(event, newTabValue) => setTab(newTabValue)}
+              scrollButtons="auto"
+              indicatorColor="primary"
+            >
+              {
+                  species.map((specie, index) => (
+                    <Tab
+                      key={speciesNames[index]}
+                      label={(
+                        <Chip
+                          label={speciesNames[index]}
+                          deleteIcon={<FontIcon className="fa fa-minus-circle" />}
+                          onClick={() => { setActiveSpecie(species[index])} }
+                          onDelete={() => { deleteSpecie(index) }}
+                        />
+                      )}
+                      {...a11yProps(index)}
+                    />
+                  ))
+                }
+            </Tabs>
+            <Button className="button">
+              <AddIcon onClick={ () => { addSpecie() } }>Add a specie</AddIcon>
+              
+            </Button>
+          </Box>
+          <>{activeSpecie}</>
+        </>
+      )
+        : <RxdNoData message="There are no Species yet." callbackText="Add new specie" callback={ ()=> { addSpecie(); }} />
+      }
+      </>
+    );
+};
+export default RxdSpecies;

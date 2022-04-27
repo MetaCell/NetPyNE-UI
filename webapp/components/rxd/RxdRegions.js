@@ -52,6 +52,11 @@ const RxdRegions = (props) => {
   }
 
   const addRegion = () => {
+    if (props.regions.length == 1)
+    {
+      alert('only 1 region is allowed');
+      return ;
+    }
     const newRegion = <RxdRegion onAddRegionName={addRegionName} key={Math.random()} ></RxdRegion> ;
     props.setRegions([...regions, newRegion]);
     setActiveRegion(newRegion);
