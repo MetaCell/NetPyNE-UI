@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import FontIcon from '@material-ui/core/Icon';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -19,6 +19,7 @@ import RxdMulticompartmentReactions from './RxdMulticompartmentReactions';
 import RxdRates from './RxdRates';
 import RxdExtracellular from './RxdExtracellular';
 import { primaryColor, navShadow, tabsTextColor } from '../../theme';
+import Utils from '../../Utils' 
 
 function TabPanel (props) {
   const {
@@ -196,6 +197,21 @@ const CONFIG_SECTIONS = ['Regions', 'Species', 'States', 'Parameters', 'Reaction
 const Rxd = () => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+  const [regions, setRegions] = React.useState([]);
+  const [species, setSpecies] = React.useState([]);
+
+  useEffect(()=>{
+    Utils.evalPythonMessage(
+      `netpyne_geppetto.netParams.rxdParams.regions`,
+    ).then((response) => { 
+      setRegions(Object.keys(response));
+    });
+    Utils.evalPythonMessage(
+      `netpyne_geppetto.netParams.rxdParams.species`,
+    ).then((response) => { 
+      setSpecies(Object.keys(response));
+    });
+  })
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -203,14 +219,12 @@ const Rxd = () => {
 
   let tabPanelContent = <div className="layoutVerticalFitInner" />;
   // let subHeader = <div className="layoutVerticalFitInner" />;
-  const [regions, setRegions] = React.useState([]) ;
-  const [species, setSpecies] = React.useState([]) ;
   const disableAdd = regions.length === 0 || species.length === 0;
   
   if (value === 0) {
-    tabPanelContent = (<RxdRegions regions={regions} setRegions={setRegions} />);
+    tabPanelContent = (<RxdRegions regions={regions} activeRegionIndex={0}/>);
   } else if (value === 1) {
-    tabPanelContent = (<RxdSpecies species={species} setSpecies={setSpecies} />);
+    tabPanelContent = (<RxdSpecies species={species} activeSpecieIndex={0} />);
     // subHeader = (
     //   <Box className={classes.subHeader}>
     //     {species.map((specieItem) => (
@@ -229,7 +243,7 @@ const Rxd = () => {
     //   </Box>
     // );
   } else if (value === 2) {
-    tabPanelContent = (<RxdStates disableAdd={disableAdd} />);
+    tabPanelContent = (<RxdStates disableAdd={disableAdd} regions={regions} />);
     // subHeader = (
     //   <Box className={classes.subHeader}>
     //     {states.map((state) => (
@@ -305,7 +319,7 @@ const Rxd = () => {
     //   </Box>
     // );
   } else if (value === 6) {
-    tabPanelContent = (<RxdRates disableAdd={disableAdd} />);
+    tabPanelContent = (<RxdRates disableAdd={disableAdd} species={species} regions={regions}/>);
     // subHeader = (
     //   <Box className={classes.subHeader}>
     //     {rates.map((rate) => (

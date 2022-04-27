@@ -45,7 +45,8 @@ const RxdSpecies = (props) => {
   const [tab, setTab] = React.useState(0);
   const [speciesNames, setSpeciesNames] = React.useState([]);
   const species = props.species ; 
-  const [activeSpecie , setActiveSpecie] = React.useState(null);
+  const regions = props.regions ;
+  const [activeSpecie , setActiveSpecie] = React.useState(species.length > 0 ? species[0] : null);
 
   const addSpecieName = (name) => {
     setSpeciesNames([...speciesNames, name]);
@@ -57,7 +58,7 @@ const RxdSpecies = (props) => {
       alert('only 1 specie is allowed');
       return ;
     }
-    const newSpecie = <RxdSpecie onAddSpecieName={addSpecieName} key={Math.random()} ></RxdSpecie> ;
+    const newSpecie = <RxdSpecie onAddSpecieName={addSpecieName} key={Math.random()} regions={regions}></RxdSpecie> ;
     props.setSpecies([...species, newSpecie]);
     setActiveSpecie(newSpecie);
   }

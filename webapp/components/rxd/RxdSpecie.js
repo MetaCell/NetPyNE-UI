@@ -7,14 +7,23 @@ import {
 } from 'netpyne/components';
 import Checkbox from '../general/Checkbox';
 import Button from '@material-ui/core/Button';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select'
 import TextField from '@material-ui/core/TextField';
 import Utils from '../../Utils' 
 
 const RxdSpecie = (props) => {
   const [custom_dynamics, set_custom_dynamics] = useState(false);
   const [specie_id, set_specie_id] = useState("");
+  const [selected_region, set_selected_region] = useState("");
   const [specie_id_created, set_specie_id_created] = useState(false);
   const base_tag = `netParams.rxdParams[\'species\'][\'${specie_id}\']`;
+  const regions = props.regions ;
+
+  const handleRegionChange =(r) => {
+    set_selected_region(r);
+  }
+
   return(
     <GridLayout className="gridLayout">
       <div />
@@ -44,8 +53,8 @@ const RxdSpecie = (props) => {
             CREATE
         </Button>
         { specie_id_created && <> 
-        <NetPyNEField id="netParams.rxdParams.species.regions">
-          <SelectField variant="filled" model="netParams.rxdParams.species.regions" />
+        <NetPyNEField id="netParams.rxdParams.regions">
+          <SelectField variant="filled" model={`${base_tag}['regions']`} mulitple={true} ></SelectField>
         </NetPyNEField>
         <NetPyNEField id="netParams.rxdParams.species.d">
           <NetPyNETextField

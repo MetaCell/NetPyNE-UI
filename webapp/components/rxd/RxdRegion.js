@@ -10,12 +10,11 @@ import TextField from '@material-ui/core/TextField';
 import Utils from '../../Utils' 
 
 const RxdRegion = (props) => {
-  const [custom_dynamics, set_custom_dynamics] = useState(false);
-  const [region_id, set_region_id] = useState("");
-  const [region_id_created, set_region_id_created] = useState(false);
+  const [region_id, set_region_id] = useState(props.id);
   const base_tag = `netParams.rxdParams[\'regions\'][\'${region_id}\']`;
   return(
       <div className="scrollbar scrollchild">
+        { !region_id && <>
           <TextField
             variant="filled"
             fullWidth
@@ -40,15 +39,17 @@ const RxdRegion = (props) => {
           >
             CREATE
         </Button>
-        { region_id_created && <> 
+        </> 
+        }
+        { region_id && <> 
         <NetPyNEField id={`netParams.rxdParams.regions[${region_id}].extracellular`}>
-          <Checkbox
+          {/* <Checkbox
             fullWidth
             noBackground
             checked={custom_dynamics}
             model={`${base_tag}['extracellular']`}
             onChange={(event) => set_custom_dynamics(event.target.checked)}
-          />
+          /> */}
         </NetPyNEField>
         <NetPyNEField id="netParams.rxdParams.regions.cells">
           <SelectField variant="filled" model={`${base_tag}['cells']`} />
