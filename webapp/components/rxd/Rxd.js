@@ -199,10 +199,11 @@ const Rxd = () => {
   const [value, setValue] = React.useState(0);
   const [regions, setRegions] = React.useState([]);
   const [species, setSpecies] = React.useState([]);
+  const [useEffectSentinel, setUseEffectSentinel] = React.useState('initial');
 
   useEffect(()=>{
     refreshState();
-  })
+  }, [useEffectSentinel])
 
   const refreshState = () => {
     Utils.evalPythonMessage(

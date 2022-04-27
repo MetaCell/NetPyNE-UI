@@ -13,9 +13,9 @@ import TextField from '@material-ui/core/TextField';
 import Utils from '../../Utils' 
 
 const RxdSpecie = (props) => {
+  const [tempSpecieId, setTempSpecieId] = useState("");
   const [specieId, setSpecieId] = useState(props.id);
   const base_tag = `netParams.rxdParams[\'regions\'][\'${specieId}\']`;
-
 
   return(
     <GridLayout className="gridLayout">
@@ -28,6 +28,9 @@ const RxdSpecie = (props) => {
             label="Specie name"
             disabled={!!specieId}
             value={specieId}
+            onChange={(event) => { 
+              setTempSpecieId(event.target.value)
+            }
           />
           <Button
             variant="contained"
@@ -35,10 +38,10 @@ const RxdSpecie = (props) => {
             onClick={() => {
               Utils.execPythonMessage(
                 `netpyne_geppetto.netParams.rxdParams[\'species\'][\'${
-                  specieId
+                  tempSpecieId
                 }\'] = {}`);
-                setSpecieId(specieId);
-                props.onAddSpecie(specieId);
+                setSpecieId(tempSpecieId);
+                props.onAddSpecie(tempSpecieId);
             }}
           >
             CREATE

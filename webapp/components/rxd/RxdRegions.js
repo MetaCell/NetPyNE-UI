@@ -46,50 +46,39 @@ const RxdRegions = (props) => {
   const regions = props.regions ;
   return (
     <>
-      {
-    regions.length !== 0 ? (
+      <Box className="subHeader">
+        <Tabs
+          value={tab}
+          vairant="scrollable"
+          onChange={(event, newTabValue) => setTab(newTabValue)}
+          scrollButtons="auto"
+          indicatorColor="primary"
+        >
+          {
+              regions.map((region, index) => (
+                <Tab
+                  key={region}
+                  label={(
+                    <Chip
+                      label={region}
+                      deleteIcon={<FontIcon className="fa fa-minus-circle" />}
+                      onClick={() => { 
+                        //no point as there's only 1 
+                      }}
+                      onDelete={() => { 
+                        //no point as there's only 1
+                      }}
+                    />
+                  )}
+                  {...a11yProps(index)}
+                />
+              ))
+            }
+        </Tabs>
+      </Box>
       <>
-        <Box className="subHeader">
-          <Tabs
-            value={tab}
-            vairant="scrollable"
-            onChange={(event, newTabValue) => setTab(newTabValue)}
-            scrollButtons="auto"
-            indicatorColor="primary"
-          >
-            {
-                regions.map((region, index) => (
-                  <Tab
-                    key={region}
-                    label={(
-                      <Chip
-                        label={region}
-                        deleteIcon={<FontIcon className="fa fa-minus-circle" />}
-                        onClick={() => { 
-                          //no point as there's only 1 
-                        }}
-                        onDelete={() => { 
-                          //no point as there's only 1
-                        }}
-                      />
-                    )}
-                    {...a11yProps(index)}
-                  />
-                ))
-              }
-          </Tabs>
-          <Button className="button">
-            <AddIcon onClick={ () => { addRegion() } }>Add a region</AddIcon>
-            
-          </Button>
-        </Box>
-        <>
-          <RxdRegion id={props.regions[props.activeRegionIndex]} onAddRegion={props.onAddRegion}></RxdRegion>
-        </>
+        <RxdRegion id={props.regions[props.activeRegionIndex]} onAddRegion={props.onAddRegion}></RxdRegion>
       </>
-    )
-      : <RxdNoData message="There are no Regions yet." callbackText="Add new region" callback={ ()=> { addRegion(); }} />
-    }
     </>
   );
 };

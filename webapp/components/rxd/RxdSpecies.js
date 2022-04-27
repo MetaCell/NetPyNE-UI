@@ -47,48 +47,41 @@ const RxdSpecies = (props) => {
 
   return (
     <>
-      {
-    species.length !== 0 ? (
-      <>
-        <Box className="subHeader">
-          <Tabs
-            value={tab}
-            vairant="scrollable"
-            onChange={(event, newTabValue) => setTab(newTabValue)}
-            scrollButtons="auto"
-            indicatorColor="primary"
-          >
-            {
-                species.map((specie, index) => (
-                  <Tab
-                    key={species}
-                    label={(
-                      <Chip
-                        label={species}
-                        deleteIcon={<FontIcon className="fa fa-minus-circle" />}
-                        onClick={() => { 
+      <Box className="subHeader">
+        <Tabs
+          value={tab}
+          vairant="scrollable"
+          onChange={(event, newTabValue) => setTab(newTabValue)}
+          scrollButtons="auto"
+          indicatorColor="primary"
+        >
+          {
+              species.map((specie, index) => (
+                <Tab
+                  key={species}
+                  label={(
+                    <Chip
+                      label={species}
+                      deleteIcon={<FontIcon className="fa fa-minus-circle" />}
+                      onClick={() => { 
 
-                        }}
-                        onDelete={() => { 
-                          
-                        }}
-                      />
-                    )}
-                    {...a11yProps(index)}
-                  />
-                ))
-              }
-          </Tabs>
-          <Button className="button">
-            <AddIcon onClick={ () => { addSpecie() } }>Add a specie</AddIcon>
-            
-          </Button>
-        </Box>
-        <><RxdSpecie id={props.species[props.activeSpecieIndex]} onAddRegion={props.onAddSpecie}></RxdSpecie></>
-      </>
-    )
-      : <RxdNoData message="There are no Species yet." callbackText="Add new specie" callback={ ()=> { addSpecie(); }} />
-    }
+                      }}
+                      onDelete={() => { 
+                        
+                      }}
+                    />
+                  )}
+                  {...a11yProps(index)}
+                />
+              ))
+            }
+        </Tabs>
+        <Button className="button">
+          <AddIcon onClick={ () => { addSpecie() } }>Add a specie</AddIcon>
+          
+        </Button>
+      </Box>
+      <><RxdSpecie id={props.species[props.activeSpecieIndex]} onAddRegion={props.onAddSpecie}></RxdSpecie></>
     </>
   );
 };

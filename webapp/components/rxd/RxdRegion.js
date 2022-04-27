@@ -9,8 +9,10 @@ import TextField from '@material-ui/core/TextField';
 import Utils from '../../Utils' 
 
 const RxdRegion = (props) => {
+  const [tempRegionId, setTempRegionId] = useState("");
   const [regionId, setRegionId] = useState(props.id);
   const base_tag = `netParams.rxdParams[\'regions\'][\'${regionId}\']`;
+  
   return(
       <div className="scrollbar scrollchild">
         { !regionId && <>
@@ -20,6 +22,9 @@ const RxdRegion = (props) => {
             label="Region name"
             disabled={!!regionId}
             value={regionId}
+            onChange={(event) => { 
+              setTempRegionId(event.target.value)
+            }}
           />
           <Button
             variant="contained"
@@ -27,10 +32,10 @@ const RxdRegion = (props) => {
             onClick={() => {
               Utils.execPythonMessage(
                 `netpyne_geppetto.netParams.rxdParams[\'regions\'][\'${
-                  regionId
+                  tempRegionId
                 }\'] = {}`);
-              setRegionId(regionId);
-              props.onAddRegion(regionId);
+              setRegionId(tempRegionId);
+              props.onAddRegion(tempRegionId);
             }}
           >
             CREATE
