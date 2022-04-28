@@ -15,11 +15,9 @@ import Utils from '../../Utils'
 const RxdSpecie = (props) => {
   const [tempSpecieId, setTempSpecieId] = useState("");
   const [specieId, setSpecieId] = useState(props.id);
-  const base_tag = `netParams.rxdParams[\'regions\'][\'${specieId}\']`;
+  const base_tag = `netParams.rxdParams[\'species\'][\'${specieId}\']`;
 
   return(
-    <GridLayout className="gridLayout">
-      <div />
       <div className="scrollbar scrollchild">
       { !specieId && <>
         <TextField
@@ -30,7 +28,7 @@ const RxdSpecie = (props) => {
             value={specieId}
             onChange={(event) => { 
               setTempSpecieId(event.target.value)
-            }
+            }}
           />
           <Button
             variant="contained"
@@ -94,9 +92,9 @@ const RxdSpecie = (props) => {
             model={`${base_tag}['name']`}
           />
         </NetPyNEField>        
-    </>}
+        </>   
+      }
     </div>
-    </GridLayout>
   )
 }
 export default RxdSpecie;

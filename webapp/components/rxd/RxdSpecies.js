@@ -81,7 +81,7 @@ const RxdSpecies = (props) => {
           
         </Button>
       </Box>
-      <><RxdSpecie id={props.species[props.activeSpecieIndex]} onAddRegion={props.onAddSpecie}></RxdSpecie></>
+      <><RxdSpecie id={props.species[props.activeSpecieIndex]} onAddSpecie={props.onAddSpecie}></RxdSpecie></>
     </>
   );
 };
