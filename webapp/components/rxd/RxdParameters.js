@@ -5,7 +5,6 @@ import {
   GridLayout,
   SelectField
 } from 'netpyne/components';
-import Checkbox from '../general/Checkbox';
 
 const Rxdreactions = () => {
   const base_tag = 'netParams.rxdParams[\'parameters\']';

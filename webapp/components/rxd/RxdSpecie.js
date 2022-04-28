@@ -3,12 +3,10 @@ import {
   NetPyNEField,
   NetPyNETextField,
   GridLayout,
-  SelectField
+  NetPyNESelectField,
+  MenuItem
 } from 'netpyne/components';
-import Checkbox from '../general/Checkbox';
 import Button from '@material-ui/core/Button';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select'
 import TextField from '@material-ui/core/TextField';
 import Utils from '../../Utils' 
 
@@ -16,6 +14,20 @@ const RxdSpecie = (props) => {
   const [tempSpecieId, setTempSpecieId] = useState("");
   const [specieId, setSpecieId] = useState(props.id);
   const base_tag = `netParams.rxdParams[\'species\'][\'${specieId}\']`;
+
+  React.useEffect(() => {
+    setSpecieId(props.id);
+  }, [props.id]);
+
+  const postProcessMenuItems = (pythonData, selected) => {
+    if (pythonData !== undefined) {
+      return pythonData.map((name) => (
+        <MenuItem id={`${name}MenuItem`} key={name} value={name}>
+          {name}
+        </MenuItem>
+      ));
+    }
+  }
 
   return(
       <div className="scrollbar scrollchild">
@@ -48,7 +60,12 @@ const RxdSpecie = (props) => {
         }
         { specieId && <> 
         <NetPyNEField id="netParams.rxdParams.regions">
-          <SelectField variant="filled" model={`${base_tag}['regions']`} mulitple={true} ></SelectField>
+          <NetPyNESelectField
+            fullWidth
+            model={`${base_tag}['regions']`}
+            method="netpyne_geppetto.getAvailableRxdRegions"
+            postProcessItems={postProcessMenuItems}
+          />
         </NetPyNEField>
         <NetPyNEField id="netParams.rxdParams.species.d">
           <NetPyNETextField

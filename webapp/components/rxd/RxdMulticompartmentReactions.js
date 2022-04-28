@@ -3,8 +3,8 @@ import {
   NetPyNEField,
   NetPyNETextField,
   GridLayout,
+  NetPyNECheckbox
 } from 'netpyne/components';
-import Checkbox from '../general/Checkbox';
 
 const RxdMulticompartmentReactions = () => {
   const [custom_dynamics, set_custom_dynamics] = useState(false);
@@ -49,15 +49,12 @@ const RxdMulticompartmentReactions = () => {
             model={`${base_tag}['rate_f']`}
           />
         </NetPyNEField> 
-        <NetPyNEField id="netParams.rxdParams.multicompartmentReactions.custom_dynamics">
-          <Checkbox
-            fullWidth
-            noBackground
-            checked={custom_dynamics}
-            model={`${base_tag}['custom_dynamics']`}
-            onChange={(event) => set_custom_dynamics(event.target.checked)}
-          />
-        </NetPyNEField> 
+        <NetPyNEField
+            id="netParams.rxdParams.multicompartmentReactions.custom_dynamics"
+            className="netpyneCheckbox"
+          >
+          <NetPyNECheckbox model={`${base_tag}['custom_dynamics']`} />
+        </NetPyNEField>
         <NetPyNEField id="netParams.rxdParams.multicompartmentReactions.membrane">
           <NetPyNETextField
             fullWidth
@@ -65,15 +62,12 @@ const RxdMulticompartmentReactions = () => {
             model={`${base_tag}['rate_f']`}
           />
         </NetPyNEField> 
-        <NetPyNEField id="netParams.rxdParams.multicompartmentReactions.membrane_flux">
-          <Checkbox
-            fullWidth
-            noBackground
-            checked={membrane_flux}
-            model={`${base_tag}['membrane_flux']`}
-            onChange={(event) => set_membrane_flux(event.target.checked)}
-          />
-        </NetPyNEField> 
+        <NetPyNEField
+            id="netParams.rxdParams.multicompartmentReactions.membrane_flux"
+            className="netpyneCheckbox"
+          >
+          <NetPyNECheckbox model={`${base_tag}['membrane_flux']`} />
+        </NetPyNEField>
       </div>
     </GridLayout>
   )

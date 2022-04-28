@@ -3,13 +3,10 @@ import {
   NetPyNEField,
   NetPyNETextField,
   GridLayout,
-  SelectField
+  NetPyNECheckbox
 } from 'netpyne/components';
-import Checkbox from '../general/Checkbox';
-
 const Rxdreactions = () => {
   const base_tag = 'netParams.rxdParams[\'reactions\']';
-  const [custom_dynamics, set_custom_dynamics] = useState(false);
   return(
     <GridLayout className="gridLayout">
       <div />
@@ -49,15 +46,9 @@ const Rxdreactions = () => {
             model={`${base_tag}['yhi']`}
           />
         </NetPyNEField>
-        <NetPyNEField id="netParams.rxdParams.multicompartmentReactions.custom_dynamics">
-          <Checkbox
-            fullWidth
-            noBackground
-            checked={custom_dynamics}
-            model={`${base_tag}['custom_dynamics']`}
-            onChange={(event) => set_custom_dynamics(event.target.checked)}
-          />
-        </NetPyNEField> 
+        <NetPyNEField id="netParams.rxdParams.multicompartmentReactions.custom_dynamics" className="netpyneCheckbox">
+          <NetPyNECheckbox model={`${base_tag}['custom_dynamics']`} />
+        </NetPyNEField>      
       </div>
     </GridLayout>
   )

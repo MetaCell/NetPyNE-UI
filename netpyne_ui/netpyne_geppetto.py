@@ -809,6 +809,12 @@ class NetPyNEGeppetto:
     def getAvailableStimSources(self):
         return list(self.netParams.stimSourceParams.keys())
 
+    def getAvailableRxdRegions(self):
+        return list(self.netParams.rxdParams.regions.keys())
+
+    def getAvailableRxdSpecies(self):
+        return list(self.netParams.rxdParams.species.keys())
+
     def getAvailableSynMech(self):
         return list(self.netParams.synMechParams.keys())
 
