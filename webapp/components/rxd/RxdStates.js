@@ -8,7 +8,7 @@ import {
 } from 'netpyne/components';
 
 const Rxdreactions = () => {
-  const base_tag = 'netParams.rxdParams[\'species\']';
+  const base_tag = 'netParams.rxdParams[\'states\']';
   const postProcessMenuItems = (pythonData, selected) => {
     if (pythonData !== undefined) {
       return pythonData.map((name) => (

@@ -5,11 +5,8 @@ import {
   GridLayout,
   SelectField
 } from 'netpyne/components';
-import Checkbox from '../general/Checkbox';
 
 const RxdExtracellular = () => {
-  const [custom_dynamics, set_custom_dynamics] = useState(false);
-  const [membrane_flux, set_membrane_flux] = useState(false);
   const base_tag = 'netParams.rxdParams[\'extracellular\']';
   return(
     <GridLayout className="gridLayout">
