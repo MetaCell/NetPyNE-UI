@@ -19,7 +19,7 @@ import RxdMulticompartmentReactions from './RxdMulticompartmentReactions';
 import RxdRates from './RxdRates';
 import RxdExtracellular from './RxdExtracellular';
 import { primaryColor, navShadow, tabsTextColor } from '../../theme';
-import Utils from '../../Utils' 
+import Utils from '../../Utils';
 
 function TabPanel (props) {
   const {
@@ -155,22 +155,22 @@ const Rxd = () => {
   const [species, setSpecies] = React.useState([]);
   const [useEffectSentinel, setUseEffectSentinel] = React.useState('initial');
 
-  useEffect(()=>{
+  useEffect(() => {
     refreshState();
-  }, [useEffectSentinel])
+  }, [useEffectSentinel]);
 
   const refreshState = () => {
     Utils.evalPythonMessage(
-      `netpyne_geppetto.netParams.rxdParams.regions`,
-    ).then((response) => { 
+      'netpyne_geppetto.netParams.rxdParams.regions',
+    ).then((response) => {
       setRegions(Object.keys(response));
     });
     Utils.evalPythonMessage(
-      `netpyne_geppetto.netParams.rxdParams.species`,
-    ).then((response) => { 
+      'netpyne_geppetto.netParams.rxdParams.species',
+    ).then((response) => {
       setSpecies(Object.keys(response));
     });
-  }
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -178,16 +178,16 @@ const Rxd = () => {
 
   const onAddRegion = (regionId) => {
     refreshState();
-  }
+  };
 
   const onAddSpecie = (regionId) => {
     refreshState();
-  }
+  };
 
   let tabPanelContent = <div className="layoutVerticalFitInner" />;
   // let subHeader = <div className="layoutVerticalFitInner" />;
   const disableAdd = regions.length === 0 || species.length === 0;
-  
+
   if (value === 0) {
     tabPanelContent = (<RxdRegions regions={regions} activeRegionIndex={0} onAddRegion={onAddRegion} />);
   } else if (value === 1) {
@@ -201,7 +201,7 @@ const Rxd = () => {
   } else if (value === 5) {
     tabPanelContent = (<RxdMulticompartmentReactions disableAdd={disableAdd} />);
   } else if (value === 6) {
-    tabPanelContent = (<RxdRates disableAdd={disableAdd} species={species} regions={regions}/>);
+    tabPanelContent = (<RxdRates disableAdd={disableAdd} species={species} regions={regions} />);
   } else if (value === 7) {
     tabPanelContent = (<RxdExtracellular disableAdd={disableAdd} />);
   }

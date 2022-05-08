@@ -3,7 +3,7 @@ import {
   NetPyNEField,
   NetPyNETextField,
   GridLayout,
-  SelectField
+  SelectField,
 } from 'netpyne/components';
 
 const Rxdreactions = () => {
@@ -36,7 +36,7 @@ const Rxdreactions = () => {
             variant="filled"
             model={`${base_tag}['value']`}
           />
-        </NetPyNEField>      
+        </NetPyNEField>
       </div>
     </GridLayout>
   )

@@ -8,7 +8,7 @@ import {
   Button,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import RxdRegion from './RxdRegion'
+import RxdRegion from './RxdRegion';
 import RxdNoData from './RxdNoData';
 
 function TabPanel (props) {
@@ -43,7 +43,7 @@ function a11yProps (index) {
 
 const RxdRegions = (props) => {
   const [tab, setTab] = React.useState(0);
-  const regions = props.regions ;
+  const { regions } = props;
   return (
     <>
       <Box className="subHeader">
@@ -62,11 +62,11 @@ const RxdRegions = (props) => {
                     <Chip
                       label={region}
                       deleteIcon={<FontIcon className="fa fa-minus-circle" />}
-                      onClick={() => { 
-                        //no point as there's only 1 
+                      onClick={() => {
+                        // no point as there's only 1
                       }}
-                      onDelete={() => { 
-                        //no point as there's only 1
+                      onDelete={() => {
+                        // no point as there's only 1
                       }}
                     />
                   )}
@@ -77,7 +77,7 @@ const RxdRegions = (props) => {
         </Tabs>
       </Box>
       <>
-        <RxdRegion id={props.regions[props.activeRegionIndex]} onAddRegion={props.onAddRegion}></RxdRegion>
+        <RxdRegion id={props.regions[props.activeRegionIndex]} onAddRegion={props.onAddRegion} />
       </>
     </>
   );

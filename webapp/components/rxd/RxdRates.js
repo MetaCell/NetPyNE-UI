@@ -1,14 +1,14 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   NetPyNEField,
   NetPyNETextField,
   GridLayout,
   NetPyNESelectField,
-  NetPyNECheckbox
+  NetPyNECheckbox,
 } from 'netpyne/components';
 
 const Rxdreactions = () => {
-  const base_tag = 'netParams.rxdParams[\'rates\']'; 
+  const base_tag = 'netParams.rxdParams[\'rates\']';
   const postProcessMenuItems = (pythonData, selected) => {
     if (pythonData !== undefined) {
       return pythonData.map((name) => (
@@ -17,12 +17,12 @@ const Rxdreactions = () => {
         </MenuItem>
       ));
     }
-  }
-  return(
+  };
+  return (
     <GridLayout className="gridLayout">
       <div />
       <div className="scrollbar scrollchild">
-      <NetPyNEField id="netParams.rxdParams.species">
+        <NetPyNEField id="netParams.rxdParams.species">
           <NetPyNESelectField
             fullWidth
             model={`${base_tag}['species']`}
@@ -44,12 +44,12 @@ const Rxdreactions = () => {
             method="netpyne_geppetto.getAvailableRxdRegions"
             postProcessItems={postProcessMenuItems}
           />
-        </NetPyNEField>   
+        </NetPyNEField>
         <NetPyNEField id="netParams.rxdParams.multicompartmentReactions.membrane_flux" className="netpyneCheckbox">
           <NetPyNECheckbox model={`${base_tag}['membrane_flux']`} />
-        </NetPyNEField>      
+        </NetPyNEField>
       </div>
     </GridLayout>
-  )
-}
+  );
+};
 export default Rxdreactions;

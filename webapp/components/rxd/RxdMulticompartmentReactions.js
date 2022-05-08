@@ -1,16 +1,16 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   NetPyNEField,
   NetPyNETextField,
   GridLayout,
-  NetPyNECheckbox
+  NetPyNECheckbox,
 } from 'netpyne/components';
 
 const RxdMulticompartmentReactions = () => {
   const [custom_dynamics, set_custom_dynamics] = useState(false);
   const [membrane_flux, set_membrane_flux] = useState(false);
   const base_tag = 'netParams.rxdParams[\'multicompartmentReactions\']';
-  return(
+  return (
     <GridLayout className="gridLayout">
       <div />
       <div className="scrollbar scrollchild">
@@ -39,14 +39,14 @@ const RxdMulticompartmentReactions = () => {
           <NetPyNETextField
             fullWidth
             variant="filled"
-            model={`${base_tag}['rate_f']`}
+            model={`${base_tag}['rate_b']`}
           />
         </NetPyNEField> 
         <NetPyNEField id="netParams.rxdParams.multicompartmentReactions.regions">
           <NetPyNETextField
             fullWidth
             variant="filled"
-            model={`${base_tag}['rate_f']`}
+            model={`${base_tag}['regions']`}
           />
         </NetPyNEField> 
         <NetPyNEField
@@ -59,7 +59,7 @@ const RxdMulticompartmentReactions = () => {
           <NetPyNETextField
             fullWidth
             variant="filled"
-            model={`${base_tag}['rate_f']`}
+            model={`${base_tag}['membrane']`}
           />
         </NetPyNEField> 
         <NetPyNEField
