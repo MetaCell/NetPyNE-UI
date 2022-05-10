@@ -3,12 +3,12 @@ import {
   NetPyNEField,
   NetPyNETextField,
   GridLayout,
-  NetPyNESelectField,
-  MenuItem
+  NetPyNESelectField
 } from 'netpyne/components';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Utils from '../../Utils' 
+import MenuItem from '@material-ui/core/MenuItem';
 
 const RxdSpecie = (props) => {
   const [tempSpecieId, setTempSpecieId] = useState("");

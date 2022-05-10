@@ -3,9 +3,9 @@ import {
   NetPyNEField,
   NetPyNETextField,
   NetPyNESelectField,
-  GridLayout,
-  MenuItem
+  GridLayout
 } from 'netpyne/components';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const Rxdreactions = () => {
   const base_tag = 'netParams.rxdParams[\'states\']';
