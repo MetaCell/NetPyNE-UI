@@ -8,7 +8,7 @@ import {
   Button,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import RxdSpecie from './RxdSpecie'
+import RxdSpecie from './RxdSpecie';
 import RxdNoData from './RxdNoData';
 
 function TabPanel (props) {
@@ -43,14 +43,14 @@ function a11yProps (index) {
 
 const RxdSpecies = (props) => {
   const [tab, setTab] = React.useState(0);
-  const species = props.species ;
+  const { species } = props;
 
   return (
     <>
       <Box className="subHeader">
         <Tabs
           value={tab}
-          vairant="scrollable"
+          variant="scrollable"
           onChange={(event, newTabValue) => setTab(newTabValue)}
           scrollButtons="auto"
           indicatorColor="primary"
@@ -63,11 +63,11 @@ const RxdSpecies = (props) => {
                     <Chip
                       label={species}
                       deleteIcon={<FontIcon className="fa fa-minus-circle" />}
-                      onClick={() => { 
+                      onClick={() => {
 
                       }}
-                      onDelete={() => { 
-                        
+                      onDelete={() => {
+
                       }}
                     />
                   )}
@@ -77,12 +77,13 @@ const RxdSpecies = (props) => {
             }
         </Tabs>
         <Button className="button">
-          <AddIcon onClick={ () => { addSpecie() } }>Add a specie</AddIcon>
-          
+          <AddIcon onClick={() => { addSpecie(); }}>Add a specie</AddIcon>
+
         </Button>
       </Box>
-      <><RxdSpecie id={props.species[props.activeSpecieIndex]} onAddSpecie={props.onAddSpecie}></RxdSpecie></>
+      <><RxdSpecie id={props.species[props.activeSpecieIndex]} onAddSpecie={props.onAddSpecie} /></>
     </>
   );
 };
+
 export default RxdSpecies;

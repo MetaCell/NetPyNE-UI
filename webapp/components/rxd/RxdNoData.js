@@ -38,7 +38,7 @@ const RxdNoData = (props) => {
       <NoData />
       <Typography>{message}</Typography>
       <Button className={classes.button} variant="outlined">
-        <AddIcon onClick={ ()=> { props.callback() } }>{ callbackText }</AddIcon>        
+        <AddIcon onClick={() => { props.callback(); }}>{ callbackText }</AddIcon>
       </Button>
     </Box>
   );

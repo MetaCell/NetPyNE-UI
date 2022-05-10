@@ -1,45 +1,46 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   NetPyNEField,
   NetPyNETextField,
   GridLayout,
-  NetPyNECheckbox
+  NetPyNECheckbox,
 } from 'netpyne/components';
+
 const Rxdreactions = () => {
   const base_tag = 'netParams.rxdParams[\'reactions\']';
-  return(
+  return (
     <GridLayout className="gridLayout">
       <div />
       <div className="scrollbar scrollchild">
-        <NetPyNEField id="netParams.rxdParams.reactions.reactant">
+        <NetPyNEField id="netParams.rxdParams.reactions.xlo">
           <NetPyNETextField
             fullWidth
             variant="filled"
             model={`${base_tag}['xlo']`}
           />
         </NetPyNEField>
-        <NetPyNEField id="netParams.rxdParams.reactions.product">
+        <NetPyNEField id="netParams.rxdParams.reactions.ylo">
           <NetPyNETextField
             fullWidth
             variant="filled"
             model={`${base_tag}['ylo']`}
           />
         </NetPyNEField>
-        <NetPyNEField id="netParams.rxdParams.reactions.rate_f">
+        <NetPyNEField id="netParams.rxdParams.reactions.zlo">
           <NetPyNETextField
             fullWidth
             variant="filled"
             model={`${base_tag}['zlo']`}
           />
         </NetPyNEField>
-        <NetPyNEField id="netParams.rxdParams.reactions.rate_b">
+        <NetPyNEField id="netParams.rxdParams.reactions.xhi">
           <NetPyNETextField
             fullWidth
             variant="filled"
             model={`${base_tag}['xhi']`}
           />
         </NetPyNEField>
-        <NetPyNEField id="netParams.rxdParams.reactions.regions">
+        <NetPyNEField id="netParams.rxdParams.reactions.yhi">
           <NetPyNETextField
             fullWidth
             variant="filled"
@@ -48,9 +49,10 @@ const Rxdreactions = () => {
         </NetPyNEField>
         <NetPyNEField id="netParams.rxdParams.multicompartmentReactions.custom_dynamics" className="netpyneCheckbox">
           <NetPyNECheckbox model={`${base_tag}['custom_dynamics']`} />
-        </NetPyNEField>      
+        </NetPyNEField>
       </div>
     </GridLayout>
-  )
-}
+  );
+};
+
 export default Rxdreactions;

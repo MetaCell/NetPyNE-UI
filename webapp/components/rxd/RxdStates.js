@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   NetPyNEField,
   NetPyNETextField,
   NetPyNESelectField,
-  GridLayout
+  GridLayout,
+  MenuItem,
 } from 'netpyne/components';
-import MenuItem from '@material-ui/core/MenuItem';
 
 const Rxdreactions = () => {
   const base_tag = 'netParams.rxdParams[\'states\']';
@@ -17,12 +17,12 @@ const Rxdreactions = () => {
         </MenuItem>
       ));
     }
-  }
-  return(
+  };
+  return (
     <GridLayout className="gridLayout">
       <div />
       <div className="scrollbar scrollchild">
-      <NetPyNEField id="netParams.rxdParams.regions">
+        <NetPyNEField id="netParams.rxdParams.regions">
           <NetPyNESelectField
             fullWidth
             model={`${base_tag}['regions']`}
@@ -43,9 +43,9 @@ const Rxdreactions = () => {
             variant="filled"
             model={`${base_tag}['name']`}
           />
-        </NetPyNEField>          
+        </NetPyNEField>
       </div>
     </GridLayout>
-  )
-}
+  );
+};
 export default Rxdreactions;
