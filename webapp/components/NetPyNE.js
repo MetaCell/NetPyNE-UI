@@ -106,10 +106,17 @@ class NetPyNE extends React.Component {
   }
 
   openPythonCallDialog (event) {
-    this.props.pythonCallErrorDialogBox({
-      errorMessage: event.evalue,
-      errorDetails: event.traceback.join('\n'),
-    });
+    if (event?.evalue && event?.traceback) {
+      this.props.pythonCallErrorDialogBox({
+        errorMessage: event.evalue,
+        errorDetails: event.traceback.join('\n'),
+      });
+    } else {
+      this.props.pythonCallErrorDialogBox({
+        errorMessage: event.data.response.evalue,
+        errorDetails: event.data.response.traceback.join('\n'),
+      });
+    }
   }
 
   addMetadataToWindow (data) {

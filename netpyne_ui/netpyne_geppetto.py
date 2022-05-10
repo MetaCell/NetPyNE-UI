@@ -593,7 +593,7 @@ class NetPyNEGeppetto:
                 sim.saveData(include)
                 sim.cfg.saveJson = False
 
-                with open(f"{sim.cfg.filename}.json") as json_file:
+                with open(f"{sim.cfg.filename}_data.json") as json_file:
                     data = json.load(json_file)
                     return data
 
