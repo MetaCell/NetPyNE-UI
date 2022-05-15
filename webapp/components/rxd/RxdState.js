@@ -16,9 +16,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const RxdSpecie = (props) => {
+const RxdState = (props) => {
   const classes = useStyles();
-  const base_tag = `netParams.rxdParams['species']['${props.id}']`;
+  const base_tag = `netParams.rxdParams['states']['${props.id}']`;
 
   const postProcessMenuItems = (pythonData, selected) => {
     let results = [];
@@ -36,13 +36,13 @@ const RxdSpecie = (props) => {
     <>
       { !props.id && (
         <>
-          <RxdNoData message="There are no Regions yet." callbackText="Add new region" callback={props.addSingleSpecie} />
+          <RxdNoData message="There are no States yet." callbackText="Add new state" callback={props.addSingleState} />
         </>
       )}
       { props.id && (
         <div className={classes.root}>
           <div className="scrollbar scrollchild spacechild">
-            <NetPyNEField id="netParams.rxdParams.species.regions">
+            <NetPyNEField id="netParams.rxdParams.states.regions">
               <NetPyNESelectField
                 multiple={1}
                 model={`${base_tag}['regions']`}
@@ -50,21 +50,7 @@ const RxdSpecie = (props) => {
                 postProcessItems={postProcessMenuItems}
               />
             </NetPyNEField>
-            <NetPyNEField id="netParams.rxdParams.species.d">
-              <NetPyNETextField
-                fullWidth
-                variant="filled"
-                model={`${base_tag}['d']`}
-              />
-            </NetPyNEField>
-            <NetPyNEField id="netParams.rxdParams.species.charge">
-              <NetPyNETextField
-                fullWidth
-                variant="filled"
-                model={`${base_tag}['charge']`}
-              />
-            </NetPyNEField>
-            <NetPyNEField id="netParams.rxdParams.species.initial">
+            <NetPyNEField id="netParams.rxdParams.states.initial">
               <NetPyNETextField
                 fullWidth
                 variant="filled"
@@ -73,21 +59,7 @@ const RxdSpecie = (props) => {
             </NetPyNEField>
           </div>
           <div className="scrollbar scrollchild spacechild">
-            <NetPyNEField id="netParams.rxdParams.species.esc_boundary_conditions">
-              <NetPyNETextField
-                fullWidth
-                variant="filled"
-                model={`${base_tag}['esc_boundary_conditions']`}
-              />
-            </NetPyNEField>
-            <NetPyNEField id="netParams.rxdParams.species.atolscale">
-              <NetPyNETextField
-                fullWidth
-                variant="filled"
-                model={`${base_tag}['atolscale']`}
-              />
-            </NetPyNEField>
-            <NetPyNEField id="netParams.rxdParams.species.name">
+            <NetPyNEField id="netParams.rxdParams.states.name">
               <NetPyNETextField
                 fullWidth
                 variant="filled"
@@ -100,5 +72,4 @@ const RxdSpecie = (props) => {
     </>
   );
 };
-
-export default RxdSpecie;
+export default RxdState;

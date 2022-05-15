@@ -1,15 +1,11 @@
-import React, { useEffect } from 'react';
-import FontIcon from '@material-ui/core/Icon';
-import { makeStyles } from '@material-ui/core/styles';
+import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
 import {
   Box,
   Tabs,
   Tab,
-  Chip,
-  Button,
 } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import { NoData, RxdBlurOn, RxdBlur } from '../icons';
+import { RxdBlurOn, RxdBlur } from '../icons';
 import RxdRegions from './RxdRegions';
 import RxdSpecies from './RxdSpecies';
 import RxdStates from './RxdStates';
@@ -51,7 +47,7 @@ function a11yProps (index) {
   };
 }
 
-const useStyles = makeStyles((theme) => ({
+const styles = ((theme) => ({
   root: {
     height: `calc(100% - 3.5rem - ${theme.spacing(1)}px)`,
     margin: `-${theme.spacing(1)}px`,
@@ -67,7 +63,8 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiTabs-flexContainer': {
       borderBottom: `0.0625rem solid ${navShadow}`,
       '& .MuiButtonBase-root': {
-        width: '10rem',
+        width: '11rem',
+        minWidth: '11rem',
         height: '5.3125rem',
         color: tabsTextColor,
         textTransform: 'uppercase',
@@ -92,9 +89,10 @@ const useStyles = makeStyles((theme) => ({
       height: '100%',
       display: 'flex',
       overflow: 'hidden',
-      flexDirection: 'column',
       alignItems: 'stretch',
       padding: '0.375rem 0.375rem 0',
+      width: '100%',
+      margin: '1px',
 
       '& .MuiCard-root': {
         backgroundColor: 'transparent !important',
@@ -148,84 +146,148 @@ const useStyles = makeStyles((theme) => ({
 
 const CONFIG_SECTIONS = ['Regions', 'Species', 'States', 'Parameters', 'Reactions', 'Multicompartment reactions', 'Rates', 'Extracellular'];
 
-const Rxd = () => {
-  const classes = useStyles();
-  const [value, setValue] = React.useState(0);
-  const [regions, setRegions] = React.useState([]);
-  const [species, setSpecies] = React.useState([]);
-  const [useEffectSentinel, setUseEffectSentinel] = React.useState('initial');
+class Rxd extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      value: 0,
+      regions: [],
+      species: [],
+      states: [],
+      parameters: [],
+    };
 
-  useEffect(() => {
-    refreshState();
-  }, [useEffectSentinel]);
+    this.onAddState = this.onAddState.bind(this);
+    this.onAddRegion = this.onAddRegion.bind(this);
+    this.onAddSpecie = this.onAddSpecie.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
 
-  const refreshState = () => {
+  handleChange (event, newValue) {
+    this.setState({ value: newValue });
+  }
+
+  onAddRegion (regionId) {
     Utils.evalPythonMessage(
       'netpyne_geppetto.netParams.rxdParams.regions',
     ).then((response) => {
-      setRegions(Object.keys(response));
+      this.setState({ regions: Object.keys(response) });
     });
+  }
+
+  onAddSpecie (speciesId) {
     Utils.evalPythonMessage(
       'netpyne_geppetto.netParams.rxdParams.species',
     ).then((response) => {
-      setSpecies(Object.keys(response));
+      this.setState({ species: Object.keys(response) });
     });
-  };
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  const onAddRegion = (regionId) => {
-    refreshState();
-  };
-
-  const onAddSpecie = (regionId) => {
-    refreshState();
-  };
-
-  let tabPanelContent = <div className="layoutVerticalFitInner" />;
-  // let subHeader = <div className="layoutVerticalFitInner" />;
-  const disableAdd = regions.length === 0 || species.length === 0;
-
-  if (value === 0) {
-    tabPanelContent = (<RxdRegions regions={regions} activeRegionIndex={0} onAddRegion={onAddRegion} />);
-  } else if (value === 1) {
-    tabPanelContent = (<RxdSpecies species={species} activeSpecieIndex={0} onAddSpecie={onAddSpecie} />);
-  } else if (value === 2) {
-    tabPanelContent = (<RxdStates disableAdd={disableAdd} regions={regions} />);
-  } else if (value === 3) {
-    tabPanelContent = (<RxdParameters disableAdd={disableAdd} />);
-  } else if (value === 4) {
-    tabPanelContent = (<RxdReactions disableAdd={disableAdd} />);
-  } else if (value === 5) {
-    tabPanelContent = (<RxdMulticompartmentReactions disableAdd={disableAdd} />);
-  } else if (value === 6) {
-    tabPanelContent = (<RxdRates disableAdd={disableAdd} species={species} regions={regions} />);
-  } else if (value === 7) {
-    tabPanelContent = (<RxdExtracellular disableAdd={disableAdd} />);
   }
 
-  return (
-    <Box className={classes.root}>
-      <Tabs
-        value={value}
-        variant="scrollable"
-        scrollButtons="auto"
-        onChange={handleChange}
-        className={classes.tabs}
-        aria-label="simple tabs example"
-      >
-        { CONFIG_SECTIONS.map((section, index) => <Tab key={section} icon={value === index ? <RxdBlurOn /> : <RxdBlur />} label={section} {...a11yProps(index)} />)}
-      </Tabs>
+  onAddState (stateId) {
+    Utils.evalPythonMessage(
+      'netpyne_geppetto.netParams.rxdParams.states',
+    ).then((response) => {
+      this.setState({ states: Object.keys(response) });
+    });
+  }
 
-      { CONFIG_SECTIONS.map((section, index) => (
-        <TabPanel value={value} index={index} key={`section${index}`} className={classes.tabPanel}>
-          {tabPanelContent}
-        </TabPanel>
-      ))}
-    </Box>
-  );
-};
+  onAddParameter (parameterId) {
+    Utils.evalPythonMessage(
+      'netpyne_geppetto.netParams.rxdParams.parameters',
+    ).then((response) => {
+      this.setState({ parameters: Object.keys(response) });
+    });
+  }
 
-export default Rxd;
+  render () {
+    const { classes, controlledState } = this.props;
+    const { value } = this.state;
+    let tabPanelContent = <div className="layoutVerticalFitInner" />;
+    const disableAdd = this.state.regions.length === 0 || this.state.species.length === 0;
+
+    if (value === 0) {
+      tabPanelContent = (
+        <RxdRegions
+          onAddRegion={this.onAddRegion}
+          regions={controlledState?.checked?.regions}
+        />
+      );
+    } else if (value === 1) {
+      tabPanelContent = (
+        <RxdSpecies
+          onAddSpecie={this.onAddSpecie}
+          species={controlledState?.checked?.species}
+        />
+      );
+    } else if (value === 2) {
+      tabPanelContent = (
+        <RxdStates
+          onAddState={this.onAddState}
+          states={controlledState?.checked?.states}
+        />
+      );
+    } else if (value === 3) {
+      tabPanelContent = (
+        <RxdParameters
+          onAddParameter={this.onAddParameter}
+          parameters={controlledState?.checked?.parameters}
+        />
+      );
+    } else if (value === 4) {
+      tabPanelContent = (
+        <RxdReactions
+          disableAdd={disableAdd}
+          reactions={controlledState?.checked?.reactions}
+        />
+      );
+    } else if (value === 5) {
+      tabPanelContent = (
+        <RxdMulticompartmentReactions
+          disableAdd={disableAdd}
+          multicompartmentReactions={controlledState?.checked?.multicompartmentReactions}
+        />
+      );
+    } else if (value === 6) {
+      tabPanelContent = (
+        <RxdRates
+          disableAdd={disableAdd}
+          rates={controlledState?.checked?.rates}
+          species={this.state.species}
+          regions={controlledState?.checked?.regions}
+        />
+      );
+    } else if (value === 7) {
+      tabPanelContent = (
+        <RxdExtracellular
+          disableAdd={disableAdd}
+          extracellular={controlledState?.checked?.extracellular}
+        />
+      );
+    }
+
+    return (
+      <Box className={classes.root}>
+        <Tabs
+          value={value}
+          variant="scrollable"
+          scrollButtons="auto"
+          onChange={this.handleChange}
+          className={classes.tabs}
+          aria-label="simple tabs example"
+        >
+          { CONFIG_SECTIONS.map((section, index) => (
+            <Tab key={section} icon={value === index ? <RxdBlurOn /> : <RxdBlur />} label={section} {...a11yProps(index)} />
+          ))}
+        </Tabs>
+
+        { CONFIG_SECTIONS.map((section, index) => (
+          <TabPanel value={value} index={index} key={`section${index}`} className={classes.tabPanel}>
+            {tabPanelContent}
+          </TabPanel>
+        ))}
+      </Box>
+    );
+  }
+}
+
+export default withStyles(styles)(Rxd);

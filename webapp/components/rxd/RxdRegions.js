@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import FontIcon from '@material-ui/core/Icon';
 import {
   Box,
@@ -9,30 +9,7 @@ import {
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import RxdRegion from './RxdRegion';
-import RxdNoData from './RxdNoData';
-
-function TabPanel (props) {
-  const {
-    children,
-    value,
-    index,
-    ...other
-  } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <>{children}</>
-      )}
-    </div>
-  );
-}
+import Utils from '../../Utils';
 
 function a11yProps (index) {
   return {
@@ -43,41 +20,82 @@ function a11yProps (index) {
 
 const RxdRegions = (props) => {
   const [tab, setTab] = React.useState(0);
-  const { regions } = props;
+  const [regionCounter, setRegionCounter] = useState(0);
+
+  const addSingleRegion = () => {
+    const newCounter = regionCounter + 1;
+    const newRegion = `region${regionCounter}`;
+    Utils.execPythonMessage(
+      `netpyne_geppetto.netParams.rxdParams['regions']['${newRegion}'] = {}`,
+    );
+    setRegionCounter(newCounter);
+    props.onAddRegion(newRegion);
+  };
+
+  let regions = [];
+  if (props.regions) {
+    regions = Object.keys(props.regions);
+  }
   return (
     <>
-      <Box className="subHeader">
-        <Tabs
-          value={tab}
-          vairant="scrollable"
-          onChange={(event, newTabValue) => setTab(newTabValue)}
-          scrollButtons="auto"
-          indicatorColor="primary"
-        >
-          {
-              regions.map((region, index) => (
-                <Tab
-                  key={region}
-                  label={(
-                    <Chip
-                      label={region}
-                      deleteIcon={<FontIcon className="fa fa-minus-circle" />}
-                      onClick={() => {
-                        // no point as there's only 1
-                      }}
-                      onDelete={() => {
-                        // no point as there's only 1
-                      }}
-                    />
-                  )}
-                  {...a11yProps(index)}
-                />
-              ))
-            }
-        </Tabs>
-      </Box>
+      { regions.length > 0
+        ? (
+          <Box className="subHeader">
+            <Tabs
+              value={tab}
+              variant="scrollable"
+              onChange={(event, newTabValue) => setTab(newTabValue)}
+              scrollButtons="auto"
+              indicatorColor="primary"
+            >
+              {
+            regions.map((region, index) => (
+              <Tab
+                key={region}
+                label={(
+                  <Chip
+                    id={region}
+                    label={region}
+                    deleteIcon={<FontIcon className="fa fa-minus-circle" />}
+                    onClick={(event) => {
+                      const clickedRegion = event.currentTarget.parentElement.id;
+                      const regionIndex = regions.indexOf(clickedRegion);
+                      if (tab !== regionIndex) {
+                        setTab(regionIndex);
+                      }
+                    }}
+                    onDelete={(event) => {
+                      Utils.execPythonMessage(
+                        `del netpyne_geppetto.netParams.rxdParams['regions']['${event.currentTarget.parentElement.id}']`,
+                      );
+                      const newRegions = Object.keys(props.regions).filter((item) => item !== event.currentTarget.parentElement.id);
+                      if (newRegions.length > 0) {
+                        setTab(newRegions.length - 1);
+                      } else {
+                        props.onAddRegion(event.currentTarget.parentElement.id);
+                      }
+                    }}
+                  />
+                )}
+                {...a11yProps(index)}
+              />
+            ))
+          }
+            </Tabs>
+            <Button className="button">
+              <AddIcon onClick={addSingleRegion}>Add a new region</AddIcon>
+            </Button>
+          </Box>
+        )
+        : <> </>}
+
       <>
-        <RxdRegion id={props.regions[props.activeRegionIndex]} onAddRegion={props.onAddRegion} />
+        <RxdRegion
+          addSingleRegion={addSingleRegion}
+          id={props?.regions ? regions[tab] : undefined}
+          onAddRegion={props.onAddRegion}
+          controlledRegion={props?.regions ? props.regions[regions[tab]] : undefined}
+        />
       </>
     </>
   );

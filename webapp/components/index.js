@@ -68,7 +68,7 @@ import _LaunchDialog from './topbar/dialogs/LaunchDialog';
 import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole';
 import _PlotViewer from './general/PlotViewer';
 import _ExperimentControlPanel from './general/ExperimentControlPanel';
-import _Rxd from './rxd/Rxd';
+import _Rxd from './rxd/Wrapper';
 
 const updateCardsDispatch = (dispatch) => ({ updateCards: () => dispatch(updateCards) });
 
@@ -141,7 +141,7 @@ export const LaunchDialog = connect(
 export const ExperimentEdit = _ExperimentEdit;
 export const ExperimentManager = _ExperimentManager;
 export const ExperimentControlPanel = _ExperimentControlPanel;
-export const Rxd = _Rxd;
+// export const Rxd = _Rxd;
 
 // ---------------------------------------------------------------------------------------- //
 
@@ -383,6 +383,15 @@ export const SelectCellTemplate = connect(
     ),
   }),
 )(_SelectCellTemplate);
+
+export const Rxd = connect(
+  null,
+  updateCardsDispatch,
+)(
+  PythonControlledCapability.createPythonControlledComponent(
+    _Rxd,
+  ),
+);
 
 // ---------------------------------------------------------------------------------------- //
 

@@ -420,7 +420,8 @@ define((require) => {
         }
 
         callPythonMethod = (value) => {
-          GeppettoUtils.evalPythonMessage(this.props.method, [])
+          const params = this.props?.pythonParams || [];
+          GeppettoUtils.evalPythonMessage(this.props.method, params)
             .then((response) => {
               if (this._isMounted) {
                 if (Object.keys(response).length !== 0) {

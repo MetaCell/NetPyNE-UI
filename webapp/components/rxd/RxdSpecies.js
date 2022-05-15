@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import FontIcon from '@material-ui/core/Icon';
 import {
   Box,
@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import RxdSpecie from './RxdSpecie';
-import RxdNoData from './RxdNoData';
+import Utils from '../../Utils';
 
 function TabPanel (props) {
   const {
@@ -43,7 +43,22 @@ function a11yProps (index) {
 
 const RxdSpecies = (props) => {
   const [tab, setTab] = React.useState(0);
-  const { species } = props;
+  const [speciesCounter, setSpeciesCounter] = useState(0);
+
+  const addSingleSpecie = () => {
+    const newCounter = speciesCounter + 1;
+    const newSpecies = `species${speciesCounter}`;
+    Utils.execPythonMessage(
+      `netpyne_geppetto.netParams.rxdParams['species']['${newSpecies}'] = {}`,
+    );
+    setSpeciesCounter(newCounter);
+    props.onAddRegion(newSpecies);
+  };
+
+  let species = [];
+  if (props.species) {
+    species = Object.keys(props.species);
+  }
 
   return (
     <>
@@ -58,16 +73,29 @@ const RxdSpecies = (props) => {
           {
               species.map((specie, index) => (
                 <Tab
-                  key={species}
+                  key={specie}
                   label={(
                     <Chip
-                      label={species}
+                      id={specie}
+                      label={specie}
                       deleteIcon={<FontIcon className="fa fa-minus-circle" />}
-                      onClick={() => {
-
+                      onClick={(event) => {
+                        const clickedSpecie = event.currentTarget.parentElement.id;
+                        const specieIndex = species.indexOf(clickedSpecie);
+                        if (tab !== specieIndex) {
+                          setTab(specieIndex);
+                        }
                       }}
-                      onDelete={() => {
-
+                      onDelete={(event) => {
+                        Utils.execPythonMessage(
+                          `del netpyne_geppetto.netParams.rxdParams['species']['${event.currentTarget.parentElement.id}']`,
+                        );
+                        const newSpecies = Object.keys(props.species).filter((item) => item !== event.currentTarget.parentElement.id);
+                        if (newSpecies.length > 0) {
+                          setTab(newSpecies.length - 1);
+                        } else {
+                          props.onAddSpecie(event.currentTarget.parentElement.id);
+                        }
                       }}
                     />
                   )}
@@ -77,11 +105,17 @@ const RxdSpecies = (props) => {
             }
         </Tabs>
         <Button className="button">
-          <AddIcon onClick={() => { addSpecie(); }}>Add a specie</AddIcon>
-
+          <AddIcon onClick={addSingleSpecie}>Add a specie</AddIcon>
         </Button>
       </Box>
-      <><RxdSpecie id={props.species[props.activeSpecieIndex]} onAddSpecie={props.onAddSpecie} /></>
+      <>
+        <RxdSpecie
+          id={props?.species ? species[tab] : undefined}
+          addSingleSpecie={addSingleSpecie}
+          onAddSpecie={props.onAddSpecie}
+          controlledSpecie={props?.species ? props.species[species[tab]] : undefined}
+        />
+      </>
     </>
   );
 };

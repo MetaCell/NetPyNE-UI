@@ -806,6 +806,28 @@ class NetPyNEGeppetto:
             sections[cellRule] = list(self.netParams.cellParams[cellRule]['secs'].keys())
         return sections
 
+    def getAvailableCellTypes(self):
+        cell_types = set([])
+        cell_types.add('all')
+        for p in self.netParams.cellParams:
+            cell_types.add(p)
+        return sorted(cell_types)
+
+    def getAvailableRxDSections(self, selectedRegion):
+        sections = set([])
+        sections.add('all')
+        if self.netParams.rxdParams.regions[selectedRegion].get('cells'):
+            if 'all' in self.netParams.rxdParams.regions[selectedRegion]['cells']:
+                for cellRule in self.netParams.cellParams:
+                    for cellSect in self.netParams.cellParams[cellRule]['secs']:
+                        sections.add(cellSect)
+            else:
+                for cellRule in self.netParams.cellParams:
+                    if cellRule in self.netParams.rxdParams.regions[selectedRegion]['cells']:
+                        for cellSect in self.netParams.cellParams[cellRule]['secs']:
+                            sections.add(cellSect)
+        return sorted(sections)
+
     def getAvailableStimSources(self):
         return list(self.netParams.stimSourceParams.keys())
 

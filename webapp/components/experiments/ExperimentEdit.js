@@ -26,6 +26,7 @@ import ParameterMenu from './ParameterMenu';
 import useStyles from './ExperimentEditStyle';
 import * as ExperimentHelper from './ExperimentHelper';
 import DialogBox from '../general/DialogBox';
+
 const RANGE_VALUE = 0;
 const SUPPORTED_TYPES = [REAL_TYPE.INT, REAL_TYPE.FLOAT, REAL_TYPE.STR, REAL_TYPE.BOOL];
 const MAX_TRIALS = 100;
