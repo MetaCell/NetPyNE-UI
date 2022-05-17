@@ -62,6 +62,15 @@ const RxdConstants = (props) => {
     props.onAddConstants('test');
   };
 
+  let constants = [];
+  if (props.constants) {
+    constants = Object.keys(props.constants);
+  } else {
+    Utils.execPythonMessage(
+      "netpyne_geppetto.netParams.rxdParams['constants'] = {}",
+    );
+  }
+
   return (
     <>
       <div className={classes.headerConstant}>
@@ -103,7 +112,7 @@ const RxdConstants = (props) => {
         </div>
       </div>
 
-      { Object.keys(props.constants).map((constant) => (
+      { constants.map((constant) => (
         <div className={classes.root}>
           <div className="scrollbar scrollchild spacechild">
             <TextField
