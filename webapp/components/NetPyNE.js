@@ -31,7 +31,7 @@ const styles = ({ zIndex }) => ({
   },
   topbar: {
     position: 'relative',
-    zIndex: zIndex.drawer + 1,
+    zIndex: zIndex.drawer,
   },
   content: {
     flexGrow: 1,
@@ -46,6 +46,11 @@ const TIMEOUT = 10000;
 const EXPERIMENT_POLL_INTERVAL = 1000;
 
 class NetPyNE extends React.Component {
+  constructor (props) {
+    super(props);
+    this.openPythonCallDialog = this.openPythonCallDialog.bind(this);
+  }
+
   componentDidMount () {
     GEPPETTO.on(GEPPETTO.Events.Error_while_exec_python_command, this.openPythonCallDialog, this);
 
@@ -101,10 +106,17 @@ class NetPyNE extends React.Component {
   }
 
   openPythonCallDialog (event) {
-    this.props.pythonCallErrorDialogBox({
-      errorMessage: event.evalue,
-      errorDetails: event.traceback.join('\n'),
-    });
+    if (event?.evalue && event?.traceback) {
+      this.props.pythonCallErrorDialogBox({
+        errorMessage: event.evalue,
+        errorDetails: event.traceback.join('\n'),
+      });
+    } else {
+      this.props.pythonCallErrorDialogBox({
+        errorMessage: event.data.response.evalue,
+        errorDetails: event.data.response.traceback.join('\n'),
+      });
+    }
   }
 
   addMetadataToWindow (data) {

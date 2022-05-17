@@ -592,7 +592,7 @@ class NetPyNEGeppetto:
                 sim.saveData(include)
                 sim.cfg.saveJson = False
 
-                with open(f"{sim.cfg.filename}.json") as json_file:
+                with open(f"{sim.cfg.filename}_data.json") as json_file:
                     data = json.load(json_file)
                     return data
 
@@ -907,8 +907,10 @@ class NetPyNEGeppetto:
                 # side effect on other rules
                 if "popParams" in model:
                     self.propagate_field_rename("pop", None, label)
-                    self.propagate_field_rename("cellModel", None, rule['cellModel'])
-                    self.propagate_field_rename("cellType", None, rule['cellType'])
+                    if 'cellModel' in rule:
+                      self.propagate_field_rename("cellModel", None, rule['cellModel'])
+                    if 'cellType' in rule:
+                      self.propagate_field_rename("cellType", None, rule['cellType'])
 
                 elif "stimSourceParams" in model:
 
@@ -916,7 +918,7 @@ class NetPyNEGeppetto:
                 elif "synMechParams" in model:
                     self.propagate_field_rename("synMech", None, label)
             return True
-        except Exception:
+        except Exception as e :
             logging.exception(f"Error while deleting parameter: {label}")
             return False
 
@@ -994,7 +996,7 @@ class NetPyNEGeppetto:
                 for plot in analysis.keys():
                     if cond in analysis[plot].keys():
                         for index, item in enumerate(analysis[plot][cond]):
-                            if isinstance(item, str):
+                            if isinstance(item, str) or isinstance(item, int):
                                 if item == old:
                                     if new == None:
                                         analysis[plot][cond].remove(item)
@@ -1012,11 +1014,11 @@ class NetPyNEGeppetto:
             else:
                 obj = getattr(self.netParams, model)
                 for key in obj.keys():
-                    if label in list(obj[key][cond].keys()):
+                    if cond in obj[key] and label in list(obj[key][cond].keys()):
                         if isinstance(obj[key][cond][label], str):
                             if old == obj[key][cond][label]:
                                 if new == '' or new == None:
-                                    obj[key].pop(label)
+                                    obj[key][cond].pop(label)
                                 else:
                                     obj[key][cond][label] = new
                         elif isinstance(obj[key][cond][label], list):

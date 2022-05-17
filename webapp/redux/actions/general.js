@@ -25,6 +25,7 @@ export const SET_THEME = 'SET_THEME';
 export const ADD_CANVAS_INSTANCES = 'ADD_CANVAS_INSTANCES';
 export const CHANGE_INSTANCE_COLOR = 'CHANGE_INSTANCE_COLOR';
 export const REMOVE_CANVAS_INSTANCES = 'REMOVE_CANVAS_INSTANCES';
+export const SELECT_INSTANCE = 'SELECT_INSTANCE';
 
 // Actions
 export const updateCards = { type: UPDATE_CARDS };
@@ -111,4 +112,12 @@ export const addInstancesToCanvas = (instances) => ({
 export const removeInstancesFromCanvas = (instances) => ({
   type: REMOVE_CANVAS_INSTANCES,
   instances,
+});
+
+export const selectInstances = (instance, selectedInstances) => ({
+  type: SELECT_INSTANCE,
+  data: {
+    instance,
+    selectedInstances,
+  },
 });
