@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
 
 const RxdState = (props) => {
   const classes = useStyles();
-  const base_tag = `netParams.rxdParams['states']['${props.id}']`;
+  const baseTag = `netParams.rxdParams['states']['${props.id}']`;
 
   const postProcessMenuItems = (pythonData, selected) => {
     let results = [];
@@ -45,7 +45,7 @@ const RxdState = (props) => {
             <NetPyNEField id="netParams.rxdParams.states.regions">
               <NetPyNESelectField
                 multiple={1}
-                model={`${base_tag}['regions']`}
+                model={`${baseTag}['regions']`}
                 method="netpyne_geppetto.getAvailableRxdRegions"
                 postProcessItems={postProcessMenuItems}
               />
@@ -54,7 +54,7 @@ const RxdState = (props) => {
               <NetPyNETextField
                 fullWidth
                 variant="filled"
-                model={`${base_tag}['initial']`}
+                model={`${baseTag}['initial']`}
               />
             </NetPyNEField>
           </div>
@@ -63,7 +63,7 @@ const RxdState = (props) => {
               <NetPyNETextField
                 fullWidth
                 variant="filled"
-                model={`${base_tag}['name']`}
+                model={`${baseTag}['name']`}
               />
             </NetPyNEField>
           </div>

@@ -62,15 +62,17 @@ const RxdSpecies = (props) => {
 
   return (
     <>
-      <Box className="subHeader">
-        <Tabs
-          value={tab}
-          variant="scrollable"
-          onChange={(event, newTabValue) => setTab(newTabValue)}
-          scrollButtons="auto"
-          indicatorColor="primary"
-        >
-          {
+      { species.length > 0
+        ? (
+          <Box className="subHeader">
+            <Tabs
+              value={tab}
+              variant="scrollable"
+              onChange={(event, newTabValue) => setTab(newTabValue)}
+              scrollButtons="auto"
+              indicatorColor="primary"
+            >
+              {
               species.map((specie, index) => (
                 <Tab
                   key={specie}
@@ -103,11 +105,13 @@ const RxdSpecies = (props) => {
                 />
               ))
             }
-        </Tabs>
-        <Button className="button">
-          <AddIcon onClick={addSingleSpecie}>Add a specie</AddIcon>
-        </Button>
-      </Box>
+            </Tabs>
+            <Button className="button">
+              <AddIcon onClick={addSingleSpecie}>Add a specie</AddIcon>
+            </Button>
+          </Box>
+        )
+        : <> </>}
       <>
         <RxdSpecie
           id={props?.species ? species[tab] : undefined}

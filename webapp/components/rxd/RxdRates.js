@@ -1,55 +1,103 @@
 import React, { useState } from 'react';
+import FontIcon from '@material-ui/core/Icon';
 import {
-  NetPyNEField,
-  NetPyNETextField,
-  GridLayout,
-  NetPyNESelectField,
-  NetPyNECheckbox,
-} from 'netpyne/components';
+  Box,
+  Tabs,
+  Tab,
+  Chip,
+  Button,
+} from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import Utils from '../../Utils';
+import RxdRate from './RxdRate';
 
-const Rxdreactions = () => {
-  const base_tag = 'netParams.rxdParams[\'rates\']';
-  const postProcessMenuItems = (pythonData, selected) => {
-    if (pythonData !== undefined) {
-      return pythonData.map((name) => (
-        <MenuItem id={`${name}MenuItem`} key={name} value={name}>
-          {name}
-        </MenuItem>
-      ));
-    }
+function a11yProps (index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
   };
+}
+
+const RxdRates = (props) => {
+  const [tab, setTab] = React.useState(0);
+  const [rateCounter, setRateCounter] = useState(0);
+
+  const addSingleRate = () => {
+    const newCounter = rateCounter + 1;
+    const newRate = `rate${rateCounter}`;
+    Utils.execPythonMessage(
+      `netpyne_geppetto.netParams.rxdParams['rates']['${newRate}'] = {}`,
+    );
+    setRateCounter(newCounter);
+    props.onAddRate(newRate);
+  };
+
+  let rates = [];
+  if (props.rates) {
+    rates = Object.keys(props.rates);
+  }
   return (
-    <GridLayout className="gridLayout">
-      <div />
-      <div className="scrollbar scrollchild">
-        <NetPyNEField id="netParams.rxdParams.species">
-          <NetPyNESelectField
-            fullWidth
-            model={`${base_tag}['species']`}
-            method="netpyne_geppetto.getAvailableSpecies"
-            postProcessItems={postProcessMenuItems}
-          />
-        </NetPyNEField>
-        <NetPyNEField id="netParams.rxdParams.parameters.rate">
-          <NetPyNETextField
-            fullWidth
-            variant="filled"
-            model={`${base_tag}['rate']`}
-          />
-        </NetPyNEField>
-        <NetPyNEField id="netParams.rxdParams.regions">
-          <NetPyNESelectField
-            fullWidth
-            model={`${base_tag}['regions']`}
-            method="netpyne_geppetto.getAvailableRxdRegions"
-            postProcessItems={postProcessMenuItems}
-          />
-        </NetPyNEField>
-        <NetPyNEField id="netParams.rxdParams.multicompartmentReactions.membrane_flux" className="netpyneCheckbox">
-          <NetPyNECheckbox model={`${base_tag}['membrane_flux']`} />
-        </NetPyNEField>
-      </div>
-    </GridLayout>
+    <>
+      { rates.length > 0
+        ? (
+          <Box className="subHeader">
+            <Tabs
+              value={tab}
+              variant="scrollable"
+              onChange={(event, newTabValue) => setTab(newTabValue)}
+              scrollButtons="auto"
+              indicatorColor="primary"
+            >
+              {
+            rates.map((region, index) => (
+              <Tab
+                key={region}
+                label={(
+                  <Chip
+                    id={region}
+                    label={region}
+                    deleteIcon={<FontIcon className="fa fa-minus-circle" />}
+                    onClick={(event) => {
+                      const clickedRegion = event.currentTarget.parentElement.id;
+                      const regionIndex = rates.indexOf(clickedRegion);
+                      if (tab !== regionIndex) {
+                        setTab(regionIndex);
+                      }
+                    }}
+                    onDelete={(event) => {
+                      Utils.execPythonMessage(
+                        `del netpyne_geppetto.netParams.rxdParams['rates']['${event.currentTarget.parentElement.id}']`,
+                      );
+                      const newRegions = Object.keys(props.rates).filter((item) => item !== event.currentTarget.parentElement.id);
+                      if (newRegions.length > 0) {
+                        setTab(newRegions.length - 1);
+                      } else {
+                        props.onAddRate(event.currentTarget.parentElement.id);
+                      }
+                    }}
+                  />
+                )}
+                {...a11yProps(index)}
+              />
+            ))
+          }
+            </Tabs>
+            <Button className="button">
+              <AddIcon onClick={addSingleRate}>Add a new reaction</AddIcon>
+            </Button>
+          </Box>
+        )
+        : <> </>}
+
+      <>
+        <RxdRate
+          addSingleRate={addSingleRate}
+          id={props?.rates ? rates[tab] : undefined}
+          onAddReaction={props.onAddRate}
+          controlledReaction={props?.rates ? props.rates[rates[tab]] : undefined}
+        />
+      </>
+    </>
   );
 };
-export default Rxdreactions;
+export default RxdRates;

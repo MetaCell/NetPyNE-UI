@@ -7,9 +7,8 @@ import {
   Chip,
   Button,
 } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
 import Utils from '../../Utils';
-import RxdReaction from './RxdReaction';
+import RxdExtracellular from './RxdExtracellular';
 
 function a11yProps (index) {
   return {
@@ -18,27 +17,27 @@ function a11yProps (index) {
   };
 }
 
-const RxdReactions = (props) => {
+const RxdExtracellulars = (props) => {
   const [tab, setTab] = React.useState(0);
-  const [reactionCounter, setReactionCounter] = useState(0);
+  const [extraCounter, setExtraCounter] = useState(0);
 
-  const addSingleReaction = () => {
-    const newCounter = reactionCounter + 1;
-    const newReaction = `reaction${reactionCounter}`;
+  const addSingleExtra = () => {
+    const newCounter = extraCounter + 1;
+    const newExtra = `extracellular${extraCounter}`;
     Utils.execPythonMessage(
-      `netpyne_geppetto.netParams.rxdParams['reactions']['${newReaction}'] = {}`,
+      `netpyne_geppetto.netParams.rxdParams['extracellular']['${newExtra}'] = {}`,
     );
-    setReactionCounter(newCounter);
-    props.onAddReaction(newReaction);
+    setExtraCounter(newCounter);
+    props.onAddExtracellular(newExtra);
   };
 
-  let reactions = [];
-  if (props.reactions) {
-    reactions = Object.keys(props.reactions);
+  let extras = [];
+  if (props.extracellular) {
+    extras = Object.keys(props.extracellular);
   }
   return (
     <>
-      { reactions.length > 0
+      { extras.length > 0
         ? (
           <Box className="subHeader">
             <Tabs
@@ -49,7 +48,7 @@ const RxdReactions = (props) => {
               indicatorColor="primary"
             >
               {
-            reactions.map((region, index) => (
+            extras.map((region, index) => (
               <Tab
                 key={region}
                 label={(
@@ -59,20 +58,20 @@ const RxdReactions = (props) => {
                     deleteIcon={<FontIcon className="fa fa-minus-circle" />}
                     onClick={(event) => {
                       const clickedRegion = event.currentTarget.parentElement.id;
-                      const regionIndex = reactions.indexOf(clickedRegion);
+                      const regionIndex = extras.indexOf(clickedRegion);
                       if (tab !== regionIndex) {
                         setTab(regionIndex);
                       }
                     }}
                     onDelete={(event) => {
                       Utils.execPythonMessage(
-                        `del netpyne_geppetto.netParams.rxdParams['reactions']['${event.currentTarget.parentElement.id}']`,
+                        `del netpyne_geppetto.netParams.rxdParams['extracellular']['${event.currentTarget.parentElement.id}']`,
                       );
-                      const newRegions = Object.keys(props.reactions).filter((item) => item !== event.currentTarget.parentElement.id);
+                      const newRegions = Object.keys(props.extracellular).filter((item) => item !== event.currentTarget.parentElement.id);
                       if (newRegions.length > 0) {
                         setTab(newRegions.length - 1);
                       } else {
-                        props.onAddReaction(event.currentTarget.parentElement.id);
+                        props.onAddExtracellular(event.currentTarget.parentElement.id);
                       }
                     }}
                   />
@@ -82,22 +81,19 @@ const RxdReactions = (props) => {
             ))
           }
             </Tabs>
-            <Button className="button">
-              <AddIcon onClick={addSingleReaction}>Add a new reaction</AddIcon>
-            </Button>
           </Box>
         )
         : <> </>}
 
       <>
-        <RxdReaction
-          addSingleReaction={addSingleReaction}
-          id={props?.reactions ? reactions[tab] : undefined}
-          onAddReaction={props.onAddReaction}
-          controlledReaction={props?.reactions ? props.reactions[reactions[tab]] : undefined}
+        <RxdExtracellular
+          addSingleExtra={addSingleExtra}
+          id={props?.extracellular ? extras[tab] : undefined}
+          onAddExtracellular={props.onAddExtracellular}
+          controlledRegion={props?.extracellular ? props.extracellular[extras[tab]] : undefined}
         />
       </>
     </>
   );
 };
-export default RxdReactions;
+export default RxdExtracellulars;

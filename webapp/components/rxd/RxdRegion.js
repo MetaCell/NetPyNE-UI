@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 
 const RxdRegion = (props) => {
   const classes = useStyles();
-  const base_tag = `netParams.rxdParams['regions']['${props.id}']`;
+  const baseTag = `netParams.rxdParams['regions']['${props.id}']`;
 
   const postProcessPops = (pythonData) => {
     let results = [];
@@ -72,7 +72,7 @@ const RxdRegion = (props) => {
             <NetPyNEField id="netParams.rxdParams.regions.cells">
               <NetPyNESelectField
                 multiple={1}
-                model={`${base_tag}['cells']`}
+                model={`${baseTag}['cells']`}
                 method="netpyne_geppetto.getAvailableCellTypes"
                 postProcessItems={postProcessPops}
               />
@@ -80,21 +80,21 @@ const RxdRegion = (props) => {
             <NetPyNEField id="netParams.rxdParams.regions.secs">
               <NetPyNESelectField
                 multiple={1}
-                model={`${base_tag}['secs']`}
+                model={`${baseTag}['secs']`}
                 method="netpyne_geppetto.getAvailableRxDSections"
                 pythonParams={[props.id]}
                 postProcessItems={postProcessSecs}
               />
             </NetPyNEField>
             <NetPyNEField id="netParams.rxdParams.regions.nrn_region">
-              <SelectField variant="filled" model={`${base_tag}['nrn_region']`} />
+              <SelectField variant="filled" model={`${baseTag}['nrn_region']`} />
             </NetPyNEField>
             <NetPyNEField id="netParams.rxdParams.regions.geometry">
-              <SelectField variant="filled" model={`${base_tag}['geometry']`} />
+              <SelectField variant="filled" model={`${baseTag}['geometry']`} />
             </NetPyNEField>
             <NetPyNEField id="netParams.rxdParams.regions.dimension">
               <NetPyNESelectField
-                model={`${base_tag}['dimension']`}
+                model={`${baseTag}['dimension']`}
                 postProcessItems={postProcessDimensions}
               />
             </NetPyNEField>
@@ -102,21 +102,21 @@ const RxdRegion = (props) => {
               <NetPyNETextField
                 fullWidth
                 variant="filled"
-                model={`${base_tag}['volume_fraction']`}
+                model={`${baseTag}['volume_fraction']`}
               />
             </NetPyNEField>
             <NetPyNEField id="netParams.rxdParams.regions.tortuosity">
               <NetPyNETextField
                 fullWidth
                 variant="filled"
-                model={`${base_tag}['tortuosity']`}
+                model={`${baseTag}['tortuosity']`}
               />
             </NetPyNEField>
             <NetPyNEField id="netParams.rxdParams.regions.dx">
               <NetPyNETextField
                 fullWidth
                 variant="filled"
-                model={`${base_tag}['dx']`}
+                model={`${baseTag}['dx']`}
               />
             </NetPyNEField>
           </div>
@@ -125,46 +125,46 @@ const RxdRegion = (props) => {
               <NetPyNETextField
                 fullWidth
                 variant="filled"
-                model={`${base_tag}['xlo']`}
+                model={`${baseTag}['xlo']`}
               />
             </NetPyNEField>
             <NetPyNEField id="netParams.rxdParams.regions.ylo">
               <NetPyNETextField
                 fullWidth
                 variant="filled"
-                model={`${base_tag}['ylo']`}
+                model={`${baseTag}['ylo']`}
               />
             </NetPyNEField>
             <NetPyNEField id="netParams.rxdParams.regions.zlo">
               <NetPyNETextField
                 fullWidth
                 variant="filled"
-                model={`${base_tag}['zlo']`}
+                model={`${baseTag}['zlo']`}
               />
             </NetPyNEField>
             <NetPyNEField id="netParams.rxdParams.regions.xhi">
               <NetPyNETextField
                 fullWidth
                 variant="filled"
-                model={`${base_tag}['xhi']`}
+                model={`${baseTag}['xhi']`}
               />
             </NetPyNEField>
             <NetPyNEField id="netParams.rxdParams.regions.yhi">
               <NetPyNETextField
                 fullWidth
                 variant="filled"
-                model={`${base_tag}['yhi']`}
+                model={`${baseTag}['yhi']`}
               />
             </NetPyNEField>
             <NetPyNEField id="netParams.rxdParams.regions.zhi">
               <NetPyNETextField
                 fullWidth
                 variant="filled"
-                model={`${base_tag}['zhi']`}
+                model={`${baseTag}['zhi']`}
               />
             </NetPyNEField>
             <NetPyNEField id="netParams.rxdParams.regions.extracellular" className="netpyneCheckbox">
-              <NetPyNECheckbox model={`${base_tag}['extracellular']`} />
+              <NetPyNECheckbox model={`${baseTag}['extracellular']`} />
             </NetPyNEField>
           </div>
         </div>

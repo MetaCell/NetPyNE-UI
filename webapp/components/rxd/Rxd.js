@@ -5,17 +5,18 @@ import {
   Tabs,
   Tab,
 } from '@material-ui/core';
-import { RxdBlurOn, RxdBlur } from '../icons';
+import Utils from '../../Utils';
+import RxdRates from './RxdRates';
+import RxdStates from './RxdStates';
 import RxdRegions from './RxdRegions';
 import RxdSpecies from './RxdSpecies';
-import RxdStates from './RxdStates';
-import RxdParameters from './RxdParameters';
+import RxdConstants from './RxdConstants';
 import RxdReactions from './RxdReactions';
+import RxdParameters from './RxdParameters';
+import RxdExtracellulars from './RxdExtracellulars';
 import RxdMulticompartmentReactions from './RxdMulticompartmentReactions';
-import RxdRates from './RxdRates';
-import RxdExtracellular from './RxdExtracellular';
 import { primaryColor, navShadow, tabsTextColor } from '../../theme';
-import Utils from '../../Utils';
+import { RxdBlurOn, RxdBlur } from '../icons';
 
 function TabPanel (props) {
   const {
@@ -144,7 +145,17 @@ const styles = ((theme) => ({
   },
 }));
 
-const CONFIG_SECTIONS = ['Regions', 'Species', 'States', 'Parameters', 'Reactions', 'Multicompartment reactions', 'Rates', 'Extracellular'];
+const CONFIG_SECTIONS = [
+  'Regions',
+  'Species',
+  'States',
+  'Parameters',
+  'Reactions',
+  'Multicompartment reactions',
+  'Rates',
+  'Extracellular',
+  'Constants',
+];
 
 class Rxd extends React.Component {
   constructor (props) {
@@ -153,13 +164,24 @@ class Rxd extends React.Component {
       value: 0,
       regions: [],
       species: [],
+      rates: [],
       states: [],
+      extras: [],
+      reactions: [],
+      constants: [],
       parameters: [],
+      multiReactions: [],
     };
 
     this.onAddState = this.onAddState.bind(this);
+    this.onAddRate = this.onAddRate.bind(this);
     this.onAddRegion = this.onAddRegion.bind(this);
     this.onAddSpecie = this.onAddSpecie.bind(this);
+    this.onAddReaction = this.onAddReaction.bind(this);
+    this.onAddConstants = this.onAddConstants.bind(this);
+    this.onAddParameter = this.onAddParameter.bind(this);
+    this.onAddExtracellular = this.onAddExtracellular.bind(this);
+    this.onAddMultiReaction = this.onAddMultiReaction.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -196,6 +218,46 @@ class Rxd extends React.Component {
       'netpyne_geppetto.netParams.rxdParams.parameters',
     ).then((response) => {
       this.setState({ parameters: Object.keys(response) });
+    });
+  }
+
+  onAddReaction (reactionId) {
+    Utils.evalPythonMessage(
+      'netpyne_geppetto.netParams.rxdParams.reactions',
+    ).then((response) => {
+      this.setState({ reactions: Object.keys(response) });
+    });
+  }
+
+  onAddMultiReaction (reactionId) {
+    Utils.evalPythonMessage(
+      'netpyne_geppetto.netParams.rxdParams.multicompartmentReactions',
+    ).then((response) => {
+      this.setState({ multiReactions: Object.keys(response) });
+    });
+  }
+
+  onAddRate (rateId) {
+    Utils.evalPythonMessage(
+      'netpyne_geppetto.netParams.rxdParams.rates',
+    ).then((response) => {
+      this.setState({ rates: Object.keys(response) });
+    });
+  }
+
+  onAddExtracellular (extraCellularId) {
+    Utils.evalPythonMessage(
+      'netpyne_geppetto.netParams.rxdParams.extracellular',
+    ).then((response) => {
+      this.setState({ extras: Object.keys(response) });
+    });
+  }
+
+  onAddConstants (constantId) {
+    Utils.evalPythonMessage(
+      'netpyne_geppetto.netParams.rxdParams.constants',
+    ).then((response) => {
+      this.setState({ constants: Object.keys(response) });
     });
   }
 
@@ -236,31 +298,36 @@ class Rxd extends React.Component {
     } else if (value === 4) {
       tabPanelContent = (
         <RxdReactions
-          disableAdd={disableAdd}
+          onAddReaction={this.onAddReaction}
           reactions={controlledState?.checked?.reactions}
         />
       );
     } else if (value === 5) {
       tabPanelContent = (
         <RxdMulticompartmentReactions
-          disableAdd={disableAdd}
+          onAddMultiReaction={this.onAddMultiReaction}
           multicompartmentReactions={controlledState?.checked?.multicompartmentReactions}
         />
       );
     } else if (value === 6) {
       tabPanelContent = (
         <RxdRates
-          disableAdd={disableAdd}
+          onAddRate={this.onAddRate}
           rates={controlledState?.checked?.rates}
-          species={this.state.species}
-          regions={controlledState?.checked?.regions}
         />
       );
     } else if (value === 7) {
       tabPanelContent = (
-        <RxdExtracellular
-          disableAdd={disableAdd}
+        <RxdExtracellulars
+          onAddExtracellular={this.onAddExtracellular}
           extracellular={controlledState?.checked?.extracellular}
+        />
+      );
+    } else if (value === 8) {
+      tabPanelContent = (
+        <RxdConstants
+          onAddConstants={this.onAddConstants}
+          constants={controlledState?.checked?.constants}
         />
       );
     }

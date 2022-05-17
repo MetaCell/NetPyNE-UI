@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
 
 const RxdParameter = (props) => {
   const classes = useStyles();
-  const base_tag = `netParams.rxdParams['parameters']['${props.id}']`;
+  const baseTag = `netParams.rxdParams['parameters']['${props.id}']`;
 
   const postProcessMenuItems = (pythonData, selected) => {
     let results = [];
@@ -45,7 +45,7 @@ const RxdParameter = (props) => {
             <NetPyNEField id="netParams.rxdParams.parameters.regions">
               <NetPyNESelectField
                 multiple={1}
-                model={`${base_tag}['regions']`}
+                model={`${baseTag}['regions']`}
                 method="netpyne_geppetto.getAvailableRxdRegions"
                 postProcessItems={postProcessMenuItems}
               />
@@ -54,14 +54,14 @@ const RxdParameter = (props) => {
               <NetPyNETextField
                 fullWidth
                 variant="filled"
-                model={`${base_tag}['name']`}
+                model={`${baseTag}['name']`}
               />
             </NetPyNEField>
             <NetPyNEField id="netParams.rxdParams.parameters.charge">
               <NetPyNETextField
                 fullWidth
                 variant="filled"
-                model={`${base_tag}['charge']`}
+                model={`${baseTag}['charge']`}
               />
             </NetPyNEField>
           </div>
@@ -70,7 +70,7 @@ const RxdParameter = (props) => {
               <NetPyNETextField
                 fullWidth
                 variant="filled"
-                model={`${base_tag}['value']`}
+                model={`${baseTag}['value']`}
               />
             </NetPyNEField>
           </div>
