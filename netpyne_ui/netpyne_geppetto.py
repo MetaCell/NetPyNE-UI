@@ -229,6 +229,8 @@ class NetPyNEGeppetto:
                 asynchronous=self.run_config.asynchronous,
                 method=simulations.MPI_BULLETIN,
                 working_directory=working_directory,
+                netParams=self.netParams,
+                simConfig=self.simConfif,
             )
 
             if self.run_config.asynchronous:
@@ -434,9 +436,10 @@ class NetPyNEGeppetto:
                     if self.doIhaveInstOrSimData()['haveInstance']:
                         sim.clearAll()
                     sim.initialize()
-                    sim.loadAll(args['jsonModelFolder'])
+                    sim.loadAll(args['jsonModelFolder'], instantiate=False)
                     self.netParams = sim.net.params
                     self.simConfig = sim.cfg
+                    self.simConfig.createCellSecs = True
                     netpyne_ui_utils.remove(self.netParams.todict())
                     netpyne_ui_utils.remove(self.simConfig.todict())
                 else:

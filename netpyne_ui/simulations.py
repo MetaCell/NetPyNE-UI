@@ -36,7 +36,7 @@ class LocalSimulationPool:
         # We allow to run only one asynchronous simulation at a time on the same instance.
         self.subprocess = None
 
-    def run(self, parallel, cores, method="", batch=False, asynchronous=False, working_directory=None):
+    def run(self, parallel, cores, method="", batch=False, asynchronous=False, working_directory=None, netParams=None, simConfig=None):
         if int(cores) > self.cpus:
             raise InvalidConfigError(
                 f"Specified {cores} cores, but only {self.cpus} are available")
@@ -60,7 +60,7 @@ class LocalSimulationPool:
             else:
                 raise InvalidConfigError(f"Unsupported method {method}")
         else:
-            return self._run_in_same_process()
+            return self._run_in_same_process(netParams, simConfig)
 
     def is_running(self):
         return self.subprocess and self.subprocess.poll() is None
@@ -80,11 +80,11 @@ class LocalSimulationPool:
         if self.is_running():
             self.subprocess.kill()
 
-    def _run_in_same_process(self):
+    def _run_in_same_process(self, netParams=None, simConfig=None):
         logging.debug('Running single core simulation')
 
         sim.setupRecording()
-        sim.simulate()
+        sim.sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig, output=False)
         sim.saveData()
 
     def _run_in_subprocess(self, cmds, asynchronous=False, working_directory: str = None):
