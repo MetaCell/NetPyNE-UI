@@ -57,12 +57,13 @@ const styles = ((theme) => ({
   },
 
   tabs: {
+    flexShrink: 0,
     '& .MuiTabs-indicator': {
       backgroundColor: primaryColor,
       height: '0.0625rem',
     },
     '& .MuiTabs-flexContainer': {
-      borderBottom: `0.0625rem solid ${navShadow}`,
+      // borderBottom: `0.0625rem solid ${navShadow}`,
       '& .MuiButtonBase-root': {
         width: '11rem',
         minWidth: '11rem',
@@ -75,6 +76,9 @@ const styles = ((theme) => ({
         },
       },
     },
+    '& .MuiTabs-scroller': {
+      borderBottom: `0.0625rem solid ${navShadow}`,
+    }
   },
 
   button: {
