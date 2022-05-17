@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import FontIcon from '@material-ui/core/Icon';
 import {
   Box,
   Tabs,
   Tab,
   Chip,
-  Button,
 } from '@material-ui/core';
 import Utils from '../../Utils';
 import RxdExtracellular from './RxdExtracellular';

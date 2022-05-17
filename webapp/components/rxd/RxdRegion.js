@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   NetPyNEField,
@@ -7,10 +7,7 @@ import {
   NetPyNECheckbox,
   NetPyNESelectField,
 } from 'netpyne/components';
-import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
-import Utils from '../../Utils';
 import RxdNoData from './RxdNoData';
 
 const useStyles = makeStyles((theme) => ({

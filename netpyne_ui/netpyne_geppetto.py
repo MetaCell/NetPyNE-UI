@@ -88,7 +88,7 @@ class NetPyNEGeppetto:
 
     def getModelAsJson(self):
         # TODO: netpyne should offer a method asJSON (#240)
-        #  that returns the JSON model without dumping to to disk.
+        # that returns the JSON model without dumping to to disk.
         obj = netpyne_utils.replaceFuncObj(self.netParams.__dict__)
         obj = netpyne_utils.replaceDictODict(obj)
         return obj
@@ -274,7 +274,7 @@ class NetPyNEGeppetto:
             if experiment:
                 if self.experiments.any_in_state([model.ExperimentState.PENDING, model.ExperimentState.SIMULATING]):
                     return utils.getJSONError("Experiment is already simulating or pending", "")
-                
+
                 if simulations.local.is_running():
                     simulations.local.stop()
 
@@ -284,7 +284,7 @@ class NetPyNEGeppetto:
                     if allTrials:
                         if len(experiment.trials) == 1 and experiment.trials[0].id == experiments.BASE_TRIAL_ID:
                             # special case where we don't want to run a batch simulation
-                            return self.simulate_single_model(experiment, use_prev_inst)    
+                            return self.simulate_single_model(experiment, use_prev_inst)
                         else:
                             return self.simulate_experiment_trials(experiment)
                     else:

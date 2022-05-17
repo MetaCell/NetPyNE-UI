@@ -421,16 +421,18 @@ define((require) => {
 
         callPythonMethod = (value) => {
           const params = this.props?.pythonParams || [];
-          GeppettoUtils.evalPythonMessage(this.props.method, params)
-            .then((response) => {
-              if (this._isMounted) {
-                if (Object.keys(response).length !== 0) {
-                  this.setState({ pythonData: response });
-                } else {
-                  this.setState({ pythonData: [] });
+          if (this.props.method) {
+            GeppettoUtils.evalPythonMessage(this.props.method, params)
+              .then((response) => {
+                if (this._isMounted) {
+                  if (Object.keys(response).length !== 0) {
+                    this.setState({ pythonData: response });
+                  } else {
+                    this.setState({ pythonData: [] });
+                  }
                 }
-              }
-            });
+              });
+          }
         };
 
         componentDidUpdate (prevProps, prevState) {
