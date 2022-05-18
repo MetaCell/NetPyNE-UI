@@ -28,7 +28,7 @@ export default class NetPyNENewPlot extends React.Component {
     return (
       <div>
         <Tooltip title="Add new plot" placement="top">
-          <Fab size="small" color="primary" onClick={this.handleButtonClick}>
+          <Fab size="small" color="primary" onClick={this.handleButtonClick} style={{ borderRadius: '50%' }}>
             <ContentAdd style={{ color: 'white' }} />
           </Fab>
         </Tooltip>

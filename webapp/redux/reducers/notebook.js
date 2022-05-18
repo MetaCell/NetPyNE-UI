@@ -5,8 +5,6 @@ export const NOTEBOOK_DEFAULT_STATE = {
   isNotebookReady: false,
 };
 
-export default (state = {}, action) => ({ ...state, ...reduceNotebook(state, action) });
-
 function reduceNotebook (state = {}, action) {
   switch (action.type) {
     case TYPES.LOAD_NOTEBOOK:
@@ -29,3 +27,5 @@ function reduceNotebook (state = {}, action) {
       return state;
   }
 }
+
+export default (state = {}, action) => ({ ...state, ...reduceNotebook(state, action) });

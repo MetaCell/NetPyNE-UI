@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import MuiSelect from '@material-ui/core/Select';
 
-export default class Select extends Component {
+class Select extends React.Component {
   render () {
     let value = this.props.value || '';
     if (this.props.multiple && value.constructor.name != 'Array') {
@@ -30,3 +30,5 @@ export default class Select extends Component {
     );
   }
 }
+
+export default Select;

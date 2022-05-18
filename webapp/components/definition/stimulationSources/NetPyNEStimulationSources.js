@@ -45,6 +45,7 @@ export default class NetPyNEStimulationSources extends Component {
     const defaultStimulationSources = { stim_source: { type: 'NetStim' } };
     const key = Object.keys(defaultStimulationSources)[0];
     const value = defaultStimulationSources[key];
+    // eslint-disable-next-line react/no-access-state-in-setstate
     const model = { ...this.state.value };
     const StimulationSourceId = Utils.getAvailableKey(model, key);
     const newStimulationSource = {

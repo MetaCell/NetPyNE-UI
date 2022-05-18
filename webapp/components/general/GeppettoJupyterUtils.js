@@ -2,15 +2,18 @@ const handle_output = function (data) {
   // data is the object passed to the callback from the kernel execution
   switch (data.msg_type) {
     case 'error':
-      GEPPETTO.CommandController.log('ERROR while executing a Python command:');
-      GEPPETTO.CommandController.log(data.content.evalue.trim());
+      console.log('ERROR while executing a Python command:');
+      console.log(data.content.evalue.trim());
       console.error('ERROR while executing a Python command:');
       console.error(data.content.traceback);
+      if (data.content.evalue === "name 'utils' is not defined") {
+        execPythonMessage('from jupyter_geppetto import synchronization, utils, synchronization as jupyter_geppetto');
+        execPythonMessage('from netpyne_ui.netpyne_geppetto import netpyne_geppetto');
+      }
+      // dispatch(GeppettoActions.geppettoError);
       GEPPETTO.trigger(GEPPETTO.Events.Error_while_exec_python_command, data.content);
-      GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
       break;
     case 'execute_result':
-      GEPPETTO.CommandController.log(data.content.data['text/plain'].trim(), true);
       try {
         var response = JSON.parse(data.content.data['text/plain'].replace(/^'(.*)'$/, '$1'));
       } catch (error) {
@@ -22,18 +25,17 @@ const handle_output = function (data) {
     // FIXME
       break;
     default:
-      GEPPETTO.CommandController.log(data.content.text.trim(), true);
+      console.log(data.content.text.trim(), true);
   }
 };
 
 const execPythonMessage = function (command, callback = handle_output) {
-  GEPPETTO.CommandController.log(`Executing Python command: ${command}`, true);
   const { kernel } = IPython.notebook;
   const messageID = kernel.execute(command, { iopub: { output: callback } }, { silent: false, stop_on_error: true, store_history: true });
 
   return new Promise((resolve, reject) => GEPPETTO.on(GEPPETTO.Events.Receive_Python_Message, (data) => {
-    if (data.id == messageID) {
-      resolve(data.response);
+    if (data.data.id == messageID) {
+      resolve(data.data.response);
     }
   }));
 };

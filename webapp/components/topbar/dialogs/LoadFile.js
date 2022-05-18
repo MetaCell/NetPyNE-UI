@@ -74,7 +74,7 @@ class LoadFile extends React.Component {
   closeExplorerDialog (fieldValue) {
     const newState = { explorerDialogOpen: false };
     if (fieldValue) {
-      const fileName = fieldValue.path.replace(/^.*[\\\/]/, '');
+      const fileName = fieldValue.path.replace(/^.*[\\/]/, '');
       const path = fieldValue.path
         .split(fileName)
         .slice(0, -1)
@@ -89,7 +89,7 @@ class LoadFile extends React.Component {
           newState.jsonPath = path;
           break;
         default:
-          throw 'Not a valid parameter!';
+          throw Error('Not a valid parameter!');
       }
     }
     this.setState(newState);
@@ -211,7 +211,7 @@ class LoadFile extends React.Component {
                 noBackground
                 label="Compile mod files"
                 checked={this.state.compileMod}
-                onChange={() => this.setState({ compileMod: !this.state.compileMod })}
+                onChange={() => this.setState((prevState) => ({ compileMod: !prevState.compileMod }))}
               />
             </Box>
           </Box>

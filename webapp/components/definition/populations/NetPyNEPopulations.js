@@ -33,7 +33,7 @@ export default class NetPyNEPopulations extends React.Component {
     this.handleRenameChildren = this.handleRenameChildren.bind(this);
   }
 
-  handleToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
+  handleToggle = () => this.setState((prevState) => ({ drawerOpen: !prevState.drawerOpen }));
 
   hasSelectedPopulationBeenRenamed (prevState, currentState) {
     const currentModel = prevState.value;
@@ -145,6 +145,7 @@ export default class NetPyNEPopulations extends React.Component {
     // Get Key and Value
     const key = Object.keys(defaultPopulationValues)[0];
     const value = defaultPopulationValues[key];
+    // eslint-disable-next-line react/no-access-state-in-setstate
     const model = { ...this.state.value };
 
     // Get New Available ID
@@ -247,7 +248,7 @@ export default class NetPyNEPopulations extends React.Component {
           />
         ));
 
-      var selectedPopulation = undefined;
+      var selectedPopulation;
       if (
         this.state.selectedPopulation !== undefined
         && Object.keys(model)

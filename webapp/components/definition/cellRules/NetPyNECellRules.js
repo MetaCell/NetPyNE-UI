@@ -86,6 +86,7 @@ export default class NetPyNECellRules extends React.Component {
   handleNewCellRule (defaultCellRules) {
     const key = Object.keys(defaultCellRules)[0];
     const value = defaultCellRules[key];
+    // eslint-disable-next-line react/no-access-state-in-setstate
     const model = { ...this.state.value };
 
     // Get New Available ID
@@ -483,7 +484,7 @@ export default class NetPyNECellRules extends React.Component {
       if (page === 'main') {
         event.preventDefault();
         this.setState({ anchorEl: event.currentTarget });
-        // this.handleNewCellRule({ 'CellType': { 'conds':{}, 'secs':{} } });
+        // this.handleNewCellRule({ CellType: { conds: {}, secs: {} } });
       } else if (page === 'sections') {
         this.handleNewSection({
           Section: {
@@ -608,6 +609,7 @@ export default class NetPyNECellRules extends React.Component {
         name,
       ])
         .then((response) => {
+          // eslint-disable-next-line react/no-access-state-in-setstate
           const model = this.state.value;
           delete model[this.state.selectedCellRule].secs[
             this.state.selectedSection
@@ -627,6 +629,7 @@ export default class NetPyNECellRules extends React.Component {
         name,
       ])
         .then((response) => {
+          // eslint-disable-next-line react/no-access-state-in-setstate
           const model = this.state.value;
           delete model[this.state.selectedCellRule].secs[name];
           this.setState({
@@ -804,6 +807,7 @@ export default class NetPyNECellRules extends React.Component {
         break;
       }
       default: {
+        break;
       }
     }
     return 'undefined';
