@@ -25,6 +25,11 @@ const RxdStates = (props) => {
   const addSingleState = () => {
     const newCounter = statesCounter + 1;
     const newState = `state${statesCounter}`;
+    if (!props.states) {
+      Utils.execPythonMessage(
+        "netpyne_geppetto.netParams.rxdParams['states'] = {}",
+      );
+    }
     Utils.execPythonMessage(
       `netpyne_geppetto.netParams.rxdParams['states']['${newState}'] = {}`,
     );

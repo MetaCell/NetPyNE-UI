@@ -25,6 +25,11 @@ const RxdReactions = (props) => {
   const addSingleReaction = () => {
     const newCounter = reactionCounter + 1;
     const newReaction = `multiReaction${reactionCounter}`;
+    if (!props.multicompartmentReactions) {
+      Utils.execPythonMessage(
+        "netpyne_geppetto.netParams.rxdParams['multicompartmentReactions'] = {}",
+      );
+    }
     Utils.execPythonMessage(
       `netpyne_geppetto.netParams.rxdParams['multicompartmentReactions']['${newReaction}'] = {}`,
     );
@@ -66,7 +71,7 @@ const RxdReactions = (props) => {
                     }}
                     onDelete={(event) => {
                       Utils.execPythonMessage(
-                        `del netpyne_geppetto.netParams.rxdParams['reactions']['${event.currentTarget.parentElement.id}']`,
+                        `del netpyne_geppetto.netParams.rxdParams['multicompartmentReactions']['${event.currentTarget.parentElement.id}']`,
                       );
                       const newRegions = Object.keys(props.multicompartmentReactions).filter((item) => item !== event.currentTarget.parentElement.id);
                       if (newRegions.length > 0) {

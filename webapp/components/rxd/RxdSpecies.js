@@ -48,6 +48,11 @@ const RxdSpecies = (props) => {
   const addSingleSpecie = () => {
     const newCounter = speciesCounter + 1;
     const newSpecies = `species${speciesCounter}`;
+    if (!props.species) {
+      Utils.execPythonMessage(
+        "netpyne_geppetto.netParams.rxdParams['species'] = {}",
+      );
+    }
     Utils.execPythonMessage(
       `netpyne_geppetto.netParams.rxdParams['species']['${newSpecies}'] = {}`,
     );

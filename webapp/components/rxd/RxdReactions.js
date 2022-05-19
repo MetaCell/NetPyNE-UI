@@ -25,6 +25,11 @@ const RxdReactions = (props) => {
   const addSingleReaction = () => {
     const newCounter = reactionCounter + 1;
     const newReaction = `reaction${reactionCounter}`;
+    if (!props.reactions) {
+      Utils.execPythonMessage(
+        "netpyne_geppetto.netParams.rxdParams['reactions'] = {}",
+      );
+    }
     Utils.execPythonMessage(
       `netpyne_geppetto.netParams.rxdParams['reactions']['${newReaction}'] = {}`,
     );

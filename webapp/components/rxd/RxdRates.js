@@ -25,6 +25,11 @@ const RxdRates = (props) => {
   const addSingleRate = () => {
     const newCounter = rateCounter + 1;
     const newRate = `rate${rateCounter}`;
+    if (!props.rates) {
+      Utils.execPythonMessage(
+        "netpyne_geppetto.netParams.rxdParams['rates'] = {}",
+      );
+    }
     Utils.execPythonMessage(
       `netpyne_geppetto.netParams.rxdParams['rates']['${newRate}'] = {}`,
     );

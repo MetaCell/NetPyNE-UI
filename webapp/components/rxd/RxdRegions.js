@@ -25,6 +25,11 @@ const RxdRegions = (props) => {
   const addSingleRegion = () => {
     const newCounter = regionCounter + 1;
     const newRegion = `region${regionCounter}`;
+    if (!props.regions) {
+      Utils.execPythonMessage(
+        "netpyne_geppetto.netParams.rxdParams['regions'] = {}",
+      );
+    }
     Utils.execPythonMessage(
       `netpyne_geppetto.netParams.rxdParams['regions']['${newRegion}'] = {}`,
     );

@@ -54,6 +54,11 @@ const RxdConstants = (props) => {
   const [value, setValue] = useState('');
 
   const addSingleConstant = () => {
+    if (!props.constants) {
+      Utils.execPythonMessage(
+        "netpyne_geppetto.netParams.rxdParams['constants'] = {}",
+      );
+    }
     Utils.execPythonMessage(
       `netpyne_geppetto.netParams.rxdParams['constants']['${parameter}'] = '${value}'`,
     );

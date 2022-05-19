@@ -23,6 +23,11 @@ const RxdExtracellulars = (props) => {
   const addSingleExtra = () => {
     const newCounter = extraCounter + 1;
     const newExtra = `extracellular${extraCounter}`;
+    if (!props.extracellular) {
+      Utils.execPythonMessage(
+        "netpyne_geppetto.netParams.rxdParams['extracellular'] = {}",
+      );
+    }
     Utils.execPythonMessage(
       `netpyne_geppetto.netParams.rxdParams['extracellular']['${newExtra}'] = {}`,
     );
