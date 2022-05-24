@@ -22,13 +22,15 @@ Sentry.init({
   ],
   tracesSampleRate: 1.0,
 });
-
+window.$ = Array; // TODO Temporary fix -- remove upon https://github.com/MetaCell/geppetto-meta/issues/380 
 initGeppetto();
 require('./css/netpyne.less');
 require('./css/material.less');
 require('./css/traceback.less');
 require('./css/flexlayout.less');
 require('./css/tree.less');
+
+window.$ = Array;
 
 ReactDOM.render(
   <div>
