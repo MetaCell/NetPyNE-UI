@@ -247,6 +247,7 @@ class NetPyNEGeppetto:
                 netpyne_model = self.instantiateNetPyNEModel()
 
                 self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
+            
             simulations.run()
 
             if self.geppetto_model:
@@ -592,7 +593,7 @@ class NetPyNEGeppetto:
                 sim.saveData(include)
                 sim.cfg.saveJson = False
 
-                with open(f"{sim.cfg.filename}.json") as json_file:
+                with open(f"{sim.cfg.filename}_data.json") as json_file:
                     data = json.load(json_file)
                     return data
 
@@ -777,7 +778,12 @@ class NetPyNEGeppetto:
                         else:
                             return [ui.getSVG(fig)]
                     else:
-                        return fig_data
+                        if plotName == 'plotEEG':
+                          return self.simConfig.filename + '_EEG.png'
+                        elif plotName == 'plotDipole':
+                          return self.simConfig.filename + '_dipole.png'
+                        else:
+                          return fig_data
         except Exception as e:
             err = "There was an exception in %s():" % (e.plotName)
             logging.exception(("%s \n %s \n%s" % (err, e, sys.exc_info())))
@@ -834,7 +840,9 @@ class NetPyNEGeppetto:
             "plotShape",
             "plot2Dnet",
             "iplotConn",
-            "granger"
+            "granger",
+            "plotDipole",
+            "plotEEG"
         ]
 
         return [plot for plot in plots if plot not in list(self.simConfig.analysis.keys())]
@@ -879,8 +887,10 @@ class NetPyNEGeppetto:
                 # side effect on other rules
                 if "popParams" in model:
                     self.propagate_field_rename("pop", None, label)
-                    self.propagate_field_rename("cellModel", None, rule['cellModel'])
-                    self.propagate_field_rename("cellType", None, rule['cellType'])
+                    if 'cellModel' in rule:
+                      self.propagate_field_rename("cellModel", None, rule['cellModel'])
+                    if 'cellType' in rule:
+                      self.propagate_field_rename("cellType", None, rule['cellType'])
 
                 elif "stimSourceParams" in model:
 
@@ -888,7 +898,7 @@ class NetPyNEGeppetto:
                 elif "synMechParams" in model:
                     self.propagate_field_rename("synMech", None, label)
             return True
-        except Exception:
+        except Exception as e :
             logging.exception(f"Error while deleting parameter: {label}")
             return False
 
@@ -966,7 +976,7 @@ class NetPyNEGeppetto:
                 for plot in analysis.keys():
                     if cond in analysis[plot].keys():
                         for index, item in enumerate(analysis[plot][cond]):
-                            if isinstance(item, str):
+                            if isinstance(item, str) or isinstance(item, int):
                                 if item == old:
                                     if new == None:
                                         analysis[plot][cond].remove(item)
@@ -984,11 +994,11 @@ class NetPyNEGeppetto:
             else:
                 obj = getattr(self.netParams, model)
                 for key in obj.keys():
-                    if label in list(obj[key][cond].keys()):
+                    if cond in obj[key] and label in list(obj[key][cond].keys()):
                         if isinstance(obj[key][cond][label], str):
                             if old == obj[key][cond][label]:
                                 if new == '' or new == None:
-                                    obj[key].pop(label)
+                                    obj[key][cond].pop(label)
                                 else:
                                     obj[key][cond][label] = new
                         elif isinstance(obj[key][cond][label], list):

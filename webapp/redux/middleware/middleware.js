@@ -8,7 +8,7 @@ import {
   VIEW_EXPERIMENTS_RESULTS,
   TRIAL_LOAD_MODEL_SPEC,
 } from 'root/redux/actions/experiments';
-import { NETPYNE_COMMANDS } from 'root/constants';
+import { NETPYNE_COMMANDS, EDIT_WIDGETS } from 'root/constants';
 import * as GeppettoActions from '@metacell/geppetto-meta-client/common/actions';
 import * as ExperimentsApi from 'root/api/experiments';
 import {
@@ -25,7 +25,7 @@ import {
   showNetwork,
   addInstancesToCanvas,
 } from '../actions/general';
-import { openBackendErrorDialog } from '../actions/errors';
+import { OPEN_BACKEND_ERROR_DIALOG, openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
 import Utils from '../../Utils';
 import { downloadJsonResponse, downloadPythonResponse } from './utils';
@@ -179,6 +179,10 @@ export default (store) => (next) => (action) => {
     //   next(GeppettoActions.waitData('Loading the NetPyNE Model', GeppettoActions.clientActions.MODEL_LOADED));
     //   next(action);
     //   break;
+    case OPEN_BACKEND_ERROR_DIALOG:
+      next(GeppettoActions.setWidgets(store.getState().widgets));
+      next(action);
+      break;
     case GeppettoActions.clientActions.MODEL_LOADED:
       if (store.getState()?.general?.modelState === Constants.MODEL_STATE.NOT_INSTANTIATED) {
         const networkPath = window.Instances.getInstance('network');
@@ -285,7 +289,11 @@ export default (store) => (next) => (action) => {
       break;
     }
     case SIMULATE_NETWORK: {
-      next(GeppettoActions.waitData('Simulating the NetPyNE Model', GeppettoActions.layoutActions.SET_WIDGETS));
+      if (!action.payload) {
+        next(GeppettoActions.waitData('Simulating the NetPyNE Model', GeppettoActions.layoutActions.SET_WIDGETS));
+      } else {
+        next(GeppettoActions.activateWidget(EDIT_WIDGETS.experimentManager.id));
+      }
       let allParams = true;
       ExperimentsApi.getParameters()
         .then((params) => {

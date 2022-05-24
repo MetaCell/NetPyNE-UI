@@ -7,21 +7,44 @@ import IconButton from '@material-ui/core/IconButton';
 import TreeItem from '@material-ui/lab/TreeItem';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import ColorLens from '@material-ui/icons/ColorLens';
-import Shuffle from '@material-ui/icons/Shuffle';
 import { ChromePicker } from 'react-color';
 import { useDispatch, useSelector } from 'react-redux';
-import { experimentLabelColor } from '../../theme';
-import { changeInstanceColor, selectInstances } from '../../redux/actions/general';
+import {
+  experimentLabelColor,
+  bgDarker,
+  bgLight,
+  radius,
+} from '../../theme';
+import {
+  RandomColorLensIcon,
+  ColorLensIcon,
+  TriangleIcon,
+} from './NetPyNEIcons';
+import { changeInstanceColor } from '../../redux/actions/general';
 
 const useStyles = makeStyles((theme) => ({
-  networkItem: {
-    paddingTop: '2px',
-    paddingBottom: '2px',
+  treeItem: {
+    '& .MuiTreeItem-iconContainer': {
+      marginRight: '5px',
+    },
+    '& .MuiTreeItem-label': {
+      paddingTop: '2px',
+      paddingBottom: '2px',
+      paddingRight: '8px',
+      borderRadius: radius,
+      '&:hover': {
+        backgroundColor: '#333333',
+      },
+    },
+  },
+  leafTreeItem: {
+    '& .MuiTreeItem-iconContainer': {
+      width: 0,
+    },
   },
   controls: {
     '& .MuiIconButton-root': {
-      padding: 0,
+      padding: '0 !important',
       marginLeft: '0.5rem',
       color: experimentLabelColor,
       '&:hover': {
@@ -29,10 +52,63 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  colorPickerBox: {
+    position: 'absolute',
+    top: '1.6rem',
+    right: '2.7rem',
+    height: '3rem',
+  },
+  triangleIcon: {
+    marginBottom: '-7px',
+    color: bgDarker,
+  },
   colorPicker: {
     position: 'absolute',
     zIndex: 1000,
     right: 0,
+    backgroundColor: `${bgDarker} !important`,
+    padding: '0.2rem',
+    '& label': {
+      color: '#ffffff !important',
+      fontFamily: 'Roboto, arial',
+      fontSize: '11px',
+      fontWeight: 400,
+    },
+    '& input': {
+      backgroundColor: `${bgLight} !important`,
+      color: '#ffffff !important',
+      boxShadow: 'none !important',
+      fontFamily: 'Roboto, arial',
+      fontSize: '11px',
+      fontWeight: 400,
+    },
+    '& svg': {
+      fill: '#ffffff !important',
+    },
+    '& svg:hover': {
+      background: 'transparent !important',
+    },
+    '& .hue-horizontal': {
+      borderRadius: '10px',
+    },
+    '& :nth-child(2)': {
+      '& :nth-child(1)': {
+        '& :nth-child(2)': {
+          '& :nth-child(2)': {
+            '& :nth-child(1)': {
+              '& :nth-child(2)': {
+                borderRadius: '10px',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  activeColorPicker: {
+    '& path': {
+      fill: '#ffffff',
+    },
   },
 }));
 
@@ -60,6 +136,8 @@ const ControlPanelTreeItem = (props) => {
     });
     dispatch(changeInstanceColor(newInstances));
     setColor(_color.rgb);
+    event.stopPropagation();
+    event.preventDefault();
   };
 
   const getRandomColor = () => ({
@@ -70,6 +148,8 @@ const ControlPanelTreeItem = (props) => {
   });
 
   const generateRandomColor = (event, nodeId) => {
+    event.stopPropagation();
+    event.preventDefault();
     const children = window.Instances.getInstance(nodeId).getChildren().map((instance) => instance.getInstancePath());
     // const newInstances = instances.filter((instance) => !(instance.instancePath.startsWith(nodeId)));
     const newInstances = instances.filter((instance) => {
@@ -98,6 +178,8 @@ const ControlPanelTreeItem = (props) => {
   };
 
   const changeVisibility = (event, nodeId) => {
+    event.stopPropagation();
+    event.preventDefault();
     const copiedInstances = instances.slice();
     let oldIndex = null;
     let oldInstance = copiedInstances.find((pInstance, index) => {
@@ -145,51 +227,71 @@ const ControlPanelTreeItem = (props) => {
 
   return (
     <TreeItem
+      className={`${classes.treeItem} ${children?.length === 0 ? classes.leafTreeItem : ''}`}
       nodeId={nodeId}
-      onLabelClick={(e) => { e.stopPropagation(); e.preventDefault(); }}
       label={(
         <Grid
           container
-          className={classes.networkItem}
-          onMouseEnter={() => setIsHoveredOver(true)}
-          onMouseLeave={() => setIsHoveredOver(false)}
+          onMouseEnter={() => setTimeout(setIsHoveredOver(true), 10000)}
+          onMouseLeave={() => setTimeout(setIsHoveredOver(false), 10000)}
           display="flex"
           flexDirection="row"
           justifyContent="space-between"
         >
-          <Grid item xs={4}><Typography onClick={() => onNodeSelect(nodeId)}>{label}</Typography></Grid>
+
+          <Grid item xs={4}>
+            <Typography onClick={(event) => {
+              onNodeSelect(nodeId);
+              event.stopPropagation();
+              event.preventDefault();
+            }}
+            >
+              {label}
+            </Typography>
+          </Grid>
           <Grid item xs={4} justifyContent="center"><Typography>{type}</Typography></Grid>
           <Grid item xs={4} justifyContent="flex-end" className={classes.controls}>
             {isHoveredOver
               ? (
                 <>
-
                   <IconButton onClick={(event) => changeVisibility(event, nodeId)}>
-                    { visibility ? <Visibility /> : <VisibilityOff /> }
+                    { visibility ? <Visibility style={{ marginRight: '0.5rem' }} /> : <VisibilityOff style={{ marginRight: '0.5rem' }} /> }
                   </IconButton>
-                  <IconButton disabled={disableRandom} onClick={(event) => generateRandomColor(event, nodeId)}><Shuffle /></IconButton>
-                  <IconButton onClick={() => setShowColorPicker(true)}><ColorLens /></IconButton>
+                  <IconButton onClick={(event) => {
+                    event.stopPropagation();
+                    event.preventDefault();
+                    setShowColorPicker(true);
+                  }}
+                  >
+                    <ColorLensIcon className={showColorPicker ? classes.activeColorPicker : ''} />
+                  </IconButton>
+                  <IconButton disabled={disableRandom} onClick={(event) => generateRandomColor(event, nodeId)}>
+                    <RandomColorLensIcon />
+                  </IconButton>
                   {
               showColorPicker
                 ? (
                   <Box
-                    onMouseLeave={() => setShowColorPicker(false)}
+                    className={classes.colorPickerBox}
+                    onMouseLeave={() => setTimeout(setShowColorPicker(false), 30000)}
                   >
+                    {/* <TriangleIcon className={classes.triangleIcon} /> */}
                     <ChromePicker
                       className={classes.colorPicker}
                       color={color}
-                      onChangeComplete={(color, event) => handleColorSelection(color, event, nodeId)}
+                      onChangeComplete={(color, event) => {
+                        handleColorSelection(color, event, nodeId);
+                      }}
                     />
                   </Box>
                 ) : null
             }
-
                 </>
               )
               : null}
           </Grid>
         </Grid>
-        )}
+      )}
     >
       {children}
     </TreeItem>
