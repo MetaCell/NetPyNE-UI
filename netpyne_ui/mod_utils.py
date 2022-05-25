@@ -31,6 +31,7 @@ loaded_mods = set()
 def compileModMechFiles(compileMod, modFolder):
     # Create Symbolic link
     if compileMod and modFolder not in loaded_mods:
+        logging.info("Compiling mod files in %s", modFolder)
         modPath = os.path.join(str(modFolder), "x86_64")
         try:
             if os.path.exists(modPath):
@@ -44,7 +45,7 @@ def compileModMechFiles(compileMod, modFolder):
             neuron.load_mechanisms(str(modFolder))
             loaded_mods.add(modFolder)
         except OSError:
-            logging.warning("Cannot compile mech files in the current folder; ")
+            logging.warning("Cannot compile mech files in the current folder; ", exc_info=True)
             neuron.load_mechanisms("/tmp")
             loaded_mods.add(modFolder)
         except:
