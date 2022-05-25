@@ -9,7 +9,10 @@ from neuron import h
 from netpyne import specs
 from netpyne.batch import Batch
 
-os.chdir(os.path.dirname(__file__))
+try:
+    os.chdir(os.path.dirname(__file__))
+except:
+    pass
 
 
 def is_error():
