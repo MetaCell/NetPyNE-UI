@@ -21,7 +21,7 @@ export class NetPyNEPythonConsole extends Component {
 
   render() {
     const notebookName = GEPPETTO_CONFIGURATION.notebookName || "notebook.ipynb";
-    return <PythonConsole pythonNotebookPath={`notebooks/${notebookName}`} />
+    return <PythonConsole pythonNotebookPath={`notebooks/${notebookName}`} extensionLoaded={this.props.extensionLoaded} />
   }
 }
 
