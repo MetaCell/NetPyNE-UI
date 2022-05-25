@@ -9,7 +9,7 @@ from jupyter_geppetto import settings
 
 os.environ['JUPYTER_CONFIG_DIR'] = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.jupyter-config')
 
-settings.debug = True
+settings.debug = False
 
 if __name__ == '__main__':
     sys.argv.append('--NotebookApp.default_url=/geppetto')

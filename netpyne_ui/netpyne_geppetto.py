@@ -46,7 +46,6 @@ os.chdir(constants.NETPYNE_WORKDIR_PATH)
 
 neuron.nrn_dll_loaded.append(os.path.join(NETPYNE_WORKDIR_PATH, 'mod'))  # Avoids to load workspace modfiles twice
 
-
 class NetPyNEGeppetto:
 
     def __init__(self):
@@ -195,7 +194,7 @@ class NetPyNEGeppetto:
         except OSError:
             experiment.state = model.ExperimentState.ERROR
             return utils.getJSONError("The specified folder already exists", "")
-
+        logging.info("Running experiment %s combinations", experiment.name)
         try:
             simulations.run(
                 platform="local",
@@ -208,6 +207,7 @@ class NetPyNEGeppetto:
             )
         except InvalidConfigError as e:
             experiment.state = model.ExperimentState.ERROR
+            logging.error("Error running experiment %s: %s", experiment.name, str(e))
             return utils.getJSONError(str(e), "")
 
         if self.run_config.asynchronous:
@@ -215,7 +215,7 @@ class NetPyNEGeppetto:
                   f"You can view the Experiment status in the Experiment Manager."
         else:
             message = f"Experiment {experiment.name} finished, you can view the results in the Experiment Manager."
-
+        print(message)
         return utils.getJSONError(message, "")
 
     def simulate_single_model(self, experiment: model.Experiment = None, use_prev_inst: bool = False):
