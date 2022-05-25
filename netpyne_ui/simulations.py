@@ -41,7 +41,7 @@ class LocalSimulationPool:
             raise InvalidConfigError(
                 f"Specified {cores} cores, but only {self.cpus} are available")
 
-        logging.info(f"Scheduling simulation on {cores} cores ...")
+        logging.info(f"Scheduling simulation on {cores} cores with {method} ...")
 
         if batch or asynchronous or parallel:
             if method == MPI_DIRECT:
@@ -91,7 +91,8 @@ class LocalSimulationPool:
         if self.is_running():
             logging.info("Another simulation is still running")
             return False
-
+        logging.info("Running simulations on subprocess inside directory %s", working_directory)
+        logging.info("Running commands: \n%s", "\n".join(cmds))
         if working_directory:
             with open(os.path.join(working_directory, 'sim.log'), 'w') as f:
                 self.subprocess = subprocess.Popen(cmds, stdout=f, stderr=f)
