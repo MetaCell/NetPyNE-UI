@@ -908,56 +908,14 @@ class NetPyNEGeppetto:
         return validateFunction(functionString, self.netParams.__dict__)
 
     def exportHLS(self, args):
-        def convert2bool(string):
-            return string.replace('true', 'True').replace('false', 'False').replace('null', 'False')
-
-        def header(title, spacer='-'):
-            return '\n# ' + title.upper() + ' ' + spacer * (77 - len(title)) + '\n'
 
         try:
-            params = ['popParams', 'cellParams', 'synMechParams']
-            params += ['connParams', 'stimSourceParams', 'stimTargetParams']
-
-            fname = args['fileName']
-            if not fname:
-                # default option
-                fname = 'output.py'
-            
+            fname = args.get('fileName', 'output.py')
             if not fname[-3:] == '.py':
                 fname = f"{fname}.py"
 
-            # TODO: use methods offered by netpyne to create this script!
-            with open(fname, 'w') as script:
-                script.write("from netpyne import specs, sim\n")
-                script.write(header("documentation"))
-                script.write("Script generated with NetPyNE-UI. Please visit:\n")
-                script.write("    - https://www.netpyne.org\n    - https://github.com/MetaCell/NetPyNE-UI\n\n")
-                script.write(header("script", spacer="="))
-                script.write("netParams = specs.NetParams()\n")
-                script.write("simConfig = specs.SimConfig()\n")
-                script.write(header("single value attributes"))
-                for attr, value in list(self.netParams.__dict__.items()):
-                    if attr not in params:
-                        if value != getattr(specs.NetParams(), attr):
-                            script.write("netParams." + attr + " = ")
-                            script.write(convert2bool(json.dumps(value, indent=4)) + "\n")
-
-                script.write(header("network attributes"))
-                for param in params:
-                    for key, value in list(getattr(self.netParams, param).items()):
-                        script.write("netParams." + param + "[" + key + "] = ")
-                        script.write(convert2bool(json.dumps(value, indent=4)) + "\n")
-
-                script.write(header("network configuration"))
-                for attr, value in list(self.simConfig.__dict__.items()):
-                    if value != getattr(specs.SimConfig(), attr):
-                        script.write("simConfig." + attr + " = ")
-                        script.write(convert2bool(json.dumps(value, indent=4)) + "\n")
-
-                script.write(header("create simulate analyze  network"))
-                script.write("# sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)\n")
-
-                script.write(header("end script", spacer="="))
+            from netpyne.conversion import createPythonScript
+            createPythonScript(fname, self.netParams, self.simConfig)
 
             with open(fname) as f:
                 file_b64 = base64.b64encode(bytes(f.read(), 'utf-8')).decode()
