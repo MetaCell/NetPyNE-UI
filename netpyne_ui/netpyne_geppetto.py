@@ -248,6 +248,7 @@ class NetPyNEGeppetto:
                 netpyne_model = self.instantiateNetPyNEModel()
 
                 self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
+            
             simulations.run()
 
             if self.geppetto_model:
@@ -777,7 +778,12 @@ class NetPyNEGeppetto:
                         else:
                             return [ui.getSVG(fig)]
                     else:
-                        return fig_data
+                        if plotName == 'plotEEG':
+                          return self.simConfig.filename + '_EEG.png'
+                        elif plotName == 'plotDipole':
+                          return self.simConfig.filename + '_dipole.png'
+                        else:
+                          return fig_data
         except Exception as e:
             err = "There was an exception in %s():" % (e.plotName)
             logging.exception(("%s \n %s \n%s" % (err, e, sys.exc_info())))
@@ -862,7 +868,9 @@ class NetPyNEGeppetto:
             "plotShape",
             "plot2Dnet",
             "iplotConn",
-            "granger"
+            "granger",
+            "plotDipole",
+            "plotEEG"
         ]
 
         return [plot for plot in plots if plot not in list(self.simConfig.analysis.keys())]
