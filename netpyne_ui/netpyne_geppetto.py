@@ -89,7 +89,7 @@ class NetPyNEGeppetto:
 
     def getModelAsJson(self):
         # TODO: netpyne should offer a method asJSON (#240)
-        #  that returns the JSON model without dumping to to disk.
+        # that returns the JSON model without dumping to to disk.
         obj = netpyne_utils.replaceFuncObj(self.netParams.__dict__)
         obj = netpyne_utils.replaceDictODict(obj)
         return obj
@@ -275,7 +275,7 @@ class NetPyNEGeppetto:
             if experiment:
                 if self.experiments.any_in_state([model.ExperimentState.PENDING, model.ExperimentState.SIMULATING]):
                     return utils.getJSONError("Experiment is already simulating or pending", "")
-                
+
                 if simulations.local.is_running():
                     simulations.local.stop()
 
@@ -285,7 +285,7 @@ class NetPyNEGeppetto:
                     if allTrials:
                         if len(experiment.trials) == 1 and experiment.trials[0].id == experiments.BASE_TRIAL_ID:
                             # special case where we don't want to run a batch simulation
-                            return self.simulate_single_model(experiment, use_prev_inst)    
+                            return self.simulate_single_model(experiment, use_prev_inst)
                         else:
                             return self.simulate_experiment_trials(experiment)
                     else:
@@ -808,8 +808,36 @@ class NetPyNEGeppetto:
             sections[cellRule] = list(self.netParams.cellParams[cellRule]['secs'].keys())
         return sections
 
+    def getAvailableCellTypes(self):
+        cell_types = set([])
+        cell_types.add('all')
+        for p in self.netParams.cellParams:
+            cell_types.add(p)
+        return sorted(cell_types)
+
+    def getAvailableRxDSections(self, selectedRegion):
+        sections = set([])
+        sections.add('all')
+        if self.netParams.rxdParams.regions[selectedRegion].get('cells'):
+            if 'all' in self.netParams.rxdParams.regions[selectedRegion]['cells']:
+                for cellRule in self.netParams.cellParams:
+                    for cellSect in self.netParams.cellParams[cellRule]['secs']:
+                        sections.add(cellSect)
+            else:
+                for cellRule in self.netParams.cellParams:
+                    if cellRule in self.netParams.rxdParams.regions[selectedRegion]['cells']:
+                        for cellSect in self.netParams.cellParams[cellRule]['secs']:
+                            sections.add(cellSect)
+        return sorted(sections)
+
     def getAvailableStimSources(self):
         return list(self.netParams.stimSourceParams.keys())
+
+    def getAvailableRxdRegions(self):
+        return list(self.netParams.rxdParams.regions.keys())
+
+    def getAvailableRxdSpecies(self):
+        return list(self.netParams.rxdParams.species.keys())
 
     def getAvailableSynMech(self):
         return list(self.netParams.synMechParams.keys())

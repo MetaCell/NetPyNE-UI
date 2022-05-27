@@ -529,6 +529,20 @@ export const EDIT_WIDGETS = {
       model: 'simConfig.analysis',
     },
   },
+  rxd: {
+    id: 'rxd',
+    name: 'Rxd Configuration',
+    model: 'netParams.rxdParams',
+    status: WidgetStatus.HIDDEN,
+    hideOnClose: true,
+    component: 'rxd',
+    panelName: TOP_PANEL,
+    enableRename: false,
+    pos: 7,
+    props: {
+      model: 'netParams.rxdParams',
+    },
+  },
   simConfig: {
     id: 'simConfig',
     name: 'Configuration',
@@ -537,7 +551,7 @@ export const EDIT_WIDGETS = {
     hideOnClose: true,
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 7,
+    pos: 8,
   },
   experimentManager: {
     id: 'experimentManager',
@@ -547,7 +561,7 @@ export const EDIT_WIDGETS = {
     component: 'experimentManager',
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 8,
+    pos: 9,
     specification: TOOLS_LIST,
   },
 };
