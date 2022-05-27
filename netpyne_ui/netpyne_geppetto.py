@@ -230,8 +230,6 @@ class NetPyNEGeppetto:
                 asynchronous=self.run_config.asynchronous,
                 method=simulations.MPI_BULLETIN,
                 working_directory=working_directory,
-                netParams=self.netParams,
-                simConfig=self.simConfig,
             )
 
             if self.run_config.asynchronous:
