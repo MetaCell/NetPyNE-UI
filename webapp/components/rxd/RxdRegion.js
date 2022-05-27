@@ -9,6 +9,7 @@ import {
 } from 'netpyne/components';
 import MenuItem from '@material-ui/core/MenuItem';
 import RxdNoData from './RxdNoData';
+import Utils from '../../Utils';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
 const RxdRegion = (props) => {
   const classes = useStyles();
   const baseTag = `netParams.rxdParams['regions']['${props.id}']`;
+  const extracellularTag = "netParams.rxdParams['extracellular']";
 
   const postProcessPops = (pythonData) => {
     let results = [];
@@ -56,6 +58,18 @@ const RxdRegion = (props) => {
     return results;
   };
 
+  const activateExtracellular = () => {
+    if (props.extracellular) {
+      // Utils.execPythonMessage(
+      //   "del netpyne_geppetto.netParams.rxdParams['regions']['extracellular']",
+      // );
+    } else {
+      // Utils.execPythonMessage(
+      //   "netpyne_geppetto.netParams.rxdParams['regions']['extracellular'] = {}",
+      // );
+    }
+  };
+
   return (
     <>
       { !props.id && (
@@ -86,27 +100,10 @@ const RxdRegion = (props) => {
             <NetPyNEField id="netParams.rxdParams.regions.nrn_region">
               <SelectField variant="filled" model={`${baseTag}['nrn_region']`} />
             </NetPyNEField>
-            <NetPyNEField id="netParams.rxdParams.regions.geometry">
-              <SelectField variant="filled" model={`${baseTag}['geometry']`} />
-            </NetPyNEField>
             <NetPyNEField id="netParams.rxdParams.regions.dimension">
               <NetPyNESelectField
                 model={`${baseTag}['dimension']`}
                 postProcessItems={postProcessDimensions}
-              />
-            </NetPyNEField>
-            <NetPyNEField id="netParams.rxdParams.regions.volume_fraction">
-              <NetPyNETextField
-                fullWidth
-                variant="filled"
-                model={`${baseTag}['volume_fraction']`}
-              />
-            </NetPyNEField>
-            <NetPyNEField id="netParams.rxdParams.regions.tortuosity">
-              <NetPyNETextField
-                fullWidth
-                variant="filled"
-                model={`${baseTag}['tortuosity']`}
               />
             </NetPyNEField>
             <NetPyNEField id="netParams.rxdParams.regions.dx">
@@ -116,8 +113,17 @@ const RxdRegion = (props) => {
                 model={`${baseTag}['dx']`}
               />
             </NetPyNEField>
+            <NetPyNEField id="netParams.rxdParams.regions.geometry">
+              <SelectField variant="filled" model={`${baseTag}['geometry']`} />
+            </NetPyNEField>
           </div>
           <div className="scrollbar scrollchild spacechild">
+            <NetPyNEField id="netParams.rxdParams.regions.extracellular" className="netpyneCheckbox">
+              <NetPyNECheckbox
+                model={`${extracellularTag}['extracellular']`}
+                onChange={activateExtracellular}
+              />
+            </NetPyNEField>
             <NetPyNEField id="netParams.rxdParams.regions.xlo">
               <NetPyNETextField
                 fullWidth
@@ -160,8 +166,19 @@ const RxdRegion = (props) => {
                 model={`${baseTag}['zhi']`}
               />
             </NetPyNEField>
-            <NetPyNEField id="netParams.rxdParams.regions.extracellular" className="netpyneCheckbox">
-              <NetPyNECheckbox model={`${baseTag}['extracellular']`} />
+            <NetPyNEField id="netParams.rxdParams.regions.volume_fraction">
+              <NetPyNETextField
+                fullWidth
+                variant="filled"
+                model={`${baseTag}['volume_fraction']`}
+              />
+            </NetPyNEField>
+            <NetPyNEField id="netParams.rxdParams.regions.tortuosity">
+              <NetPyNETextField
+                fullWidth
+                variant="filled"
+                model={`${baseTag}['tortuosity']`}
+              />
             </NetPyNEField>
           </div>
         </div>

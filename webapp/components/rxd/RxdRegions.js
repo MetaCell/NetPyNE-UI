@@ -29,6 +29,9 @@ const RxdRegions = (props) => {
       Utils.execPythonMessage(
         "netpyne_geppetto.netParams.rxdParams['regions'] = {}",
       );
+      Utils.execPythonMessage(
+        "netpyne_geppetto.netParams.rxdParams['extracellular'] = {}",
+      );
     }
     Utils.execPythonMessage(
       `netpyne_geppetto.netParams.rxdParams['regions']['${newRegion}'] = {}`,
@@ -100,6 +103,7 @@ const RxdRegions = (props) => {
           id={props?.regions ? regions[tab] : undefined}
           onAddRegion={props.onAddRegion}
           controlledRegion={props?.regions ? props.regions[regions[tab]] : undefined}
+          extracellular={props?.extracellular ? props?.extracellular : undefined}
         />
       </>
     </>
