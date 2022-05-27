@@ -54,6 +54,7 @@ class NetPyNEGeppetto:
         self.netParams = specs.NetParams()
         self.simConfig = specs.SimConfig()
         self.run_config = model.RunConfig()
+        self.simConfig.recordTraces = {'V_soma': {'sec':'soma', 'loc':0.5, 'var':'v'}}
 
         self.experiments = experiments
 
@@ -68,7 +69,7 @@ class NetPyNEGeppetto:
         experiments.get_experiments()
         running_exps = experiments.get_by_states([
             model.ExperimentState.PENDING,
-            model.ExperimentState.SIMULATING, 
+            model.ExperimentState.SIMULATING,
             model.ExperimentState.INSTANTIATING
         ])
         if not simulations.local.is_running():
@@ -230,7 +231,7 @@ class NetPyNEGeppetto:
                 method=simulations.MPI_BULLETIN,
                 working_directory=working_directory,
                 netParams=self.netParams,
-                simConfig=self.simConfif,
+                simConfig=self.simConfig,
             )
 
             if self.run_config.asynchronous:
@@ -439,7 +440,7 @@ class NetPyNEGeppetto:
                     sim.loadAll(args['jsonModelFolder'], instantiate=False)
                     self.netParams = sim.net.params
                     self.simConfig = sim.cfg
-                    self.simConfig.createCellSecs = True
+                    self.simConfig.saveCellSecs = True
                     netpyne_ui_utils.remove(self.netParams.todict())
                     netpyne_ui_utils.remove(self.simConfig.todict())
                 else:
