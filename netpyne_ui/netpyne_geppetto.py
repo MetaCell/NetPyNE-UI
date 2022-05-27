@@ -950,8 +950,8 @@ class NetPyNEGeppetto:
             with open(fname, 'w') as script:
                 script.write("from netpyne import specs, sim\n")
                 script.write(header("documentation"))
-                script.write("Script generated with NetPyNE-UI. Please visit:\n")
-                script.write("    - https://www.netpyne.org\n    - https://github.com/MetaCell/NetPyNE-UI\n\n")
+                script.write("# Script generated with NetPyNE-UI. Please visit:\n")
+                script.write("#    - https://www.netpyne.org\n#    - https://github.com/MetaCell/NetPyNE-UI\n\n")
                 script.write(header("script", spacer="="))
                 script.write("netParams = specs.NetParams()\n")
                 script.write("simConfig = specs.SimConfig()\n")
@@ -965,7 +965,7 @@ class NetPyNEGeppetto:
                 script.write(header("network attributes"))
                 for param in params:
                     for key, value in list(getattr(self.netParams, param).items()):
-                        script.write("netParams." + param + "[" + key + "] = ")
+                        script.write("netParams." + param + "['" + key + "'] = ")
                         script.write(convert2bool(json.dumps(value, indent=4)) + "\n")
 
                 script.write(header("network configuration"))
