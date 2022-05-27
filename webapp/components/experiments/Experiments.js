@@ -119,7 +119,6 @@ const useStyles = (theme) => ({
 const Experiments = (props) => {
   const {
     experiments,
-    getExperiments,
     classes,
     setEditState,
     setExperimentName,
@@ -127,7 +126,7 @@ const Experiments = (props) => {
     setView,
   } = props;
 
-  useEffect(getExperiments, []);
+
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);

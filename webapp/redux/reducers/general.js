@@ -5,7 +5,6 @@ import { MODEL_STATE } from '../../constants';
 // Default state for general
 export const GENERAL_DEFAULT_STATE = {
   updates: 0,
-  modelLoaded: false,
   editMode: true,
   modelState: MODEL_STATE.NOT_INSTANTIATED,
   dialogOpen: false,
@@ -53,8 +52,6 @@ export default function reduceGeneral (state = GENERAL_DEFAULT_STATE, action) {
   switch (action.type) {
     case Actions.UPDATE_CARDS:
       return { ...state, updates: state.updates + 1 };
-    case Actions.MODEL_LOADED:
-      return { ...state, modelLoaded: true };
     case Actions.SHOW_NETWORK:
       return { ...state, editMode: false };
     case Actions.CREATE_NETWORK:

@@ -15,7 +15,7 @@ import PythonControlledCapability from './general/PythonControlledCapability';
 import { openBackendErrorDialog, closeBackendErrorDialog } from '../redux/actions/errors';
 import {
   updateCards, editModel, simulateNetwork, createNetwork, closeDialog,
-  createAndSimulateNetwork, showNetwork, pythonCall, modelLoaded, deleteNetParamsObj, resetModel,
+  createAndSimulateNetwork, showNetwork, pythonCall, deleteNetParamsObj, resetModel,
   setDefaultWidgets, changeInstanceColor, openConfirmationDialog, closeConfirmationDialog, selectInstances,
 } from '../redux/actions/general';
 
@@ -121,7 +121,6 @@ export const Experiments = connect(
     experiments: state.experiments.experiments,
   }),
   (dispatch) => ({
-    getExperiments: () => dispatch(getExperiments()),
     cloneExperiment: (name) => dispatch(cloneExperiment(name)),
   }),
 )(_Experiments);
@@ -163,8 +162,8 @@ export const NetPyNE = connect(
     pythonCallErrorDialogBox: (payload) => dispatch(openBackendErrorDialog(payload)),
     setWidgets: (payload) => dispatch(setWidgets(payload)),
     setDefaultWidgets: () => dispatch(setDefaultWidgets),
-    modelLoaded: () => dispatch(modelLoaded),
     getExperiments: () => dispatch(getExperiments()),
+    
   }),
 )(_NetPyNE);
 
@@ -320,7 +319,7 @@ export const Topbar = connect(
     topbarDialogName: state.topbar.dialogName,
     topbarDialogMetadata: state.topbar.dialogMetadata,
     pageTransitionMode: state.topbar.pageTransitionMode,
-    modelLoaded: state.general.modelLoaded,
+    modelLoaded: state.client.model && state.client.model.status,
     automaticInstantiation: state.general.automaticInstantiation,
     automaticSimulation: state.general.automaticSimulation,
     theme: state.general.theme,

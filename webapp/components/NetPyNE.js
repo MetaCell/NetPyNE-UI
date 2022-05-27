@@ -12,9 +12,6 @@ import {
   LaunchDialog,
 } from 'netpyne/components';
 
-import * as GeppettoActions from '@metacell/geppetto-meta-client/common/actions';
-import Utils from '../Utils';
-import { EDIT_WIDGETS } from '../constants';
 
 const styles = ({ zIndex }) => ({
   root: {
@@ -42,8 +39,7 @@ const styles = ({ zIndex }) => ({
   noGrow: { flexGrow: 0 },
 });
 
-const TIMEOUT = 10000;
-const EXPERIMENT_POLL_INTERVAL = 1000;
+
 
 class NetPyNE extends React.Component {
   constructor (props) {
@@ -55,50 +51,10 @@ class NetPyNE extends React.Component {
     GEPPETTO.on(GEPPETTO.Events.Error_while_exec_python_command, this.openPythonCallDialog, this);
 
     const {
-      setDefaultWidgets, setWidgets, modelLoaded, getExperiments,
+      setDefaultWidgets,
     } = this.props;
 
     setDefaultWidgets();
-    GEPPETTO.on('jupyter_geppetto_extension_ready', (data) => {
-      const project = {
-        id: 1,
-        name: 'Project',
-        experiments: [{
-          id: 1,
-          name: 'Experiment',
-          status: 'DESIGN',
-        }],
-      };
-      // to move to redux action, if not working create tech debt card and we do it later.
-      GEPPETTO.Manager.loadProject(project, false);
-      // to remove the experiment.
-      // GEPPETTO.Manager.loadExperiment(1, [], []);
-
-      let responded = false;
-      Utils.execPythonMessage('from netpyne_ui.netpyne_geppetto import netpyne_geppetto');
-      Utils.evalPythonMessage('netpyne_geppetto.getData', [])
-        .then((response) => {
-          responded = true;
-
-          GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, 'Loading NetPyNE-UI');
-          const metadata = Utils.convertToJSON(response);
-          this.addMetadataToWindow(metadata);
-          setWidgets(EDIT_WIDGETS);
-          modelLoaded();
-          // GeppettoActions.modelLoaded();
-          GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-
-          setInterval(getExperiments, EXPERIMENT_POLL_INTERVAL);
-        });
-
-      setTimeout(() => {
-        if (!responded) {
-          GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, 'Reloading Python Kernel');
-          IPython.notebook.restart_kernel({ confirm: false })
-            .then(() => window.location.reload());
-        }
-      }, TIMEOUT);
-    });
   }
 
   componentWillUnmount () {
@@ -119,21 +75,11 @@ class NetPyNE extends React.Component {
     }
   }
 
-  addMetadataToWindow (data) {
-    console.log('Initialising NetPyNE Tabs');
-    window.metadata = data.metadata;
-    window.currentFolder = data.currentFolder;
-    window.isDocker = data.isDocker;
-    window.pythonConsoleLoaded = true;
-    window.tuts = data.tuts;
-    window.cores = data.cores;
-  }
+  
 
   render () {
     const { classes } = this.props;
-    if (!this.props.modelLoaded) {
-      return '';
-    }
+
     const Layout = LayoutManager();
     return (
       <div className={classes.root}>

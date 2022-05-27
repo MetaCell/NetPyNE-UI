@@ -7,6 +7,7 @@ import {
   setExperiments,
   VIEW_EXPERIMENTS_RESULTS,
   TRIAL_LOAD_MODEL_SPEC,
+  getExperiments
 } from 'root/redux/actions/experiments';
 import { NETPYNE_COMMANDS, EDIT_WIDGETS } from 'root/constants';
 import * as GeppettoActions from '@metacell/geppetto-meta-client/common/actions';
@@ -32,6 +33,10 @@ import { downloadJsonResponse, downloadPythonResponse } from './utils';
 import * as Constants from '../../constants';
 
 const SUPPORTED_TYPES = [Constants.REAL_TYPE.INT, Constants.REAL_TYPE.FLOAT, Constants.REAL_TYPE.STR, Constants.REAL_TYPE.BOOL];
+
+const TIMEOUT = 10000;
+const EXPERIMENT_POLL_INTERVAL = 1000;
+
 let previousLayout = {
   edit: undefined,
   network: undefined,
@@ -134,6 +139,16 @@ class PythonMessageFilter {
   }
 }
 
+function addMetadataToWindow (data) {
+
+  window.metadata = data.metadata;
+  window.currentFolder = data.currentFolder;
+  window.isDocker = data.isDocker;
+  window.pythonConsoleLoaded = true;
+  window.tuts = data.tuts;
+  window.cores = data.cores;
+}
+
 const errorMessageFilter = new PythonMessageFilter();
 
 export default (store) => (next) => (action) => {
@@ -175,10 +190,48 @@ export default (store) => (next) => (action) => {
   };
 
   switch (action.type) {
-    // case MODEL_LOADED:
-    //   next(GeppettoActions.waitData('Loading the NetPyNE Model', GeppettoActions.clientActions.MODEL_LOADED));
-    //   next(action);
-    //   break;
+
+    case "JUPYTER_GEPPETTO_EXTENSION_READY": {
+      const project = {
+        id: 1,
+        name: 'Project',
+        experiments: [{
+          id: 1,
+          name: 'Experiment',
+          status: 'DESIGN',
+        }],
+      };
+      // to move to redux action, if not working create tech debt card and we do it later.
+      GEPPETTO.Manager.loadProject(project, false);
+      // to remove the experiment.
+      // GEPPETTO.Manager.loadExperiment(1, [], []);
+
+      let responded = false;
+      Utils.execPythonMessage('from netpyne_ui.netpyne_geppetto import netpyne_geppetto');
+      Utils.evalPythonMessage('netpyne_geppetto.getData', [])
+        .then((response) => {
+          responded = true;
+          next(GeppettoActions.waitData('Loading NetPyNE-UI', GeppettoActions.clientActions.MODEL_LOADED));
+
+          const metadata = Utils.convertToJSON(response);
+          addMetadataToWindow(metadata);
+          next(GeppettoActions.setWidgets(EDIT_WIDGETS));
+
+          next(GeppettoActions.modelLoaded())
+
+
+          setInterval(getExperiments, EXPERIMENT_POLL_INTERVAL);
+        });
+
+      setTimeout(() => {
+        if (!responded) {
+          next(GeppettoActions.waitData('Reloading Python Kernel', GeppettoActions.clientActions.MODEL_LOADED));
+          IPython.notebook.restart_kernel({ confirm: false })
+            .then(() => window.location.reload());
+        }
+      }, TIMEOUT);
+      break;
+    }
     case OPEN_BACKEND_ERROR_DIALOG:
       next(GeppettoActions.setWidgets(store.getState().widgets));
       next(action);
