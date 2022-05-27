@@ -480,8 +480,9 @@ const ExperimentEdit = (props) => {
   };
 
   const setExperimentNameInfo = (val) => {
-    validateExperimentName(val);
-    setExperimentName(val);
+    const name = val.replace(' ', '_');
+    validateExperimentName(name);
+    setExperimentName(name);
   };
 
   return (
