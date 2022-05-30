@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Experiments } from '../index';
-import EditExperiment from './ExperimentEdit';
+import { Experiments, ExperimentEdit } from '../index';
+
 import ViewExperiment from './ExperimentView';
 import JsonViewer from '../general/JsonViewer';
 import { EXPERIMENT_VIEWS } from '../../constants';
@@ -38,7 +38,7 @@ const ExperimentManager = () => {
         />
       );
       case EXPERIMENT_VIEWS.edit: return (
-        <EditExperiment
+        <ExperimentEdit
           editState={editState}
           name={experimentName}
           setView={setView}

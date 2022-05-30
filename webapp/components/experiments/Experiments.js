@@ -18,9 +18,10 @@ import Divider from '@material-ui/core/Divider';
 import AddIcon from '@material-ui/icons/Add';
 import {
   GridLayout,
+  
 } from 'netpyne/components';
 import { withStyles } from '@material-ui/core/styles';
-import { removeExperiment } from 'root/api/experiments';
+
 import Utils from 'root/Utils';
 import {
   EXPERIMENT_STATE, EXPERIMENT_TEXTS, EXPERIMENT_VIEWS,
@@ -123,6 +124,7 @@ const Experiments = (props) => {
     setEditState,
     setExperimentName,
     cloneExperiment,
+    removeExperiment,
     setView,
   } = props;
 
@@ -135,11 +137,11 @@ const Experiments = (props) => {
 
   const deleteExperiment = (actionConfirmed) => {
     if (actionConfirmed) {
-      removeExperiment(actionExperimentName)
-        .then(() => {
-          setDeleteDialogOpen(false);
-        })
-        .catch((err) => console.error(err));
+      removeExperiment(actionExperimentName);
+        
+      setDeleteDialogOpen(false);
+        
+       
     } else {
       setDeleteDialogOpen(false);
     }

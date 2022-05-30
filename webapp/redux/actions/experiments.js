@@ -1,4 +1,7 @@
 export const GET_EXPERIMENTS = 'GET_EXPERIMENTS';
+export const EDIT_EXPERIMENT = 'EDIT_EXPERIMENT';
+export const ADD_EXPERIMENT = 'ADD_EXPERIMENT';
+export const REMOVE_EXPERIMENT = 'REMOVE_EXPERIMENT';
 export const SET_EXPERIMENTS = 'SET_EXPERIMENTS';
 export const CLONE_EXPERIMENT = 'CLONE_EXPERIMENT';
 export const VIEW_EXPERIMENTS_RESULTS = 'VIEW_EXPERIMENT_RESULTS';
@@ -9,10 +12,36 @@ export const CLOSE_LAUNCH_DIALOG = 'CLOSE_LAUNCH_DIALOG';
 /**
  * Triggers fetching the Experiments from the backend.
  */
-export const getExperiments = () => ({
-  type: GET_EXPERIMENTS,
+export const addExperiment = (details) => ({
+  type: ADD_EXPERIMENT,
+  payload: details
 });
 
+/**
+ * Triggers fetching the Experiments from the backend.
+ */
+ export const removeExperiment = (name) => ({
+  type: REMOVE_EXPERIMENT,
+  payload: name
+});
+
+/**
+ * Triggers fetching the Experiments from the backend.
+ */
+ export const editExperiment = (name, details) => ({
+  type: EDIT_EXPERIMENT,
+  payload: {
+    name,
+    details
+  }
+});
+
+/**
+ * Triggers fetching the Experiments from the backend.
+ */
+ export const getExperiments = () => ({
+  type: GET_EXPERIMENTS,
+});
 /**
  * Set fetched experiments.
  */

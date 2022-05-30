@@ -21,8 +21,11 @@ import {
 
 import {
   cloneExperiment,
-  getExperiments,
+
   openLaunchDialog,
+  removeExperiment,
+  addExperiment,
+  editExperiment
 } from '../redux/actions/experiments';
 
 import {
@@ -122,6 +125,7 @@ export const Experiments = connect(
   }),
   (dispatch) => ({
     cloneExperiment: (name) => dispatch(cloneExperiment(name)),
+    removeExperiment: (name) => dispatch(removeExperiment(name)),
   }),
 )(_Experiments);
 
@@ -144,7 +148,14 @@ export const ExperimentControlPanel = connect(
   null,
 )(_ExperimentControlPanel);
 
-export const ExperimentEdit = _ExperimentEdit;
+export const ExperimentEdit = connect(
+  null,
+  (dispatch) => ({
+    editExperiment: (name, details) => dispatch(editExperiment(name, details)),
+    addExperiment: (name, details) => dispatch(addExperiment(name, details)),
+  }),
+)(_ExperimentEdit);
+
 export const ExperimentManager = _ExperimentManager;
 
 // ---------------------------------------------------------------------------------------- //
@@ -161,9 +172,7 @@ export const NetPyNE = connect(
   (dispatch) => ({
     pythonCallErrorDialogBox: (payload) => dispatch(openBackendErrorDialog(payload)),
     setWidgets: (payload) => dispatch(setWidgets(payload)),
-    setDefaultWidgets: () => dispatch(setDefaultWidgets),
-    getExperiments: () => dispatch(getExperiments()),
-    
+    setDefaultWidgets: () => dispatch(setDefaultWidgets),    
   }),
 )(_NetPyNE);
 

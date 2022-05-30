@@ -11,7 +11,8 @@ import {
 } from 'root/redux/actions/experiments';
 import { NETPYNE_COMMANDS, EDIT_WIDGETS } from 'root/constants';
 import * as GeppettoActions from '@metacell/geppetto-meta-client/common/actions';
-import * as ExperimentsApi from 'root/api/experiments';
+import * as ExperimentsApi from '../../api/experiments';
+
 import {
   UPDATE_CARDS,
   CREATE_NETWORK,
@@ -31,11 +32,16 @@ import { closeDrawerDialogBox } from '../actions/drawer';
 import Utils from '../../Utils';
 import { downloadJsonResponse, downloadPythonResponse } from './utils';
 import * as Constants from '../../constants';
+import { ADD_EXPERIMENT, REMOVE_EXPERIMENT } from '../actions/experiments';
 
 const SUPPORTED_TYPES = [Constants.REAL_TYPE.INT, Constants.REAL_TYPE.FLOAT, Constants.REAL_TYPE.STR, Constants.REAL_TYPE.BOOL];
 
 const TIMEOUT = 10000;
 const EXPERIMENT_POLL_INTERVAL = 1000;
+
+const STABLE_EXPERIMENTS_STATES = new Set([
+  Constants.EXPERIMENT_STATE.DESIGN, Constants.EXPERIMENT_STATE.SIMULATED, Constants.EXPERIMENT_STATE.ERROR
+]);
 
 let previousLayout = {
   edit: undefined,
@@ -87,18 +93,17 @@ const dehydrateCanvas = () => {
 
 const createSimulateBackendCall = async (cmd, payload, consoleMessage, spinnerType) => {
   console.log(consoleMessage);
-  // GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, spinnerType);
 
   const response = await Utils.evalPythonMessage(cmd, [payload]);
   console.log('Python response', response);
-  GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+
   const responsePayload = processError(response);
   console.log('Python payload', responsePayload);
 
   if (responsePayload) {
     throw responsePayload;
   } else {
-    // GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
+
 
     dehydrateCanvas();
 
@@ -124,7 +129,7 @@ const simulateNetwork = (payload) => createSimulateBackendCall(
 
 class PythonMessageFilter {
   errorIds = new Set();
-  shouldLaunch (e) {
+  shouldLaunch(e) {
     const errorId = e.additionalInfo?.sim_id;
     if (!errorId) {
       return true;
@@ -139,7 +144,7 @@ class PythonMessageFilter {
   }
 }
 
-function addMetadataToWindow (data) {
+function addMetadataToWindow(data) {
 
   window.metadata = data.metadata;
   window.currentFolder = data.currentFolder;
@@ -179,15 +184,65 @@ export default (store) => (next) => (action) => {
   const toNetworkCallback = (reset) => () => {
     switchLayoutAction(false, reset);
     next(action);
+    getExperiments();
   };
 
   const pythonErrorCallback = (error) => {
     console.debug(Utils.getPlainStackTrace(error.errorDetails));
+    getExperiments()
     if (errorMessageFilter.shouldLaunch(error)) {
       return next(openBackendErrorDialog(error));
     }
+    
     return next(action);
   };
+
+
+  const getExperiments = () => {
+    Utils.evalPythonMessage(NETPYNE_COMMANDS.getExperiments, [])
+      .then((experiments) => {
+        next(setExperiments(experiments));
+
+        if (experiments.find(e => !STABLE_EXPERIMENTS_STATES.has(e.state))) {
+          setTimeout(getExperiments, EXPERIMENT_POLL_INTERVAL);
+        }
+      }
+      );
+  }
+
+  const checkParametersThen = (callback, goToNetworkView=false) => {
+    let allParams = true;
+    ExperimentsApi.getParameters()
+        .then((params) => {
+          const flattened = Utils.flatten(params);
+          const paramKeys = Object.keys(flattened);
+
+          const filteredKeys = paramKeys.filter((key) => {
+            // TODO: avoid to fetch field twice!
+            const field = Utils.getMetadataField(`netParams.${key}`);
+            if (field && SUPPORTED_TYPES.includes(field.type)) {
+              return true;
+            }
+            return false;
+          });
+          const expData = store.getState().experiments;
+          expData?.inDesign?.params?.forEach((param) => {
+            if (!filteredKeys.includes(param.mapsTo)) {
+              pythonErrorCallback(
+                {
+                  errorDetails: 'Missing Parameters',
+                  errorMessage: 'Error',
+                },
+              );
+              allParams = false;
+            }
+          });
+          if (allParams) {
+            callback()
+              .then(toNetworkCallback(goToNetworkView), pythonErrorCallback);
+          }
+        }, pythonErrorCallback);
+  }
 
   switch (action.type) {
 
@@ -218,9 +273,7 @@ export default (store) => (next) => (action) => {
           next(GeppettoActions.setWidgets(EDIT_WIDGETS));
 
           next(GeppettoActions.modelLoaded())
-
-
-          setInterval(getExperiments, EXPERIMENT_POLL_INTERVAL);
+          getExperiments()
         });
 
       setTimeout(() => {
@@ -273,72 +326,16 @@ export default (store) => (next) => (action) => {
     }
     case CREATE_NETWORK: {
       next(GeppettoActions.waitData('Instantiating the NetPyNE Model', GeppettoActions.layoutActions.SET_WIDGETS));
-      let allParams = true;
-      ExperimentsApi.getParameters()
-        .then((params) => {
-          const flattened = Utils.flatten(params);
-          const paramKeys = Object.keys(flattened);
 
-          const filteredKeys = paramKeys.filter((key) => {
-          // TODO: avoid to fetch field twice!
-            const field = Utils.getMetadataField(`netParams.${key}`);
-            if (field && SUPPORTED_TYPES.includes(field.type)) {
-              return true;
-            }
-            return false;
-          });
-          const expData = store.getState().experiments;
-          expData?.inDesign?.params?.forEach((param) => {
-            if (!filteredKeys.includes(param.mapsTo)) {
-              pythonErrorCallback(
-                {
-                  errorDetails: 'Missing Parameters',
-                  errorMessage: 'Error',
-                },
-              );
-              allParams = false;
-            }
-          });
-          if (allParams) {
-            instantiateNetwork({})
-              .then(toNetworkCallback(false), pythonErrorCallback);
-          }
-        }, pythonErrorCallback);
+      checkParametersThen(() => instantiateNetwork({}))
+
+     
       break;
     }
     case CREATE_SIMULATE_NETWORK: {
       next(GeppettoActions.waitData('Simulating the NetPyNE Model', GeppettoActions.layoutActions.SET_WIDGETS));
-      let allParams = true;
-      ExperimentsApi.getParameters()
-        .then((params) => {
-          const flattened = Utils.flatten(params);
-          const paramKeys = Object.keys(flattened);
+      checkParametersThen(() => simulateNetwork({ allTrials: false }))
 
-          const filteredKeys = paramKeys.filter((key) => {
-          // TODO: avoid to fetch field twice!
-            const field = Utils.getMetadataField(`netParams.${key}`);
-            if (field && SUPPORTED_TYPES.includes(field.type)) {
-              return true;
-            }
-            return false;
-          });
-          const expData = store.getState().experiments;
-          expData?.inDesign?.params?.forEach((param) => {
-            if (!filteredKeys.includes(param.mapsTo)) {
-              pythonErrorCallback(
-                {
-                  errorDetails: 'Missing Parameters',
-                  errorMessage: 'Error',
-                },
-              );
-              allParams = false;
-            }
-          });
-          if (allParams) {
-            simulateNetwork({ allTrials: false })
-              .then(toNetworkCallback(false), pythonErrorCallback);
-          }
-        }, pythonErrorCallback);
       break;
     }
     case SIMULATE_NETWORK: {
@@ -347,37 +344,8 @@ export default (store) => (next) => (action) => {
       } else {
         next(GeppettoActions.activateWidget(EDIT_WIDGETS.experimentManager.id));
       }
-      let allParams = true;
-      ExperimentsApi.getParameters()
-        .then((params) => {
-          const flattened = Utils.flatten(params);
-          const paramKeys = Object.keys(flattened);
 
-          const filteredKeys = paramKeys.filter((key) => {
-          // TODO: avoid to fetch field twice!
-            const field = Utils.getMetadataField(`netParams.${key}`);
-            if (field && SUPPORTED_TYPES.includes(field.type)) {
-              return true;
-            }
-            return false;
-          });
-          const expData = store.getState().experiments;
-          expData?.inDesign?.params?.forEach((param) => {
-            if (!filteredKeys.includes(param.mapsTo)) {
-              pythonErrorCallback(
-                {
-                  errorDetails: 'Missing Parameters',
-                  errorMessage: 'Error',
-                },
-              );
-              allParams = false;
-            }
-          });
-          if (allParams) {
-            simulateNetwork({ allTrials: action.payload, usePrevInst: false })
-              .then(toNetworkCallback(false), pythonErrorCallback);
-          }
-        }, pythonErrorCallback);
+      checkParametersThen(() => simulateNetwork({ allTrials: action.payload, usePrevInst: false }))
       break;
     }
     case PYTHON_CALL: {
@@ -427,18 +395,35 @@ export default (store) => (next) => (action) => {
         .then((response) => console.log(response));
       break;
     }
-    case GET_EXPERIMENTS: {
-      Utils.evalPythonMessage(NETPYNE_COMMANDS.getExperiments, [])
-        .then((response) => next(setExperiments(response)));
-      break;
-    }
+
     case CLONE_EXPERIMENT: {
-      // GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Cloning experiment ${action.payload.name}`);
+
       pythonCall({
         cmd: NETPYNE_COMMANDS.cloneExperiment,
         args: action.payload,
       })
-        .then((response) => console.log(response));
+        .then((response) => {
+          console.log(response);
+          getExperiments()
+        });
+      break;
+    }
+    case REMOVE_EXPERIMENT: {
+
+      ExperimentsApi.removeExperiment(action.payload)
+        .then((response) => {
+          console.log(response);
+          getExperiments()
+        });
+      break;
+    }
+    case ADD_EXPERIMENT: {
+
+      ExperimentsApi.addExperiment(action.payload)
+        .then((response) => {
+          console.log(response);
+          getExperiments()
+        });
       break;
     }
     case TRIAL_LOAD_MODEL_SPEC: {

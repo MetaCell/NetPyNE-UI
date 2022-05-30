@@ -162,6 +162,8 @@ const ExperimentEdit = (props) => {
     name,
     editState,
     setView,
+    editExperiment,
+    addExperiment
   } = props;
 
   const rangeParam = {
@@ -358,15 +360,11 @@ const ExperimentEdit = (props) => {
     if (numberOfTrials > MAX_TRIALS) {
       setTrialNumberErrorDialogOpen({ condition: true, number: numberOfTrials });
     } else if (editState) {
-      ExperimentsApi.editExperiment(experiment?.name, newExperimentDetails)
-        .then(() => {
-          setView(EXPERIMENT_VIEWS.list);
-        });
+      editExperiment(experiment?.name, newExperimentDetails)  
+      setView(EXPERIMENT_VIEWS.list);
     } else {
-      ExperimentsApi.addExperiment(newExperimentDetails)
-        .then(() => {
-          setView(EXPERIMENT_VIEWS.list);
-        });
+      addExperiment(newExperimentDetails);
+      setView(EXPERIMENT_VIEWS.list);
     }
   };
 
