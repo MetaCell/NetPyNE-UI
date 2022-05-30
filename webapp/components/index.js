@@ -72,6 +72,7 @@ import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole';
 import _PlotViewer from './general/PlotViewer';
 import _ExperimentControlPanel from './general/ExperimentControlPanel';
 import _Rxd from './rxd/Wrapper';
+import { WidgetStatus } from '@metacell/geppetto-meta-client/common/layout/model';
 
 const updateCardsDispatch = (dispatch) => ({ updateCards: () => dispatch(updateCards) });
 
@@ -152,6 +153,8 @@ export const ExperimentEdit = connect(
   (state, ownProps) => ({
     ...ownProps,
     updates: state.general.updates,
+    widgets: state.widgets,
+    visible: state.widgets?.experimentManager?.status != WidgetStatus.HIDDEN 
   }),
   (dispatch) => ({
     editExperiment: (name, details) => dispatch(editExperiment(name, details)),

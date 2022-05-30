@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
-import * as ExperimentsApi from 'root/api/experiments';
+import * as ExperimentsApi from '../../api/experiments';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -163,7 +163,8 @@ const ExperimentEdit = (props) => {
     editState,
     setView,
     editExperiment,
-    addExperiment
+    addExperiment,
+    visible, updates, widgets
   } = props;
 
   const rangeParam = {
@@ -275,8 +276,11 @@ const ExperimentEdit = (props) => {
   };
 
   useEffect(() => {
-    getParameters();
-  }, [props]);
+    if(visible) {
+      getParameters();
+    }
+    
+  }, [visible, updates, widgets]);
 
   const validateExperimentName = (name) => {
     const isEmpty = (val) => val == null || val.trim() === '';
