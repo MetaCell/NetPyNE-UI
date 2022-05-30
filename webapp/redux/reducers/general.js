@@ -70,6 +70,8 @@ export default function reduceGeneral (state = GENERAL_DEFAULT_STATE, action) {
       };
     case Actions.CLOSE_DIALOG:
       return { ...state, dialogOpen: false };
+    case Actions.LOAD_TUTORIAL:
+      return { ...state, updates: state.updates + 1   };
     case Actions.OPEN_CONFIRMATION_DIALOG:
       return {
         ...state,

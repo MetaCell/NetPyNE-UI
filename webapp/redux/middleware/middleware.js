@@ -193,7 +193,7 @@ export default (store) => (next) => (action) => {
     if (errorMessageFilter.shouldLaunch(error)) {
       return next(openBackendErrorDialog(error));
     }
-    
+
     return next(action);
   };
 
@@ -210,41 +210,50 @@ export default (store) => (next) => (action) => {
       );
   }
 
-  const checkParametersThen = (callback, goToNetworkView=false) => {
+  const checkParametersThen = (callback, goToNetworkView = false) => {
     let allParams = true;
     ExperimentsApi.getParameters()
-        .then((params) => {
-          const flattened = Utils.flatten(params);
-          const paramKeys = Object.keys(flattened);
+      .then((params) => {
+        const flattened = Utils.flatten(params);
+        const paramKeys = Object.keys(flattened);
 
-          const filteredKeys = paramKeys.filter((key) => {
-            // TODO: avoid to fetch field twice!
-            const field = Utils.getMetadataField(`netParams.${key}`);
-            if (field && SUPPORTED_TYPES.includes(field.type)) {
-              return true;
-            }
-            return false;
-          });
-          const expData = store.getState().experiments;
-          expData?.inDesign?.params?.forEach((param) => {
-            if (!filteredKeys.includes(param.mapsTo)) {
-              pythonErrorCallback(
-                {
-                  errorDetails: 'Missing Parameters',
-                  errorMessage: 'Error',
-                },
-              );
-              allParams = false;
-            }
-          });
-          if (allParams) {
-            callback()
-              .then(toNetworkCallback(goToNetworkView), pythonErrorCallback);
+        const filteredKeys = paramKeys.filter((key) => {
+          // TODO: avoid to fetch field twice!
+          const field = Utils.getMetadataField(`netParams.${key}`);
+          if (field && SUPPORTED_TYPES.includes(field.type)) {
+            return true;
           }
-        }, pythonErrorCallback);
+          return false;
+        });
+        const expData = store.getState().experiments;
+        expData?.inDesign?.params?.forEach((param) => {
+          if (!filteredKeys.includes(param.mapsTo)) {
+            pythonErrorCallback(
+              {
+                errorDetails: 'Missing Parameters',
+                errorMessage: 'Error',
+              },
+            );
+            allParams = false;
+          }
+        });
+        if (allParams) {
+          callback()
+            .then(toNetworkCallback(goToNetworkView), pythonErrorCallback);
+        }
+      }, pythonErrorCallback);
   }
 
   switch (action.type) {
+    case GeppettoActions.layoutActions.SET_WIDGETS: {
+      if (Object.values(action.data).length == 1) {
+        // Initializing, only Python console is here
+        next(GeppettoActions.waitData('Loading NetPyNE-UI', GeppettoActions.clientActions.MODEL_LOADED));
+      }
+      next(action);
+      break;
+    }
+
 
     case "JUPYTER_GEPPETTO_EXTENSION_READY": {
       const project = {
@@ -329,7 +338,7 @@ export default (store) => (next) => (action) => {
 
       checkParametersThen(() => instantiateNetwork({}))
 
-     
+
       break;
     }
     case CREATE_SIMULATE_NETWORK: {
@@ -392,7 +401,12 @@ export default (store) => (next) => (action) => {
         cmd: NETPYNE_COMMANDS.importModel,
         args: params,
       })
-        .then((response) => console.log(response));
+        .then((response) => {
+          next(action)
+          console.log("Tutorial imported", response)
+        }
+        );
+
       break;
     }
 

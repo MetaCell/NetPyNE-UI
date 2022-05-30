@@ -5,12 +5,13 @@ import ViewExperiment from './ExperimentView';
 import JsonViewer from '../general/JsonViewer';
 import { EXPERIMENT_VIEWS } from '../../constants';
 
-const ExperimentManager = () => {
+const ExperimentManager = (props) => {
   const [editState, setEditState] = useState(false);
   const [experimentName, setExperimentName] = useState(null);
   const [trial, setTrial] = useState(null);
   const [trialJSON, setTrialJSON] = useState(null);
   const [view, setView] = useState(EXPERIMENT_VIEWS.list);
+
 
   const viewHandler = () => {
     switch (view) {

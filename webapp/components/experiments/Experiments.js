@@ -193,7 +193,7 @@ const Experiments = (props) => {
             <TableContainer component={Paper}>
               <Table aria-label="simple table">
                 <TableBody>
-                  {experiments.map((experiment) => (
+                  {experiments.sort(experiment => experiment.timestamp).map((experiment) => (
                     <TableRow key={experiment?.name}>
                       <TableCell component="th" scope="row">
                         <Button onClick={() => viewExperiment(experiment?.name)}>

@@ -149,7 +149,10 @@ export const ExperimentControlPanel = connect(
 )(_ExperimentControlPanel);
 
 export const ExperimentEdit = connect(
-  null,
+  (state, ownProps) => ({
+    ...ownProps,
+    updates: state.general.updates,
+  }),
   (dispatch) => ({
     editExperiment: (name, details) => dispatch(editExperiment(name, details)),
     addExperiment: (name, details) => dispatch(addExperiment(name, details)),
@@ -157,7 +160,6 @@ export const ExperimentEdit = connect(
 )(_ExperimentEdit);
 
 export const ExperimentManager = _ExperimentManager;
-
 // ---------------------------------------------------------------------------------------- //
 
 // CONNECT
