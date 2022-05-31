@@ -99,6 +99,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
                 id={`${parameter.name}-from`}
                 label="From"
                 variant="filled"
+                type="number"
                 value={parameter?.minVal || parameter?.min}
                 onChange={(e) => handleRangeInput(e.target.value, index, parameter, 'min')}
                 error={parameter?.minerror}
@@ -111,6 +112,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
                 id={`${parameter.name}-to`}
                 label="To"
                 variant="filled"
+                type="number"
                 value={parameter?.maxVal || parameter?.max}
                 onChange={(e) => handleRangeInput(e.target.value, index, parameter, 'max')}
                 error={parameter?.maxerror}
@@ -123,6 +125,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
                 id={`${parameter.name}-step`}
                 label="Step"
                 variant="filled"
+                type="number"
                 value={parameter?.stepVal || parameter?.step}
                 onChange={(e) => handleRangeInput(e.target.value, index, parameter, 'step')}
                 error={parameter?.steperror}
@@ -136,7 +139,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
             <Grid item xs={12}>
               <TextField
                 id={`${parameter.name}-values`}
-                label="Values (separated with comas)"
+                label="Values (separated with commas)"
                 variant="filled"
                 value={parameter?.val || parameter?.values.join()}
                 onChange={(e) => handleInputValues(e.target.value, index, parameter, 'val')}
