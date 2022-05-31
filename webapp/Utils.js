@@ -238,7 +238,7 @@ const Utils = {
 
   formatDate (timestamp) {
     const date = new Date(timestamp);
-    return date?.toLocaleDateString();
+    return date?.toLocaleString();
   },
 
   execPythonMessage,
