@@ -1,4 +1,5 @@
 import Utils from '../../Utils';
+import { getPythonTypeString } from './utils';
 
 const REAL_TYPE = {
   INT: 'int',
@@ -29,7 +30,7 @@ function flatten(obj, path = '') {
 
   return Object.keys(obj).reduce(
     (output, key) => (obj instanceof Array
-      ? Object.assign(output, flatten(obj[key], `${path}[${key}].`))
+      ? Object.assign(output, flatten(obj[key], `${path.slice(0, -1)}[${key}].`))
       : Object.assign(output, flatten(obj[key], `${path + key}.`))),
     {},
   );
@@ -38,18 +39,34 @@ function flatten(obj, path = '') {
 
 
 
-export function getFlattenedParamKeys(params) {
+/**
+ * 
+ * @param {*} params Netpyne parameters 
+ * @returns map of flatten parameter name to the field spec from Netpyne metadata or inferred from the value
+ */
+export function getFlattenedParams(params) {
 
   const flattened = flatten(params);
-  const paramKeys = Object.keys(flattened);
-  const filteredKeys = paramKeys.filter((key) => {
-    // TODO: avoid to fetch field twice!
-    const field = Utils.getMetadataField(`${key}`);
-    if (field && SUPPORTED_TYPES.includes(field.type)) {
-      return true;
+  function getFieldSpec(fieldKey) {
+    const metadataField = Utils.getMetadataField(fieldKey);
+    if(metadataField) {
+      return metadataField;
     }
-    return false;
-  });
-  return filteredKeys
+    return {
+      type: getPythonTypeString(flattened[fieldKey]),
+      label: fieldKey.split(".").pop()
+    }
+  }
+
+  const res = {};
+
+  for(const key in flattened) {
+    const field = getFieldSpec(key);
+    if(field && SUPPORTED_TYPES.includes(field.type)) {
+      res[key] = field
+    }
+  }
+ 
+  return res;
 }
 

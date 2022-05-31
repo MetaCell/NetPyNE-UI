@@ -26,7 +26,7 @@ import ParameterMenu from './ParameterMenu';
 import useStyles from './ExperimentEditStyle';
 import * as ExperimentHelper from './ExperimentHelper';
 import DialogBox from '../general/DialogBox';
-import {getFlattenedParamKeys} from './processExperimentData';
+import {getFlattenedParams} from './processExperimentData';
 import Tooltip from '@material-ui/core/Tooltip';
 
 const RANGE_VALUE = 0;
@@ -37,6 +37,7 @@ const {
   RANGE,
   LIST,
 } = EXPERIMENT_TEXTS;
+
 
 const ParameterRow = (parameter, index, handleParamSelection, handleChange, handleRangeInput,
   handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams, classes) => (
@@ -51,7 +52,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
         <Autocomplete
           popupIcon={<ExpandMoreIcon />}
           id={`${parameter.name}-combo-box-demo`}
-          options={selectionParams}
+          options={selectionParams ? Object.keys(selectionParams): []}
           style={{ width: 300 }}
           classes={{
             popper: classes.popper,
@@ -62,13 +63,15 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
             
           )}
           renderInput={(params) => (
-            <Tooltip placement="top" title={parameter.mapsTo && Utils.getMetadataField(parameter.mapsTo, 'help')}>
+            <Tooltip placement="top" title={selectionParams && parameter.mapsTo && (Utils.getMetadataField(parameter.mapsTo, 'help') || `This field is of type ${selectionParams[parameter.mapsTo]?.type}`) }>
             <TextField
               {...params}
-              label="Type or select parameter"
+              disabled={Boolean(parameter.mapsTo)}
+              label={parameter.mapsTo && selectionParams ? selectionParams[parameter.mapsTo]?.label: "Type or select parameter"}
               variant="outlined"
             /></Tooltip>
           )}
+         
           value={parameter.mapsTo || null}
           onChange={(e, val) => handleParamSelection(val, parameter, index)}
         />
@@ -200,9 +203,9 @@ const ExperimentEdit = (props) => {
   const [groupParameters, setGroupParameters] = useState([]);
   const [experimentName, setExperimentName] = useState('');
   const [experimentNameError, setExperimentNameError] = useState('');
-  const [selectionParams, setSelectionParams] = useState([]);
+  const [selectionParams, setSelectionParams] = useState(null);
   const [trialNumberErrorDialogOpen, setTrialNumberErrorDialogOpen] = useState({ condition: false, number: 1 });
-  const [paramsCounter, setParamsCounter] = useState(0);
+
 
   // Existing Experiment.
   const [experiment, setExperiment] = useState(null);
@@ -266,8 +269,7 @@ const ExperimentEdit = (props) => {
       .then((params) => {
         // eslint-disable-next-line prefer-template
         // eslint-disable-next-line no-undef
-
-        setSelectionParams(getFlattenedParamKeys(params));
+        setSelectionParams(getFlattenedParams(params));
         
       });
   };
@@ -388,11 +390,12 @@ const ExperimentEdit = (props) => {
     setParamChange(parameter.inGroup, newParam);
   };
 
+
   const handleParamSelection = (val, parameter, index) => {
     let field = null;
     if (val !== null) {
       // parameters are a subset of `netParams`
-      field = Utils.getMetadataField(val);
+      field = selectionParams[val];
     }
 
     const newParam = parameter.inGroup ? [...groupParameters] : [...parameters];
@@ -507,6 +510,7 @@ const ExperimentEdit = (props) => {
               <Divider />
             </Box>
           </Box>
+
           <Box className="editExperimentContent">
             <Box mb={1} className="editExperimentDefault">
               <Box mb={2} className="editExperimentBreadcrumb">
@@ -531,7 +535,7 @@ const ExperimentEdit = (props) => {
                 )}
               </Box>
               )}
-              {selectionParams.length > 0 && (
+              {selectionParams && (
               <Box className="editExperimentRow">
                 {parameters.map((parameter, index) => (
                   ParameterRow(parameter, index, handleParamSelection, handleChange,
@@ -542,6 +546,7 @@ const ExperimentEdit = (props) => {
               )}
             </Box>
           </Box>
+          
           <Box>
             <Link to="true" color="primary" onClick={addParameter}>
               <AddIcon />
