@@ -27,9 +27,10 @@ import useStyles from './ExperimentEditStyle';
 import * as ExperimentHelper from './ExperimentHelper';
 import DialogBox from '../general/DialogBox';
 import {getFlattenedParamKeys} from './processExperimentData';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const RANGE_VALUE = 0;
-const SUPPORTED_TYPES = [REAL_TYPE.INT, REAL_TYPE.FLOAT, REAL_TYPE.STR, REAL_TYPE.BOOL];
+
 const MAX_TRIALS = 100;
 
 const {
@@ -46,6 +47,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
       key={`${parameter.name}-${index}`}
     >
       <Grid item xs className="editExperimentAutocomplete">
+      
         <Autocomplete
           popupIcon={<ExpandMoreIcon />}
           id={`${parameter.name}-combo-box-demo`}
@@ -55,16 +57,17 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
             popper: classes.popper,
           }}
           renderOption={(option) => (
-            <>
-              {option}
-            </>
+            <>{option}</>
+              
+            
           )}
           renderInput={(params) => (
+            <Tooltip title={parameter.mapsTo && Utils.getMetadataField(parameter.mapsTo, 'help')}>
             <TextField
               {...params}
               label="Type or select parameter"
               variant="outlined"
-            />
+            /></Tooltip>
           )}
           value={parameter.mapsTo || null}
           onChange={(e, val) => handleParamSelection(val, parameter, index)}
@@ -82,7 +85,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
           >
             <MenuItem value="list">List</MenuItem>
             {
-            (parameter.field === undefined || (parameter?.field && [REAL_TYPE.FLOAT, REAL_TYPE.INT].includes(parameter.field.type)))
+            (parameter.field === undefined || (parameter?.field && [REAL_TYPE.FLOAT, REAL_TYPE.INT, REAL_TYPE.FUNC].includes(parameter.field.type)))
             && <MenuItem value="range">Range</MenuItem>
           }
           </Select>
@@ -403,7 +406,7 @@ const ExperimentEdit = (props) => {
     };
 
     if (parameter.type === RANGE) {
-      if (field && ![REAL_TYPE.INT, REAL_TYPE.FLOAT].includes(field.type)) {
+      if (field && ![REAL_TYPE.INT, REAL_TYPE.FLOAT, REAL_TYPE.FUNC].includes(field.type)) {
         newParam[index] = {
           ...newParam[index],
           type: LIST,
