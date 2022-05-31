@@ -20,22 +20,6 @@ const SUPPORTED_TYPES = [
 
 
 
-function flatten(obj, path = '') {
-  if (!(obj instanceof Object)) {
-    // eslint-disable-next-line no-new-object
-    const newObj = new Object();
-    newObj[path.replace(/\.$/g, '')] = obj;
-    return newObj;
-  }
-
-  return Object.keys(obj).reduce(
-    (output, key) => (obj instanceof Array
-      ? Object.assign(output, flatten(obj[key], `${path.slice(0, -1)}[${key}].`))
-      : Object.assign(output, flatten(obj[key], `${path + key}.`))),
-    {},
-  );
-}
-
 
 
 
@@ -46,7 +30,7 @@ function flatten(obj, path = '') {
  */
 export function getFlattenedParams(params) {
 
-  const flattened = flatten(params);
+  const flattened = Utils.flatten(params);
   function getFieldSpec(fieldKey) {
     const metadataField = Utils.getMetadataField(fieldKey);
     if(metadataField) {

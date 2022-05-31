@@ -33,10 +33,9 @@ import { downloadJsonResponse, downloadPythonResponse } from './utils';
 import * as Constants from '../../constants';
 import { ADD_EXPERIMENT, REMOVE_EXPERIMENT } from '../actions/experiments';
 
-const SUPPORTED_TYPES = [Constants.REAL_TYPE.INT, Constants.REAL_TYPE.FLOAT, Constants.REAL_TYPE.STR, Constants.REAL_TYPE.BOOL];
 
 const TIMEOUT = 10000;
-const EXPERIMENT_POLL_INTERVAL = 1000;
+const EXPERIMENT_POLL_INTERVAL = 5000;
 
 const STABLE_EXPERIMENTS_STATES = new Set([
   Constants.EXPERIMENT_STATE.DESIGN, Constants.EXPERIMENT_STATE.SIMULATED, Constants.EXPERIMENT_STATE.ERROR
@@ -211,25 +210,19 @@ export default (store) => (next) => (action) => {
 
   const checkParametersThen = (callback, goToNetworkView = false) => {
     let allParams = true;
-    ExperimentsApi.getParameters()
+    const inDesignExp = store.getState().experiments?.inDesign;
+ 
+    if(inDesignExp) {
+      ExperimentsApi.getParameters()
       .then((params) => {
         const flattened = Utils.flatten(params);
-        const paramKeys = Object.keys(flattened);
-
-        const filteredKeys = paramKeys.filter((key) => {
-          // TODO: avoid to fetch field twice!
-          const field = Utils.getMetadataField(key);
-          if (field && SUPPORTED_TYPES.includes(field.type)) {
-            return true;
-          }
-          return false;
-        });
-        const expData = store.getState().experiments;
-        expData?.inDesign?.params?.forEach((param) => {
-          if (!filteredKeys.includes(param.mapsTo)) {
+        const paramKeys = new Set(Object.keys(flattened));
+ 
+        inDesignExp.params?.forEach((param) => {
+          if (!paramKeys.has(param.mapsTo)) {
             pythonErrorCallback(
               {
-                errorDetails: 'Missing Parameters',
+                errorDetails: `Experiment parameter ${param.mapsTo} is missing from the current model`,
                 errorMessage: 'Error',
               },
             );
@@ -241,6 +234,10 @@ export default (store) => (next) => (action) => {
             .then(toNetworkCallback(goToNetworkView), pythonErrorCallback);
         }
       }, pythonErrorCallback);
+    } else {
+      callback().then(toNetworkCallback(goToNetworkView), pythonErrorCallback)
+    }
+    
   }
 
   switch (action.type) {

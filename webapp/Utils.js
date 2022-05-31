@@ -249,7 +249,7 @@ const Utils = {
 
     return Object.keys(obj)
       .reduce((output, key) => (obj instanceof Array
-        ? { ...output, ...Utils.flatten(obj[key], `${path}[${key}].`) }
+        ? { ...output, ...Utils.flatten(obj[key], `${path.slice(0, -1)}[${key}].`) }
         : { ...output, ...Utils.flatten(obj[key], `${path + key}.`) }), {});
   },
 };
