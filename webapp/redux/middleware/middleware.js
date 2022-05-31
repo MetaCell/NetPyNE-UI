@@ -219,7 +219,7 @@ export default (store) => (next) => (action) => {
 
         const filteredKeys = paramKeys.filter((key) => {
           // TODO: avoid to fetch field twice!
-          const field = Utils.getMetadataField(`netParams.${key}`);
+          const field = Utils.getMetadataField(key);
           if (field && SUPPORTED_TYPES.includes(field.type)) {
             return true;
           }

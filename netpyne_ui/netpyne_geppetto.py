@@ -89,7 +89,7 @@ class NetPyNEGeppetto:
     def getModelAsJson(self):
         # TODO: netpyne should offer a method asJSON (#240)
         # that returns the JSON model without dumping to to disk.
-        obj = netpyne_utils.replaceFuncObj(self.netParams.__dict__)
+        obj = netpyne_utils.replaceFuncObj({"netParams": self.netParams.__dict__, "simConfig": self.simConfig.__dict__})
         obj = netpyne_utils.replaceDictODict(obj)
         return obj
 
@@ -373,7 +373,7 @@ class NetPyNEGeppetto:
         exp.params = self.experiments.process_params(exp.params)
 
         netParams = copy.deepcopy(self.netParams)
-        netParams.mapping = {p.mapsTo: p.mapsTo.split('.') for p in exp.params}
+        netParams.mapping = {p.mapsTo.replace('netParams.', ''): p.mapsTo.split('.')[1::] for p in exp.params if 'netParams' in p.mapsTo}
 
         simCfg = copy.copy(self.simConfig)
         simCfg.saveJson = True
