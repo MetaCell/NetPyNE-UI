@@ -62,7 +62,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
             
           )}
           renderInput={(params) => (
-            <Tooltip title={parameter.mapsTo && Utils.getMetadataField(parameter.mapsTo, 'help')}>
+            <Tooltip placement="top" title={parameter.mapsTo && Utils.getMetadataField(parameter.mapsTo, 'help')}>
             <TextField
               {...params}
               label="Type or select parameter"
