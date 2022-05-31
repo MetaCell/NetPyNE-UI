@@ -276,6 +276,7 @@ class Rxd extends React.Component {
         <RxdRegions
           onAddRegion={this.onAddRegion}
           regions={controlledState?.checked?.regions}
+          extracellular={controlledState?.checked?.extracellular}
         />
       );
     } else if (value === 1) {

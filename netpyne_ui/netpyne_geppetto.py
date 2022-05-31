@@ -824,7 +824,7 @@ class NetPyNEGeppetto:
     def getAvailableRxDSections(self, selectedRegion):
         sections = set([])
         sections.add('all')
-        if self.netParams.rxdParams.regions[selectedRegion].get('cells'):
+        if selectedRegion in self.netParams.rxdParams.regions and self.netParams.rxdParams.regions[selectedRegion].get('cells'):
             if 'all' in self.netParams.rxdParams.regions[selectedRegion]['cells']:
                 for cellRule in self.netParams.cellParams:
                     for cellSect in self.netParams.cellParams[cellRule]['secs']:
