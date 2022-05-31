@@ -24,7 +24,6 @@ const SimpleDialog = (props) => {
       maxWidth="sm"
       open={open}
       onClose={onClose}
-      className={classes.root}
     >
       <DialogTitle>
         {title}
