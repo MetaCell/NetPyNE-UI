@@ -15,7 +15,7 @@ const styles = () => ({
  */
 const SimpleDialog = (props) => {
   const {
-    classes, title, open, onClose, onAction, actionLabel, children,
+    classes, className, title, open, onClose, onAction, actionLabel, children,
   } = props;
 
   return (
@@ -24,6 +24,7 @@ const SimpleDialog = (props) => {
       maxWidth="sm"
       open={open}
       onClose={onClose}
+      className={className}
     >
       <DialogTitle>
         {title}
@@ -34,7 +35,7 @@ const SimpleDialog = (props) => {
       <DialogActions>
         <Button
           onClick={onClose}
-          style={styles.cancel}
+          className={classes.cancel}
           key="CANCEL"
         >
           CANCEL
