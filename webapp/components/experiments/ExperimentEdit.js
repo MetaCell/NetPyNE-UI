@@ -26,7 +26,7 @@ import ParameterMenu from './ParameterMenu';
 import useStyles from './ExperimentEditStyle';
 import * as ExperimentHelper from './ExperimentHelper';
 import DialogBox from '../general/DialogBox';
-import workerCode from './workers/processExperimentData';
+import {getFlattenedParamKeys} from './processExperimentData';
 
 const RANGE_VALUE = 0;
 const SUPPORTED_TYPES = [REAL_TYPE.INT, REAL_TYPE.FLOAT, REAL_TYPE.STR, REAL_TYPE.BOOL];
@@ -226,7 +226,7 @@ const ExperimentEdit = (props) => {
       exp.params.forEach((param) => {
         let updatedParam = param;
         if (param.mapsTo != null) {
-          const field = Utils.getMetadataField(`netParams.${param.mapsTo}`);
+          const field = Utils.getMetadataField(param.mapsTo);
           if (field) {
             updatedParam = { ...param, field };
             updatedParam = validateParameter(updatedParam);
@@ -260,18 +260,9 @@ const ExperimentEdit = (props) => {
       .then((params) => {
         // eslint-disable-next-line prefer-template
         // eslint-disable-next-line no-undef
-        const worker = new Worker(workerCode);
-        worker.onmessage = function (e) {
-          switch (e.data.resultMessage) {
-            case 'OK':
-              setSelectionParams(e.data.params.results);
-              worker.terminate();
-              break;
-            default:
-              console.error('worker processing metadata for autocomplete not working.');
-          }
-        };
-        worker.postMessage({ message: 'process', params: { data: params, metadata: window.metadata } });
+
+        setSelectionParams(getFlattenedParamKeys(params));
+        
       });
   };
 
@@ -395,7 +386,7 @@ const ExperimentEdit = (props) => {
     let field = null;
     if (val !== null) {
       // parameters are a subset of `netParams`
-      field = Utils.getMetadataField(`netParams.${val}`);
+      field = Utils.getMetadataField(val);
     }
 
     const newParam = parameter.inGroup ? [...groupParameters] : [...parameters];
