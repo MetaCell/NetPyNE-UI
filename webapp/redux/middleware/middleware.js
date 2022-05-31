@@ -3,11 +3,10 @@
 /* eslint-disable consistent-return */
 import {
   CLONE_EXPERIMENT,
-  GET_EXPERIMENTS,
+  EDIT_EXPERIMENT,
   setExperiments,
   VIEW_EXPERIMENTS_RESULTS,
-  TRIAL_LOAD_MODEL_SPEC,
-  getExperiments
+  TRIAL_LOAD_MODEL_SPEC
 } from 'root/redux/actions/experiments';
 import { NETPYNE_COMMANDS, EDIT_WIDGETS } from 'root/constants';
 import * as GeppettoActions from '@metacell/geppetto-meta-client/common/actions';
@@ -434,6 +433,15 @@ export default (store) => (next) => (action) => {
     case ADD_EXPERIMENT: {
 
       ExperimentsApi.addExperiment(action.payload)
+        .then((response) => {
+          console.log(response);
+          getExperiments()
+        });
+      break;
+    }
+    case EDIT_EXPERIMENT: {
+
+      ExperimentsApi.editExperiment(action.payload.name, action.payload.details)
         .then((response) => {
           console.log(response);
           getExperiments()
