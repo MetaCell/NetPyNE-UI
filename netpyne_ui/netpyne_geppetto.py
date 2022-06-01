@@ -235,7 +235,7 @@ class NetPyNEGeppetto:
             if self.run_config.asynchronous:
                 message = "Experiment is pending! " \
                   f"Results will be stored in your workspace at ./{os.path.join(constants.EXPERIMENTS_FOLDER, experiment.name)}"
-                return utils.getJSONError(message, "")
+                return dict(message=message)
             else:
                 sim.load(f'{constants.MODEL_OUTPUT_FILENAME}.json')
                 self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)

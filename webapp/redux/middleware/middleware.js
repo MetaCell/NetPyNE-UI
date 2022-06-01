@@ -122,9 +122,9 @@ const instantiateNetwork = (payload) => createSimulateBackendCall(
   GEPPETTO.Resources.INSTANTIATING_MODEL,
 );
 
-const simulateNetwork = (payload) => createSimulateBackendCall(
+const simulateNetwork = (isBatch) => createSimulateBackendCall(
   NETPYNE_COMMANDS.simulateModel,
-  payload,
+  isBatch,
   'The NetPyNE model is getting simulated...',
   GEPPETTO.Resources.RUNNING_SIMULATION,
 );
@@ -185,6 +185,7 @@ export default (store) => (next) => (action) => {
 
   const toNetworkCallback = (reset) => () => {
     switchLayoutAction(false, reset);
+    getExperiments()
     next(action);
     
   };
@@ -215,7 +216,7 @@ export default (store) => (next) => (action) => {
   const checkParametersThen = (callback, goToNetworkView = false) => {
     let allParams = true;
     const inDesignExp = store.getState().experiments?.inDesign;
- 
+
     if(inDesignExp) {
       ExperimentsApi.getParameters()
       .then((params) => {
@@ -242,6 +243,7 @@ export default (store) => (next) => (action) => {
         }
       }, pythonErrorCallback);
     } else {
+      next(GeppettoActions.waitData('Simulating the NetPyNE Model', GeppettoActions.layoutActions.SET_WIDGETS));
       callback().then(toNetworkCallback(goToNetworkView), pythonErrorCallback)
     }
     
@@ -345,15 +347,13 @@ export default (store) => (next) => (action) => {
       break;
     }
     case CREATE_SIMULATE_NETWORK: {
-      next(GeppettoActions.waitData('Simulating the NetPyNE Model', GeppettoActions.layoutActions.SET_WIDGETS));
+   
       checkParametersThen(() => simulateNetwork({ allTrials: false }))
 
       break;
     }
     case SIMULATE_NETWORK: {
-      if (!action.payload) {
-        next(GeppettoActions.waitData('Simulating the NetPyNE Model', GeppettoActions.layoutActions.SET_WIDGETS));
-      } else {
+      if (action.payload) {
         next(GeppettoActions.activateWidget(EDIT_WIDGETS.experimentManager.id));
       }
 
