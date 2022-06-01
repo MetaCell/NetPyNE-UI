@@ -25,6 +25,7 @@ import {
   RESET_MODEL,
   showNetwork,
   addInstancesToCanvas,
+  openConfirmationDialog
 } from '../actions/general';
 import { OPEN_BACKEND_ERROR_DIALOG, openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
@@ -89,6 +90,9 @@ const dehydrateCanvas = () => {
   }
 };
 
+function isGeppettoModel(obj) {
+  return Boolean(obj && obj.eClass)
+}
 const createSimulateBackendCall = async (cmd, payload, consoleMessage, spinnerType) => {
   console.log(consoleMessage);
 
@@ -100,7 +104,7 @@ const createSimulateBackendCall = async (cmd, payload, consoleMessage, spinnerTy
 
   if (responsePayload) {
     throw responsePayload;
-  } else {
+  } else if(isGeppettoModel(response)) {
 
 
     dehydrateCanvas();
@@ -182,7 +186,7 @@ export default (store) => (next) => (action) => {
   const toNetworkCallback = (reset) => () => {
     switchLayoutAction(false, reset);
     next(action);
-    getExperiments();
+    
   };
 
   const pythonErrorCallback = (error) => {
@@ -230,8 +234,11 @@ export default (store) => (next) => (action) => {
           }
         });
         if (allParams) {
-          callback()
-            .then(toNetworkCallback(goToNetworkView), pythonErrorCallback);
+          callback().then((response => {
+            next(openConfirmationDialog({title: "Experiment started", ...response})); 
+            getExperiments();
+          })
+            ,pythonErrorCallback);
         }
       }, pythonErrorCallback);
     } else {
@@ -373,11 +380,12 @@ export default (store) => (next) => (action) => {
       };
       pythonCall(action)
         .then(callback, pythonErrorCallback);
+      next(action);
       break;
     }
     case LOAD_TUTORIAL: {
       const tutName = action.payload.replace('.py', '');
-      // GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading tutorial ${tutName}`);
+      next(GeppettoActions.waitData(`Importing ${tutName}...`, LOAD_TUTORIAL));
 
       const params = {
         modFolder: 'mod',

@@ -217,7 +217,7 @@ class NetPyNEGeppetto:
         else:
             message = f"Experiment {experiment.name} finished, you can view the results in the Experiment Manager."
 
-        return utils.getJSONError(message, "")
+        return dict(message=message)
 
     def simulate_single_model(self, experiment: model.Experiment = None, use_prev_inst: bool = False):
         if experiment:
