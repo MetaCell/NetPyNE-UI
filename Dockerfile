@@ -32,6 +32,9 @@ RUN npm install --global yarn
 RUN npm install --global yalc
 RUN python install.py ${BUILD_ARGS} --geppetto ${GEPPETTO_VERSION}
 
+# Temp fixes for eeg plots
+RUN wget -P `pip show LFPykit | grep "Location:" | awk '{print $2"/lfpykit"}'` https://www.parralab.org/nyhead/sa_nyhead.mat
+
 WORKDIR ${INSTALLATION_FOLDER}
 
 RUN pip install -r requirements-test.txt
