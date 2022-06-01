@@ -54,6 +54,7 @@ class NetPyNEGeppetto:
         self.netParams = specs.NetParams()
         self.simConfig = specs.SimConfig()
         self.run_config = model.RunConfig()
+        self.simConfig.recordTraces = {'V_soma': {'sec':'soma', 'loc':0.5, 'var':'v'}}
 
         self.experiments = experiments
 
@@ -68,7 +69,7 @@ class NetPyNEGeppetto:
         experiments.get_experiments()
         running_exps = experiments.get_by_states([
             model.ExperimentState.PENDING,
-            model.ExperimentState.SIMULATING, 
+            model.ExperimentState.SIMULATING,
             model.ExperimentState.INSTANTIATING
         ])
         if not simulations.local.is_running():
@@ -435,9 +436,10 @@ class NetPyNEGeppetto:
                     if self.doIhaveInstOrSimData()['haveInstance']:
                         sim.clearAll()
                     sim.initialize()
-                    sim.loadAll(args['jsonModelFolder'])
+                    sim.loadAll(args['jsonModelFolder'], instantiate=False)
                     self.netParams = sim.net.params
                     self.simConfig = sim.cfg
+                    self.simConfig.saveCellSecs = True
                     netpyne_ui_utils.remove(self.netParams.todict())
                     netpyne_ui_utils.remove(self.simConfig.todict())
                 else:
@@ -822,7 +824,7 @@ class NetPyNEGeppetto:
     def getAvailableRxDSections(self, selectedRegion):
         sections = set([])
         sections.add('all')
-        if self.netParams.rxdParams.regions[selectedRegion].get('cells'):
+        if selectedRegion in self.netParams.rxdParams.regions and self.netParams.rxdParams.regions[selectedRegion].get('cells'):
             if 'all' in self.netParams.rxdParams.regions[selectedRegion]['cells']:
                 for cellRule in self.netParams.cellParams:
                     for cellSect in self.netParams.cellParams[cellRule]['secs']:
@@ -936,56 +938,14 @@ class NetPyNEGeppetto:
         return validateFunction(functionString, self.netParams.__dict__)
 
     def exportHLS(self, args):
-        def convert2bool(string):
-            return string.replace('true', 'True').replace('false', 'False').replace('null', 'False')
-
-        def header(title, spacer='-'):
-            return '\n# ' + title.upper() + ' ' + spacer * (77 - len(title)) + '\n'
 
         try:
-            params = ['popParams', 'cellParams', 'synMechParams']
-            params += ['connParams', 'stimSourceParams', 'stimTargetParams']
-
-            fname = args['fileName']
-            if not fname:
-                # default option
-                fname = 'output.py'
-            
+            fname = args.get('fileName', 'output.py')
             if not fname[-3:] == '.py':
                 fname = f"{fname}.py"
 
-            # TODO: use methods offered by netpyne to create this script!
-            with open(fname, 'w') as script:
-                script.write("from netpyne import specs, sim\n")
-                script.write(header("documentation"))
-                script.write("Script generated with NetPyNE-UI. Please visit:\n")
-                script.write("    - https://www.netpyne.org\n    - https://github.com/MetaCell/NetPyNE-UI\n\n")
-                script.write(header("script", spacer="="))
-                script.write("netParams = specs.NetParams()\n")
-                script.write("simConfig = specs.SimConfig()\n")
-                script.write(header("single value attributes"))
-                for attr, value in list(self.netParams.__dict__.items()):
-                    if attr not in params:
-                        if value != getattr(specs.NetParams(), attr):
-                            script.write("netParams." + attr + " = ")
-                            script.write(convert2bool(json.dumps(value, indent=4)) + "\n")
-
-                script.write(header("network attributes"))
-                for param in params:
-                    for key, value in list(getattr(self.netParams, param).items()):
-                        script.write("netParams." + param + "[" + key + "] = ")
-                        script.write(convert2bool(json.dumps(value, indent=4)) + "\n")
-
-                script.write(header("network configuration"))
-                for attr, value in list(self.simConfig.__dict__.items()):
-                    if value != getattr(specs.SimConfig(), attr):
-                        script.write("simConfig." + attr + " = ")
-                        script.write(convert2bool(json.dumps(value, indent=4)) + "\n")
-
-                script.write(header("create simulate analyze  network"))
-                script.write("# sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)\n")
-
-                script.write(header("end script", spacer="="))
+            from netpyne.conversion import createPythonScript
+            createPythonScript(fname, self.netParams, self.simConfig)
 
             with open(fname) as f:
                 file_b64 = base64.b64encode(bytes(f.read(), 'utf-8')).decode()

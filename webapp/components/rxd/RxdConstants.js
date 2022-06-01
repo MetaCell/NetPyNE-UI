@@ -16,19 +16,6 @@ import AddIcon from '@material-ui/icons/Add';
 import FontIcon from '@material-ui/core/Icon';
 import Utils from '../../Utils';
 import {
-  bgDarkest,
-  bgLight,
-  bgRegular,
-  secondaryColor,
-  fontColor,
-  radius,
-  primaryColor,
-  experimentInputColor,
-  experimentFieldColor,
-  experimentSvgColor,
-  experimentLabelColor,
-  experimentAutocompleteBorder,
-  errorFieldBorder,
   tabsTextColor,
 } from '../../theme';
 

@@ -294,12 +294,14 @@ class ListComponent extends Component {
               <IconButton
                 id={`${this.props.id}-button`}
                 onClick={this.addChild} 
+                disabled={this.props.disabled}
               >
                 <Add />
               </IconButton>
             </Box>
             <TextField
               variant="filled"
+              disabled={this.props.disabled}
               id={this.props.id}
               label={
                 this.props.label ? `Add new ${this.props.label}` : 'Add new item'

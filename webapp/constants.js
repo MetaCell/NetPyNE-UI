@@ -683,3 +683,16 @@ export const LAUNCH_MODAL = {
   defaultResource: 'Local Machine',
   errorText: 'Please check the input',
 };
+
+export const geometryClasses = [
+  'DistributedBoundary',
+  'FractionalVolume',
+  'FixedCrossSection',
+  'ScalableBorder',
+  'Shell',
+];
+
+export const geometryStrings = [
+  'inside',
+  'membrane',
+];
