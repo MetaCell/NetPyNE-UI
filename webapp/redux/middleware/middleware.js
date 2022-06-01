@@ -261,6 +261,7 @@ export default (store) => (next) => (action) => {
 
 
     case "JUPYTER_GEPPETTO_EXTENSION_READY": {
+      next(action);
       const project = {
         id: 1,
         name: 'Project',
