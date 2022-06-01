@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import FontIcon from '@material-ui/core/Icon';
 import {
-  Box,
-  Tabs,
-  Tab,
-  Chip,
-} from '@material-ui/core';
+  NetPyNEField,
+  ListComponent,
+  NetPyNECheckbox,
+  NetPyNETextField,
+} from 'netpyne/components';
+import { makeStyles } from '@material-ui/core/styles';
+import RxdNoData from './RxdNoData';
 import Utils from '../../Utils';
-import RxdExtracellular from './RxdExtracellular';
 
 function a11yProps (index) {
   return {
@@ -16,88 +16,118 @@ function a11yProps (index) {
   };
 }
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    overflow: 'hidden',
+    display: 'flex',
+    alignItems: 'stretch',
+  },
+}));
+
 const RxdExtracellulars = (props) => {
-  const [tab, setTab] = React.useState(0);
-  const [extraCounter, setExtraCounter] = useState(0);
+  const classes = useStyles();
+  const baseTag = "netParams.rxdParams['extracellular']";
 
-  const addSingleExtra = () => {
-    const newCounter = extraCounter + 1;
-    const newExtra = `extracellular${extraCounter}`;
-    if (!props.extracellular) {
-      Utils.execPythonMessage(
-        "netpyne_geppetto.netParams.rxdParams['extracellular'] = {}",
-      );
-    }
-    Utils.execPythonMessage(
-      `netpyne_geppetto.netParams.rxdParams['extracellular']['${newExtra}'] = {}`,
-    );
-    setExtraCounter(newCounter);
-    props.onAddExtracellular(newExtra);
-  };
-
-  let extras = [];
-  if (props.extracellular) {
-    extras = Object.keys(props.extracellular);
+  let regions = [];
+  if (props.regions) {
+    regions = Object.keys(props.regions);
   }
   return (
     <>
-      { extras.length > 0
+      { regions.length > 0
         ? (
-          <Box className="subHeader">
-            <Tabs
-              value={tab}
-              variant="scrollable"
-              onChange={(event, newTabValue) => setTab(newTabValue)}
-              scrollButtons="auto"
-              indicatorColor="primary"
-            >
-              {
-            extras.map((region, index) => (
-              <Tab
-                key={region}
-                label={(
-                  <Chip
-                    id={region}
-                    label={region}
-                    deleteIcon={<FontIcon className="fa fa-minus-circle" />}
-                    onClick={(event) => {
-                      const clickedRegion = event.currentTarget.parentElement.id;
-                      const regionIndex = extras.indexOf(clickedRegion);
-                      if (tab !== regionIndex) {
-                        setTab(regionIndex);
-                      }
-                    }}
-                    onDelete={(event) => {
-                      Utils.execPythonMessage(
-                        `del netpyne_geppetto.netParams.rxdParams['extracellular']['${event.currentTarget.parentElement.id}']`,
-                      );
-                      const newRegions = Object.keys(props.extracellular).filter((item) => item !== event.currentTarget.parentElement.id);
-                      if (newRegions.length > 0) {
-                        setTab(newRegions.length - 1);
-                      } else {
-                        props.onAddExtracellular(event.currentTarget.parentElement.id);
-                      }
-                    }}
-                  />
-                )}
-                {...a11yProps(index)}
-              />
-            ))
-          }
-            </Tabs>
-          </Box>
+          <div className={classes.root}>
+            <div className="scrollbar scrollchild spacechild">
+              <NetPyNEField id="netParams.rxdParams.regions.extracellular" className="netpyneCheckbox">
+                <NetPyNECheckbox
+                  model={`${baseTag}['extracellular']`}
+                  onChange={() => { console.log('test'); }}
+                />
+              </NetPyNEField>
+              <NetPyNEField id="netParams.rxdParams.extracellular.volume_fraction">
+                <NetPyNETextField
+                  fullWidth
+                  disabled={!props?.extracellular?.extracellular}
+                  variant="filled"
+                  model={`${baseTag}['volume_fraction']`}
+                />
+              </NetPyNEField>
+              <NetPyNEField id="netParams.rxdParams.extracellular.tortuosity">
+                <NetPyNETextField
+                  fullWidth
+                  disabled={!props?.extracellular?.extracellular}
+                  variant="filled"
+                  model={`${baseTag}['tortuosity']`}
+                />
+              </NetPyNEField>
+              <NetPyNEField id="netParams.rxdParams.extracellular.dx">
+                <ListComponent
+                  disabled={!props?.extracellular?.extracellular}
+                  model={`${baseTag}['dx']`}
+                />
+              </NetPyNEField>
+            </div>
+            <div className="scrollbar scrollchild spacechild">
+              <NetPyNEField id="netParams.rxdParams.extracellular.xlo">
+                <NetPyNETextField
+                  fullWidth
+                  disabled={!props?.extracellular?.extracellular}
+                  variant="filled"
+                  model={`${baseTag}['xlo']`}
+                />
+              </NetPyNEField>
+              <NetPyNEField id="netParams.rxdParams.extracellular.ylo">
+                <NetPyNETextField
+                  fullWidth
+                  disabled={!props?.extracellular?.extracellular}
+                  variant="filled"
+                  model={`${baseTag}['ylo']`}
+                />
+              </NetPyNEField>
+              <NetPyNEField id="netParams.rxdParams.extracellular.zlo">
+                <NetPyNETextField
+                  fullWidth
+                  disabled={!props?.extracellular?.extracellular}
+                  variant="filled"
+                  model={`${baseTag}['zlo']`}
+                />
+              </NetPyNEField>
+              <NetPyNEField id="netParams.rxdParams.extracellular.xhi">
+                <NetPyNETextField
+                  fullWidth
+                  disabled={!props?.extracellular?.extracellular}
+                  variant="filled"
+                  model={`${baseTag}['xhi']`}
+                />
+              </NetPyNEField>
+              <NetPyNEField id="netParams.rxdParams.extracellular.yhi">
+                <NetPyNETextField
+                  fullWidth
+                  disabled={!props?.extracellular?.extracellular}
+                  variant="filled"
+                  model={`${baseTag}['yhi']`}
+                />
+              </NetPyNEField>
+              <NetPyNEField id="netParams.rxdParams.extracellular.zhi">
+                <NetPyNETextField
+                  fullWidth
+                  disabled={!props?.extracellular?.extracellular}
+                  variant="filled"
+                  model={`${baseTag}['zhi']`}
+                />
+              </NetPyNEField>
+            </div>
+          </div>
         )
-        : <> </>}
-
-      <>
-        <RxdExtracellular
-          addSingleExtra={addSingleExtra}
-          id={props?.extracellular ? extras[tab] : undefined}
-          onAddExtracellular={props.onAddExtracellular}
-          controlledRegion={props?.extracellular ? props.extracellular[extras[tab]] : undefined}
-        />
-      </>
+        : (
+          <>
+            <RxdNoData
+              message="Extracellular is disabled if regions are missing."
+            />
+          </>
+        )}
     </>
   );
 };
+
 export default RxdExtracellulars;

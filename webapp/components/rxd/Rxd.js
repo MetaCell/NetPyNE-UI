@@ -78,7 +78,7 @@ const styles = ((theme) => ({
     },
     '& .MuiTabs-scroller': {
       borderBottom: `0.0625rem solid ${navShadow}`,
-    }
+    },
   },
 
   button: {
@@ -325,6 +325,7 @@ class Rxd extends React.Component {
       tabPanelContent = (
         <RxdExtracellulars
           onAddExtracellular={this.onAddExtracellular}
+          regions={controlledState?.checked?.regions}
           extracellular={controlledState?.checked?.extracellular}
         />
       );
