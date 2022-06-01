@@ -37,9 +37,13 @@ const RxdNoData = (props) => {
     <Box className={`${classes.noData} layoutVerticalFitInner`}>
       <NoData />
       <Typography>{message}</Typography>
-      <Button className={classes.button} variant="outlined">
-        <AddIcon onClick={() => { props.callback(); }}>{ callbackText }</AddIcon>
-      </Button>
+      {callback && callbackText
+        ? (
+          <Button className={classes.button} variant="outlined">
+            <AddIcon onClick={() => { props.callback(); }}>{ callbackText }</AddIcon>
+          </Button>
+        )
+        : (<></>)}
     </Box>
   );
 };

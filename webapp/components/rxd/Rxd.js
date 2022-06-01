@@ -78,7 +78,7 @@ const styles = ((theme) => ({
     },
     '& .MuiTabs-scroller': {
       borderBottom: `0.0625rem solid ${navShadow}`,
-    }
+    },
   },
 
   button: {
@@ -276,6 +276,7 @@ class Rxd extends React.Component {
         <RxdRegions
           onAddRegion={this.onAddRegion}
           regions={controlledState?.checked?.regions}
+          extracellular={controlledState?.checked?.extracellular}
         />
       );
     } else if (value === 1) {
@@ -324,6 +325,7 @@ class Rxd extends React.Component {
       tabPanelContent = (
         <RxdExtracellulars
           onAddExtracellular={this.onAddExtracellular}
+          regions={controlledState?.checked?.regions}
           extracellular={controlledState?.checked?.extracellular}
         />
       );
