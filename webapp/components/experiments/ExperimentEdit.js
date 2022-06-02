@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
-import * as ExperimentsApi from 'root/api/experiments';
+import * as ExperimentsApi from '../../api/experiments';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -26,16 +26,18 @@ import ParameterMenu from './ParameterMenu';
 import useStyles from './ExperimentEditStyle';
 import * as ExperimentHelper from './ExperimentHelper';
 import DialogBox from '../general/DialogBox';
-import workerCode from './workers/processExperimentData';
+import {getFlattenedParams} from './processExperimentData';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const RANGE_VALUE = 0;
-const SUPPORTED_TYPES = [REAL_TYPE.INT, REAL_TYPE.FLOAT, REAL_TYPE.STR, REAL_TYPE.BOOL];
+
 const MAX_TRIALS = 100;
 
 const {
   RANGE,
   LIST,
 } = EXPERIMENT_TEXTS;
+
 
 const ParameterRow = (parameter, index, handleParamSelection, handleChange, handleRangeInput,
   handleInputValues, addToGroup, removeFromGroup, removeParameter, selectionParams, classes) => (
@@ -46,26 +48,30 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
       key={`${parameter.name}-${index}`}
     >
       <Grid item xs className="editExperimentAutocomplete">
+      
         <Autocomplete
           popupIcon={<ExpandMoreIcon />}
           id={`${parameter.name}-combo-box-demo`}
-          options={selectionParams}
+          options={selectionParams ? Object.keys(selectionParams): []}
           style={{ width: 300 }}
           classes={{
             popper: classes.popper,
           }}
           renderOption={(option) => (
-            <>
-              {option}
-            </>
+            <>{option}</>
+              
+            
           )}
           renderInput={(params) => (
+            <Tooltip placement="top" title={selectionParams && parameter.mapsTo && (Utils.getMetadataField(parameter.mapsTo, 'help') || `This field is of type ${selectionParams[parameter.mapsTo]?.type}`) }>
             <TextField
               {...params}
-              label="Type or select parameter"
+              disabled={Boolean(parameter.mapsTo)}
+              label={parameter.mapsTo && selectionParams ? selectionParams[parameter.mapsTo]?.label: "Type or select parameter"}
               variant="outlined"
-            />
+            /></Tooltip>
           )}
+         
           value={parameter.mapsTo || null}
           onChange={(e, val) => handleParamSelection(val, parameter, index)}
         />
@@ -82,7 +88,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
           >
             <MenuItem value="list">List</MenuItem>
             {
-            (parameter.field === undefined || (parameter?.field && [REAL_TYPE.FLOAT, REAL_TYPE.INT].includes(parameter.field.type)))
+            (parameter.field === undefined || (parameter?.field && [REAL_TYPE.FLOAT, REAL_TYPE.INT, REAL_TYPE.FUNC].includes(parameter.field.type)))
             && <MenuItem value="range">Range</MenuItem>
           }
           </Select>
@@ -96,6 +102,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
                 id={`${parameter.name}-from`}
                 label="From"
                 variant="filled"
+                type="number"
                 value={parameter?.minVal || parameter?.min}
                 onChange={(e) => handleRangeInput(e.target.value, index, parameter, 'min')}
                 error={parameter?.minerror}
@@ -108,6 +115,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
                 id={`${parameter.name}-to`}
                 label="To"
                 variant="filled"
+                type="number"
                 value={parameter?.maxVal || parameter?.max}
                 onChange={(e) => handleRangeInput(e.target.value, index, parameter, 'max')}
                 error={parameter?.maxerror}
@@ -120,6 +128,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
                 id={`${parameter.name}-step`}
                 label="Step"
                 variant="filled"
+                type="number"
                 value={parameter?.stepVal || parameter?.step}
                 onChange={(e) => handleRangeInput(e.target.value, index, parameter, 'step')}
                 error={parameter?.steperror}
@@ -133,7 +142,7 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
             <Grid item xs={12}>
               <TextField
                 id={`${parameter.name}-values`}
-                label="Values (separated with comas)"
+                label="Values (separated with commas)"
                 variant="filled"
                 value={parameter?.val || parameter?.values.join()}
                 onChange={(e) => handleInputValues(e.target.value, index, parameter, 'val')}
@@ -162,6 +171,9 @@ const ExperimentEdit = (props) => {
     name,
     editState,
     setView,
+    editExperiment,
+    addExperiment,
+    visible, updates, widgets
   } = props;
 
   const rangeParam = {
@@ -191,9 +203,9 @@ const ExperimentEdit = (props) => {
   const [groupParameters, setGroupParameters] = useState([]);
   const [experimentName, setExperimentName] = useState('');
   const [experimentNameError, setExperimentNameError] = useState('');
-  const [selectionParams, setSelectionParams] = useState([]);
+  const [selectionParams, setSelectionParams] = useState(null);
   const [trialNumberErrorDialogOpen, setTrialNumberErrorDialogOpen] = useState({ condition: false, number: 1 });
-  const [paramsCounter, setParamsCounter] = useState(0);
+
 
   // Existing Experiment.
   const [experiment, setExperiment] = useState(null);
@@ -223,7 +235,7 @@ const ExperimentEdit = (props) => {
       exp.params.forEach((param) => {
         let updatedParam = param;
         if (param.mapsTo != null) {
-          const field = Utils.getMetadataField(`netParams.${param.mapsTo}`);
+          const field = Utils.getMetadataField(param.mapsTo);
           if (field) {
             updatedParam = { ...param, field };
             updatedParam = validateParameter(updatedParam);
@@ -257,24 +269,17 @@ const ExperimentEdit = (props) => {
       .then((params) => {
         // eslint-disable-next-line prefer-template
         // eslint-disable-next-line no-undef
-        const worker = new Worker(workerCode);
-        worker.onmessage = function (e) {
-          switch (e.data.resultMessage) {
-            case 'OK':
-              setSelectionParams(e.data.params.results);
-              worker.terminate();
-              break;
-            default:
-              console.error('worker processing metadata for autocomplete not working.');
-          }
-        };
-        worker.postMessage({ message: 'process', params: { data: params, metadata: window.metadata } });
+        setSelectionParams(getFlattenedParams(params));
+        
       });
   };
 
   useEffect(() => {
-    getParameters();
-  });
+    if(visible) {
+      getParameters();
+    }
+    
+  }, [visible, updates, widgets]);
 
   const validateExperimentName = (name) => {
     const isEmpty = (val) => val == null || val.trim() === '';
@@ -358,15 +363,11 @@ const ExperimentEdit = (props) => {
     if (numberOfTrials > MAX_TRIALS) {
       setTrialNumberErrorDialogOpen({ condition: true, number: numberOfTrials });
     } else if (editState) {
-      ExperimentsApi.editExperiment(experiment?.name, newExperimentDetails)
-        .then(() => {
-          setView(EXPERIMENT_VIEWS.list);
-        });
+      editExperiment(experiment?.name, newExperimentDetails)  
+      setView(EXPERIMENT_VIEWS.list);
     } else {
-      ExperimentsApi.addExperiment(newExperimentDetails)
-        .then(() => {
-          setView(EXPERIMENT_VIEWS.list);
-        });
+      addExperiment(newExperimentDetails);
+      setView(EXPERIMENT_VIEWS.list);
     }
   };
 
@@ -389,11 +390,12 @@ const ExperimentEdit = (props) => {
     setParamChange(parameter.inGroup, newParam);
   };
 
+
   const handleParamSelection = (val, parameter, index) => {
     let field = null;
     if (val !== null) {
       // parameters are a subset of `netParams`
-      field = Utils.getMetadataField(`netParams.${val}`);
+      field = selectionParams[val];
     }
 
     const newParam = parameter.inGroup ? [...groupParameters] : [...parameters];
@@ -410,7 +412,7 @@ const ExperimentEdit = (props) => {
     };
 
     if (parameter.type === RANGE) {
-      if (field && ![REAL_TYPE.INT, REAL_TYPE.FLOAT].includes(field.type)) {
+      if (field && ![REAL_TYPE.INT, REAL_TYPE.FLOAT, REAL_TYPE.FUNC].includes(field.type)) {
         newParam[index] = {
           ...newParam[index],
           type: LIST,
@@ -509,6 +511,7 @@ const ExperimentEdit = (props) => {
               <Divider />
             </Box>
           </Box>
+
           <Box className="editExperimentContent">
             <Box mb={1} className="editExperimentDefault">
               <Box mb={2} className="editExperimentBreadcrumb">
@@ -533,7 +536,7 @@ const ExperimentEdit = (props) => {
                 )}
               </Box>
               )}
-              {selectionParams.length > 0 && (
+              {selectionParams && (
               <Box className="editExperimentRow">
                 {parameters.map((parameter, index) => (
                   ParameterRow(parameter, index, handleParamSelection, handleChange,
@@ -544,6 +547,7 @@ const ExperimentEdit = (props) => {
               )}
             </Box>
           </Box>
+          
           <Box>
             <Link to="true" color="primary" onClick={addParameter}>
               <AddIcon />

@@ -90,7 +90,7 @@ class NetPyNEGeppetto:
     def getModelAsJson(self):
         # TODO: netpyne should offer a method asJSON (#240)
         # that returns the JSON model without dumping to to disk.
-        obj = netpyne_utils.replaceFuncObj(self.netParams.__dict__)
+        obj = netpyne_utils.replaceFuncObj({"netParams": self.netParams.__dict__, "simConfig": self.simConfig.__dict__})
         obj = netpyne_utils.replaceDictODict(obj)
         return obj
 
@@ -218,7 +218,7 @@ class NetPyNEGeppetto:
         else:
             message = f"Experiment {experiment.name} finished, you can view the results in the Experiment Manager."
 
-        return utils.getJSONError(message, "")
+        return dict(message=message)
 
     def simulate_single_model(self, experiment: model.Experiment = None, use_prev_inst: bool = False):
         if experiment:
@@ -235,7 +235,7 @@ class NetPyNEGeppetto:
             if self.run_config.asynchronous:
                 message = "Experiment is pending! " \
                   f"Results will be stored in your workspace at ./{os.path.join(constants.EXPERIMENTS_FOLDER, experiment.name)}"
-                return utils.getJSONError(message, "")
+                return dict(message=message)
             else:
                 sim.load(f'{constants.MODEL_OUTPUT_FILENAME}.json')
                 self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
@@ -374,7 +374,7 @@ class NetPyNEGeppetto:
         exp.params = self.experiments.process_params(exp.params)
 
         netParams = copy.deepcopy(self.netParams)
-        netParams.mapping = {p.mapsTo: p.mapsTo.split('.') for p in exp.params}
+        netParams.mapping = {p.mapsTo.replace('netParams.', ''): p.mapsTo.split('.')[1::] for p in exp.params if 'netParams' in p.mapsTo}
 
         simCfg = copy.copy(self.simConfig)
         simCfg.saveJson = True

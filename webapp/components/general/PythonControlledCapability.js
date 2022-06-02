@@ -491,7 +491,7 @@ define((require) => {
 });
 
 function getNameFromWrappedComponent (WrappedComponent) {
-  return WrappedComponent.name || WrappedComponent.displayName || WrappedComponent.Naked.render.name;
+  return WrappedComponent.name || WrappedComponent.displayName || WrappedComponent?.Naked?.render?.name || WrappedComponent?.render?.name;
 }
 
 /**

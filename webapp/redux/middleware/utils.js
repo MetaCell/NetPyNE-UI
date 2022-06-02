@@ -32,3 +32,50 @@ export const downloadPythonResponse = (exportInfo) => {
   const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
   forceBlobDownload(blob, exportInfo.fileName);
 };
+
+export class PythonMessageFilter {
+  errorIds = new Set();
+  shouldLaunch(e) {
+    const errorId = e.additionalInfo?.sim_id;
+    if (!errorId) {
+      return true;
+    }
+    if (errorId) {
+      if (this.errorIds.has(errorId)) {
+        return false;
+      }
+      this.errorIds.add(errorId);
+      return true;
+    }
+  }
+}
+
+export const pythonCall = async ({
+  cmd,
+  args,
+}) => {
+  const response = await Utils.evalPythonMessage(cmd, [args]);
+  const errorPayload = processError(response);
+  // GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+
+  if (errorPayload) {
+    throw errorPayload;
+  }
+
+  return response;
+};
+
+
+export const processError = (response) => {
+  const parsedResponse = Utils.getErrorResponse(response);
+  if (parsedResponse) {
+    Utils.captureSentryException(parsedResponse);
+    return {
+      errorMessage: parsedResponse.message,
+      errorDetails: parsedResponse.details,
+      additionalInfo: parsedResponse.additionalInfo,
+    };
+  }
+  return false;
+};
+

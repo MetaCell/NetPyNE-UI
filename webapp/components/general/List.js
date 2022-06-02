@@ -293,9 +293,10 @@ class ListComponent extends Component {
             <Box display="flex" alignItems="center" className={classes.addIcon}>
               <IconButton
                 id={`${this.props.id}-button`}
+                onClick={this.addChild} 
                 disabled={this.props.disabled}
               >
-                <Add onClick={this.addChild} />
+                <Add />
               </IconButton>
             </Box>
             <TextField

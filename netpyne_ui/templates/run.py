@@ -50,5 +50,5 @@ except Exception as e:
     print("Experiment failed ...")
     print(e)
 
-    update_state(exp, "ERRROR")
+    update_state(exp, "ERROR")
     sys.exit(1)
