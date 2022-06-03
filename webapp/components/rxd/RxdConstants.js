@@ -120,6 +120,7 @@ const RxdConstants = (props) => {
               fullWidth
               label="value"
               variant="filled"
+              realType="float"
               model={`${baseTag}['${constant}']`}
             />
           </div>
