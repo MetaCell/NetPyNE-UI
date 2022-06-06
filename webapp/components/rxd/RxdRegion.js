@@ -196,6 +196,7 @@ const RxdRegion = (props) => {
                 fullWidth
                 label="value"
                 variant="filled"
+                realType="float"
                 model={`${baseTag}['geometry']['args']['${item}']`}
               />
             </div>
