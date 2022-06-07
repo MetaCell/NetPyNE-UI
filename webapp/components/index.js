@@ -15,14 +15,17 @@ import PythonControlledCapability from './general/PythonControlledCapability';
 import { openBackendErrorDialog, closeBackendErrorDialog } from '../redux/actions/errors';
 import {
   updateCards, editModel, simulateNetwork, createNetwork, closeDialog,
-  createAndSimulateNetwork, showNetwork, pythonCall, modelLoaded, deleteNetParamsObj, resetModel,
+  createAndSimulateNetwork, showNetwork, pythonCall, deleteNetParamsObj, resetModel,
   setDefaultWidgets, changeInstanceColor, openConfirmationDialog, closeConfirmationDialog, selectInstances,
 } from '../redux/actions/general';
 
 import {
   cloneExperiment,
-  getExperiments,
+
   openLaunchDialog,
+  removeExperiment,
+  addExperiment,
+  editExperiment
 } from '../redux/actions/experiments';
 
 import {
@@ -68,6 +71,8 @@ import _LaunchDialog from './topbar/dialogs/LaunchDialog';
 import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole';
 import _PlotViewer from './general/PlotViewer';
 import _ExperimentControlPanel from './general/ExperimentControlPanel';
+import _Rxd from './rxd/Wrapper';
+import { WidgetStatus } from '@metacell/geppetto-meta-client/common/layout/model';
 
 const updateCardsDispatch = (dispatch) => ({ updateCards: () => dispatch(updateCards) });
 
@@ -120,8 +125,8 @@ export const Experiments = connect(
     experiments: state.experiments.experiments,
   }),
   (dispatch) => ({
-    getExperiments: () => dispatch(getExperiments()),
     cloneExperiment: (name) => dispatch(cloneExperiment(name)),
+    removeExperiment: (name) => dispatch(removeExperiment(name)),
   }),
 )(_Experiments);
 
@@ -144,9 +149,20 @@ export const ExperimentControlPanel = connect(
   null,
 )(_ExperimentControlPanel);
 
-export const ExperimentEdit = _ExperimentEdit;
-export const ExperimentManager = _ExperimentManager;
+export const ExperimentEdit = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    updates: state.general.updates,
+    widgets: state.widgets,
+    visible: state.widgets?.experimentManager?.status != WidgetStatus.HIDDEN 
+  }),
+  (dispatch) => ({
+    editExperiment: (name, details) => dispatch(editExperiment(name, details)),
+    addExperiment: (name, details) => dispatch(addExperiment(name, details)),
+  }),
+)(_ExperimentEdit);
 
+export const ExperimentManager = _ExperimentManager;
 // ---------------------------------------------------------------------------------------- //
 
 // CONNECT
@@ -161,9 +177,7 @@ export const NetPyNE = connect(
   (dispatch) => ({
     pythonCallErrorDialogBox: (payload) => dispatch(openBackendErrorDialog(payload)),
     setWidgets: (payload) => dispatch(setWidgets(payload)),
-    setDefaultWidgets: () => dispatch(setDefaultWidgets),
-    modelLoaded: () => dispatch(modelLoaded),
-    getExperiments: () => dispatch(getExperiments()),
+    setDefaultWidgets: () => dispatch(setDefaultWidgets),    
   }),
 )(_NetPyNE);
 
@@ -319,7 +333,7 @@ export const Topbar = connect(
     topbarDialogName: state.topbar.dialogName,
     topbarDialogMetadata: state.topbar.dialogMetadata,
     pageTransitionMode: state.topbar.pageTransitionMode,
-    modelLoaded: state.general.modelLoaded,
+    modelLoaded: state.client.model && state.client.model.status,
     automaticInstantiation: state.general.automaticInstantiation,
     automaticSimulation: state.general.automaticSimulation,
     theme: state.general.theme,
@@ -387,6 +401,15 @@ export const SelectCellTemplate = connect(
     ),
   }),
 )(_SelectCellTemplate);
+
+export const Rxd = connect(
+  null,
+  updateCardsDispatch,
+)(
+  PythonControlledCapability.createPythonControlledComponent(
+    _Rxd,
+  ),
+);
 
 // ---------------------------------------------------------------------------------------- //
 

@@ -14,9 +14,8 @@ export const convertFieldValue = (field, value) => {
 
   switch (field.type) {
     case REAL_TYPE.INT:
-      return Number(value);
-
     case REAL_TYPE.FLOAT:
+    case REAL_TYPE.FUNC:
       return Number(value);
 
     case REAL_TYPE.STR:

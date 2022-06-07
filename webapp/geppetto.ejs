@@ -34,37 +34,15 @@
 
 <!-- For index purposes -->
 <div style="display:none" id="content">
-$content
+The NetPyNE user interface allows you to build computational models visually and to run experiments.
 </div>
 
-<div id="widgetContainer"></div>
-<div id="modal-region"></div>
-<div id="load-spinner"></div>
 
 
-
-<div id="mainContainer">
-	<div id="loadingText" style="font-family: consolas;margin: 0px;width: 100%;height: 100%;text-align: center;">
-		<img src="geppetto/build/static/splash.png" style="max-width: 50%;text-align: center;" alt="" onerror='document.getElementById("loadingMessage").style.display="block"' >
+<div id="mainContainer" style="background: #222">
+	<div id="loadingText" style="display: flex; align-items: center;width: 100vw;height: 100vh;text-align: center;">
+		<img src="geppetto/build/static/splash.gif" style="max-width: 100%;text-align: center;" alt="" onerror='document.getElementById("loadingMessage").style.display="block"' >
 	</div>
-    <div id="controls" class="noSelection">
-		<div id="DownloadProjectButton" class="row"></div>
-        <div id="SaveButton" class="row"></div>
-        <div id="PublicProject" class="row"></div>
-        <div id="HomeButton" class="row"></div>
-        <div id="ControlsMenuButton" class="row"></div>
-        <div id="sim-toolbar" class="row"></div>
-        <div id="tutorial"></div>
-        <div id="foreground-toolbar" class="row"></div>
-        <div id="github-logo"></div>
-    </div>
-
-    <div id="geppettologo" class="noSelection"></div>
-    <div id="spotlight" class="hiddenStart"></div>
-    <div id="controlpanel" class="hiddenStart"></div>
-    <div id="querybuilder" class="hiddenStart"></div>
-    <div id="sim" class="noSelection"></div>
-	<div id="share-button"></div>
     <div id="footer">
         <div id="footerHeader"></div>
     </div>
@@ -97,7 +75,7 @@ $content
     ga('create', 'UA-45841517-1', 'geppetto.org');
     ga('send', 'pageview');
 </script>
-<script charset="utf-8" type="text/javascript" src="<%= cssPaths%>geppetto/build/common.bundle.js"></script>
+
 <script charset="utf-8" type="text/javascript" src="<%= cssPaths%>geppetto/build/main.bundle.js"></script>
 </body>
 </html>

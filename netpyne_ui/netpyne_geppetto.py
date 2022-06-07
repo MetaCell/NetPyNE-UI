@@ -57,6 +57,7 @@ class NetPyNEGeppetto:
         self.netParams = specs.NetParams()
         self.simConfig = specs.SimConfig()
         self.run_config = model.RunConfig()
+        self.simConfig.recordTraces = {'V_soma': {'sec':'soma', 'loc':0.5, 'var':'v'}}
 
         self.experiments = experiments
 
@@ -72,7 +73,7 @@ class NetPyNEGeppetto:
         experiments.get_experiments()
         running_exps = experiments.get_by_states([
             model.ExperimentState.PENDING,
-            model.ExperimentState.SIMULATING, 
+            model.ExperimentState.SIMULATING,
             model.ExperimentState.INSTANTIATING
         ])
         if not simulations.local.is_running():
@@ -92,8 +93,8 @@ class NetPyNEGeppetto:
 
     def getModelAsJson(self):
         # TODO: netpyne should offer a method asJSON (#240)
-        #  that returns the JSON model without dumping to to disk.
-        obj = netpyne_utils.replaceFuncObj(self.netParams.__dict__)
+        # that returns the JSON model without dumping to to disk.
+        obj = netpyne_utils.replaceFuncObj({"netParams": self.netParams.__dict__, "simConfig": self.simConfig.__dict__})
         obj = netpyne_utils.replaceDictODict(obj)
         return obj
 
@@ -215,8 +216,8 @@ class NetPyNEGeppetto:
                   f"You can view the Experiment status in the Experiment Manager."
         else:
             message = f"Experiment {experiment.name} finished, you can view the results in the Experiment Manager."
-        print(message)
-        return utils.getJSONError(message, "")
+
+        return dict(message=message)
 
     def simulate_single_model(self, experiment: model.Experiment = None, use_prev_inst: bool = False):
         if experiment:
@@ -233,7 +234,7 @@ class NetPyNEGeppetto:
             if self.run_config.asynchronous:
                 message = "Experiment is pending! " \
                   f"Results will be stored in your workspace at ./{os.path.join(constants.EXPERIMENTS_FOLDER, experiment.name)}"
-                return utils.getJSONError(message, "")
+                return dict(message=message)
             else:
                 sim.load(f'{constants.MODEL_OUTPUT_FILENAME}.json')
                 self.geppetto_model = self.model_interpreter.getGeppettoModel(sim)
@@ -274,7 +275,7 @@ class NetPyNEGeppetto:
             if experiment:
                 if self.experiments.any_in_state([model.ExperimentState.PENDING, model.ExperimentState.SIMULATING]):
                     return utils.getJSONError("Experiment is already simulating or pending", "")
-                
+
                 if simulations.local.is_running():
                     simulations.local.stop()
 
@@ -284,7 +285,7 @@ class NetPyNEGeppetto:
                     if allTrials:
                         if len(experiment.trials) == 1 and experiment.trials[0].id == experiments.BASE_TRIAL_ID:
                             # special case where we don't want to run a batch simulation
-                            return self.simulate_single_model(experiment, use_prev_inst)    
+                            return self.simulate_single_model(experiment, use_prev_inst)
                         else:
                             return self.simulate_experiment_trials(experiment)
                     else:
@@ -372,7 +373,7 @@ class NetPyNEGeppetto:
         exp.params = self.experiments.process_params(exp.params)
 
         netParams = copy.deepcopy(self.netParams)
-        netParams.mapping = {p.mapsTo: p.mapsTo.split('.') for p in exp.params}
+        netParams.mapping = {p.mapsTo.replace('netParams.', ''): p.mapsTo.split('.')[1::] for p in exp.params if 'netParams' in p.mapsTo}
 
         simCfg = copy.copy(self.simConfig)
         simCfg.saveJson = True
@@ -434,9 +435,10 @@ class NetPyNEGeppetto:
                     if self.doIhaveInstOrSimData()['haveInstance']:
                         sim.clearAll()
                     sim.initialize()
-                    sim.loadAll(args['jsonModelFolder'])
+                    sim.loadAll(args['jsonModelFolder'], instantiate=False)
                     self.netParams = sim.net.params
                     self.simConfig = sim.cfg
+                    self.simConfig.saveCellSecs = True
                     netpyne_ui_utils.remove(self.netParams.todict())
                     netpyne_ui_utils.remove(self.simConfig.todict())
                 else:
@@ -812,8 +814,36 @@ class NetPyNEGeppetto:
             sections[cellRule] = list(self.netParams.cellParams[cellRule]['secs'].keys())
         return sections
 
+    def getAvailableCellTypes(self):
+        cell_types = set([])
+        cell_types.add('all')
+        for p in self.netParams.cellParams:
+            cell_types.add(p)
+        return sorted(cell_types)
+
+    def getAvailableRxDSections(self, selectedRegion):
+        sections = set([])
+        sections.add('all')
+        if selectedRegion in self.netParams.rxdParams.regions and self.netParams.rxdParams.regions[selectedRegion].get('cells'):
+            if 'all' in self.netParams.rxdParams.regions[selectedRegion]['cells']:
+                for cellRule in self.netParams.cellParams:
+                    for cellSect in self.netParams.cellParams[cellRule]['secs']:
+                        sections.add(cellSect)
+            else:
+                for cellRule in self.netParams.cellParams:
+                    if cellRule in self.netParams.rxdParams.regions[selectedRegion]['cells']:
+                        for cellSect in self.netParams.cellParams[cellRule]['secs']:
+                            sections.add(cellSect)
+        return sorted(sections)
+
     def getAvailableStimSources(self):
         return list(self.netParams.stimSourceParams.keys())
+
+    def getAvailableRxdRegions(self):
+        return list(self.netParams.rxdParams.regions.keys())
+
+    def getAvailableRxdSpecies(self):
+        return list(self.netParams.rxdParams.species.keys())
 
     def getAvailableSynMech(self):
         return list(self.netParams.synMechParams.keys())
@@ -908,56 +938,14 @@ class NetPyNEGeppetto:
         return validateFunction(functionString, self.netParams.__dict__)
 
     def exportHLS(self, args):
-        def convert2bool(string):
-            return string.replace('true', 'True').replace('false', 'False').replace('null', 'False')
-
-        def header(title, spacer='-'):
-            return '\n# ' + title.upper() + ' ' + spacer * (77 - len(title)) + '\n'
 
         try:
-            params = ['popParams', 'cellParams', 'synMechParams']
-            params += ['connParams', 'stimSourceParams', 'stimTargetParams']
-
-            fname = args['fileName']
-            if not fname:
-                # default option
-                fname = 'output.py'
-            
+            fname = args.get('fileName', 'output.py')
             if not fname[-3:] == '.py':
                 fname = f"{fname}.py"
 
-            # TODO: use methods offered by netpyne to create this script!
-            with open(fname, 'w') as script:
-                script.write("from netpyne import specs, sim\n")
-                script.write(header("documentation"))
-                script.write("Script generated with NetPyNE-UI. Please visit:\n")
-                script.write("    - https://www.netpyne.org\n    - https://github.com/MetaCell/NetPyNE-UI\n\n")
-                script.write(header("script", spacer="="))
-                script.write("netParams = specs.NetParams()\n")
-                script.write("simConfig = specs.SimConfig()\n")
-                script.write(header("single value attributes"))
-                for attr, value in list(self.netParams.__dict__.items()):
-                    if attr not in params:
-                        if value != getattr(specs.NetParams(), attr):
-                            script.write("netParams." + attr + " = ")
-                            script.write(convert2bool(json.dumps(value, indent=4)) + "\n")
-
-                script.write(header("network attributes"))
-                for param in params:
-                    for key, value in list(getattr(self.netParams, param).items()):
-                        script.write("netParams." + param + "[" + key + "] = ")
-                        script.write(convert2bool(json.dumps(value, indent=4)) + "\n")
-
-                script.write(header("network configuration"))
-                for attr, value in list(self.simConfig.__dict__.items()):
-                    if value != getattr(specs.SimConfig(), attr):
-                        script.write("simConfig." + attr + " = ")
-                        script.write(convert2bool(json.dumps(value, indent=4)) + "\n")
-
-                script.write(header("create simulate analyze  network"))
-                script.write("# sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)\n")
-
-                script.write(header("end script", spacer="="))
+            from netpyne.conversion import createPythonScript
+            createPythonScript(fname, self.netParams, self.simConfig)
 
             with open(fname) as f:
                 file_b64 = base64.b64encode(bytes(f.read(), 'utf-8')).decode()

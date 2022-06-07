@@ -18,10 +18,11 @@ import Divider from '@material-ui/core/Divider';
 import AddIcon from '@material-ui/icons/Add';
 import {
   GridLayout,
+  
 } from 'netpyne/components';
 import { withStyles } from '@material-ui/core/styles';
-import { removeExperiment } from 'root/api/experiments';
-import Utils from 'root/Utils';
+
+import Utils from '../../Utils';
 import {
   EXPERIMENT_STATE, EXPERIMENT_TEXTS, EXPERIMENT_VIEWS,
 } from '../../constants';
@@ -51,6 +52,7 @@ const useStyles = (theme) => ({
           fontWeight: 300,
           fontSize: '1rem',
           color: experimentGrey,
+          whiteSpace: "nowrap"
         },
         '& .experimentIcon': {
           color: experimentGrey,
@@ -119,15 +121,15 @@ const useStyles = (theme) => ({
 const Experiments = (props) => {
   const {
     experiments,
-    getExperiments,
     classes,
     setEditState,
     setExperimentName,
     cloneExperiment,
+    removeExperiment,
     setView,
   } = props;
 
-  useEffect(getExperiments, []);
+
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -136,11 +138,11 @@ const Experiments = (props) => {
 
   const deleteExperiment = (actionConfirmed) => {
     if (actionConfirmed) {
-      removeExperiment(actionExperimentName)
-        .then(() => {
-          setDeleteDialogOpen(false);
-        })
-        .catch((err) => console.error(err));
+      removeExperiment(actionExperimentName);
+        
+      setDeleteDialogOpen(false);
+        
+       
     } else {
       setDeleteDialogOpen(false);
     }
@@ -192,7 +194,7 @@ const Experiments = (props) => {
             <TableContainer component={Paper}>
               <Table aria-label="simple table">
                 <TableBody>
-                  {experiments.map((experiment) => (
+                  {experiments.sort((e1, e2) => new Date(e2.timestamp) - new Date(e1.timestamp)).map((experiment) => (
                     <TableRow key={experiment?.name}>
                       <TableCell component="th" scope="row">
                         <Button onClick={() => viewExperiment(experiment?.name)}>

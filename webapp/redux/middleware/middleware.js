@@ -3,14 +3,15 @@
 /* eslint-disable consistent-return */
 import {
   CLONE_EXPERIMENT,
-  GET_EXPERIMENTS,
+  EDIT_EXPERIMENT,
   setExperiments,
   VIEW_EXPERIMENTS_RESULTS,
-  TRIAL_LOAD_MODEL_SPEC,
+  TRIAL_LOAD_MODEL_SPEC
 } from 'root/redux/actions/experiments';
 import { NETPYNE_COMMANDS, EDIT_WIDGETS } from 'root/constants';
 import * as GeppettoActions from '@metacell/geppetto-meta-client/common/actions';
-import * as ExperimentsApi from 'root/api/experiments';
+import * as ExperimentsApi from '../../api/experiments';
+
 import {
   UPDATE_CARDS,
   CREATE_NETWORK,
@@ -24,14 +25,23 @@ import {
   RESET_MODEL,
   showNetwork,
   addInstancesToCanvas,
+  openConfirmationDialog
 } from '../actions/general';
 import { OPEN_BACKEND_ERROR_DIALOG, openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
 import Utils from '../../Utils';
 import { downloadJsonResponse, downloadPythonResponse } from './utils';
 import * as Constants from '../../constants';
+import { ADD_EXPERIMENT, REMOVE_EXPERIMENT } from '../actions/experiments';
 
-const SUPPORTED_TYPES = [Constants.REAL_TYPE.INT, Constants.REAL_TYPE.FLOAT, Constants.REAL_TYPE.STR, Constants.REAL_TYPE.BOOL];
+
+const TIMEOUT = 10000;
+const EXPERIMENT_POLL_INTERVAL = 5000;
+
+const STABLE_EXPERIMENTS_STATES = new Set([
+  Constants.EXPERIMENT_STATE.DESIGN, Constants.EXPERIMENT_STATE.SIMULATED, Constants.EXPERIMENT_STATE.ERROR
+]);
+
 let previousLayout = {
   edit: undefined,
   network: undefined,
@@ -80,20 +90,22 @@ const dehydrateCanvas = () => {
   }
 };
 
+function isGeppettoModel(obj) {
+  return Boolean(obj && obj.eClass)
+}
 const createSimulateBackendCall = async (cmd, payload, consoleMessage, spinnerType) => {
   console.log(consoleMessage);
-  // GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, spinnerType);
 
   const response = await Utils.evalPythonMessage(cmd, [payload]);
   console.log('Python response', response);
-  GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+
   const responsePayload = processError(response);
   console.log('Python payload', responsePayload);
 
   if (responsePayload) {
     throw responsePayload;
-  } else {
-    // GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
+  } else if(isGeppettoModel(response)) {
+
 
     dehydrateCanvas();
 
@@ -110,16 +122,16 @@ const instantiateNetwork = (payload) => createSimulateBackendCall(
   GEPPETTO.Resources.INSTANTIATING_MODEL,
 );
 
-const simulateNetwork = (payload) => createSimulateBackendCall(
+const simulateNetwork = (isBatch) => createSimulateBackendCall(
   NETPYNE_COMMANDS.simulateModel,
-  payload,
+  isBatch,
   'The NetPyNE model is getting simulated...',
   GEPPETTO.Resources.RUNNING_SIMULATION,
 );
 
 class PythonMessageFilter {
   errorIds = new Set();
-  shouldLaunch (e) {
+  shouldLaunch(e) {
     const errorId = e.additionalInfo?.sim_id;
     if (!errorId) {
       return true;
@@ -132,6 +144,16 @@ class PythonMessageFilter {
       return true;
     }
   }
+}
+
+function addMetadataToWindow(data) {
+
+  window.metadata = data.metadata;
+  window.currentFolder = data.currentFolder;
+  window.isDocker = data.isDocker;
+  window.pythonConsoleLoaded = true;
+  window.tuts = data.tuts;
+  window.cores = data.cores;
 }
 
 const errorMessageFilter = new PythonMessageFilter();
@@ -163,22 +185,121 @@ export default (store) => (next) => (action) => {
 
   const toNetworkCallback = (reset) => () => {
     switchLayoutAction(false, reset);
+    getExperiments()
     next(action);
+    
   };
 
   const pythonErrorCallback = (error) => {
     console.debug(Utils.getPlainStackTrace(error.errorDetails));
+    getExperiments()
     if (errorMessageFilter.shouldLaunch(error)) {
       return next(openBackendErrorDialog(error));
     }
+
     return next(action);
   };
 
+
+  const getExperiments = () => {
+    Utils.evalPythonMessage(NETPYNE_COMMANDS.getExperiments, [])
+      .then((experiments) => {
+        next(setExperiments(experiments));
+
+        if (experiments.find(e => !STABLE_EXPERIMENTS_STATES.has(e.state))) {
+          setTimeout(getExperiments, EXPERIMENT_POLL_INTERVAL);
+        }
+      }
+      );
+  }
+
+  const checkParametersThen = (callback, goToNetworkView = false) => {
+    let allParams = true;
+    const inDesignExp = store.getState().experiments?.inDesign;
+
+    if(inDesignExp) {
+      ExperimentsApi.getParameters()
+      .then((params) => {
+        const flattened = Utils.flatten(params);
+        const paramKeys = new Set(Object.keys(flattened));
+ 
+        inDesignExp.params?.forEach((param) => {
+          if (!paramKeys.has(param.mapsTo)) {
+            pythonErrorCallback(
+              {
+                errorDetails: `Experiment parameter ${param.mapsTo} is missing from the current model`,
+                errorMessage: 'Error',
+              },
+            );
+            allParams = false;
+          }
+        });
+        if (allParams) {
+          callback().then((response => {
+            next(openConfirmationDialog({title: "Experiment started", ...response})); 
+            getExperiments();
+          })
+            ,pythonErrorCallback);
+        }
+      }, pythonErrorCallback);
+    } else {
+      next(GeppettoActions.waitData('Simulating the NetPyNE Model', GeppettoActions.layoutActions.SET_WIDGETS));
+      callback().then(toNetworkCallback(goToNetworkView), pythonErrorCallback)
+    }
+    
+  }
+
   switch (action.type) {
-    // case MODEL_LOADED:
-    //   next(GeppettoActions.waitData('Loading the NetPyNE Model', GeppettoActions.clientActions.MODEL_LOADED));
-    //   next(action);
-    //   break;
+    case GeppettoActions.layoutActions.SET_WIDGETS: {
+      if (Object.values(action.data).length == 1) {
+        // Initializing, only Python console is here
+        next(GeppettoActions.waitData('Loading NetPyNE-UI', GeppettoActions.clientActions.MODEL_LOADED));
+      }
+      next(action);
+      break;
+    }
+
+
+    case "JUPYTER_GEPPETTO_EXTENSION_READY": {
+      next(action);
+      const project = {
+        id: 1,
+        name: 'Project',
+        experiments: [{
+          id: 1,
+          name: 'Experiment',
+          status: 'DESIGN',
+        }],
+      };
+      // to move to redux action, if not working create tech debt card and we do it later.
+      GEPPETTO.Manager.loadProject(project, false);
+      // to remove the experiment.
+      // GEPPETTO.Manager.loadExperiment(1, [], []);
+
+      let responded = false;
+      Utils.execPythonMessage('from netpyne_ui.netpyne_geppetto import netpyne_geppetto');
+      Utils.evalPythonMessage('netpyne_geppetto.getData', [])
+        .then((response) => {
+          responded = true;
+          next(GeppettoActions.waitData('Loading NetPyNE-UI', GeppettoActions.clientActions.MODEL_LOADED));
+
+          const metadata = Utils.convertToJSON(response);
+          addMetadataToWindow(metadata);
+          next(GeppettoActions.setWidgets(EDIT_WIDGETS));
+
+          next(GeppettoActions.modelLoaded())
+          getExperiments()
+        });
+
+      setTimeout(() => {
+        if (!responded) {
+          next(GeppettoActions.waitData('Reloading Python Kernel', GeppettoActions.clientActions.MODEL_LOADED));
+          IPython.notebook.restart_kernel({ confirm: false })
+            .then(() => window.location.reload());
+        }
+      }, TIMEOUT);
+      break;
+    }
     case OPEN_BACKEND_ERROR_DIALOG:
       next(GeppettoActions.setWidgets(store.getState().widgets));
       next(action);
@@ -220,111 +341,24 @@ export default (store) => (next) => (action) => {
     }
     case CREATE_NETWORK: {
       next(GeppettoActions.waitData('Instantiating the NetPyNE Model', GeppettoActions.layoutActions.SET_WIDGETS));
-      let allParams = true;
-      ExperimentsApi.getParameters()
-        .then((params) => {
-          const flattened = Utils.flatten(params);
-          const paramKeys = Object.keys(flattened);
 
-          const filteredKeys = paramKeys.filter((key) => {
-          // TODO: avoid to fetch field twice!
-            const field = Utils.getMetadataField(`netParams.${key}`);
-            if (field && SUPPORTED_TYPES.includes(field.type)) {
-              return true;
-            }
-            return false;
-          });
-          const expData = store.getState().experiments;
-          expData?.inDesign?.params?.forEach((param) => {
-            if (!filteredKeys.includes(param.mapsTo)) {
-              pythonErrorCallback(
-                {
-                  errorDetails: 'Missing Parameters',
-                  errorMessage: 'Error',
-                },
-              );
-              allParams = false;
-            }
-          });
-          if (allParams) {
-            instantiateNetwork({})
-              .then(toNetworkCallback(false), pythonErrorCallback);
-          }
-        }, pythonErrorCallback);
+      checkParametersThen(() => instantiateNetwork({}))
+
+
       break;
     }
     case CREATE_SIMULATE_NETWORK: {
-      next(GeppettoActions.waitData('Simulating the NetPyNE Model', GeppettoActions.layoutActions.SET_WIDGETS));
-      let allParams = true;
-      ExperimentsApi.getParameters()
-        .then((params) => {
-          const flattened = Utils.flatten(params);
-          const paramKeys = Object.keys(flattened);
+   
+      checkParametersThen(() => simulateNetwork({ allTrials: false }))
 
-          const filteredKeys = paramKeys.filter((key) => {
-          // TODO: avoid to fetch field twice!
-            const field = Utils.getMetadataField(`netParams.${key}`);
-            if (field && SUPPORTED_TYPES.includes(field.type)) {
-              return true;
-            }
-            return false;
-          });
-          const expData = store.getState().experiments;
-          expData?.inDesign?.params?.forEach((param) => {
-            if (!filteredKeys.includes(param.mapsTo)) {
-              pythonErrorCallback(
-                {
-                  errorDetails: 'Missing Parameters',
-                  errorMessage: 'Error',
-                },
-              );
-              allParams = false;
-            }
-          });
-          if (allParams) {
-            simulateNetwork({ allTrials: false })
-              .then(toNetworkCallback(false), pythonErrorCallback);
-          }
-        }, pythonErrorCallback);
       break;
     }
     case SIMULATE_NETWORK: {
-      if (!action.payload) {
-        next(GeppettoActions.waitData('Simulating the NetPyNE Model', GeppettoActions.layoutActions.SET_WIDGETS));
-      } else {
+      if (action.payload) {
         next(GeppettoActions.activateWidget(EDIT_WIDGETS.experimentManager.id));
       }
-      let allParams = true;
-      ExperimentsApi.getParameters()
-        .then((params) => {
-          const flattened = Utils.flatten(params);
-          const paramKeys = Object.keys(flattened);
 
-          const filteredKeys = paramKeys.filter((key) => {
-          // TODO: avoid to fetch field twice!
-            const field = Utils.getMetadataField(`netParams.${key}`);
-            if (field && SUPPORTED_TYPES.includes(field.type)) {
-              return true;
-            }
-            return false;
-          });
-          const expData = store.getState().experiments;
-          expData?.inDesign?.params?.forEach((param) => {
-            if (!filteredKeys.includes(param.mapsTo)) {
-              pythonErrorCallback(
-                {
-                  errorDetails: 'Missing Parameters',
-                  errorMessage: 'Error',
-                },
-              );
-              allParams = false;
-            }
-          });
-          if (allParams) {
-            simulateNetwork({ allTrials: action.payload, usePrevInst: false })
-              .then(toNetworkCallback(false), pythonErrorCallback);
-          }
-        }, pythonErrorCallback);
+      checkParametersThen(() => simulateNetwork({ allTrials: action.payload, usePrevInst: false }))
       break;
     }
     case PYTHON_CALL: {
@@ -347,6 +381,7 @@ export default (store) => (next) => (action) => {
       };
       pythonCall(action)
         .then(callback, pythonErrorCallback);
+      next(action);
       break;
     }
     case LOAD_TUTORIAL: {
@@ -354,7 +389,7 @@ export default (store) => (next) => (action) => {
       const filename  = path.pop()
       const dirname = path.join("/")
       const tutName = filename.replace('.py', '');
-      // GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Loading tutorial ${tutName}`);
+      next(GeppettoActions.waitData(`Importing ${tutName}...`, LOAD_TUTORIAL));
 
       const params = {
         modFolder: dirname + '/mod',
@@ -374,21 +409,52 @@ export default (store) => (next) => (action) => {
         cmd: NETPYNE_COMMANDS.importModel,
         args: params,
       })
-        .then((response) => console.log(response));
+        .then((response) => {
+          next(action)
+          console.log("Tutorial imported", response)
+        }
+        );
+
       break;
     }
-    case GET_EXPERIMENTS: {
-      Utils.evalPythonMessage(NETPYNE_COMMANDS.getExperiments, [])
-        .then((response) => next(setExperiments(response)));
-      break;
-    }
+
     case CLONE_EXPERIMENT: {
-      // GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, `Cloning experiment ${action.payload.name}`);
+
       pythonCall({
         cmd: NETPYNE_COMMANDS.cloneExperiment,
         args: action.payload,
       })
-        .then((response) => console.log(response));
+        .then((response) => {
+          console.log(response);
+          getExperiments()
+        });
+      break;
+    }
+    case REMOVE_EXPERIMENT: {
+
+      ExperimentsApi.removeExperiment(action.payload)
+        .then((response) => {
+          console.log(response);
+          getExperiments()
+        });
+      break;
+    }
+    case ADD_EXPERIMENT: {
+
+      ExperimentsApi.addExperiment(action.payload)
+        .then((response) => {
+          console.log(response);
+          getExperiments()
+        });
+      break;
+    }
+    case EDIT_EXPERIMENT: {
+
+      ExperimentsApi.editExperiment(action.payload.name, action.payload.details)
+        .then((response) => {
+          console.log(response);
+          getExperiments()
+        });
       break;
     }
     case TRIAL_LOAD_MODEL_SPEC: {
