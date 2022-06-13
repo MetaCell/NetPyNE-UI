@@ -348,7 +348,7 @@ export default (store) => (next) => (action) => {
       break;
     }
     case CREATE_SIMULATE_NETWORK: {
-   
+
       checkParametersThen(() => simulateNetwork({ allTrials: false }))
 
       break;
@@ -358,7 +358,7 @@ export default (store) => (next) => (action) => {
         next(GeppettoActions.activateWidget(EDIT_WIDGETS.experimentManager.id));
       }
 
-      checkParametersThen(() => simulateNetwork({ allTrials: action.payload, usePrevInst: false }))
+      checkParametersThen(() => simulateNetwork({ allTrials: action.payload, usePrevInst: (store.getState().general.modelState !== Constants.MODEL_STATE.NOT_INSTANTIATED) }))
       break;
     }
     case PYTHON_CALL: {
