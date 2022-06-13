@@ -358,7 +358,7 @@ export default (store) => (next) => (action) => {
         next(GeppettoActions.activateWidget(EDIT_WIDGETS.experimentManager.id));
       }
 
-      checkParametersThen(() => simulateNetwork({ allTrials: action.payload, usePrevInst: false }))
+      checkParametersThen(() => simulateNetwork({ allTrials: action.payload, usePrevInst: (store.getState().generalState === Constants.MODEL_STATE.NOT_INSTANTIATED ? false : true) }))
       break;
     }
     case PYTHON_CALL: {
