@@ -30,7 +30,12 @@ scheduling:
 
 auth:
   type: tmp
-
+proxy:
+  https:
+    enabled: false
+    hosts: []
+    letsencrypt:
+      contactEmail:
 singleuser:
   storage:
     type: none
