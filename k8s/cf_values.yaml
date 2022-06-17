@@ -23,14 +23,18 @@ hub:
       c.Spawner.debug = True
     spawner: >-
       c.Spawner.args = ["--library=netpyne_ui", "--NotebookApp.disable_check_xsrf=True"]
-
 scheduling:
   userScheduler:
     replicas: 1
 
 auth:
   type: tmp
-
+proxy:
+  https:
+    enabled: false
+    hosts: []
+    letsencrypt:
+      contactEmail:
 singleuser:
   storage:
     type: none
