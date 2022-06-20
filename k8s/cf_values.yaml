@@ -9,23 +9,12 @@ hub:
       memory: 128Mi
   namedServerLimitPerUser: 2
   shutdownOnLogout: true
-
   extraConfig:
     timing: |
-
-      c.Spawner.port = 8000
-      c.Spawner.http_timeout = 300
-      c.Spawner.start_timeout = 300
       c.Spawner.notebook_dir = '/home/jovyan/work/NetPyNE-UI'
       c.Spawner.default_url = '/geppetto'
-      c.Spawner.debug = True
     spawner: >-
-      c.Spawner.args = ["--library=netpyne_ui", "--ServerApp.disable_check_xsrf=True"]
-scheduling:
-  userScheduler:
-    replicas: 1
-
-
+      c.Spawner.args = ["--library=netpyne_ui"]
 singleuser:
   storage:
     type: none
