@@ -59,7 +59,6 @@ USER $NB_UID
 
 EXPOSE 8888
 
-CMD ./NetPyNE-UI
 
 
 
