@@ -23,6 +23,11 @@ Jinja2==2.11.2
 jsonpickle==2.1.0
 jsonschema==3.2.0
 jupyter_geppetto==1.1.1
+jupyter-client==7.0.6
+jupyter-core==4.9.1
+jupyter-server==1.11.2
+jupyterhub==1.5.0
+jupyterlab==3.2.4
 jupyterthemes==0.20.0
 kiwisolver==1.2.0
 lesscpy==0.14.0

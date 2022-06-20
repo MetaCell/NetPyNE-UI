@@ -20,7 +20,7 @@ hub:
       c.Spawner.default_url = '/geppetto'
       c.Spawner.debug = True
     spawner: >-
-      c.Spawner.args = ["--library=netpyne_ui", "--NotebookApp.disable_check_xsrf=True"]
+      c.Spawner.args = ["--library=netpyne_ui", "--ServerApp.disable_check_xsrf=True"]
 scheduling:
   userScheduler:
     replicas: 1
