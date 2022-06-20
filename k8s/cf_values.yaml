@@ -2,19 +2,17 @@ hub:
   image: 
     name: gcr.io/metacellllc/netpyne-hub
     pullPolicy: IfNotPresent
-
+  allowNamedServers: true
   resources:
     requests:
       cpu: 100m
       memory: 128Mi
-
-  allowNamedServers: true
   namedServerLimitPerUser: 2
   shutdownOnLogout: true
 
   extraConfig:
     timing: |
-      c.JupyterHub.allow_named_servers = True
+
       c.Spawner.port = 8000
       c.Spawner.http_timeout = 300
       c.Spawner.start_timeout = 300
@@ -27,14 +25,7 @@ scheduling:
   userScheduler:
     replicas: 1
 
-auth:
-  type: tmp
-proxy:
-  https:
-    enabled: false
-    hosts: []
-    letsencrypt:
-      contactEmail:
+
 singleuser:
   storage:
     type: none
