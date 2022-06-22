@@ -6,6 +6,8 @@ from pyneuroml import pynml
 from pyneuroml.lems import generate_lems_file_for_neuroml
 from pyneuroml.pynml import read_neuroml2_file
 
+from netpyne_ui.mod_utils import compileModMechFiles
+
 
 def convertAndImportLEMSSimulation(lemsFileName):
     """Converts a LEMS Simulation file
@@ -24,16 +26,15 @@ def convertAndImportLEMSSimulation(lemsFileName):
 
     pynml.run_lems_with_jneuroml_netpyne(
         lemsFileName, only_generate_scripts=True)
-    netpyne_file = lemsFileName.replace(".xml", "_netpyne")
 
-    import_str = "from %s import NetPyNESimulation" % netpyne_file
+    compileModMechFiles(True, os.path.dirname(fullLemsFileName))
 
-    exec(import_str, globals())
+    netpyne_file = os.path.basename(lemsFileName.replace(".xml", "_netpyne"))
+    sys.path.append(os.path.dirname(lemsFileName))
+    NetPyNESimulation = __import__(netpyne_file,globals=globals()).NetPyNESimulation
 
-    logging.info(
-        "Loading from python generated from jnml (using: %s)...", import_str)
 
-    ns = eval("NetPyNESimulation(tstop=1000, dt=0.025)")
+    ns = NetPyNESimulation(tstop=1000, dt=0.025)
 
     simConfig = ns.simConfig
     fileName = ns.nml2_file_name
@@ -93,7 +94,7 @@ def convertAndImportNeuroML2(nml2FileName, verbose=True):
     duration = 1000
     dt = 0.025
     lems_file_name = "LEMS_%s.xml" % sim_id
-    target_dir = "."
+    target_dir = os.path.dirname(fullNmlFileName)
 
     generate_lems_file_for_neuroml(
         sim_id,

@@ -517,8 +517,6 @@ class NetPyNEGeppetto:
             # Get Current dir
             owd = os.getcwd()
 
-            compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
-
             with redirect_stdout(sys.__stdout__):
                 # NetParams
                 net_params_path = str(modelParameters["netParamsPath"])
@@ -567,17 +565,15 @@ class NetPyNEGeppetto:
             # Get Current dir
             owd = os.getcwd()
 
-            compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
-
             with redirect_stdout(sys.__stdout__):
                 # NetParams
                 filename = str(modelParameters["fileName"])
                
-                self.netParams, self.simConfig = neuroml.convertAndImportNeuroML2(filename)
+                self.simConfig, self.netParams = neuroml.convertAndImportNeuroML2(filename)
 
                 # TODO: when should sim.initialize be called?
                 #   Only on import or better before every simulation or network instantiation?
-                sim.initialize()
+                
             return utils.getJSONReply()
         except Exception:
             message = "Error while importing the NetPyNE model"
@@ -594,17 +590,15 @@ class NetPyNEGeppetto:
             # Get Current dir
             owd = os.getcwd()
 
-            compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
-
             with redirect_stdout(sys.__stdout__):
                 # NetParams
                 filename = str(modelParameters["fileName"])
                
-                self.netParams, self.simConfig = neuroml.convertAndImportLEMSSimulation(filename)
+                self.simConfig, self.netParams = neuroml.convertAndImportLEMSSimulation(filename)
 
                 # TODO: when should sim.initialize be called?
                 #   Only on import or better before every simulation or network instantiation?
-                sim.initialize()
+                
             return utils.getJSONReply()
         except Exception:
             message = "Error while importing the NetPyNE model"

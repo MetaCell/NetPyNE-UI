@@ -38,7 +38,7 @@ setuptools.setup(
     ],
     install_requires=[
         'jupyter-geppetto>=1.0.0',
-        'NEURON>=8.0.2'
+        'NEURON>=8.0.2',
         'netpyne>=1.0.2.1'
     ],
 )
