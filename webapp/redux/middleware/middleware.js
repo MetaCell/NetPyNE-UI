@@ -35,7 +35,7 @@ import * as Constants from '../../constants';
 import { ADD_EXPERIMENT, REMOVE_EXPERIMENT } from '../actions/experiments';
 
 
-const TIMEOUT = 10000;
+const TIMEOUT = 20000;
 const EXPERIMENT_POLL_INTERVAL = 5000;
 
 const STABLE_EXPERIMENTS_STATES = new Set([
