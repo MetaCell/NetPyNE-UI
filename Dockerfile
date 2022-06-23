@@ -1,42 +1,69 @@
-FROM frodriguez4600/jupyter-neuron:v7.8.0
-ARG INSTALLATION_FOLDER=/home/jovyan/work/NetPyNE-UI
-ARG NETPYNE_VERSION=development
-ARG WORKSPACE_VERSION=nov2020
+FROM node:13.14 as jsbuild
+
+WORKDIR /app
+
+COPY --chown=1000:1000 webapp/package.json .
+COPY --chown=1000:1000 webapp/yarn.lock .
+
+
+RUN yarn install  --network-timeout 1000000000
+
+COPY webapp/ .
+RUN yarn build-dev
+
+
+RUN mv node_modules/@metacell .
+RUN rm -Rf node_modules/*
+RUN mv @metacell node_modules
+
+###
+FROM jupyter/base-notebook:hub-1.5.0
+ENV NB_UID=jovyan
+ENV FOLDER=netpyne
 ARG GEPPETTO_VERSION=development
 ARG BUILD_ARGS=""
 
-USER $NB_USER
+ENV FOLDER=/home/jovyan/work/NetPyNE-UI
 
-ENV INSTALLATION_FOLDER=$INSTALLATION_FOLDER
-ENV NETPYNE_VERSION=$NETPYNE_VERSION
-ENV WORKSPACE_VERSION=$WORKSPACE_VERSION
-ENV GEPPETTO_VERSION=$GEPPETTO_VERSION
-ENV BUILD_ARGS=$BUILD_ARGS
-
-# Install openmpi for parallel simulations
-# Important: Have to switch to root to install a package and ensure to switch back to NB user afterwards
 USER root
-RUN apt-get update && apt-get install -y libopenmpi-dev
-USER $NB_USER
 
-WORKDIR /home/jovyan/work
-COPY --chown=1000:1000 requirements.txt ${INSTALLATION_FOLDER}/requirements.txt
+RUN rm -rf /var/lib/apt/lists
+RUN apt-get update -qq &&\
+    apt-get install python3-tk vim nano unzip git make libtool g++ -qq pkg-config libfreetype6-dev libpng-dev libopenmpi-dev -y
+RUN conda install python=3.7 -y
 
-WORKDIR ${INSTALLATION_FOLDER}
-RUN pip install -r requirements.txt
 
-COPY --chown=1000:1000 . .
-WORKDIR ${INSTALLATION_FOLDER}/utilities
+WORKDIR $FOLDER
+COPY --chown=1000:1000 requirements.txt requirements.txt
+RUN pip install -r requirements.txt --no-cache-dir --prefer-binary
 
-RUN npm install --global yarn
-RUN npm install --global yalc
-RUN python install.py ${BUILD_ARGS} --geppetto ${GEPPETTO_VERSION}
+COPY --chown=$NB_UID:1000 . .
+COPY --from=jsbuild --chown=$NB_UID:1000 /app webapp
+
+
+RUN jupyter nbextension install --py --symlink --sys-prefix jupyter_geppetto
+RUN jupyter nbextension enable --py --sys-prefix jupyter_geppetto
+RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension
+RUN jupyter serverextension enable --py --sys-prefix jupyter_geppetto
+
+RUN python utilities/install.py ${BUILD_ARGS} --geppetto ${GEPPETTO_VERSION} --npm-skip
+
+RUN jupyter labextension disable @jupyterlab/hub-extension
+
+RUN chown  $NB_UID .
+RUN chown -R $NB_UID workspace
+
+
+USER $NB_UID
+
+
+EXPOSE 8888
+
+
+
 
 # Temp fixes for eeg plots
 RUN wget -P `pip show LFPykit | grep "Location:" | awk '{print $2"/lfpykit"}'` https://www.parralab.org/nyhead/sa_nyhead.mat
 
 WORKDIR ${INSTALLATION_FOLDER}
 
-RUN pip install -r requirements-test.txt
-RUN pytest tests/backend
-CMD /bin/bash -c "jupyter notebook --NotebookApp.default_url=/geppetto --NotebookApp.token='' --library=netpyne_ui --NotebookApp.disable_check_xsrf=True"
