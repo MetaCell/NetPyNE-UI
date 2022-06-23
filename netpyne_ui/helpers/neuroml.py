@@ -27,10 +27,10 @@ def convertAndImportLEMSSimulation(lemsFileName):
     pynml.run_lems_with_jneuroml_netpyne(
         lemsFileName, only_generate_scripts=True)
 
-    compileModMechFiles(True, os.path.dirname(fullLemsFileName))
+    compileModMechFiles(True, ".")
 
     netpyne_file = os.path.basename(lemsFileName.replace(".xml", "_netpyne"))
-    sys.path.append(os.path.dirname(lemsFileName))
+    # sys.path.append(os.path.abspath("workspace"))
     NetPyNESimulation = __import__(netpyne_file,globals=globals()).NetPyNESimulation
 
 
@@ -81,6 +81,12 @@ def convertAndImportNeuroML2(nml2FileName, verbose=True):
     Returns:
         simConfig, netParams for the model in NetPyNE
     """
+    current_path = os.getcwd()
+    tmp_path = os.path.join(nml2FileName + "_files") 
+    if not os.path.exists(tmp_path):
+        os.makedirs(tmp_path)
+    os.chdir(tmp_path)
+    sys.path.append(tmp_path)
     fullNmlFileName = os.path.abspath(nml2FileName)
     if verbose:
         print(
@@ -93,8 +99,10 @@ def convertAndImportNeuroML2(nml2FileName, verbose=True):
     sim_id = "Sim_%s" % target
     duration = 1000
     dt = 0.025
+    lems_file_name = os.path.join(os.path.dirname(fullNmlFileName), "LEMS_%s.xml" % sim_id)
     lems_file_name = "LEMS_%s.xml" % sim_id
     target_dir = os.path.dirname(fullNmlFileName)
+    target_dir = "."
 
     generate_lems_file_for_neuroml(
         sim_id,
@@ -115,10 +123,13 @@ def convertAndImportNeuroML2(nml2FileName, verbose=True):
         gen_saves_for_quantities={},  # Dict with file names vs lists of quantity paths
         gen_spike_saves_for_all_somas=True,
         report_file_name="report.txt",
-        copy_neuroml=False,
+        copy_neuroml=True,
         verbose=verbose,
     )
-    return convertAndImportLEMSSimulation(lems_file_name)
+    os.chdir(tmp_path)
+    res = convertAndImportLEMSSimulation(lems_file_name)
+    os.chdir(current_path)
+    return res
 
 
 if __name__ == "__main__":

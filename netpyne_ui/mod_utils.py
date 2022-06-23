@@ -34,9 +34,8 @@ def compileModMechFiles(compileMod, modFolder):
         if os.path.exists(modPath):
             shutil.rmtree(modPath)
 
-        os.chdir(modFolder)
-        subprocess.call(["nrnivmodl"])
-        os.chdir('..')
+        subprocess.call(["nrnivmodl"], cwd=modFolder)
+        
 
         try:
             neuron.load_mechanisms(str(modFolder))
