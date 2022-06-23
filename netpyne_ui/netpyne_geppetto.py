@@ -569,13 +569,9 @@ class NetPyNEGeppetto:
                 # NetParams
                 filename = str(modelParameters["fileName"])
                
-                simConfig, netParams = neuroml.convertAndImportNeuroML2(filename)
+                simConfig, netParams = neuroml.convertAndImportNeuroML2(filename, compileMod=modelParameters["compileMod"])
                 self.netParams = netParams
                 self.simConfig = simConfig
-
-                # TODO: when should sim.initialize be called?
-                #   Only on import or better before every simulation or network instantiation?
-                
             return utils.getJSONReply()
         except Exception as e:
             message = "Error while importing the NetPyNE model"

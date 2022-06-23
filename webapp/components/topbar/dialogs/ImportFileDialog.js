@@ -53,7 +53,7 @@ class ImportFileDialog extends React.Component {
       fileName: null,
       modFolder: '',
       loadMod: false,
-      compileMod: false,
+      compileMod: true,
       explorerDialogOpen: false,
       explorerParameter: '',
       exploreOnlyDirs: false,
@@ -154,7 +154,7 @@ class ImportFileDialog extends React.Component {
   }
 
   render() {
-    const { classes, modelState, extension, title, command } = this.props;
+    const { classes, modelState, extension, title, command, modFileSelector=false } = this.props;
     const message = 'IMPORTING MODEL';
     const buttonLabel = 'Import';
 
@@ -193,7 +193,7 @@ class ImportFileDialog extends React.Component {
               ),
             }}
           />
-           <TextField
+          { modFileSelector && <TextField
               variant="filled"
               fullWidth
               label="Path to mod files"
@@ -213,8 +213,8 @@ class ImportFileDialog extends React.Component {
                   </InputAdornment>
                 ),
               }}
-            />
-                        <Checkbox
+            /> }
+            <Checkbox
               fullWidth
               noBackground
               label="Compile mod files"

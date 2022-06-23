@@ -9,7 +9,7 @@ from pyneuroml.pynml import read_neuroml2_file
 from netpyne_ui.mod_utils import compileModMechFiles
 
 
-def convertAndImportLEMSSimulation(lemsFileName):
+def convertAndImportLEMSSimulation(lemsFileName, compileMod=True):
     """Converts a LEMS Simulation file
 
     Converts a LEMS Simulation file (https://docs.neuroml.org/Userdocs/LEMSSimulation.html)
@@ -27,7 +27,8 @@ def convertAndImportLEMSSimulation(lemsFileName):
     pynml.run_lems_with_jneuroml_netpyne(
         lemsFileName, only_generate_scripts=True)
 
-    compileModMechFiles(True, ".")
+    if compileMod:
+        compileModMechFiles(True, ".")
 
     netpyne_file = os.path.basename(lemsFileName.replace(".xml", "_netpyne"))
     # sys.path.append(os.path.abspath("workspace"))
@@ -72,7 +73,7 @@ def convertAndImportLEMSSimulation(lemsFileName):
 
 
 
-def convertAndImportNeuroML2(nml2FileName, verbose=True):
+def convertAndImportNeuroML2(nml2FileName,  compileMod=True):
     """Loads a NeuroML 2 file into NetPyNE
     Loads a NeuroML 2 file into NetPyNE by creating a new LEMS Simulation
     file (https://docs.neuroml.org/Userdocs/LEMSSimulation.html) and using jNeuroML
@@ -88,8 +89,8 @@ def convertAndImportNeuroML2(nml2FileName, verbose=True):
     os.chdir(tmp_path)
     sys.path.append(tmp_path)
     fullNmlFileName = os.path.abspath(nml2FileName)
-    if verbose:
-        print(
+
+    logging.info(
             "Importing NeuroML 2 network from: %s"
             % fullNmlFileName
         )
@@ -124,10 +125,10 @@ def convertAndImportNeuroML2(nml2FileName, verbose=True):
         gen_spike_saves_for_all_somas=True,
         report_file_name="report.txt",
         copy_neuroml=True,
-        verbose=verbose,
+        verbose=True,
     )
     os.chdir(tmp_path)
-    res = convertAndImportLEMSSimulation(lems_file_name)
+    res = convertAndImportLEMSSimulation(lems_file_name, compileMod=compileMod)
     os.chdir(current_path)
     return res
 
