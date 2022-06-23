@@ -10,7 +10,7 @@ notebook.ipynb
 Dockerfile
 Dockerfile_base
 Dockerfile_dev
-node_modules
+webapp/node_modules
 webapp/build
 webapp/geppetto-client
 workspace
@@ -24,3 +24,4 @@ app.log
 .jupyter-config
 **/*.pyc
 **/__pycache__
+app.log

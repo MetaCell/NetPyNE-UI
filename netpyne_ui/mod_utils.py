@@ -33,15 +33,15 @@ def compileModMechFiles(compileMod, modFolder):
     if compileMod and modFolder not in loaded_mods:
         logging.info("Compiling mod files in %s", modFolder)
         modPath = os.path.join(str(modFolder), "x86_64")
+
+
         try:
             if os.path.exists(modPath):
                 shutil.rmtree(modPath)
         except OSError:
             pass
         try:
-            os.chdir(modFolder)
-            subprocess.call(["nrnivmodl"])
-            os.chdir('..')
+            subprocess.call(["nrnivmodl"], cwd=modFolder)
             neuron.load_mechanisms(str(modFolder))
             loaded_mods.add(modFolder)
         except OSError:

@@ -3,6 +3,11 @@ Run this to debug
 """
 import sys
 import os
+import shutil
+
+path = "/home/user/NetPyNE-UI/workspace/NetPyNEShowcase/NeuroML2/tmp"
+if os.path.exists(path):
+    shutil.rmtree(path)
 
 from notebook.notebookapp import NotebookApp
 from jupyter_geppetto import settings
@@ -16,7 +21,7 @@ if __name__ == '__main__':
     sys.argv.append("--NotebookApp.token=''")
     sys.argv.append('--library=netpyne_ui')
     sys.argv.append('--NotebookApp.disable_check_xsrf=True')
-
+    
     app = NotebookApp.instance()
     app.initialize(sys.argv)
     app.file_to_run = ''

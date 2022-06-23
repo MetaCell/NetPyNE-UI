@@ -8,7 +8,7 @@ import {
   VIEW_EXPERIMENTS_RESULTS,
   TRIAL_LOAD_MODEL_SPEC
 } from 'root/redux/actions/experiments';
-import { NETPYNE_COMMANDS, EDIT_WIDGETS } from 'root/constants';
+import { NETPYNE_COMMANDS, EDIT_WIDGETS } from '../../constants';
 import * as GeppettoActions from '@metacell/geppetto-meta-client/common/actions';
 import * as ExperimentsApi from '../../api/experiments';
 
@@ -35,7 +35,7 @@ import * as Constants from '../../constants';
 import { ADD_EXPERIMENT, REMOVE_EXPERIMENT } from '../actions/experiments';
 
 
-const TIMEOUT = 10000;
+const TIMEOUT = 20000;
 const EXPERIMENT_POLL_INTERVAL = 5000;
 
 const STABLE_EXPERIMENTS_STATES = new Set([
@@ -348,7 +348,7 @@ export default (store) => (next) => (action) => {
       break;
     }
     case CREATE_SIMULATE_NETWORK: {
-   
+
       checkParametersThen(() => simulateNetwork({ allTrials: false }))
 
       break;
@@ -358,7 +358,7 @@ export default (store) => (next) => (action) => {
         next(GeppettoActions.activateWidget(EDIT_WIDGETS.experimentManager.id));
       }
 
-      checkParametersThen(() => simulateNetwork({ allTrials: action.payload, usePrevInst: false }))
+      checkParametersThen(() => simulateNetwork({ allTrials: action.payload, usePrevInst: (store.getState().general.modelState !== Constants.MODEL_STATE.NOT_INSTANTIATED) }))
       break;
     }
     case PYTHON_CALL: {
@@ -379,6 +379,17 @@ export default (store) => (next) => (action) => {
         }
         next(closeDrawerDialogBox);
       };
+
+      switch (action.cmd) {
+        case NETPYNE_COMMANDS.importNeuroML:
+          case NETPYNE_COMMANDS.importModel:
+            case NETPYNE_COMMANDS.importNeuroML:
+              next(GeppettoActions.waitData('Importing Model...', "RECEIVE_PYTHON_MESSAGE"));
+              break;
+        default:
+          break;
+      }
+      
       pythonCall(action)
         .then(callback, pythonErrorCallback);
       next(action);

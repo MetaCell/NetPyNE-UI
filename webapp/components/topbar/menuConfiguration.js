@@ -185,6 +185,22 @@ export default {
                 parameters: [openTopbarDialog, TOPBAR_CONSTANTS.IMPORT_HLS],
               },
             },
+            {
+              label: 'From NeuroML2 (beta)...',
+              icon: '',
+              action: {
+                handlerAction: 'redux',
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.IMPORT_NEUROML],
+              },
+            },
+            {
+              label: 'From LEMS Simulation  (beta)...',
+              icon: '',
+              action: {
+                handlerAction: 'redux',
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.IMPORT_LEMS],
+              },
+            },
           ],
         },
         {

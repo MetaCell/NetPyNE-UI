@@ -13,6 +13,7 @@ import importlib
 import json
 import logging
 import os
+import pprint
 import re
 import sys
 from shutil import copyfile
@@ -498,6 +499,8 @@ class NetPyNEGeppetto:
                 # Load again because gatherData removed simData
                 sim.loadSimData(json_path)
 
+
+
     def importModel(self, modelParameters):
         """ Imports a model stored in form of Python files.
 
@@ -512,9 +515,6 @@ class NetPyNEGeppetto:
         try:
             # Get Current dir
             owd = os.getcwd()
-            
-            compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
-
 
             with redirect_stdout(sys.__stdout__):
                 # NetParams
@@ -548,6 +548,54 @@ class NetPyNEGeppetto:
                 # TODO: when should sim.initialize be called?
                 #   Only on import or better before every simulation or network instantiation?
                 sim.initialize()
+            return utils.getJSONReply()
+        except Exception:
+            message = "Error while importing the NetPyNE model"
+            logging.exception(message)
+            return utils.getJSONError(message, sys.exc_info())
+        finally:
+            os.chdir(owd)
+
+    def importNeuroML(self, modelParameters):
+        from netpyne_ui.helpers import neuroml
+       
+
+        try:
+            # Get Current dir
+            owd = os.getcwd()
+
+            with redirect_stdout(sys.__stdout__):
+                # NetParams
+                filename = str(modelParameters["fileName"])
+               
+                simConfig, netParams = neuroml.convertAndImportNeuroML2(filename, compileMod=modelParameters["compileMod"])
+                self.netParams = netParams
+                self.simConfig = simConfig
+            return utils.getJSONReply()
+        except Exception as e:
+            message = "Error while importing the NetPyNE model"
+            logging.exception(message)
+            return utils.getJSONError(message, sys.exc_info())
+        finally:
+            os.chdir(owd)
+
+    def importLEMS(self, modelParameters):
+        from netpyne_ui.helpers import neuroml
+       
+
+        try:
+            # Get Current dir
+            owd = os.getcwd()
+
+            with redirect_stdout(sys.__stdout__):
+                # NetParams
+                filename = str(modelParameters["fileName"])
+               
+                self.simConfig, self.netParams = neuroml.convertAndImportLEMSSimulation(filename)
+
+                # TODO: when should sim.initialize be called?
+                #   Only on import or better before every simulation or network instantiation?
+                
             return utils.getJSONReply()
         except Exception:
             message = "Error while importing the NetPyNE model"
@@ -614,7 +662,7 @@ class NetPyNEGeppetto:
             logging.exception(message)
             return utils.getJSONError(message, sys.exc_info())
 
-    def importNeuroML(self, modelParams):
+    def importNeuroMLOLD(self, modelParams):
         try:
             with redirect_stdout(sys.__stdout__):
                 sim.initialize()
