@@ -186,7 +186,7 @@ export default {
               },
             },
             {
-              label: 'From NeuroML2...',
+              label: 'From NeuroML2 (beta)...',
               icon: '',
               action: {
                 handlerAction: 'redux',
@@ -194,7 +194,7 @@ export default {
               },
             },
             {
-              label: 'From LEMS Simulation...',
+              label: 'From LEMS Simulation  (beta)...',
               icon: '',
               action: {
                 handlerAction: 'redux',
