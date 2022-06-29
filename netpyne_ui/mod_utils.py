@@ -1,4 +1,3 @@
-import logging
 import shutil
 import subprocess
 import os
@@ -26,27 +25,20 @@ def is_loaded_mechanisms():
     else:
         return True
 
-loaded_mods = set()
 
 def compileModMechFiles(compileMod, modFolder):
     # Create Symbolic link
-    if compileMod and modFolder not in loaded_mods:
-        logging.info("Compiling mod files in %s", modFolder)
+    if compileMod:
         modPath = os.path.join(str(modFolder), "x86_64")
 
+        if os.path.exists(modPath):
+            shutil.rmtree(modPath)
+
+        os.chdir(modFolder)
+        subprocess.call(["nrnivmodl"])
+        os.chdir('..')
 
         try:
-            if os.path.exists(modPath):
-                shutil.rmtree(modPath)
-        except OSError:
-            pass
-        try:
-            subprocess.call(["nrnivmodl"], cwd=modFolder)
             neuron.load_mechanisms(str(modFolder))
-            loaded_mods.add(modFolder)
-        except OSError:
-            logging.warning("Cannot compile mech files in the current folder; ", exc_info=True)
-            neuron.load_mechanisms("/tmp")
-            loaded_mods.add(modFolder)
         except:
-            raise Exception("Could not compile mech files")
+            raise
