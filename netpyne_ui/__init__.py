@@ -26,8 +26,6 @@ from multiprocessing import Process
 thread = Process(target = init_eeg)
 thread.start()
 
-sys.stdin = open(os.path.join(HERE, "stdin.txt"),'r') # FIXES library asking for input to download -- eg lfpykit models
-
 
 RouteManager.add_controller(api.NetPyNEController)
 
