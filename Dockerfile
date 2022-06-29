@@ -53,6 +53,8 @@ RUN jupyter labextension disable @jupyterlab/hub-extension
 RUN chown  $NB_UID .
 RUN chown -R $NB_UID workspace
 
+# Temp fixes for eeg plots
+RUN chown $NB_UID `pip show LFPykit | grep "Location:" | awk '{print $2"/lfpykit"}'`
 
 USER $NB_UID
 
