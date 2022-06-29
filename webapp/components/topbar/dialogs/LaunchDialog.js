@@ -317,7 +317,7 @@ const LaunchDialog = (props) => {
           <Box className="wrap">
             <img src={value === LAUNCH_MODAL.experimentState ? experimentSelected : experimentUnselected} alt="completeExperiment" />
             <Typography>
-              All Trials (
+              All Conditions (
               {numberOfTrials}
               )
             </Typography>
