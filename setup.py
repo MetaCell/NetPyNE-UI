@@ -44,6 +44,8 @@ setuptools.setup(
         'NEURON>=8.0.2',
         'netpyne>=1.0.2.1',
         'neuromllite==0.5.1',
-        'pyNeuroML>=0.7.1'
+        'pyNeuroML>=0.7.1',
+        'sentry_sdk>=1.5.2',
+        'dacite>=1.6.0'
     ],
 )
