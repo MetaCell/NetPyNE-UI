@@ -65,7 +65,7 @@ pygeppetto==0.8.1
 Pygments==2.6.1
 PyJWT==1.7.1
 PyLEMS==0.4.9.3
-pyNeuroML==0.3.15
+pyNeuroML==0.7.1
 pyOpenSSL==19.1.0
 pyparsing==2.4.7
 pyrsistent==0.16.0

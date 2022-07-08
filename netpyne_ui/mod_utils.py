@@ -26,7 +26,7 @@ def is_loaded_mechanisms():
         return True
 
 
-def compileModMechFiles(compileMod, modFolder):
+def loadModMechFiles(compileMod, modFolder):
     # Create Symbolic link
     if compileMod:
         modPath = os.path.join(str(modFolder), "x86_64")
@@ -37,7 +37,7 @@ def compileModMechFiles(compileMod, modFolder):
         subprocess.call(["nrnivmodl"], cwd=modFolder)
         
 
-        try:
-            neuron.load_mechanisms(str(modFolder))
-        except:
-            raise
+    try:
+        neuron.load_mechanisms(str(modFolder))
+    except:
+        raise
