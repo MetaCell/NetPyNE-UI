@@ -41,7 +41,7 @@ from pygeppetto import ui
 from jupyter_geppetto import jupyter_geppetto, synchronization, utils
 from contextlib import redirect_stdout
 from netpyne_ui.constants import NETPYNE_WORKDIR_PATH, NUM_CONN_LIMIT
-from netpyne_ui.mod_utils import compileModMechFiles
+from netpyne_ui.mod_utils import loadModMechFiles
 
 os.chdir(constants.NETPYNE_WORKDIR_PATH)
 
@@ -429,7 +429,7 @@ class NetPyNEGeppetto:
 
         try:
             owd = os.getcwd()
-            compileModMechFiles(args['compileMod'], args['modFolder'])
+            loadModMechFiles(args['compileMod'], args['modFolder'])
         except Exception:
             message = "Error while importing/compiling mods"
             logging.exception(message)
@@ -583,11 +583,10 @@ class NetPyNEGeppetto:
                 # NetParams
                 filename = str(modelParameters["fileName"])
                
-                simConfig, netParams = neuroml.convertAndImportNeuroML2(filename, compileMod=modelParameters["compileMod"])
-                self.netParams = netParams
-                self.simConfig = simConfig
+                self.simConfig, self.netParams = neuroml.convertAndImportNeuroML2(filename, compileMod=modelParameters["compileMod"])
+                   
             return utils.getJSONReply()
-        except Exception as e:
+        except:
             message = "Error while importing the NetPyNE model"
             logging.exception(message)
             return utils.getJSONError(message, sys.exc_info())
@@ -606,7 +605,7 @@ class NetPyNEGeppetto:
                 # NetParams
                 filename = str(modelParameters["fileName"])
                
-                self.simConfig, self.netParams = neuroml.convertAndImportLEMSSimulation(filename)
+                self.simConfig, self.netParams = neuroml.convertLEMSSimulation(filename)
 
                 # TODO: when should sim.initialize be called?
                 #   Only on import or better before every simulation or network instantiation?
@@ -628,7 +627,7 @@ class NetPyNEGeppetto:
 
                 conds = {} if rule not in self.netParams.cellParams else self.netParams.cellParams[rule]['conds']
 
-                compileModMechFiles(modelParameters["compileMod"], modelParameters["modFolder"])
+                loadModMechFiles(modelParameters["compileMod"], modelParameters["modFolder"])
 
                 del modelParameters["modFolder"]
                 del modelParameters["compileMod"]
