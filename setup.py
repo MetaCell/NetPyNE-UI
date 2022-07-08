@@ -46,6 +46,8 @@ setuptools.setup(
         'neuromllite==0.5.1',
         'pyNeuroML>=0.7.1',
         'sentry_sdk>=1.5.2',
-        'dacite>=1.6.0'
+        'dacite>=1.6.0',
+        'h5py>=3.7.0',
+        'jsonpickle>=2.1.0'
     ],
 )
