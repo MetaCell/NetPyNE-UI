@@ -1,4 +1,4 @@
-airspeed==0.5.4dev-20150515
+airspeed==0.5.5
 alembic==1.4.2
 async-generator==1.10
 attrs==19.3.0
