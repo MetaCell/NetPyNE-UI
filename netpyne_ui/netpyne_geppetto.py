@@ -522,7 +522,7 @@ class NetPyNEGeppetto:
             #   Shouldn't be specific to Import
             sim.clearAll()
         try:
-            compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
+            loadModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
         except Exception:
             message = "Error while importing/compiling mods"
             logging.exception(message)
