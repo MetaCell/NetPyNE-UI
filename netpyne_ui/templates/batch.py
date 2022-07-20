@@ -46,9 +46,9 @@ def run_batch(experiment):
     params = specs.ODict()
     grouped_params = []
     for param in experiment["params"]:
-        params[param["mapsTo"].replace("simConfig.", "")] = param["values"]
+        params[param["mapsTo"].replace("netParams.", "")] = param["values"]
         if param["inGroup"]:
-            grouped_params.append(param["mapsTo"].replace("simConfig.", ""))
+            grouped_params.append(param["mapsTo"].replace("netParams.", ""))
 
     with open("netParams.json", "r") as f:
         net_params = json.load(f)

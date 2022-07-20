@@ -571,6 +571,20 @@ export const EDIT_WIDGETS = {
       model: 'netParams.stimTargetParams',
     },
   },
+  rxd: {
+    id: 'rxd',
+    name: 'Reaction-Diffusion',
+    model: 'netParams.rxdParams',
+    status: WidgetStatus.HIDDEN,
+    hideOnClose: true,
+    component: 'rxd',
+    panelName: TOP_PANEL,
+    enableRename: false,
+    pos: 6,
+    props: {
+      model: 'netParams.rxdParams',
+    },
+  },
   analysis: {
     id: 'analysis',
     name: 'Plot Settings',
@@ -580,25 +594,12 @@ export const EDIT_WIDGETS = {
     component: 'analysis',
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 6,
+    pos: 7,
     props: {
       model: 'simConfig.analysis',
     },
   },
-  rxd: {
-    id: 'rxd',
-    name: 'Rxd Configuration',
-    model: 'netParams.rxdParams',
-    status: WidgetStatus.HIDDEN,
-    hideOnClose: true,
-    component: 'rxd',
-    panelName: TOP_PANEL,
-    enableRename: false,
-    pos: 7,
-    props: {
-      model: 'netParams.rxdParams',
-    },
-  },
+
   simConfig: {
     id: 'simConfig',
     name: 'Configuration',

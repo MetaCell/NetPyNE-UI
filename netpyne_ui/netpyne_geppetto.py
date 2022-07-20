@@ -75,6 +75,16 @@ class NetPyNEGeppetto:
         if not simulations.local.is_running():
             [experiments.set_to_error(e) for e in running_exps]
 
+        # sys.stdin = open(os.path.join(constants.HERE, "stdin.txt"),'r') # FIXES library asking for input to download -- eg lfpykit models
+
+        # from ipykernel import kernelbase
+
+        # def raw_input(self, prompt=''):
+        #     return "y"
+        # kernelbase.Kernel.raw_input = raw_input
+
+        # from lfpykit.eegmegcalc import NYHeadModel
+        # NYHeadModel()
 
     def getData(self):
         return {
