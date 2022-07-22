@@ -6172,9 +6172,10 @@ grid-index@^1.1.0:
   resolved "https://registry.yarnpkg.com/grid-index/-/grid-index-1.1.0.tgz#97f8221edec1026c8377b86446a7c71e79522ea7"
   integrity sha512-HZRwumpOGUrHyxO5bqKZL0B0GlUpwtCAzZ42sgxUPniu33R1LSFH5yrIcBCHjkctCAh3mtWKcKd9J4vDDdeVHA==
 
-"griddle-0.6-fork@git+https://github.com/rodriguez-facundo/griddle.git":
+"griddle-0.6-fork@https://github.com/rodriguez-facundo/griddle.git":
   version "0.6.1"
-  resolved "git+https://github.com/rodriguez-facundo/griddle.git#218468b8c438295f8b3c6a8229491eb7972ed85e"
+  uid "218468b8c438295f8b3c6a8229491eb7972ed85e"
+  resolved "https://github.com/rodriguez-facundo/griddle.git#218468b8c438295f8b3c6a8229491eb7972ed85e"
   dependencies:
     lodash "^4.12.0"
     prop-types "^15.6.2"
@@ -11284,9 +11285,9 @@ terser-webpack-plugin@^1.4.3:
     worker-farm "^1.7.0"
 
 terser@^4.1.2:
-  version "4.8.0"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-4.8.0.tgz#63056343d7c70bb29f3af665865a46fe03a0df17"
-  integrity sha512-EAPipTNeWsb/3wLPeup1tVPaXfIaU68xMnVdPafIL1TV05OhASArYyIfFvnvJCNrR2NIOvDVNNTFRa+Re2MWyw==
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-4.8.1.tgz#a00e5634562de2239fd404c649051bf6fc21144f"
+  integrity sha512-4GnLC0x667eJG0ewJTa6z/yXrbLGv80D9Ru6HIpCQmO+Q4PfEtBFi0ObSckqwL6VyQv/7ENJieXHo2ANmdQwgw==
   dependencies:
     commander "^2.20.0"
     source-map "~0.6.1"
