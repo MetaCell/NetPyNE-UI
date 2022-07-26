@@ -605,7 +605,7 @@ class NetPyNEGeppetto:
                 # NetParams
                 filename = str(modelParameters["fileName"])
                
-                self.simConfig, self.netParams = neuroml.convertLEMSSimulation(filename)
+                self.simConfig, self.netParams = neuroml.convertAndImportLEMSSimulation(filename)
 
                 # TODO: when should sim.initialize be called?
                 #   Only on import or better before every simulation or network instantiation?
