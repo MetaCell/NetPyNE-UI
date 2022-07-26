@@ -38,6 +38,8 @@ export const {
   primaryColorHover,
   fabDisableColor,
   fabDisableBg,
+  navShadow,
+  tabsTextColor,
 } = vars;
 
 const rawTheme = {

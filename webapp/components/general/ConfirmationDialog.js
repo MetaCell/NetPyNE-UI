@@ -28,9 +28,7 @@ class ConfirmationDialog extends React.Component {
           this.props.dispatchAction(this.props.confirmationDialogOnConfirm.action);
         }
       }
-    } else {
-      console.log('Command/desired behaviour not passed to confirmation dialog');
-    }
+    } 
   }
 
   render () {
@@ -53,13 +51,13 @@ class ConfirmationDialog extends React.Component {
           {confirmationDialogMessage}
         </DialogContent>
         <DialogActions>
-          <Button
+          {this.props.confirmationDialogOnConfirm && <Button
             onClick={closeConfirmationDialog}
             style={styles.cancel}
             key="CANCEL"
           >
             CANCEL
-          </Button>
+          </Button> }
           <Button
             color="primary"
             variant="contained"

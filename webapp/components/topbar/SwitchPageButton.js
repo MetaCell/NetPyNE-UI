@@ -73,7 +73,7 @@ class SwitchPageButton extends Component {
       editModelPage,
       modelState
     } = this.props;
-    const instantiated = modelState == MODEL_STATE.INSTANTIATED ;
+    const instantiated = modelState == MODEL_STATE.INSTANTIATED;
     return (
       <div className={classes.container}>
         {editModelPage
@@ -88,14 +88,14 @@ class SwitchPageButton extends Component {
                 { BACK_TO_EXPLORER }
               </Button>
               <SplitButton
-                options={instantiated ? instantiatedEditOptions : editOptions }
+                options={instantiated ? instantiatedEditOptions : editOptions}
                 handleClick={(selectedOption) => this.handleClick(selectedOption)}
                 icon={(
                   <span style={{ marginRight: '5px' }}>
                     <Icon name="rocket" />
                   </span>
                 )}
-                skipIconFor={ CREATE_NETWORK }
+                skipIconFor={CREATE_NETWORK}
               />
             </>
           )
@@ -116,6 +116,7 @@ class SwitchPageButton extends Component {
                     <Icon name="rocket" />
                   </span>
                 )}
+                skipIconFor={SIMULATE}
               />
             </>
           )}

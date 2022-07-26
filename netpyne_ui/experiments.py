@@ -74,7 +74,7 @@ def edit_experiment(name: str, experiment: dict):
 
     if exp.state != model.ExperimentState.DESIGN:
         raise ExperimentsError(
-            f"Can only edit experiment in f{model.ExperimentState.DESIGN} state"
+            f"Can only edit experiment in {model.ExperimentState.DESIGN} state"
         )
 
     updated_exp = from_dict(model.Experiment, experiment)

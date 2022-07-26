@@ -3,7 +3,6 @@ import { PYTHON_CONSOLE_WIDGET, WidgetStatus } from '../../constants';
 
 // Action Types
 export const UPDATE_CARDS = 'UPDATE_CARDS';
-export const MODEL_LOADED = 'NETPYNE_MODEL_LOADED';
 export const SHOW_NETWORK = 'SHOW_NETWORK';
 export const CREATE_NETWORK = 'CREATE_NETWORK';
 export const CREATE_SIMULATE_NETWORK = 'CREATE_SIMULATE_NETWORK';
@@ -29,8 +28,6 @@ export const SELECT_INSTANCE = 'SELECT_INSTANCE';
 
 // Actions
 export const updateCards = { type: UPDATE_CARDS };
-
-export const modelLoaded = { type: MODEL_LOADED };
 
 export const createNetwork = { type: CREATE_NETWORK };
 export const createAndSimulateNetwork = { type: CREATE_SIMULATE_NETWORK };
