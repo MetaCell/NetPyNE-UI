@@ -10,7 +10,7 @@ from pyneuroml.pynml import read_neuroml2_file
 from netpyne_ui.mod_utils import loadModMechFiles
 
 
-def convertAndImportLEMSSimulation(lemsFileName, compileMod=True):
+def convertLEMSSimulation(lemsFileName, compileMod=True):
     """Converts a LEMS Simulation file
 
     Converts a LEMS Simulation file (https://docs.neuroml.org/Userdocs/LEMSSimulation.html)
@@ -18,35 +18,35 @@ def convertAndImportLEMSSimulation(lemsFileName, compileMod=True):
     Returns:
         simConfig, netParams for the model in NetPyNE
     """
-    fullLemsFileName = os.path.abspath(lemsFileName)
+    current_path = os.getcwd()
+    try:
+        
+        fullLemsFileName = os.path.abspath(lemsFileName)
+        tmp_path = os.path.dirname(fullLemsFileName) 
+        if tmp_path:
+            os.chdir(tmp_path)
+        logging.info(
+            "Importing LEMSSimulation with NeuroML 2 network from: %s"
+            % fullLemsFileName
+        )
 
-    logging.info(
-        "Importing LEMSSimulation with NeuroML 2 network from: %s"
-        % fullLemsFileName
-    )
+        result = pynml.run_lems_with_jneuroml_netpyne(
+            lemsFileName, only_generate_json=True, exit_on_fail=False)
+        
+        if result == False:
+            raise Exception("Error loading lems file")
+        lems = pynml.read_lems_file(lemsFileName)
 
-    result = pynml.run_lems_with_jneuroml_netpyne(
-        lemsFileName, only_generate_json=True, exit_on_fail=False)
+        np_json_fname = fullLemsFileName.replace('.xml','_netpyne_data.json')
     
-    if result == False:
-        raise Exception("Error loading lems file")
-    lems = pynml.read_lems_file(lemsFileName)
-
-    np_json_fname = os.path.basename(lemsFileName.replace('.xml','_netpyne_data.json'))
-   
-    from netpyne import sim
-    loadModMechFiles(False, os.path.dirname(np_json_fname)) 
-    sim.initialize()
-    sim.loadAll(np_json_fname, instantiate=False)
-    netParams = sim.net.params
-    simConfig = sim.cfg
-
-    return simConfig, netParams
+        return np_json_fname
+    finally:
+        os.chdir(current_path)
 
 
 
 
-def convertAndImportNeuroML2(nml2FileName,  compileMod=True):
+def convertNeuroML2(nml2FileName,  compileMod=True):
     """Loads a NeuroML 2 file into NetPyNE
     Loads a NeuroML 2 file into NetPyNE by creating a new LEMS Simulation
     file (https://docs.neuroml.org/Userdocs/LEMSSimulation.html) and using jNeuroML
@@ -57,12 +57,13 @@ def convertAndImportNeuroML2(nml2FileName,  compileMod=True):
     """
     current_path = os.getcwd()
     try:
-        tmp_path = os.path.join(nml2FileName + "_files") 
-        if not os.path.exists(tmp_path):
-            os.makedirs(tmp_path)
-        os.chdir(tmp_path)
-        sys.path.append(tmp_path)
         fullNmlFileName = os.path.abspath(nml2FileName)
+        work_path = os.path.dirname(fullNmlFileName) 
+        if not os.path.exists(work_path):
+            os.makedirs(work_path)
+        os.chdir(work_path)
+        sys.path.append(work_path)
+        
 
         logging.info(
                 "Importing NeuroML 2 network from: %s"
@@ -101,8 +102,8 @@ def convertAndImportNeuroML2(nml2FileName,  compileMod=True):
             copy_neuroml=True,
             verbose=True,
         )
-        os.chdir(tmp_path)
-        res = convertAndImportLEMSSimulation(lems_file_name, compileMod=compileMod)
+        os.chdir(work_path)
+        res = convertLEMSSimulation(lems_file_name, compileMod=compileMod)
     finally:
         os.chdir(current_path)
     return res
@@ -111,6 +112,6 @@ def convertAndImportNeuroML2(nml2FileName,  compileMod=True):
 if __name__ == "__main__":
 
     if '-nml' in sys.argv:
-        convertAndImportNeuroML2("../../NeuroML2/Spikers.net.nml")
+        convertNeuroML2("../../NeuroML2/Spikers.net.nml")
     else:
-        convertAndImportLEMSSimulation("LEMS_HHSimple.xml")
+        convertLEMSSimulation("LEMS_HHSimple.xml")

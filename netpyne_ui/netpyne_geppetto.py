@@ -305,7 +305,7 @@ class NetPyNEGeppetto:
                     experiment.state = model.ExperimentState.ERROR
                     message = ("Unknown error during simulation of Experiment. SimulationId %i" % sim_id)
                     logging.exception(message)
-                    return utils.getJSONError("Unknown error during simulation of Experiment", sys.exc_info(), { "sim_id": sim_id})
+                    return utils.getJSONError(message, sys.exc_info())
 
             else:
                 return self.simulate_single_model(use_prev_inst=use_prev_inst)
@@ -313,7 +313,7 @@ class NetPyNEGeppetto:
         except Exception as e :
             message = ("Error while simulating the NetPyNE model: %s. SimulationId %f" % (e, sim_id))
             logging.exception(message)
-            return utils.getJSONError(message, sys.exc_info(), { "sim_id": sim_id})
+            return utils.getJSONError(message, sys.exc_info())
 
     def _prepare_simulation_files(self, experiment: model.Experiment = None, use_prev_inst: bool = False) -> str:
         """Prepares template files and netpyne model files for a single simulation """
@@ -583,9 +583,17 @@ class NetPyNEGeppetto:
                 # NetParams
                 filename = str(modelParameters["fileName"])
                
-                self.simConfig, self.netParams = neuroml.convertAndImportNeuroML2(filename, compileMod=modelParameters["compileMod"])
+                json_fname = neuroml.convertNeuroML2(filename, compileMod=modelParameters["compileMod"])
                    
-            return utils.getJSONReply()
+            return self.loadModel(args=dict(
+                compileMod=True,
+                modFolder=os.path.dirname(json_fname),
+                jsonModelFolder=json_fname,
+                loadNet=True,
+                loadSimData=True,
+                loadSimCfg=True,
+                loadNetParams=True
+            ))
         except:
             message = "Error while importing the NetPyNE model"
             logging.exception(message)
@@ -605,12 +613,17 @@ class NetPyNEGeppetto:
                 # NetParams
                 filename = str(modelParameters["fileName"])
                
-                self.simConfig, self.netParams = neuroml.convertAndImportLEMSSimulation(filename)
+                json_fname =  neuroml.convertLEMSSimulation(filename)
 
-                # TODO: when should sim.initialize be called?
-                #   Only on import or better before every simulation or network instantiation?
-                
-            return utils.getJSONReply()
+            return self.loadModel(args=dict(
+                compileMod=True,
+                modFolder=os.path.dirname(json_fname),
+                jsonModelFolder=json_fname,
+                loadNet=True,
+                loadSimData=True,
+                loadSimCfg=True,
+                loadNetParams=True
+            ))
         except Exception:
             message = "Error while importing the NetPyNE model"
             logging.exception(message)
