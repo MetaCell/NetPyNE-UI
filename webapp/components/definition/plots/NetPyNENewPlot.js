@@ -101,6 +101,13 @@ export default class NetPyNENewPlot extends React.Component {
           >
             Granger Causality Plot
           </MenuItem>
+          <MenuItem
+            key="plotRateSpectrogram"
+            value="plotRateSpectrogram"
+            onClick={() => this.handleClick('plotRateSpectrogram')}
+          >
+            Rate Spectrogram Plot
+          </MenuItem>
         </Menu>
       </div>
     );
