@@ -882,7 +882,8 @@ class NetPyNEGeppetto:
             "iplotConn",
             "granger",
             "plotDipole",
-            "plotEEG"
+            "plotEEG",
+            "plotRateSpectrogram"
         ]
 
         return [plot for plot in plots if plot not in list(self.simConfig.analysis.keys())]
