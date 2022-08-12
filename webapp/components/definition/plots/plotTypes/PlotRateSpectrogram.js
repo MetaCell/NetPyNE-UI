@@ -74,7 +74,7 @@ export default class PlotRateSpectrogram extends React.Component {
           <SelectField model={`${tag}['transformMethod']`} />
         </NetPyNEField>
 
-        <NetPyNEField id="simConfig.analysis.plotRateSpectrogram.fontSize">
+        {/* <NetPyNEField id="simConfig.analysis.plotRateSpectrogram.fontSize">
           <NetPyNETextField
             fullWidth
             variant="filled"
@@ -109,7 +109,7 @@ export default class PlotRateSpectrogram extends React.Component {
           className="netpyneCheckbox"
         >
           <NetPyNECheckbox model={`${tag}['showFig']`} />
-        </NetPyNEField>
+        </NetPyNEField> */}
       </Box>
     );
   }
