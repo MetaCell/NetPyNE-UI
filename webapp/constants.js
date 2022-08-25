@@ -444,6 +444,33 @@ export const PLOT_WIDGETS = {
       },
     },
   },
+  plotRateSpectrogram: {
+    id: 'plotRateSpectrogram',
+    name: 'Rate Spectrogram Plot',
+    status: WidgetStatus.MINIMIZED,
+    component: 'Plot',
+    hideOnClose: true,
+    panelName: MINIMIZED_PANEL,
+    defaultPanel: 'plotPanel',
+    enableRename: false,
+    initialized: false,
+    disabled: true,
+    method: {
+      plotKey: 'plotRateSpectrogram',
+      plotMethod: 'plotRateSpectrogram',
+      plotType: false,
+    },
+    pos: 15,
+    config: {
+      id: 'plotRateSpectrogram',
+      name: 'Rate Spectrogram Plot',
+      method: {
+        plotKey: 'plotRateSpectrogram',
+        plotMethod: 'plotRateSpectrogram',
+        plotType: false,
+      },
+    },
+  },
 };
 
 export const DEFAULT_NETWORK_WIDGETS = {
