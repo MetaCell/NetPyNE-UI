@@ -22,6 +22,8 @@ ENV NB_UID=jovyan
 ENV FOLDER=netpyne
 ARG GEPPETTO_VERSION=development
 ARG BUILD_ARGS=""
+ARG NETPYNE_VERSION=master
+ARG WORKSPACE_VERSION=master
 
 ENV FOLDER=/home/jovyan/work/NetPyNE-UI
 
@@ -46,7 +48,7 @@ RUN jupyter nbextension enable --py --sys-prefix jupyter_geppetto
 RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension
 RUN jupyter serverextension enable --py --sys-prefix jupyter_geppetto
 
-RUN python utilities/install.py ${BUILD_ARGS} --geppetto ${GEPPETTO_VERSION} --npm-skip
+RUN python utilities/install.py ${BUILD_ARGS} --geppetto ${GEPPETTO_VERSION} --netpyne $NETPYNE_VERSION --workspace WORKSPACE_VERSION --npm-skip
 
 RUN jupyter labextension disable @jupyterlab/hub-extension
 
