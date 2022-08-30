@@ -31,7 +31,7 @@ USER root
 
 RUN rm -rf /var/lib/apt/lists
 RUN apt-get update -qq &&\
-    apt-get install python3-tk vim nano unzip git make libtool g++ -qq pkg-config libfreetype6-dev libpng-dev libopenmpi-dev -y
+    apt-get install python3-tk vim nano unzip git make libtool g++ -qq pkg-config libfreetype6-dev libpng-dev libopenmpi-dev  openjdk-11-jre-headless -y -y
 RUN conda install python=3.7 -y
 
 
