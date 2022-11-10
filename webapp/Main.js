@@ -13,7 +13,7 @@ import '@metacell/geppetto-meta-ui/flex-layout/style/dark.scss';
 global.GEPPETTO_CONFIGURATION = require('./GeppettoConfiguration.json');
 const { initGeppetto } = require('@metacell/geppetto-meta-client/GEPPETTO');
 
-if (process.env == 'production')
+if (process.env.NODE_ENV == 'production')
 {
   Sentry.init({
     dsn: 'https://d8bf7e40eec34cb9891f6dd8207b5e83@sentry.metacell.us/6',
