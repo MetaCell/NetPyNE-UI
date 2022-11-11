@@ -137,10 +137,11 @@ def main(netpyne_branch, workspace_branch, geppetto_branch=None, skipNpm=False,
         execute(cmd=['npm', 'run', 'build-dev' if development else 'build'],
                 cwd=os.path.join(DEPS_DIR, META_DIR, JUPYTER_DIR, 'js'))
 
-    execute(cmd=['jupyter', 'nbextension', 'install', '--py', '--symlink', '--force', '--sys-prefix', 'jupyter_geppetto'])
-    execute(cmd=['jupyter', 'nbextension', 'enable', '--py', '--sys-prefix', '--force', 'jupyter_geppetto'])
-    execute(cmd=['jupyter', 'nbextension', 'enable', '--py', '--sys-prefix', '--force', 'widgetsnbextension'])
-    execute(cmd=['jupyter', 'serverextension', 'enable', '--py', '--sys-prefix', '--force', 'jupyter_geppetto'])
+    execute(cmd=['rm', '-rf', '/opt/conda/share/jupyter/nbextensions/jupyter_geppetto'])                                                                               
+    execute(cmd=['jupyter', 'nbextension', 'install', '--py', '--symlink', '--sys-prefix', 'jupyter_geppetto'])
+    execute(cmd=['jupyter', 'nbextension', 'enable', '--py', '--sys-prefix', 'jupyter_geppetto'])
+    execute(cmd=['jupyter', 'nbextension', 'enable', '--py', '--sys-prefix', 'widgetsnbextension'])
+    execute(cmd=['jupyter', 'serverextension', 'enable', '--py', '--sys-prefix', 'jupyter_geppetto'])
 
     # Set python console theme
     print("Installing notebook theme")
