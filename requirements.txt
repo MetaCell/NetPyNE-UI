@@ -23,7 +23,7 @@ jedi==0.17.0
 Jinja2==2.11.2
 jsonpickle==2.1.0
 jsonschema==3.2.0
-jupyter_geppetto==1.1.1
+jupyter_geppetto==1.1.4
 jupyter-client==7.0.6
 jupyter-core==4.9.1
 jupyter-server==1.11.2
