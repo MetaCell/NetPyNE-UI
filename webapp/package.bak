@@ -6,14 +6,13 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint . --color --fix",
-    "build": "webpack --mode development -p --progress --devtool source-map",
+    "build": "webpack --mode production -p --progress --devtool source-map",
     "build-dev": "webpack --mode development --devtool source-map",
     "build-dev-noTest": "webpack --mode development --devtool source-map --env.noTest=true",
     "build-dev-noTest:watch": "webpack --mode development --devtool source-map --env.noTest=true --progress --watch",
     "start": "node --max_old_space_size=2048 node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress  --config webpack.config.dev.js"
   },
   "dependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.13.0",
     "@fortawesome/react-fontawesome": "^0.1.9",
