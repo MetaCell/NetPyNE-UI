@@ -54,15 +54,15 @@ const plotFigure = async (plotId, plotMethod, plotType = false, uri = null, them
       if (response.startsWith('[') && response.endsWith(']')) {
         response = eval(response);
       }
-    }
-    if (plotMethod.startsWith('iplot')) {
-      let htmlText = response.replace ? response.replace(/\\n/g, '')
-        .replace(/\\/g, '') : '';
-      if (plotId === 'rxdConcentrationPlot') {
-        // FIXME: How can we center the bokeh plots when sizing_mode='scale_height'
-        htmlText = htmlText.replace('<head>', '<head><style>.bk {margin: 0 auto!important;}</style>');
+      if (response.indexOf('<html') > -1) {
+        let htmlText = response.replace ? response.replace(/\\n/g, '')
+          .replace(/\\/g, '') : '';
+        //if (plotId === 'rxdConcentrationPlot') {
+          // FIXME: How can we center the bokeh plots when sizing_mode='scale_height'
+          htmlText = htmlText.replace('<head>', '<head><style>.bk {margin: 0 auto!important;} div {overflow:hidden;} frame {overflow:hidden;}</style>');
+        //}
+        return htmlText;
       }
-      return htmlText;
     }
     if ((plotMethod == 'plotDipole' || plotMethod == 'plotEEG' )) { //uri is available here
       const plotUri = uri.replace('{name}', response);
