@@ -284,7 +284,7 @@ const LaunchDialog = (props) => {
           <span style={{ color: primaryColor, leftMargin: '5px' }}>{experimentName}</span>
         </span>
       )}
-      classes={classes}
+      className={classes.root}
       onAction={() => {
         dispatch(closeLaunchDialog());
         dispatch(simulateNetwork(value === LAUNCH_MODAL.experimentState));
@@ -317,7 +317,7 @@ const LaunchDialog = (props) => {
           <Box className="wrap">
             <img src={value === LAUNCH_MODAL.experimentState ? experimentSelected : experimentUnselected} alt="completeExperiment" />
             <Typography>
-              All Trials (
+              All Conditions (
               {numberOfTrials}
               )
             </Typography>

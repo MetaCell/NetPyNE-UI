@@ -420,16 +420,19 @@ define((require) => {
         }
 
         callPythonMethod = (value) => {
-          GeppettoUtils.evalPythonMessage(this.props.method, [])
-            .then((response) => {
-              if (this._isMounted) {
-                if (Object.keys(response).length !== 0) {
-                  this.setState({ pythonData: response });
-                } else {
-                  this.setState({ pythonData: [] });
+          const params = this.props?.pythonParams || [];
+          if (this.props.method) {
+            GeppettoUtils.evalPythonMessage(this.props.method, params)
+              .then((response) => {
+                if (this._isMounted) {
+                  if (Object.keys(response).length !== 0) {
+                    this.setState({ pythonData: response });
+                  } else {
+                    this.setState({ pythonData: [] });
+                  }
                 }
-              }
-            });
+              });
+          }
         };
 
         componentDidUpdate (prevProps, prevState) {
@@ -488,7 +491,7 @@ define((require) => {
 });
 
 function getNameFromWrappedComponent (WrappedComponent) {
-  return WrappedComponent.name || WrappedComponent.displayName || WrappedComponent.Naked.render.name;
+  return WrappedComponent.name || WrappedComponent.displayName || WrappedComponent?.Naked?.render?.name || WrappedComponent?.render?.name;
 }
 
 /**

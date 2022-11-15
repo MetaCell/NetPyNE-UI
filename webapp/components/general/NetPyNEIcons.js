@@ -5,7 +5,7 @@ import Icon from '@material-ui/core/Icon';
 const BASE_PATH = 'geppetto/build/static/icons/';
 
 export default ({
-  name, selected, highlight = false, disabled = false, fontSize = 'default', color,
+  name, selected, highlight = false, disabled = false, fontSize = 'medium', color,
 }) => {
   const className = `image-icon ${selected ? 'selected' : ''} ${highlight ? ' highlight' : ''}`;
   return (

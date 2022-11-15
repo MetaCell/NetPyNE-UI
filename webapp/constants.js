@@ -444,6 +444,33 @@ export const PLOT_WIDGETS = {
       },
     },
   },
+  plotRateSpectrogram: {
+    id: 'plotRateSpectrogram',
+    name: 'Rate Spectrogram Plot',
+    status: WidgetStatus.MINIMIZED,
+    component: 'Plot',
+    hideOnClose: true,
+    panelName: MINIMIZED_PANEL,
+    defaultPanel: 'plotPanel',
+    enableRename: false,
+    initialized: false,
+    disabled: true,
+    method: {
+      plotKey: 'plotRateSpectrogram',
+      plotMethod: 'plotRateSpectrogram',
+      plotType: false,
+    },
+    pos: 15,
+    config: {
+      id: 'plotRateSpectrogram',
+      name: 'Rate Spectrogram Plot',
+      method: {
+        plotKey: 'plotRateSpectrogram',
+        plotMethod: 'plotRateSpectrogram',
+        plotType: false,
+      },
+    },
+  },
 };
 
 export const DEFAULT_NETWORK_WIDGETS = {
@@ -571,6 +598,20 @@ export const EDIT_WIDGETS = {
       model: 'netParams.stimTargetParams',
     },
   },
+  rxd: {
+    id: 'rxd',
+    name: 'Reaction-Diffusion',
+    model: 'netParams.rxdParams',
+    status: WidgetStatus.HIDDEN,
+    hideOnClose: true,
+    component: 'rxd',
+    panelName: TOP_PANEL,
+    enableRename: false,
+    pos: 6,
+    props: {
+      model: 'netParams.rxdParams',
+    },
+  },
   analysis: {
     id: 'analysis',
     name: 'Plot Settings',
@@ -580,11 +621,12 @@ export const EDIT_WIDGETS = {
     component: 'analysis',
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 6,
+    pos: 7,
     props: {
       model: 'simConfig.analysis',
     },
   },
+
   simConfig: {
     id: 'simConfig',
     name: 'Configuration',
@@ -593,7 +635,7 @@ export const EDIT_WIDGETS = {
     hideOnClose: true,
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 7,
+    pos: 8,
   },
   experimentManager: {
     id: 'experimentManager',
@@ -603,7 +645,7 @@ export const EDIT_WIDGETS = {
     component: 'experimentManager',
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 8,
+    pos: 9,
     specification: TOOLS_LIST,
   },
 };
@@ -669,3 +711,16 @@ export const LAUNCH_MODAL = {
   defaultResource: 'Local Machine',
   errorText: 'Please check the input',
 };
+
+export const geometryClasses = [
+  'DistributedBoundary',
+  'FractionalVolume',
+  'FixedCrossSection',
+  'ScalableBorder',
+  'Shell',
+];
+
+export const geometryStrings = [
+  'inside',
+  'membrane',
+];

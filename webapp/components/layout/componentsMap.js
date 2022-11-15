@@ -13,6 +13,7 @@ import {
   NetPyNEPythonConsole,
   ExperimentManager,
   ExperimentControlPanel,
+  Rxd,
 } from '..';
 
 import PlotViewer from '../general/PlotViewer';
@@ -36,6 +37,7 @@ const componentMap = {
   'analysis': NetPyNEPlots,
   'experimentManager': ExperimentManager,
   'experimentControlPanel': ExperimentControlPanel,
+  'rxd': Rxd,
 };
 
 export default componentMap;

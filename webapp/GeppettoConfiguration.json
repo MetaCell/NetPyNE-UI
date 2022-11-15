@@ -6,6 +6,7 @@
     "embedderURL": ["/"],
     "rootRedirect":"",
     "noTest": false,
+    "customSplash": "geppetto/build/static/splash.gif",
     "extensions": {
         "geppetto-default/ComponentsInitialization": false,
         "geppetto-netpyne/ComponentsInitialization": true

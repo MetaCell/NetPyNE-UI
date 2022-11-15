@@ -1,6 +1,6 @@
 {
   "name": "geppetto-netpyne",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Geppetto NetPyNE-UI frontend.",
   "repository": "https://github.com/MetaCell/NetPyNE-UI",
   "license": "MIT",
@@ -13,7 +13,6 @@
     "start": "node --max_old_space_size=2048 node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress  --config webpack.config.dev.js"
   },
   "dependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.13.0",
     "@fortawesome/react-fontawesome": "^0.1.9",

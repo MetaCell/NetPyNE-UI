@@ -1,3 +1,5 @@
+import { REAL_TYPE } from '../../constants';
+
 export function descendingComparator (a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -22,4 +24,18 @@ export function stableSort (array, comparator) {
     return a[1] - b[1];
   });
   return stabilizedThis.map((el) => el[0]);
+}
+
+
+export function getPythonTypeString(obj) {
+  if(typeof obj == "number") {
+    return REAL_TYPE.FLOAT
+  }
+  if(typeof obj == "string") {
+    return REAL_TYPE.STR
+  }
+  if(typeof obj == "boolean") {
+    return REAL_TYPE.BOOL
+  }
+  return undefined;
 }
