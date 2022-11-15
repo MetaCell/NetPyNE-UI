@@ -187,7 +187,7 @@ export default (store) => (next) => (action) => {
     switchLayoutAction(false, reset);
     getExperiments()
     next(action);
-    
+
   };
 
   const pythonErrorCallback = (error) => {
@@ -213,7 +213,7 @@ export default (store) => (next) => (action) => {
       );
   }
 
-  const checkParametersThen = (callback, goToNetworkView = false) => {
+  const checkParametersThen = (callback, goToNetworkView = false, waitingMessage = '') => {
     let allParams = true;
     const inDesignExp = store.getState().experiments?.inDesign;
 
@@ -222,7 +222,7 @@ export default (store) => (next) => (action) => {
       .then((params) => {
         const flattened = Utils.flatten(params);
         const paramKeys = new Set(Object.keys(flattened));
- 
+
         inDesignExp.params?.forEach((param) => {
           if (!paramKeys.has(param.mapsTo)) {
             pythonErrorCallback(
@@ -236,17 +236,17 @@ export default (store) => (next) => (action) => {
         });
         if (allParams) {
           callback().then((response => {
-            next(openConfirmationDialog({title: "Experiment started", ...response})); 
+            next(openConfirmationDialog({title: "Experiment started", ...response}));
             getExperiments();
           })
             ,pythonErrorCallback);
         }
       }, pythonErrorCallback);
     } else {
-      next(GeppettoActions.waitData('Simulating the NetPyNE Model', GeppettoActions.layoutActions.SET_WIDGETS));
+      next(GeppettoActions.waitData(waitingMessage, GeppettoActions.layoutActions.SET_WIDGETS));
       callback().then(toNetworkCallback(goToNetworkView), pythonErrorCallback)
     }
-    
+
   }
 
   switch (action.type) {
@@ -342,14 +342,14 @@ export default (store) => (next) => (action) => {
     case CREATE_NETWORK: {
       next(GeppettoActions.waitData('Instantiating the NetPyNE Model', GeppettoActions.layoutActions.SET_WIDGETS));
 
-      checkParametersThen(() => instantiateNetwork({}))
+      checkParametersThen(() => instantiateNetwork({}), false, "Creating the NetPyNE Model")
 
 
       break;
     }
     case CREATE_SIMULATE_NETWORK: {
 
-      checkParametersThen(() => simulateNetwork({ allTrials: false }))
+      checkParametersThen(() => simulateNetwork({ allTrials: false }), false, "Creating and simulating the NetPyNE Model")
 
       break;
     }
@@ -358,7 +358,7 @@ export default (store) => (next) => (action) => {
         next(GeppettoActions.activateWidget(EDIT_WIDGETS.experimentManager.id));
       }
 
-      checkParametersThen(() => simulateNetwork({ allTrials: action.payload, usePrevInst: (store.getState().general.modelState !== Constants.MODEL_STATE.NOT_INSTANTIATED) }))
+      checkParametersThen(() => simulateNetwork({ allTrials: action.payload, usePrevInst: (store.getState().general.modelState !== Constants.MODEL_STATE.NOT_INSTANTIATED) }), false, "Simulating the NetPyNE Model")
       break;
     }
     case PYTHON_CALL: {
