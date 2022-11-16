@@ -340,16 +340,12 @@ export default (store) => (next) => (action) => {
       break;
     }
     case CREATE_NETWORK: {
-      next(GeppettoActions.waitData('Instantiating the NetPyNE Model', GeppettoActions.layoutActions.SET_WIDGETS));
-
-      checkParametersThen(() => instantiateNetwork({}), false, "Creating the NetPyNE Model")
-
+      checkParametersThen(() => instantiateNetwork({}), false, "Instantiating the NetPyNE Model")
 
       break;
     }
     case CREATE_SIMULATE_NETWORK: {
-
-      checkParametersThen(() => simulateNetwork({ allTrials: false }), false, "Creating and simulating the NetPyNE Model")
+      checkParametersThen(() => simulateNetwork({ allTrials: false }), false, "Instantiating and simulating the NetPyNE Model")
 
       break;
     }
