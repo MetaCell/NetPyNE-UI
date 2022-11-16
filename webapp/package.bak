@@ -13,7 +13,6 @@
     "start": "node --max_old_space_size=2048 node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress  --config webpack.config.dev.js"
   },
   "dependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.13.0",
     "@fortawesome/react-fontawesome": "^0.1.9",
@@ -21,7 +20,7 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@metacell/geppetto-meta-client": "1.0.0-final",
-    "@metacell/geppetto-meta-core": "1.0.0-final",
+    "@metacell/geppetto-meta-core": "file:.yalc/@metacell/geppetto-meta-core",
     "@metacell/geppetto-meta-ui": "1.0.0-final",
     "@nosferatu500/react-sortable-tree": "3.0.5",
     "@sentry/integrations": "^6.16.1",

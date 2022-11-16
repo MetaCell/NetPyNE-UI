@@ -180,6 +180,7 @@ const useStyles = (theme) => ({
         },
         '& .MuiBox-root': {
           display: 'flex',
+          overflow: 'hidden',
           alignItems: 'center',
           fontSize: '0.75rem',
           fontWeight: '500',

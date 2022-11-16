@@ -39,7 +39,7 @@ export default makeStyles(({
     width: '100%',
 
     '& > .MuiBox-root': {
-      overflow: 'auto',
+      overflow: 'hidden',
       maxHeight: 'calc(100vh - 96px)',
     },
   },
