@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint . --color --fix",
-    "build": "webpack --mode development -p --progress --devtool source-map",
+    "build": "webpack --mode production -p --progress --devtool source-map",
     "build-dev": "webpack --mode development --devtool source-map",
     "build-dev-noTest": "webpack --mode development --devtool source-map --env.noTest=true",
     "build-dev-noTest:watch": "webpack --mode development --devtool source-map --env.noTest=true --progress --watch",
