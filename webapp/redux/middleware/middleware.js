@@ -27,7 +27,7 @@ import {
   addInstancesToCanvas,
   openConfirmationDialog
 } from '../actions/general';
-import { OPEN_BACKEND_ERROR_DIALOG, openBackendErrorDialog } from '../actions/errors';
+import { OPEN_BACKEND_ERROR_DIALOG, CLOSE_BACKEND_ERROR_DIALOG, openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
 import Utils from '../../Utils';
 import { downloadJsonResponse, downloadPythonResponse } from './utils';
@@ -187,7 +187,6 @@ export default (store) => (next) => (action) => {
     switchLayoutAction(false, reset);
     getExperiments()
     next(action);
-    
   };
 
   const pythonErrorCallback = (error) => {
@@ -341,10 +340,7 @@ export default (store) => (next) => (action) => {
     }
     case CREATE_NETWORK: {
       next(GeppettoActions.waitData('Instantiating the NetPyNE Model', GeppettoActions.layoutActions.SET_WIDGETS));
-
       checkParametersThen(() => instantiateNetwork({}))
-
-
       break;
     }
     case CREATE_SIMULATE_NETWORK: {
@@ -490,6 +486,11 @@ export default (store) => (next) => (action) => {
           }
           next(action);
         }, pythonErrorCallback);
+      break;
+    }
+    case CLOSE_BACKEND_ERROR_DIALOG: {
+      next(GeppettoActions.setWidgets(store.getState().widgets));
+      next(action);
       break;
     }
     default: {
