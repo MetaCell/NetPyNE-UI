@@ -9,7 +9,7 @@ import middleware from './middleware/middleware';
 import plotMiddleware from './middleware/plotMiddleware';
 import rulesMiddleware from './middleware/rulesOperationsMiddleware';
 
-import defaultLayout from '../components/layout/defaultLayout';
+import baseLayout from '../components/layout/defaultLayout';
 import componentMap from '../components/layout/componentsMap';
 
 const INIT_STATE = {
@@ -22,7 +22,7 @@ const store = createStore(
   all,
   INIT_STATE,
   [middleware, plotMiddleware, rulesMiddleware],
-  { defaultLayout, componentMap },
+  { undefined, baseLayout, componentMap },
 );
 
 export default store;
