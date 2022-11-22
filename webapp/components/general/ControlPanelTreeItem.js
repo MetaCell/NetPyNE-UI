@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   colorPicker: {
     position: 'absolute',
     zIndex: 1000,
-    right: 0,
+    right: '-2.7rem',
     backgroundColor: `${bgDarker} !important`,
     padding: '0.2rem',
     '& label': {
