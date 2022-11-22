@@ -17,8 +17,7 @@ import {
 } from '../../theme';
 import {
   RandomColorLensIcon,
-  ColorLensIcon,
-  TriangleIcon,
+  SquareIcon,
 } from './NetPyNEIcons';
 import { changeInstanceColor } from '../../redux/actions/general';
 
@@ -117,41 +116,66 @@ const ControlPanelTreeItem = (props) => {
   const dispatch = useDispatch();
   const [showColorPicker, setShowColorPicker] = React.useState(false);
   const [isHoveredOver, setIsHoveredOver] = React.useState(false);
-  const [color, setColor] = React.useState({
-    g: 0.50, b: 0.60, r: 1, a: 1,
-  });
   const [visibility, setVisibility] = React.useState(true);
   const instances = useSelector((state) => state.general.instances);
-
-  const handleColorSelection = (_color, event, nodeId) => {
-    const newInstances = instances.filter((instance) => !(instance.instancePath.startsWith(nodeId)));
-    newInstances.push({
-      instancePath: nodeId,
-      color: {
-        r: _color.rgb.r / 255,
-        g: _color.rgb.g / 255,
-        b: _color.rgb.b / 255,
-        a: _color.rgb.a,
-      },
-    });
-    dispatch(changeInstanceColor(newInstances));
-    setColor(_color.rgb);
-    event.stopPropagation();
-    event.preventDefault();
+  const defaultColor = {
+    g: 0.50,
+    b: 0.60,
+    r: 1,
+    a: 1,
+    hex: "#FF7F99"
   };
 
-  const getRandomColor = () => ({
-    r: parseFloat((Math.random() * 255).toFixed(2)),
-    g: parseFloat((Math.random() * 255).toFixed(2)),
-    b: parseFloat((Math.random() * 255).toFixed(2)),
-    a: 1,
-  });
+  const getColor = (nodeId) => {
+    const insts = instances.filter((instance) => instance.instancePath === nodeId);
+    if (insts.length > 0 && "color" in insts[0]) {
+      return insts[0].color
+    }
+    // we check if all children have the same color
+    const children = instances.filter((instance) => instance.instancePath.startsWith(nodeId) && instance.instancePath !== nodeId);
+    if (children.length === 0) {
+      return defaultColor;
+    }
+    const color = children[0].color;
+    if (children.every(x => x.color && x.color.hex === color.hex)) {
+      return color
+    }
+    return { hex: "#989898" }
+  }
 
-  const generateRandomColor = (event, nodeId) => {
-    event.stopPropagation();
-    event.preventDefault();
+  const randomColor = () => {
+    const [r, g, b] = [Math.random() * 255, Math.random() * 255, Math.random() * 255];
+    return {
+      r: parseFloat(r.toFixed(2)),
+      g: parseFloat(g.toFixed(2)),
+      b: parseFloat(b.toFixed(2)),
+      a: 1,
+      hex: "#" + (r >> 0).toString(16) + (g >> 0).toString(16) + (b >> 0).toString(16)
+    }
+  }
+
+  const translateColor = (_color) => {
+     return {
+        r: _color.r / 255,
+        g: _color.g / 255,
+        b: _color.b / 255,
+        a: _color.a,
+        hex: _color.hex
+      }
+  }
+
+  const handleColorChange = (event, nodeId, colorGenerator) => {
     const children = window.Instances.getInstance(nodeId).getChildren().map((instance) => instance.getInstancePath());
-    // const newInstances = instances.filter((instance) => !(instance.instancePath.startsWith(nodeId)));
+    if (children.length === 0) {  // If we're on a leaf, we do a classical color change
+      const newInstances = instances.filter((instance) => !(instance.instancePath.startsWith(nodeId)));
+      newInstances.push({
+        instancePath: nodeId,
+        color: translateColor(colorGenerator())
+      });
+      dispatch(changeInstanceColor(newInstances));
+      return
+    }
+    // Otherwise, we need to change to color of children also
     const newInstances = instances.filter((instance) => {
       let condition = true;
       children.forEach((child) => {
@@ -163,18 +187,16 @@ const ControlPanelTreeItem = (props) => {
     });
 
     children.forEach((child) => {
-      const randomColor = getRandomColor();
       newInstances.push({
         instancePath: child,
-        color: {
-          r: randomColor.r / 255,
-          g: randomColor.g / 255,
-          b: randomColor.b / 255,
-          a: randomColor.a,
-        },
+        color: translateColor(colorGenerator()),
       });
     });
     dispatch(changeInstanceColor(newInstances));
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
   };
 
   const changeVisibility = (event, nodeId) => {
@@ -232,8 +254,8 @@ const ControlPanelTreeItem = (props) => {
       label={(
         <Grid
           container
-          onMouseEnter={() => setTimeout(setIsHoveredOver(true), 10000)}
-          onMouseLeave={() => setTimeout(setIsHoveredOver(false), 10000)}
+          onMouseEnter={() => setIsHoveredOver(true)}
+          onMouseLeave={() => { setIsHoveredOver(false); setShowColorPicker(false) }}
           display="flex"
           flexDirection="row"
           justifyContent="space-between"
@@ -257,38 +279,36 @@ const ControlPanelTreeItem = (props) => {
                   <IconButton onClick={(event) => changeVisibility(event, nodeId)}>
                     { visibility ? <Visibility style={{ marginRight: '0.5rem' }} /> : <VisibilityOff style={{ marginRight: '0.5rem' }} /> }
                   </IconButton>
-                  <IconButton onClick={(event) => {
-                    event.stopPropagation();
-                    event.preventDefault();
-                    setShowColorPicker(true);
-                  }}
-                  >
-                    <ColorLensIcon className={showColorPicker ? classes.activeColorPicker : ''} />
+                  <IconButton disabled={disableRandom} onClick={(event) => handleColorChange(event, nodeId, randomColor)}>
+                      <RandomColorLensIcon style={{ marginRight: '0.5rem' }} />
                   </IconButton>
-                  <IconButton disabled={disableRandom} onClick={(event) => generateRandomColor(event, nodeId)}>
-                    <RandomColorLensIcon />
-                  </IconButton>
-                  {
-              showColorPicker
+                </>
+              )
+              : null}
+              <IconButton onClick={(event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                setShowColorPicker(true)
+              }}>
+                <SquareIcon fillColor={getColor(nodeId).hex}/>
+
+              </IconButton>
+                {showColorPicker && isHoveredOver
                 ? (
                   <Box
                     className={classes.colorPickerBox}
-                    onMouseLeave={() => setTimeout(setShowColorPicker(false), 30000)}
+                    onMouseLeave={() => setShowColorPicker(false)}
                   >
-                    {/* <TriangleIcon className={classes.triangleIcon} /> */}
                     <ChromePicker
                       className={classes.colorPicker}
-                      color={color}
+                      color={getColor(nodeId).hex}
                       onChangeComplete={(color, event) => {
-                        handleColorSelection(color, event, nodeId);
+                        handleColorChange(event, nodeId, () => {return {...color.rgb, hex: color.hex}});
                       }}
                     />
                   </Box>
                 ) : null
-            }
-                </>
-              )
-              : null}
+                }
           </Grid>
         </Grid>
       )}
