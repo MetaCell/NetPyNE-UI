@@ -20,16 +20,19 @@ yarn global add yalc
 
 app=$(pwd)
 
+echo "#### geppetto core ####"
 cd $app/../src/geppetto-meta/geppetto.js/geppetto-core
-rm -rf node_modules
+rm -rf node_modules build
 yarn && yarn build:dev && yarn publish:yalc
 
+echo "#### geppetto ui ####"
 cd $app/../src/geppetto-meta/geppetto.js/geppetto-ui
-rm -rf node_modules
+rm -rf node_modules build
 yarn && yarn build:dev && yarn publish:yalc
 
+echo "#### geppetto client ####"
 cd $app/../src/geppetto-meta/geppetto.js/geppetto-client
-rm -rf node_modules
+rm -rf node_modules build
 yarn && yarn build:dev && yarn publish:yalc
 
 cd $app
