@@ -27,7 +27,7 @@ import {
   addInstancesToCanvas,
   openConfirmationDialog
 } from '../actions/general';
-import { OPEN_BACKEND_ERROR_DIALOG, openBackendErrorDialog } from '../actions/errors';
+import { OPEN_BACKEND_ERROR_DIALOG, CLOSE_BACKEND_ERROR_DIALOG, openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
 import Utils from '../../Utils';
 import { downloadJsonResponse, downloadPythonResponse } from './utils';
@@ -35,7 +35,7 @@ import * as Constants from '../../constants';
 import { ADD_EXPERIMENT, REMOVE_EXPERIMENT } from '../actions/experiments';
 
 
-const TIMEOUT = 10000;
+const TIMEOUT = 30000;
 const EXPERIMENT_POLL_INTERVAL = 5000;
 
 const STABLE_EXPERIMENTS_STATES = new Set([
@@ -187,7 +187,6 @@ export default (store) => (next) => (action) => {
     switchLayoutAction(false, reset);
     getExperiments()
     next(action);
-
   };
 
   const pythonErrorCallback = (error) => {
@@ -486,6 +485,11 @@ export default (store) => (next) => (action) => {
           }
           next(action);
         }, pythonErrorCallback);
+      break;
+    }
+    case CLOSE_BACKEND_ERROR_DIALOG: {
+      next(GeppettoActions.setWidgets(store.getState().widgets));
+      next(action);
       break;
     }
     default: {

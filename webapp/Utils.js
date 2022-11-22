@@ -25,7 +25,8 @@ const Utils = {
   },
 
   captureSentryException (e) {
-    Sentry.captureException(e);
+    if (process.env.NODE_ENV == 'production')
+      Sentry.captureException(e);
     console.error(e);
   },
 
