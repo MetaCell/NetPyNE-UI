@@ -21,8 +21,8 @@ const PlotViewer = ({ key, id, method }) => {
             name="dipole"
             srcDoc={data}
             style={{
-              overflowX:hidden,
-              overflowY:hidden,
+              overflowX:'hidden',
+              overflowY:'hidden',
               border: 0,
               width: '100%',
               height: '100%',
