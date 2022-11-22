@@ -128,7 +128,8 @@ const ControlPanelTreeItem = (props) => {
 
   const getColor = (nodeId) => {
     const insts = instances.filter((instance) => instance.instancePath === nodeId);
-    if (insts.length > 0 && "color" in insts[0]) {
+    const hasChildren = instances.some((instance) => instance.instancePath.startsWith(nodeId) && instance.instancePath !== nodeId);
+    if (props.children.length === 0 && insts.length > 0 && "color" in insts[0]) {
       return insts[0].color
     }
     // we check if all children have the same color
@@ -164,19 +165,30 @@ const ControlPanelTreeItem = (props) => {
       }
   }
 
-  const handleColorChange = (event, nodeId, colorGenerator) => {
-    const children = window.Instances.getInstance(nodeId).getChildren().map((instance) => instance.getInstancePath());
-    if (children.length === 0) {  // If we're on a leaf, we do a classical color change
-      const newInstances = instances.filter((instance) => !(instance.instancePath.startsWith(nodeId)));
-      newInstances.push({
-        instancePath: nodeId,
-        color: translateColor(colorGenerator())
-      });
-      dispatch(changeInstanceColor(newInstances));
-      return
-    }
-    // Otherwise, we need to change to color of children also
-    const newInstances = instances.filter((instance) => {
+  const collectAllChildren = (instance) => {
+    const children = [...instance.getChildren()]
+    children.forEach(child => children.push(...collectAllChildren(child)))
+    return children
+  }
+
+  const handleLeafColorChange = (event, nodeId, colorGenerator) => {
+    const updateInstances = instances.filter((instance) => !instance.pathInstance.startsWith(nodeId));
+    updateInstances.push({
+      instancePath: nodeId,
+      color: translateColor(colorGenerator())
+    });
+    dispatch(changeInstanceColor(updateInstances));
+  }
+
+  const handleContainerColorChange = (event, nodeId, colorGenerator) => {
+    event.stopPropagation();
+    event.preventDefault();
+
+    const childrenPaths = collectAllChildren(window.Instances.getInstance(nodeId))
+                            .filter((instance) => !instance.getChildren() || instance.getChildren().length === 0)
+                            .map((instance) => instance.getInstancePath());
+    const children = childrenPaths.filter((path) => path.startsWith(nodeId));
+    const updateInstances = instances.filter((instance) => {
       let condition = true;
       children.forEach((child) => {
         if (instance.instancePath.startsWith(child)) {
@@ -185,19 +197,22 @@ const ControlPanelTreeItem = (props) => {
       });
       return condition;
     });
-
     children.forEach((child) => {
-      newInstances.push({
+      updateInstances.push({
         instancePath: child,
-        color: translateColor(colorGenerator()),
+        color: translateColor(colorGenerator())
       });
     });
-    dispatch(changeInstanceColor(newInstances));
-    if (event) {
-      event.stopPropagation();
-      event.preventDefault();
+    dispatch(changeInstanceColor(updateInstances));
+  }
+
+  const handleColorChange = (event, nodeId, colorGenerator) => {
+    if (props.children.length === 0) {
+      handleLeafColorChange(event, nodeId, colorGenerator);
+      return
     }
-  };
+    handleContainerColorChange(event, nodeId, colorGenerator);
+  }
 
   const changeVisibility = (event, nodeId) => {
     event.stopPropagation();
