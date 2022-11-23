@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
   colorPickerBox: {
     position: 'absolute',
     top: '1.6rem',
-    right: '2.7rem',
+    right: '0',
     height: '3rem',
   },
   triangleIcon: {
@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   colorPicker: {
     position: 'absolute',
     zIndex: 1000,
-    right: '-2.7rem',
+    right: '0',
     backgroundColor: `${bgDarker} !important`,
     padding: '0.2rem',
     '& label': {
