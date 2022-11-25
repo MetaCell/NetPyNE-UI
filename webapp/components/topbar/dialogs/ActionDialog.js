@@ -63,6 +63,7 @@ class ActionDialog extends React.Component {
       classes,
       errorMessage,
       errorDetails,
+      errorCanGoBack,
     } = this.props;
 
     let action;
@@ -89,10 +90,10 @@ class ActionDialog extends React.Component {
         <Button
           variant="contained"
           color="primary"
-          key="BACK"
+          key={errorCanGoBack? "CLOSE": "BACK"}
           onClick={() => this.handleClickGoBack()}
         >
-          BACK
+          {errorCanGoBack? "CLOSE": "BACK"}
         </Button>
       );
 
@@ -101,6 +102,16 @@ class ActionDialog extends React.Component {
         content = StackTrace(classes.exception, errorDetails);
       }
     }
+
+    const cancelButton = (errorMessage === '') ? (
+      <Button
+        onClick={this.cancelDialog}
+        style={styles.cancel}
+        key="CANCEL"
+      >
+        CANCEL
+      </Button>
+    ) : <></>
 
     return (
       <Dialog
@@ -115,13 +126,7 @@ class ActionDialog extends React.Component {
           {content}
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={this.cancelDialog}
-            style={styles.cancel}
-            key="CANCEL"
-          >
-            CANCEL
-          </Button>
+          {cancelButton}
           {action}
         </DialogActions>
       </Dialog>
