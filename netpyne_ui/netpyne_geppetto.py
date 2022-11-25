@@ -259,7 +259,7 @@ class NetPyNEGeppetto:
                 netpyne_model = self.instantiateNetPyNEModel()
 
                 self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
-            
+
             simulations.run()
 
             if self.geppetto_model:
@@ -374,7 +374,7 @@ class NetPyNEGeppetto:
 
     def _prepare_batch_files(self, experiment: model.Experiment) -> str:
         """Creates template files and netpyne model files in the experiment folder.
-        
+
         Only for an experiment consisting of many trials.
 
         :param experiment: given experiment
@@ -599,7 +599,8 @@ class NetPyNEGeppetto:
                 if not args['netCells']:
                     sim.initialize(netParams=self.netParams, simConfig=self.simConfig)
                 sim.cfg.filename = args['fileName']
-                include = [el for el in specs.SimConfig().saveDataInclude if el in args.keys() and args[el]]
+                sim_config_data_include = specs.SimConfig().saveDataInclude
+                include = [el for el in sim_config_data_include if args.get(el, False)]
                 if args['netCells']: include += ['netPops']
                 sim.cfg.saveJson = True
                 sim.saveData(include)
