@@ -166,6 +166,14 @@ export default {
           },
         },
         {
+          label: 'Open from Index...',
+          icon: '',
+          action: {
+            handlerAction: 'redux',
+            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.LOAD_INDEX],
+          },
+        },
+        {
           label: 'Save...',
           icon: '',
           action: {

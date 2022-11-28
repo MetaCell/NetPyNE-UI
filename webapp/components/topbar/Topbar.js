@@ -14,6 +14,7 @@ import { bgRegular } from '../../theme';
 import Splash from '../general/Splash';
 
 import LoadFileDialog from './dialogs/LoadFile';
+import LoadFileIndexDialog from './dialogs/LoadFileIndex';
 import SaveFileDialog from './dialogs/SaveFile';
 import NewModelDialog from './dialogs/NewModel';
 import ImportExportHLSDialog from './dialogs/ImportExportHLS';
@@ -134,6 +135,14 @@ class Topbar extends Component {
         case TOPBAR_CONSTANTS.LOAD:
           content = (
             <LoadFileDialog
+              open={dialogOpen}
+              onRequestClose={() => this.handleClose()}
+            />
+          );
+          break;
+        case TOPBAR_CONSTANTS.LOAD_INDEX:
+          content = (
+            <LoadFileIndexDialog
               open={dialogOpen}
               onRequestClose={() => this.handleClose()}
             />
