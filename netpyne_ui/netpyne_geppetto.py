@@ -509,6 +509,9 @@ class NetPyNEGeppetto:
                 # Load again because gatherData removed simData
                 sim.loadSimData(json_path)
 
+    def loadFromIndexFile(self, json_path: str):
+        sim.loadFromIndexFile(json_path)
+
     def importModel(self, modelParameters):
         """ Imports a model stored in form of Python files.
 
