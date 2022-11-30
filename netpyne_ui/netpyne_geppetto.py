@@ -510,7 +510,23 @@ class NetPyNEGeppetto:
                 sim.loadSimData(json_path)
 
     def loadFromIndexFile(self, json_path: str):
-        sim.loadFromIndexFile(json_path)
+        cfg, netParams = sim.loadFromIndexFile(json_path['jsonModelFolder'])
+        self.simConfig = cfg
+        self.netParams = netParams
+
+        if isinstance(self.netParams, dict):
+          self.netParams = specs.NetParams(self.netParams)
+
+        if isinstance(self.simConfig, dict):
+          self.simConfig = specs.SimConfig(self.simConfig)
+
+        for key, value in self.netParams.cellParams.items():
+            if hasattr(value, 'todict'):
+                self.netParams.cellParams[key] = value.todict()
+
+        # TODO: when should sim.initialize be called?
+        #   Only on import or better before every simulation or network instantiation?
+        sim.initialize()
 
     def importModel(self, modelParameters):
         """ Imports a model stored in form of Python files.

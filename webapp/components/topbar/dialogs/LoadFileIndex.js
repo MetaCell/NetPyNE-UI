@@ -46,7 +46,7 @@ class LoadFileIndex extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      jsonModelFolder: '',
+      jsonModelFolder: '/Users/infectuz/Desktop/examples/CA3model_3pops/index.npjson',
       modFolder: '',
       compileMod: false,
       explorerDialogOpen: false,
