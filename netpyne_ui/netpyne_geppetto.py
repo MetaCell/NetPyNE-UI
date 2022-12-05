@@ -740,10 +740,13 @@ class NetPyNEGeppetto:
             return self.simConfig.analysis[plot_name]
         return {}
 
-    def getDirList(self, dir=None, onlyDirs=False, filterFiles=False):
+    def getDirList(self, dir=None, onlyDirs=False, filterFiles=False, subDir=None):
         # Get Current dir
         if dir is None or dir == '':
-            dir = os.path.join(os.getcwd(), constants.NETPYNE_WORKDIR_PATH)
+            base = constants.NETPYNE_WORKDIR_PATH
+            if subDir:
+              base = os.path.join(base, subDir)
+            dir = os.path.join(os.getcwd(), base)
         dir_list = []
         file_list = []
         for f in sorted(os.listdir(str(dir)), key=str.lower):

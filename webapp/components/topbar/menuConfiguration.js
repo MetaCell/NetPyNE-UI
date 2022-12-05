@@ -166,6 +166,14 @@ export default {
           },
         },
         {
+          label: 'Open from Workspace Index...',
+          icon: '',
+          action: {
+            handlerAction: 'redux',
+            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.LOAD_INDEX_WORKSPACE],
+          },
+        },
+        {
           label: 'Open from Index...',
           icon: '',
           action: {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import Menu from '@metacell/geppetto-meta-ui/menu/Menu';
+import FileBrowser from '../general/FileBrowser';
 
 import { withStyles } from '@material-ui/core/styles';
 import { SwitchPageButton } from 'netpyne/components';
@@ -40,6 +41,30 @@ class Topbar extends Component {
     super(props);
     this.state = { openSnackBar: false };
     this.menuHandler = this.menuHandler.bind(this);
+  }
+
+  closeExplorerDialog (fieldValue) {
+    const newState = { explorerDialogOpen: false };
+    if (fieldValue) {
+      const fileName = fieldValue.path.replace(/^.*[\\/]/, '');
+      const path = fieldValue.path
+        .split(fileName)
+        .slice(0, -1)
+        .join('');
+      switch (this.state.explorerParameter) {
+        case 'modFolder':
+          newState.modFolder = fieldValue.path;
+          newState.modPath = path;
+          break;
+        case 'jsonModelFolder':
+          newState.jsonModelFolder = fieldValue.path;
+          newState.jsonPath = path;
+          break;
+        default:
+          throw Error('Not a valid parameter!');
+      }
+    }
+    this.setState(newState);
   }
 
   handleOpenSnackBar (message) {
@@ -137,6 +162,17 @@ class Topbar extends Component {
             <LoadFileDialog
               open={dialogOpen}
               onRequestClose={() => this.handleClose()}
+            />
+          );
+          break;
+        case TOPBAR_CONSTANTS.LOAD_INDEX_WORKSPACE:
+          content = (
+            <FileBrowser
+              open={true}
+              exploreOnlyDirs={false}
+              filterFiles=".npjson"
+              startDir="examples"
+              onRequestClose={(selection) => this.closeExplorerDialog(selection)}
             />
           );
           break;

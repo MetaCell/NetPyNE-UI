@@ -20,9 +20,10 @@ export default class FileBrowser extends React.Component {
     this.handleClickVisualize = this.handleClickVisualize.bind(this);
 
     this.state = {};
+    this.getDirList([], undefined, this.props.startDir);
   }
 
-  getDirList (treeData, rowInfo) {
+  getDirList (treeData, rowInfo, startDir) {
     if (rowInfo != undefined) {
       var { path } = rowInfo.node;
     } else {
@@ -30,7 +31,7 @@ export default class FileBrowser extends React.Component {
     }
 
     Utils
-      .evalPythonMessage('netpyne_geppetto.getDirList', [path, this.props.exploreOnlyDirs, this.props.filterFiles])
+      .evalPythonMessage('netpyne_geppetto.getDirList', [path, this.props.exploreOnlyDirs, this.props.filterFiles, startDir])
       .then((dirList) => {
         if (treeData != [] && treeData.length > 0) {
           rowInfo.node.children = dirList;
@@ -56,7 +57,7 @@ export default class FileBrowser extends React.Component {
 
   handleClickVisualize (event, rowInfo) {
     if (rowInfo.node.load == false) {
-      this.getDirList(this.refs.tree.state.treeData, rowInfo);
+      this.getDirList(this.refs.tree.state.treeData, rowInfo, this.props.startDir);
     } else if (this.props.exploreOnlyDirs || (rowInfo.node.children == undefined && rowInfo.node.load == undefined)) {
       this.setState({ selection: rowInfo.node });
     }
@@ -83,7 +84,7 @@ export default class FileBrowser extends React.Component {
 
   componentDidUpdate (prevProps, prevState) {
     if (prevProps.open == false && this.props.open) {
-      this.getDirList([]);
+      this.getDirList([], undefined, prevProps.startDir);
     }
   }
 
