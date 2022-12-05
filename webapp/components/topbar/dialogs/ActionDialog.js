@@ -63,7 +63,6 @@ class ActionDialog extends React.Component {
       classes,
       errorMessage,
       errorDetails,
-      errorCanGoBack,
     } = this.props;
 
     let action;
@@ -73,15 +72,25 @@ class ActionDialog extends React.Component {
     if (errorMessage === '') {
       title = this.props.title;
       action = (
-        <Button
-          id="appBarPerformActionButton"
-          key="appBarPerformActionButton"
-          variant="contained"
-          color="primary"
-          onClick={this.performAction}
+        <>
+          <Button
+          onClick={this.cancelDialog}
+          style={styles.cancel}
+          key="CANCEL"
         >
-          {this.props.buttonLabel}
+          CANCEL
         </Button>
+        <Button
+            id="appBarPerformActionButton"
+            key="appBarPerformActionButton"
+            variant="contained"
+            color="primary"
+            onClick={this.performAction}
+          >
+            {this.props.buttonLabel}
+          </Button>
+        </>
+
       );
 
       content = this.props.children;
@@ -90,10 +99,10 @@ class ActionDialog extends React.Component {
         <Button
           variant="contained"
           color="primary"
-          key={errorCanGoBack? "CLOSE": "BACK"}
+          key="CLOSE"
           onClick={() => this.handleClickGoBack()}
         >
-          {errorCanGoBack? "CLOSE": "BACK"}
+          CLOSE
         </Button>
       );
 
@@ -102,16 +111,6 @@ class ActionDialog extends React.Component {
         content = StackTrace(classes.exception, errorDetails);
       }
     }
-
-    const cancelButton = (errorMessage === '') ? (
-      <Button
-        onClick={this.cancelDialog}
-        style={styles.cancel}
-        key="CANCEL"
-      >
-        CANCEL
-      </Button>
-    ) : <></>
 
     return (
       <Dialog
@@ -126,7 +125,6 @@ class ActionDialog extends React.Component {
           {content}
         </DialogContent>
         <DialogActions>
-          {cancelButton}
           {action}
         </DialogActions>
       </Dialog>
