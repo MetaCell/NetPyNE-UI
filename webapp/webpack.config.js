@@ -37,12 +37,10 @@ const availableExtensions = [
   {
     from: path.resolve(__dirname, geppettoClientPath, 'style/css/font-awesome.min.css'),
     to: 'static/css',
-    flatten: true,
   },
   {
     from: path.resolve(__dirname, geppettoClientPath, 'style/css/gpt-icons.css'),
     to: 'static/css',
-    flatten: true,
   },
   {
     from: path.resolve(__dirname, geppettoClientPath, 'static/*'),
