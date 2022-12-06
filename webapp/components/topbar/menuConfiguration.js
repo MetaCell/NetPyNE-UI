@@ -170,7 +170,7 @@ export default {
           icon: '',
           action: {
             handlerAction: 'redux',
-            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.LOAD_INDEX_WORKSPACE],
+            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.SAVE_INDEX_WORKSPACE],
           },
         },
         {
