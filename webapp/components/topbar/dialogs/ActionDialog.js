@@ -112,11 +112,13 @@ class ActionDialog extends React.Component {
       }
     }
 
+    const shouldDisplay = Boolean(!this.state.hide || this.props.openErrorDialogBox);
     return (
+      shouldDisplay ?(
       <Dialog
         fullWidth
         maxWidth={this.props.openErrorDialogBox ? 'md' : 'sm'}
-        open={Boolean(!this.state.hide || this.props.openErrorDialogBox)}
+        open={shouldDisplay}
         onClose={() => this.cancelDialog()}
         className={classes.root}
       >
@@ -128,6 +130,7 @@ class ActionDialog extends React.Component {
           {action}
         </DialogActions>
       </Dialog>
+      ): <></>
     );
   }
 }
