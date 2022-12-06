@@ -510,7 +510,7 @@ class NetPyNEGeppetto:
                 sim.loadSimData(json_path)
 
     def loadFromIndexFile(self, json_path: str):
-        cfg, netParams = sim.loadFromIndexFile(json_path['jsonModelFolder'])
+        cfg, netParams = sim.loadFromIndexFile(json_path)
         self.simConfig = cfg
         self.netParams = netParams
 

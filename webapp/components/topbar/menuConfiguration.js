@@ -162,23 +162,7 @@ export default {
           icon: '',
           action: {
             handlerAction: 'redux',
-            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.LOAD],
-          },
-        },
-        {
-          label: 'Open from Workspace Index...',
-          icon: '',
-          action: {
-            handlerAction: 'redux',
             parameters: [openTopbarDialog, TOPBAR_CONSTANTS.LOAD_INDEX_WORKSPACE],
-          },
-        },
-        {
-          label: 'Open from Index...',
-          icon: '',
-          action: {
-            handlerAction: 'redux',
-            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.LOAD_INDEX],
           },
         },
         {
@@ -186,8 +170,30 @@ export default {
           icon: '',
           action: {
             handlerAction: 'redux',
-            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.SAVE],
+            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.LOAD_INDEX_WORKSPACE],
           },
+        },
+        {
+          label: 'Legacy',
+          icon: '',
+          list: [
+            {
+              label: 'Open...',
+              icon: '',
+              action: {
+                handlerAction: 'redux',
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.LOAD],
+              },
+            },
+            {
+              label: 'Save...',
+              icon: '',
+              action: {
+                handlerAction: 'redux',
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.SAVE],
+              },
+            },
+          ],
         },
         {
           label: 'Import',

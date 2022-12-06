@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import Menu from '@metacell/geppetto-meta-ui/menu/Menu';
 import FileBrowser from '../general/FileBrowser';
-
+import Utils from 'root/Utils';
 import { withStyles } from '@material-ui/core/styles';
 import { SwitchPageButton } from 'netpyne/components';
 import toolbarConfig, {
@@ -24,6 +24,7 @@ import UploadDownloadFilesDialog from './dialogs/UploadDownloadFiles';
 
 import { TOPBAR_CONSTANTS, MODEL_STATE, DEFAULT_CONFIRMATION_DIALOG_MESSAGE } from '../../constants';
 import { LOAD_TUTORIAL } from '../../redux/actions/general';
+import OverwriteModel from './dialogs/OverwriteModel';
 
 const styles = () => ({
   topbar: {
@@ -44,27 +45,15 @@ class Topbar extends Component {
   }
 
   closeExplorerDialog (fieldValue) {
-    const newState = { explorerDialogOpen: false };
     if (fieldValue) {
-      const fileName = fieldValue.path.replace(/^.*[\\/]/, '');
-      const path = fieldValue.path
-        .split(fileName)
-        .slice(0, -1)
-        .join('');
-      switch (this.state.explorerParameter) {
-        case 'modFolder':
-          newState.modFolder = fieldValue.path;
-          newState.modPath = path;
-          break;
-        case 'jsonModelFolder':
-          newState.jsonModelFolder = fieldValue.path;
-          newState.jsonPath = path;
-          break;
-        default:
-          throw Error('Not a valid parameter!');
-      }
+      Utils.evalPythonMessage('netpyne_geppetto.loadFromIndexFile', [fieldValue.path])
     }
-    this.setState(newState);
+    this.handleClose();
+  }
+
+  overWriteModel () {
+    Utils.evalPythonMessage('netpyne_geppetto.loadFromIndexFile', [fieldValue.path])
+    this.handleClose();
   }
 
   handleOpenSnackBar (message) {
@@ -165,10 +154,18 @@ class Topbar extends Component {
             />
           );
           break;
+        case TOPBAR_CONSTANTS.SAVE_INDEX_WORKSPACE:
+          content = (
+            <OverwriteModel
+              open={dialogOpen}
+              onRequestClose={() => this.overWriteModel()}
+            />
+          );
+          break;
         case TOPBAR_CONSTANTS.LOAD_INDEX_WORKSPACE:
           content = (
             <FileBrowser
-              open={true}
+              open={dialogOpen}
               exploreOnlyDirs={false}
               filterFiles=".npjson"
               startDir="examples"
