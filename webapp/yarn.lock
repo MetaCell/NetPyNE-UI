@@ -4104,9 +4104,9 @@ decimal.js@9.0.1:
   integrity sha512-2h0iKbJwnImBk4TGk7CG1xadoA0g3LDPlQhQzbZ221zvG0p2YVUedbKIPsOZXKZGx6YmZMJKYOalpCMxSdDqTQ==
 
 decode-uri-component@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/decode-uri-component/-/decode-uri-component-0.2.0.tgz#eb3913333458775cb84cd1a1fae062106bb87545"
-  integrity sha512-hjf+xovcEn31w/EUYdTXQh/8smFL/dzYjohQGEIgjyNavaJfBY2p5F527Bo1VPATxv0VYTUC2bOcXvqFwk78Og==
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/decode-uri-component/-/decode-uri-component-0.2.2.tgz#e69dbe25d37941171dd540e024c444cd5188e1e9"
+  integrity sha512-FqUYQ+8o158GyGTrMFJms9qh3CqTKvAqgqsTnkLI8sKu0028orqBhxNMFkFen0zGyg6epACD32pjVk58ngIErQ==
 
 deep-equal@^1.0.1:
   version "1.1.1"
@@ -6196,9 +6196,10 @@ grid-index@^1.1.0:
   resolved "https://registry.yarnpkg.com/grid-index/-/grid-index-1.1.0.tgz#97f8221edec1026c8377b86446a7c71e79522ea7"
   integrity sha512-HZRwumpOGUrHyxO5bqKZL0B0GlUpwtCAzZ42sgxUPniu33R1LSFH5yrIcBCHjkctCAh3mtWKcKd9J4vDDdeVHA==
 
-"griddle-0.6-fork@git+https://github.com/rodriguez-facundo/griddle.git":
+"griddle-0.6-fork@https://github.com/rodriguez-facundo/griddle.git":
   version "0.6.1"
-  resolved "git+https://github.com/rodriguez-facundo/griddle.git#218468b8c438295f8b3c6a8229491eb7972ed85e"
+  uid "218468b8c438295f8b3c6a8229491eb7972ed85e"
+  resolved "https://github.com/rodriguez-facundo/griddle.git#218468b8c438295f8b3c6a8229491eb7972ed85e"
   dependencies:
     lodash "^4.12.0"
     prop-types "^15.6.2"
