@@ -1,11 +1,20 @@
 #!/bin/sh
 
-set -e
+trap ctrl_c INT
+
+ctrl_c() {
+	echo "### Stopping dev server ###"
+	mv package.json dev_package.json
+	mv package.bak package.json
+	exit 0	
+}
+
+#set -e
 
 rm -rf node_modules
 rm -rf yarn.lock
-cp package.json package.bak
-cp dev_package.json package.json
+mv package.json package.bak
+mv dev_package.json package.json
 
 yarn global add yalc
 
@@ -33,3 +42,5 @@ cd $app
 yalc add @metacell/geppetto-meta-client
 yalc add @metacell/geppetto-meta-core
 yalc add @metacell/geppetto-meta-ui
+
+yarn && yarn run start
