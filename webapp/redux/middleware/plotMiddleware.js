@@ -60,6 +60,7 @@ const plotFigure = async (plotId, plotMethod, plotType = false, uri = null, them
         //if (plotId === 'rxdConcentrationPlot') {
           // FIXME: How can we center the bokeh plots when sizing_mode='scale_height'
           htmlText = htmlText.replace('<head>', '<head><style>.bk {margin: 0 auto!important;} div {overflow:hidden;} frame {overflow:hidden;}</style>');
+          htmlText = htmlText.replace('margin: 0 auto!important;', 'margin: 0;');
         //}
         return htmlText;
       }
