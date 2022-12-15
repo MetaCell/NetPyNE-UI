@@ -172,7 +172,7 @@ const ControlPanelTreeItem = (props) => {
   }
 
   const handleLeafColorChange = (event, nodeId, colorGenerator) => {
-    const updateInstances = instances.filter((instance) => !instance.pathInstance.startsWith(nodeId));
+    const updateInstances = instances.filter((instance) => !instance.instancePath.startsWith(nodeId));
     updateInstances.push({
       instancePath: nodeId,
       color: translateColor(colorGenerator())
