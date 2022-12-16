@@ -1,8 +1,6 @@
 import { Base64 } from 'js-base64';
 
-const getTimeStamp = () => new Date().toGMTString().replace(',', '').replace(/[ ,:]/g, '_');
-
-const createFileName = (name) => name + getTimeStamp();
+const createFileName = (name) => name
 
 const forceBlobDownload = (blob, filename) => {
   const url = window.URL.createObjectURL(blob);
@@ -18,7 +16,7 @@ export const downloadJsonResponse = (jsonData) => {
   let filename = createFileName('NetPyNE_Model_');
 
   if (jsonData.simConfig && jsonData.simConfig.filename) {
-    filename = createFileName(`${jsonData.simConfig.filename}_`);
+    filename = createFileName(`${jsonData.simConfig.filename}`);
   }
 
   filename += '.json';

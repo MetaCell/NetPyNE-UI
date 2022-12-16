@@ -34,11 +34,13 @@ const saveOptions = [
   },
 ];
 
+const getTimeStamp = () => new Date().toGMTString().replace(',', '').replace(/[ ,:]/g, '_');
+
 export default class SaveFile extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      fileName: 'output',
+      fileName: 'output_' + getTimeStamp(),
       netParams: true,
       simConfig: true,
       simData: true,
