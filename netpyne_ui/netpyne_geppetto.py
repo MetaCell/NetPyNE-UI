@@ -192,6 +192,8 @@ class NetPyNEGeppetto:
         try:
             with redirect_stdout(sys.__stdout__):
                 if not args.get("usePrevInst", False):
+                    if self.doIhaveInstOrSimData()['haveInstance']:
+                        sim.clearAll()
                     netpyne_model = self.instantiateNetPyNEModel()
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
 
@@ -259,7 +261,7 @@ class NetPyNEGeppetto:
                 netpyne_model = self.instantiateNetPyNEModel()
 
                 self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
-            
+
             simulations.run()
 
             if self.geppetto_model:
@@ -374,7 +376,7 @@ class NetPyNEGeppetto:
 
     def _prepare_batch_files(self, experiment: model.Experiment) -> str:
         """Creates template files and netpyne model files in the experiment folder.
-        
+
         Only for an experiment consisting of many trials.
 
         :param experiment: given experiment
