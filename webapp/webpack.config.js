@@ -35,6 +35,11 @@ if (isWin) {
 
 const availableExtensions = [
   {
+    from: path.resolve(__dirname, geppettoClientPath, 'style/fonts/*'),
+    to: 'static/fonts',
+    flatten: true,
+  },
+  {
     from: path.resolve(__dirname, geppettoClientPath, 'style/css/font-awesome.min.css'),
     to: 'static/css',
   },
