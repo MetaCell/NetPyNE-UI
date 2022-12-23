@@ -117,17 +117,12 @@ def main(netpyne_branch, workspace_branch, geppetto_branch=None, skipNpm=False,
         execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, META_DIR, JUPYTER_DIR))
         # installing core dependencies
         execute(cmd=['pip', 'install', '-e', '.'], cwd=ROOT_DIR)
+        if netpyne_branch and netpyne_branch != 'master':
+          cprint("Installing netpyne")
+          clone(repository=NETPYNE, branch_or_tag=netpyne_branch)
+          execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, NETPYNE_DIR))
     else:
-
-        if netpyne_branch and netpyne_branch != 'master':
-          cprint("Installing netpyne")
-          clone(repository=NETPYNE, branch_or_tag=netpyne_branch)
-          execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, NETPYNE_DIR))
         # install requirements
-        if netpyne_branch and netpyne_branch != 'master':
-          cprint("Installing netpyne")
-          clone(repository=NETPYNE, branch_or_tag=netpyne_branch)
-          execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, NETPYNE_DIR))
         cprint("Installing UI python package...")
         execute(cmd=['pip', 'install', '-e', '.', '--no-deps'], cwd=ROOT_DIR)
 
@@ -143,7 +138,8 @@ def main(netpyne_branch, workspace_branch, geppetto_branch=None, skipNpm=False,
         execute(cmd=['npm', 'ci'], cwd=os.path.join(DEPS_DIR, META_DIR, JUPYTER_DIR, 'js'))
         execute(cmd=['npm', 'run', 'build-dev' if development else 'build'],
                 cwd=os.path.join(DEPS_DIR, META_DIR, JUPYTER_DIR, 'js'))
-
+  
+    execute(cmd=['jupyter', 'nbextension', 'uninstall', 'jupyter_geppetto'])                                                                            
     execute(cmd=['jupyter', 'nbextension', 'install', '--py', '--symlink', '--sys-prefix', 'jupyter_geppetto'])
     execute(cmd=['jupyter', 'nbextension', 'enable', '--py', '--sys-prefix', 'jupyter_geppetto'])
     execute(cmd=['jupyter', 'nbextension', 'enable', '--py', '--sys-prefix', 'widgetsnbextension'])

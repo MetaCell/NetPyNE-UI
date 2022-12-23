@@ -10,6 +10,7 @@ from jupyter_geppetto.webapi import get, post
 from notebook.base.handlers import IPythonHandler
 from netpyne_ui.constants import ALLOWED_EXTENSIONS, UPLOAD_FOLDER_PATH
 
+
 def allowed_file(filename, allowed_extensions=ALLOWED_EXTENSIONS):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in allowed_extensions
@@ -45,6 +46,23 @@ def get_file_paths(handler):
     return file_paths
 
 
+def is_within_directory(directory, target):
+    abs_directory = os.path.abspath(directory)
+    abs_target = os.path.abspath(target)
+
+    prefix = os.path.commonprefix([abs_directory, abs_target])
+
+    return prefix == abs_directory
+
+
+def safe_extract_tar(tar, path=".", members=None, *, numeric_owner=False):
+    for member in tar.getmembers():
+        member_path = os.path.join(path, member.name)
+        if not is_within_directory(path, member_path):
+            raise Exception("Attempted Path Traversal in Tar File")
+    tar.extractall(path, members, numeric_owner=numeric_owner)
+
+
 class NetPyNEController:  # pytest: no cover
 
     @post('/uploads')
@@ -78,7 +96,7 @@ class NetPyNEController:  # pytest: no cover
 
                 elif filename.endswith('.tar.gz'):
                     with tarfile.open(file_path, mode='r:gz') as tar:
-                        tar.extractall(UPLOAD_FOLDER_PATH)
+                        safe_extract_tar(tar, UPLOAD_FOLDER_PATH)
 
                 elif filename.endswith('.gz'):
                     with gzip.open(file_path, "rb") as gz, open(file_path.replace('.gz', ''), 'wb') as ff:

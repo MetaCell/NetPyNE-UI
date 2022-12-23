@@ -384,7 +384,7 @@ export const getNetPyNEMenu = (props) => (
       },
     },
     {
-      label: 'Color preferences',
+      label: 'Plot color preferences',
       icon: '',
       list: [
         {

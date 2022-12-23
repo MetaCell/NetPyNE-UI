@@ -30,7 +30,6 @@ require('./css/traceback.less');
 require('./css/flexlayout.less');
 require('./css/tree.less');
 
-window.$ = Array;
 
 ReactDOM.render(
   <div>
