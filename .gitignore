@@ -30,3 +30,4 @@ venv
 webapp/build
 webapp/.yalc
 node_modules
+sa_nyhead.mat
