@@ -315,7 +315,8 @@ class NetPyNEGeppetto:
         except Exception as e :
             message = ("Error while simulating the NetPyNE model: %s. SimulationId %f" % (e, sim_id))
             logging.exception(message)
-            return utils.getJSONError(message, sys.exc_info(), { "sim_id": sim_id})
+            # return utils.getJSONError(message, sys.exc_info(), { "sim_id": sim_id})
+            return utils.getJSONError(message, sys.exc_info())
 
     def _prepare_simulation_files(self, experiment: model.Experiment = None, use_prev_inst: bool = False) -> str:
         """Prepares template files and netpyne model files for a single simulation """
