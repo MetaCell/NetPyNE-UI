@@ -116,12 +116,12 @@ def main(netpyne_branch, workspace_branch, geppetto_branch=None, skipNpm=False,
         execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, META_DIR, JUPYTER_DIR))
         # installing core dependencies
         execute(cmd=['pip', 'install', '-e', '.'], cwd=ROOT_DIR)
-    else:
-        # install requirements
         if netpyne_branch and netpyne_branch != 'master':
           cprint("Installing netpyne")
           clone(repository=NETPYNE, branch_or_tag=netpyne_branch)
           execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, NETPYNE_DIR))
+    else:
+        # install requirements
         cprint("Installing UI python package...")
         execute(cmd=['pip', 'install', '-e', '.', '--no-deps'], cwd=ROOT_DIR)
 

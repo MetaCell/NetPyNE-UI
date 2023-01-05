@@ -30,7 +30,8 @@ class NetPyNESynapse extends React.Component {
 
   UNSAFE_componentWillReceiveProps (nextProps) {
     if (this.state.currentName != nextProps.name) {
-      this.setState({ currentName: nextProps.name, synMechMod: '' });
+      this.setSyncMechModState(nextProps.name)
+      this.setState({ currentName: nextProps.name});
     }
   }
 
@@ -113,6 +114,15 @@ class NetPyNESynapse extends React.Component {
       }'`,
     );
     this.setState({ synMechMod: value });
+  }
+
+  async setSyncMechModState(synapseName) {
+    const value = await Utils.execPythonMessage(
+      `netpyne_geppetto.netParams.synMechParams['${
+        synapseName
+      }']['mod']`
+    )
+    this.setState({synMechMod: value})
   }
 
   render () {

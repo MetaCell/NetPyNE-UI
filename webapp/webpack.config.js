@@ -35,6 +35,19 @@ if (isWin) {
 
 const availableExtensions = [
   {
+    from: path.resolve(__dirname, geppettoClientPath, 'style/fonts/*'),
+    to: 'static/fonts',
+    flatten: true,
+  },
+  {
+    from: path.resolve(__dirname, geppettoClientPath, 'style/css/font-awesome.min.css'),
+    to: 'static/css',
+  },
+  {
+    from: path.resolve(__dirname, geppettoClientPath, 'style/css/gpt-icons.css'),
+    to: 'static/css',
+  },
+  {
     from: path.resolve(__dirname, geppettoClientPath, 'static/*'),
     to: 'static',
     flatten: true,
@@ -58,6 +71,7 @@ const availableExtensions = [
     from: path.resolve(__dirname, 'static'),
     to: 'static',
   },
+
 ];
 
 module.exports = function (env) {
