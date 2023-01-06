@@ -1,6 +1,6 @@
 {
   "name": "geppetto-netpyne",
-  "version": "0.8.1",
+  "version": "0.9.0",
   "description": "Geppetto NetPyNE-UI frontend.",
   "repository": "https://github.com/MetaCell/NetPyNE-UI",
   "license": "MIT",

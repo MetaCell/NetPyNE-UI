@@ -47,6 +47,7 @@ netpyne==1.0.3
 NEURON==8.0.2
 numpy==1.18.5
 oauthlib==3.0.1
+optuna==2.10.1
 ordered-set==4.0.2
 pamela==1.0.0
 pandas==0.23.4
