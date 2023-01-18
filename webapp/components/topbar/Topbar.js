@@ -51,8 +51,8 @@ class Topbar extends Component {
     this.handleClose();
   }
 
-  overWriteModel () {
-    Utils.evalPythonMessage('netpyne_geppetto.loadFromIndexFile', [fieldValue.path])
+  saveToIndexFile () {
+    Utils.evalPythonMessage('netpyne_geppetto.saveToIndexFile', [fieldValue.path])
     this.handleClose();
   }
 
@@ -158,7 +158,7 @@ class Topbar extends Component {
           content = (
             <OverwriteModel
               open={dialogOpen}
-              onRequestClose={() => this.overWriteModel()}
+              onRequestClose={() => this.saveToIndexFile()}
             />
           );
           break;

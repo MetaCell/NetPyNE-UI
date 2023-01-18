@@ -259,7 +259,7 @@ class NetPyNEGeppetto:
                 netpyne_model = self.instantiateNetPyNEModel()
 
                 self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
-            
+
             simulations.run()
 
             if self.geppetto_model:
@@ -374,7 +374,7 @@ class NetPyNEGeppetto:
 
     def _prepare_batch_files(self, experiment: model.Experiment) -> str:
         """Creates template files and netpyne model files in the experiment folder.
-        
+
         Only for an experiment consisting of many trials.
 
         :param experiment: given experiment
@@ -527,6 +527,14 @@ class NetPyNEGeppetto:
         # TODO: when should sim.initialize be called?
         #   Only on import or better before every simulation or network instantiation?
         sim.initialize()
+
+    def saveToIndexFile(self, args):
+        print("HERE ARE ARGS", args)
+        sim.saveModel(netParams=self.netParams,
+                      simConfig=self.simConfig,
+                      srcPath=...,
+                      dstPath=...)
+
 
     def importModel(self, modelParameters):
         """ Imports a model stored in form of Python files.
