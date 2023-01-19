@@ -9,12 +9,15 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Icon from '@material-ui/core/Icon';
 
 import { ActionDialog, Tooltip } from 'netpyne/components';
-import Utils from '../../../Utils';
 import Checkbox from '../../general/Checkbox';
 
 import { NETPYNE_COMMANDS } from '../../../constants';
-import { fas } from '@fortawesome/free-solid-svg-icons';
+import { useSelector, useDispatch } from 'react-redux';
 import { ExpandMore } from '@material-ui/icons';
+
+import Utils from 'root/Utils';
+import { registerModelPath } from '../../../redux/actions/general';
+
 
 const saveOptions = [
   {
@@ -29,29 +32,19 @@ const saveOptions = [
   },
 ];
 
-// const getTimeStamp = () => new Date().toGMTString().replace(',', '').replace(/[ ,:]/g, '_');
 
+const OverwriteModel = (props) => {
+  const srcPath = useSelector((state) => state.general.modelPath);
+  const [explorerDialogOpen, setExplorerDialogOpen] = React.useState(false);
+  const [explorerParameter, setExplorerParameter] = React.useState('srcPath');
+  const [dstPath, setDstPath] = React.useState(srcPath);
+  const [options, setOptions] = React.useState({
+    exportNetParamsAsPython: false,
+    exportSimConfigAsPython: false
+  });
+  const dispatch = useDispatch();
 
-export default class OverwriteModel extends React.Component {
-  constructor (props) {
-    super(props);
-    this.state = {
-      // fileName: 'output_' + getTimeStamp(),
-      explorerDialogOpen: false,
-      explorerParameter: 'srcPath',
-      srcPath: "examples",
-      dstPath: "examples",
-      exportNetParamsAsPython: false,
-      exportSimConfigAsPython: false,
-    };
-  }
-
-  componentDidMount () {
-    Utils.evalPythonMessage('netpyne_geppetto.doIhaveInstOrSimData', [])
-      .then((response) => { });
-  }
-
-  getDirAndModuleFromPath (fullpath) {
+  const getDirAndModuleFromPath = (fullpath) => {
     const fileName = fullpath.replace(/^.*[\\/]/, '');
     const moduleName = fileName.replace(/\.[^/.]+$/, '');
     const dirPath = fullpath.split(fileName)
@@ -64,52 +57,72 @@ export default class OverwriteModel extends React.Component {
     };
   }
 
-  showExplorerDialog (explorerParameter) {
-    this.setState({
-      explorerDialogOpen: true,
-      explorerParameter: explorerParameter,
-    });
+  const registerSavedModelPath = (path) => {
+    dispatch(registerModelPath(path));
   }
 
-  closeExplorerDialog (fieldValue) {
-    const newState = { explorerDialogOpen: false };
+  const showExplorerDialog = (explorerParameter) => {
+    setExplorerDialogOpen(true);
+    setExplorerParameter(explorerParameter)
+  }
+
+  const closeExplorerDialog = (fieldValue) => {
+    setExplorerDialogOpen(false);
     if (fieldValue) {
       const {
         dirPath,
         moduleName,
-      } = this.getDirAndModuleFromPath(fieldValue.path);
-      newState[this.state.explorerParameter] = `${dirPath}${moduleName}`;
-      // switch (this.state.explorerParameter) {
-      //   case 'srcPath': {
-      //     newState.srcPath = `${srcPath}/${moduleName}`;
-      //     break;
-      //   }
-      //   case 'dstPath': {
-      //     newState.dstPath = `${dirPath}/${moduleName}`;
-      //     break;
-      //   }
-      // }
+      } = getDirAndModuleFromPath(fieldValue.path);
+
+      switch (explorerParameter) {
+        // case 'srcPath': {
+        //   newState.srcPath = `${srcPath}/${moduleName}`;
+        //   break;
+        // }
+        case 'dstPath': {
+          setDstPath(`${dirPath}${moduleName}`);
+          break;
+        }
+      }
     }
-    this.setState({ ...newState });
   }
 
-  render () {
+  const switchCheckBox = (state) => {
+    setOptions(options => {
+      const opts = {...options};
+      opts[state] = !options[state];
+      return opts
+    });
+  }
+
+  const actionCallBack = (command, args) => {
+    Utils.evalPythonMessage(command, [args])
+         .then(() => {
+          registerSavedModelPath(dstPath)
+    })
+  }
+
     return (
       <>
       <ActionDialog
         command={NETPYNE_COMMANDS.saveModel}
+        callback={actionCallBack}
         message={GEPPETTO.Resources.EXPORTING_MODEL}
         buttonLabel="Save"
         title="Save as JSON file"
-        args={this.state}
-        {...this.props}
+        args={{
+          srcPath,
+          dstPath,
+          exportNetParamsAsPython: options.exportNetParamsAsPython,
+          exportSimConfigAsPython: options.exportSimConfigAsPython
+        }}
+        {...props}
       >
       {/* <TextField
             variant="filled"
             fullWidth
             value={this.state.srcPath}
-            onChange={(event) => this.setState({ srcPath: event.target.value })}
-            // onChange={(event) => this.onNetParamsPathChange(event.target.value)}
+            onChange={(event) => setSrcPath(event.target.value)}
             label="Model source path"
             // helperText="Only "
             InputProps={{
@@ -119,7 +132,7 @@ export default class OverwriteModel extends React.Component {
                     <Icon
                       className="fa fa-folder hovered"
                       style={{ cursor: 'pointer' }}
-                      onClick={() => this.showExplorerDialog('srcPath')}
+                      onClick={() => showExplorerDialog('srcPath')}
                     />
                   </Tooltip>
                 </InputAdornment>
@@ -129,9 +142,8 @@ export default class OverwriteModel extends React.Component {
         <TextField
             variant="filled"
             fullWidth
-            value={this.state.dstPath}
-            onChange={(event) => this.setState({ dstPath: event.target.value })}
-            // onChange={(event) => this.onNetParamsPathChange(event.target.value)}
+            value={dstPath}
+            onChange={(event) => setDstPath(event.target.value)}
             label="Model destination path"
             // helperText="Only "
             InputProps={{
@@ -141,7 +153,7 @@ export default class OverwriteModel extends React.Component {
                     <Icon
                       className="fa fa-folder hovered"
                       style={{ cursor: 'pointer' }}
-                      onClick={() => this.showExplorerDialog('dstPath')}
+                      onClick={() => showExplorerDialog('dstPath')}
                     />
                   </Tooltip>
                 </InputAdornment>
@@ -167,11 +179,10 @@ export default class OverwriteModel extends React.Component {
                     >
                       <ListItemIcon>
                         <Checkbox
-                          onChange={() => this.setState(({
-                            [saveOption.state]: oldState,
-                            ...others
-                          }) => ({ [saveOption.state]: !oldState }))}
-                          checked={this.state[saveOption.state]}
+                          onChange={() =>
+                            switchCheckBox(saveOption.state)
+                          }
+                          checked={options[saveOption.state]}
                           noBackground
                         />
                       </ListItemIcon>
@@ -189,13 +200,14 @@ export default class OverwriteModel extends React.Component {
       </ActionDialog>
 
       <FileBrowser
-              open={this.state.explorerDialogOpen}
+              open={explorerDialogOpen}
               exploreOnlyDirs={true}
               // filterFiles={''}
-              onRequestClose={(selection) => this.closeExplorerDialog(selection)}
-              startDir={this.state[this.state.explorerParameter]}
+              onRequestClose={(selection) => closeExplorerDialog(selection)}
+              startDir={explorerParameter === 'srcPath'? srcPath: dstPath}
             />
       </>
     );
-  }
 }
+
+export default OverwriteModel;
