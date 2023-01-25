@@ -48,12 +48,14 @@ class Topbar extends Component {
     if (fieldValue) {
       Utils.evalPythonMessage('netpyne_geppetto.loadFromIndexFile', [fieldValue.path])
            .then(() => {
-            const fileName = fieldValue.path.replace(/^.*[\\/]/, '');
-            const path = fieldValue.path
-              .split(fileName)
-              .slice(0, -1)
-              .join('');
-            const action = registerModelPath(path);
+            // const fileName = fieldValue.path.replace(/^.*[\\/]/, '');
+            // const path = fieldValue.path
+            //   .split(fileName)
+            //   .slice(0, -1)
+            //   .join('');
+            // const action = registerModelPath(path);
+            // this.props.dispatchAction(action);
+            const action = registerModelPath(fieldValue.path);
             this.props.dispatchAction(action);
       });
     }
@@ -163,7 +165,6 @@ class Topbar extends Component {
           content = (
             <OverwriteModel
               open={dialogOpen}
-              onAction={() => this.registerSavedModelPath()}
             />
           );
           break;
@@ -171,8 +172,8 @@ class Topbar extends Component {
           content = (
             <FileBrowser
               open={dialogOpen}
-              exploreOnlyDirs={false}
-              filterFiles=".npjson"
+              exploreOnlyDirs={true}
+              // filterFiles=".npjson"
               startDir="examples"
               onRequestClose={(selection) => this.closeExplorerDialog(selection)}
             />
