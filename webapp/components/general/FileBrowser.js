@@ -32,6 +32,9 @@ export default class FileBrowser extends React.Component {
     } else {
       var path = '';
     }
+    if (!startDir) {
+      startDir = '';
+    }
 
     Utils
       .evalPythonMessage('netpyne_geppetto.getDirList', [path, this.props.exploreOnlyDirs, this.props.filterFiles, startDir])
