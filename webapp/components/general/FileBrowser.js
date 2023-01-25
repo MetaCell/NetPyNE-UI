@@ -20,7 +20,10 @@ export default class FileBrowser extends React.Component {
     this.handleClickVisualize = this.handleClickVisualize.bind(this);
 
     this.state = {};
-    this.getDirList([], undefined, this.props.startDir);
+    this.tree;
+    if (this.props.open) {
+      this.getDirList([], undefined, this.props.startDir);
+    }
   }
 
   getDirList (treeData, rowInfo, startDir) {
@@ -51,13 +54,13 @@ export default class FileBrowser extends React.Component {
         } else {
           this.setState({ selection: rowInfo.node });
         }
-        this.refs.tree.updateTreeData(newTreeData);
+        this.tree.updateTreeData(newTreeData);
       });
   }
 
   handleClickVisualize (event, rowInfo) {
     if (rowInfo.node.load == false) {
-      this.getDirList(this.refs.tree.state.treeData, rowInfo, this.props.startDir);
+      this.getDirList(this.tree.state.treeData, rowInfo, this.props.startDir);
     } else if (this.props.exploreOnlyDirs || (rowInfo.node.children == undefined && rowInfo.node.load == undefined)) {
       this.setState({ selection: rowInfo.node });
     }
@@ -65,11 +68,11 @@ export default class FileBrowser extends React.Component {
 
   getSelectedFiles () {
     const nodes = {};
-    if (!this.refs.tree) {
+    if (!this.tree) {
       return nodes;
     }
     walk({
-      treeData: this.refs.tree.state.treeData,
+      treeData: this.tree.state.treeData,
       getNodeKey: ({ treeIndex }) => treeIndex,
       ignoreCollapsed: true,
       callback: (rowInfoIter) => {
@@ -89,7 +92,7 @@ export default class FileBrowser extends React.Component {
   }
 
   handleMoveUp (reset = false) {
-    let path = this.refs.tree.state.treeData[0].path.split('/').slice(0, -2).join('/') || '/';
+    let path = this.tree.state.treeData[0].path.split('/').slice(0, -2).join('/') || '/';
 
     if (reset) {
       path = window.currentFolder;
@@ -182,7 +185,7 @@ export default class FileBrowser extends React.Component {
             rowHeight={30}
             toggleMode={!!this.props.toggleMode}
             activateParentsNodeOnClick={this.props.exploreOnlyDirs}
-            ref="tree"
+            ref={(refElement) => this.tree = refElement}
           />
         </DialogContent>
         <DialogActions>
