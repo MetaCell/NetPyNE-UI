@@ -529,11 +529,18 @@ class NetPyNEGeppetto:
         sim.initialize()
 
     def saveToIndexFile(self, args):
-        print("HERE ARE ARGS", args)
-        # sim.saveModel(netParams=self.netParams,
-        #               simConfig=self.simConfig,
-        #               srcPath=...,
-        #               dstPath=...)
+        options = args.get("options", {})
+        srcPath = args.get("srcPath")
+        dstPath = args.get("dstPath")
+        exportNetParamsAsPython = options.get("exportNetParamsAsPython")
+        exportSimConfigAsPython = options.get("exportSimConfigAsPython")
+
+        sim.saveModel(netParams=self.netParams,
+                      simConfig=self.simConfig,
+                      srcPath=srcPath,
+                      dstPath=dstPath,
+                      exportNetParamsAsPython=exportNetParamsAsPython,
+                      exportSimConfigAsPython=exportSimConfigAsPython)
 
 
     def importModel(self, modelParameters):
