@@ -5,6 +5,7 @@ import { toMatchImageSnapshot } from 'jest-image-snapshot'
 expect.extend({ toMatchImageSnapshot })
 const path = require('path');
 var scriptName = path.basename(__filename, '.js');
+import * as selectors from './selectors'
 
 
 //PAGE INFO:
@@ -20,22 +21,13 @@ const SNAPSHOT_OPTIONS = {
         ssim: 'fast',
     },
     failureThresholdType: 'percent',
-    failureThreshold: 0.1
+    failureThreshold: 0.05
 };
 
-//SELECTORS:
-const BASE_PAGE_SELECTOR = '.NetPyNE-root-1'
-const TUTORIALS_BUTTON_SELECTOR = 'button[id = "Tutorials"]'
-const TUTORIAL_3A_SELECTOR = 'li[id= "Tut 3a: Multiscale network (low IP3)"]'
-const MODEL_BUTTON_SELECTOR = 'button[id="Model"]'
-const CREATE_NETWORK_SELECTOR = 'li[id="Create network"]'
-const SIMULATE_NETWORK_SELECTOR = 'li[id="Simulate network"]'
-const SIMULATION_PAGE_SELECTOR = 'canvas'
-const CONNECTIONS_PLOT_SELECTOR = 'div[title=\"Connections Plot\"][role=button]'
 
 
 //USERS:
-const USERNAME = 'EEG_and_Dipole_Userr_'
+const USERNAME = 'EEG_Dipole__User_saa'
 const PASSWORD = 'password'
 
 
@@ -45,16 +37,16 @@ jest.setTimeout(300000);
 
 beforeAll(async () => {
     await page.goto(baseURL);
-    await page.waitForSelector('#login-main');
-    await page.waitForSelector('#username_input')
+    await page.waitForSelector(selectors.LOGIN_PAGE_SELECTOR);
+    await page.waitForSelector(selectors.USERNAME_SELECTOR)
     await expect(page)
-        .toFill('#username_input', USERNAME, { timeout: TIMEOUT });
+        .toFill(selectors.USERNAME_SELECTOR, USERNAME, { timeout: TIMEOUT });
 
-    await page.waitForSelector('#password_input')
+    await page.waitForSelector(selectors.PASSWORD_SELECTOR)
     await expect(page)
-        .toFill('#password_input', PASSWORD, { timeout: TIMEOUT });
+        .toFill(selectors.PASSWORD_SELECTOR, PASSWORD, { timeout: TIMEOUT });
 
-    await page.click('#login_submit')
+    await page.click(selectors.LOGIN_BUTTON_SELECTOR)
     // Wait for initial loading spinner to disappear
     await page.waitForFunction(() => {
         let el = document.querySelector('#loading-spinner');
@@ -71,13 +63,13 @@ describe('EEG and Dipole Plot Test using Tutorial#1', () => {
     it('Load Tutorial#1', async () => {
 
         await page.waitForTimeout(PAGE_WAIT * 2)
-        await page.waitForSelector('#selectCellButton', { timeout: TIMEOUT })
+        await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT })
         await page.waitForTimeout(PAGE_WAIT * 2)
-        await click(page, TUTORIALS_BUTTON_SELECTOR, { timeout: TIMEOUT })
+        await click(page, selectors.TUTORIALS_BUTTON_SELECTOR, { timeout: TIMEOUT })
 
         await console.log('Loading Tutorial #1')
-        await click(page, "li[id='Tut 1: Simple cell network']", { timeout: TIMEOUT })
-        await page.waitForSelector('#pyr')
+        await click(page, selectors.TUTORIAL_1_SELECTOR, { timeout: TIMEOUT })
+        await page.waitForSelector(selectors.PYR_CELL_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT)
 
 
@@ -85,109 +77,111 @@ describe('EEG and Dipole Plot Test using Tutorial#1', () => {
 
     it('Configure recording ', async () => {
 
-        await page.waitForSelector('div[title="Configuration"]')
-        await page.click('div[title="Configuration"]')
-    
-        await page.waitForSelector('#configRecord')
-        await page.click('#configRecord')
-        await page.waitForTimeout(PAGE_WAIT)
-    
-        await page.waitForSelector(`div[title="Dict of traces to record (default: {} ; example: {'V_soma': {'sec':'soma','loc':0.5,'var':'v'} })."]`)
-        await page.waitForTimeout(PAGE_WAIT)
-        await page.waitForSelector(`#simConfigrecordDipole`)
-        await expect(page).toClick(`#simConfigrecordDipole`)
-        await page.waitForTimeout(PAGE_WAIT)
-        await page.click(`#simConfigrecordDipole`)
-        await page.waitForTimeout(PAGE_WAIT)
-    
-      })
+        await console.log('Setting Recording configuration')
 
-      it('Create network', async () => {
+        await page.waitForSelector(selectors.CONFIGURATION_TAB_SELECTOR)
+        await page.click(selectors.CONFIGURATION_TAB_SELECTOR)
 
-        await page.waitForSelector(MODEL_BUTTON_SELECTOR)
-        await click(page, MODEL_BUTTON_SELECTOR, { timeout: TIMEOUT });
-        await page.waitForSelector(CREATE_NETWORK_SELECTOR)
-        await click(page, CREATE_NETWORK_SELECTOR, { timeout: TIMEOUT });
-    
+        await page.waitForSelector(selectors.RECORDING_CONFIGURATION_TAB_SELECTOR)
+        await page.click(selectors.RECORDING_CONFIGURATION_TAB_SELECTOR)
+        await page.waitForTimeout(PAGE_WAIT)
+
+        await page.waitForSelector(selectors.TRACES_TO_RECORD_SELECTOR)
+        await page.waitForTimeout(PAGE_WAIT)
+        await page.waitForSelector(selectors.DIPOLE_LFPYKIT_SELECTOR)
+        await expect(page).toClick(selectors.DIPOLE_LFPYKIT_SELECTOR)
+        await page.waitForTimeout(PAGE_WAIT)
+        await page.click(selectors.DIPOLE_LFPYKIT_SELECTOR)
+        await page.waitForTimeout(PAGE_WAIT)
+
+    })
+
+    it('Create network', async () => {
+
+        await page.waitForSelector(selectors.MODEL_BUTTON_SELECTOR)
+        await click(page, selectors.MODEL_BUTTON_SELECTOR, { timeout: TIMEOUT });
+        await page.waitForSelector(selectors.CREATE_NETWORK_SELECTOR)
+        await click(page, selectors.CREATE_NETWORK_SELECTOR, { timeout: TIMEOUT });
+
         await console.log('Create network')
-    
-        await page.waitForSelector('div[title="EEG plot"][aria-disabled="true"]', { timeout: TIMEOUT * 3 })
-        await page.waitForSelector('div[title="Dipole plot"][aria-disabled="true"]', { timeout: TIMEOUT * 3 })
-    
+
+        await page.waitForSelector(selectors.DISABLED_EEG_PLOT_SELECTOR, { timeout: TIMEOUT * 3 })
+        await page.waitForSelector(selectors.DISABLED_DIPOLE_PLOT_SELECTOR, { timeout: TIMEOUT * 3 })
+
         await page.waitForTimeout(PAGE_WAIT)
-    
+
         await console.log('... taking snapshot ...');
         await page.waitForTimeout(PAGE_WAIT);
         expect(await page.screenshot())
-          .toMatchImageSnapshot({
-            ...SNAPSHOT_OPTIONS,
-            customSnapshotIdentifier: 'Tutorial#1 Network'
-          });
-      })
+            .toMatchImageSnapshot({
+                ...SNAPSHOT_OPTIONS,
+                customSnapshotIdentifier: 'Tutorial#1 Network'
+            });
+    })
 
-      it('Simulate network', async () => {
+    it('Simulate network', async () => {
 
-        await page.waitForSelector('div[class="MuiButtonGroup-root MuiButtonGroup-contained"]')
-        await click(page, 'div[class="MuiButtonGroup-root MuiButtonGroup-contained"]', { timeout: TIMEOUT });
-    
+        await page.waitForSelector(selectors.SIMULATE_BUTTON_SELECTOR)
+        await click(page, selectors.SIMULATE_BUTTON_SELECTOR, { timeout: TIMEOUT });
+
         await console.log('Simulate network')
-    
-        await page.waitForSelector(SIMULATION_PAGE_SELECTOR, { timeout: TIMEOUT * 2 });
-    
-        await page.waitForSelector('div[title="Raster plot"][aria-disabled="false"]', { timeout: TIMEOUT * 3 })
-        await page.waitForSelector('div[title="EEG plot"][aria-disabled="false"]', { timeout: TIMEOUT * 3 })
-        await page.waitForSelector('div[title="Dipole plot"][aria-disabled="false"]', { timeout: TIMEOUT * 3 })
-      });
 
-      it('Dipole Plot', async () => {
+        await page.waitForSelector(selectors.SIMULATION_PAGE_SELECTOR, { timeout: TIMEOUT * 2 });
+
+        await page.waitForSelector(selectors.RASTER_PLOT_SELECTOR, { timeout: TIMEOUT * 3 })
+        await page.waitForSelector(selectors.EEG_PLOT_SELECTOR, { timeout: TIMEOUT * 3 })
+        await page.waitForSelector(selectors.DIPOLE_PLOT_SELECTOR, { timeout: TIMEOUT * 3 })
+    });
+
+    it('Dipole Plot', async () => {
 
         await page.waitForTimeout(PAGE_WAIT * 2);
-        await click(page, 'div[title="Dipole plot"][aria-disabled="false"]')
-        await page.waitForSelector('canvas', { timeout: TIMEOUT })
+        await click(page, selectors.DIPOLE_PLOT_SELECTOR)
+        await page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
 
         await console.log('View Dipole Plot ...')
 
         await page.waitForTimeout(PAGE_WAIT * 10);
-        await click(page, CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
+        await click(page, selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
         await page.waitForTimeout(PAGE_WAIT);
-        await click(page, 'div[title="Dipole plot"][aria-disabled="false"]')
-        await page.waitForSelector('canvas', { timeout: TIMEOUT })
+        await click(page, selectors.DIPOLE_PLOT_SELECTOR)
+        await page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
         await page.waitForTimeout(PAGE_WAIT * 3);
-    
+
         await console.log('... taking snapshot ...');
         expect(await page.screenshot())
-          .toMatchImageSnapshot({
-            ...SNAPSHOT_OPTIONS,
-            customSnapshotIdentifier: 'Dipole Plot'
-          });
-      });
-    
-    
-      it('EEG Plot', async () => {
-    
+            .toMatchImageSnapshot({
+                ...SNAPSHOT_OPTIONS,
+                customSnapshotIdentifier: 'Dipole Plot'
+            });
+    });
+
+
+    it('EEG Plot', async () => {
+
         await page.waitForTimeout(PAGE_WAIT * 2);
-        await click(page, 'div[title="EEG plot"][aria-disabled="false"]')
-        await page.waitForSelector('canvas', { timeout: TIMEOUT })
+        await click(page, selectors.EEG_PLOT_SELECTOR)
+        await page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
 
         await console.log('View EEG Plot ...')
 
-        await page.waitForTimeout(PAGE_WAIT * 12);
-        await click(page, CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
-        await page.waitForTimeout(PAGE_WAIT*2);
-        await click(page, 'div[title="EEG plot"][aria-disabled="false"]')
-        await page.waitForSelector('canvas', { timeout: TIMEOUT })
+        await page.waitForTimeout(PAGE_WAIT * 14);
+        await click(page, selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
+        await page.waitForTimeout(PAGE_WAIT * 2);
+        await click(page, selectors.EEG_PLOT_SELECTOR)
+        await page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
         await page.waitForTimeout(PAGE_WAIT * 3);
-    
+
         await console.log('... taking snapshot ...');
         expect(await page.screenshot())
-          .toMatchImageSnapshot({
-            ...SNAPSHOT_OPTIONS,
-            customSnapshotIdentifier: 'EEG Plot'
-          });
-    
-      });
+            .toMatchImageSnapshot({
+                ...SNAPSHOT_OPTIONS,
+                customSnapshotIdentifier: 'EEG Plot'
+            });
 
-   
+    });
+
+
 
 
 });
