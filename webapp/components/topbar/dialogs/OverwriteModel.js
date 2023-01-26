@@ -198,20 +198,17 @@ const OverwriteModel = (props) => {
             </AccordionDetails>
           </Accordion>
         </div>
-
-      </ActionDialog>
-
-      <FileBrowser
+        <FileBrowser
               open={explorerDialogOpen}
               exploreOnlyDirs={true}
               // filterFiles={''}
               onRequestClose={(selection) => closeExplorerDialog(selection)}
               startDir={explorerParameter === 'srcPath'? srcPath: dstPath}
             />
-
+      </ActionDialog>
       {openOverwriteDialog ?
          <ActionDialog
-            onRequestClose={() => setOpenOverwriteDialog(false)}
+            openDialog={openOverwriteDialog}
             onAction={saveModel}
             buttonLabel="Overwrite"
             title="Destination Path Already Exists"
