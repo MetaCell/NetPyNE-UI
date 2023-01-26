@@ -83,6 +83,25 @@ describe('EEG and Dipole Plot Test using Tutorial#1', () => {
 
     })
 
+    it('Configure recording ', async () => {
+
+        await page.waitForSelector('div[title="Configuration"]')
+        await page.click('div[title="Configuration"]')
+    
+        await page.waitForSelector('#configRecord')
+        await page.click('#configRecord')
+        await page.waitForTimeout(PAGE_WAIT)
+    
+        await page.waitForSelector(`div[title="Dict of traces to record (default: {} ; example: {'V_soma': {'sec':'soma','loc':0.5,'var':'v'} })."]`)
+        await page.waitForTimeout(PAGE_WAIT)
+        await page.waitForSelector(`#simConfigrecordDipole`)
+        await expect(page).toClick(`#simConfigrecordDipole`)
+        await page.waitForTimeout(PAGE_WAIT)
+        await page.click(`#simConfigrecordDipole`)
+        await page.waitForTimeout(PAGE_WAIT)
+    
+      })
+
    
 
 
