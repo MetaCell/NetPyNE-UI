@@ -32,10 +32,10 @@ const saveOptions = [
   },
 ];
 
-
 const OverwriteModel = (props) => {
   const srcPath = useSelector((state) => state.general.modelPath);
   const [explorerDialogOpen, setExplorerDialogOpen] = React.useState(false);
+  const [openOverwriteDialog, setOpenOverwriteDialog] = React.useState(false);
   const [explorerParameter, setExplorerParameter] = React.useState('srcPath');
   const [dstPath, setDstPath] = React.useState(srcPath);
   const [options, setOptions] = React.useState({
@@ -95,27 +95,29 @@ const OverwriteModel = (props) => {
     });
   }
 
-  const actionCallBack = (command, args) => {
-    Utils.evalPythonMessage(command, [args])
-         .then(() => {
-          registerSavedModelPath(dstPath)
-    })
+  const saveModel = () => {
+    const args = [srcPath, dstPath, options.exportNetParamsAsPython, options.exportSimConfigAsPython]
+    Utils.evalPythonMessage(NETPYNE_COMMANDS.saveModel, args).then(() => registerSavedModelPath(dstPath))
+  }
+
+  const checkDirExistence = async (command, path) => {
+    const exists = await Utils.evalPythonMessage(command, [path])
+    if (exists) {
+      setOpenOverwriteDialog(true)
+      return
+    }
+    saveModel()
   }
 
     return (
       <>
       <ActionDialog
-        command={NETPYNE_COMMANDS.saveModel}
-        callback={actionCallBack}
+        command={'netpyne_geppetto.checkFileExists'}
+        callback={checkDirExistence}
         message={GEPPETTO.Resources.EXPORTING_MODEL}
         buttonLabel="Save"
         title="Save as JSON file"
-        args={{
-          srcPath,
-          dstPath,
-          exportNetParamsAsPython: options.exportNetParamsAsPython,
-          exportSimConfigAsPython: options.exportSimConfigAsPython
-        }}
+        args={dstPath}
         {...props}
       >
       {/* <TextField
@@ -206,6 +208,18 @@ const OverwriteModel = (props) => {
               onRequestClose={(selection) => closeExplorerDialog(selection)}
               startDir={explorerParameter === 'srcPath'? srcPath: dstPath}
             />
+
+      {openOverwriteDialog ?
+         <ActionDialog
+            onRequestClose={() => setOpenOverwriteDialog(false)}
+            onAction={saveModel}
+            buttonLabel="Overwrite"
+            title="Destination Path Already Exists"
+          >
+            <Typography>{`Path "${dstPath}" already exists, do you want to overwrite it?`}</Typography>
+          </ActionDialog>
+         : <></>
+      }
       </>
     );
 }

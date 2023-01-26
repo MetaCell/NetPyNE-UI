@@ -9,6 +9,7 @@ import importlib
 import json
 import logging
 import os
+from pathlib import Path
 import re
 import sys
 from shutil import copyfile
@@ -528,13 +529,8 @@ class NetPyNEGeppetto:
         #   Only on import or better before every simulation or network instantiation?
         sim.initialize()
 
-    def saveToIndexFile(self, args):
-        options = args.get("options", {})
-        srcPath = args.get("srcPath")
-        dstPath = args.get("dstPath")
-        exportNetParamsAsPython = options.get("exportNetParamsAsPython")
-        exportSimConfigAsPython = options.get("exportSimConfigAsPython")
-
+    def saveToIndexFile(self, srcPath, dstPath, exportNetParamsAsPython, exportSimConfigAsPython):
+        print(srcPath, dstPath, exportNetParamsAsPython, exportSimConfigAsPython)
         sim.saveModel(netParams=self.netParams,
                       simConfig=self.simConfig,
                       srcPath=srcPath,
@@ -754,6 +750,10 @@ class NetPyNEGeppetto:
         if self.simConfig.analysis and plot_name in self.simConfig.analysis:
             return self.simConfig.analysis[plot_name]
         return {}
+
+    def checkFileExists(self, path):
+        path = Path(path or '')
+        return path.exists()
 
     def getDirList(self, dir=None, onlyDirs=False, filterFiles=False, subDir=None):
         # Get Current dir
