@@ -35,7 +35,7 @@ const CONNECTIONS_PLOT_SELECTOR = 'div[title=\"Connections Plot\"][role=button]'
 
 
 //USERS:
-const USERNAME = 'EEG_and_Dipole_Test_User_2'
+const USERNAME = 'EEG_and_Dipole_Test_User_213'
 const PASSWORD = 'password'
 
 
@@ -101,6 +101,43 @@ describe('EEG and Dipole Plot Test using Tutorial#1', () => {
         await page.waitForTimeout(PAGE_WAIT)
     
       })
+
+      it('Create network', async () => {
+
+        await page.waitForSelector(MODEL_BUTTON_SELECTOR)
+        await click(page, MODEL_BUTTON_SELECTOR, { timeout: TIMEOUT });
+        await page.waitForSelector(CREATE_NETWORK_SELECTOR)
+        await click(page, CREATE_NETWORK_SELECTOR, { timeout: TIMEOUT });
+    
+        await console.log('Create network')
+    
+        await page.waitForSelector('div[title="EEG plot"][aria-disabled="true"]', { timeout: TIMEOUT * 3 })
+        await page.waitForSelector('div[title="Dipole plot"][aria-disabled="true"]', { timeout: TIMEOUT * 3 })
+    
+        await page.waitForTimeout(PAGE_WAIT)
+    
+        await console.log('... taking snapshot ...');
+        await page.waitForTimeout(PAGE_WAIT);
+        expect(await page.screenshot())
+          .toMatchImageSnapshot({
+            ...SNAPSHOT_OPTIONS,
+            customSnapshotIdentifier: 'Tutorial#1 Network'
+          });
+      })
+
+      it('Simulate network', async () => {
+
+        await page.waitForSelector('div[class="MuiButtonGroup-root MuiButtonGroup-contained"]')
+        await click(page, 'div[class="MuiButtonGroup-root MuiButtonGroup-contained"]', { timeout: TIMEOUT });
+    
+        await console.log('Simulate network')
+    
+        await page.waitForSelector(SIMULATION_PAGE_SELECTOR, { timeout: TIMEOUT * 2 });
+    
+        await page.waitForSelector('div[title="Raster plot"][aria-disabled="false"]', { timeout: TIMEOUT * 3 })
+        await page.waitForSelector('div[title="EEG plot"][aria-disabled="false"]', { timeout: TIMEOUT * 3 })
+        await page.waitForSelector('div[title="Dipole plot"][aria-disabled="false"]', { timeout: TIMEOUT * 3 })
+      });
 
    
 
