@@ -8,7 +8,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Icon from '@material-ui/core/Icon';
 
-import { ActionDialog, Tooltip } from 'netpyne/components';
+import { ActionValidationDialog, Tooltip } from 'netpyne/components';
 import Checkbox from '../../general/Checkbox';
 
 import { NETPYNE_COMMANDS } from '../../../constants';
@@ -36,6 +36,7 @@ const OverwriteModel = (props) => {
   const srcPath = useSelector((state) => state.general.modelPath);
   const [explorerDialogOpen, setExplorerDialogOpen] = React.useState(false);
   const [openOverwriteDialog, setOpenOverwriteDialog] = React.useState(false);
+  const [isDirectoryValid, setIsDirectoryValid] = React.useState(false);
   const [explorerParameter, setExplorerParameter] = React.useState('srcPath');
   const [dstPath, setDstPath] = React.useState(srcPath);
   const [options, setOptions] = React.useState({
@@ -95,29 +96,48 @@ const OverwriteModel = (props) => {
     });
   }
 
+  React.useEffect(() => {
+    setIsDirectoryValid(dstPath)  // Does dstPath exists?
+  }, [dstPath])
+
   const saveModel = () => {
     const args = [srcPath, dstPath, options.exportNetParamsAsPython, options.exportSimConfigAsPython]
-    Utils.evalPythonMessage(NETPYNE_COMMANDS.saveModel, args).then(() => registerSavedModelPath(dstPath))
+    Utils.evalPythonMessage(NETPYNE_COMMANDS.saveModel, args).then(() => {
+      registerSavedModelPath(dstPath)
+      props.onRequestClose()
+    })
   }
 
   const checkDirExistence = async (command, path) => {
+    // If srcPath === dstPath, then a first save have been made to this directory.
+    // We can conclude that this save is to overwrite the current model, no need to ask for confirmation.
+    if (srcPath === dstPath) {
+      saveModel()
+      return
+    }
     const exists = await Utils.evalPythonMessage(command, [path])
+    // If the path exists, we ask for confirmation
     if (exists) {
       setOpenOverwriteDialog(true)
       return
     }
+    // Otherwise, we save
     saveModel()
   }
 
+  // We cleanup on close
+  React.useEffect(() => { return () => props.onRequestClose() }, []);
+
     return (
       <>
-      <ActionDialog
+      <ActionValidationDialog
         command={'netpyne_geppetto.checkFileExists'}
         callback={checkDirExistence}
         message={GEPPETTO.Resources.EXPORTING_MODEL}
         buttonLabel="Save"
         title="Save as JSON file"
         args={dstPath}
+        disabledButton={!isDirectoryValid}
         {...props}
       >
       {/* <TextField
@@ -142,12 +162,13 @@ const OverwriteModel = (props) => {
             }}
           /> */}
         <TextField
+            error={!isDirectoryValid}
+            helperText={!isDirectoryValid ? "Please select a directory": ''}
             variant="filled"
             fullWidth
             value={dstPath}
             onChange={(event) => setDstPath(event.target.value)}
             label="Model destination path"
-            // helperText="Only "
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -205,16 +226,15 @@ const OverwriteModel = (props) => {
               onRequestClose={(selection) => closeExplorerDialog(selection)}
               startDir={explorerParameter === 'srcPath'? srcPath: dstPath}
             />
-      </ActionDialog>
+      </ActionValidationDialog>
       {openOverwriteDialog ?
-         <ActionDialog
-            openDialog={openOverwriteDialog}
+         <ActionValidationDialog
             onAction={saveModel}
             buttonLabel="Overwrite"
             title="Destination Path Already Exists"
           >
             <Typography>{`Path "${dstPath}" already exists, do you want to overwrite it?`}</Typography>
-          </ActionDialog>
+          </ActionValidationDialog>
          : <></>
       }
       </>

@@ -164,7 +164,7 @@ class Topbar extends Component {
         case TOPBAR_CONSTANTS.SAVE_INDEX_WORKSPACE:
           content = (
             <OverwriteModel
-              openDialog={dialogOpen}
+              open={dialogOpen}
               onRequestClose={() => this.handleClose()}
             />
           );
