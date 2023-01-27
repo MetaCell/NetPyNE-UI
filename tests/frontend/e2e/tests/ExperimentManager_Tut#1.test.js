@@ -38,7 +38,7 @@ const SIMULATION_PAGE_SELECTOR = 'canvas'
 
 
 //USERS:
-const USERNAME = 'TestUser_ExperimentManager_1'
+const USERNAME = 'TestUser_ExperimentManager_12'
 const PASSWORD = 'testpassword'
 
 
@@ -179,6 +179,30 @@ describe('Experiment Manager test using Tut#1', () => {
         console.log('Experiment created')
 
     })
+
+    it('Simulate All conditions', async () => {
+
+        await page.waitForSelector('div[class="MuiButtonGroup-root MuiButtonGroup-contained"]')
+        await click(page, 'div[class="MuiButtonGroup-root MuiButtonGroup-contained"]', { timeout: TIMEOUT });
+    
+        console.log('Simulating all conditions')
+    
+        await page.waitForSelector('div[class="MuiBox-root MuiBox-root-185 wrap"]')
+        await page.click('div[class="MuiBox-root MuiBox-root-185 wrap"]')
+        await page.click('#appBarPerformActionButton')
+    
+        await page.waitForTimeout(PAGE_WAIT);
+    
+        await page.waitForSelector('button[class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"]')
+        await page.click('button[class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"]')
+    
+        await page.waitForSelector(SIMULATION_PAGE_SELECTOR, { timeout: TIMEOUT * 2 });
+        await page.waitForSelector('div[class = "MuiBox-root MuiBox-root-186 MuiChip-icon MuiChipLoader"]', { hidden: false, timeout: TIMEOUT * 2 })
+        await page.waitForSelector('div[class = "MuiBox-root MuiBox-root-186 MuiChip-icon MuiChipLoader"]', { hidden: true, timeout: TIMEOUT * 5 })
+        console.log('Experiment Simulation finished')
+    
+      });
+    
 
 
 
