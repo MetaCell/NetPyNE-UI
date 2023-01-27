@@ -72,15 +72,25 @@ class ActionDialog extends React.Component {
     if (errorMessage === '') {
       title = this.props.title;
       action = (
-        <Button
-          id="appBarPerformActionButton"
-          key="appBarPerformActionButton"
-          variant="contained"
-          color="primary"
-          onClick={this.performAction}
+        <>
+          <Button
+          onClick={this.cancelDialog}
+          style={styles.cancel}
+          key="CANCEL"
         >
-          {this.props.buttonLabel}
+          CANCEL
         </Button>
+        <Button
+            id="appBarPerformActionButton"
+            key="appBarPerformActionButton"
+            variant="contained"
+            color="primary"
+            onClick={this.performAction}
+          >
+            {this.props.buttonLabel}
+          </Button>
+        </>
+
       );
 
       content = this.props.children;
@@ -89,10 +99,10 @@ class ActionDialog extends React.Component {
         <Button
           variant="contained"
           color="primary"
-          key="BACK"
+          key="CLOSE"
           onClick={() => this.handleClickGoBack()}
         >
-          BACK
+          CLOSE
         </Button>
       );
 
@@ -102,11 +112,13 @@ class ActionDialog extends React.Component {
       }
     }
 
+    const shouldDisplay = Boolean(!this.state.hide || this.props.openErrorDialogBox);
     return (
+      shouldDisplay ?(
       <Dialog
         fullWidth
         maxWidth={this.props.openErrorDialogBox ? 'md' : 'sm'}
-        open={Boolean(!this.state.hide || this.props.openErrorDialogBox)}
+        open={shouldDisplay}
         onClose={() => this.cancelDialog()}
         className={classes.root}
       >
@@ -115,16 +127,10 @@ class ActionDialog extends React.Component {
           {content}
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={this.cancelDialog}
-            style={styles.cancel}
-            key="CANCEL"
-          >
-            CANCEL
-          </Button>
           {action}
         </DialogActions>
       </Dialog>
+      ): <></>
     );
   }
 }

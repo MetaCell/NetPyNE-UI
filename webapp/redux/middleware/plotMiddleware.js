@@ -35,9 +35,10 @@ const plotFigure = async (plotId, plotMethod, plotType = false, uri = null, them
       new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve(null);
-        }, 30000);
+        }, 2 * 60 * 1000); // Timeout set to 2 minutes, previously, 30000 (30s)
       })]);
 
+    // let response = await Utils.evalPythonMessage(NETPYNE_COMMANDS.plotFigure, [plotMethod, plotType, theme], false)
     console.log('Plot response received for', plotId);
     if (!response && !uri) { //png plots return null response but they provide a uri so they can be grabbed from the workspace
       return null;
@@ -54,15 +55,16 @@ const plotFigure = async (plotId, plotMethod, plotType = false, uri = null, them
       if (response.startsWith('[') && response.endsWith(']')) {
         response = eval(response);
       }
-    }
-    if (plotMethod.startsWith('iplot')) {
-      let htmlText = response.replace ? response.replace(/\\n/g, '')
-        .replace(/\\/g, '') : '';
-      if (plotId === 'rxdConcentrationPlot') {
-        // FIXME: How can we center the bokeh plots when sizing_mode='scale_height'
-        htmlText = htmlText.replace('<head>', '<head><style>.bk {margin: 0 auto!important;}</style>');
+      if (response.indexOf('<html') > -1) {
+        let htmlText = response.replace ? response.replace(/\\n/g, '')
+          .replace(/\\/g, '') : '';
+        //if (plotId === 'rxdConcentrationPlot') {
+          // FIXME: How can we center the bokeh plots when sizing_mode='scale_height'
+          htmlText = htmlText.replace('<head>', '<head><style>.bk {margin: 0 auto!important;} div {overflow:hidden;} frame {overflow:hidden;}</style>');
+          htmlText = htmlText.replace('margin: 0 auto!important;', 'margin: 0;');
+        //}
+        return htmlText;
       }
-      return htmlText;
     }
     if ((plotMethod == 'plotDipole' || plotMethod == 'plotEEG' )) { //uri is available here
       const plotUri = uri.replace('{name}', response);

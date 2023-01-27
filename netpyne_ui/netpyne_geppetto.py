@@ -193,6 +193,8 @@ class NetPyNEGeppetto:
         try:
             with redirect_stdout(sys.__stdout__):
                 if not args.get("usePrevInst", False):
+                    if self.doIhaveInstOrSimData()['haveInstance']:
+                        sim.clearAll()
                     netpyne_model = self.instantiateNetPyNEModel()
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
 
