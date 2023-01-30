@@ -26,6 +26,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
           node-version: ${{ matrix.node-version }}
+          cache-dependency-path: frontend/e2e/tests/package-lock.json
     - name: EEG and Dipole Plot snapshot test using Tut#1
       run: |
           #install dependencies
@@ -46,6 +47,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
           node-version: ${{ matrix.node-version }}
+          cache-dependency-path: frontend/e2e/tests/package-lock.json
     - name: Experiment Manager snapshot test using Tut#1
       run: |
           #install dependencies
