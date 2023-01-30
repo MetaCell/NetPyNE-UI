@@ -304,15 +304,16 @@ class NetPyNEGeppetto:
                         return self.simulate_single_model(experiment, use_prev_inst)
                 except Exception:
                     experiment.state = model.ExperimentState.ERROR
-                    message = ("Unknown error during simulation of Experiment. SimulationId %i" % sim_id)
+                    message = f"Unknown error during simulation of Experiment. SimulationId {sim_id}"
                     logging.exception(message)
-                    return utils.getJSONError(message, sys.exc_info())
+                    # return utils.getJSONError("Unknown error during simulation of Experiment", sys.exc_info(), { "sim_id": sim_id})
+                    return utils.getJSONError("Unknown error during simulation of Experiment", sys.exc_info())
 
             else:
                 return self.simulate_single_model(use_prev_inst=use_prev_inst)
 
         except Exception as e :
-            message = ("Error while simulating the NetPyNE model: %s. SimulationId %f" % (e, sim_id))
+            message = f"Error while simulating the NetPyNE model: {e}. SimulationId {sim_id}"
             logging.exception(message)
             return utils.getJSONError(message, sys.exc_info())
 
