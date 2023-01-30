@@ -6,11 +6,11 @@ on:
   push:
     branches:
      - "master"
-     - "develop"
+     - "development"
   pull_request:
     branches:
      - "master"
-     - "develop"
+     - "development"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs: 
@@ -32,5 +32,25 @@ jobs:
           npm ci
           # run EEG and Dipole Plot test
           npm run EEG_Dipole_test
+      env:
+          CI: true
+  Experiment_Manager-test:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-20.04
+    container: lironavon/docker-puppeteer-container:14.16.0
+    env:
+      CI: true
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+          node-version: ${{ matrix.node-version }}
+    - name: Experiment Manager snapshot test using Tut#1
+      run: |
+          #install dependencies
+          npm ci
+          # run Experiment Manager test
+          npm run Experiment_Manager_test
       env:
           CI: true

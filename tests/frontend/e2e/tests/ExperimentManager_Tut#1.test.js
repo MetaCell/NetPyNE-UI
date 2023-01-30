@@ -27,7 +27,7 @@ const SNAPSHOT_OPTIONS = {
 
 
 //USERS:
-const USERNAME = 'TestUser_Experiment_Manager_sdshsjhd'
+const USERNAME = 'TestUser_Experiment_Manager'
 const PASSWORD = 'testpassword'
 
 

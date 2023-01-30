@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest --verbose",
     "EEG_Dipole_test": "jest --verbose EEG_and_Dipole_Tut#1 ",
+    "Experiment_Manager_test": "jest --verbose ExperimentManager_Tut#1 ",
     "lint": "eslint --fix --ext .js,.jsx ."
   },
   "dependencies": {
