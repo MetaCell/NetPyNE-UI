@@ -68,7 +68,6 @@ class NetPyNEGeppetto:
         logging.debug("Initializing the original model")
 
         jupyter_geppetto.context = {'netpyne_geppetto': self}
-        self.loaded_mods=set()
 
         # Set running experiments without any subprocess to ERRROR
         experiments.get_experiments()
