@@ -3,11 +3,6 @@ Run this to debug
 """
 import sys
 import os
-import shutil
-
-path = "/home/user/NetPyNE-UI/workspace/NetPyNEShowcase/NeuroML2/tmp"
-if os.path.exists(path):
-    shutil.rmtree(path)
 
 from notebook.notebookapp import NotebookApp
 from jupyter_geppetto import settings
