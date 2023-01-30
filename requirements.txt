@@ -34,6 +34,7 @@ jupyterthemes==0.20.0
 kiwisolver==1.2.0
 lesscpy==0.14.0
 libNeuroML==0.4.0
+lfpykit==0.5
 lxml==4.5.1
 Mako==1.1.0
 MarkupSafe==1.1.1
