@@ -14,6 +14,7 @@ import {
   setTheme,
 } from '../../redux/actions/general';
 import {
+  MODEL_STATE,
   TOPBAR_CONSTANTS, THEMES, TUTORIALS_LIST,
 } from '../../constants';
 import { openLaunchDialog } from '../../redux/actions/experiments';
@@ -328,7 +329,8 @@ export const getModelMenu = (props) => (
           ? [openLaunchDialog()]
           // TODO: (#263) this logic causes issues by potentially simulating
           //  old instance with modified netParams and simConfig
-          : [props.modelState ? createAndSimulateNetwork : simulateNetwork],
+          // : [props.modelState ? createAndSimulateNetwork : simulateNetwork],
+          : [props.modelState === MODEL_STATE.NOT_INSTANTIATED ? createAndSimulateNetwork : simulateNetwork()],
       },
     },
     {
