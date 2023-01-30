@@ -26,19 +26,8 @@ const SNAPSHOT_OPTIONS = {
 
 
 
-//SELECTORS:
-const BASE_PAGE_SELECTOR = '.NetPyNE-root-1'
-const TUTORIALS_BUTTON_SELECTOR = 'button[id = "Tutorials"]'
-const TUTORIAL_3A_SELECTOR = 'li[id= "Tut 3a: Multiscale network (low IP3)"]'
-const MODEL_BUTTON_SELECTOR = 'button[id="Model"]'
-const CREATE_NETWORK_SELECTOR = 'li[id="Create network"]'
-const SIMULATE_NETWORK_SELECTOR = 'li[id="Simulate network"]'
-const SIMULATION_PAGE_SELECTOR = 'canvas'
-
-
-
 //USERS:
-const USERNAME = 'TestUser_ExperimentManager_124'
+const USERNAME = 'TestUser_Experiment_Manager_sdshsjhd'
 const PASSWORD = 'testpassword'
 
 
@@ -52,16 +41,16 @@ describe('Experiment Manager test using Tut#1', () => {
 
     beforeAll(async () => {
         await page.goto(baseURL);
-        await page.waitForSelector('#login-main');
-        await page.waitForSelector('#username_input')
+        await page.waitForSelector(selectors.LOGIN_PAGE_SELECTOR);
+        await page.waitForSelector(selectors.USERNAME_SELECTOR)
         await expect(page)
-            .toFill('#username_input', USERNAME, { timeout: TIMEOUT });
+            .toFill(selectors.USERNAME_SELECTOR, USERNAME, { timeout: TIMEOUT });
 
-        await page.waitForSelector('#password_input')
+        await page.waitForSelector(selectors.PASSWORD_SELECTOR)
         await expect(page)
-            .toFill('#password_input', PASSWORD, { timeout: TIMEOUT });
+            .toFill(selectors.PASSWORD_SELECTOR, PASSWORD, { timeout: TIMEOUT });
 
-        await page.click('#login_submit')
+        await page.click(selectors.LOGIN_BUTTON_SELECTOR)
         // Wait for initial loading spinner to disappear
         await page.waitForFunction(() => {
             let el = document.querySelector('#loading-spinner');
@@ -72,14 +61,14 @@ describe('Experiment Manager test using Tut#1', () => {
     it('Load Tutorial#1', async () => {
 
         await page.waitForTimeout(PAGE_WAIT * 2)
-        await page.waitForSelector('#selectCellButton', { timeout: TIMEOUT })
+        await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT })
         await page.waitForTimeout(PAGE_WAIT)
-        await click(page, TUTORIALS_BUTTON_SELECTOR, { timeout: TIMEOUT })
+        await click(page, selectors.TUTORIALS_BUTTON_SELECTOR, { timeout: TIMEOUT })
 
         console.log('Tutorial #1')
-        await click(page, "li[id='Tut 1: Simple cell network']", { timeout: TIMEOUT })
+        await click(page,selectors.TUTORIAL_1_SELECTOR, { timeout: TIMEOUT })
         await page.waitForTimeout(PAGE_WAIT)
-        await page.waitForSelector('#pyr')
+        await page.waitForSelector(selectors.PYR_CELL_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT)
 
 
@@ -88,14 +77,14 @@ describe('Experiment Manager test using Tut#1', () => {
 
     it('Create network', async () => {
 
-        await page.waitForSelector(MODEL_BUTTON_SELECTOR)
-        await click(page, MODEL_BUTTON_SELECTOR, { timeout: TIMEOUT });
-        await page.waitForSelector(CREATE_NETWORK_SELECTOR)
-        await click(page, CREATE_NETWORK_SELECTOR, { timeout: TIMEOUT });
+        await page.waitForSelector(selectors.MODEL_BUTTON_SELECTOR)
+        await click(page,selectors.MODEL_BUTTON_SELECTOR, { timeout: TIMEOUT });
+        await page.waitForSelector(selectors.CREATE_NETWORK_SELECTOR)
+        await click(page, selectors.CREATE_NETWORK_SELECTOR, { timeout: TIMEOUT });
 
         console.log('Create network')
 
-        await page.waitForSelector('div[title="Raster plot"][aria-disabled="true"]', { timeout: TIMEOUT * 3 })
+        await page.waitForSelector(selectors.DISABLED_RASTER_PLOT_SELECTOR, { timeout: TIMEOUT * 3 })
 
         await page.waitForTimeout(PAGE_WAIT)
 
@@ -112,19 +101,19 @@ describe('Experiment Manager test using Tut#1', () => {
 
         console.log('Setting up experiment')
 
-        await page.waitForSelector('div[title="Experiment Manager"]')
-        await page.click('div[title="Experiment Manager"]')
-        await page.waitForSelector('button[class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary"]')
-        await page.click('button[class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary"]')
+        await page.waitForSelector(selectors.EXPERIMENT_MANAGER_TAB_SELECTOR)
+        await page.click(selectors.EXPERIMENT_MANAGER_TAB_SELECTOR)
+        await page.waitForSelector(selectors.CREATE_NEW_EXPERIMENT_SELECTOR)
+        await page.click(selectors.CREATE_NEW_EXPERIMENT_SELECTOR)
 
-        await page.waitForSelector('h2[class="MuiTypography-root MuiTypography-h6"]')
-        await page.click('#confirmDeletion')
-        await page.waitForSelector('#experiment-name')
+        await page.waitForSelector(selectors.CREATE_NEW_EXPERIMENT_POPUP_SELECTOR)
+        await page.click(selectors.CONFIRM_SELECTOR)
+        await page.waitForSelector(selectors.EXPERIMENT_NAME_SELECTOR)
 
-        await expect(page).toFill('#experiment-name', 'Test Experiment')
+        await expect(page).toFill(selectors.EXPERIMENT_NAME_SELECTOR, 'Test Experiment')
         await page.waitForTimeout(PAGE_WAIT);
 
-        await page.click('#undefined-combo-box-demo')
+        await page.click(selectors.PARAMETER_SELECTION_SELECTOR)
 
 
         await page.evaluate(() => {
@@ -137,34 +126,34 @@ describe('Experiment Manager test using Tut#1', () => {
         await page.waitForTimeout(PAGE_WAIT);
 
         const inputFromValue = await page.$eval('#undefined-from', el => el.value);
-        await page.click('#undefined-to');
+        await page.click(selectors.FROM_VALUE_SELECTOR);
         for (let i = 0; i < inputFromValue.length; i++) {
             await page.keyboard.press('Backspace');
         }
 
-        await page.type('#undefined-from', '1')
+        await page.type(selectors.FROM_VALUE_SELECTOR, '1')
 
         const inputToValue = await page.$eval('#undefined-to', el => el.value);
-        await page.click('#undefined-to');
+        await page.click(selectors.TO_VALUE_SELECTOR);
         for (let i = 0; i < inputToValue.length; i++) {
             await page.keyboard.press('Backspace');
         }
 
-        await page.type('#undefined-to', '4')
+        await page.type(selectors.TO_VALUE_SELECTOR, '4')
 
         const inputStepValue = await page.$eval('#undefined-step', el => el.value);
-        await page.click('#undefined-step');
+        await page.click(selectors.STEP_VALUE_SELECTOR);
         for (let i = 0; i < inputStepValue.length; i++) {
             await page.keyboard.press('Backspace');
         }
 
-        await page.type('#undefined-step', '1')
+        await page.type(selectors.STEP_VALUE_SELECTOR, '1')
 
         await page.waitForTimeout(PAGE_WAIT);
 
-        await page.click('button[class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"]')
+        await page.click(selectors.CREATE_EXPERIMENT_BUTTON_SELECTOR)
 
-        await page.waitForSelector('th[class="MuiTableCell-root MuiTableCell-body"]')
+        await page.waitForSelector(selectors.EXPERIMENT_TABLE_HEADER_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT);
 
         const experiment_name = await page.evaluate(() => {
@@ -182,23 +171,23 @@ describe('Experiment Manager test using Tut#1', () => {
 
     it('Simulate All conditions', async () => {
 
-        await page.waitForSelector('div[class="MuiButtonGroup-root MuiButtonGroup-contained"]')
-        await click(page, 'div[class="MuiButtonGroup-root MuiButtonGroup-contained"]', { timeout: TIMEOUT });
+        await page.waitForSelector(selectors.SIMULATE_BUTTON_SELECTOR)
+        await click(page, selectors.SIMULATE_BUTTON_SELECTOR, { timeout: TIMEOUT });
 
         console.log('Simulating all conditions')
 
-        await page.waitForSelector('div[class="MuiBox-root MuiBox-root-185 wrap"]')
-        await page.click('div[class="MuiBox-root MuiBox-root-185 wrap"]')
-        await page.click('#appBarPerformActionButton')
+        await page.waitForSelector(selectors.SIMULATE_POPUP_SELECTOR)
+        await page.click(selectors.SIMULATE_POPUP_SELECTOR)
+        await page.click(selectors.CONFIRM_SIMULATE_SELECTOR)
 
         await page.waitForTimeout(PAGE_WAIT);
 
-        await page.waitForSelector('button[class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"]')
-        await page.click('button[class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"]')
+        await page.waitForSelector(selectors.CONFIRM_EXPERIMENT_STARTED_SELECTOR)
+        await page.click(selectors.CONFIRM_EXPERIMENT_STARTED_SELECTOR)
 
-        await page.waitForSelector(SIMULATION_PAGE_SELECTOR, { timeout: TIMEOUT * 2 });
-        await page.waitForSelector('div[class = "MuiBox-root MuiBox-root-186 MuiChip-icon MuiChipLoader"]', { hidden: false, timeout: TIMEOUT * 2 })
-        await page.waitForSelector('div[class = "MuiBox-root MuiBox-root-186 MuiChip-icon MuiChipLoader"]', { hidden: true, timeout: TIMEOUT * 5 })
+        await page.waitForSelector(selectors.SIMULATION_PAGE_SELECTOR, { timeout: TIMEOUT * 2 });
+        await page.waitForSelector(selectors.SIMULATION_LOADER_SELECTOR, { hidden: false, timeout: TIMEOUT * 2 })
+        await page.waitForSelector(selectors.SIMULATION_LOADER_SELECTOR, { hidden: true, timeout: TIMEOUT * 5 })
         console.log('Experiment Simulation finished')
 
     });
@@ -207,12 +196,12 @@ describe('Experiment Manager test using Tut#1', () => {
 
         console.log('Checking experiment condition #1')
 
-        await page.click('span[class="MuiButton-startIcon MuiButton-iconSizeMedium"]')
+        await page.click(selectors.BACK_TO_EDIT_SELECTOR)
 
         await page.waitForTimeout(PAGE_WAIT * 2)
 
-        await page.waitForSelector('div[title="Cell Types"]')
-        await page.click('div[title="Cell Types"]')
+        await page.waitForSelector(selectors.CELL_TYPES_TAB_SELECTOR)
+        await page.click(selectors.CELL_TYPES_TAB_SELECTOR)
 
         await page.evaluate(() => {
             let sections = document.querySelectorAll('div[class="MuiButtonBase-root MuiListItem-root makeStyles-selected-23 MuiListItem-dense MuiListItem-button"]');
@@ -224,10 +213,10 @@ describe('Experiment Manager test using Tut#1', () => {
         await page.waitForTimeout(PAGE_WAIT)
 
 
-        await page.waitForSelector('table[class="MuiTable-root"]')
-        await page.click('button[class="MuiButtonBase-root MuiButton-root MuiButton-text"]')
+        await page.waitForSelector(selectors.EXPERIMENT_TABLE_SELECTOR)
+        await page.click(selectors.CREATED_EXPERIMENT_SELECTOR)
 
-        await page.waitForSelector('tr[class = "MuiTableRow-root MuiTableRow-head"]')
+        await page.waitForSelector(selectors.EXPERIMENT_CONDIIONS_ROW_SELECTOR)
 
         await page.evaluate(() => {
             let results = document.querySelectorAll('button[title="Explore results"]');
@@ -236,8 +225,8 @@ describe('Experiment Manager test using Tut#1', () => {
             }
         });
 
-        await page.waitForSelector('#confirmDeletion')
-        await page.click('#confirmDeletion')
+        await page.waitForSelector(selectors.CONFIRM_SELECTOR)
+        await page.click(selectors.CONFIRM_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT)
 
         console.log('... taking snapshot ...');
@@ -257,9 +246,8 @@ describe('Experiment Manager test using Tut#1', () => {
 
         console.log('Checking experiment condition #2')
 
-
         await page.waitForTimeout(PAGE_WAIT)
-        await page.click('span[class="MuiButton-startIcon MuiButton-iconSizeMedium"]')
+        await page.click(selectors.BACK_TO_EDIT_SELECTOR)
 
         await page.waitForTimeout(PAGE_WAIT * 3)
 
@@ -270,8 +258,8 @@ describe('Experiment Manager test using Tut#1', () => {
             }
         });
 
-        await page.waitForSelector('#confirmDeletion')
-        await page.click('#confirmDeletion')
+        await page.waitForSelector(selectors.CONFIRM_SELECTOR)
+        await page.click(selectors.CONFIRM_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT)
 
         console.log('... taking snapshot ...');
@@ -290,7 +278,7 @@ describe('Experiment Manager test using Tut#1', () => {
         console.log('Checking experiment condition #3')
 
         await page.waitForTimeout(PAGE_WAIT)
-        await page.click('span[class="MuiButton-startIcon MuiButton-iconSizeMedium"]')
+        await page.click(selectors.BACK_TO_EDIT_SELECTOR)
 
         await page.waitForTimeout(PAGE_WAIT * 3)
 
@@ -301,8 +289,8 @@ describe('Experiment Manager test using Tut#1', () => {
             }
         });
 
-        await page.waitForSelector('#confirmDeletion')
-        await page.click('#confirmDeletion')
+        await page.waitForSelector(selectors.CONFIRM_SELECTOR)
+        await page.click(selectors.CONFIRM_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT)
 
         console.log('... taking snapshot ...');
@@ -316,11 +304,31 @@ describe('Experiment Manager test using Tut#1', () => {
 
     })
 
+    it('Delete Experiment', async () => {
 
+        console.log('Deleting experiment')
 
+        await page.waitForTimeout(PAGE_WAIT)
+        await page.click(selectors.BACK_TO_EDIT_SELECTOR)
 
+        await page.waitForTimeout(PAGE_WAIT)
 
+        await page.click(selectors.EDIT_EXPERIMENT_BACK_SELECTOR)
 
+        await page.waitForTimeout(PAGE_WAIT)
 
+        await page.evaluate(() => {
+            let results = document.querySelectorAll('button[class="MuiButtonBase-root MuiButton-root MuiButton-text experimentIcon"]');
+            for (var i = 0; i < results.length; i++) {
+                results[1].innerHTML.includes("label") && results[1].click();
+            }
+        });
+
+        await page.waitForSelector(selectors.CONFIRM_SELECTOR)
+        await page.click(selectors.CONFIRM_SELECTOR)
+
+        await page.waitForFunction(() => !document.querySelector('tr[class="MuiTableRow-root"]'));
+        
+    })
 
 });
