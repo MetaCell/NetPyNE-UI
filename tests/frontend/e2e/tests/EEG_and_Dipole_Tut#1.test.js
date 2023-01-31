@@ -27,7 +27,7 @@ const SNAPSHOT_OPTIONS = {
 
 
 //USERS:
-const USERNAME = 'EEGandDipole_TestUser_'
+const USERNAME = 'EEGDipole_TestUser_'
 const PASSWORD = 'password'
 
 
@@ -141,7 +141,7 @@ describe('EEG and Dipole Plot Test using Tutorial#1', () => {
 
         await console.log('View Dipole Plot ...')
 
-        await page.waitForTimeout(PAGE_WAIT * 15);
+        await page.waitForTimeout(PAGE_WAIT * 20);
         await page.click(selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
         await page.waitForTimeout(PAGE_WAIT);
         await page.click(selectors.DIPOLE_PLOT_SELECTOR)
@@ -165,7 +165,7 @@ describe('EEG and Dipole Plot Test using Tutorial#1', () => {
 
         await console.log('View EEG Plot ...')
 
-        await page.waitForTimeout(PAGE_WAIT * 20);
+        await page.waitForTimeout(PAGE_WAIT * 25);
         await page.click(selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
         await page.waitForTimeout(PAGE_WAIT * 2);
         await page.click(selectors.EEG_PLOT_SELECTOR)
