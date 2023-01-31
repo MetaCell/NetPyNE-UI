@@ -27,7 +27,7 @@ const SNAPSHOT_OPTIONS = {
 
 
 //USERS:
-const USERNAME = 'EEG_Dipole__User_saa'
+const USERNAME = 'EEG_Dipole_TestUser'
 const PASSWORD = 'password'
 
 
@@ -62,8 +62,8 @@ describe('EEG and Dipole Plot Test using Tutorial#1', () => {
 
     it('Load Tutorial#1', async () => {
 
-        await page.waitForTimeout(PAGE_WAIT * 2)
-        await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT })
+        await page.waitForTimeout(PAGE_WAIT * 3)
+        await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT * 2 })
         await page.waitForTimeout(PAGE_WAIT * 2)
         await click(page, selectors.TUTORIALS_BUTTON_SELECTOR, { timeout: TIMEOUT })
 
@@ -141,7 +141,7 @@ describe('EEG and Dipole Plot Test using Tutorial#1', () => {
 
         await console.log('View Dipole Plot ...')
 
-        await page.waitForTimeout(PAGE_WAIT * 10);
+        await page.waitForTimeout(PAGE_WAIT * 15);
         await click(page, selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
         await page.waitForTimeout(PAGE_WAIT);
         await click(page, selectors.DIPOLE_PLOT_SELECTOR)
@@ -165,7 +165,7 @@ describe('EEG and Dipole Plot Test using Tutorial#1', () => {
 
         await console.log('View EEG Plot ...')
 
-        await page.waitForTimeout(PAGE_WAIT * 14);
+        await page.waitForTimeout(PAGE_WAIT * 15);
         await click(page, selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
         await page.waitForTimeout(PAGE_WAIT * 2);
         await click(page, selectors.EEG_PLOT_SELECTOR)
