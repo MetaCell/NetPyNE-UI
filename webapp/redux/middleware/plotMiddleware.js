@@ -106,6 +106,7 @@ export default (store) => (next) => (action) => {
     showSpinner("Loading plot...");
     return plotFigure(widget.id, method.plotMethod, method.plotType, uri, store.getState().general.theme)
       .then((data) => {
+        data = '<div style="bk {margin: 0 auto!important;} div {overflow:hidden;} frame {overflow:hidden;}>'+data+'</div>';
         setPlotToWindow(widget.id, data);
         widget.initialized = true;
         hideSpinner();
