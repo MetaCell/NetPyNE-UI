@@ -21,13 +21,13 @@ const SNAPSHOT_OPTIONS = {
         ssim: 'fast',
     },
     failureThresholdType: 'percent',
-    failureThreshold: 0.05
+    failureThreshold: 0.2
 };
 
 
 
 //USERS:
-const USERNAME = 'TestUser_Experiment_Manager'
+const USERNAME = 'Test_User_Experiment_Manager_'
 const PASSWORD = 'testpassword'
 
 

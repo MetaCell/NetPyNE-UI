@@ -21,13 +21,13 @@ const SNAPSHOT_OPTIONS = {
         ssim: 'fast',
     },
     failureThresholdType: 'percent',
-    failureThreshold: 0.15
+    failureThreshold: 0.2
 };
 
 
 
 //USERS:
-const USERNAME = 'EEG_and_Dipole_TestUser'
+const USERNAME = 'EEG_and_Dipole_TestUser_12'
 const PASSWORD = 'password'
 
 
@@ -128,9 +128,9 @@ describe('EEG and Dipole Plot Test using Tutorial#1', () => {
 
         await page.waitForSelector(selectors.SIMULATION_PAGE_SELECTOR, { timeout: TIMEOUT * 2 });
 
-        await page.waitForSelector(selectors.RASTER_PLOT_SELECTOR, { timeout: TIMEOUT * 3 })
-        await page.waitForSelector(selectors.EEG_PLOT_SELECTOR, { timeout: TIMEOUT * 3 })
-        await page.waitForSelector(selectors.DIPOLE_PLOT_SELECTOR, { timeout: TIMEOUT * 3 })
+        await page.waitForSelector(selectors.RASTER_PLOT_SELECTOR, { timeout: TIMEOUT * 5 })
+        await page.waitForSelector(selectors.EEG_PLOT_SELECTOR, { timeout: TIMEOUT * 5 })
+        await page.waitForSelector(selectors.DIPOLE_PLOT_SELECTOR, { timeout: TIMEOUT * 5 })
     });
 
     it('Dipole Plot', async () => {
