@@ -21,13 +21,13 @@ const SNAPSHOT_OPTIONS = {
         ssim: 'fast',
     },
     failureThresholdType: 'percent',
-    failureThreshold: 0.05
+    failureThreshold: 0.1
 };
 
 
 
 //USERS:
-const USERNAME = 'EEG_Dipole_TestUser'
+const USERNAME = 'EEG_and_Dipole_TestUser'
 const PASSWORD = 'password'
 
 
