@@ -165,7 +165,7 @@ describe('EEG and Dipole Plot Test using Tutorial#1', () => {
 
         await console.log('View EEG Plot ...')
 
-        await page.waitForTimeout(PAGE_WAIT * 15);
+        await page.waitForTimeout(PAGE_WAIT * 20);
         await click(page, selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
         await page.waitForTimeout(PAGE_WAIT * 2);
         await click(page, selectors.EEG_PLOT_SELECTOR)
