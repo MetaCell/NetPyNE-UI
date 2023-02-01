@@ -4,9 +4,15 @@
   "description": "NetPyNe UI tests",
   "license": "unlicensed",
   "scripts": {
-    "test": "jest --verbose",
+    "test": "jest --verbose ",
     "EEG_Dipole_test": "jest --verbose EEG_and_Dipole_Tut#1 ",
     "Experiment_Manager_test": "jest --verbose ExperimentManager_Tut#1 ",
+    "Tutorial_1_test":"jest --verbose Tut#1_smoke ",
+    "Tutorial_2_test":"jest --verbose Tut#2_smoke ",
+    "Tutorial_3A_test":"jest --verbose Tut#3a_smoke ",
+    "Tutorial_3B_test":"jest --verbose Tut#3b_smoke ",
+    "Tutorial_3C_test":"jest --verbose Tut#3c_smoke ",
+    "Tutorial_4_test":"jest --verbose Tut#4_smoke ",
     "lint": "eslint --fix --ext .js,.jsx ."
   },
   "dependencies": {
