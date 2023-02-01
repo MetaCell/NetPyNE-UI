@@ -23,7 +23,7 @@ const SNAPSHOT_OPTIONS = {
 
 
 //USERS:
-const USERNAME = 'test_user_tut_3b_'
+const USERNAME = 'test_user_tut_3b'
 const PASSWORD =  'testpassword'
 
 
