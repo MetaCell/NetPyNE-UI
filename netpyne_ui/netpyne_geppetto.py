@@ -602,7 +602,8 @@ class NetPyNEGeppetto:
                 if not args['netCells']:
                     sim.initialize(netParams=self.netParams, simConfig=self.simConfig)
                 sim.cfg.filename = args['fileName']
-                include = [el for el in specs.SimConfig().saveDataInclude if el in args.keys() and args[el]]
+                sim_config_data_include = specs.SimConfig().saveDataInclude
+                include = [el for el in sim_config_data_include if args.get(el, False)]
                 if args['netCells']: include += ['netPops']
                 sim.cfg.saveJson = True
                 sim.saveData(include)
