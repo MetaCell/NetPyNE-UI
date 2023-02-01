@@ -129,7 +129,7 @@ const ControlPanelTreeItem = (props) => {
   const getColor = (nodeId) => {
     const insts = instances.filter((instance) => instance.instancePath === nodeId);
     const hasChildren = instances.some((instance) => instance.instancePath.startsWith(nodeId) && instance.instancePath !== nodeId);
-    if (props.children.length === 0 && insts.length > 0 && "color" in insts[0]) {
+    if (props.children && props.children.length === 0 && insts.length > 0 && "color" in insts[0]) {
       return insts[0].color
     }
     // we check if all children have the same color
