@@ -708,7 +708,7 @@ export const LAUNCH_MODAL = {
   modelState: 'model',
   experimentState: 'experiment',
   actionSimulate: 'Simulate',
-  defaultResource: 'Local Machine',
+  defaultResource: 'Current Pod',
   errorText: 'Please check the input',
 };
 
