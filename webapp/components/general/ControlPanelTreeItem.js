@@ -126,19 +126,45 @@ const ControlPanelTreeItem = (props) => {
     hex: "#FF7F99"
   };
 
+  const getParent = (nodeId) => {
+    const insts = instances.filter((instance) =>
+      nodeId.replace(instance.instancePath, '')  !== nodeId && instance.instancePath.length < nodeId.length
+    );
+    if (insts.length === 0) {
+      return null;
+    }
+    return insts.sort((a, b) => b.instancePath.length - a.instancePath.length)[0]
+  }
+
   const getColor = (nodeId) => {
     const insts = instances.filter((instance) => instance.instancePath === nodeId);
-    const hasChildren = instances.some((instance) => instance.instancePath.startsWith(nodeId) && instance.instancePath !== nodeId);
-    if (props.children && props.children.length === 0 && insts.length > 0 && "color" in insts[0]) {
-      return insts[0].color
+    const parent = getParent(nodeId);
+    // If there is no recorded parent, and there is no instances
+    if (!parent && insts.length === 0) {
+      return defaultColor;
+    }
+    // If there is a parent, but no instances, we take the color of the parent
+    if (insts.length === 0) {
+      return parent.color
+    }
+    const inst = insts[0]
+    // If the instance doesn't have children and have a color
+    if (props.children && props.children.length === 0 && insts.length > 0 && "color" in inst) {
+      return inst.color
     }
     // we check if all children have the same color
     const children = instances.filter((instance) => instance.instancePath.startsWith(nodeId) && instance.instancePath !== nodeId);
+    // if we cannot find children (no color set for children)
     if (children.length === 0) {
+      // if there is a color, we display it
+      if (inst.color) {
+        return inst.color
+      }
+      // if there is none (color not set) we take the default one
       return defaultColor;
     }
     const color = children[0].color;
-    if (children.every(x => x.color && x.color.hex === color.hex)) {
+    if (children.length > 1 && children.every(x => x.color && x.color.hex === color.hex)) {
       return color
     }
     return { hex: "#989898" }
@@ -165,12 +191,6 @@ const ControlPanelTreeItem = (props) => {
       }
   }
 
-  const collectAllChildren = (instance) => {
-    const children = [...instance.getChildren()]
-    children.forEach(child => children.push(...collectAllChildren(child)))
-    return children
-  }
-
   const handleLeafColorChange = (event, nodeId, colorGenerator) => {
     const updateInstances = instances.filter((instance) => !instance.instancePath.startsWith(nodeId));
     updateInstances.push({
@@ -184,8 +204,8 @@ const ControlPanelTreeItem = (props) => {
     event.stopPropagation();
     event.preventDefault();
 
-    const childrenPaths = collectAllChildren(window.Instances.getInstance(nodeId))
-                            .filter((instance) => !instance.getChildren() || instance.getChildren().length === 0)
+    const instance = window.Instances.getInstance(nodeId);
+    const childrenPaths = [...instance.getChildren()]
                             .map((instance) => instance.getInstancePath());
     const children = childrenPaths.filter((path) => path.startsWith(nodeId));
     const updateInstances = instances.filter((instance) => {
@@ -294,7 +314,7 @@ const ControlPanelTreeItem = (props) => {
                   <IconButton onClick={(event) => changeVisibility(event, nodeId)}>
                     { visibility ? <Visibility style={{ marginRight: '0.5rem' }} /> : <VisibilityOff style={{ marginRight: '0.5rem' }} /> }
                   </IconButton>
-                  <IconButton disabled={disableRandom} onClick={(event) => handleColorChange(event, nodeId, randomColor)}>
+                  <IconButton onClick={(event) => handleColorChange(event, nodeId, randomColor)}>
                       <RandomColorLensIcon style={{ marginRight: '0.5rem' }} />
                   </IconButton>
                 </>
