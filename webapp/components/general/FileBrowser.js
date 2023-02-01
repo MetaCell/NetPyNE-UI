@@ -26,7 +26,7 @@ export default class FileBrowser extends React.Component {
     }
   }
 
-  getDirList (treeData, rowInfo, startDir) {
+  getDirList (treeData, rowInfo, startDir = '') {
     if (rowInfo != undefined) {
       var { path } = rowInfo.node;
     } else {

@@ -175,7 +175,7 @@ class Topbar extends Component {
               open={dialogOpen}
               exploreOnlyDirs={true}
               // filterFiles=".npjson"
-              startDir="examples"
+              startDir=""
               onRequestClose={(selection) => this.closeExplorerDialog(selection)}
             />
           );
