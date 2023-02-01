@@ -26,10 +26,10 @@ const AboutContent = withStyles(styles)(({ classes }) => (
     <img width="250" src={logoNetpyne} />
     <Box m={1}>
       <Link variant="h5" style={{ display: 'block' }} href="https://github.com/MetaCell/NetPyNE-UI" target="_blank">
-        NetPyNE-UI v0.9.0
+        NetPyNE-UI v0.9.1
       </Link>
       <Link variant="h5" style={{ display: 'block' }} href="https://github.com/Neurosim-lab/netpyne" target="_blank">
-        NetPyNE v1.0.3
+        NetPyNE v1.0.3.1
       </Link>
       <Link variant="h5" style={{ display: 'block' }} href="https://www.neuron.yale.edu/neuron/" target="_blank">
         NEURON v8.0.2
