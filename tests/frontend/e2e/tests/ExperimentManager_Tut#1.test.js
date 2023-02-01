@@ -58,6 +58,35 @@ describe('Experiment Manager test using Tut#1', () => {
         }, { timeout: TIMEOUT });
     });
 
+    it('Open new page', async () => {
+
+        console.log('Opening a new NetPyNE page')
+
+        await page.on("dialog", dialog =>
+            dialog.accept());
+
+        await page.waitForSelector('#File', { timeout: PAGE_WAIT * 20 })
+        await page.waitForTimeout(PAGE_WAIT * 6)
+        await page.click('#File')
+        await page.waitForSelector('#New', { timeout: PAGE_WAIT * 10 })
+        await page.waitForTimeout(PAGE_WAIT)
+        await page.click('#New')
+        await page.waitForTimeout(PAGE_WAIT)
+        await page.waitForSelector('#appBarPerformActionButton')
+        await page.click('#appBarPerformActionButton')
+        await page.waitForTimeout(PAGE_WAIT * 2)
+
+        await page.waitForFunction(() => {
+            let el = document.querySelector('#loading-spinner');
+            return el == null || el.clientHeight === 0;
+        }, { timeout: TIMEOUT });
+
+        
+
+        await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT * 10 })
+
+    })
+
     it('Load Tutorial#1', async () => {
 
         await page.waitForTimeout(PAGE_WAIT * 2)
@@ -66,7 +95,7 @@ describe('Experiment Manager test using Tut#1', () => {
         await click(page, selectors.TUTORIALS_BUTTON_SELECTOR, { timeout: TIMEOUT })
 
         console.log('Tutorial #1')
-        await click(page,selectors.TUTORIAL_1_SELECTOR, { timeout: TIMEOUT })
+        await click(page, selectors.TUTORIAL_1_SELECTOR, { timeout: TIMEOUT })
         await page.waitForTimeout(PAGE_WAIT)
         await page.waitForSelector(selectors.PYR_CELL_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT)
@@ -78,7 +107,7 @@ describe('Experiment Manager test using Tut#1', () => {
     it('Create network', async () => {
 
         await page.waitForSelector(selectors.MODEL_BUTTON_SELECTOR)
-        await click(page,selectors.MODEL_BUTTON_SELECTOR, { timeout: TIMEOUT });
+        await click(page, selectors.MODEL_BUTTON_SELECTOR, { timeout: TIMEOUT });
         await page.waitForSelector(selectors.CREATE_NETWORK_SELECTOR)
         await click(page, selectors.CREATE_NETWORK_SELECTOR, { timeout: TIMEOUT });
 
@@ -328,7 +357,7 @@ describe('Experiment Manager test using Tut#1', () => {
         await page.click(selectors.CONFIRM_SELECTOR)
 
         await page.waitForFunction(() => !document.querySelector('tr[class="MuiTableRow-root"]'));
-        
+
     })
 
 });
