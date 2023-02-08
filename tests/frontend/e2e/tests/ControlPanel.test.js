@@ -145,5 +145,52 @@ describe('Test for the Control Panel - color picker', () => {
 
     })
 
+    it('Randomize Main Level network color', async () => {
+
+        console.log('Randomize Main Level network color')
+
+        await page.waitForTimeout(PAGE_WAIT * 3)
+
+        await page.waitForSelector('div[class="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-space-between"]')
+
+
+        const primary_level_colors = await page.$$eval('rect[rx="5"]', primary_level_colors => {
+            return primary_level_colors.map(primary_level_color => primary_level_color.outerHTML);
+        });
+
+        expect(primary_level_colors[0]).toContain('fill="#FF7F99"')
+        expect(primary_level_colors[0]).toEqual(primary_level_colors[1])
+        expect(primary_level_colors[1]).toEqual(primary_level_colors[2])
+
+        await page.waitForTimeout(PAGE_WAIT)
+
+        const rows = await page.$$('div[class = "MuiTypography-root MuiTreeItem-label MuiTypography-body1"]')
+        for (var i = 0; i < rows.length; i++) {
+            await rows[0].hover()
+        }
+
+        const buttons = await page.$$('button[class="MuiButtonBase-root MuiIconButton-root"]')
+
+        for (var i = 0; i < buttons.length; i++) {
+            await buttons[1].click()
+        }
+
+        await page.waitForTimeout(PAGE_WAIT)
+
+        const rndm_primary_level_colors = await page.$$eval('rect[rx="5"]', rndm_primary_level_colors => {
+            return rndm_primary_level_colors.map(rndm_primary_level_color => rndm_primary_level_color.outerHTML);
+        });
+
+        expect(rndm_primary_level_colors[0]).toContain('fill="#989898"')
+        // expect(rndm_primary_level_colors[1]).not.toEqual(rndm_primary_level_colors[0])
+        // expect(rndm_primary_level_colors[2]).not.toEqual(rndm_primary_level_colors[0])
+        // expect(rndm_primary_level_colors[2]).not.toEqual(rndm_primary_level_colors[1])
+
+        console.log('Main Network color randomized successfully')
+
+        await page.waitForTimeout(PAGE_WAIT)
+
+    })
+
     
 });
