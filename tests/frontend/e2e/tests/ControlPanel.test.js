@@ -192,5 +192,39 @@ describe('Test for the Control Panel - color picker', () => {
 
     })
 
+    it('Randomize Sub level E network color', async () => {
+
+        console.log('Randomize Sub Level E network color')
+
+        const rows = await page.$$('div[class = "MuiTypography-root MuiTreeItem-label MuiTypography-body1"]')
+        for (var i = 0; i < rows.length; i++) {
+            await rows[1].click()
+            await rows[1].hover()
+        }
+
+        const second_level_colors = await page.$$eval('rect[rx="5"]', second_level_colors => {
+            return second_level_colors.map(second_level_color => second_level_color.outerHTML);
+        });
+
+
+        expect(second_level_colors[1]).not.toEqual(second_level_colors[2])
+        // expect(second_level_colors[2]).toEqual(second_level_colors[3]) 
+
+
+        const buttons = await page.$$('button[class="MuiButtonBase-root MuiIconButton-root"]')
+
+        for (var i = 0; i < buttons.length; i++) {
+            await buttons[2].click()
+        }
+
+        expect(second_level_colors[2]).not.toEqual(second_level_colors[3])
+        expect(second_level_colors[1]).toContain('fill="#989898"')
+
+        console.log('E Network color randomized successfully')
+
+        await page.waitForTimeout(PAGE_WAIT * 3)
+
+    })
+
     
 });
