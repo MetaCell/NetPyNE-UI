@@ -15,10 +15,10 @@ const TIMEOUT = 60000;
 
 //SNAPSHOT:
 const SNAPSHOT_OPTIONS = {
-    customSnapshotsDir: `./tests/snapshots/${scriptName}`,
+    customSnapshotsDir: `./tests/snapshots/Tut#2_smoke.test/`,
     comparisonMethod: 'ssim',
     failureThresholdType: 'percent',
-    failureThreshold: 0.5
+    failureThreshold: 0.25
 };
 
 
@@ -132,13 +132,13 @@ describe('Test for the Control Panel - color picker', () => {
 
         console.log('Opening Control Panel')
 
-        await page.waitForSelector('div[title="Control Panel"]')
+        await page.waitForSelector(selectors.CONTROL_PANEL_TAB_SELECTOR)
 
-        await page.click('div[title="Control Panel"]')
+        await page.click(selectors.CONTROL_PANEL_TAB_SELECTOR)
 
-        await page.waitForSelector('ul[role="tree"]')
+        await page.waitForSelector(selectors.NETWORKS_IN_CONTROL_PANEL_SELECTOR)
 
-        const network_items = (await page.$$('li[role="treeitem"]')).length;
+        const network_items = (await page.$$(selectors.NETWORK_ITEMS_CONTROL_PANEL_SELECTOR)).length;
         await expect(network_items).toEqual(3)
 
         console.log('Control Panel displayed successfully')
@@ -151,10 +151,10 @@ describe('Test for the Control Panel - color picker', () => {
 
         await page.waitForTimeout(PAGE_WAIT * 3)
 
-        await page.waitForSelector('div[class="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-space-between"]')
+        await page.waitForSelector(selectors.CONTROL_PANEL_TABLE_SELECTOR)
 
 
-        const primary_level_colors = await page.$$eval('rect[rx="5"]', primary_level_colors => {
+        const primary_level_colors = await page.$$eval(selectors.COLOR_RECT_SELECTOR, primary_level_colors => {
             return primary_level_colors.map(primary_level_color => primary_level_color.outerHTML);
         });
 
@@ -164,12 +164,12 @@ describe('Test for the Control Panel - color picker', () => {
 
         await page.waitForTimeout(PAGE_WAIT)
 
-        const rows = await page.$$('div[class = "MuiTypography-root MuiTreeItem-label MuiTypography-body1"]')
+        const rows = await page.$$(selectors.CONTROL_PANEL_NETWORK_ROWS_SELECTOR)
         for (var i = 0; i < rows.length; i++) {
             await rows[0].hover()
         }
 
-        const buttons = await page.$$('button[class="MuiButtonBase-root MuiIconButton-root"]')
+        const buttons = await page.$$(selectors.COLOR_CONTROL_BUTTONS_SELECTOR)
 
         for (var i = 0; i < buttons.length; i++) {
             await buttons[1].click()
@@ -177,7 +177,7 @@ describe('Test for the Control Panel - color picker', () => {
 
         await page.waitForTimeout(PAGE_WAIT)
 
-        const rndm_primary_level_colors = await page.$$eval('rect[rx="5"]', rndm_primary_level_colors => {
+        const rndm_primary_level_colors = await page.$$eval(selectors.COLOR_RECT_SELECTOR, rndm_primary_level_colors => {
             return rndm_primary_level_colors.map(rndm_primary_level_color => rndm_primary_level_color.outerHTML);
         });
 
@@ -196,13 +196,13 @@ describe('Test for the Control Panel - color picker', () => {
 
         console.log('Randomize Sub Level E network color')
 
-        const rows = await page.$$('div[class = "MuiTypography-root MuiTreeItem-label MuiTypography-body1"]')
+        const rows = await page.$$(selectors.CONTROL_PANEL_NETWORK_ROWS_SELECTOR)
         for (var i = 0; i < rows.length; i++) {
             await rows[1].click()
             await rows[1].hover()
         }
 
-        const second_level_colors = await page.$$eval('rect[rx="5"]', second_level_colors => {
+        const second_level_colors = await page.$$eval(selectors.COLOR_RECT_SELECTOR, second_level_colors => {
             return second_level_colors.map(second_level_color => second_level_color.outerHTML);
         });
 
@@ -211,7 +211,7 @@ describe('Test for the Control Panel - color picker', () => {
         // expect(second_level_colors[2]).toEqual(second_level_colors[3]) 
 
 
-        const buttons = await page.$$('button[class="MuiButtonBase-root MuiIconButton-root"]')
+        const buttons = await page.$$(selectors.COLOR_CONTROL_BUTTONS_SELECTOR)
 
         for (var i = 0; i < buttons.length; i++) {
             await buttons[2].click()
@@ -231,20 +231,20 @@ describe('Test for the Control Panel - color picker', () => {
 
         console.log('Selecting a color for the I network')
 
-        const rows = await page.$$('div[class = "MuiTypography-root MuiTreeItem-label MuiTypography-body1"]')
+        const rows = await page.$$(selectors.CONTROL_PANEL_NETWORK_ROWS_SELECTOR)
         for (var i = 0; i < rows.length; i++) {
             await rows[1].click()
         }
 
         await page.waitForTimeout(PAGE_WAIT)
 
-        const rows_ = await page.$$('div[class = "MuiTypography-root MuiTreeItem-label MuiTypography-body1"]')
+        const rows_ = await page.$$(selectors.CONTROL_PANEL_NETWORK_ROWS_SELECTOR)
 
         for (var i = 0; i < rows_.length; i++) {
             await rows_[2].click()
         }
 
-        const network_colors = await page.$$eval('rect[rx="5"]', network_colors => {
+        const network_colors = await page.$$eval(selectors.COLOR_RECT_SELECTOR, network_colors => {
             return network_colors.map(network_color => network_color.outerHTML);
         });
 
@@ -253,7 +253,7 @@ describe('Test for the Control Panel - color picker', () => {
 
         await page.waitForTimeout(PAGE_WAIT * 3)
 
-        const buttons = await page.$$('button[class="MuiButtonBase-root MuiIconButton-root"]')
+        const buttons = await page.$$(selectors.COLOR_CONTROL_BUTTONS_SELECTOR)
 
         for (var i = 0; i < buttons.length; i++) {
             await buttons[4].click()
@@ -261,7 +261,7 @@ describe('Test for the Control Panel - color picker', () => {
 
         await page.waitForTimeout(PAGE_WAIT)
 
-        const list_bounds = await page.$('ul[role="tree"]');
+        const list_bounds = await page.$(selectors.NETWORKS_IN_CONTROL_PANEL_SELECTOR);
         const rect = await page.evaluate((list_bounds) => {
             const { top, left, bottom, right } = list_bounds.getBoundingClientRect();
             return { top, left, bottom, right };
@@ -273,12 +273,12 @@ describe('Test for the Control Panel - color picker', () => {
 
         await page.waitForTimeout(PAGE_WAIT * 2)
 
-        const rows_after_colouring_I = await page.$$('div[class = "MuiTypography-root MuiTreeItem-label MuiTypography-body1"]')
+        const rows_after_colouring_I = await page.$$(selectors.CONTROL_PANEL_NETWORK_ROWS_SELECTOR)
         for (var i = 0; i < rows_after_colouring_I.length; i++) {
             await rows_after_colouring_I[2].click()
         }
 
-        const network_colors_after_colouring_I = await page.$$eval('rect[rx="5"]', network_colors_after_colouring_I => {
+        const network_colors_after_colouring_I = await page.$$eval(selectors.COLOR_RECT_SELECTOR, network_colors_after_colouring_I => {
             return network_colors_after_colouring_I.map(network_color_after_colouring_I => network_color_after_colouring_I.outerHTML);
         });
         await page.waitForTimeout(PAGE_WAIT)
