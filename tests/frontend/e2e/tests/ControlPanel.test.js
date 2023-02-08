@@ -226,5 +226,87 @@ describe('Test for the Control Panel - color picker', () => {
 
     })
 
+
+     it('Pick a color for the sublevel I netowrk', async () => {
+
+        console.log('Selecting a color for the I network')
+
+        const rows = await page.$$('div[class = "MuiTypography-root MuiTreeItem-label MuiTypography-body1"]')
+        for (var i = 0; i < rows.length; i++) {
+            await rows[1].click()
+        }
+
+        await page.waitForTimeout(PAGE_WAIT)
+
+        const rows_ = await page.$$('div[class = "MuiTypography-root MuiTreeItem-label MuiTypography-body1"]')
+
+        for (var i = 0; i < rows_.length; i++) {
+            await rows_[2].click()
+        }
+
+        const network_colors = await page.$$eval('rect[rx="5"]', network_colors => {
+            return network_colors.map(network_color => network_color.outerHTML);
+        });
+
+        // expect(network_colors[2]).toContain('fill="#989898"')
+        // expect(network_colors[3]).toEqual(network_colors[4])
+
+        await page.waitForTimeout(PAGE_WAIT * 3)
+
+        const buttons = await page.$$('button[class="MuiButtonBase-root MuiIconButton-root"]')
+
+        for (var i = 0; i < buttons.length; i++) {
+            await buttons[4].click()
+        }
+
+        await page.waitForTimeout(PAGE_WAIT)
+
+        const list_bounds = await page.$('ul[role="tree"]');
+        const rect = await page.evaluate((list_bounds) => {
+            const { top, left, bottom, right } = list_bounds.getBoundingClientRect();
+            return { top, left, bottom, right };
+        }, list_bounds);
+
+        await page.waitForTimeout(PAGE_WAIT)
+
+        await page.mouse.click(Math.round(rect.right) - 40, Math.round(rect.bottom) + 40)
+
+        await page.waitForTimeout(PAGE_WAIT * 2)
+
+        const rows_after_colouring_I = await page.$$('div[class = "MuiTypography-root MuiTreeItem-label MuiTypography-body1"]')
+        for (var i = 0; i < rows_after_colouring_I.length; i++) {
+            await rows_after_colouring_I[2].click()
+        }
+
+        const network_colors_after_colouring_I = await page.$$eval('rect[rx="5"]', network_colors_after_colouring_I => {
+            return network_colors_after_colouring_I.map(network_color_after_colouring_I => network_color_after_colouring_I.outerHTML);
+        });
+        await page.waitForTimeout(PAGE_WAIT)
+
+        expect(network_colors_after_colouring_I[2]).toContain('fill="#420b0b"')
+        expect(network_colors_after_colouring_I[2]).toEqual(network_colors_after_colouring_I[3])
+        expect(network_colors_after_colouring_I[2]).toEqual(network_colors_after_colouring_I[4])
+
+        console.log('I network color selected successfully')
+
+    })
+
+    it('Filter results from the Control panel', async () => {
+
+        console.log('Filtering results')
+
+
+       
+        
+        // await page.waitForSelector('ul[role="tree"]')
+        // const network_items = (await page.$$('li[role="treeitem"]')).length;
+        // await expect(network_items).toEqual(3)
+
+        console.log('Results filtered successfully')
+
+
+    })
+
+
     
 });
