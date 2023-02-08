@@ -128,5 +128,22 @@ describe('Test for the Control Panel - color picker', () => {
             });
     })
 
+    it('Open Color Picker Menu', async () => {
+
+        console.log('Opening Control Panel')
+
+        await page.waitForSelector('div[title="Control Panel"]')
+
+        await page.click('div[title="Control Panel"]')
+
+        await page.waitForSelector('ul[role="tree"]')
+
+        const network_items = (await page.$$('li[role="treeitem"]')).length;
+        await expect(network_items).toEqual(3)
+
+        console.log('Control Panel displayed successfully')
+
+    })
+
     
 });
