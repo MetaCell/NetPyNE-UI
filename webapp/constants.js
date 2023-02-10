@@ -29,6 +29,7 @@ export const NETPYNE_COMMANDS = {
   simulateModel: 'netpyne_geppetto.simulateNetPyNEModelInGeppetto',
   importModel: 'netpyne_geppetto.importModel',
   exportModel: 'netpyne_geppetto.exportModel',
+  saveModel: 'netpyne_geppetto.saveToIndexFile',
   exportHLS: 'netpyne_geppetto.exportHLS',
   plotFigure: 'netpyne_geppetto.getPlot',
   deleteParam: 'netpyne_geppetto.deleteParam',
@@ -70,6 +71,9 @@ export const PYTHON_CONSOLE_WIDGET = {
  */
 export const TOPBAR_CONSTANTS = {
   LOAD: 'LOAD',
+  LOAD_INDEX: 'LOAD_INDEX',
+  LOAD_INDEX_WORKSPACE: 'LOAD_INDEX_WORKSPACE',
+  SAVE_INDEX_WORKSPACE: 'SAVE_INDEX_WORKSPACE',
   SAVE: 'SAVE',
   IMPORT_HLS: 'IMPORT_HLS',
   EXPORT_HLS: 'EXPORT_HLS',
