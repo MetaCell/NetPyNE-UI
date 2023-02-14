@@ -22,8 +22,8 @@ const PlotViewer = ({ key, id, method }) => {
             srcDoc={data}
             style={{
               position: 'absolute',
-              overflowX:'yes',
-              overflowY:'yes',
+              overflowX:'scroll',
+              overflowY:'scroll',
               top: '0px',
               left: '0px',
               border: 0,
