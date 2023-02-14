@@ -23,7 +23,7 @@ import ImportCellParamsDialog from './dialogs/ImportCellParams';
 import UploadDownloadFilesDialog from './dialogs/UploadDownloadFiles';
 
 import { TOPBAR_CONSTANTS, MODEL_STATE, DEFAULT_CONFIRMATION_DIALOG_MESSAGE } from '../../constants';
-import { LOAD_TUTORIAL, registerModelPath } from '../../redux/actions/general';
+import { LOAD_TUTORIAL, loadModel } from '../../redux/actions/general';
 import OverwriteModel from './dialogs/OverwriteModel';
 
 const styles = () => ({
@@ -34,6 +34,7 @@ const styles = () => ({
     justifyContent: 'space-between',
   },
 });
+
 
 class Topbar extends Component {
   snackBarMessage = '';
@@ -46,18 +47,8 @@ class Topbar extends Component {
 
   closeExplorerDialog (fieldValue) {
     if (fieldValue) {
-      Utils.evalPythonMessage('netpyne_geppetto.loadFromIndexFile', [fieldValue.path])
-           .then(() => {
-            // const fileName = fieldValue.path.replace(/^.*[\\/]/, '');
-            // const path = fieldValue.path
-            //   .split(fileName)
-            //   .slice(0, -1)
-            //   .join('');
-            // const action = registerModelPath(path);
-            // this.props.dispatchAction(action);
-            const action = registerModelPath(fieldValue.path);
-            this.props.dispatchAction(action);
-      });
+      const path = fieldValue.path
+      this.props.dispatchAction(loadModel(path));
     }
     this.handleClose();
   }
