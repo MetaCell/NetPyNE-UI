@@ -59,11 +59,14 @@ class NetPyNE extends React.Component {
     const loadFromEvent = event => {
       console.log('Parent frame message received:', event)
 
-      // Here we would expect some cross-origin check, but we don't do anything more than load a nwb file here
+      // Here we would expect some cross-origin check, but we don't do anything more than load a model here
       switch (event.data.type) {
         case 'INIT_INSTANCE':
-          console.log('NOW WE CAN SWITCH STATE?')
+          if (this.loaded) {
+            return
+          }
           this.loaded = true
+          console.log('Netpyne is ready')
           if (window !== window.parent) {
             window.parent.postMessage({
               type: 'APP_READY'
