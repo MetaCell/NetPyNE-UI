@@ -21,9 +21,10 @@ const SNAPSHOT_OPTIONS = {
     failureThreshold: 0.25
 };
 
+let r = (Math.random() + 1).toString(36).substring(7);
 
 //USERS:
-const USERNAME = 'color_picker_TestUser'
+const USERNAME = `TestUser${r}`
 const PASSWORD = 'testpassword'
 
 //TESTS:
@@ -59,9 +60,10 @@ describe('Test for the Control Panel - color picker', () => {
 
         await page.on("dialog", dialog =>
             dialog.accept());
-
+        
+        await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT, visible: true })
         await page.waitForSelector(selectors.FILE_TAB_SELECTOR, { timeout: PAGE_WAIT * 30 })
-        await page.waitForTimeout(PAGE_WAIT * 7)
+        await page.waitForTimeout(PAGE_WAIT)
         await page.click(selectors.FILE_TAB_SELECTOR)
         await page.waitForSelector(selectors.NEW_FILE_SELECTOR, { timeout: PAGE_WAIT * 10 })
         await page.waitForTimeout(PAGE_WAIT)
@@ -182,9 +184,7 @@ describe('Test for the Control Panel - color picker', () => {
         });
 
         expect(rndm_primary_level_colors[0]).toContain('fill="#989898"')
-        // expect(rndm_primary_level_colors[1]).not.toEqual(rndm_primary_level_colors[0])
-        // expect(rndm_primary_level_colors[2]).not.toEqual(rndm_primary_level_colors[0])
-        // expect(rndm_primary_level_colors[2]).not.toEqual(rndm_primary_level_colors[1])
+        expect(rndm_primary_level_colors[2]).not.toEqual(rndm_primary_level_colors[1])
 
         console.log('Main Network color randomized successfully')
 
@@ -201,14 +201,15 @@ describe('Test for the Control Panel - color picker', () => {
             await rows[1].click()
             await rows[1].hover()
         }
+        await page.waitForTimeout(PAGE_WAIT)
 
         const second_level_colors = await page.$$eval(selectors.COLOR_RECT_SELECTOR, second_level_colors => {
             return second_level_colors.map(second_level_color => second_level_color.outerHTML);
         });
 
 
-        expect(second_level_colors[1]).not.toEqual(second_level_colors[2])
-        // expect(second_level_colors[2]).toEqual(second_level_colors[3]) 
+        expect(second_level_colors[1]).toEqual(second_level_colors[2])
+        expect(second_level_colors[2]).toEqual(second_level_colors[3]) 
 
 
         const buttons = await page.$$(selectors.COLOR_CONTROL_BUTTONS_SELECTOR)
@@ -217,8 +218,15 @@ describe('Test for the Control Panel - color picker', () => {
             await buttons[2].click()
         }
 
-        expect(second_level_colors[2]).not.toEqual(second_level_colors[3])
-        expect(second_level_colors[1]).toContain('fill="#989898"')
+        await page.waitForTimeout(PAGE_WAIT * 2)
+
+        const second_level_colors_after_rndm = await page.$$eval(selectors.COLOR_RECT_SELECTOR, second_level_colors_after_rndm => {
+            return second_level_colors_after_rndm.map(second_level_color_after_rndm => second_level_color_after_rndm.outerHTML);
+        });
+
+        expect(second_level_colors_after_rndm[1]).toContain('fill="#989898"')
+        expect(second_level_colors_after_rndm[2]).not.toEqual(second_level_colors_after_rndm[3])
+        expect(second_level_colors_after_rndm[2]).not.toEqual(second_level_colors_after_rndm[1])
 
         console.log('E Network color randomized successfully')
 
@@ -244,12 +252,14 @@ describe('Test for the Control Panel - color picker', () => {
             await rows_[2].click()
         }
 
+        await page.waitForTimeout(PAGE_WAIT)
+
         const network_colors = await page.$$eval(selectors.COLOR_RECT_SELECTOR, network_colors => {
             return network_colors.map(network_color => network_color.outerHTML);
         });
 
-        // expect(network_colors[2]).toContain('fill="#989898"')
-        // expect(network_colors[3]).toEqual(network_colors[4])
+        expect(network_colors[3]).toEqual(network_colors[4])
+        expect(network_colors[3]).toEqual(network_colors[2])
 
         await page.waitForTimeout(PAGE_WAIT * 3)
 
@@ -283,7 +293,6 @@ describe('Test for the Control Panel - color picker', () => {
         });
         await page.waitForTimeout(PAGE_WAIT)
 
-        expect(network_colors_after_colouring_I[2]).toContain('fill="#420b0b"')
         expect(network_colors_after_colouring_I[2]).toEqual(network_colors_after_colouring_I[3])
         expect(network_colors_after_colouring_I[2]).toEqual(network_colors_after_colouring_I[4])
 
@@ -293,17 +302,19 @@ describe('Test for the Control Panel - color picker', () => {
 
     it('Filter results from the Control panel', async () => {
 
+        
+        await page.waitForTimeout(PAGE_WAIT)
         console.log('Filtering results')
 
+        await expect(page).toFill('input[class="MuiInputBase-input MuiOutlinedInput-input"]', 'E')
 
-       
-        
-        // await page.waitForSelector('ul[role="tree"]')
-        // const network_items = (await page.$$('li[role="treeitem"]')).length;
-        // await expect(network_items).toEqual(3)
+        await page.waitForTimeout(PAGE_WAIT)
+
+        await page.waitForSelector('ul[role="tree"]')
+        const network_items = (await page.$$('li[role="treeitem"]')).length;
+        await expect(network_items).toEqual(3)
 
         console.log('Results filtered successfully')
-
 
     })
 
