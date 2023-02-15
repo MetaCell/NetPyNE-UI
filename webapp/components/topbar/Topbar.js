@@ -14,6 +14,7 @@ import toolbarConfig, {
 import { bgRegular } from '../../theme';
 import Splash from '../general/Splash';
 
+import ImportFileDialog from './dialogs/ImportFileDialog';
 import LoadFileDialog from './dialogs/LoadFile';
 import LoadFileIndexDialog from './dialogs/LoadFileIndex';
 import SaveFileDialog from './dialogs/SaveFile';
@@ -22,7 +23,7 @@ import ImportExportHLSDialog from './dialogs/ImportExportHLS';
 import ImportCellParamsDialog from './dialogs/ImportCellParams';
 import UploadDownloadFilesDialog from './dialogs/UploadDownloadFiles';
 
-import { TOPBAR_CONSTANTS, MODEL_STATE, DEFAULT_CONFIRMATION_DIALOG_MESSAGE } from '../../constants';
+import { TOPBAR_CONSTANTS, MODEL_STATE, DEFAULT_CONFIRMATION_DIALOG_MESSAGE, NETPYNE_COMMANDS } from '../../constants';
 import { LOAD_TUTORIAL, registerModelPath } from '../../redux/actions/general';
 import OverwriteModel from './dialogs/OverwriteModel';
 
@@ -258,6 +259,32 @@ class Topbar extends Component {
             />
           );
           break;
+          case TOPBAR_CONSTANTS.IMPORT_NEUROML:
+            content = (
+              <ImportFileDialog
+                open={dialogOpen}
+                onRequestClose={() => this.handleClose()}
+                title="Import from NeuroML 2"
+                command={NETPYNE_COMMANDS.importNeuroML}
+                modelState={modelState}
+                extension=".net.nml"
+                openConfirmationDialog={(payload) => openConfirmationDialog(payload)}
+              />
+            );
+            break;
+            case TOPBAR_CONSTANTS.IMPORT_LEMS:
+              content = (
+                <ImportFileDialog
+                  open={dialogOpen}
+                  onRequestClose={() => this.handleClose()}
+                  command={NETPYNE_COMMANDS.importLEMS}
+                  title="Import simulation from LEMS"
+                  modelState={modelState}
+                  extension=".xml"
+                  openConfirmationDialog={(payload) => openConfirmationDialog(payload)}
+                />
+              );
+              break;
         default:
           content = <div />;
           break;

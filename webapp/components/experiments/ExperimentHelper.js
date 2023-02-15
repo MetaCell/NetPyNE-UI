@@ -24,12 +24,25 @@ export const convertFieldValue = (field, value) => {
     case REAL_TYPE.BOOL:
       return Boolean(value);
 
+    case REAL_TYPE_FLOAT:
+      return validLocale(value);
+
     default:
       // .. handling of more types
       // list(float), dict, list(list(float)), func
       return value;
   }
 };
+
+function getLocale() {
+  if (navigator.languages != undefined) 
+    return navigator.languages[0]; 
+  return navigator.language;
+}
+function validLocale(num) {
+  const locale = getLocale();
+  return Intl.NumberFormat(locale).format(num);
+}
 
 export const isValidValue = (value, type) => {
   if (type == null) {

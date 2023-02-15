@@ -37,6 +37,8 @@ export const NETPYNE_COMMANDS = {
   getExperiments: 'netpyne_geppetto.experiments.get_experiments',
   cloneExperiment: 'netpyne_geppetto.cloneExperiment',
   viewExperimentResults: 'netpyne_geppetto.viewExperimentResult',
+  importNeuroML: 'netpyne_geppetto.importNeuroML',
+  importLEMS: 'netpyne_geppetto.importLEMS',
 };
 
 export const REAL_TYPE = {
@@ -88,6 +90,8 @@ export const TOPBAR_CONSTANTS = {
   BACK_TO_EDITION: 'BACK TO EDIT',
   NEW_PAGE: 'NEW_PAGE',
   NETWORK_MODEL: 'NETWORK_MODEL',
+  IMPORT_NEUROML: 'IMPORT_NEUROML',
+  IMPORT_LEMS: 'IMPORT_LEMS'
 };
 
 /*
@@ -712,7 +716,7 @@ export const LAUNCH_MODAL = {
   modelState: 'model',
   experimentState: 'experiment',
   actionSimulate: 'Simulate',
-  defaultResource: 'Local Machine',
+  defaultResource: 'Server',
   errorText: 'Please check the input',
 };
 

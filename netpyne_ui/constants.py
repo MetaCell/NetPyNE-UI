@@ -11,7 +11,7 @@ TEMPLATE_FILENAME_SINGLE_RUN_INSTANTIATED = "run_instantiated_net.py"
 TEMPLATE_FILENAME_BATCH_RUN = "batch_run_single.py"
 TEMPLATE_FILENAME_BATCH = "batch.py"
 
-ALLOWED_EXTENSIONS = ["py", "zip", "gz", ".tar.gz", "pdf", "txt", "xls", "png", "jpeg", "hoc", "json"]
+ALLOWED_EXTENSIONS = ["py", "zip", "gz", ".tar.gz", "pdf", "txt", "xls", "png", "jpeg", "hoc", "json", "xml", "nml"]
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 UPLOAD_FOLDER_PATH = os.path.join(ROOT, NETPYNE_WORKDIR, UPLOAD_FOLDER_NAME)

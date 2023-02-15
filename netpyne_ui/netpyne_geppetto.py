@@ -3,6 +3,10 @@ netpyne_geppetto.py
 
 Initialise NetPyNE Geppetto, this class contains methods to connect NetPyNE with the Geppetto based UI
 """
+import json
+import os
+from os.path import join, dirname
+from glob import glob
 import copy
 import dataclasses
 import importlib
@@ -10,6 +14,7 @@ import json
 import logging
 import os
 from pathlib import Path
+import pprint
 import re
 import sys
 from shutil import copyfile
@@ -37,12 +42,11 @@ from pygeppetto import ui
 from jupyter_geppetto import jupyter_geppetto, synchronization, utils
 from contextlib import redirect_stdout
 from netpyne_ui.constants import NETPYNE_WORKDIR_PATH, NUM_CONN_LIMIT
-from netpyne_ui.mod_utils import compileModMechFiles
+from netpyne_ui.mod_utils import loadModMechFiles
 
 os.chdir(constants.NETPYNE_WORKDIR_PATH)
 
 neuron.nrn_dll_loaded.append(os.path.join(NETPYNE_WORKDIR_PATH, 'mod'))  # Avoids to load workspace modfiles twice
-
 
 class NetPyNEGeppetto:
 
@@ -181,13 +185,7 @@ class NetPyNEGeppetto:
         }
 
     def find_tutorials(self):
-        only_files = [f for f in os.listdir(constants.NETPYNE_WORKDIR_PATH) if
-                      os.path.isfile(os.path.join(constants.NETPYNE_WORKDIR_PATH, f))]
-
-        def _filter(_file):
-            return '.py' in _file and 'tut' in _file and 'gui' in _file
-
-        return list(filter(_filter, only_files))
+        return glob(join(NETPYNE_WORKDIR_PATH, "**/gui_tut*.py"), recursive=True)
 
     def instantiateNetPyNEModelInGeppetto(self, args):
         try:
@@ -210,7 +208,7 @@ class NetPyNEGeppetto:
         except OSError:
             experiment.state = model.ExperimentState.ERROR
             return utils.getJSONError("The specified folder already exists", "")
-
+        logging.info("Running experiment %s combinations", experiment.name)
         try:
             simulations.run(
                 platform="local",
@@ -223,6 +221,7 @@ class NetPyNEGeppetto:
             )
         except InvalidConfigError as e:
             experiment.state = model.ExperimentState.ERROR
+            logging.error("Error running experiment %s: %s", experiment.name, str(e))
             return utils.getJSONError(str(e), "")
 
         if self.run_config.asynchronous:
@@ -306,17 +305,18 @@ class NetPyNEGeppetto:
                         return self.simulate_single_model(experiment, use_prev_inst)
                 except Exception:
                     experiment.state = model.ExperimentState.ERROR
-                    message = ("Unknown error during simulation of Experiment. SimulationId %i" % sim_id)
+                    message = f"Unknown error during simulation of Experiment. SimulationId {sim_id}"
                     logging.exception(message)
-                    return utils.getJSONError("Unknown error during simulation of Experiment", sys.exc_info(), { "sim_id": sim_id})
+                    # return utils.getJSONError("Unknown error during simulation of Experiment", sys.exc_info(), { "sim_id": sim_id})
+                    return utils.getJSONError("Unknown error during simulation of Experiment", sys.exc_info())
 
             else:
                 return self.simulate_single_model(use_prev_inst=use_prev_inst)
 
         except Exception as e :
-            message = ("Error while simulating the NetPyNE model: %s. SimulationId %f" % (e, sim_id))
+            message = f"Error while simulating the NetPyNE model: {e}. SimulationId {sim_id}"
             logging.exception(message)
-            return utils.getJSONError(message, sys.exc_info(), { "sim_id": sim_id})
+            return utils.getJSONError(message, sys.exc_info())
 
     def _prepare_simulation_files(self, experiment: model.Experiment = None, use_prev_inst: bool = False) -> str:
         """Prepares template files and netpyne model files for a single simulation """
@@ -432,7 +432,7 @@ class NetPyNEGeppetto:
 
         try:
             owd = os.getcwd()
-            compileModMechFiles(args['compileMod'], args['modFolder'])
+            loadModMechFiles(args['compileMod'], args['modFolder'])
         except Exception:
             message = "Error while importing/compiling mods"
             logging.exception(message)
@@ -539,7 +539,6 @@ class NetPyNEGeppetto:
                       exportNetParamsAsPython=exportNetParamsAsPython,
                       exportSimConfigAsPython=exportSimConfigAsPython)
 
-
     def importModel(self, modelParameters):
         """ Imports a model stored in form of Python files.
 
@@ -550,12 +549,15 @@ class NetPyNEGeppetto:
             # TODO: this must be integrated into the general lifecycle of "model change -> simulate"
             #   Shouldn't be specific to Import
             sim.clearAll()
-
+        try:
+            loadModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
+        except Exception:
+            message = "Error while importing/compiling mods"
+            logging.exception(message)
+            return utils.getJSONError(message, sys.exc_info())
         try:
             # Get Current dir
             owd = os.getcwd()
-
-            compileModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
 
             with redirect_stdout(sys.__stdout__):
                 # NetParams
@@ -597,6 +599,66 @@ class NetPyNEGeppetto:
         finally:
             os.chdir(owd)
 
+    def importNeuroML(self, modelParameters):
+        from netpyne_ui.helpers import neuroml
+       
+
+        try:
+            # Get Current dir
+            owd = os.getcwd()
+
+            with redirect_stdout(sys.__stdout__):
+                # NetParams
+                filename = str(modelParameters["fileName"])
+               
+                json_fname = neuroml.convertNeuroML2(filename, compileMod=modelParameters["compileMod"])
+                   
+            return self.loadModel(args=dict(
+                compileMod=True,
+                modFolder=os.path.dirname(json_fname),
+                jsonModelFolder=json_fname,
+                loadNet=True,
+                loadSimData=True,
+                loadSimCfg=True,
+                loadNetParams=True
+            ))
+        except:
+            message = "Error while importing the NetPyNE model"
+            logging.exception(message)
+            return utils.getJSONError(message, sys.exc_info())
+        finally:
+            os.chdir(owd)
+
+    def importLEMS(self, modelParameters):
+        from netpyne_ui.helpers import neuroml
+       
+
+        try:
+            # Get Current dir
+            owd = os.getcwd()
+
+            with redirect_stdout(sys.__stdout__):
+                # NetParams
+                filename = str(modelParameters["fileName"])
+               
+                json_fname =  neuroml.convertLEMSSimulation(filename)
+
+            return self.loadModel(args=dict(
+                compileMod=True,
+                modFolder=os.path.dirname(json_fname),
+                jsonModelFolder=json_fname,
+                loadNet=True,
+                loadSimData=True,
+                loadSimCfg=True,
+                loadNetParams=True
+            ))
+        except Exception:
+            message = "Error while importing the NetPyNE model"
+            logging.exception(message)
+            return utils.getJSONError(message, sys.exc_info())
+        finally:
+            os.chdir(owd)
+
     def importCellTemplate(self, modelParameters):
         try:
             with redirect_stdout(sys.__stdout__):
@@ -606,7 +668,7 @@ class NetPyNEGeppetto:
 
                 conds = {} if rule not in self.netParams.cellParams else self.netParams.cellParams[rule]['conds']
 
-                compileModMechFiles(modelParameters["compileMod"], modelParameters["modFolder"])
+                loadModMechFiles(modelParameters["compileMod"], modelParameters["modFolder"])
 
                 del modelParameters["modFolder"]
                 del modelParameters["compileMod"]
@@ -630,7 +692,8 @@ class NetPyNEGeppetto:
                 if not args['netCells']:
                     sim.initialize(netParams=self.netParams, simConfig=self.simConfig)
                 sim.cfg.filename = args['fileName']
-                include = [el for el in specs.SimConfig().saveDataInclude if el in args.keys() and args[el]]
+                sim_config_data_include = specs.SimConfig().saveDataInclude
+                include = [el for el in sim_config_data_include if args.get(el, False)]
                 if args['netCells']: include += ['netPops']
                 sim.cfg.saveJson = True
                 sim.saveData(include)
@@ -655,7 +718,7 @@ class NetPyNEGeppetto:
             logging.exception(message)
             return utils.getJSONError(message, sys.exc_info())
 
-    def importNeuroML(self, modelParams):
+    def importNeuroMLOLD(self, modelParams):
         try:
             with redirect_stdout(sys.__stdout__):
                 sim.initialize()
