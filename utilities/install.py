@@ -60,7 +60,7 @@ def clone(repository, folder=None, branch_or_tag=None, cwdp=DEPS_DIR, recursive=
 
         if exit_code != 0:
             raise SystemExit(f'Failed to clone repository {repository} into {folder}')
-        
+
     if not os.path.exists(os.path.join(cwdp, folder, '.git')):
         print(f'Skipping checkout of {repository}: folder is not a git repository')
         return
@@ -87,6 +87,7 @@ def compile_mod():
 def main(netpyne_branch, workspace_branch, geppetto_branch=None, skipNpm=False,
          skipTest=False, development=False):
     cprint("Installing requirements")
+    print(workspace_branch)
     execute(cmd=['pip', 'install', '-r', 'requirements.txt'], cwd=ROOT_DIR)
 
     if not os.path.exists(DEPS_DIR):
@@ -126,18 +127,19 @@ def main(netpyne_branch, workspace_branch, geppetto_branch=None, skipNpm=False,
         execute(cmd=['pip', 'install', '-e', '.', '--no-deps'], cwd=ROOT_DIR)
 
     os.chdir(ROOT_DIR)
-    cprint("Cloning workspace")
-    clone(repository=WORKSPACE, branch_or_tag=workspace_branch, folder=WORKSPACE_DIR, cwdp=ROOT_DIR)
-    cprint("Compiling workspace modules")
-    compile_mod()
+    if workspace_branch:
+      cprint("Cloning workspace")
+      clone(repository=WORKSPACE, branch_or_tag=workspace_branch, folder=WORKSPACE_DIR, cwdp=ROOT_DIR)
+      cprint("Compiling workspace modules")
+      compile_mod()
 
     if not skipNpm and os.path.exists(os.path.join(DEPS_DIR, META_DIR, JUPYTER_DIR)):
         cprint("Building Jupyter Geppetto extension...")
         execute(cmd=['npm', 'ci'], cwd=os.path.join(DEPS_DIR, META_DIR, JUPYTER_DIR, 'js'))
         execute(cmd=['npm', 'run', 'build-dev' if development else 'build'],
                 cwd=os.path.join(DEPS_DIR, META_DIR, JUPYTER_DIR, 'js'))
-  
-    execute(cmd=['jupyter', 'nbextension', 'uninstall', 'jupyter_geppetto'])                                                                            
+
+    execute(cmd=['jupyter', 'nbextension', 'uninstall', 'jupyter_geppetto'])
     execute(cmd=['jupyter', 'nbextension', 'install', '--py', '--symlink', '--sys-prefix', 'jupyter_geppetto'])
     execute(cmd=['jupyter', 'nbextension', 'enable', '--py', '--sys-prefix', 'jupyter_geppetto'])
     execute(cmd=['jupyter', 'nbextension', 'enable', '--py', '--sys-prefix', 'widgetsnbextension'])
@@ -188,7 +190,7 @@ def main(netpyne_branch, workspace_branch, geppetto_branch=None, skipNpm=False,
         cprint("Installing test libraries")
         execute(cmd=['pip', 'install', '-r', 'requirements-test.txt'], cwd=ROOT_DIR)
         cprint("Testing NetPyNE")
-        # execute("python -m unittest netpyne_ui.tests.netpyne_model_interpreter_test".split())
+        execute("python -m pytest tests".split())
 
     cprint("Installing client packages")
     if not skipNpm:

@@ -3,11 +3,14 @@ import fnmatch
 import os
 from glob import glob
 
-#This block copies resources to the server so we avoid jupyter nbextension install --py --sys-prefix jupyter_geppetto
+# This block copies resources to the server so we avoid jupyter nbextension install --py --sys-prefix jupyter_geppetto
 data_files = []
-data_files.append(('geppetto/src/main/webapp/build/', glob('src/jupyter_geppetto/geppetto/src/main/webapp/build/*.js')))
-data_files.append(('geppetto/src/main/webapp/build/', glob('src/jupyter_geppetto/geppetto/src/main/webapp/build/*.vm')))
-data_files.append(('geppetto/geppetto/src/main/webapp/build/', glob('src/jupyter_geppetto/geppetto/src/main/webapp/build/fonts/*')))
+data_files.append(('geppetto/src/main/webapp/build/',
+                  glob('src/jupyter_geppetto/geppetto/src/main/webapp/build/*.js')))
+data_files.append(('geppetto/src/main/webapp/build/',
+                  glob('src/jupyter_geppetto/geppetto/src/main/webapp/build/*.vm')))
+data_files.append(('geppetto/geppetto/src/main/webapp/build/',
+                  glob('src/jupyter_geppetto/geppetto/src/main/webapp/build/fonts/*')))
 for root, dirnames, filenames in os.walk('src/jupyter_geppetto/geppetto/src/main/webapp/js/'):
     for filename in fnmatch.filter(filenames, '*'):
         data_files.append((root[3:], [os.path.join(root, filename)]))
@@ -39,6 +42,12 @@ setuptools.setup(
     install_requires=[
         'jupyter-geppetto>=1.0.0',
         'NEURON>=8.0.2',
-        'netpyne>=1.0.2.1'
+        'netpyne>=1.0.3.1',
+        'neuromllite==0.5.1',
+        'pyNeuroML>=0.7.1',
+        'sentry_sdk>=1.5.2',
+        'dacite>=1.6.0',
+        'h5py>=3.7.0',
+        'jsonpickle>=2.1.0',
     ],
 )
