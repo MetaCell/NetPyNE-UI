@@ -58,6 +58,33 @@ beforeAll(async () => {
 
 describe('EEG and Dipole Plot Test using Tutorial#1', () => {
 
+    it('Open new page', async () => {
+
+        console.log('Opening a new NetPyNE page')
+
+        await page.on("dialog", dialog =>
+            dialog.accept());
+
+        await page.waitForSelector('#File', { timeout: PAGE_WAIT * 20 })
+        await page.waitForTimeout(PAGE_WAIT * 6)
+        await page.click('#File')
+        await page.waitForSelector('#New', { timeout: PAGE_WAIT * 10 })
+        await page.waitForTimeout(PAGE_WAIT)
+        await page.click('#New')
+        await page.waitForTimeout(PAGE_WAIT)
+        await page.waitForSelector('#appBarPerformActionButton')
+        await page.click('#appBarPerformActionButton')
+        await page.waitForTimeout(PAGE_WAIT * 2)
+
+        await page.waitForFunction(() => {
+            let el = document.querySelector('#loading-spinner');
+            return el == null || el.clientHeight === 0;
+        }, { timeout: TIMEOUT });
+
+
+        await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT * 10 })
+
+    })
 
 
     it('Load Tutorial#1', async () => {

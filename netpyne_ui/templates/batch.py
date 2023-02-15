@@ -9,8 +9,13 @@ from neuron import h
 from netpyne import specs
 from netpyne.batch import Batch
 
-os.chdir(os.path.dirname(__file__))
+CURRENT_DIR = "."
+try:
+    CURRENT_DIR = os.path.dirname(__file__)
+except:
+    pass
 
+os.chdir(CURRENT_DIR)
 
 def is_error():
     """Validates if Experiment failed or succeeded.
@@ -19,9 +24,9 @@ def is_error():
     """
 
     data_files = list(pathlib.Path(
-        os.path.dirname(__file__)).glob(f"*_data.json"))
+        CURRENT_DIR).glob(f"*_data.json"))
     cfg_files = list(pathlib.Path(
-        os.path.dirname(__file__)).glob(f"*_cfg.json"))
+        CURRENT_DIR).glob(f"*_cfg.json"))
 
     if len(data_files) != len(cfg_files):
         print(

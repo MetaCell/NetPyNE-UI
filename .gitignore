@@ -27,4 +27,7 @@ utilities/x86_64
 x86_64
 .jupyter-config
 venv
+webapp/build
+webapp/.yalc
 node_modules
+sa_nyhead.mat
