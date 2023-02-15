@@ -513,7 +513,7 @@ class NetPyNEGeppetto:
                 sim.loadSimData(json_path)
 
     def loadFromIndexFile(self, json_path: str):
-        cfg, netParams = sim.loadFromIndexFile(json_path)
+        cfg, netParams = sim.loadModel(json_path, loadMechs=True)
         self.simConfig = cfg
         self.netParams = netParams
 
@@ -601,7 +601,7 @@ class NetPyNEGeppetto:
 
     def importNeuroML(self, modelParameters):
         from netpyne_ui.helpers import neuroml
-       
+
 
         try:
             # Get Current dir
@@ -610,9 +610,9 @@ class NetPyNEGeppetto:
             with redirect_stdout(sys.__stdout__):
                 # NetParams
                 filename = str(modelParameters["fileName"])
-               
+
                 json_fname = neuroml.convertNeuroML2(filename, compileMod=modelParameters["compileMod"])
-                   
+
             return self.loadModel(args=dict(
                 compileMod=True,
                 modFolder=os.path.dirname(json_fname),
@@ -631,7 +631,7 @@ class NetPyNEGeppetto:
 
     def importLEMS(self, modelParameters):
         from netpyne_ui.helpers import neuroml
-       
+
 
         try:
             # Get Current dir
@@ -640,7 +640,7 @@ class NetPyNEGeppetto:
             with redirect_stdout(sys.__stdout__):
                 # NetParams
                 filename = str(modelParameters["fileName"])
-               
+
                 json_fname =  neuroml.convertLEMSSimulation(filename)
 
             return self.loadModel(args=dict(
