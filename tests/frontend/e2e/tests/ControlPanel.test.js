@@ -21,7 +21,7 @@ const SNAPSHOT_OPTIONS = {
     failureThreshold: 0.25
 };
 
-let r = (Math.random() + 1).toString(36).substring(7);
+let r = (Math.random() + 1).toString(36).substring(2);
 
 //USERS:
 const USERNAME = `TestUser${r}`
@@ -61,11 +61,11 @@ describe('Test for the Control Panel - color picker', () => {
         await page.on("dialog", dialog =>
             dialog.accept());
 
-        await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT, visible: true })
-        await page.waitForSelector(selectors.FILE_TAB_SELECTOR, { timeout: PAGE_WAIT * 30 })
+        await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT * 4, visible: true })
+        await page.waitForSelector(selectors.FILE_TAB_SELECTOR, { timeout: PAGE_WAIT * 3 })
         await page.waitForTimeout(PAGE_WAIT)
         await page.click(selectors.FILE_TAB_SELECTOR)
-        await page.waitForSelector(selectors.NEW_FILE_SELECTOR, { timeout: PAGE_WAIT * 10 })
+        await page.waitForSelector(selectors.NEW_FILE_SELECTOR, { timeout: PAGE_WAIT * 3 })
         await page.waitForTimeout(PAGE_WAIT)
         await page.click(selectors.NEW_FILE_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT)
