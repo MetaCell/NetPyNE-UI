@@ -77,3 +77,4 @@ export const COLOR_CONTROL_BUTTONS_SELECTOR = 'button[class="MuiButtonBase-root 
 export const COLOR_RECT_SELECTOR = 'rect[rx="5"]'
 export const CONTROL_PANEL_NETWORK_ROWS_SELECTOR = 'div[class = "MuiTypography-root MuiTreeItem-label MuiTypography-body1"]'
 export const CONTROL_PANEL_TABLE_SELECTOR = 'div[class="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-space-between"]'
+export const CONTROL_PANEL_FILTER_SELECTOR = 'input[class="MuiInputBase-input MuiOutlinedInput-input"]'

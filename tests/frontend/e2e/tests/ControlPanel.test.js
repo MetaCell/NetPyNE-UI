@@ -60,7 +60,7 @@ describe('Test for the Control Panel - color picker', () => {
 
         await page.on("dialog", dialog =>
             dialog.accept());
-        
+
         await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT, visible: true })
         await page.waitForSelector(selectors.FILE_TAB_SELECTOR, { timeout: PAGE_WAIT * 30 })
         await page.waitForTimeout(PAGE_WAIT)
@@ -78,7 +78,6 @@ describe('Test for the Control Panel - color picker', () => {
             return el == null || el.clientHeight === 0;
         }, { timeout: TIMEOUT });
 
-
         await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT * 10 })
 
         console.log('Page opened successfully')
@@ -93,15 +92,14 @@ describe('Test for the Control Panel - color picker', () => {
         await page.click(selectors.TUTORIALS_BUTTON_SELECTOR, { timeout: TIMEOUT })
 
         console.log('Loading Tutorial #2')
+
         await page.click(selectors.TUTORIAL_2_SELECTOR, { timeout: TIMEOUT })
         await page.waitForTimeout(PAGE_WAIT)
-
         await page.waitForSelector(selectors.PYR_2_CELL_SELECTOR)
         await page.waitForSelector(selectors.INT_CELL_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT)
 
         console.log('Tutorial #2 loaded successfully')
-
 
     })
 
@@ -135,9 +133,7 @@ describe('Test for the Control Panel - color picker', () => {
         console.log('Opening Control Panel')
 
         await page.waitForSelector(selectors.CONTROL_PANEL_TAB_SELECTOR)
-
         await page.click(selectors.CONTROL_PANEL_TAB_SELECTOR)
-
         await page.waitForSelector(selectors.NETWORKS_IN_CONTROL_PANEL_SELECTOR)
 
         const network_items = (await page.$$(selectors.NETWORK_ITEMS_CONTROL_PANEL_SELECTOR)).length;
@@ -152,9 +148,7 @@ describe('Test for the Control Panel - color picker', () => {
         console.log('Randomize Main Level network color')
 
         await page.waitForTimeout(PAGE_WAIT * 3)
-
         await page.waitForSelector(selectors.CONTROL_PANEL_TABLE_SELECTOR)
-
 
         const primary_level_colors = await page.$$eval(selectors.COLOR_RECT_SELECTOR, primary_level_colors => {
             return primary_level_colors.map(primary_level_color => primary_level_color.outerHTML);
@@ -209,7 +203,7 @@ describe('Test for the Control Panel - color picker', () => {
 
 
         expect(second_level_colors[1]).toEqual(second_level_colors[2])
-        expect(second_level_colors[2]).toEqual(second_level_colors[3]) 
+        expect(second_level_colors[2]).toEqual(second_level_colors[3])
 
 
         const buttons = await page.$$(selectors.COLOR_CONTROL_BUTTONS_SELECTOR)
@@ -235,7 +229,7 @@ describe('Test for the Control Panel - color picker', () => {
     })
 
 
-     it('Pick a color for the sublevel I netowrk', async () => {
+    it('Pick a color for the sublevel I netowrk', async () => {
 
         console.log('Selecting a color for the I network')
 
@@ -278,9 +272,7 @@ describe('Test for the Control Panel - color picker', () => {
         }, list_bounds);
 
         await page.waitForTimeout(PAGE_WAIT)
-
         await page.mouse.click(Math.round(rect.right) - 40, Math.round(rect.bottom) + 40)
-
         await page.waitForTimeout(PAGE_WAIT * 2)
 
         const rows_after_colouring_I = await page.$$(selectors.CONTROL_PANEL_NETWORK_ROWS_SELECTOR)
@@ -302,16 +294,15 @@ describe('Test for the Control Panel - color picker', () => {
 
     it('Filter results from the Control panel', async () => {
 
-        
         await page.waitForTimeout(PAGE_WAIT)
         console.log('Filtering results')
 
-        await expect(page).toFill('input[class="MuiInputBase-input MuiOutlinedInput-input"]', 'E')
+        await expect(page).toFill(selectors.CONTROL_PANEL_FILTER_SELECTOR, 'E')
 
         await page.waitForTimeout(PAGE_WAIT)
+        await page.waitForSelector(selectors.NETWORKS_IN_CONTROL_PANEL_SELECTOR)
 
-        await page.waitForSelector('ul[role="tree"]')
-        const network_items = (await page.$$('li[role="treeitem"]')).length;
+        const network_items = (await page.$$(selectors.NETWORK_ITEMS_CONTROL_PANEL_SELECTOR)).length;
         await expect(network_items).toEqual(3)
 
         console.log('Results filtered successfully')
@@ -319,5 +310,4 @@ describe('Test for the Control Panel - color picker', () => {
     })
 
 
-    
 });
