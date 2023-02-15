@@ -13,6 +13,7 @@
     "Tutorial_3B_test":"jest --verbose Tut#3b_smoke ",
     "Tutorial_3C_test":"jest --verbose Tut#3c_smoke ",
     "Tutorial_4_test":"jest --verbose Tut#4_smoke ",
+    "Control_Panel_test": "jest --verbose ControlPanel ",
     "lint": "eslint --fix --ext .js,.jsx ."
   },
   "dependencies": {
