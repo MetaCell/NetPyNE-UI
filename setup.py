@@ -48,6 +48,6 @@ setuptools.setup(
         'sentry_sdk>=1.5.2',
         'dacite>=1.6.0',
         'h5py>=3.7.0',
-        'jsonpickle>=2.1.0'
+        'jsonpickle>=2.1.0',
     ],
 )
