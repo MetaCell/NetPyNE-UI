@@ -708,7 +708,7 @@ export const LAUNCH_MODAL = {
   modelState: 'model',
   experimentState: 'experiment',
   actionSimulate: 'Simulate',
-  defaultResource: 'Current Pod',
+  defaultResource: 'Server',
   errorText: 'Please check the input',
 };
 
