@@ -113,7 +113,7 @@ define((require) => {
          * we can't know when to check if this.state.value should be replaced
          * with this.props.default
          */
-        UNRELIABLE_SyncDefaultValueWithPython (timeInterval = 600, attemps = 0) {
+        UNRELIABLE_SyncDefaultValueWithPython (timeInterval = 2500, attemps = 0) {
           if (attemps < 3) {
             setTimeout(() => {
               if (this.props.default && this.state.value === '') {
