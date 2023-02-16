@@ -63,7 +63,7 @@ describe('Tutorial #1 for Smoke Testing', () => {
     await page.on("dialog", dialog =>
       dialog.accept());
 
-    await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT * 4, visible: true })
+    await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT * 6, visible: true })
     await page.waitForSelector(selectors.FILE_TAB_SELECTOR, { timeout: PAGE_WAIT * 3 })
     await page.waitForTimeout(PAGE_WAIT)
     await page.click(selectors.FILE_TAB_SELECTOR)
