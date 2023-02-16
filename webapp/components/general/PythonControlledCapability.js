@@ -105,7 +105,7 @@ define((require) => {
 
         componentDidMount () {
           super.componentDidMount();
-          this.UNRELIABLE_SyncDefaultValueWithPython();
+          this.UNRELIABLE_SyncDefaultValueWithPython(100);
         }
 
         /*
@@ -113,7 +113,7 @@ define((require) => {
          * we can't know when to check if this.state.value should be replaced
          * with this.props.default
          */
-        UNRELIABLE_SyncDefaultValueWithPython (timeInterval = 2500, attemps = 0) {
+        UNRELIABLE_SyncDefaultValueWithPython (timeInterval = 1000, attemps = 0) {
           if (attemps < 3) {
             setTimeout(() => {
               if (this.props.default && this.state.value === '') {
@@ -185,7 +185,7 @@ define((require) => {
             && this.state.value === ''
             && this.props.default
           ) {
-            this.UNRELIABLE_SyncDefaultValueWithPython(1000);
+            this.UNRELIABLE_SyncDefaultValueWithPython(100);
           }
         }
 
