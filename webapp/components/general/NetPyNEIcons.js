@@ -91,3 +91,12 @@ export function TreeItemLineWithRadiusIcon (props) {
     </SvgIcon>
   );
 }
+
+
+export function SquareIcon (props) {
+  return (
+    <SvgIcon viewBox="0 0 24 24" {...props}>
+      <rect width="20" height="20" fill={props.fillColor ? props.fillColor : "#FF7F99"} rx="5" />
+    </SvgIcon>
+  );
+}

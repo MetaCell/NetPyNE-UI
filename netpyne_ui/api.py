@@ -10,6 +10,7 @@ from jupyter_geppetto.webapi import get, post
 from notebook.base.handlers import IPythonHandler
 from netpyne_ui.constants import ALLOWED_EXTENSIONS, UPLOAD_FOLDER_PATH
 
+
 def allowed_file(filename, allowed_extensions=ALLOWED_EXTENSIONS):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in allowed_extensions
@@ -18,7 +19,8 @@ def allowed_file(filename, allowed_extensions=ALLOWED_EXTENSIONS):
 def send_files(handler, file_path, filename):
     with open(file_path, "rb") as f:
         handler.set_header('Content-Type', 'application/force-download')
-        handler.set_header('Content-Disposition', f"attachment; filename={filename}")
+        handler.set_header('Content-Disposition',
+                           f"attachment; filename={filename}")
 
         try:
             while True:
@@ -35,12 +37,30 @@ def get_file_paths(handler):
     file_paths = False
     if 'uri' in handler.request.arguments:
         file_paths = []
-        tmp_file_paths = [path.decode('utf-8') for path in handler.request.arguments['uri']]
+        tmp_file_paths = [path.decode('utf-8')
+                          for path in handler.request.arguments['uri']]
         for path in tmp_file_paths:
             if os.path.exists(path):
                 file_paths.append(path)
 
     return file_paths
+
+
+def is_within_directory(directory, target):
+    abs_directory = os.path.abspath(directory)
+    abs_target = os.path.abspath(target)
+
+    prefix = os.path.commonprefix([abs_directory, abs_target])
+
+    return prefix == abs_directory
+
+
+def safe_extract_tar(tar, path=".", members=None, *, numeric_owner=False):
+    for member in tar.getmembers():
+        member_path = os.path.join(path, member.name)
+        if not is_within_directory(path, member_path):
+            raise Exception("Attempted Path Traversal in Tar File")
+    tar.extractall(path, members, numeric_owner=numeric_owner)
 
 
 class NetPyNEController:  # pytest: no cover
@@ -51,12 +71,14 @@ class NetPyNEController:  # pytest: no cover
         files_saved = 0
 
         if len(files) == 0 or 'file' not in files:
-            handler.set_status(400, f"Can't find 'file' or filename is empty. Files received {len(files)}")
+            handler.set_status(
+                400, f"Can't find 'file' or filename is empty. Files received {len(files)}")
         else:
 
             for f in files['file']:
                 if not allowed_file(f.filename):
-                    logging.warn(f"Can't store file {f.filename}. Extension not allowed")
+                    logging.warn(
+                        f"Can't store file {f.filename}. Extension not allowed")
                     continue
 
                 # Save to file
@@ -74,7 +96,7 @@ class NetPyNEController:  # pytest: no cover
 
                 elif filename.endswith('.tar.gz'):
                     with tarfile.open(file_path, mode='r:gz') as tar:
-                        tar.extractall(UPLOAD_FOLDER_PATH)
+                        safe_extract_tar(tar, UPLOAD_FOLDER_PATH)
 
                 elif filename.endswith('.gz'):
                     with gzip.open(file_path, "rb") as gz, open(file_path.replace('.gz', ''), 'wb') as ff:
@@ -102,8 +124,42 @@ class NetPyNEController:  # pytest: no cover
                     tar_gz_file_path = os.path.join(dir_path, tar_gz_file_name)
                     with tarfile.open(tar_gz_file_path, mode='w:gz') as tar:
                         for file_path in file_paths:
-                            tar.add(file_path, os.path.join('download', file_path.split('/')[-1]))
+                            tar.add(file_path, os.path.join(
+                                'download', file_path.split('/')[-1]))
 
                     send_files(handler, tar_gz_file_path, tar_gz_file_name)
 
         handler.finish()
+
+
+def create_notebook(filename):
+    import nbformat as nbf
+    from nbformat.v4.nbbase import new_notebook
+    from nbformat import sign
+    import codecs
+
+    directory = os.path.dirname(filename)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    nb0 = new_notebook(cells=[nbf.v4.new_markdown_cell("""# Welcome to the NetPyNE-ui!
+    
+    """),
+                              nbf.v4.new_code_cell(
+                                  'netpyne_geppetto.netParams'),
+                              nbf.v4.new_code_cell(
+                                  'netpyne_geppetto.simConfig')
+                              ], metadata={"kernelspec": {
+                                  "display_name": "Python 3",
+                                  "language": "python",
+                                  "name": "python3"
+                              }})
+
+    f = codecs.open(filename, encoding='utf-8', mode='w')
+
+    nbf.write(nb0, filename)
+    f.close()
+
+
+# TODO move to jupyter geppetto, using notebook dir path
+if os.path.exists('workspace') and not os.path.exists('workspace/notebook.ipynb'):
+    create_notebook('workspace/notebook.ipynb')

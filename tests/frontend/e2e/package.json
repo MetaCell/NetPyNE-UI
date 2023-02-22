@@ -4,14 +4,22 @@
   "description": "NetPyNe UI tests",
   "license": "unlicensed",
   "scripts": {
-    "test": "jest --verbose",
+    "test": "jest --verbose ",
+    "EEG_Dipole_test": "jest --verbose EEG_and_Dipole_Tut#1 ",
+    "Experiment_Manager_test": "jest --verbose ExperimentManager_Tut#1 ",
+    "Tutorial_1_test":"jest --verbose Tut#1_smoke ",
+    "Tutorial_2_test":"jest --verbose Tut#2_smoke ",
+    "Tutorial_3A_test":"jest --verbose Tut#3a_smoke ",
+    "Tutorial_3B_test":"jest --verbose Tut#3b_smoke ",
+    "Tutorial_3C_test":"jest --verbose Tut#3c_smoke ",
+    "Tutorial_4_test":"jest --verbose Tut#4_smoke ",
     "lint": "eslint --fix --ext .js,.jsx ."
   },
   "dependencies": {
-    "jest": "^24.9.0",
-    "jest-image-snapshot": "^4.2.0",
-    "jest-puppeteer": "^4.4.0",
-    "puppeteer": "^1.20.0"
+    "jest": "^27.5.1",
+    "jest-image-snapshot": "^4.5.1",
+    "jest-puppeteer": "^6.1.0",
+    "puppeteer": "^13.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
@@ -23,13 +31,13 @@
     "@babel/preset-stage-2": "^7.0.0",
     "@babel/runtime": "^7.4.5",
     "babel-eslint": "^10.0.1",
-    "eslint": "^6.0.1",
-    "eslint-plugin-jest": "^22.21.0",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.3.0",
     "babel-plugin-transform-decorators-legacy": "^1.3.5",
     "babel-plugin-transform-object-assign": "^6.8.0",
-    "babel-plugin-transform-runtime": "^6.15.0"
+    "babel-plugin-transform-runtime": "^6.15.0",
+    "eslint": "^6.0.1",
+    "eslint-plugin-jest": "^22.21.0"
   },
   "buildOptions": {
     "emitEntryPoint": true,

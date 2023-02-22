@@ -8,7 +8,7 @@ import {
   VIEW_EXPERIMENTS_RESULTS,
   TRIAL_LOAD_MODEL_SPEC
 } from 'root/redux/actions/experiments';
-import { NETPYNE_COMMANDS, EDIT_WIDGETS } from 'root/constants';
+import { NETPYNE_COMMANDS, EDIT_WIDGETS } from '../../constants';
 import * as GeppettoActions from '@metacell/geppetto-meta-client/common/actions';
 import * as ExperimentsApi from '../../api/experiments';
 
@@ -27,7 +27,7 @@ import {
   addInstancesToCanvas,
   openConfirmationDialog
 } from '../actions/general';
-import { OPEN_BACKEND_ERROR_DIALOG, openBackendErrorDialog } from '../actions/errors';
+import { OPEN_BACKEND_ERROR_DIALOG, CLOSE_BACKEND_ERROR_DIALOG, openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
 import Utils from '../../Utils';
 import { downloadJsonResponse, downloadPythonResponse } from './utils';
@@ -187,7 +187,6 @@ export default (store) => (next) => (action) => {
     switchLayoutAction(false, reset);
     getExperiments()
     next(action);
-    
   };
 
   const pythonErrorCallback = (error) => {
@@ -213,7 +212,7 @@ export default (store) => (next) => (action) => {
       );
   }
 
-  const checkParametersThen = (callback, goToNetworkView = false) => {
+  const checkParametersThen = (callback, goToNetworkView = false, waitingMessage = '') => {
     let allParams = true;
     const inDesignExp = store.getState().experiments?.inDesign;
 
@@ -222,7 +221,7 @@ export default (store) => (next) => (action) => {
       .then((params) => {
         const flattened = Utils.flatten(params);
         const paramKeys = new Set(Object.keys(flattened));
- 
+
         inDesignExp.params?.forEach((param) => {
           if (!paramKeys.has(param.mapsTo)) {
             pythonErrorCallback(
@@ -236,17 +235,17 @@ export default (store) => (next) => (action) => {
         });
         if (allParams) {
           callback().then((response => {
-            next(openConfirmationDialog({title: "Experiment started", ...response})); 
+            next(openConfirmationDialog({title: "Experiment started", ...response}));
             getExperiments();
           })
             ,pythonErrorCallback);
         }
       }, pythonErrorCallback);
     } else {
-      next(GeppettoActions.waitData('Simulating the NetPyNE Model', GeppettoActions.layoutActions.SET_WIDGETS));
+      next(GeppettoActions.waitData(waitingMessage, GeppettoActions.layoutActions.SET_WIDGETS));
       callback().then(toNetworkCallback(goToNetworkView), pythonErrorCallback)
     }
-    
+
   }
 
   switch (action.type) {
@@ -340,16 +339,12 @@ export default (store) => (next) => (action) => {
       break;
     }
     case CREATE_NETWORK: {
-      next(GeppettoActions.waitData('Instantiating the NetPyNE Model', GeppettoActions.layoutActions.SET_WIDGETS));
-
-      checkParametersThen(() => instantiateNetwork({}))
-
+      checkParametersThen(() => instantiateNetwork({}), false, "Instantiating the NetPyNE Model")
 
       break;
     }
     case CREATE_SIMULATE_NETWORK: {
-
-      checkParametersThen(() => simulateNetwork({ allTrials: false }))
+      checkParametersThen(() => simulateNetwork({ allTrials: false }), false, "Instantiating and simulating the NetPyNE Model")
 
       break;
     }
@@ -358,7 +353,7 @@ export default (store) => (next) => (action) => {
         next(GeppettoActions.activateWidget(EDIT_WIDGETS.experimentManager.id));
       }
 
-      checkParametersThen(() => simulateNetwork({ allTrials: action.payload, usePrevInst: (store.getState().general.modelState !== Constants.MODEL_STATE.NOT_INSTANTIATED) }))
+      checkParametersThen(() => simulateNetwork({ allTrials: action.payload, usePrevInst: (store.getState().general.modelState !== Constants.MODEL_STATE.NOT_INSTANTIATED) }), false, "Simulating the NetPyNE Model")
       break;
     }
     case PYTHON_CALL: {
@@ -379,25 +374,39 @@ export default (store) => (next) => (action) => {
         }
         next(closeDrawerDialogBox);
       };
+
+      switch (action.cmd) {
+        case NETPYNE_COMMANDS.importNeuroML:
+          case NETPYNE_COMMANDS.importModel:
+            case NETPYNE_COMMANDS.importNeuroML:
+              next(GeppettoActions.waitData('Importing Model...', "RECEIVE_PYTHON_MESSAGE"));
+              break;
+        default:
+          break;
+      }
+      
       pythonCall(action)
         .then(callback, pythonErrorCallback);
       next(action);
       break;
     }
     case LOAD_TUTORIAL: {
-      const tutName = action.payload.replace('.py', '');
+      const path = action.payload.split("/");
+      const filename  = path.pop()
+      const dirname = path.join("/")
+      const tutName = filename.replace('.py', '');
       next(GeppettoActions.waitData(`Importing ${tutName}...`, LOAD_TUTORIAL));
 
       const params = {
-        modFolder: 'mod',
+        modFolder: dirname + '/mod',
         loadMod: false,
-        compileMod: false,
+        compileMod: true,
 
-        netParamsPath: '.',
+        netParamsPath: dirname,
         netParamsModuleName: tutName,
         netParamsVariable: 'netParams',
 
-        simConfigPath: '.',
+        simConfigPath: dirname,
         simConfigModuleName: tutName,
         simConfigVariable: 'simConfig',
       };
@@ -490,6 +499,11 @@ export default (store) => (next) => (action) => {
           }
           next(action);
         }, pythonErrorCallback);
+      break;
+    }
+    case CLOSE_BACKEND_ERROR_DIALOG: {
+      next(GeppettoActions.setWidgets(store.getState().widgets));
+      next(action);
       break;
     }
     default: {

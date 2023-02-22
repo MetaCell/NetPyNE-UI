@@ -41,7 +41,7 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         except:
             logging.error("Error loading mechanisms", exc_info=True)
 
-    @unittest.skip("Neuroml model import issue")
+    # @unittest.skip("Neuroml model import issue")
     def test_netpyne_exported_model_1(self):
       print("------------------------------------")
       print("Netpyne exported model sim run")
@@ -68,7 +68,7 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
       params["modFolder"] = ""
       params["modPath"] = ""
       params["tab"] = "simulate"
-      
+
       print(params['jsonModelFolder'])
 
       netpyne = NetPyNEGeppetto()

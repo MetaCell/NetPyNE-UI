@@ -15,30 +15,32 @@ const saveOptions = [
   {
     label: 'High-level Network Parameters (netParams)',
     label2: 'Cell rules, connectivity rules, etc',
-    state: 'loadNetParams',
+    state: 'netParams',
   },
   {
     label: 'Simulation Configuration (simConfig)',
     label2: 'duration, recorded variables, etc',
-    state: 'loadSimCfg',
+    state: 'simConfig',
   },
   {
     label: 'Instantiated Network',
     label2: 'All cells, connections, etc',
-    state: 'loadNet',
+    state: 'netCells',
   },
   {
     label: 'Simulation Data',
     label2: 'Spikes, traces, etc',
-    state: 'loadSimData',
+    state: 'simData',
   },
 ];
+
+const getTimeStamp = () => new Date().toGMTString().replace(',', '').replace(/[ ,:]/g, '_');
 
 export default class SaveFile extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      fileName: 'output',
+      fileName: 'output_' + getTimeStamp(),
       netParams: true,
       simConfig: true,
       simData: true,
