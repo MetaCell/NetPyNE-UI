@@ -140,6 +140,7 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
     switch (this.state.type) {
       case '2DMap':
       case '1DMap':
+        Utils.execPythonMessage(`netpyne_geppetto.netParams.defineCellShapes = True`)
         return (
           <>
             <NetPyNEField id="netParams.subConnParams.density.gridY" className="listStyle">
@@ -167,6 +168,7 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
           </>
         )
       case 'distance':
+        Utils.execPythonMessage(`netpyne_geppetto.netParams.defineCellShapes = False`)
         return (
           <>
             <NetPyNEField id="netParams.subConnParams.density.ref_sec">
@@ -204,6 +206,8 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
             </NetPyNEField>
           </>
         )
+      default:
+        Utils.execPythonMessage(`netpyne_geppetto.netParams.defineCellShapes = False`)
     }
   }
 
