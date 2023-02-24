@@ -33,6 +33,7 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
       errorMessage: undefined,
       errorDetails: undefined,
       type: 'uniform',
+      coord: '',
     };
   }
 
@@ -120,6 +121,21 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
     }
   }
 
+  handleCoord(value) {
+    this.setState({ coord: value })
+    if (value === 'cartesian') {
+      Utils.execPythonMessage(
+        `netpyne_geppetto.netParams.subConnParams['${this.props.name}']['density']['coord'] = '${value}'`,
+      )
+      Utils.execPythonMessage(`netpyne_geppetto.netParams.defineCellShapes = True`)
+    } else {
+      Utils.execPythonMessage(`netpyne_geppetto.netParams.defineCellShapes = False`)
+      Utils.execPythonMessage(
+        `del netpyne_geppetto.netParams.subConnParams['${this.props.name}']['density']['coord']`,
+      )
+    }
+  }
+
   densityExtraFun () {
     switch (this.state.type) {
       case '2DMap':
@@ -175,15 +191,16 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
               />
             </NetPyNEField>
             <NetPyNEField id="netParams.subConnParams.density.coord">
-              <NetPyNESelectField
-                model={`netParams.subConnParams['${this.props.name}']['density']['coord']`}
-                fullWidth
-                postProcessItems={() => ["", "cartesian"].map((name, idx) => (
+              <Select
+                onChange={(event) => this.handleCoord(event.target.value)}
+                value={this.state.coord}
+                fullWidth >
+                {["", "cartesian"].map((name, idx) => (
                   <MenuItem id={`${name}MenuItem`} key={`_${name}`} value={name}>
                     {name}
                   </MenuItem>
                 ))}
-              />
+              </Select>
             </NetPyNEField>
           </>
         )
