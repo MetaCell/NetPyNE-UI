@@ -35,6 +35,7 @@ import {
 
 import _NetPyNECellRules from './definition/cellRules/NetPyNECellRules';
 import _NetPyNEConnectivityRules from './definition/connectivity/NetPyNEConnectivityRules';
+import _NetPyNESubcellsConnectivityRules from './definition/subcellConnectivity/NetPyNESubcellsConnectivityRules';
 import _NetPyNEPlots from './definition/plots/NetPyNEPlots';
 import _ListComponent from './general/List';
 import _AdapterComponent from './general/AdapterComponent';
@@ -93,6 +94,10 @@ export const NetPyNECellRules = connect(
 
 export const NetPyNEConnectivityRules = PythonControlledCapability.createPythonControlledComponent(
   _NetPyNEConnectivityRules,
+);
+
+export const NetPyNESubcellsConnectivityRules = PythonControlledCapability.createPythonControlledComponent(
+  _NetPyNESubcellsConnectivityRules
 );
 
 export const NetPyNEPlots = PythonControlledCapability.createPythonControlledComponent(
