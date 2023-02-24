@@ -66,7 +66,7 @@ export default class NetPyNESubCellsConnectivityRules extends Component {
     };
     // Create Cell Rule Client side
     Utils.execPythonMessage(
-      `netpyne_geppetto.netParams.connParams["${
+      `netpyne_geppetto.netParams.subConnParams["${
         connectivityRuleId
       }"] = ${
         JSON.stringify(value)}`,
@@ -142,7 +142,7 @@ export default class NetPyNESubCellsConnectivityRules extends Component {
               },
               () => {
                 Utils.renameKey(
-                  'netParams.connParams',
+                  'netParams.subConnParams',
                   m,
                   newValue,
                   (response, newValue) => {
@@ -199,7 +199,7 @@ export default class NetPyNESubCellsConnectivityRules extends Component {
     return (
       model
       && model[selectedConnectivityRule]
-      && `netParams.connParams["${selectedConnectivityRule}"]`
+      && `netParams.subConnParams["${selectedConnectivityRule}"]`
     );
   }
 
@@ -242,7 +242,7 @@ export default class NetPyNESubCellsConnectivityRules extends Component {
             name={connName}
             key={connName}
             selected={connName == this.state.selectedConnectivityRule}
-            paramPath="connParams"
+            paramPath="subConnParams"
             handleClick={this.selectConnectivityRule}
           />
         ));

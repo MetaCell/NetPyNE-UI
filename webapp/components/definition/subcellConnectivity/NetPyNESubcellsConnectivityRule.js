@@ -18,7 +18,10 @@ import {
   ListComponent,
   NetPyNECoordsRange,
 } from 'netpyne/components';
+import Select from 'netpyne/components/general/Select';
 import Utils from '../../../Utils';
+
+const densityStrings = ["uniform", "1DMap", "2DMap", "distance"]
 
 export default class NetPyNESubCellsConnectivityRule extends React.Component {
   constructor (props) {
@@ -29,6 +32,7 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
       sectionId: 'General',
       errorMessage: undefined,
       errorDetails: undefined,
+      type: 'uniform',
     };
   }
 
@@ -48,7 +52,7 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
       this.triggerUpdate(() => {
         // Rename the population in Python
         Utils.renameKey(
-          'netParams.connParams',
+          'netParams.subConnParams',
           storedValue,
           newValue,
           (response, newValue) => {
@@ -103,7 +107,91 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
     this.setState({ currentName: nextProps.name });
   }
 
+  handleDensity (value) {
+    this.setState({ type: value })
+    if (value === 'uniform') {
+      Utils.execPythonMessage(
+        `netpyne_geppetto.netParams.subConnParams['${this.props.name}']['density'] = 'uniform'`,
+      )
+    } else {
+      Utils.execPythonMessage(
+        `netpyne_geppetto.netParams.subConnParams['${this.props.name}']['density'] = {}`,
+      )
+    }
+  }
+
+  densityExtraFun () {
+    switch (this.state.type) {
+      case '2DMap':
+      case '1DMap':
+        return (
+          <>
+            <NetPyNEField id="netParams.subConnParams.density.gridY" className="listStyle">
+              <ListComponent
+                model={`netParams.subConnParams['${this.props.name}']['density']['gridY']`}
+              />
+            </NetPyNEField>
+            {this.state.type === "2DMap" ?
+              <NetPyNEField id="netParams.subConnParams.density.gridX" className="listStyle">
+                <ListComponent
+                  model={`netParams.subConnParams['${this.props.name}']['density']['gridX']`}
+                />
+            </NetPyNEField> : <></>}
+            <NetPyNEField id="netParams.subConnParams.density.fixedSomaY" className="listStyle">
+              <ListComponent
+                model={`netParams.subConnParams['${this.props.name}']['density']['fixedSomaY']`}
+              />
+            </NetPyNEField>
+            <NetPyNEField id="netParams.subConnParams.density.gridValues" className="listStyle">
+              <ListComponent
+                model={`netParams.subConnParams['${this.props.name}']['density']['gridValues']`}
+              />
+            </NetPyNEField>
+
+          </>
+        )
+      case 'distance':
+        return (
+          <>
+            <NetPyNEField id="netParams.subConnParams.density.ref_sec">
+              <NetPyNETextField
+                fullWidth
+                variant="filled"
+                model={`netParams.subConnParams['${this.props.name}']['density']['ref_sec']`}
+              />
+            </NetPyNEField>
+            <NetPyNEField id="netParams.subConnParams.density.ref_seg">
+              <NetPyNETextField
+                fullWidth
+                variant="filled"
+                model={`netParams.subConnParams['${this.props.name}']['density']['ref_seg']`}
+              />
+            </NetPyNEField>
+            <NetPyNEField id="netParams.subConnParams.density.target_distance">
+            <NetPyNETextField
+                fullWidth
+                variant="filled"
+                model={`netParams.subConnParams['${this.props.name}']['density']['target_distance']`}
+              />
+            </NetPyNEField>
+            <NetPyNEField id="netParams.subConnParams.density.coord">
+              <NetPyNESelectField
+                model={`netParams.subConnParams['${this.props.name}']['density']['coord']`}
+                fullWidth
+                postProcessItems={() => ["", "cartesian"].map((name, idx) => (
+                  <MenuItem id={`${name}MenuItem`} key={`_${name}`} value={name}>
+                    {name}
+                  </MenuItem>
+                ))}
+              />
+            </NetPyNEField>
+          </>
+        )
+    }
+  }
+
   render () {
+    const densityExtras = this.densityExtraFun();
     const dialogPop = this.state.errorMessage !== undefined ? (
       <Dialog open style={{ whiteSpace: 'pre-wrap' }}>
         <DialogTitle id="alert-dialog-title">
@@ -144,58 +232,11 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
             />
           </Box>
 
-          <NetPyNEField id="netParams.connParams.weight">
-            <NetPyNETextField
-              fullWidth
-              variant="filled"
-              model={
-                `netParams.connParams['${this.props.name}']['weight']`
-              }
-            />
-          </NetPyNEField>
-
-          <NetPyNEField id="netParams.connParams.probability">
-            <NetPyNETextField
-              fullWidth
-              variant="filled"
-              model={
-                `netParams.connParams['${this.props.name}']['probability']`
-              }
-            />
-          </NetPyNEField>
-
-          <NetPyNEField id="netParams.connParams.convergence">
-            <NetPyNETextField
-              fullWidth
-              variant="filled"
-              model={
-                `netParams.connParams['${this.props.name}']['convergence']`
-              }
-            />
-          </NetPyNEField>
-
-          <NetPyNEField id="netParams.connParams.divergence">
-            <NetPyNETextField
-              fullWidth
-              variant="filled"
-              model={
-                `netParams.connParams['${this.props.name}']['divergence']`
-              }
-            />
-          </NetPyNEField>
-
-          <NetPyNEField id="netParams.connParams.delay">
-            <NetPyNETextField
-              fullWidth
-              variant="filled"
-              model={`netParams.connParams['${this.props.name}']['delay']`}
-            />
-          </NetPyNEField>
-
-          <NetPyNEField id="netParams.connParams.synMech">
+          <NetPyNEField id="netParams.subConnParams.groupSynMechs">
             <NetPyNESelectField
+              multiple={1}
               model={
-                `netParams.connParams['${this.props.name}']['synMech']`
+                `netParams.subConnParams['${this.props.name}']['groupSynMechs']`
               }
               fullWidth
               method="netpyne_geppetto.getAvailableSynMech"
@@ -207,47 +248,34 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
             />
           </NetPyNEField>
 
-          <NetPyNEField id="netParams.connParams.sec" className="listStyle">
+          <NetPyNEField id="netParams.subConnParams.sec" className="listStyle">
             <ListComponent
-              model={`netParams.connParams['${this.props.name}']['sec']`}
+              model={`netParams.subConnParams['${this.props.name}']['sec']`}
             />
           </NetPyNEField>
 
-          <NetPyNEField id="netParams.connParams.loc" className="listStyle">
-            <ListComponent
-              model={`netParams.connParams['${this.props.name}']['loc']`}
-            />
+          <NetPyNEField id="netParams.subConnParams.density">
+            <Select variant="filled" value={this.state.type} onChange={(event) => this.handleDensity(event.target.value)}>
+              {densityStrings.map((item) => (
+                <MenuItem id={`${item}MenuItem`} key={item} value={item}>
+                  {`${item}`}
+                </MenuItem>
+              ))}
+            </Select>
           </NetPyNEField>
 
-          <NetPyNEField id="netParams.connParams.synsPerConn">
-            <NetPyNETextField
-              fullWidth
-              variant="filled"
-              model={
-                `netParams.connParams['${this.props.name}']['synsPerConn']`
-              }
-            />
-          </NetPyNEField>
+          {densityExtras}
 
-          <NetPyNEField id="netParams.connParams.plasticity">
-            <NetPyNETextField
-              fullWidth
-              variant="filled"
-              model={
-                `netParams.connParams['${this.props.name}']['plasticity']`
-              }
-            />
-          </NetPyNEField>
           {dialogPop}
         </Box>
       );
     } else if (this.state.sectionId === 'Pre Conditions') {
       var content = (
         <Box className="scrollbar scrollchild" mt={1}>
-          <NetPyNEField id="netParams.connParams.preConds.pop">
+          <NetPyNEField id="netParams.subConnParams.preConds.pop">
             <NetPyNESelectField
               model={
-                `netParams.connParams['${
+                `netParams.subConnParams['${
                   this.props.name
                 }']['preConds']['pop']`
               }
@@ -257,11 +285,11 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
             />
           </NetPyNEField>
 
-          <NetPyNEField id="netParams.connParams.preConds.cellType">
+          <NetPyNEField id="netParams.subConnParams.preConds.cellType">
             <NetPyNESelectField
               fullWidth
               model={
-                `netParams.connParams['${
+                `netParams.subConnParams['${
                   this.props.name
                 }']['preConds']['cellType']`
               }
@@ -274,7 +302,7 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
           <NetPyNECoordsRange
             id="xRangePreConn"
             name={this.props.name}
-            model="netParams.connParams"
+            model="netParams.subConnParams"
             conds="preConds"
             items={[
               {
@@ -291,7 +319,7 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
           <NetPyNECoordsRange
             id="yRangePreConn"
             name={this.props.name}
-            model="netParams.connParams"
+            model="netParams.subConnParams"
             conds="preConds"
             items={[
               {
@@ -308,7 +336,7 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
           <NetPyNECoordsRange
             id="zRangePreConn"
             name={this.props.name}
-            model="netParams.connParams"
+            model="netParams.subConnParams"
             conds="preConds"
             items={[
               {
@@ -326,10 +354,10 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
     } else if (this.state.sectionId === 'Post Conditions') {
       var content = (
         <Box className="scrollbar scrollchild" mt={1}>
-          <NetPyNEField id="netParams.connParams.postConds.pop">
+          <NetPyNEField id="netParams.subConnParams.postConds.pop">
             <NetPyNESelectField
               model={
-                `netParams.connParams['${
+                `netParams.subConnParams['${
                   this.props.name
                 }']['postConds']['pop']`
               }
@@ -340,10 +368,10 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
             />
           </NetPyNEField>
 
-          <NetPyNEField id="netParams.connParams.postConds.cellType">
+          <NetPyNEField id="netParams.subConnParams.postConds.cellType">
             <NetPyNESelectField
               model={
-                `netParams.connParams['${
+                `netParams.subConnParams['${
                   this.props.name
                 }']['postConds']['cellType']`
               }
@@ -357,7 +385,7 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
           <NetPyNECoordsRange
             id="xRangePostConn"
             name={this.props.name}
-            model="netParams.connParams"
+            model="netParams.subConnParams"
             conds="postConds"
             items={[
               {
@@ -374,7 +402,7 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
           <NetPyNECoordsRange
             id="yRangePostConn"
             name={this.props.name}
-            model="netParams.connParams"
+            model="netParams.subConnParams"
             conds="postConds"
             items={[
               {
@@ -391,7 +419,7 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
           <NetPyNECoordsRange
             id="zRangePostConn"
             name={this.props.name}
-            model="netParams.connParams"
+            model="netParams.subConnParams"
             conds="postConds"
             items={[
               {
