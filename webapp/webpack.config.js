@@ -108,6 +108,7 @@ module.exports = function (env) {
 
   return {
     entry: entries,
+    devtool: 'source-map',
 
     optimization: {
       splitChunks: {

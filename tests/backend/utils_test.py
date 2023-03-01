@@ -8,4 +8,4 @@ import sentry_sdk
 sentry_sdk.init()
 
 def test_compile_mod():
-    mod_utils.compileModMechFiles(True, NETPYNE_WORKDIR_PATH)
+    mod_utils.loadModMechFiles(True, NETPYNE_WORKDIR_PATH)

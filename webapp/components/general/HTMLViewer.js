@@ -23,11 +23,11 @@ class CustomHTMLViewer extends Component {
 
   componentDidMount () {
     window.addEventListener('resize', this.delayedResize.bind(this));
-    this.resizeIfNeeded();
+    this.resizeIfNeeded(true);
   }
 
   componentDidUpdate () {
-    this.resizeIfNeeded();
+    this.resizeIfNeeded(true);
   }
 
   componentWillUnmount () {
@@ -63,10 +63,10 @@ class CustomHTMLViewer extends Component {
     }
   }
 
-  resizeIfNeeded () {
+  resizeIfNeeded (force = false) {
     const dimensions = this.getParentSize();
 
-    if (dimensions !== false && this.wasParentResized(dimensions)) {
+    if ((dimensions !== false && this.wasParentResized(dimensions)) || (force)) {
       this.dimensions = dimensions;
       this.adjustSVGSize();
     }
