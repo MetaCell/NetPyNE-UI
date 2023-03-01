@@ -25,9 +25,10 @@ const SNAPSHOT_OPTIONS = {
 };
 
 
+let r = (Math.random() + 1).toString(36).substring(2);
 
 //USERS:
-const USERNAME = 'Test_User_Experiment_Manager_'
+const USERNAME = `TestUser${r}`
 const PASSWORD = 'testpassword'
 
 
@@ -65,15 +66,16 @@ describe('Experiment Manager test using Tut#1', () => {
         await page.on("dialog", dialog =>
             dialog.accept());
 
-        await page.waitForSelector('#File', { timeout: PAGE_WAIT * 20 })
-        await page.waitForTimeout(PAGE_WAIT * 6)
-        await page.click('#File')
-        await page.waitForSelector('#New', { timeout: PAGE_WAIT * 10 })
+        await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT * 6, visible: true })
+        await page.waitForSelector(selectors.FILE_TAB_SELECTOR, { timeout: PAGE_WAIT * 3 })
         await page.waitForTimeout(PAGE_WAIT)
-        await page.click('#New')
+        await page.click(selectors.FILE_TAB_SELECTOR)
+        await page.waitForSelector(selectors.NEW_FILE_SELECTOR, { timeout: PAGE_WAIT * 3 })
         await page.waitForTimeout(PAGE_WAIT)
-        await page.waitForSelector('#appBarPerformActionButton')
-        await page.click('#appBarPerformActionButton')
+        await page.click(selectors.NEW_FILE_SELECTOR)
+        await page.waitForTimeout(PAGE_WAIT)
+        await page.waitForSelector(selectors.CONFIRM_NEW_PAGE_SELECTOR)
+        await page.click(selectors.CONFIRM_NEW_PAGE_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT * 2)
 
         await page.waitForFunction(() => {
@@ -81,9 +83,9 @@ describe('Experiment Manager test using Tut#1', () => {
             return el == null || el.clientHeight === 0;
         }, { timeout: TIMEOUT });
 
-        
-
         await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT * 10 })
+
+        console.log('Page opened successfully')
 
     })
 
