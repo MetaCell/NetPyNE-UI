@@ -8,7 +8,7 @@ import {
   VIEW_EXPERIMENTS_RESULTS,
   TRIAL_LOAD_MODEL_SPEC
 } from 'root/redux/actions/experiments';
-import { NETPYNE_COMMANDS, EDIT_WIDGETS } from 'root/constants';
+import { NETPYNE_COMMANDS, EDIT_WIDGETS } from '../../constants';
 import * as GeppettoActions from '@metacell/geppetto-meta-client/common/actions';
 import * as ExperimentsApi from '../../api/experiments';
 
@@ -376,25 +376,39 @@ export default (store) => (next) => (action) => {
         }
         next(closeDrawerDialogBox);
       };
+
+      switch (action.cmd) {
+        case NETPYNE_COMMANDS.importNeuroML:
+          case NETPYNE_COMMANDS.importModel:
+            case NETPYNE_COMMANDS.importNeuroML:
+              next(GeppettoActions.waitData('Importing Model...', "RECEIVE_PYTHON_MESSAGE"));
+              break;
+        default:
+          break;
+      }
+      
       pythonCall(action)
         .then(callback, pythonErrorCallback);
       next(action);
       break;
     }
     case LOAD_TUTORIAL: {
-      const tutName = action.payload.replace('.py', '');
+      const path = action.payload.split("/");
+      const filename  = path.pop()
+      const dirname = path.join("/")
+      const tutName = filename.replace('.py', '');
       next(GeppettoActions.waitData(`Importing ${tutName}...`, LOAD_TUTORIAL));
 
       const params = {
-        modFolder: 'mod',
+        modFolder: dirname + '/mod',
         loadMod: false,
-        compileMod: false,
+        compileMod: true,
 
-        netParamsPath: '.',
+        netParamsPath: dirname,
         netParamsModuleName: tutName,
         netParamsVariable: 'netParams',
 
-        simConfigPath: '.',
+        simConfigPath: dirname,
         simConfigModuleName: tutName,
         simConfigVariable: 'simConfig',
       };
