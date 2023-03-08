@@ -10,6 +10,7 @@ import {
   Dialog,
   ConfirmationDialog,
   LaunchDialog,
+  Tutorial
 } from 'netpyne/components';
 
 
@@ -86,6 +87,7 @@ class NetPyNE extends React.Component {
         <div className={classes.container}>
           <div className={classes.topbar}>
             <Topbar />
+            <Tutorial />
           </div>
           <Box p={1} flex={1} display="flex" alignItems="stretch">
             <Grid container spacing={1} className={classes.content} alignItems="stretch">

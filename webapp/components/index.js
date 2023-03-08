@@ -18,6 +18,7 @@ import {
   createAndSimulateNetwork, showNetwork, pythonCall, deleteNetParamsObj, resetModel,
   setDefaultWidgets, changeInstanceColor, openConfirmationDialog, closeConfirmationDialog, selectInstances,
 } from '../redux/actions/general';
+import { incrementTutorialStep } from '../redux/actions/tutorials';
 
 import {
   cloneExperiment,
@@ -70,6 +71,7 @@ import _ExperimentManager from './experiments/ExperimentManager';
 import _LaunchDialog from './topbar/dialogs/LaunchDialog';
 import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole';
 import _PlotViewer from './general/PlotViewer';
+import _Tutorial from './general/Tutorial'
 import _ExperimentControlPanel from './general/ExperimentControlPanel';
 import _Rxd from './rxd/Wrapper';
 import { WidgetStatus } from '@metacell/geppetto-meta-client/common/layout/model';
@@ -410,6 +412,18 @@ export const Rxd = connect(
     _Rxd,
   ),
 );
+
+export const Tutorial = connect(
+  (state) => ({
+    steps: state.tutorial.steps,
+    tourStep: state.tutorial.tourStep,
+    tourRunning: state.tutorial.tourRunning
+  }),
+  (dispatch) => ({
+    incrementTutorialStep: () => dispatch(incrementTutorialStep)
+  }),
+)(_Tutorial);
+
 
 // ---------------------------------------------------------------------------------------- //
 

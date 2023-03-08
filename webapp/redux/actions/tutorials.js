@@ -6,4 +6,4 @@ export const INCREMENT_TUTORIAL_STEP = 'INCREMENT_TUTORIAL_STEP';
 // Actions
 export const startTutorial = (payload, metadata = {}) => ({ type: START_TUTORIAL, payload, metadata });
 export const stopTutorial = { type: STOP_TUTORIAL };
-export const incrementTutorialStep = { type: INCREMENT_TUTORIAL_STEP };
+export const incrementTutorialStep = (payload, metadata = {}) => ({ type: INCREMENT_TUTORIAL_STEP, payload, metadata });;

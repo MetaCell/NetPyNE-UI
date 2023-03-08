@@ -1,26 +1,22 @@
+import React from 'react';
 import Joyride from 'react-joyride';
-import { useSelector } from 'react-redux';
-import { incrementTutorialStep } from '../../redux/actions/tutorials';
 
-const incrementStepIndex = () => {
-  incrementTutorialStep();
-}
+export default function Tutorial(props) {
+  const {
+    steps,
+    tourStep,
+    tourRunning,
+    incrementTutorialStep,
+  } = props;
 
-const Tutorial = () => {
-  const steps = useSelector((state) => state.tutorial.steps);
-  const currentStep = useSelector((state) => state.tutorial.tourStep);
-  const running = useSelector((state) => state.tutorial.tourRunning);
-
-  return (
+  return ( 
     <div>
       <Joyride 
-      steps={steps} 
-        run={running} 
-        stepIndex={currentStep} 
-        callback={incrementStepIndex}
+        steps={steps} 
+        run={tourRunning} 
+        stepIndex={tourStep} 
+        callback={incrementTutorialStep}
         />
     </div>
   );
 }
-
-export default Tutorial ;
