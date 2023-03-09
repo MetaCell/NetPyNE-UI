@@ -4,8 +4,11 @@ import { START_TUTORIAL, STOP_TUTORIAL, INCREMENT_TUTORIAL_STEP } from '../actio
 // Default state for general
 export const TUTORIAL_DEFAULT_STATE = {
   tourRunning: false,
-  tourStep: 0,
-  steps: []
+  tourStep: 1,
+  steps: [{
+    target: '.MuiButtonBase-root',
+    content: 'This is the first step!',
+  }]
 };
 
 // reducer

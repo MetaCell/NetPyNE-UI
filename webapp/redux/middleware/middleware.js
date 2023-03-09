@@ -11,7 +11,7 @@ import {
 import { NETPYNE_COMMANDS, EDIT_WIDGETS } from '../../constants';
 import * as GeppettoActions from '@metacell/geppetto-meta-client/common/actions';
 import * as ExperimentsApi from '../../api/experiments';
-
+import { startTutorial } from '../../redux/actions/tutorials';
 import {
   UPDATE_CARDS,
   CREATE_NETWORK,
@@ -417,6 +417,8 @@ export default (store) => (next) => (action) => {
       })
         .then((response) => {
           next(action)
+          //activate Tutorial
+          next(startTutorial());
           console.log("Tutorial imported", response)
         }
         );
