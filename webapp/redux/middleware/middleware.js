@@ -417,8 +417,6 @@ export default (store) => (next) => (action) => {
       })
         .then((response) => {
           next(action)
-          //activate Tutorial
-          next(startTutorial());
           console.log("Tutorial imported", response)
         }
         );

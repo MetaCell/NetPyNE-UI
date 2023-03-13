@@ -5,14 +5,14 @@ export default function Tutorial(props) {
   const {
     steps,
     tourStep,
-    tourRunning,
-    incrementTutorialStep,
+    tourRunning
   } = props;
 
   return ( 
     <div>
       <Joyride 
         steps={steps} 
+        stepIndex={tourStep}
         styles={{
           options: {
             arrowColor: '#e3ffeb',
@@ -21,12 +21,13 @@ export default function Tutorial(props) {
             primaryColor: '#000',
             textColor: '#004a14',
             width: 900,
-            zIndex: 1000,
+            zIndex: 10000,
           }
         }}
         run={tourRunning} 
-        stepIndex={tourStep} 
-        callback={() => { alert('completed step')}}
+        callback={() => { 
+          console.log('completed step')
+        }}
         />
     </div>
   );
