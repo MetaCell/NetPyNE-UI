@@ -13,6 +13,7 @@ import importlib
 import json
 import logging
 import os
+from pathlib import Path
 import pprint
 import re
 import sys
@@ -511,7 +512,32 @@ class NetPyNEGeppetto:
                 # Load again because gatherData removed simData
                 sim.loadSimData(json_path)
 
+    def loadFromIndexFile(self, json_path: str):
+        cfg, netParams = sim.loadModel(json_path, loadMechs=True)
+        self.simConfig = cfg
+        self.netParams = netParams
 
+        if isinstance(self.netParams, dict):
+          self.netParams = specs.NetParams(self.netParams)
+
+        if isinstance(self.simConfig, dict):
+          self.simConfig = specs.SimConfig(self.simConfig)
+
+        for key, value in self.netParams.cellParams.items():
+            if hasattr(value, 'todict'):
+                self.netParams.cellParams[key] = value.todict()
+
+        # TODO: when should sim.initialize be called?
+        #   Only on import or better before every simulation or network instantiation?
+        sim.initialize()
+
+    def saveToIndexFile(self, srcPath, dstPath, exportNetParamsAsPython, exportSimConfigAsPython):
+        sim.saveModel(netParams=self.netParams,
+                      simConfig=self.simConfig,
+                      srcPath=srcPath,
+                      dstPath=dstPath,
+                      exportNetParamsAsPython=exportNetParamsAsPython,
+                      exportSimConfigAsPython=exportSimConfigAsPython)
 
     def importModel(self, modelParameters):
         """ Imports a model stored in form of Python files.
@@ -575,7 +601,7 @@ class NetPyNEGeppetto:
 
     def importNeuroML(self, modelParameters):
         from netpyne_ui.helpers import neuroml
-       
+
 
         try:
             # Get Current dir
@@ -584,9 +610,9 @@ class NetPyNEGeppetto:
             with redirect_stdout(sys.__stdout__):
                 # NetParams
                 filename = str(modelParameters["fileName"])
-               
+
                 json_fname = neuroml.convertNeuroML2(filename, compileMod=modelParameters["compileMod"])
-                   
+
             return self.loadModel(args=dict(
                 compileMod=True,
                 modFolder=os.path.dirname(json_fname),
@@ -605,7 +631,7 @@ class NetPyNEGeppetto:
 
     def importLEMS(self, modelParameters):
         from netpyne_ui.helpers import neuroml
-       
+
 
         try:
             # Get Current dir
@@ -614,7 +640,7 @@ class NetPyNEGeppetto:
             with redirect_stdout(sys.__stdout__):
                 # NetParams
                 filename = str(modelParameters["fileName"])
-               
+
                 json_fname =  neuroml.convertLEMSSimulation(filename)
 
             return self.loadModel(args=dict(
@@ -789,10 +815,17 @@ class NetPyNEGeppetto:
             return self.simConfig.analysis[plot_name]
         return {}
 
-    def getDirList(self, dir=None, onlyDirs=False, filterFiles=False):
+    def checkFileExists(self, path):
+        path = Path(path or '')
+        return path.exists()
+
+    def getDirList(self, dir=None, onlyDirs=False, filterFiles=False, subDir=None):
         # Get Current dir
         if dir is None or dir == '':
-            dir = os.path.join(os.getcwd(), constants.NETPYNE_WORKDIR_PATH)
+            base = constants.NETPYNE_WORKDIR_PATH
+            if subDir:
+              base = os.path.join(base, subDir)
+            dir = os.path.join(os.getcwd(), base)
         dir_list = []
         file_list = []
         for f in sorted(os.listdir(str(dir)), key=str.lower):

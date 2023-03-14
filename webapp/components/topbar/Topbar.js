@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import Menu from '@metacell/geppetto-meta-ui/menu/Menu';
-
+import FileBrowser from '../general/FileBrowser';
+import Utils from 'root/Utils';
 import { withStyles } from '@material-ui/core/styles';
 import { SwitchPageButton } from 'netpyne/components';
 import toolbarConfig, {
@@ -15,6 +16,7 @@ import Splash from '../general/Splash';
 
 import ImportFileDialog from './dialogs/ImportFileDialog';
 import LoadFileDialog from './dialogs/LoadFile';
+import LoadFileIndexDialog from './dialogs/LoadFileIndex';
 import SaveFileDialog from './dialogs/SaveFile';
 import NewModelDialog from './dialogs/NewModel';
 import ImportExportHLSDialog from './dialogs/ImportExportHLS';
@@ -22,7 +24,8 @@ import ImportCellParamsDialog from './dialogs/ImportCellParams';
 import UploadDownloadFilesDialog from './dialogs/UploadDownloadFiles';
 
 import { TOPBAR_CONSTANTS, MODEL_STATE, DEFAULT_CONFIRMATION_DIALOG_MESSAGE, NETPYNE_COMMANDS } from '../../constants';
-import { LOAD_TUTORIAL } from '../../redux/actions/general';
+import { LOAD_TUTORIAL, registerModelPath } from '../../redux/actions/general';
+import OverwriteModel from './dialogs/OverwriteModel';
 
 const styles = () => ({
   topbar: {
@@ -41,6 +44,25 @@ class Topbar extends Component {
     this.state = { openSnackBar: false };
     this.menuHandler = this.menuHandler.bind(this);
   }
+
+  closeExplorerDialog (fieldValue) {
+    if (fieldValue) {
+      Utils.evalPythonMessage('netpyne_geppetto.loadFromIndexFile', [fieldValue.path])
+           .then(() => {
+            // const fileName = fieldValue.path.replace(/^.*[\\/]/, '');
+            // const path = fieldValue.path
+            //   .split(fileName)
+            //   .slice(0, -1)
+            //   .join('');
+            // const action = registerModelPath(path);
+            // this.props.dispatchAction(action);
+            const action = registerModelPath(fieldValue.path);
+            this.props.dispatchAction(action);
+      });
+    }
+    this.handleClose();
+  }
+
 
   handleOpenSnackBar (message) {
     this.snackBarMessage = message;
@@ -135,6 +157,33 @@ class Topbar extends Component {
         case TOPBAR_CONSTANTS.LOAD:
           content = (
             <LoadFileDialog
+              open={dialogOpen}
+              onRequestClose={() => this.handleClose()}
+            />
+          );
+          break;
+        case TOPBAR_CONSTANTS.SAVE_INDEX_WORKSPACE:
+          content = (
+            <OverwriteModel
+              open={dialogOpen}
+              onRequestClose={() => this.handleClose()}
+            />
+          );
+          break;
+        case TOPBAR_CONSTANTS.LOAD_INDEX_WORKSPACE:
+          content = (
+            <FileBrowser
+              open={dialogOpen}
+              exploreOnlyDirs={true}
+              // filterFiles=".npjson"
+              startDir=""
+              onRequestClose={(selection) => this.closeExplorerDialog(selection)}
+            />
+          );
+          break;
+        case TOPBAR_CONSTANTS.LOAD_INDEX:
+          content = (
+            <LoadFileIndexDialog
               open={dialogOpen}
               onRequestClose={() => this.handleClose()}
             />
