@@ -23,8 +23,8 @@ import ImportExportHLSDialog from './dialogs/ImportExportHLS';
 import ImportCellParamsDialog from './dialogs/ImportCellParams';
 import UploadDownloadFilesDialog from './dialogs/UploadDownloadFiles';
 
-import { TOPBAR_CONSTANTS, MODEL_STATE, DEFAULT_CONFIRMATION_DIALOG_MESSAGE, NETPYNE_COMMANDS  } from '../../constants';
-import { LOAD_TUTORIAL, loadModel } from '../../redux/actions/general';
+import { TOPBAR_CONSTANTS, MODEL_STATE, DEFAULT_CONFIRMATION_DIALOG_MESSAGE, NETPYNE_COMMANDS } from '../../constants';
+import { LOAD_TUTORIAL, registerModelPath, loadModel } from '../../redux/actions/general';
 import OverwriteModel from './dialogs/OverwriteModel';
 
 const styles = () => ({
