@@ -14,7 +14,7 @@ decorator==4.4.2
 defusedxml==0.6.0
 Deprecated==1.2.10
 entrypoints==0.3
-future==0.18.2
+future==0.18.3
 h5py==3.7.0
 idna==2.9
 ipython-genutils==0.2.0
