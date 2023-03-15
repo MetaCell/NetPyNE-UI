@@ -10,6 +10,7 @@ import PlotRaster from './plotTypes/PlotRaster';
 import PlotTraces from './plotTypes/PlotTraces';
 import PlotGranger from './plotTypes/PlotGranger';
 import PlotRatePSD from './plotTypes/PlotRatePSD';
+import PlotRateSpectrogram from './plotTypes/PlotRateSpectrogram'
 import PlotSpikeHist from './plotTypes/PlotSpikeHist';
 import PlotSpikeStats from './plotTypes/PlotSpikeStats';
 import NetPyNENewPlot from './NetPyNENewPlot';
@@ -122,6 +123,9 @@ export default class NetPyNEPlots extends React.Component {
         break;
       case 'granger':
         selectedPlot = <PlotGranger />;
+        break;
+      case 'plotRateSpectrogram':
+        selectedPlot = <PlotRateSpectrogram />;
         break;
     }
 

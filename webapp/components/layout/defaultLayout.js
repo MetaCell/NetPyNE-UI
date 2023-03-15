@@ -4,13 +4,17 @@ export default {
     tabSetHeaderHeight: 26,
     tabSetTabStripHeight: 26,
     enableEdgeDock: false,
-    borderBarSize: 0,
+    borderBarSize: 1,
+    borderEnableDrop: false,
   },
   borders: [
     {
       type: 'border',
       location: 'bottom',
       children: [],
+      size: 1,
+      barSize: 1,
+      enableDrop: false,
     },
   ],
   layout: {

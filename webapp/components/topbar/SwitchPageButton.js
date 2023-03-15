@@ -32,8 +32,11 @@ const CREATE_NETWORK = 'CREATE NETWORK';
 const CREATE_AND_SIMULATE = 'CREATE AND SIMULATE';
 const SIMULATE = 'SIMULATE';
 const BACK_TO_EDIT = 'BACK TO EDIT';
+const BACK_TO_EXPLORER = 'GO TO EXPLORER';
+const UPDATE_NETWORK = 'UPDATE NETWORK';
 
 const editOptions = [CREATE_NETWORK, CREATE_AND_SIMULATE, SIMULATE];
+const instantiatedEditOptions = [UPDATE_NETWORK, CREATE_AND_SIMULATE, SIMULATE];
 const exploreOptions = [SIMULATE, CREATE_AND_SIMULATE];
 
 class SwitchPageButton extends Component {
@@ -43,12 +46,20 @@ class SwitchPageButton extends Component {
   }
 
   handleClick = (selectedOption) => {
-    if (selectedOption === CREATE_NETWORK) {
+    if (selectedOption === CREATE_NETWORK || selectedOption === UPDATE_NETWORK) {
       this.props.createNetwork();
     } else if (selectedOption === SIMULATE) {
-      this.props.simulateNetwork();
+      if (this.props.experimentInDesign) {
+        this.props.openLaunchDialog();
+      } else {
+        this.props.simulateNetwork();
+      }
     } else if (selectedOption === CREATE_AND_SIMULATE) {
-      this.props.createAndSimulateNetwork();
+      if (this.props.experimentInDesign) {
+        this.props.openLaunchDialog();
+      } else {
+        this.props.createAndSimulateNetwork();
+      }
     } else if (selectedOption === BACK_TO_EDIT) {
       this.props.switchToEditModelPage();
     } else {
@@ -56,43 +67,37 @@ class SwitchPageButton extends Component {
     }
   };
 
-  getExploreLabel () {
-    const {
-      automaticInstantiation,
-      automaticSimulation,
-    } = this.props;
-    const instantiate = automaticInstantiation || this.props.modelState === MODEL_STATE.NOT_INSTANTIATED;
-    if (instantiate && automaticSimulation) {
-      return TOPBAR_CONSTANTS.CREATE_AND_SIMULATE_NETWORK;
-    }
-    if (instantiate) {
-      return TOPBAR_CONSTANTS.CREATE_NETWORK;
-    }
-    if (automaticSimulation) {
-      console.debug('Bad option combination: can\'t auto simulate without auto instantiate');
-    }
-    return TOPBAR_CONSTANTS.EXPLORE_EXISTING_NETWORK;
-  }
-
   render () {
     const {
       classes,
       editModelPage,
+      modelState
     } = this.props;
+    const instantiated = modelState == MODEL_STATE.INSTANTIATED;
     return (
       <div className={classes.container}>
         {editModelPage
           ? (
-            <SplitButton
-              options={editOptions}
-              handleClick={(selectedOption) => this.handleClick(selectedOption)}
-              icon={(
-                <span style={{ marginRight: '5px' }}>
-                  <Icon name="rocket" />
-                </span>
-              )}
-              skipIconFor={CREATE_NETWORK}
-            />
+            <>
+              <Button
+                variant="contained"
+                onClick={() => this.handleClick(BACK_TO_EXPLORER)}
+                startIcon={<Icon name="screen" selected={false} />}
+                disabled={!instantiated}
+              >
+                { BACK_TO_EXPLORER }
+              </Button>
+              <SplitButton
+                options={instantiated ? instantiatedEditOptions : editOptions}
+                handleClick={(selectedOption) => this.handleClick(selectedOption)}
+                icon={(
+                  <span style={{ marginRight: '5px' }}>
+                    <Icon name="rocket" />
+                  </span>
+                )}
+                skipIconFor={CREATE_NETWORK}
+              />
+            </>
           )
           : (
             <>
@@ -111,6 +116,7 @@ class SwitchPageButton extends Component {
                     <Icon name="rocket" />
                   </span>
                 )}
+                skipIconFor={SIMULATE}
               />
             </>
           )}

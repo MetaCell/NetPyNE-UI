@@ -8,11 +8,10 @@ import {
   LayoutManager,
   Drawer,
   Dialog,
+  ConfirmationDialog,
+  LaunchDialog,
 } from 'netpyne/components';
 
-import Utils from '../Utils';
-
-import { EDIT_WIDGETS } from '../constants';
 
 const styles = ({ zIndex }) => ({
   root: {
@@ -29,7 +28,7 @@ const styles = ({ zIndex }) => ({
   },
   topbar: {
     position: 'relative',
-    zIndex: zIndex.drawer + 1,
+    zIndex: zIndex.drawer,
   },
   content: {
     flexGrow: 1,
@@ -40,76 +39,47 @@ const styles = ({ zIndex }) => ({
   noGrow: { flexGrow: 0 },
 });
 
-const TIMEOUT = 10000;
+
 
 class NetPyNE extends React.Component {
-  openPythonCallDialog (event) {
-    const payload = {
-      errorMessage: event.evalue,
-      errorDetails: event.traceback.join('\n'),
-    };
-    this.props.pythonCallErrorDialogBox(payload);
-  }
-
-  addMetadataToWindow (data) {
-    console.log('Initialising NetPyNE Tabs');
-    window.metadata = data.metadata;
-    window.currentFolder = data.currentFolder;
-    window.isDocker = data.isDocker;
-    window.pythonConsoleLoaded = true;
-    window.tuts = data.tuts;
+  constructor (props) {
+    super(props);
+    this.openPythonCallDialog = this.openPythonCallDialog.bind(this);
   }
 
   componentDidMount () {
     GEPPETTO.on(GEPPETTO.Events.Error_while_exec_python_command, this.openPythonCallDialog, this);
-    this.props.setDefaultWidgets();
 
-    GEPPETTO.on('jupyter_geppetto_extension_ready', (data) => {
-      const project = {
-        id: 1,
-        name: 'Project',
-        experiments: [{
-          id: 1,
-          name: 'Experiment',
-          status: 'DESIGN',
-        }],
-      };
-      GEPPETTO.Manager.loadProject(project, false);
-      GEPPETTO.Manager.loadExperiment(1, [], []);
+    const {
+      setDefaultWidgets,
+    } = this.props;
 
-      let responded = false;
-      Utils.execPythonMessage('from netpyne_ui.netpyne_geppetto import netpyne_geppetto');
-      Utils.evalPythonMessage('netpyne_geppetto.getData', [])
-        .then((response) => {
-          responded = true;
-
-          GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, 'Loading NetPyNE-UI');
-          const metadata = Utils.convertToJSON(response);
-          this.addMetadataToWindow(metadata);
-          this.props.setWidgets(EDIT_WIDGETS);
-          this.props.modelLoaded();
-          GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-        });
-
-      setTimeout(() => {
-        if (!responded) {
-          GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, 'Reloading Python Kernel');
-          IPython.notebook.restart_kernel({ confirm: false })
-            .then(() => window.location.reload());
-        }
-      }, TIMEOUT);
-    });
+    setDefaultWidgets();
   }
 
   componentWillUnmount () {
     GEPPETTO.off(GEPPETTO.Events.Error_while_exec_python_command, this.openPythonCallDialog, this);
   }
 
+  openPythonCallDialog (event) {
+    if (event?.evalue && event?.traceback) {
+      this.props.pythonCallErrorDialogBox({
+        errorMessage: event.evalue,
+        errorDetails: event.traceback.join('\n'),
+      });
+    } else {
+      this.props.pythonCallErrorDialogBox({
+        errorMessage: event.data.response.evalue,
+        errorDetails: event.data.response.traceback.join('\n'),
+      });
+    }
+  }
+
+  
+
   render () {
     const { classes } = this.props;
-    if (!this.props.modelLoaded) {
-      return '';
-    }
+
     const Layout = LayoutManager();
     return (
       <div className={classes.root}>
@@ -129,7 +99,9 @@ class NetPyNE extends React.Component {
           </Box>
         </div>
         <Dialog />
+        <ConfirmationDialog />
         <ErrorDialog />
+        <LaunchDialog />
       </div>
     );
   }

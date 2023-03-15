@@ -1,7 +1,8 @@
 import {
   NETPYNE_COMMANDS, NETWORK_PLOT_WIDGETS, PLOT_WIDGETS, WidgetStatus,
 } from 'root/constants';
-import { addWidget, SET_WIDGETS, UPDATE_WIDGET } from '../actions/layout';
+import { VIEW_EXPERIMENTS_RESULTS } from 'root/redux/actions/experiments';
+import * as GeppettoActions from '@metacell/geppetto-meta-client/common/actions';
 import Utils from '../../Utils';
 import { processError } from './middleware';
 import {
@@ -10,13 +11,14 @@ import {
   SET_THEME,
   CREATE_NETWORK,
 } from '../actions/general';
+import { hideSpinner, showSpinner } from '@metacell/geppetto-meta-client/common/actions/actions';
 
 // A simple cache for plots coming from the backend.
 // This is a temporary solution until we have a proper strategy to store the plot data in redux
 // and ensured that plot data doesn't lead to performance issues due to possible deep-copy in reducers.
 window.plotCache = {};
 
-const isDisabled = (widget, plots) => !plots[widget.method.plotKey] ?? true;
+const isDisabled = (widget, plots) => !plots[widget.config.method.plotKey] ?? true;
 
 const setPlotToWindow = (plotId, data) => {
   if (data === '') {
@@ -26,7 +28,7 @@ const setPlotToWindow = (plotId, data) => {
   window.plotCache[plotId] = data;
 };
 
-const plotFigure = async (plotId, plotMethod, plotType = false, theme) => {
+const plotFigure = async (plotId, plotMethod, plotType = false, uri = null, theme) => {
   try {
     let response = await Promise.race([
       Utils.evalPythonMessage(NETPYNE_COMMANDS.plotFigure, [plotMethod, plotType, theme], false),
@@ -37,7 +39,7 @@ const plotFigure = async (plotId, plotMethod, plotType = false, theme) => {
       })]);
 
     console.log('Plot response received for', plotId);
-    if (!response) {
+    if (!response && !uri) { //png plots return null response but they provide a uri so they can be grabbed from the workspace
       return null;
     }
 
@@ -52,15 +54,20 @@ const plotFigure = async (plotId, plotMethod, plotType = false, theme) => {
       if (response.startsWith('[') && response.endsWith(']')) {
         response = eval(response);
       }
-    }
-    if (plotMethod.startsWith('iplot')) {
-      let htmlText = response.replace ? response.replace(/\\n/g, '')
-        .replace(/\\/g, '') : '';
-      if (plotId === 'rxdConcentrationPlot') {
-        // FIXME: How can we center the bokeh plots when sizing_mode='scale_height'
-        htmlText = htmlText.replace('<head>', '<head><style>.bk {margin: 0 auto!important;}</style>');
+      if (response.indexOf('<html') > -1) {
+        let htmlText = response.replace ? response.replace(/\\n/g, '')
+          .replace(/\\/g, '') : '';
+        //if (plotId === 'rxdConcentrationPlot') {
+          // FIXME: How can we center the bokeh plots when sizing_mode='scale_height'
+          htmlText = htmlText.replace('<head>', '<head><style>.bk {margin: 0 auto!important;} div {overflow:hidden;} frame {overflow:hidden;}</style>');
+          htmlText = htmlText.replace('margin: 0 auto!important;', 'margin: 0;');
+        //}
+        return htmlText;
       }
-      return htmlText;
+    }
+    if ((plotMethod == 'plotDipole' || plotMethod == 'plotEEG' )) { //uri is available here
+      const plotUri = uri.replace('{name}', response);
+      return (`<img src="${plotUri}"></img>`) ;
     }
     if (response?.length !== undefined) {
       return response[0];
@@ -76,16 +83,31 @@ const plotFigure = async (plotId, plotMethod, plotType = false, theme) => {
   return null;
 };
 
+const updatePlots = (next) => {
+  Utils.evalPythonMessage(NETPYNE_COMMANDS.checkAvailablePlots, [])
+    .then((plots) => {
+      window.plotCache = {};
+      Object.values(PLOT_WIDGETS)
+        .forEach((widget) => {
+          widget.initialized = false;
+          widget.disabled = isDisabled(widget, plots);
+          next(GeppettoActions.addWidget(widget));
+        });
+    });
+};
+
 export default (store) => (next) => (action) => {
   async function setWidget (widget) {
     const {
-      plotMethod,
-      plotType,
-    } = widget.method;
-    return plotFigure(widget.id, plotMethod, plotType, store.getState().general.theme)
+      method,
+      uri,
+    } = widget.config;
+    showSpinner("Loading plot...");
+    return plotFigure(widget.id, method.plotMethod, method.plotType, uri, store.getState().general.theme)
       .then((data) => {
         setPlotToWindow(widget.id, data);
         widget.initialized = true;
+        hideSpinner();
         if (data) {
           console.debug('Plot retrieved:', widget.id);
           return widget;
@@ -96,7 +118,7 @@ export default (store) => (next) => (action) => {
   }
 
   switch (action.type) {
-    case UPDATE_WIDGET: {
+    case GeppettoActions.layoutActions.UPDATE_WIDGET: {
       // Triggered on tab of widget icon in sidebar
       // and refreshes widget data if widget wasn't initialized before.
       const widget = action.data;
@@ -109,12 +131,12 @@ export default (store) => (next) => (action) => {
       next(action);
       break;
     }
-    case SET_WIDGETS: {
+    case GeppettoActions.layoutActions.SET_WIDGETS: {
       // This is triggered once when we change the layout from Edit > Explore.
       // We add the widgets (back) to the sidebar but without fetching any data.
       Object.values(action.data)
         .filter((widget) => widget.id in PLOT_WIDGETS)
-        .forEach((widget) => next(addWidget(widget)));
+        .forEach((widget) => next(GeppettoActions.addWidget(widget)));
       next(action);
       break;
     }
@@ -127,26 +149,17 @@ export default (store) => (next) => (action) => {
               delete window.plotCache[widget.id];
               widget.initialized = false;
               widget.disabled = isDisabled(widget, plots);
-              next(addWidget(widget));
+              next(GeppettoActions.addWidget(widget));
             });
         });
 
       next(action);
       break;
     }
+    case VIEW_EXPERIMENTS_RESULTS:
     case SIMULATE_NETWORK:
     case CREATE_SIMULATE_NETWORK: {
-      Utils.evalPythonMessage(NETPYNE_COMMANDS.checkAvailablePlots, [])
-        .then((plots) => {
-          window.plotCache = {};
-          Object.values(PLOT_WIDGETS)
-            .forEach((widget) => {
-              widget.initialized = false;
-              widget.disabled = isDisabled(widget, plots);
-              next(addWidget(widget));
-            });
-        });
-
+      updatePlots(next);
       next(action);
       break;
     }
@@ -155,7 +168,7 @@ export default (store) => (next) => (action) => {
       if (!store.getState().general.editMode) {
         for (const widget of Object.values(PLOT_WIDGETS)) {
           setWidget(widget)
-            .then((w) => (w ? next(addWidget(w)) : null));
+            .then((w) => (w ? next(GeppettoActions.addWidget(w)) : null));
         }
       }
       break;

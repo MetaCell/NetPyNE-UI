@@ -13,6 +13,7 @@ init.py
 webapp/node_modules
 webapp/geppetto-client
 webapp/build
+webapp/.yalc
 workspace
 netpyne_workspace
 tests/frontend/e2e/node_modules
@@ -26,5 +27,4 @@ utilities/x86_64
 x86_64
 .jupyter-config
 venv
-webapp/build
-webapp/.yalc
+node_modules

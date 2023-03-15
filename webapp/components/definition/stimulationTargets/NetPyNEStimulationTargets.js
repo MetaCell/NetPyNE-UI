@@ -276,6 +276,7 @@ export default class NetPyNEStimulationTargets extends Component {
                     overflow: 'visible',
                     display: 'flex',
                     justifyContent: 'center',
+                    borderRadius: '50%',
                   }}
                 >
                   Target

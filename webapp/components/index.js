@@ -1,21 +1,32 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
-import PythonControlledCapability from './general/PythonControlledCapability';
-import { TOPBAR_CONSTANTS } from '../constants';
-
+import { getLayoutManagerInstance } from '@metacell/geppetto-meta-client/common/layout/LayoutManager';
 import {
+  addWidget,
   activateWidget,
   setWidgets,
   updateWidget,
   newWidget,
-} from '../redux/actions/layout';
+  maximiseWidget,
+} from '@metacell/geppetto-meta-client/common/actions';
+import { TOPBAR_CONSTANTS } from '../constants';
+import PythonControlledCapability from './general/PythonControlledCapability';
 import { openBackendErrorDialog, closeBackendErrorDialog } from '../redux/actions/errors';
 import {
   updateCards, editModel, simulateNetwork, createNetwork, closeDialog,
-  createAndSimulateNetwork, showNetwork, pythonCall, modelLoaded, deleteNetParamsObj, resetModel,
-  setDefaultWidgets,
+  createAndSimulateNetwork, showNetwork, pythonCall, deleteNetParamsObj, resetModel,
+  setDefaultWidgets, changeInstanceColor, openConfirmationDialog, closeConfirmationDialog, selectInstances,
 } from '../redux/actions/general';
+
+import {
+  cloneExperiment,
+
+  openLaunchDialog,
+  removeExperiment,
+  addExperiment,
+  editExperiment
+} from '../redux/actions/experiments';
 
 import {
   openTopbarDialog,
@@ -31,9 +42,8 @@ import Checkbox from './general/Checkbox';
 import _NetPyNEStimulationTargets from './definition/stimulationTargets/NetPyNEStimulationTargets';
 import _Dimensions from './definition/populations/Dimensions';
 import _NetPyNE from './NetPyNE';
-import _NetPyNECellRule from './definition/cellRules/NetPyNECellRule';
 import _NetPyNESection from './definition/cellRules/sections/NetPyNESection';
-import { getLayoutManagerInstance } from './layout/LayoutManager';
+import _NetPyNECellRule from './definition/cellRules/NetPyNECellRule';
 import _NetPyNEPopulation from './definition/populations/NetPyNEPopulation';
 import _NetPyNEPopulations from './definition/populations/NetPyNEPopulations';
 import _NetPyNEStimulationSource from './definition/stimulationSources/NetPyNEStimulationSource';
@@ -51,7 +61,18 @@ import _Topbar from './topbar/Topbar';
 import _SwitchPageButton from './topbar/SwitchPageButton';
 import _NetPyNEThumbnail from './general/NetPyNEThumbnail';
 import _Dialog from './general/Dialog';
+import _ConfirmationDialog from './general/ConfirmationDialog';
 import _SelectCellTemplate from './definition/cellRules/SelectCellTemplate';
+import _Experiments from './experiments/Experiments';
+import _ExperimentEdit from './experiments/ExperimentEdit';
+// eslint-disable-next-line import/no-cycle
+import _ExperimentManager from './experiments/ExperimentManager';
+import _LaunchDialog from './topbar/dialogs/LaunchDialog';
+import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole';
+import _PlotViewer from './general/PlotViewer';
+import _ExperimentControlPanel from './general/ExperimentControlPanel';
+import _Rxd from './rxd/Wrapper';
+import { WidgetStatus } from '@metacell/geppetto-meta-client/common/layout/model';
 
 const updateCardsDispatch = (dispatch) => ({ updateCards: () => dispatch(updateCards) });
 
@@ -98,6 +119,50 @@ export const SelectField = PythonControlledCapability.createPythonControlledCont
   _SelectField,
 );
 
+export const Experiments = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    experiments: state.experiments.experiments,
+  }),
+  (dispatch) => ({
+    cloneExperiment: (name) => dispatch(cloneExperiment(name)),
+    removeExperiment: (name) => dispatch(removeExperiment(name)),
+  }),
+)(_Experiments);
+
+export const LaunchDialog = connect(
+  (state, ownProps) => {
+    const { inDesign, openLaunchDialog } = state.experiments;
+    return ({
+      ...ownProps,
+      open: openLaunchDialog,
+      experimentName: inDesign == null ? '' : inDesign.name,
+      numberOfTrials: inDesign == null ? '' : inDesign.trials.length,
+    });
+  },
+)(_LaunchDialog);
+
+export const ExperimentControlPanel = connect(
+  (state) => ({
+    modelState: state.general.modelState,
+  }),
+  null,
+)(_ExperimentControlPanel);
+
+export const ExperimentEdit = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    updates: state.general.updates,
+    widgets: state.widgets,
+    visible: state.widgets?.experimentManager?.status != WidgetStatus.HIDDEN 
+  }),
+  (dispatch) => ({
+    editExperiment: (name, details) => dispatch(editExperiment(name, details)),
+    addExperiment: (name, details) => dispatch(addExperiment(name, details)),
+  }),
+)(_ExperimentEdit);
+
+export const ExperimentManager = _ExperimentManager;
 // ---------------------------------------------------------------------------------------- //
 
 // CONNECT
@@ -112,8 +177,7 @@ export const NetPyNE = connect(
   (dispatch) => ({
     pythonCallErrorDialogBox: (payload) => dispatch(openBackendErrorDialog(payload)),
     setWidgets: (payload) => dispatch(setWidgets(payload)),
-    setDefaultWidgets: () => dispatch(setDefaultWidgets),
-    modelLoaded: () => dispatch(modelLoaded),
+    setDefaultWidgets: () => dispatch(setDefaultWidgets),    
   }),
 )(_NetPyNE);
 
@@ -135,7 +199,7 @@ export const NetPyNESection = connect(
   (dispatch) => ({ openTopbarDialog: () => dispatch(openTopbarDialog(TOPBAR_CONSTANTS.IMPORT_CELL_TEMPLATE)) }),
 )(_NetPyNESection);
 
-export const LayoutManager = () => connect((state) => ({ layout: state.layout }))(getLayoutManagerInstance()
+export const LayoutManager = () => connect((state) => ({ ...state }))(getLayoutManagerInstance()
   .getComponent());
 
 export const NetPyNEPopulation = connect(
@@ -203,15 +267,18 @@ export const NetPyNEInstantiated = connect(
   (state) => ({
     modelState: state.general.modelState,
     theme: state.general.theme,
+    data: state.general.instances,
   }),
-  null,
+  (dispatch) => ({
+    selectInstances: (instances, selectedInstances) => dispatch(selectInstances(instances, selectedInstances)),
+  }),
 )(_NetPyNEInstantiated);
 
 export const NetWorkControlButtons = connect(
   (state) => ({ modelState: state.general.modelState }),
   (dispatch) => ({
     createAndSimulateNetwork: () => dispatch(createAndSimulateNetwork),
-    simulateNetwork: () => dispatch(simulateNetwork),
+    simulateNetwork: () => dispatch(simulateNetwork()),
   }),
 )(_NetWorkControlButtons);
 
@@ -237,17 +304,24 @@ export const ErrorDialog = connect(
   }),
 )(_ActionDialog);
 
-export { NetPyNEPythonConsole } from './general/NetPyNEPythonConsole';
+export const NetPyNEPythonConsole = connect(
+  (state) => ({
+    extensionLoaded: state.client.jupyter_geppetto_extension.loaded,
+  }),
+  null,
+)(_NetPyNEPythonConsole);
 
 export const Drawer = connect(
   (state) => ({
     editMode: state.general.editMode,
-    layout: state.layout,
+    widgets: state.widgets,
   }),
   (dispatch) => ({
     updateWidget: (newConf) => dispatch(updateWidget(newConf)),
     newWidget: (widget) => dispatch(newWidget(widget)),
     activateWidget: (widgetId) => dispatch(activateWidget(widgetId)),
+    maximiseWidget: (widgetId) => dispatch(maximiseWidget(widgetId)),
+    addWidget: (widgetConf) => dispatch(addWidget(widgetConf)),
   }),
 )(_Drawer);
 
@@ -259,15 +333,17 @@ export const Topbar = connect(
     topbarDialogName: state.topbar.dialogName,
     topbarDialogMetadata: state.topbar.dialogMetadata,
     pageTransitionMode: state.topbar.pageTransitionMode,
-    modelLoaded: state.general.modelLoaded,
+    modelLoaded: state.client.model && state.client.model.status,
     automaticInstantiation: state.general.automaticInstantiation,
     automaticSimulation: state.general.automaticSimulation,
     theme: state.general.theme,
+    experimentInDesign: state.experiments.inDesign != null,
   }),
   (dispatch) => ({
     dispatchAction: (action) => dispatch(action),
     closeDialog: () => dispatch(closeTopbarDialog),
     resetModel: () => dispatch(resetModel),
+    openConfirmationDialog: (payload) => dispatch(openConfirmationDialog(payload)),
   }),
 )(_Topbar);
 
@@ -277,13 +353,15 @@ export const SwitchPageButton = connect(
     modelState: state.general.modelState,
     automaticInstantiation: state.general.automaticInstantiation,
     automaticSimulation: state.general.automaticSimulation,
+    experimentInDesign: state.experiments.inDesign != null,
   }),
   (dispatch) => ({
     switchToEditModelPage: () => dispatch(editModel),
     createNetwork: () => dispatch(createNetwork),
     createAndSimulateNetwork: () => dispatch(createAndSimulateNetwork),
     showNetwork: () => dispatch(showNetwork),
-    simulateNetwork: () => dispatch(simulateNetwork),
+    simulateNetwork: () => dispatch(simulateNetwork()),
+    openLaunchDialog: () => dispatch(openLaunchDialog()),
   }),
 )(_SwitchPageButton);
 
@@ -301,6 +379,20 @@ export const Dialog = connect(
   (dispatch) => ({ handleClose: () => dispatch(closeDialog) }),
 )(_Dialog);
 
+export const ConfirmationDialog = connect(
+  (state) => ({
+    confirmationDialogOpen: state.general.confirmationDialogOpen,
+    confirmationDialogTitle: state.general.confirmationDialogTitle,
+    confirmationDialogMessage: state.general.confirmationDialogMessage,
+    confirmationDialogOnConfirm: state.general.confirmationDialogOnConfirm,
+  }),
+  (dispatch) => ({
+    dispatchAction: (action) => dispatch(action),
+    closeConfirmationDialog: () => dispatch(closeConfirmationDialog),
+    pythonCall: (cmd, args) => dispatch(pythonCall(cmd, args)),
+  }),
+)(_ConfirmationDialog);
+
 export const SelectCellTemplate = connect(
   null,
   (dispatch) => ({
@@ -309,6 +401,16 @@ export const SelectCellTemplate = connect(
     ),
   }),
 )(_SelectCellTemplate);
+
+export const Rxd = connect(
+  null,
+  updateCardsDispatch,
+)(
+  PythonControlledCapability.createPythonControlledComponent(
+    _Rxd,
+  ),
+);
+
 // ---------------------------------------------------------------------------------------- //
 
 // DEFAULTS

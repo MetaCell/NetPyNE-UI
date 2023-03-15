@@ -1,6 +1,4 @@
 import React from 'react';
-
-import Divider from '@material-ui/core/Divider';
 import {
   bgRegular, bgDark, font, primaryColor, gutter, radius,
 } from '../../theme';
@@ -8,8 +6,6 @@ import {
 import { openTopbarDialog } from '../../redux/actions/topbar';
 import {
   openDialog, loadTutorial,
-  changeAutomaticInstantiation,
-  changeAutomaticSimulation,
   createAndSimulateNetwork,
   createNetwork,
   simulateNetwork,
@@ -18,8 +14,9 @@ import {
   setTheme,
 } from '../../redux/actions/general';
 import {
-  TOPBAR_CONSTANTS, MODEL_STATE, THEMES, TUTORIALS_LIST,
+  TOPBAR_CONSTANTS, THEMES, TUTORIALS_LIST,
 } from '../../constants';
+import { openLaunchDialog } from '../../redux/actions/experiments';
 
 const checkedIcon = 'fa fa-check secondary';
 
@@ -86,7 +83,7 @@ export const getTutorials = () => {
         label: tutLabel,
         icon: '',
         action: {
-          handlerAction: 'redux',
+          handlerAction: 'handleTutorial',
           parameters: [loadTutorial, tutFile],
         },
       };
@@ -324,18 +321,23 @@ export const getModelMenu = (props) => (
     },
     {
       label: TOPBAR_CONSTANTS.SIMULATE,
+      className: 'topbar-menu-item',
       action: {
         handlerAction: 'redux',
-        // TODO: (#263) this logic causes issues by potentially simulating
-        //  old instance with modified netParams and simConfig
-        parameters: [props.modelState === MODEL_STATE.NOT_INSTANTIATED ? createAndSimulateNetwork : simulateNetwork],
+        parameters: props.experimentInDesign
+          ? [openLaunchDialog()]
+          // TODO: (#263) this logic causes issues by potentially simulating
+          //  old instance with modified netParams and simConfig
+          : [props.modelState ? createAndSimulateNetwork : simulateNetwork],
       },
     },
     {
       label: TOPBAR_CONSTANTS.CREATE_AND_SIMULATE_NETWORK,
       action: {
         handlerAction: 'redux',
-        parameters: [createAndSimulateNetwork],
+        parameters: props.experimentInDesign
+          ? [openLaunchDialog()]
+          : [createAndSimulateNetwork],
       },
     },
   ]
@@ -366,7 +368,7 @@ export const getNetPyNEMenu = (props) => (
       },
     },
     {
-      label: 'Color preferences',
+      label: 'Plot color preferences',
       icon: '',
       list: [
         {

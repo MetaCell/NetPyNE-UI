@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import Box from '@material-ui/core/Box';
@@ -8,11 +7,13 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+import { withStyles } from '@material-ui/core/styles';
+import { getLayoutManagerInstance } from '@metacell/geppetto-meta-client/common/layout/LayoutManager';
+import { WidgetStatus } from '@metacell/geppetto-meta-client/common/layout/model';
 
-import { WidgetStatus } from '../layout/model';
 import {
-  EDIT_WIDGETS,
-  DEFAULT_NETWORK_WIDGETS, TOP_PANEL,
+  EDIT_WIDGETS, DEFAULT_NETWORK_WIDGETS, TOP_PANEL, TOOLS_LIST, SIDEBAR_HEADINGS,
 } from '../../constants';
 
 import DrawerIcon from '../general/NetPyNEIcons';
@@ -57,30 +58,62 @@ const DrawerItem = ({
   </Tooltip>
 );
 
-export default ({
+const drawerStyles = ({ spacing }) => ({
+  root: {
+    '& .drawerListBox': {
+      '& .MuiTypography-root': {
+        color: '#A8A5A5',
+        marginBottom: spacing(2),
+        whiteSpace: 'nowrap',
+        fontSize: '0.875rem',
+      },
+      '& .MuiDivider-root': {
+        marginTop: spacing(2),
+        marginBottom: spacing(2.5),
+      },
+    },
+    '& .drawerList': {
+      '& .MuiListItem-gutters': {
+        padding: spacing(0.4, 0),
+      },
+      '& .MuiListItemIcon-root': {
+        minWidth: spacing(4),
+      },
+      '& .MuiListItemText-root': {
+        whiteSpace: 'nowrap',
+      },
+      '& .MuiSvgIcon-root': {
+        color: '#EB517A',
+      },
+    },
+  },
+});
+
+const DrawerList = ({
   newWidget,
   editMode,
+  widgets,
   activateWidget,
+  maximiseWidget,
   updateWidget,
+  addWidget,
+  classes,
 }) => {
   const [expand, setExpand] = useState(false);
 
-  const classes = useStyles({
+  const drawerClasses = useStyles({
     width: expand ? drawerOpenWidth : drawerCloseWidth,
     expand,
   });
-  const layoutManager = require('../layout/LayoutManager')
-    .getLayoutManagerInstance();
+  const layoutManager = getLayoutManagerInstance();
 
   function createOrFocusWidget (widgetId) {
     const widget = { ...layoutManager.getWidget(widgetId) };
     if (!widget) {
       const widgetConf = getNewWidgetConf(widgetId);
       newWidget({ path: widgetConf.id, ...widgetConf });
-    } else if (widget.status === WidgetStatus.MINIMIZED) {
-      updateBorderWidget(widgetId);
     } else {
-      activateWidget(widgetId);
+      updateBorderWidget(widgetId);
     }
   }
 
@@ -103,16 +136,21 @@ export default ({
   }
 
   function getMenu () {
-    return layoutManager.getWidgets()
-      .sort((w1, w2) => w1.pos - w2.pos);
+    const [modelDrawerItems, toolsDrawerItems] = [[], []];
+    // eslint-disable-next-line array-callback-return
+    Object.values(widgets).sort((w1, w2) => w1.pos - w2.pos).filter((widget) => {
+      widget.specification !== TOOLS_LIST
+        ? modelDrawerItems.push(widget) : toolsDrawerItems.push(widget);
+    });
+    return [modelDrawerItems, toolsDrawerItems];
   }
 
   const mapItem = ({
     name,
     id,
   }) => {
-    const widget = layoutManager.getWidget(id);
-    const status = layoutManager.getWidgetStatus(id);
+    const widget = widgets[id];
+    const status = widget.status;
 
     return (
       <DrawerItem
@@ -122,27 +160,44 @@ export default ({
         widget={widget}
         disabled={widget.disabled}
         expanded={expand}
-        classes={classes}
+        classes={drawerClasses}
         createOrFocusWidget={createOrFocusWidget}
         status={status}
       />
     );
   };
-
+  const paperClasses = `${expand ? drawerClasses.openDrawer : drawerClasses.closeDrawer} ${classes.root}`;
   return (
-    <Paper elevation={0} className={expand ? classes.openDrawer : classes.closeDrawer}>
-      <div className={classes.container}>
-        <Box p={2}>
-          <List dense disablePadding>
-            {getMenu()
+    <Paper elevation={0} className={paperClasses}>
+      <div className={drawerClasses.container}>
+        <Box px={1} py={2}>
+          { expand && (
+            <Box className="drawerListBox">
+              <Typography variant="body2">{editMode ? SIDEBAR_HEADINGS.MODEL : SIDEBAR_HEADINGS.PLOTS}</Typography>
+            </Box>
+          )}
+          <List disablePadding>
+            {getMenu()[0]
+              .map(mapItem)}
+          </List>
+          <Box className="drawerListBox">
+            <Divider />
+            { expand && (
+              <Typography variant="body2">{SIDEBAR_HEADINGS.TOOLS}</Typography>
+            )}
+          </Box>
+          <List disablePadding>
+            {getMenu()[1]
               .map(mapItem)}
           </List>
         </Box>
 
-        <div className={expand ? classes.buttonContainerOpen : classes.buttonContainerClosed}>
+        <div className={expand
+          ? drawerClasses.buttonContainerOpen : drawerClasses.buttonContainerClosed}
+        >
           <Tooltip title={expand ? 'Collapse' : 'Expand'}>
             <IconButton
-              className={classes.button}
+              className={drawerClasses.button}
               size="medium"
               onClick={() => {
                 setExpand(!expand);
@@ -158,3 +213,5 @@ export default ({
     </Paper>
   );
 };
+
+export default withStyles(drawerStyles)(DrawerList);

@@ -52,6 +52,7 @@ export default class NetPyNENewPlot extends React.Component {
               style={{
                 width: 40,
                 height: 40,
+                borderRadius: '50%',
               }}
               color={page == 'main' ? 'primary' : 'secondary'}
               onClick={(event) => handleButtonClick(event)}

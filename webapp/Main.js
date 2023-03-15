@@ -1,39 +1,49 @@
-global.jQuery = require('jquery');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import * as Sentry from '@sentry/react';
+import { CaptureConsole } from '@sentry/integrations';
+import { LoadingSpinner } from '@metacell/geppetto-meta-client/components';
+import { NetPyNE } from './components';
+import theme from './theme';
+import store from './redux/store';
+import '@metacell/geppetto-meta-ui/flex-layout/style/dark.scss';
+
 global.GEPPETTO_CONFIGURATION = require('./GeppettoConfiguration.json');
+const { initGeppetto } = require('@metacell/geppetto-meta-client/GEPPETTO');
 
-jQuery(() => {
-  require('geppetto-client-initialization');
-  const ReactDOM = require('react-dom');
-  const React = require('react');
-  const { MuiThemeProvider } = require('@material-ui/core/styles');
-  const { NetPyNE } = require('./components');
+if (process.env.NODE_ENV == 'production')
+{
+  Sentry.init({
+    dsn: 'https://d8bf7e40eec34cb9891f6dd8207b5e83@sentry.metacell.us/6',
+    integrations: [
+      new CaptureConsole({
+        levels: ['error'],
+      }),
+    ],
+    tracesSampleRate: 1.0,
+  });
+}
 
-  const theme = require('./theme').default;
 
-  const { Provider } = require('react-redux');
-  const configureStore = require('./redux/store').default;
+initGeppetto();
+require('./css/netpyne.less');
+require('./css/material.less');
+require('./css/traceback.less');
+require('./css/flexlayout.less');
+require('./css/tree.less');
 
-  require('./css/netpyne.less');
-  require('./css/material.less');
-  require('./css/traceback.less');
-  require('./css/flexlayout.less');
-  require('./css/tree.less');
+ReactDOM.render(
+  <div>
+    <MuiThemeProvider theme={theme}>
+      <Provider store={store}>
+        <LoadingSpinner />
+        <NetPyNE />
+      </Provider>
+    </MuiThemeProvider>
+  </div>,
+  document.querySelector('#mainContainer'),
+);
 
-  const store = configureStore();
-
-  ReactDOM.render(
-    <div>
-      <MuiThemeProvider theme={theme}>
-        <Provider store={store}>
-          <NetPyNE />
-        </Provider>
-      </MuiThemeProvider>
-
-    </div>,
-    document.querySelector('#mainContainer'),
-  );
-
-  GEPPETTO.G.setIdleTimeOut(-1);
-  GEPPETTO.Resources.COLORS.DEFAULT = '#6f54aa';
-  GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, 'Initialising NetPyNE');
-});
+GEPPETTO.Resources.COLORS.DEFAULT = '#6f54aa';

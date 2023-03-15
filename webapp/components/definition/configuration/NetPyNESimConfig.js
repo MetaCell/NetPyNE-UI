@@ -11,18 +11,20 @@ import {
   GridLayout,
 } from 'netpyne/components';
 
+const CONFIG_SECTIONS = {
+  GENERAL: 'General',
+  SAVE_CONFIGURATION: 'SaveConfiguration',
+  RECORD: 'Record',
+  NET_PARAMS: 'netParams',
+};
+
 class NetPyNESimConfig extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      model: props.model,
       selectedIndex: 0,
-      sectionId: 'General',
+      sectionId: CONFIG_SECTIONS.GENERAL,
     };
-  }
-
-  UNSAFE_componentWillReceiveProps (nextProps) {
-    this.setState({ model: nextProps.model });
   }
 
   select = (index, sectionId) => this.setState({
@@ -34,7 +36,7 @@ class NetPyNESimConfig extends React.Component {
     let contentLeft = <div className="layoutVerticalFitInner" />;
     let contentRight = <div className="layoutVerticalFitInner" />;
     const { classes } = this.props;
-    if (this.state.sectionId == 'General') {
+    if (this.state.sectionId === CONFIG_SECTIONS.GENERAL) {
       contentLeft = (
         <div className="scrollbar scrollchild">
           <NetPyNEField id="simConfig.duration">
@@ -69,19 +71,6 @@ class NetPyNESimConfig extends React.Component {
             <ListComponent model="simConfig.seeds" />
           </NetPyNEField>
 
-          <NetPyNEField
-            id="simConfig.checkErrors"
-            className="netpyneCheckbox"
-          >
-            <NetPyNECheckbox model="simConfig.checkErrors" />
-          </NetPyNEField>
-
-          <NetPyNEField
-            id="simConfig.checkErrorsVerbose"
-            className="netpyneCheckbox"
-          >
-            <NetPyNECheckbox model="simConfig.checkErrorsVerbose" />
-          </NetPyNEField>
         </div>
       );
       contentRight = (
@@ -172,7 +161,7 @@ class NetPyNESimConfig extends React.Component {
           </NetPyNEField>
         </div>
       );
-    } else if (this.state.sectionId == 'SaveConfiguration') {
+    } else if (this.state.sectionId === CONFIG_SECTIONS.SAVE_CONFIGURATION) {
       contentLeft = (
         <div className="scrollbar scrollchild">
           <NetPyNEField id="simConfig.simLabel">
@@ -254,7 +243,7 @@ class NetPyNESimConfig extends React.Component {
           </NetPyNEField>
         </div>
       );
-    } else if (this.state.sectionId == 'Record') {
+    } else if (this.state.sectionId === CONFIG_SECTIONS.RECORD) {
       contentLeft = (
         <div className="scrollbar scrollchild">
           <NetPyNEField id="simConfig.recordCells" className="listStyle">
@@ -289,15 +278,56 @@ class NetPyNESimConfig extends React.Component {
           </NetPyNEField>
 
           <NetPyNEField
+            id="simConfig.saveLFPPops"
+            className="netpyneCheckbox"
+            style={{ marginTop: 25 }}
+          >
+            <NetPyNECheckbox model="simConfig.saveLFPPops" />
+          </NetPyNEField>
+
+          <NetPyNEField
             id="simConfig.recordStim"
             className="netpyneCheckbox"
             style={{ marginTop: 25 }}
           >
             <NetPyNECheckbox model="simConfig.recordStim" />
           </NetPyNEField>
+
+          <NetPyNEField
+            id="simConfig.recordDipole"
+            className="netpyneCheckbox"
+            style={{ marginTop: 25 }}
+          >
+            <NetPyNECheckbox model="simConfig.recordDipole" />
+          </NetPyNEField>
+
+          <NetPyNEField
+            id="simConfig.recordDipolesHNN"
+            className="netpyneCheckbox"
+            style={{ marginTop: 25 }}
+          >
+            <NetPyNECheckbox model="simConfig.recordDipolesHNN" />
+          </NetPyNEField>
+
+
+          <NetPyNEField
+            id="simConfig.saveDipoleCells"
+            className="netpyneCheckbox"
+            style={{ marginTop: 25 }}
+          >
+            <NetPyNECheckbox model="simConfig.saveDipoleCells" />
+          </NetPyNEField>
+
+          <NetPyNEField
+            id="simConfig.saveDipolePops"
+            className="netpyneCheckbox"
+            style={{ marginTop: 25 }}
+          >
+            <NetPyNECheckbox model="simConfig.saveDipolePops" />
+          </NetPyNEField>        
         </div>
       );
-    } else if (this.state.sectionId == 'netParams') {
+    } else if (this.state.sectionId === CONFIG_SECTIONS.NET_PARAMS) {
       contentLeft = (
         <div className="scrollbar scrollchild">
           <NetPyNEField id="netParams.scale">
@@ -405,28 +435,28 @@ class NetPyNESimConfig extends React.Component {
         >
           <BottomNavigationAction
             id="configGeneral"
-            key="General"
+            key={CONFIG_SECTIONS.GENERAL}
             label="General"
             icon={<FontIcon className="fa fa-bars" />}
             onClick={() => this.select(0, 'General')}
           />
           <BottomNavigationAction
             id="configRecord"
-            key="Record"
+            key={CONFIG_SECTIONS.RECORD}
             label="Record"
             icon={<FontIcon className="fa fa-circle" />}
             onClick={() => this.select(1, 'Record')}
           />
           <BottomNavigationAction
             id="configSaveConfiguration"
-            key="SaveConfiguration"
+            key={CONFIG_SECTIONS.SAVE_CONFIGURATION}
             label="Save Configuration"
             icon={<FontIcon className="fa fa-floppy-o" />}
             onClick={() => this.select(2, 'SaveConfiguration')}
           />
           <BottomNavigationAction
             id="confignetParams"
-            key="netParams"
+            key={CONFIG_SECTIONS.NET_PARAMS}
             label="Network Attributes"
             icon={<FontIcon className="fa fa-cog" />}
             onClick={() => this.select(3, 'netParams')}
@@ -443,7 +473,6 @@ class NetPyNESimConfig extends React.Component {
 }
 
 const styles = ({
-  shape,
   spacing,
 }) => ({
   root: {
@@ -462,6 +491,7 @@ const styles = ({
     maxHeight: `calc(100vh - ${spacing(27)}px)`,
     overflowY: 'auto',
   },
+  option: { color: 'white' },
 });
 
 export default withStyles(styles)(NetPyNESimConfig);
