@@ -176,6 +176,7 @@ export const Dimensions = connect(
 export const NetPyNE = connect(
   null,
   (dispatch) => ({
+    dispatchAction: (action) => dispatch(action),
     pythonCallErrorDialogBox: (payload) => dispatch(openBackendErrorDialog(payload)),
     setWidgets: (payload) => dispatch(setWidgets(payload)),
     setDefaultWidgets: () => dispatch(setDefaultWidgets),
