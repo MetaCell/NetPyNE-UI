@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Joyride from 'react-joyride';
 
-export default function Tutorial(props) {
+export default function TutorialObserver(props) {
   const [ nodes, setNodes] = useState([]);
 
   const {

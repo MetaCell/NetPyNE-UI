@@ -71,7 +71,7 @@ import _ExperimentManager from './experiments/ExperimentManager';
 import _LaunchDialog from './topbar/dialogs/LaunchDialog';
 import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole';
 import _PlotViewer from './general/PlotViewer';
-import _Tutorial from './general/Tutorial';
+import _TutorialObserver from './general/TutorialObserver';
 import _ExperimentControlPanel from './general/ExperimentControlPanel';
 import _Rxd from './rxd/Wrapper';
 import { WidgetStatus } from '@metacell/geppetto-meta-client/common/layout/model';
@@ -413,7 +413,7 @@ export const Rxd = connect(
   ),
 );
 
-export const Tutorial = connect(
+export const TutorialObserver = connect(
   (state) => ({
     steps: state.tutorial.steps,
     tourStep: state.tutorial.tourStep,
@@ -423,7 +423,7 @@ export const Tutorial = connect(
     incrementTutorialStep: () => dispatch(incrementTutorialStep),
     stopTutorialStep: () => { dispatch(stopTutorial) }
   }),
-)(_Tutorial);
+)(_TutorialObserver);
 
 
 // ---------------------------------------------------------------------------------------- //

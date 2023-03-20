@@ -10,7 +10,7 @@ import {
   Dialog,
   ConfirmationDialog,
   LaunchDialog,
-  Tutorial
+  TutorialObserver
 } from 'netpyne/components';
 
 const styles = ({ zIndex }) => ({
@@ -86,7 +86,7 @@ class NetPyNE extends React.Component {
 
     const Layout = LayoutManager();
     return (
-      <Tutorial>
+      <TutorialObserver>
         <div className={classes.root}>
           <div className={classes.container}>
             <div className={classes.topbar}>
@@ -108,7 +108,7 @@ class NetPyNE extends React.Component {
           <ErrorDialog />
           <LaunchDialog />
         </div>
-      </Tutorial>
+      </TutorialObserver>
     );
   }
 }
