@@ -12,8 +12,6 @@ import {
   LaunchDialog,
   Tutorial
 } from 'netpyne/components';
-import GlobalObserver from './general/GlobalObserver';
-import TestChildComponent from './general/TestChildComponent';
 
 const styles = ({ zIndex }) => ({
   root: {
@@ -47,6 +45,10 @@ class NetPyNE extends React.Component {
   constructor (props) {
     super(props);
     this.openPythonCallDialog = this.openPythonCallDialog.bind(this);
+  }
+
+  componentDidUpdate() {
+    console.log('updated')
   }
 
   componentDidMount () {
@@ -96,9 +98,7 @@ class NetPyNE extends React.Component {
                 <Drawer />
               </Grid>
               <Grid item>
-                <GlobalObserver>
-                  <Layout />
-                </GlobalObserver>
+                <Layout />
               </Grid>
             </Grid>
           </Box>
