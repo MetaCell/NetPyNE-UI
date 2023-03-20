@@ -71,7 +71,7 @@ import _ExperimentManager from './experiments/ExperimentManager';
 import _LaunchDialog from './topbar/dialogs/LaunchDialog';
 import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole';
 import _PlotViewer from './general/PlotViewer';
-import _Tutorial from './general/Tutorial'
+import _Tutorial from './general/Tutorial';
 import _ExperimentControlPanel from './general/ExperimentControlPanel';
 import _Rxd from './rxd/Wrapper';
 import { WidgetStatus } from '@metacell/geppetto-meta-client/common/layout/model';

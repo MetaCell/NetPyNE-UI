@@ -1,13 +1,35 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Joyride from 'react-joyride';
 
 export default function Tutorial(props) {
+  const [ nodes, setNodes] = useState([]);
+
   const {
     steps,
     tourStep,
     tourRunning,
     stopTutorialStep,
+    children
   } = props;
+
+  useEffect(() => {
+    // Listen for new components being added to the DOM
+    const observer = new MutationObserver((mutationsList) => {
+      mutationsList.forEach((mutation) => {
+        // If a new node is added to the DOM, add it to the steps array
+        if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+          const node = mutation.addedNodes[0];
+          setNodes((prevSteps) => [...prevSteps, { target: node }]);
+        }
+      });
+    });
+
+    // Start observing the DOM
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Stop observing the DOM when the component unmounts
+    return () => observer.disconnect();
+  }, []);
   
   const callbackHandler = (data) => {
     const { action, index, type, size } = data;
@@ -18,7 +40,8 @@ export default function Tutorial(props) {
   }
 
   return ( 
-    <div>
+    <>
+      {children}
       <Joyride 
         steps={steps} 
         stepIndex={tourStep}
@@ -36,6 +59,6 @@ export default function Tutorial(props) {
         run={tourRunning} 
         callback={callbackHandler}
         />
-    </div>
+    </>
   );
 }
