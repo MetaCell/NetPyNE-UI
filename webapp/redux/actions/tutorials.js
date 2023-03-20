@@ -6,6 +6,6 @@ export const RUN_CONTROLLED_STEP = 'RUN_CONTROLLED_STEP';
 
 // Actions
 export const startTutorial         = (payload, metadata = {}) => ({ type: START_TUTORIAL, payload, metadata });
-export const stopTutorial          = (payload) => ({ type: STOP_TUTORIAL });
+export const stopTutorial          = (payload, metadata = {}) => ({ type: STOP_TUTORIAL, metadata });
 export const incrementTutorialStep = (payload, metadata = {}) => ({ type: INCREMENT_TUTORIAL_STEP, payload, metadata });;
-export const runControlledStep     = (payload, metadata = {}) => ({ type: RUN_CONTROLLED_STEP, payload })
+export const runControlledStep     = (payload, metadata = {}) => ({ type: RUN_CONTROLLED_STEP, payload, metadata })

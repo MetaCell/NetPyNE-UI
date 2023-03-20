@@ -1,47 +1,13 @@
 // import action types
 import React from 'react';
+import tutorial_steps from './data/tutorial_steps';
 import { START_TUTORIAL, STOP_TUTORIAL, INCREMENT_TUTORIAL_STEP, RUN_CONTROLLED_STEP } from '../actions/tutorials';
 
 // Default state for general
 export const TUTORIAL_DEFAULT_STATE = {
   tourRunning: true,
   tourStep: 0,
-  steps: [{
-    target: '#selectCellButton',
-    content: (
-      <div>
-        <p>Import a simple cell model</p>
-        <p>Click on the + above Cell</p>
-      </div>
-    )
-  },
-  {
-    target: '#step1',
-    content: (
-      <div>
-        <p>Click on Ball and stick HH cell</p>
-      </div>
-    )
-  },
-  {
-    target: '#step1',
-    content: (
-      <div>
-        <p>Our new cell type appears</p>
-        <p>Click on CellType0 and the panel on the right will appear</p>
-        <p>Rename the cell type: “pyr” for pyramidal</p>
-      </div>
-    )
-  },
-  {
-    target: '#step1',
-    content: (
-      <div>
-        <p>Click on Section to see the sections that make up this imported cell type</p>
-      </div>
-    )
-  },
-]
+  steps: tutorial_steps
 };
 
 // reducer

@@ -5,8 +5,17 @@ export default function Tutorial(props) {
   const {
     steps,
     tourStep,
-    tourRunning
+    tourRunning,
+    stopTutorialStep,
   } = props;
+  
+  const callbackHandler = (data) => {
+    const { action, index, type, size } = data;
+    
+    if (action === 'close' && tourRunning ) {
+      stopTutorialStep();
+    } 
+  }
 
   return ( 
     <div>
@@ -25,9 +34,7 @@ export default function Tutorial(props) {
           }
         }}
         run={tourRunning} 
-        callback={() => { 
-          console.log('completed step')
-        }}
+        callback={callbackHandler}
         />
     </div>
   );
