@@ -26,7 +26,7 @@ export default function TutorialObserver(props) {
           // Add a new step to the steps array
           const match_id = node.id ; 
           if (nodes.indexOf(match_id) == -1)
-            setNodes((prevNodes) => [...prevNodes, match_id]);
+            setNodes([...nodes, match_id]);
         }
       })
 
@@ -56,7 +56,7 @@ export default function TutorialObserver(props) {
       runControlledStep({ step: nodes_length })
 
     // Start observing the DOM
-    observer.observe(document.body, { childList: true, subtree: true });
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true });
 
     // Stop observing the DOM when the component unmounts
     return () => observer.disconnect();

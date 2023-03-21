@@ -423,7 +423,7 @@ export const TutorialObserver = connect(
     runControlledStep: () => dispatch(runControlledStep),
     stopTutorialStep: () => { dispatch(stopTutorial) }
   }),
-)(_TutorialObser);
+)(_TutorialObserver);
 
 
 // ---------------------------------------------------------------------------------------- //
