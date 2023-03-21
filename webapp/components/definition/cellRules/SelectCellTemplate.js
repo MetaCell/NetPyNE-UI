@@ -17,7 +17,7 @@ class NetPyNENewPlot extends React.Component {
   }
 
   componentDidMount() {
-    this.props.dispatch(runControlledStep({ tourStep: 1 }));
+    //this.props.dispatch(runControlledStep({ tourStep: 1 }));
   }
 
   handleButtonClick = (event) => {
@@ -52,9 +52,6 @@ class NetPyNENewPlot extends React.Component {
     } = this.props;
 
     const displayMenu = Boolean(anchorEl);
-
-    if (displayMenu)
-      this.props.dispatch(runControlledStep({ tourStep: 2 }));
 
     return (
       <div>

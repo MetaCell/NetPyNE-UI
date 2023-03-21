@@ -18,7 +18,7 @@ import {
   createAndSimulateNetwork, showNetwork, pythonCall, deleteNetParamsObj, resetModel,
   setDefaultWidgets, changeInstanceColor, openConfirmationDialog, closeConfirmationDialog, selectInstances,
 } from '../redux/actions/general';
-import { incrementTutorialStep, stopTutorial } from '../redux/actions/tutorials';
+import { runControlledStep, stopTutorial } from '../redux/actions/tutorials';
 
 import {
   cloneExperiment,
@@ -420,10 +420,10 @@ export const TutorialObserver = connect(
     tourRunning: state.tutorial.tourRunning
   }),
   (dispatch) => ({
-    incrementTutorialStep: () => dispatch(incrementTutorialStep),
+    runControlledStep: () => dispatch(runControlledStep),
     stopTutorialStep: () => { dispatch(stopTutorial) }
   }),
-)(_TutorialObserver);
+)(_TutorialObser);
 
 
 // ---------------------------------------------------------------------------------------- //
