@@ -3,7 +3,7 @@ import Joyride from 'react-joyride';
 import tutorial_steps from '../../redux/reducers/data/tutorial_steps';
 
 export default function TutorialObserver(props) {
-  const [ nodes, setNodes] = useState([]);
+  const [ nodeIdList, setNodeIdList] = useState([]);
 
   const {
     steps,
@@ -25,8 +25,8 @@ export default function TutorialObserver(props) {
         if (node[attr_name] === attr_value) {
           // Add a new step to the steps array
           const match_id = node.id ; 
-          if (nodes.indexOf(match_id) == -1)
-            setNodes([...nodes, match_id]);
+          if (nodeIdList.indexOf(match_id) == -1)
+            setNodeIdList([...nodeIdList, match_id]);
         }
       })
 
@@ -51,7 +51,7 @@ export default function TutorialObserver(props) {
       });
     });
 
-    const nodes_length = nodes.length  ;
+    const nodes_length = nodeIdList.length  ;
     if(nodes_length > 0)
       runControlledStep({ step: nodes_length })
 
