@@ -9,8 +9,10 @@ export default function TutorialObserver(props) {
     steps,
     tourStep,
     tourRunning,
+    discoveredSteps,
     runControlledStep,
     stopTutorialStep,
+    addDiscoveredStep,
     children
   } = props;
 
@@ -51,16 +53,18 @@ export default function TutorialObserver(props) {
       });
     });
 
-    const nodes_length = nodeIdList.length  ;
-    if(nodes_length > 0)
-      runControlledStep({ step: nodes_length })
-
     // Start observing the DOM
     observer.observe(document.body, { childList: true, subtree: true, attributes: true });
 
     // Stop observing the DOM when the component unmounts
     return () => observer.disconnect();
   }, []);
+
+  const nodes_length = nodeIdList.length  ;
+  if(nodes_length > 0)
+    addDiscoveredStep({ nodeIdList })
+
+  console.log(discoveredSteps); //manage logic
   
   const callbackHandler = (data) => {
     const { action, index, type, size } = data;
