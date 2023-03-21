@@ -34,6 +34,7 @@
     "react": "^17.0.1",
     "react-color": "^2.19.3",
     "react-dom": "^16.4.0",
+    "react-joyride": "^2.5.3",
     "react-json-view": "^1.21.3",
     "react-redux": "^7.2.0",
     "react-sortable-tree": "^2.8.0",
