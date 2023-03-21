@@ -1,0 +1,18 @@
+FROM ghcr.io/puppeteer/puppeteer:16.1.0
+
+# COPY webapp/package.json .
+# COPY webapp/package-lock.json .
+
+COPY tests/frontend/e2e/package.json .
+COPY tests/frontend/e2e/package-lock.json .
+
+RUN npm ci
+
+USER pptruser
+COPY --chown=pptruser:pptruser tests tests
+# COPY jest.config.js .
+# COPY jest-puppeteer.config.js .
+# COPY setUpSnapTests.js .
+# COPY .babelrc .
+
+ENV TEST_URL=https://stage.netpyne.metacell.us/

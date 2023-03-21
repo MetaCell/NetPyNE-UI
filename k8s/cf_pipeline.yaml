@@ -2,6 +2,7 @@ version: "1.0"
 stages:
   - "clone"
   - "build"
+  - "test"
   - "deploy"
 steps:
   main_clone:
@@ -32,25 +33,56 @@ steps:
     working_directory: k8s
     tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}-${{CF_BUILD_TIMESTAMP}}'
     registry: ${{REGISTRY}}
-  installing_chart:
-    type: helm
-    stage: deploy
-    title: "Deploy chart"
-    working_directory: k8s
-    arguments:
-      action: install
-      chart_name: jupyterhub
-      release_name: ${{RELEASE_NAME}}
-      helm_version: 3.0.2
-      chart_repo_url: 'https://jupyterhub.github.io/helm-chart/'
-      chart_version: '0.9.0'
-      kube_context: ${{CLUSTER_NAME}}
-      namespace: ${{NAMESPACE}}
-      custom_value_files: 
-        - 'cf_values.yaml'
-      custom_values:
-        - 'hub_image_tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}-${{CF_BUILD_TIMESTAMP}}'
-        - 'singleuser_image_tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}-${{CF_BUILD_TIMESTAMP}}'
-        - 'singleuser_memory_limit=${{MEMORY_MAX}}'
-        - 'singleuser_memory_guarantee=${{MEMORY_MIN}}'
-        - 'proxy_secretToken=${{SECRET_TOKEN}}'
+  test_build:
+    stage: test
+    type: build
+    title: Building NetPyNE test image
+    image_name: netpyne-test
+    working_directory: ./NetPyNE-UI
+    dockerfile: Dockerfile.testing
+    buildkit: true
+  test:
+    type: composition
+    title: Running Tests
+    description: Temporary test environment
+    stage: test
+    working_directory: ./NetPyNE-UI
+    composition:
+      version: '2'
+      services:
+        netpyne_app:
+          image: '${{BuildingNetPyNE-UI}}'
+          working_dir: /home/pptruser
+          ports:
+            - 80
+    composition_candidates:
+      test:
+        image: '${{test_build}}'
+        links:
+         - netpyne_app
+        working_dir: /home/pptruser
+        environment:
+        - TEST_URL=http://netpyne_app:80
+        command: bash -c 'npm run Tutorial_1_test'
+  # installing_chart:
+  #   type: helm
+  #   stage: deploy
+  #   title: "Deploy chart"
+  #   working_directory: k8s
+  #   arguments:
+  #     action: install
+  #     chart_name: jupyterhub
+  #     release_name: ${{RELEASE_NAME}}
+  #     helm_version: 3.0.2
+  #     chart_repo_url: 'https://jupyterhub.github.io/helm-chart/'
+  #     chart_version: '0.9.0'
+  #     kube_context: ${{CLUSTER_NAME}}
+  #     namespace: ${{NAMESPACE}}
+  #     custom_value_files: 
+  #       - 'cf_values.yaml'
+  #     custom_values:
+  #       - 'hub_image_tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}-${{CF_BUILD_TIMESTAMP}}'
+  #       - 'singleuser_image_tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}-${{CF_BUILD_TIMESTAMP}}'
+  #       - 'singleuser_memory_limit=${{MEMORY_MAX}}'
+  #       - 'singleuser_memory_guarantee=${{MEMORY_MIN}}'
+  #       - 'proxy_secretToken=${{SECRET_TOKEN}}'
