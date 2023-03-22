@@ -6,27 +6,40 @@ import { START_TUTORIAL, STOP_TUTORIAL, INCREMENT_TUTORIAL_STEP, RUN_CONTROLLED_
 // Default state for general
 export const TUTORIAL_DEFAULT_STATE = {
   tourRunning: false,
+  requestedTourStep: 0,
   tourStep: 0,
+  activeSteps: [],
   discoveredSteps: [],
   steps: tutorial_steps,
   renderedSteps: []
 };
 
+//component could fire a increment step but it might not yet be active on the observable
+function getValidActiveStep( requiredStep, discoveredSteps )
+{
+  const discoveredStepsLength = discoveredSteps.length ;
+  return Math.min(requiredStep, discoveredStepsLength);
+}
+
 // reducer
-function reduceTutorial (state, action) {
+export default (state = TUTORIAL_DEFAULT_STATE, action) => {
   switch (action.type) {
     case START_TUTORIAL:
-      return { tourRunning: true, step: 1 };
+      return Object.assign(state, { tourRunning: true, tourStep: 1, requestedTourStep: 1 });
     case STOP_TUTORIAL:
       return Object.assign(state, { tourRunning: false, tourStep: state.tourStep });
     case ADD_DISCOVERED_STEP:
     {
-      const currentSteps = state.discoveredSteps ;
-      action.payload.nodeIdList.forEach( n => {
-        if (currentSteps.indexOf(n) == -1)
-          currentSteps.push(n);
-      })
-      return Object.assign(state, { discoveredSteps: currentSteps });
+      const discoveredSteps = [...state.discoveredSteps, ...action.payload.nodeIdList].filter((item, index, arr) => arr.indexOf(item) === index);
+      const tourStep = getValidActiveStep( state.requestedTourStep, discoveredSteps);
+      const tourRunning = tourStep > state.tourStep || state.tourRunning ; //target discovered and been already request OR tutorial already running
+      return { 
+        ...state,
+        discoveredSteps,
+        activeSteps: [...action.payload.nodeIdList],
+        tourStep,
+        tourRunning
+      }
     }
     case RUN_CONTROLLED_STEP_BY_ELEMENT_ID:
     {
@@ -34,16 +47,11 @@ function reduceTutorial (state, action) {
       return stepIndex > -1 ? Object.assign(state, { tourRunning: true, tourStep: stepIndex+1 }) : state ;
     }
     case INCREMENT_TUTORIAL_STEP:
-      return Object.assign(state, { tourStep: state.tourStep +1 });
+      const requestedTourStep = state.tourStep + 1 ;
+      return Object.assign(state, { requestedTourStep });
     case RUN_CONTROLLED_STEP:
       return Object.assign(state, { tourRunning: true, tourStep: action.payload });
-    default: {
-      return { ...state };
-    }
+    default:
+      return state
   }
 }
-
-export default (state = { ...TUTORIAL_DEFAULT_STATE }, action) => ({
-  ...state,
-  ...reduceTutorial(state, action),
-});

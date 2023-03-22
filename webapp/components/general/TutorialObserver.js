@@ -1,21 +1,26 @@
 import React, {useEffect, useState} from 'react';
 import Joyride from 'react-joyride';
 import tutorial_steps from '../../redux/reducers/data/tutorial_steps';
+import TutorialBubble from './TutorialBubble';
 
 export default function TutorialObserver(props) {
-  const [ nodeIdList, setNodeIdList] = useState([]);
 
   const {
     steps,
     tourStep,
     tourRunning,
-    discoveredSteps,
-    runControlledStep,
+    startTutorialStep,
     runControlledStepByElementId,
     stopTutorialStep,
     addDiscoveredStep,
+    incrementTutorialStepCallback,
     children
   } = props;
+
+  const [ nodeIdList, setNodeIdList] = useState([]);
+  const [target, setTarget] = useState('');
+  const [content, setContent] = useState('');
+  const [lastRenderStep, setLastRenderStep] = useState(tourStep);
 
   const search =  tutorial_steps.map( s => s.target ); 
 
@@ -29,7 +34,7 @@ export default function TutorialObserver(props) {
           // Add a new step to the steps array
           const match_id = node.id ; 
           if (nodeIdList.indexOf(match_id) == -1)
-            setNodeIdList([...nodeIdList, '#'+ match_id]);
+            setNodeIdList([...nodeIdList, match_id]);
         }
       })
 
@@ -61,44 +66,36 @@ export default function TutorialObserver(props) {
     return () => observer.disconnect();
   }, []);
 
-  const nodes_length = nodeIdList.length  ;
-  if(nodes_length > 0)
+  if(nodeIdList.length > 0)
     addDiscoveredStep({ nodeIdList })
-
-  if(discoveredSteps.length > 0)
-  {
-    const nextStepId = discoveredSteps.pop();
-    runControlledStepByElementId(nextStepId);
-  }
   
-  const callbackHandler = (data) => {
-    const { action, index, type, size } = data;
-    
-    if (action === 'close' && tourRunning ) {
-      stopTutorialStep();
-    } 
+  const callbackHandler = () => {
+    incrementTutorialStepCallback();
+    stopTutorialStep();
+  }
+
+  const startTutorialCallBack = () => {
+    startTutorialStep();  
+  }
+
+  if ( tourStep > 0 && tourStep > lastRenderStep ) //prevent infinite rendering loop
+  {
+    setTarget(steps[tourStep-1].target.replace('#',''));
+    setContent(steps[tourStep-1].content)
+    setLastRenderStep(tourStep);
   }
 
   return ( 
     <>
       {children}
-      <Joyride 
-        steps={steps} 
-        styles={{
-          options: {
-            arrowColor: '#e3ffeb',
-            backgroundColor: '#e3ffeb',
-            overlayColor: 'rgba(79, 26, 0, 0.4)',
-            primaryColor: '#000',
-            textColor: '#004a14',
-            width: 900,
-            zIndex: 10000,
-          }
-        }}
-        run={tourRunning} 
-        tourStep={tourStep}
-        callback={callbackHandler}
-        />
+      <button onClick={ () => { startTutorialCallBack() }}>RESET TUTORIAL</button>
+      { 
+        tourRunning && <TutorialBubble
+        element={target}
+        content={content}
+        onClose={callbackHandler}
+      />
+      }
     </>
   );
 }
