@@ -10,4 +10,4 @@ RUN npm ci
 
 COPY . .
 	
-CMD ["npm", "run", "test"]
+# CMD ["npm", "run", "test"]
