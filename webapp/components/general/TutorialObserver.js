@@ -11,6 +11,7 @@ export default function TutorialObserver(props) {
     tourRunning,
     discoveredSteps,
     runControlledStep,
+    runControlledStepByElementId,
     stopTutorialStep,
     addDiscoveredStep,
     children
@@ -28,7 +29,7 @@ export default function TutorialObserver(props) {
           // Add a new step to the steps array
           const match_id = node.id ; 
           if (nodeIdList.indexOf(match_id) == -1)
-            setNodeIdList([...nodeIdList, match_id]);
+            setNodeIdList([...nodeIdList, '#'+ match_id]);
         }
       })
 
@@ -64,7 +65,11 @@ export default function TutorialObserver(props) {
   if(nodes_length > 0)
     addDiscoveredStep({ nodeIdList })
 
-  console.log(discoveredSteps); //manage logic
+  if(discoveredSteps.length > 0)
+  {
+    const nextStepId = discoveredSteps.pop();
+    runControlledStepByElementId(nextStepId);
+  }
   
   const callbackHandler = (data) => {
     const { action, index, type, size } = data;
@@ -79,7 +84,6 @@ export default function TutorialObserver(props) {
       {children}
       <Joyride 
         steps={steps} 
-        stepIndex={tourStep}
         styles={{
           options: {
             arrowColor: '#e3ffeb',
@@ -92,6 +96,7 @@ export default function TutorialObserver(props) {
           }
         }}
         run={tourRunning} 
+        tourStep={tourStep}
         callback={callbackHandler}
         />
     </>

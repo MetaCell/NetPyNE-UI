@@ -1,14 +1,15 @@
 // import action types
 import React from 'react';
 import tutorial_steps from './data/tutorial_steps';
-import { START_TUTORIAL, STOP_TUTORIAL, INCREMENT_TUTORIAL_STEP, RUN_CONTROLLED_STEP, ADD_DISCOVERED_STEP } from '../actions/tutorials';
+import { START_TUTORIAL, STOP_TUTORIAL, INCREMENT_TUTORIAL_STEP, RUN_CONTROLLED_STEP, ADD_DISCOVERED_STEP, RUN_CONTROLLED_STEP_BY_ELEMENT_ID } from '../actions/tutorials';
 
 // Default state for general
 export const TUTORIAL_DEFAULT_STATE = {
-  tourRunning: true,
+  tourRunning: false,
   tourStep: 0,
   discoveredSteps: [],
-  steps: tutorial_steps
+  steps: tutorial_steps,
+  renderedSteps: []
 };
 
 // reducer
@@ -26,6 +27,11 @@ function reduceTutorial (state, action) {
           currentSteps.push(n);
       })
       return Object.assign(state, { discoveredSteps: currentSteps });
+    }
+    case RUN_CONTROLLED_STEP_BY_ELEMENT_ID:
+    {
+      const stepIndex = state.steps.findIndex( step => step.target == action.payload)
+      return stepIndex > -1 ? Object.assign(state, { tourRunning: true, tourStep: stepIndex+1 }) : state ;
     }
     case INCREMENT_TUTORIAL_STEP:
       return Object.assign(state, { tourStep: state.tourStep +1 });

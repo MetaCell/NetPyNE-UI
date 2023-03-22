@@ -12,6 +12,7 @@ import {
   LaunchDialog,
   TutorialObserver
 } from 'netpyne/components';
+import TutorialJoyride from './general/TutorialJoyride';
 
 const styles = ({ zIndex }) => ({
   root: {
