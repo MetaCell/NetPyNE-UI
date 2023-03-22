@@ -7,7 +7,7 @@
     "test": "jest --verbose ",
     "EEG_Dipole_test": "jest --verbose EEG_and_Dipole_Tut#1 ",
     "Experiment_Manager_test": "jest --verbose ExperimentManager_Tut#1 ",
-    "Tutorial_1_test":"jest --verbose Tut#1_smoke ",
+    "Tutorial_1_test":"./node_modules/.bin/jest --verbose Tut#1_smoke ",
     "Tutorial_2_test":"jest --verbose Tut#2_smoke ",
     "Tutorial_3A_test":"jest --verbose Tut#3a_smoke ",
     "Tutorial_3B_test":"jest --verbose Tut#3b_smoke ",
