@@ -1,10 +1,23 @@
 import React from "react";
 
-const TutorialBubble = ({ element, content, onClose, ...rest }) => {
-  const target = document.getElementById(element);
+const TutorialBubble = ({ element, content, steps, onClose, ...rest }) => {
+  let target = null ;
+
+  if (element[0] == '#') 
+    target = document.getElementById(element.replace('#', ''));
+  else
+    target = document.getElementsByClassName(element);
+
   if (!target) {
     return null;
   }
+  //if there's a collection we got no choise than passing the element index as configuration
+  if (target instanceof HTMLCollection)
+  {
+    const targetConfig = steps.find( t => t.target == element );
+    target = target[targetConfig?.collectionIndex || 0 ]
+  }
+
   const targetRect = target.getBoundingClientRect();
 
   return (

@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import Joyride from 'react-joyride';
 import tutorial_steps from '../../redux/reducers/data/tutorial_steps';
 import TutorialBubble from './TutorialBubble';
 
@@ -10,7 +9,6 @@ export default function TutorialObserver(props) {
     tourStep,
     tourRunning,
     startTutorialStep,
-    runControlledStepByElementId,
     stopTutorialStep,
     addDiscoveredStep,
     incrementTutorialStepCallback,
@@ -29,12 +27,12 @@ export default function TutorialObserver(props) {
       // Check if the node has the desired property
       search.forEach( s => {
         const attr_name  = s.indexOf('#') > -1 ? 'id' : 'className';
-        const attr_value = s.split(/[#.]/).join("");
+        const attr_value = s.split(/[#]/).join("");
         if (node[attr_name] === attr_value) {
           // Add a new step to the steps array
-          const match_id = node.id ; 
-          if (nodeIdList.indexOf(match_id) == -1)
-            setNodeIdList([...nodeIdList, match_id]);
+          let nodeId = node[attr_name] ;
+          if (nodeIdList.indexOf(nodeId) == -1)
+            setNodeIdList([...nodeIdList, nodeId]);
         }
       })
 
@@ -80,7 +78,7 @@ export default function TutorialObserver(props) {
 
   if ( tourStep > 0 && tourStep > lastRenderStep ) //prevent infinite rendering loop
   {
-    setTarget(steps[tourStep-1].target.replace('#',''));
+    setTarget(steps[tourStep-1].target);
     setContent(steps[tourStep-1].content)
     setLastRenderStep(tourStep);
   }
@@ -93,6 +91,7 @@ export default function TutorialObserver(props) {
         tourRunning && <TutorialBubble
         element={target}
         content={content}
+        steps={steps}
         onClose={callbackHandler}
       />
       }
