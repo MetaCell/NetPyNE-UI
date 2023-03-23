@@ -10,9 +10,9 @@ RUN npm ci
 
 USER pptruser
 COPY --chown=pptruser:pptruser tests tests
-# COPY jest.config.js .
-# COPY jest-puppeteer.config.js .
-# COPY setUpSnapTests.js .
+COPY tests/frontend/e2e/jest.config.js .
+COPY tests/frontend/e2e/jest-puppeteer.config.js .
+COPY tests/frontend/e2e/setupTests.js .
 COPY tests/frontend/e2e/babel.config.js .
 
 ENV TEST_URL=https://stage.netpyne.metacell.us/
