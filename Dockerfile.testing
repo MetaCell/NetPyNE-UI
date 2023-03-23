@@ -13,6 +13,6 @@ COPY --chown=pptruser:pptruser tests tests
 # COPY jest.config.js .
 # COPY jest-puppeteer.config.js .
 # COPY setUpSnapTests.js .
-# COPY .babelrc .
+COPY tests/frontend/e2e/babel.config.js .
 
 ENV TEST_URL=https://stage.netpyne.metacell.us/
