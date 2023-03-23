@@ -10,10 +10,10 @@ RUN npm ci
 
 USER pptruser
 COPY --chown=pptruser:pptruser tests tests
-COPY tests/frontend/e2e/jest.config.js .
-COPY tests/frontend/e2e/jest-puppeteer.config.js .
-COPY tests/frontend/e2e/babel.config.js .
-COPY tests/frontend/e2e/tests/setupTests.js .
+COPY --chown=pptruser:pptruser tests/frontend/e2e/jest.config.js .
+COPY --chown=pptruser:pptruser tests/frontend/e2e/jest-puppeteer.config.js .
+COPY --chown=pptruser:pptruser tests/frontend/e2e/babel.config.js .
+COPY --chown=pptruser:pptruser tests/frontend/e2e/tests/setupTests.js .
 
 
 ENV TEST_URL=https://stage.netpyne.metacell.us/
