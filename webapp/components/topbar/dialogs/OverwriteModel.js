@@ -32,18 +32,34 @@ const saveOptions = [
   },
 ];
 
+const DEFAULT_DIR = "uploads";
+
 const OverwriteModel = (props) => {
+  const updateFullPath = (value) => {
+    if (value && value.startsWith('/')) { // We know we will be in a UNIX like env.
+      return value
+    }
+    Utils
+    .evalPythonMessage('netpyne_geppetto.getFullPath', [null, value])
+    .then((fullpath) => {
+      setDstPath(fullpath)
+    })
+    return DEFAULT_DIR
+  }
+
   const srcPath = useSelector((state) => state.general.modelPath);
   const [explorerDialogOpen, setExplorerDialogOpen] = React.useState(false);
   const [openOverwriteDialog, setOpenOverwriteDialog] = React.useState(false);
   const [isDirectoryValid, setIsDirectoryValid] = React.useState(false);
   const [explorerParameter, setExplorerParameter] = React.useState('srcPath');
-  const [dstPath, setDstPath] = React.useState(srcPath);
+  const [dstPath, setDstPath] = React.useState(srcPath ? srcPath: DEFAULT_DIR);
   const [options, setOptions] = React.useState({
     exportNetParamsAsPython: false,
     exportSimConfigAsPython: false
   });
   const dispatch = useDispatch();
+
+  updateFullPath(dstPath);
 
   const getDirAndModuleFromPath = (fullpath) => {
     const fileName = fullpath.replace(/^.*[\\/]/, '');
@@ -127,6 +143,8 @@ const OverwriteModel = (props) => {
 
   // We cleanup on close
   React.useEffect(() => { return () => props.onRequestClose() }, []);
+
+
 
     return (
       <>

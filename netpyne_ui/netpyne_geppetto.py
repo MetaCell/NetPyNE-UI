@@ -819,13 +819,17 @@ class NetPyNEGeppetto:
         path = Path(path or '')
         return path.exists()
 
-    def getDirList(self, dir=None, onlyDirs=False, filterFiles=False, subDir=None):
-        # Get Current dir
+    def getFullPath(self, dir, subDir):
         if dir is None or dir == '':
             base = constants.NETPYNE_WORKDIR_PATH
             if subDir:
-              base = os.path.join(base, subDir)
+                base = os.path.join(base, subDir)
             dir = os.path.join(os.getcwd(), base)
+        return dir
+
+    def getDirList(self, dir=None, onlyDirs=False, filterFiles=False, subDir=None):
+        # Get Current dir
+        dir = self.getFullPath(dir, subDir)
         dir_list = []
         file_list = []
         for f in sorted(os.listdir(str(dir)), key=str.lower):
