@@ -68,8 +68,8 @@ export default function TutorialObserver(props) {
     addDiscoveredStep({ nodeIdList })
   
   const callbackHandler = () => {
-    incrementTutorialStepCallback();
     stopTutorialStep();
+    incrementTutorialStepCallback();
   }
 
   const startTutorialCallBack = () => {

@@ -15,10 +15,16 @@ export const TUTORIAL_DEFAULT_STATE = {
 };
 
 //component could fire a increment step but it might not yet be active on the observable
-function getValidActiveStep( requiredStep, discoveredSteps )
+function getValidActiveStep( requiredStep, currentStep, steps, discoveredSteps )
 {
-  const discoveredStepsLength = discoveredSteps.length ;
-  return Math.min(requiredStep, discoveredStepsLength);
+  let tourStep = currentStep ;
+  if (requiredStep > 0)
+  {
+    const requestedStepConfig = steps[requiredStep-1];
+    if ( discoveredSteps.indexOf(requestedStepConfig.target.replace('#', '')) > -1)
+      tourStep = requiredStep ;
+  }
+  return tourStep ;
 }
 
 // reducer
@@ -31,7 +37,7 @@ export default (state = TUTORIAL_DEFAULT_STATE, action) => {
     case ADD_DISCOVERED_STEP:
     {
       const discoveredSteps = [...state.discoveredSteps, ...action.payload.nodeIdList].filter((item, index, arr) => arr.indexOf(item) === index);
-      const tourStep = getValidActiveStep( state.requestedTourStep, discoveredSteps);
+      const tourStep = getValidActiveStep( state.requestedTourStep, state.tourStep, state.steps, discoveredSteps);
       const tourRunning = tourStep > state.tourStep || state.tourRunning ; //target discovered and been already request OR tutorial already running
       return { 
         ...state,
@@ -47,8 +53,12 @@ export default (state = TUTORIAL_DEFAULT_STATE, action) => {
       return stepIndex > -1 ? Object.assign(state, { tourRunning: true, tourStep: stepIndex+1 }) : state ;
     }
     case INCREMENT_TUTORIAL_STEP:
+    {
       const requestedTourStep = state.tourStep + 1 ;
-      return Object.assign(state, { requestedTourStep });
+      const validStep = getValidActiveStep( requestedTourStep, state.tourStep, state.steps, state.discoveredSteps);
+      const cont = validStep > state.tourStep || state.tourRunning ; //target discovered and been already request OR tutorial already running
+      return Object.assign(state, { requestedTourStep, tourStep: validStep, tourRunning: cont });
+    }
     case RUN_CONTROLLED_STEP:
       return Object.assign(state, { tourRunning: true, tourStep: action.payload });
     default:

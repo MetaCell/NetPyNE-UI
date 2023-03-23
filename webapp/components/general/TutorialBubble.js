@@ -18,6 +18,10 @@ const TutorialBubble = ({ element, content, steps, onClose, ...rest }) => {
     target = target[targetConfig?.collectionIndex || 0 ]
   }
 
+  const visible = target.checkVisibility();
+  if (!visible)
+    return null ;
+
   const targetRect = target.getBoundingClientRect();
 
   return (
