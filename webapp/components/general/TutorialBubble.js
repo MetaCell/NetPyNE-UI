@@ -4,10 +4,6 @@ const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutoria
 
   const [count, setCount] = useState(0);
 
-  const handleForceUpdate = () => {
-    forceUpdate();
-  };
-
   const forceUpdate = () => {
     setCount(count);
   };
@@ -15,7 +11,7 @@ const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutoria
   const tourStep  = steps[requestedTourStep-1];
   if(!tourStep)
     return null ;
-    
+
   const target    = tourStep.target ;
   const content  = tourStep.content ;
   let DOMtarget = null ;
@@ -30,10 +26,10 @@ const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutoria
     return null;
   }
   //if there's a collection we got no choise than passing the element index as configuration
-  if (target instanceof HTMLCollection)
+  if (DOMtarget instanceof HTMLCollection)
   {
-    const targetConfig = steps.find( t => t.target == element );
-    target = target[targetConfig?.collectionIndex || 0 ]
+    const targetConfig = steps.find( t => t.target == target );
+    DOMtarget = DOMtarget[targetConfig?.collectionIndex || 0 ]
   }
 
   const visible = DOMtarget.checkVisibility();
