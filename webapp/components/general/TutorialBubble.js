@@ -1,14 +1,19 @@
 import React from "react";
 
-const TutorialBubble = ({ element, content, steps, onClose, ...rest }) => {
-  let target = null ;
+const TutorialBubble = ({ requestedTourStep, steps, stopTutorial, incrementTutorialStep, validateTutorialStep  }) => {
 
-  if (element[0] == '#') 
-    target = document.getElementById(element.replace('#', ''));
+  const tourStep  = steps[requestedTourStep-1];
+  const target    = tourStep.target ;
+  const content  = tourStep.content ;
+  let DOMtarget = null ;
+
+  if (target[0] == '#') 
+    DOMtarget = document.getElementById(target.replace('#', ''));
   else
-    target = document.getElementsByClassName(element);
+    DOMtarget = document.getElementsByClassName(target);
 
-  if (!target) {
+  if (!DOMtarget) {
+    stopTutorial();
     return null;
   }
   //if there's a collection we got no choise than passing the element index as configuration
@@ -18,11 +23,16 @@ const TutorialBubble = ({ element, content, steps, onClose, ...rest }) => {
     target = target[targetConfig?.collectionIndex || 0 ]
   }
 
-  const visible = target.checkVisibility();
+  const visible = DOMtarget.checkVisibility();
   if (!visible)
+  {
+    stopTutorial();
     return null ;
+  }else{
+    validateTutorialStep({ tourStep: requestedTourStep });
+  }
 
-  const targetRect = target.getBoundingClientRect();
+  const targetRect = DOMtarget.getBoundingClientRect();
 
   return (
     <div style={{ position: "relative" }} id="tutorialBubble">
@@ -38,12 +48,11 @@ const TutorialBubble = ({ element, content, steps, onClose, ...rest }) => {
           maxWidth: "300px",
           fontSize: "16px",
           lineHeight: "1.5",
-          zIndex: 9999,
-          ...rest
+          zIndex: 9999
         }}
       >
         <div>{content}</div>
-        <button onClick={onClose}           
+        <button onClick={incrementTutorialStep}           
         style={{
             display: "block",
             margin: "0 auto",

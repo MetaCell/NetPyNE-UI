@@ -8,10 +8,12 @@ export default function TutorialObserver(props) {
     steps,
     tourStep,
     tourRunning,
+    requestedTourStep,
     startTutorialStep,
     stopTutorialStep,
     addDiscoveredStep,
-    incrementTutorialStepCallback,
+    incrementTutorialStep,
+    validateTutorialStep,
     children
   } = props;
 
@@ -66,11 +68,6 @@ export default function TutorialObserver(props) {
 
   if(nodeIdList.length > 0)
     addDiscoveredStep({ nodeIdList })
-  
-  const callbackHandler = () => {
-    stopTutorialStep();
-    incrementTutorialStepCallback();
-  }
 
   const startTutorialCallBack = () => {
     startTutorialStep();  
@@ -89,10 +86,11 @@ export default function TutorialObserver(props) {
       <button onClick={ () => { startTutorialCallBack() }}>RESET TUTORIAL</button>
       { 
         tourRunning && <TutorialBubble
-        element={target}
-        content={content}
+        requestedTourStep={requestedTourStep}
         steps={steps}
-        onClose={callbackHandler}
+        stopTutorial={stopTutorialStep}
+        incrementTutorialStep={incrementTutorialStep}
+        validateTutorialStep={validateTutorialStep}
       />
       }
     </>
