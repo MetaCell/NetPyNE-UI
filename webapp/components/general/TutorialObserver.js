@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import tutorial_steps from '../../redux/reducers/data/tutorial_steps';
 import TutorialBubble from './TutorialBubble';
 
@@ -14,13 +14,16 @@ export default function TutorialObserver(props) {
     addDiscoveredStep,
     incrementTutorialStep,
     validateTutorialStep,
+    checkBubbleRender,
+    lastCheckRender,
     children
   } = props;
 
   const [ nodeIdList, setNodeIdList] = useState([]);
-  const [target, setTarget] = useState('');
-  const [content, setContent] = useState('');
-  const [lastRenderStep, setLastRenderStep] = useState(tourStep);
+
+  const bubbleUpdate = () => {
+    checkBubbleRender({ epoch: Date.now() })
+  };
 
   const search =  tutorial_steps.map( s => s.target ); 
 
@@ -57,6 +60,7 @@ export default function TutorialObserver(props) {
           traverseNodes(mutation.addedNodes, search);
         }
       });
+      bubbleUpdate();
     });
 
     // Start observing the DOM
@@ -73,26 +77,18 @@ export default function TutorialObserver(props) {
     startTutorialStep();  
   }
 
-  if ( tourStep > 0 && tourStep > lastRenderStep ) //prevent infinite rendering loop
-  {
-    setTarget(steps[tourStep-1].target);
-    setContent(steps[tourStep-1].content)
-    setLastRenderStep(tourStep);
-  }
-
   return ( 
     <>
       {children}
       <button onClick={ () => { startTutorialCallBack() }}>RESET TUTORIAL</button>
-      { 
-        tourRunning && <TutorialBubble
-        requestedTourStep={requestedTourStep}
-        steps={steps}
-        stopTutorial={stopTutorialStep}
-        incrementTutorialStep={incrementTutorialStep}
-        validateTutorialStep={validateTutorialStep}
-      />
-      }
+        <TutorialBubble
+          requestedTourStep={requestedTourStep}
+          steps={steps}
+          stopTutorial={stopTutorialStep}
+          incrementTutorialStep={incrementTutorialStep}
+          validateTutorialStep={validateTutorialStep}
+          lastCheckRender={lastCheckRender}
+        />
     </>
   );
 }

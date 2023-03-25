@@ -1,8 +1,21 @@
-import React from "react";
+import React, {useState} from "react";
 
-const TutorialBubble = ({ requestedTourStep, steps, stopTutorial, incrementTutorialStep, validateTutorialStep  }) => {
+const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutorial, incrementTutorialStep, validateTutorialStep  }) => {
+
+  const [count, setCount] = useState(0);
+
+  const handleForceUpdate = () => {
+    forceUpdate();
+  };
+
+  const forceUpdate = () => {
+    setCount(count);
+  };
 
   const tourStep  = steps[requestedTourStep-1];
+  if(!tourStep)
+    return null ;
+    
   const target    = tourStep.target ;
   const content  = tourStep.content ;
   let DOMtarget = null ;
@@ -36,6 +49,7 @@ const TutorialBubble = ({ requestedTourStep, steps, stopTutorial, incrementTutor
 
   return (
     <div style={{ position: "relative" }} id="tutorialBubble">
+      {lastCheckRender}
       <div
         style={{
           position: "absolute",

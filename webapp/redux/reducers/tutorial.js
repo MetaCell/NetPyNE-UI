@@ -1,12 +1,13 @@
 // import action types
 import React from 'react';
 import tutorial_steps from './data/tutorial_steps';
-import { START_TUTORIAL, STOP_TUTORIAL, INCREMENT_TUTORIAL_STEP, RUN_CONTROLLED_STEP, ADD_DISCOVERED_STEP, RUN_CONTROLLED_STEP_BY_ELEMENT_ID, VALIDATE_TUTORIAL_STEP } from '../actions/tutorials';
+import { START_TUTORIAL, STOP_TUTORIAL, INCREMENT_TUTORIAL_STEP, RUN_CONTROLLED_STEP, ADD_DISCOVERED_STEP, RUN_CONTROLLED_STEP_BY_ELEMENT_ID, VALIDATE_TUTORIAL_STEP, CHECK_BUBBLE_RENDER } from '../actions/tutorials';
 
 // Default state for general
 export const TUTORIAL_DEFAULT_STATE = {
   tourRunning: false,
   requestedTourStep: 0,
+  lastCheckRender: 0,
   tourStep: 0,
   activeSteps: [],
   discoveredSteps: [],
@@ -57,6 +58,8 @@ export default (state = TUTORIAL_DEFAULT_STATE, action) => {
       return Object.assign(state, { tourRunning: true, tourStep: action.payload });
     case VALIDATE_TUTORIAL_STEP:
       return Object.assign(state, { tourStep: action.payload.tourStep })
+    case CHECK_BUBBLE_RENDER:
+      return Object.assign(state, { lastCheckRender: action.payload.epoch })
     default:
       return state
   }
