@@ -42,7 +42,7 @@ const OverwriteModel = (props) => {
     Utils
     .evalPythonMessage('netpyne_geppetto.getFullPath', [null, value])
     .then((fullpath) => {
-      setDstPath(fullpath)
+      setDstPath(`${fullpath}/`)
     })
     return DEFAULT_DIR
   }
