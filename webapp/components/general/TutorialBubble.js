@@ -8,31 +8,43 @@ const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutoria
     setCount(count);
   };
 
+  const getDOMTarget = (target) => {
+    let DOMtarget = null ;
+
+    if (target[0] == '#') 
+      DOMtarget = document.getElementById(target.replace('#', ''));
+    else
+    {
+      DOMtarget = document.getElementsByClassName(target);
+      //last attempt element name
+      if (!DOMtarget || DOMtarget.length == 0 )
+        DOMtarget = document.getElementsByTagName(target);
+    }
+
+    if (!DOMtarget || DOMtarget.length == 0 ) {
+      stopTutorial();
+      return null;
+    }
+    //if there's a collection we got no choise than passing the element index as configuration
+    if (DOMtarget instanceof HTMLCollection)
+    {
+      const targetConfig = steps.find( t => t.target == target );
+      DOMtarget = DOMtarget[targetConfig?.collectionIndex || 0 ]
+    }
+
+    return DOMtarget;
+  }
+
   const tourStep  = steps[requestedTourStep-1];
   if(!tourStep)
     return null ;
 
-  const target    = tourStep.target ;
+  const target   = tourStep.target ;
   const content  = tourStep.content ;
-  let DOMtarget = null ;
 
-  if (target[0] == '#') 
-    DOMtarget = document.getElementById(target.replace('#', ''));
-  else
-    DOMtarget = document.getElementsByClassName(target);
+  const  DOMtarget = getDOMTarget(target);
+  const visible    = DOMtarget?.checkVisibility();
 
-  if (!DOMtarget) {
-    stopTutorial();
-    return null;
-  }
-  //if there's a collection we got no choise than passing the element index as configuration
-  if (DOMtarget instanceof HTMLCollection)
-  {
-    const targetConfig = steps.find( t => t.target == target );
-    DOMtarget = DOMtarget[targetConfig?.collectionIndex || 0 ]
-  }
-
-  const visible = DOMtarget.checkVisibility();
   if (!visible)
   {
     stopTutorial();
@@ -49,7 +61,7 @@ const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutoria
       <div
         style={{
           position: "absolute",
-          top: targetRect.bottom + 10 - window.innerHeight,
+          top: targetRect.top + 10 - window.innerHeight,
           left: targetRect.left,
           backgroundColor: "white",
           borderRadius: "8px",

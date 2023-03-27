@@ -57,7 +57,8 @@ const tutorial_steps = [
       <div>
         <p>Change the population name to “E” for excitatory</p>
       </div>
-    )
+    ),
+    collectionIndex: 2
   },
   {
     target: '#netParamspopParamsPopulation0cellType',
@@ -80,6 +81,56 @@ const tutorial_steps = [
     content: (
       <div>
         <p>Once we have a population with cells, we can create our network and visualize it</p>
+      </div>
+    )
+  },
+  {
+    target: 'canvas',
+    content: (
+      <div>
+        <p>You can see the layout of our 40 pyr cells</p>
+        <p>You can rotate, pan, and zoom</p>
+        <p>You can choose colors from the control panel</p>
+        <p>Most analysis plots (sidebar) are useless without having run a simulation</p>
+      </div>
+    ),
+    stepIndex: 0 
+  },
+  {
+    target: 'material-icons MuiIcon-root',
+    content: (
+      <div>
+        <p>The 2D net plot shows cell positions</p>
+        <p>No connectivity has been added yet</p>
+        <p>Explore the interactive plot</p>
+        <p>Explore moving and reshaping tabs (drag from the tab title)</p>
+      </div>
+    ),
+    stepIndex: 2 
+  },
+  {
+    target: 'flexlayout__tab_button_content',
+    content: (
+      <div>
+        <p>Click on Synaptic Mechanisms in tabs</p>
+      </div>
+    ),
+    stepIndex: 2 
+  },
+  {
+    target: 'flexlayout__tab_button_content',
+    content: (
+      <div>
+        <p>Click on Synaptic Mechanisms in tabs</p>
+      </div>
+    ),
+    stepIndex: 2 
+  },
+  {
+    target: 'Synapse0',
+    content: (
+      <div>
+        <p>Click on + above Synapse </p>
       </div>
     )
   }
