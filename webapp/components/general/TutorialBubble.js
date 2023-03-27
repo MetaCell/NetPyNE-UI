@@ -8,7 +8,7 @@ const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutoria
     setCount(count);
   };
 
-  const getDOMTarget = (target) => {
+  const getDOMTarget = (target, config) => {
     let DOMtarget = null ;
 
     if (target[0] == '#') 
@@ -27,12 +27,29 @@ const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutoria
     }
     //if there's a collection we got no choise than passing the element index as configuration
     if (DOMtarget instanceof HTMLCollection)
-    {
-      const targetConfig = steps.find( t => t.target == target );
-      DOMtarget = DOMtarget[targetConfig?.collectionIndex || 0 ]
-    }
+      DOMtarget = DOMtarget[config?.collectionIndex || 0 ]
 
     return DOMtarget;
+  }
+
+  function calculateVisiblePosition(rect1, width2, height2) {
+    const windowHeight = window.innerHeight;
+    const windowWidth = window.innerWidth;
+  
+    let x = rect1.left ;
+    let y = rect1.top  - windowHeight;
+  
+    // Check if element2 is outside the viewport horizontally
+    if (x + width2 > windowWidth) {
+      x = rect1.left - width2 ;
+    }
+  
+    // Check if element2 is outside the viewport vertically
+    if (y + height2 > windowHeight) {
+      y =  - height2 ;
+    }
+  
+    return { x, y };
   }
 
   const tourStep  = steps[requestedTourStep-1];
@@ -42,7 +59,7 @@ const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutoria
   const target   = tourStep.target ;
   const content  = tourStep.content ;
 
-  const  DOMtarget = getDOMTarget(target);
+  const  DOMtarget = getDOMTarget(target, tourStep);
   const visible    = DOMtarget?.checkVisibility();
 
   if (!visible)
@@ -54,6 +71,7 @@ const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutoria
   }
 
   const targetRect = DOMtarget.getBoundingClientRect();
+  const { x,y } = calculateVisiblePosition(targetRect, 150, 300);
 
   return (
     <div style={{ position: "relative" }} id="tutorialBubble">
@@ -61,13 +79,14 @@ const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutoria
       <div
         style={{
           position: "absolute",
-          top: targetRect.top + 10 - window.innerHeight,
-          left: targetRect.left,
+          top: y,
+          left: x,
           backgroundColor: "white",
           borderRadius: "8px",
           boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
           padding: "16px",
-          maxWidth: "300px",
+          maxWidth: "150px",
+          maxHeight: "300px",
           fontSize: "16px",
           lineHeight: "1.5",
           zIndex: 9999

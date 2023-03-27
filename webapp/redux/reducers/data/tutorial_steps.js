@@ -94,7 +94,7 @@ const tutorial_steps = [
         <p>Most analysis plots (sidebar) are useless without having run a simulation</p>
       </div>
     ),
-    stepIndex: 0 
+    collectionIndex: 0 
   },
   {
     target: 'material-icons MuiIcon-root',
@@ -106,7 +106,16 @@ const tutorial_steps = [
         <p>Explore moving and reshaping tabs (drag from the tab title)</p>
       </div>
     ),
-    stepIndex: 2 
+    collectionIndex: 2 
+  },
+  {
+    target: 'MuiButtonBase-root MuiButton-root MuiButton-contained',
+    content: (
+      <div>
+        <p>Click on Back To Edit</p>
+      </div>
+    ),
+    collectionIndex: 6 
   },
   {
     target: 'flexlayout__tab_button_content',
@@ -115,24 +124,167 @@ const tutorial_steps = [
         <p>Click on Synaptic Mechanisms in tabs</p>
       </div>
     ),
-    stepIndex: 2 
+    collectionIndex: 2 
   },
   {
-    target: 'flexlayout__tab_button_content',
-    content: (
-      <div>
-        <p>Click on Synaptic Mechanisms in tabs</p>
-      </div>
-    ),
-    stepIndex: 2 
-  },
-  {
-    target: 'Synapse0',
+    target: '#newSynapseButton',
     content: (
       <div>
         <p>Click on + above Synapse </p>
       </div>
     )
-  }
+  },
+  {
+    target: 'MuiInputBase-input MuiFilledInput-input',
+    content: (
+      <div>
+        <p>Name the synapse “exc”</p>
+      </div>
+    ),
+    collectionIndex: 2
+  },
+  {
+    target: 'MuiInputBase-input MuiFilledInput-input',
+    content: (
+      <div>
+        <p>Leave the default mechanism Exp2Syn</p>
+      </div>
+    ),
+    collectionIndex: 3
+  },
+  {
+    target: 'MuiInputBase-input MuiFilledInput-input',
+    content: (
+      <div>
+        <p>Enter 0.1 in Time constant for exponential 1 </p>
+      </div>
+    ),
+    collectionIndex: 4
+  },
+  {
+    target: 'MuiInputBase-input MuiFilledInput-input',
+    content: (
+      <div>
+        <p>Enter 1.0 in Time constant for exponential 2</p>
+      </div>
+    ),
+    collectionIndex: 5
+  },
+  {
+    target: 'MuiInputBase-input MuiFilledInput-input',
+    content: (
+      <div>
+        <p>Enter 0 in Reversal potential </p>
+      </div>
+    ),
+    collectionIndex: 6
+  },
+  {
+    target: 'flexlayout__tab_button_content',
+    content: (
+      <div>
+        <p>Click on Connectivity Rules in tabs or sidebar</p>
+      </div>
+    ),
+    collectionIndex: 3 
+  },
+  {
+    target: '#newConnectivityRuleButton',
+    content: (
+      <div>
+        <p>Click on + above Connectivity Rule </p>
+      </div>
+    )
+  },
+  {
+    target: 'MuiInputBase-input MuiFilledInput-input',
+    content: (
+      <div>
+        <p>Select “exc” for Synaptic mechanism</p>
+      </div>
+    ),
+    collectionIndex: 8 
+  },
+  {
+    target: 'MuiInputBase-input MuiFilledInput-input',
+    content: (
+      <div>
+        <p>Enter 0.1 in Probability of connection</p>
+      </div>
+    ),
+    collectionIndex: 9 
+  },
+  {
+    target: 'MuiInputBase-input MuiFilledInput-input',
+    content: (
+      <div>
+        <p>Enter 0.005 in Weight of synaptic connection</p>
+      </div>
+    ),
+    collectionIndex: 10 
+  },
+  {
+    target: 'MuiInputBase-input MuiFilledInput-input',
+    content: (
+      <div>
+        <p>Enter 5 in Connection delay</p>
+      </div>
+    ),
+    collectionIndex: 11 
+  },
+  {
+    target: 'MuiBottomNavigationAction-wrapper',
+    content: (
+      <div>
+        <p>Click on PRE-SYNAPTIC CELLS CONDITIONS</p>
+      </div>
+    ),
+    collectionIndex: 2 
+  },
+  {
+    target: 'MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiSelect-filled MuiInputBase-input MuiFilledInput-input',
+    content: (
+      <div>
+        <p>Select “exc” for Synaptic mechanism</p>
+      </div>
+    ),
+    collectionIndex: 1 
+  },
+  {
+    target: 'MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiSelect-filled MuiInputBase-input MuiFilledInput-input',
+    content: (
+      <div>
+        <p>Enter 0.1 in Probability of connection</p>
+      </div>
+    ),
+    collectionIndex: 2 
+  },
+  {
+    target: 'MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiSelect-filled MuiInputBase-input MuiFilledInput-input',
+    content: (
+      <div>
+        <p>Enter 0.005 in Weight of synaptic connection</p>
+      </div>
+    ),
+    collectionIndex: 3 
+  },
+  {
+    target: 'MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiSelect-filled MuiInputBase-input MuiFilledInput-input',
+    content: (
+      <div>
+        <p>Enter 5 in Connection delayS</p>
+      </div>
+    ),
+    collectionIndex: 4 
+  }  
+  ,{
+    target: 'MuiBottomNavigationAction-wrapper',
+    content: (
+      <div>
+        <p>Click on PRE-SYNAPTIC CELLS CONDITIONS</p>
+      </div>
+    ),
+    collectionIndex: 3 
+  },
 ]
 export default tutorial_steps ;
