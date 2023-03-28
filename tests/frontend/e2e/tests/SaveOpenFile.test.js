@@ -244,4 +244,105 @@ describe('Save / Open File testing', () => {
         console.log('Model updated')
     })
 
+    it('Save model', async () => {
+        console.log('Saving model ...')
+
+        await page.click(selectors.FILE_TAB_SELECTOR)
+        await page.waitForSelector(selectors.NEW_FILE_SELECTOR, { timeout: PAGE_WAIT * 3 })
+        await page.waitForTimeout(PAGE_WAIT)
+        await page.evaluate(async () => {
+            document.getElementById("Save...").click();
+        })
+        await page.waitForSelector('h2[class="MuiTypography-root MuiTypography-h6"]')
+
+        const inputValue = await page.$eval('input[class="MuiInputBase-input MuiFilledInput-input MuiInputBase-inputAdornedStart MuiFilledInput-inputAdornedStart"]', el => el.value);
+        await page.click('input[class="MuiInputBase-input MuiFilledInput-input MuiInputBase-inputAdornedStart MuiFilledInput-inputAdornedStart"]', { clickCount: 3 });
+        await page.waitForTimeout(PAGE_WAIT)
+
+        expect(page).toFill('input[class="MuiInputBase-input MuiFilledInput-input MuiInputBase-inputAdornedStart MuiFilledInput-inputAdornedStart"]', '/home/jovyan/work/NetPyNE-UI/workspace/uploads/aut_test')
+        await page.waitForTimeout(PAGE_WAIT * 2)
+        await page.click('#appBarPerformActionButton')
+        await page.waitForTimeout(PAGE_WAIT)
+
+        console.log('Model saved as default')
+    })
+
+    it('Save model - NetParams', async () => {
+        console.log('Saving model with NetParams as Python ...')
+
+        await page.click(selectors.FILE_TAB_SELECTOR)
+        await page.waitForSelector(selectors.NEW_FILE_SELECTOR, { timeout: PAGE_WAIT * 3 })
+        await page.waitForTimeout(PAGE_WAIT)
+        await page.evaluate(async () => {
+            document.getElementById("Save...").click();
+        })
+        await page.waitForSelector('h2[class="MuiTypography-root MuiTypography-h6"]')
+
+        const inputValue = await page.$eval('input[class="MuiInputBase-input MuiFilledInput-input MuiInputBase-inputAdornedStart MuiFilledInput-inputAdornedStart"]', el => el.value);
+        for (let i = 0; i < inputValue.length; i++) {
+            await page.keyboard.press('Backspace');
+        }
+
+        expect(page).toFill('input[class="MuiInputBase-input MuiFilledInput-input MuiInputBase-inputAdornedStart MuiFilledInput-inputAdornedStart"]', '/home/jovyan/work/NetPyNE-UI/workspace/uploads/aut_test_net_params')
+        await page.waitForTimeout(PAGE_WAIT)
+
+        await page.evaluate(() => {
+            [...document.querySelectorAll('.MuiAccordionSummary-content')].find(element => element.innerText === "Advanced Options").click();
+        });
+
+        await page.waitForSelector('ul[class="MuiList-root MuiList-padding"]')
+        await page.waitForSelector('input[type="checkbox"]')
+        await page.waitForTimeout(PAGE_WAIT)
+
+        const checkbox_buttons = await page.$$('input[type="checkbox"]')
+
+        await checkbox_buttons[0].click()
+        await page.waitForTimeout(PAGE_WAIT)
+
+        await page.waitForTimeout(PAGE_WAIT)
+        await page.click('#appBarPerformActionButton')
+        await page.waitForTimeout(PAGE_WAIT)
+
+        console.log('Model saved with NetParams as Python')
+
+    })
+
+    it('Save model - SimConfig', async () => {
+        console.log('Saving model with SimConfig as Python ...')
+
+        await page.click(selectors.FILE_TAB_SELECTOR)
+        await page.waitForSelector(selectors.NEW_FILE_SELECTOR, { timeout: PAGE_WAIT * 3 })
+        await page.waitForTimeout(PAGE_WAIT)
+        await page.evaluate(async () => {
+            document.getElementById("Save...").click();
+        })
+        await page.waitForSelector('h2[class="MuiTypography-root MuiTypography-h6"]')
+
+        const inputValue = await page.$eval('input[class="MuiInputBase-input MuiFilledInput-input MuiInputBase-inputAdornedStart MuiFilledInput-inputAdornedStart"]', el => el.value);
+        for (let i = 0; i < inputValue.length; i++) {
+            await page.keyboard.press('Backspace');
+        }
+
+        expect(page).toFill('input[class="MuiInputBase-input MuiFilledInput-input MuiInputBase-inputAdornedStart MuiFilledInput-inputAdornedStart"]', '/home/jovyan/work/NetPyNE-UI/workspace/uploads/aut_test_sim_config')
+        await page.waitForTimeout(PAGE_WAIT)
+
+        await page.evaluate(() => {
+            [...document.querySelectorAll('.MuiAccordionSummary-content')].find(element => element.innerText === "Advanced Options").click();
+        });
+
+        await page.waitForSelector('ul[class="MuiList-root MuiList-padding"]')
+        await page.waitForSelector('input[type="checkbox"]')
+        await page.waitForTimeout(PAGE_WAIT)
+
+        const checkbox_buttons = await page.$$('input[type="checkbox"]')
+        await checkbox_buttons[1].click()
+        await page.waitForTimeout(PAGE_WAIT)
+
+        await page.waitForTimeout(PAGE_WAIT * 3)
+        await page.click('#appBarPerformActionButton')
+        await page.waitForTimeout(PAGE_WAIT)
+        console.log('Model saved with SimConfig as Python')
+
+    })
+
 })
