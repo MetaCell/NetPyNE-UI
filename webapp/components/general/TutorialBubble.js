@@ -9,9 +9,9 @@ const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutoria
   };
 
 
-  function isVisible(el) {
-    return Boolean(el.offsetParent || el.offsetWidth || el.offsetHeight);
-}
+//   function isVisible(el) {
+//     return Boolean(el.offsetParent || el.offsetWidth || el.offsetHeight);
+// }
 
   const getDOMTarget = (target, config) => {
     // We query the DOM with the selector
@@ -31,11 +31,12 @@ const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutoria
     }
 
     // we pass the element index as configuration or 0 by default
-    const DOMTarget = DOMtargets[config?.collectionIndex || 0 ];
-    if (isVisible(DOMTarget)) {
-      return DOMTarget;
-    }
-    return null;
+    return DOMtargets[config?.collectionIndex || 0 ];
+    // const DOMTarget = DOMtargets[config?.collectionIndex || 0 ];
+    // if (isVisible(DOMTarget)) {
+    //   return DOMTarget;
+    // }
+    // return null;
   }
 
   function calculateVisiblePosition(rect1, width2, height2) {
