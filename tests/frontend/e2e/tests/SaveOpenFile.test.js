@@ -87,4 +87,71 @@ describe('Save / Open File testing', () => {
 
     })
 
+    it('Open model from File > Open', async () => {
+        console.log('Opening model from File')
+
+        await page.waitForTimeout(PAGE_WAIT * 2)
+        await page.waitForSelector(selectors.FILE_TAB_SELECTOR)
+        await page.click(selectors.FILE_TAB_SELECTOR)
+        await page.waitForSelector(selectors.NEW_FILE_SELECTOR, { timeout: PAGE_WAIT * 3 })
+        await page.waitForTimeout(PAGE_WAIT)
+
+        await page.evaluate(async () => {
+            document.getElementById("Open...").click();
+        })
+
+        await page.waitForSelector('.ReactVirtualized__Grid__innerScrollContainer')
+        await page.click('.fa-level-up')
+        await page.waitForTimeout(PAGE_WAIT)
+        await page.waitForSelector('div[class = "rst__rowContents rst__rowContentsDragDisabled"]')
+
+        const folder_num = await page.$$('div[class = "rst__rowContents rst__rowContentsDragDisabled"]')
+
+        await page.evaluate(() => {
+            [...document.querySelectorAll('div[class = "rst__rowContents rst__rowContentsDragDisabled"]')].find(element => element.textContent === 'src').click();
+        });
+
+        await page.waitForTimeout(PAGE_WAIT)
+
+        const folder_num_src = await page.$$('div[class = "rst__rowContents rst__rowContentsDragDisabled"]')
+
+        expect(folder_num_src.length).toBeGreaterThan(folder_num.length)
+
+        await page.evaluate(() => {
+            [...document.querySelectorAll('div[class = "rst__rowContents rst__rowContentsDragDisabled"]')].find(element => element.textContent === 'netpyne').click();
+        });
+        await page.waitForTimeout(PAGE_WAIT)
+
+        const folder_num_netpyne = await page.$$('div[class = "rst__rowContents rst__rowContentsDragDisabled"]')
+        expect(folder_num_netpyne.length).toBeGreaterThan(folder_num_src.length)
+
+        await page.evaluate(() => {
+            [...document.querySelectorAll('div[class = "rst__rowContents rst__rowContentsDragDisabled"]')].find(element => element.textContent === 'examples').scrollIntoView();
+        });
+
+        await page.evaluate(() => {
+            [...document.querySelectorAll('div[class = "rst__rowContents rst__rowContentsDragDisabled"]')].find(element => element.textContent === 'examples').click();
+        });
+        await page.waitForTimeout(PAGE_WAIT * 2)
+
+
+        await page.evaluate(() => {
+            [...document.querySelectorAll('div[class = "rst__rowContents rst__rowContentsDragDisabled"]')].find(element => element.textContent === 'HybridTut').scrollIntoView();
+        });
+        await page.evaluate(() => {
+            [...document.querySelectorAll('div[class = "rst__rowContents rst__rowContentsDragDisabled"]')].find(element => element.textContent === 'netClamp').click();
+        });
+        await page.waitForTimeout(PAGE_WAIT * 2)
+
+        const folder_num_netClamp = await page.$$('div[class = "rst__rowContents rst__rowContentsDragDisabled"]')
+        expect(folder_num_netClamp.length).toBeGreaterThan(folder_num_netpyne.length)
+
+        await page.click('#browserAccept')
+
+        await page.waitForSelector('#Erule')
+
+        console.log('Model Loaded')
+
+    })
+
 })
