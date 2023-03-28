@@ -345,4 +345,180 @@ describe('Save / Open File testing', () => {
 
     })
 
+    it('Check default Saved Model', async () => {
+        console.log('Checking default saved model ...')
+        await page.waitForTimeout(PAGE_WAIT * 2)
+        await page.waitForSelector('div[title="Python"]')
+
+        await page.click('div[title="Python"]')
+        await page.waitForSelector('#pythonConsoleOutput')
+
+        const elementHandle = await page.waitForSelector(
+            '#pythonConsoleFrame'
+        );
+
+        const python_frame = await elementHandle.contentFrame();
+
+        await python_frame.waitForSelector('#ipython-main-app')
+
+        await python_frame.waitForSelector('div.inner_cell')
+        const line = await python_frame.$('div.inner_cell')
+        await line.click()
+        await line.type('pwd')
+
+        await page.keyboard.down('Shift');
+        await page.keyboard.press('Enter');
+        await page.keyboard.up('Shift');
+
+        await python_frame.waitForSelector('div[class="output_subarea output_text output_result"]')
+
+        await page.waitForTimeout(PAGE_WAIT * 3)
+
+        const first_code_output = await python_frame.$$eval('div[class="output_subarea output_text output_result"]', pwd_code_outputs => {
+            return pwd_code_outputs.map(pwd_code_output => pwd_code_output.innerText)
+        })
+
+        expect(first_code_output[0]).toBe("'/home/jovyan/work/NetPyNE-UI/workspace'")
+
+        const code_lines = await python_frame.$$('div.inner_cell')
+
+        await code_lines[1].type('cd uploads/aut_test/src')
+
+        await page.keyboard.down('Shift');
+        await page.keyboard.press('Enter');
+        await page.keyboard.up('Shift');
+
+        await page.waitForTimeout(PAGE_WAIT * 3)
+
+        const second_code_output = await python_frame.$$eval('div[class="output_subarea output_text output_stream output_stdout"]', cd_code_outputs => {
+            return cd_code_outputs.map(cd_code_output => cd_code_output.innerText)
+        })
+
+        expect(second_code_output[0]).toBe("/home/jovyan/work/NetPyNE-UI/workspace/uploads/aut_test/src\n")
+
+        const ls_code_lines = await python_frame.$$('div.inner_cell')
+
+        await ls_code_lines[1].type('ls -l')
+
+        await page.keyboard.down('Shift');
+        await page.keyboard.press('Enter');
+        await page.keyboard.up('Shift');
+
+        await page.waitForTimeout(PAGE_WAIT * 3)
+
+        const third_code_output = await python_frame.$$eval('div[class="output_subarea output_text output_stream output_stdout"]', ls_code_outputs => {
+            return ls_code_outputs.map(ls_code_output => ls_code_output.innerText)
+        })
+
+        expect(third_code_output[1]).toContain("cfg.json")
+        expect(third_code_output[1]).toContain("netParams.json")
+
+        console.log('Model saved correctly')
+
+    })
+
+    it('Check netParams.py Saved Model', async () => {
+        console.log('Checking netParams.py saved model ...')
+
+        await page.waitForSelector('#pythonConsoleOutput')
+
+        const elementHandle = await page.waitForSelector(
+            '#pythonConsoleFrame'
+        );
+
+        const python_frame = await elementHandle.contentFrame();
+
+        await python_frame.waitForSelector('#ipython-main-app')
+
+        const cd_code_lines = await python_frame.$$('div.inner_cell')
+
+        await cd_code_lines[2].type('cd ../../')
+
+        await page.keyboard.down('Shift');
+        await page.keyboard.press('Enter');
+        await page.keyboard.up('Shift');
+
+        await page.waitForTimeout(PAGE_WAIT * 3)
+
+        const net_code_lines = await python_frame.$$('div.inner_cell')
+
+        await net_code_lines[3].type('cd aut_test_net_params/src')
+        await page.keyboard.down('Shift');
+        await page.keyboard.press('Enter');
+        await page.keyboard.up('Shift');
+
+        await page.waitForTimeout(PAGE_WAIT * 3)
+
+        const ls_code_lines = await python_frame.$$('div.inner_cell')
+
+        await ls_code_lines[3].type('ls -l')
+
+        await page.keyboard.down('Shift');
+        await page.keyboard.press('Enter');
+        await page.keyboard.up('Shift');
+
+        await page.waitForTimeout(PAGE_WAIT * 3)
+
+        const netParam_code_output = await python_frame.$$eval('div[class="output_subarea output_text output_stream output_stdout"]', np_code_outputs => {
+            return np_code_outputs.map(np_code_output => np_code_output.innerText)
+        })
+
+        expect(netParam_code_output[4]).toContain("cfg.json")
+        expect(netParam_code_output[4]).toContain("netParams.py")
+
+        console.log('Model saved correctly')
+    })
+
+    it('Check cfg.py Saved Model', async () => {
+        console.log('Checking cfg.py saved model ...')
+
+        await page.waitForSelector('#pythonConsoleOutput')
+
+        const elementHandle = await page.waitForSelector(
+            '#pythonConsoleFrame'
+        );
+
+        const python_frame = await elementHandle.contentFrame();
+
+        await python_frame.waitForSelector('#ipython-main-app')
+
+        const cd_code_lines = await python_frame.$$('div.inner_cell')
+
+        await cd_code_lines[4].type('cd ../../')
+
+        await page.keyboard.down('Shift');
+        await page.keyboard.press('Enter');
+        await page.keyboard.up('Shift');
+
+        await page.waitForTimeout(PAGE_WAIT * 3)
+
+        const net_code_lines = await python_frame.$$('div.inner_cell')
+
+        await net_code_lines[5].type('cd aut_test_sim_config/src')
+        await page.keyboard.down('Shift');
+        await page.keyboard.press('Enter');
+        await page.keyboard.up('Shift');
+
+        await page.waitForTimeout(PAGE_WAIT * 3)
+
+        const ls_code_lines = await python_frame.$$('div.inner_cell')
+
+        await ls_code_lines[6].type('ls -l')
+
+        await page.keyboard.down('Shift');
+        await page.keyboard.press('Enter');
+        await page.keyboard.up('Shift');
+
+        await page.waitForTimeout(PAGE_WAIT * 3)
+
+        const simConfig_code_output = await python_frame.$$eval('div[class="output_subarea output_text output_stream output_stdout"]', sc_code_outputs => {
+            return sc_code_outputs.map(sc_code_output => sc_code_output.innerText)
+        })
+
+        expect(simConfig_code_output[7]).toContain("cfg.py")
+        expect(simConfig_code_output[7]).toContain("netParams.json")
+        console.log('Model saved correctly')
+
+    })
+
 })
