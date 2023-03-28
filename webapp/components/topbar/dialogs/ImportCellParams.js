@@ -133,6 +133,7 @@ class ImportCellParams extends React.Component {
 
         <NetPyNEField id="netParams.importCellParams.fileName">
           <TextField
+            id="importCellParamsFileName"
             variant="filled"
             fullWidth
             value={fileName}
@@ -155,6 +156,7 @@ class ImportCellParams extends React.Component {
 
         <NetPyNEField id="netParams.importCellParams.modFolder">
           <TextField
+            id="importCellParamsModFolder"
             fullWidth
             variant="filled"
             value={modFolder}
