@@ -239,7 +239,7 @@ const tutorial_steps = [
         <p>Click on PRE-SYNAPTIC CELLS CONDITIONS</p>
       </div>
     ),
-    collectionIndex: 2 
+    collectionIndex: 1 
   },
   {
     target: 'MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiSelect-filled MuiInputBase-input MuiFilledInput-input',
@@ -281,10 +281,192 @@ const tutorial_steps = [
     target: 'MuiBottomNavigationAction-wrapper',
     content: (
       <div>
-        <p>Click on PRE-SYNAPTIC CELLS CONDITIONS</p>
+        <p>Click on POST-SYNAPTIC CELLS CONDITIONS</p>
       </div>
     ),
-    collectionIndex: 3 
+    collectionIndex: 2 
   },
+  ,{
+    target: 'netParamsconnParamsConnectivityRule0postCondspop',
+    content: (
+      <div>
+        <p>Select E for the Population</p>
+      </div>
+    )
+  }
+  ,{
+    target: 'MuiButtonBase-root MuiButton-root MuiButton-contained MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedContained MuiButtonGroup-groupedContainedHorizontal MuiButtonGroup-groupedContainedPrimary MuiButton-containedPrimary',
+    content: (
+      <div>
+        <p>CREATE NETWORK</p>
+      </div>
+    ),
+    collectionIndex: 0 
+  }
+  ,{
+    target: 'MuiButtonBase-root MuiListItem-root makeStyles-selected-23 MuiListItem-dense MuiListItem-button',
+    content: (
+      <div>
+        <p>Generate a 2D Net Plot</p>
+      </div>
+    ),
+    collectionIndex: 2 
+  }
+  ,{
+    target: 'MuiButtonBase-root MuiButton-root MuiButton-contained',
+    content: (
+      <div>
+        <p>Now we can see our connectivity</p>
+        <p>Click BACK TO EDIT when you are ready to continue</p>
+      </div>
+    ),
+    collectionIndex: 6
+  }
+  ,{
+    target: 'flexlayout__tab_button_content',
+    content: (
+      <div>
+        <p>Click on Stim. Sources in tabs or sidebar</p>
+      </div>
+    ),
+    collectionIndex: 4
+  }
+  , {
+    target: '#newStimulationSourceButton',
+    content: (
+      <div>
+        <p>Click on + above Source</p>
+      </div>
+    ),
+    collectionIndex: 4
+  }
+  //stimulation input rules
+  , {
+    target: 'MuiInputBase-input MuiFilledInput-input',
+    content: (
+      <div>
+        <p>Type “IClamp1” in The name of the stimulation source</p>
+      </div>
+    ),
+    collectionIndex: 2
+  }
+  , {
+    target: 'MuiInputBase-input MuiFilledInput-input',
+    content: (
+      <div>
+        <p>Leave the default IClamp as the Point process used as stimulator</p>
+      </div>
+    ),
+    collectionIndex: 3
+  }
+  , {
+    target: 'MuiInputBase-input MuiFilledInput-input',
+    content: (
+      <div>
+        <p>Set Current clamp delay to 20</p>
+      </div>
+    ),
+    collectionIndex: 4
+  }
+  , {
+    target: 'MuiInputBase-input MuiFilledInput-input',
+    content: (
+      <div>
+        <p>Set Current clamp duration to 5</p>
+      </div>
+    ),
+    collectionIndex: 5
+  }
+  , {
+    target: 'MuiInputBase-input MuiFilledInput-input',
+    content: (
+      <div>
+        <p>Set Current clamp amplitude to 0.1 </p>
+      </div>
+    ),
+    collectionIndex: 6
+  }
+  //steam targets
+  , {
+    target: 'flexlayout__tab_button_content',
+    content: (
+      <div>
+        <p>Click on Stim. Targets in tabs or sidebar</p>
+      </div>
+    ),
+    collectionIndex: 5
+  }
+  , {
+    target: '#newStimulationTargetButton',
+    content: (
+      <div>
+        <p>CClick on + above Target</p>
+      </div>
+    )
+  }
+  , {
+    target: 'MuiInputBase-input MuiFilledInput-input',
+    content: (
+      <div>
+        <p>Type “IClamp1->cell0” in The name of the stimulation target </p>
+      </div>
+    ),
+    collectionIndex: 10
+  }
+  , {
+    target: 'MuiInputBase-input MuiFilledInput-input',
+    content: (
+      <div>
+        <p>Set Stimulation source to IClamp1</p>
+      </div>
+    ),
+    collectionIndex: 11
+  }
+  , {
+    target: 'MuiInputBase-input MuiFilledInput-input',
+    content: (
+      <div>
+        <p>Type “dend” in Target section</p>
+      </div>
+    ),
+    collectionIndex: 12
+  }
+  , {
+    target: 'MuiInputBase-input MuiFilledInput-input',
+    content: (
+      <div>
+        <p>Enter 1 in Target location</p>
+      </div>
+    ),
+    collectionIndex: 13
+  }
+  //conditions tab
+  , {
+    target: '#stimTargetCondsTab',
+    content: (
+      <div>
+        <p>Click on CONDITIONS</p>
+      </div>
+    )
+  }
+  , {
+    target: '#netParamsstimTargetParamsstim_target0condscellList',
+    content: (
+      <div>
+        <p>Enter 0 in Add new Target cell global indices</p>
+        <p>Click the + on the right</p>
+      </div>
+    )
+  }
+  , {
+    target: 'MuiInputBase-input MuiFilledInput-input',
+    content: (
+      <div>
+        <p>Click on Configuration in the tabs or sidebar</p>
+      </div>
+    ),
+    collectionIndex: 8
+  }
+  //COnfiguration
 ]
 export default tutorial_steps ;
