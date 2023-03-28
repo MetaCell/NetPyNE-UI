@@ -468,5 +468,180 @@ const tutorial_steps = [
     collectionIndex: 8
   }
   //COnfiguration
+  , {
+    target: '#simConfigduration',
+    content: (
+      <div>
+        <p>Change the Duration to 200</p>
+      </div>
+    )
+  }
+  , {
+    target: 'MuiBox-root MuiBox-root-391',
+    content: (
+      <div>
+        <p>Change the Time Step to 0.1</p>
+      </div>
+    ),
+    collectionIndex: 0
+  }
+  , {
+    target: 'MuiBottomNavigationAction-wrapper',
+    content: (
+      <div>
+        <p>Click on RECORD</p>
+      </div>
+    ),
+    collectionIndex: 3
+  }
+  , {
+    target: '#simConfigrecordCells',
+    content: (
+      <div>
+        <p>Enter 0 in Add new Cells to record traces from</p>
+      </div>
+    )
+  }
+  , {
+    target: '#simConfigrecordTraces-button',
+    content: (
+      <div>
+        <p>Click the + on the right</p>
+        <p>Type "V_dend... TODO FORMAT'</p>
+      </div>
+    )
+  }
+  //Plot Settings
+  , {
+    target: 'flexlayout__tab_button flexlayout__tab_button_top flexlayout__tab_button--unselected',
+    content: (
+      <div>
+        <p>We want to overlay the voltage traces from soma and dend</p>
+        <p>Go to Plot Settings</p>
+      </div>
+    ),
+    collectionIndex: 3
+  }
+  , {
+    target: 'MuiButtonBase-root MuiFab-root MuiFab-sizeSmall MuiFab-primary',
+    content: (
+      <div>
+        <p>Click the + </p>
+      </div>
+    ),
+    collectionIndex: 3
+  }
+  , {
+    target: 'MuiButtonBase-root MuiListItem-root MuiMenuItem-root MuiMenuItem-gutters MuiListItem-gutters MuiListItem-button',
+    content: (
+      <div>
+        <p>Click on Traces Plot</p>
+      </div>
+    ),
+    collectionIndex: 0
+  }    
+  , {
+    target: 'MuiBox-root MuiBox-root-451',
+    content: (
+      <div>
+        <p>Click in Cells to include then click gids then click cell 0</p>
+      </div>
+    ),
+    collectionIndex: 0
+  }
+  , {
+    target: 'MuiBox-root MuiBox-root-451',
+    content: (
+      <div>
+        <p>Click in Cells to include then click gids then click cell 0</p>
+      </div>
+    ),
+    collectionIndex: 0
+  } 
+  , {
+    target: 'MuiButtonBase-root MuiListItem-root MuiMenuItem-root MuiMenuItem-gutters MuiListItem-gutters MuiListItem-button',
+    content: (
+      <div>
+        <p>Click in Cells to include then click gids then click cell 0</p>
+      </div>
+    ),
+    collectionIndex: 3
+  }
+  , {
+    target: '#simConfiganalysisiplotTracesoverlay',
+    content: (
+      <div>
+        <p>Check the box next to overlay data</p>
+      </div>
+    )
+  }
+  , {
+    target: 'MuiButton-label',
+    content: (
+      <div>
+        <p>Click on UPDATE NETWORK</p>
+      </div>
+    ),
+    collectionIndex: 7
+  }
+  //run simulation
+  , {
+    target: 'material-icons MuiIcon-root',
+    content: (
+      <div>
+        <p>Click on the 🚀 to launch</p>
+        <p>Alternatively, in the menu bar, click Model and then Simulate network</p>
+        <p>Explore the analysis plots</p>
+      </div>
+    ),
+    collectionIndex: 1
+  }
+  //plots
+  , {
+    target: 'MuiListItemIcon-root makeStyles-icon-26',
+    content: (
+      <div>
+        <p>Raster plot</p>
+      </div>
+    ),
+    collectionIndex: 2
+  }
+  , {
+    target: 'MuiListItemIcon-root makeStyles-icon-26',
+    content: (
+      <div>
+        <p>Voltage traces</p>
+      </div>
+    ),
+    collectionIndex: 3
+  }
+  , {
+    target: 'MuiListItemIcon-root makeStyles-icon-26',
+    content: (
+      <div>
+        <p>Spike histogram</p>
+      </div>
+    ),
+    collectionIndex: 4
+  }
+  , {
+    target: 'MuiListItemIcon-root makeStyles-icon-26',
+    content: (
+      <div>
+        <p>Connectivity</p>
+      </div>
+    ),
+    collectionIndex: 5
+  }
+  //Clear the GUI
+  , {
+    target: '#File',
+    content: (
+      <div>
+        <p>In the menu bar, click File then New then Blank</p>
+        <p>This is necessary to clear the kernel when changing models/p>
+      </div>
+    )
+  }
 ]
 export default tutorial_steps ;
