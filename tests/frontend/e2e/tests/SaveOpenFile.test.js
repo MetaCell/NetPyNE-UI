@@ -154,4 +154,94 @@ describe('Save / Open File testing', () => {
 
     })
 
+    it('Create and Simulate opened model', async () => {
+        console.log('Instantiating and Simulating model...')
+
+        await page.waitForTimeout(PAGE_WAIT)
+
+        await page.waitForSelector('button[aria-label="select merge strategy"]')
+        await page.click('button[aria-label="select merge strategy"]')
+
+        await page.waitForSelector('#split-button-menu > li')
+        await page.evaluate(() => {
+            [...document.querySelectorAll('#split-button-menu > li')].find(element => element.innerText === 'CREATE AND SIMULATE').click();
+        });
+
+        await page.waitForSelector('div[aria-label="split button"]')
+        await page.click('div[aria-label="split button"]')
+
+        await page.waitForSelector('canvas', { timeout: TIMEOUT * 2 });
+
+        await page.waitForSelector('div[title="Raster plot"][aria-disabled="false"]', { timeout: TIMEOUT * 3 })
+
+        console.log('... taking snapshot ...');
+        await page.waitForTimeout(PAGE_WAIT)
+        expect(await page.screenshot())
+            .toMatchImageSnapshot({
+                ...SNAPSHOT_OPTIONS,
+                customSnapshotIdentifier: 'NetClamp Model'
+            });
+        console.log('Model Simulated')
+    })
+
+    it('Change the instantiated model', async () => {
+        console.log('Editing model ...')
+
+        await page.evaluate(() => {
+            [...document.querySelectorAll('button[class = "MuiButtonBase-root MuiButton-root MuiButton-contained"]')].find(element => element.innerText === 'BACK TO EDIT').click();
+        });
+        await page.waitForSelector('div[title="Populations"]')
+        await page.click('div[title="Populations"]')
+        await page.waitForSelector('#E2')
+
+        await page.click('#E2')
+        await page.waitForSelector('#netParamspopParamsE2numCells')
+        expect(page).toFill('#netParamspopParamsE2numCells', '5')
+        await page.waitForTimeout(PAGE_WAIT * 2)
+
+        await page.click('#I2')
+        await page.waitForSelector('#netParamspopParamsI2numCells')
+        expect(page).toFill('#netParamspopParamsI2numCells', '5')
+        await page.waitForTimeout(PAGE_WAIT * 2)
+
+        await page.click('#E4')
+        await page.waitForSelector('#netParamspopParamsE4numCells')
+        expect(page).toFill('#netParamspopParamsE4numCells', '5')
+        await page.waitForTimeout(PAGE_WAIT * 2)
+
+        await page.click('#I4')
+        await page.waitForSelector('#netParamspopParamsI4numCells')
+        expect(page).toFill('#netParamspopParamsI4numCells', '5')
+        await page.waitForTimeout(PAGE_WAIT * 2)
+
+        await page.click('#E5')
+        await page.waitForSelector('#netParamspopParamsE5numCells')
+        expect(page).toFill('#netParamspopParamsE5numCells', '5')
+        await page.waitForTimeout(PAGE_WAIT * 2)
+
+        await page.click('#I5')
+        await page.waitForSelector('#netParamspopParamsI5numCells')
+        expect(page).toFill('#netParamspopParamsI5numCells', '5')
+        await page.waitForTimeout(PAGE_WAIT * 2)
+
+        await page.waitForSelector(selectors.MODEL_BUTTON_SELECTOR, { timeout: TIMEOUT });
+        await page.click(selectors.MODEL_BUTTON_SELECTOR, { timeout: TIMEOUT });
+        await page.waitForSelector(selectors.CREATE_AND_SIMULATE_NETWORK_SELECTOR, { timeout: TIMEOUT });
+        await page.click(selectors.CREATE_AND_SIMULATE_NETWORK_SELECTOR, { timeout: TIMEOUT });
+
+        await page.waitForSelector('canvas', { timeout: TIMEOUT * 2 });
+
+        await page.waitForSelector('div[title="Raster plot"][aria-disabled="false"]', { timeout: TIMEOUT * 3 })
+
+        console.log('... taking snapshot ...');
+        await page.waitForTimeout(PAGE_WAIT)
+        expect(await page.screenshot())
+            .toMatchImageSnapshot({
+                ...SNAPSHOT_OPTIONS,
+                customSnapshotIdentifier: 'Edited NetClamp Model'
+            });
+
+        console.log('Model updated')
+    })
+
 })
