@@ -408,7 +408,7 @@ const tutorial_steps = [
     target: 'MuiInputBase-input MuiFilledInput-input',
     content: (
       <div>
-        <p>Type “IClamp1->cell0” in The name of the stimulation target </p>
+        <p>Type “IClamp1 cell0” in The name of the stimulation target </p>
       </div>
     ),
     collectionIndex: 10
@@ -639,7 +639,7 @@ const tutorial_steps = [
     content: (
       <div>
         <p>In the menu bar, click File then New then Blank</p>
-        <p>This is necessary to clear the kernel when changing models/p>
+        <p>This is necessary to clear the kernel when changing models</p>
       </div>
     )
   }
