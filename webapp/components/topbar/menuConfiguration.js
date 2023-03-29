@@ -296,7 +296,7 @@ export default {
               icon: '',
               action: {
                 handlerAction: 'triggerTutorials',
-                parameters: ['tutorial1'],
+                parameters: [0],
               },
             },
             {
@@ -304,7 +304,7 @@ export default {
               icon: '',
               action: {
                 handlerAction: 'triggerTutorials',
-                parameters: ['tutorial2'],
+                parameters: [1],
               },
             },
             {
@@ -312,7 +312,7 @@ export default {
               icon: '',
               action: {
                 handlerAction: 'triggerTutorials',
-                parameters: ['tutorial3'],
+                parameters: [2],
               },
             },
           ],

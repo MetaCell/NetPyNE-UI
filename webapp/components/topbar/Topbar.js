@@ -21,6 +21,11 @@ import ImportExportHLSDialog from './dialogs/ImportExportHLS';
 import ImportCellParamsDialog from './dialogs/ImportCellParams';
 import UploadDownloadFilesDialog from './dialogs/UploadDownloadFiles';
 
+import tutorial_steps from '../../redux/reducers/data/tutorial_steps';
+import tutorial2_steps from '../../redux/reducers/data/tutorial2_steps';
+import tutorial3_steps from '../../redux/reducers/data/tutorial3_steps';
+
+import { startTutorial } from '../../redux/actions/tutorials';
 import { TOPBAR_CONSTANTS, MODEL_STATE, DEFAULT_CONFIRMATION_DIALOG_MESSAGE, NETPYNE_COMMANDS } from '../../constants';
 import { LOAD_TUTORIAL } from '../../redux/actions/general';
 
@@ -107,7 +112,13 @@ class Topbar extends Component {
 
         break;
       }
-
+      case 'triggerTutorials': {
+        const [index] = click.parameters;
+        const tutorials = [tutorial_steps, tutorial2_steps, tutorial3_steps];
+        const action = startTutorial(tutorials[index]);
+        this.props.dispatchAction(action);
+        break;
+      }
       default:
         console.log(`Menu action not mapped, it is ${click}`);
     }

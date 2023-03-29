@@ -1,5 +1,5 @@
 import React from 'react';
-const tutorial_steps = [
+const tutorial2_steps = [
   {
     target: '#selectCellButton',
     content: (
@@ -141,4 +141,4 @@ const tutorial_steps = [
     )
   }
 ]
-export default tutorial_steps ;
+export default tutorial2_steps ;

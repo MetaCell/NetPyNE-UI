@@ -1,5 +1,5 @@
 import React from 'react';
-const tutorial_steps = [
+const tutorial3_steps = [
   {
     target: '#Tutorials',
     content: (
@@ -131,7 +131,7 @@ const tutorial_steps = [
     )
   },
 ]
-export default tutorial_steps ;
+export default tutorial3_steps ;
 
 
 // .MuiGrid-item .MuiButton-root:nth-last-child(2)  => CREATE_NETWORK/SIMULATE

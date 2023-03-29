@@ -17,7 +17,7 @@ export const TUTORIAL_DEFAULT_STATE = {
 export default (state = TUTORIAL_DEFAULT_STATE, action) => {
   switch (action.type) {
     case START_TUTORIAL:
-      return Object.assign(state, { tourRunning: true, requestedTourStep: 1 });
+      return Object.assign(state, { tourRunning: true, requestedTourStep: 1, steps: action.payload });
     case STOP_TUTORIAL:
       return Object.assign(state, { tourRunning: false });
     case INCREMENT_TUTORIAL_STEP:

@@ -12,7 +12,7 @@ import {
   LaunchDialog,
   TutorialObserver
 } from 'netpyne/components';
-import TutorialJoyride from './general/TutorialJoyride';
+
 
 const styles = ({ zIndex }) => ({
   root: {
@@ -80,7 +80,7 @@ class NetPyNE extends React.Component {
     }
   }
 
-  
+
 
   render () {
     const { classes } = this.props;
