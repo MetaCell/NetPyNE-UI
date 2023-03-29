@@ -844,12 +844,10 @@ class NetPyNEGeppetto:
         try:
             with redirect_stdout(sys.__stdout__):
                 availablePlots = self.checkAvailablePlots()
-                checkCondition = False
-                if plotName.replace('iplot', 'plot') in availablePlots.keys():
-                    checkCondition = availablePlots[plotName.replace('iplot', 'plot')]
+                checkCondition = availablePlots.get(plotName.replace('iplot', 'plot'), False)
 
                 if checkCondition is False:
-                    logging.info("Plot not available")
+                    logging.info("Plot " + plotName + " not available")
                     return -1
 
                 args = self.getPlotSettings(plotName)
