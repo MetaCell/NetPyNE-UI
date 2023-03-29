@@ -843,6 +843,13 @@ class NetPyNEGeppetto:
     def getPlot(self, plotName, LFPflavour, theme='gui'):
         try:
             with redirect_stdout(sys.__stdout__):
+                availablePlots = self.checkAvailablePlots()
+                checkCondition = availablePlots.get(plotName.replace('iplot', 'plot'), False)
+
+                if checkCondition is False:
+                    logging.info("Plot " + plotName + " not available")
+                    return -1
+
                 args = self.getPlotSettings(plotName)
                 if LFPflavour:
                     args['plots'] = [LFPflavour]
