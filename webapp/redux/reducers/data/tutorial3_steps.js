@@ -1,7 +1,7 @@
 import React from 'react';
 const tutorial3_steps = [
   {
-    target: '#Tutorials',
+    target: 'button[id="Template models"]',
     content: (
       <div>
         <p>Open the tutorial menu.</p>
@@ -9,7 +9,7 @@ const tutorial3_steps = [
     )
   },
   {
-    target: 'li[label*="Tut 3a:"]',
+    target: 'li[label*="Model 3a:"]',
     content: (
       <div>
         <p>Select the tutorial 3a.</p>
