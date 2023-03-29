@@ -26,56 +26,9 @@ const SNAPSHOT_OPTIONS = {
 
 let r = (Math.random() + 1).toString(36).substring(2);
 
-const EDITED_MODEL = `\"popParams\": {
-    \"E2\": {
-        \"cellType\": \"E\",
-        \"numCells\": 5,
-        \"yRange\": [
-            100,
-            300
-        ]
-    },
-    \"E4\": {
-        \"cellType\": \"E\",
-        \"numCells\": 5,
-        \"yRange\": [
-            300,
-            600
-        ]
-    },
-    \"E5\": {
-        \"cellType\": \"E\",
-        \"numCells\": 5,
-        \"ynormRange\": [
-            0.6,
-            1.0
-        ]
-    },
-    \"I2\": {
-        \"cellType\": \"I\",
-        \"numCells\": 5,
-        \"yRange\": [
-            100,
-            300
-        ]
-    },
-    \"I4\": {
-        \"cellType\": \"I\",
-        \"numCells\": 5,
-        \"yRange\": [
-            300,
-            600
-        ]
-    },
-    \"I5\": {
-        \"cellType\": \"I\",
-        \"numCells\": 5,
-        \"ynormRange\": [
-            0.6,
-            1.0
-        ]
-    }
-},`
+const EDITED_MODEL =
+    '{"E2": {"cellType": "E", "numCells": 5, "yRange": [100, 300]}, "E4": {"cellType": "E", "numCells": 5, "yRange": [300, 600]}, "E5": {"cellType": "E", "numCells": 5, "ynormRange": [0.6, 1]}, "I2": {"cellType": "I", "numCells": 5, "yRange": [100, 300]}, "I4": {"cellType": "I", "numCells": 5, "yRange": [300, 600]}, "I5": {"cellType": "I", "numCells": 5, "ynormRange": [0.6, 1]}}'
+
 
 //USERS:
 const USERNAME = `TestUser${r}`
@@ -573,7 +526,7 @@ describe('Save / Open File testing', () => {
 
     it('Check the edited Populations of the Saved Model', async () => {
 
-        console.log('Checking cfg.py saved model ...')
+        console.log('Checking the edited Populations of the saved model ...')
 
         await page.waitForSelector('#pythonConsoleOutput')
 
@@ -599,7 +552,9 @@ describe('Save / Open File testing', () => {
             return cat_code_outputs.map(cat_code_output => cat_code_output.innerText)
         })
 
-        expect(cat_code_output[8]).toContain(EDITED_MODEL)
+        var obj = JSON.parse(cat_code_output[8])
+
+        expect(obj.net.params.popParams).toEqual(JSON.parse(EDITED_MODEL))
 
     })
 
