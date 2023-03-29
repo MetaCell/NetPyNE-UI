@@ -264,7 +264,7 @@ export default {
       },
     },
     {
-      label: 'Tutorials',
+      label: 'Template models',
       icon: '',
       position: 'bottom-start',
       style: topLevelMenuItemStyle,
@@ -286,6 +286,36 @@ export default {
             handlerAction: TOPBAR_CONSTANTS.NEW_PAGE,
             parameters: ['http://netpyne.org/'],
           },
+        },
+        {
+          label: 'Tutorials',
+          icon: '',
+          list: [
+            {
+              label: 'Open tutorial 1',
+              icon: '',
+              action: {
+                handlerAction: 'triggerTutorials',
+                parameters: ['tutorial1'],
+              },
+            },
+            {
+              label: 'Open tutorial 2',
+              icon: '',
+              action: {
+                handlerAction: 'triggerTutorials',
+                parameters: ['tutorial2'],
+              },
+            },
+            {
+              label: 'Open tutorial 3',
+              icon: '',
+              action: {
+                handlerAction: 'triggerTutorials',
+                parameters: ['tutorial3'],
+              },
+            },
+          ],
         },
       ],
     },

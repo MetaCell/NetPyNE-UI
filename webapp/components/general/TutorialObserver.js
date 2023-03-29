@@ -1,5 +1,4 @@
 import React, {useEffect, useState, useRef} from 'react';
-import tutorial_steps from '../../redux/reducers/data/tutorial_steps';
 import TutorialBubble from './TutorialBubble';
 
 export default function TutorialObserver(props) {
@@ -35,10 +34,10 @@ export default function TutorialObserver(props) {
   }, []);
 
   const startTutorialCallBack = () => {
-    startTutorialStep();  
+    startTutorialStep();
   }
 
-  return ( 
+  return (
     <>
       {children}
       <button onClick={ () => { startTutorialCallBack() }}>RESET TUTORIAL</button>
