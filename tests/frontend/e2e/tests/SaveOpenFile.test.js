@@ -557,7 +557,4 @@ describe('Save / Open File testing', () => {
         expect(obj.net.params.popParams).toEqual(JSON.parse(EDITED_MODEL))
 
     })
-
-
-
 })
