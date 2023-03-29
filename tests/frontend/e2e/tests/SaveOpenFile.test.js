@@ -103,12 +103,12 @@ describe('Save / Open File testing', () => {
             document.getElementById("Open...").click();
         })
 
-        await page.waitForSelector('.ReactVirtualized__Grid__innerScrollContainer')
-        await page.click('.fa-level-up')
+        await page.waitForSelector(selectors.FILE_SYSTEM_SELECTOR)
+        await page.click(selectors.LEVEL_UP_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT)
-        await page.waitForSelector('div[class = "rst__rowContents rst__rowContentsDragDisabled"]')
+        await page.waitForSelector(selectors.FOLDERS_SELECTOR)
 
-        const folder_num = await page.$$('div[class = "rst__rowContents rst__rowContentsDragDisabled"]')
+        const folder_num = await page.$$(selectors.FOLDERS_SELECTOR)
 
         await page.evaluate(() => {
             [...document.querySelectorAll('div[class = "rst__rowContents rst__rowContentsDragDisabled"]')].find(element => element.textContent === 'src').click();
@@ -116,7 +116,7 @@ describe('Save / Open File testing', () => {
 
         await page.waitForTimeout(PAGE_WAIT)
 
-        const folder_num_src = await page.$$('div[class = "rst__rowContents rst__rowContentsDragDisabled"]')
+        const folder_num_src = await page.$$(selectors.FOLDERS_SELECTOR)
 
         expect(folder_num_src.length).toBeGreaterThan(folder_num.length)
 
@@ -125,7 +125,7 @@ describe('Save / Open File testing', () => {
         });
         await page.waitForTimeout(PAGE_WAIT)
 
-        const folder_num_netpyne = await page.$$('div[class = "rst__rowContents rst__rowContentsDragDisabled"]')
+        const folder_num_netpyne = await page.$$(selectors.FOLDERS_SELECTOR)
         expect(folder_num_netpyne.length).toBeGreaterThan(folder_num_src.length)
 
         await page.evaluate(() => {
@@ -146,12 +146,12 @@ describe('Save / Open File testing', () => {
         });
         await page.waitForTimeout(PAGE_WAIT * 2)
 
-        const folder_num_netClamp = await page.$$('div[class = "rst__rowContents rst__rowContentsDragDisabled"]')
+        const folder_num_netClamp = await page.$$(selectors.FOLDERS_SELECTOR)
         expect(folder_num_netClamp.length).toBeGreaterThan(folder_num_netpyne.length)
 
-        await page.click('#browserAccept')
+        await page.click(selectors.SELECT_BUTTON_SELECTOR)
 
-        await page.waitForSelector('#Erule')
+        await page.waitForSelector(selectors.E_RULE_SELECTOR)
 
         console.log('Model Loaded')
 
@@ -162,20 +162,20 @@ describe('Save / Open File testing', () => {
 
         await page.waitForTimeout(PAGE_WAIT)
 
-        await page.waitForSelector('button[aria-label="select merge strategy"]')
-        await page.click('button[aria-label="select merge strategy"]')
+        await page.waitForSelector(selectors.NETWORK_CREATION_MENU_BUTTON_SELECTOR)
+        await page.click(selectors.NETWORK_CREATION_MENU_BUTTON_SELECTOR)
 
-        await page.waitForSelector('#split-button-menu > li')
+        await page.waitForSelector(selectors.NETWORK_CREATION_MENU_ITEMS_SELECTOR)
         await page.evaluate(() => {
             [...document.querySelectorAll('#split-button-menu > li')].find(element => element.innerText === 'CREATE AND SIMULATE').click();
         });
 
-        await page.waitForSelector('div[aria-label="split button"]')
-        await page.click('div[aria-label="split button"]')
+        await page.waitForSelector(selectors.NETWORK_CREATION_BUTTON_SELECTOR)
+        await page.click(selectors.NETWORK_CREATION_BUTTON_SELECTOR)
 
-        await page.waitForSelector('canvas', { timeout: TIMEOUT * 2 });
+        await page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT * 2 });
 
-        await page.waitForSelector('div[title="Raster plot"][aria-disabled="false"]', { timeout: TIMEOUT * 3 })
+        await page.waitForSelector(selectors.RASTER_PLOT_SELECTOR, { timeout: TIMEOUT * 3 })
 
         console.log('... taking snapshot ...');
         await page.waitForTimeout(PAGE_WAIT)
@@ -193,8 +193,8 @@ describe('Save / Open File testing', () => {
         await page.evaluate(() => {
             [...document.querySelectorAll('button[class = "MuiButtonBase-root MuiButton-root MuiButton-contained"]')].find(element => element.innerText === 'BACK TO EDIT').click();
         });
-        await page.waitForSelector('div[title="Populations"]')
-        await page.click('div[title="Populations"]')
+        await page.waitForSelector(selectors.POPULATIONS_TAB_SELECTOR)
+        await page.click(selectors.POPULATIONS_TAB_SELECTOR)
         await page.waitForSelector('#E2')
 
         await page.click('#E2')
@@ -232,9 +232,9 @@ describe('Save / Open File testing', () => {
         await page.waitForSelector(selectors.CREATE_AND_SIMULATE_NETWORK_SELECTOR, { timeout: TIMEOUT });
         await page.click(selectors.CREATE_AND_SIMULATE_NETWORK_SELECTOR, { timeout: TIMEOUT });
 
-        await page.waitForSelector('canvas', { timeout: TIMEOUT * 2 });
+        await page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT * 2 });
 
-        await page.waitForSelector('div[title="Raster plot"][aria-disabled="false"]', { timeout: TIMEOUT * 3 })
+        await page.waitForSelector(selectors.RASTER_PLOT_SELECTOR, { timeout: TIMEOUT * 3 })
 
         console.log('... taking snapshot ...');
         await page.waitForTimeout(PAGE_WAIT)
@@ -256,15 +256,15 @@ describe('Save / Open File testing', () => {
         await page.evaluate(async () => {
             document.getElementById("Save...").click();
         })
-        await page.waitForSelector('h2[class="MuiTypography-root MuiTypography-h6"]')
+        await page.waitForSelector(selectors.SAVE_MENU_SELECTOR)
 
-        const inputValue = await page.$eval('input[class="MuiInputBase-input MuiFilledInput-input MuiInputBase-inputAdornedStart MuiFilledInput-inputAdornedStart"]', el => el.value);
-        await page.click('input[class="MuiInputBase-input MuiFilledInput-input MuiInputBase-inputAdornedStart MuiFilledInput-inputAdornedStart"]', { clickCount: 3 });
+        const inputValue = await page.$eval(selectors.PATH_INPUT_SELECTOR, el => el.value);
+        await page.click(selectors.PATH_INPUT_SELECTOR, { clickCount: 3 });
         await page.waitForTimeout(PAGE_WAIT)
 
-        expect(page).toFill('input[class="MuiInputBase-input MuiFilledInput-input MuiInputBase-inputAdornedStart MuiFilledInput-inputAdornedStart"]', '/home/jovyan/work/NetPyNE-UI/workspace/uploads/aut_test')
+        expect(page).toFill(selectors.PATH_INPUT_SELECTOR, '/home/jovyan/work/NetPyNE-UI/workspace/uploads/aut_test')
         await page.waitForTimeout(PAGE_WAIT * 2)
-        await page.click('#appBarPerformActionButton')
+        await page.click(selectors.SAVE_BUTTON_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT)
 
         console.log('Model saved as default')
@@ -279,31 +279,31 @@ describe('Save / Open File testing', () => {
         await page.evaluate(async () => {
             document.getElementById("Save...").click();
         })
-        await page.waitForSelector('h2[class="MuiTypography-root MuiTypography-h6"]')
+        await page.waitForSelector(selectors.SAVE_MENU_SELECTOR)
 
-        const inputValue = await page.$eval('input[class="MuiInputBase-input MuiFilledInput-input MuiInputBase-inputAdornedStart MuiFilledInput-inputAdornedStart"]', el => el.value);
+        const inputValue = await page.$eval(selectors.PATH_INPUT_SELECTOR, el => el.value);
         for (let i = 0; i < inputValue.length; i++) {
             await page.keyboard.press('Backspace');
         }
 
-        expect(page).toFill('input[class="MuiInputBase-input MuiFilledInput-input MuiInputBase-inputAdornedStart MuiFilledInput-inputAdornedStart"]', '/home/jovyan/work/NetPyNE-UI/workspace/uploads/aut_test_net_params')
+        expect(page).toFill(selectors.PATH_INPUT_SELECTOR, '/home/jovyan/work/NetPyNE-UI/workspace/uploads/aut_test_net_params')
         await page.waitForTimeout(PAGE_WAIT)
 
         await page.evaluate(() => {
             [...document.querySelectorAll('.MuiAccordionSummary-content')].find(element => element.innerText === "Advanced Options").click();
         });
 
-        await page.waitForSelector('ul[class="MuiList-root MuiList-padding"]')
-        await page.waitForSelector('input[type="checkbox"]')
+        await page.waitForSelector(selectors.EXPORT_OPTIONS_SELECTOR)
+        await page.waitForSelector(selectors.CHECKBOX_OPTION_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT)
 
-        const checkbox_buttons = await page.$$('input[type="checkbox"]')
+        const checkbox_buttons = await page.$$(selectors.CHECKBOX_OPTION_SELECTOR)
 
         await checkbox_buttons[0].click()
         await page.waitForTimeout(PAGE_WAIT)
 
         await page.waitForTimeout(PAGE_WAIT)
-        await page.click('#appBarPerformActionButton')
+        await page.click(selectors.SAVE_BUTTON_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT)
 
         console.log('Model saved with NetParams as Python')
@@ -319,30 +319,30 @@ describe('Save / Open File testing', () => {
         await page.evaluate(async () => {
             document.getElementById("Save...").click();
         })
-        await page.waitForSelector('h2[class="MuiTypography-root MuiTypography-h6"]')
+        await page.waitForSelector(selectors.SAVE_MENU_SELECTOR)
 
-        const inputValue = await page.$eval('input[class="MuiInputBase-input MuiFilledInput-input MuiInputBase-inputAdornedStart MuiFilledInput-inputAdornedStart"]', el => el.value);
+        const inputValue = await page.$eval(selectors.PATH_INPUT_SELECTOR, el => el.value);
         for (let i = 0; i < inputValue.length; i++) {
             await page.keyboard.press('Backspace');
         }
 
-        expect(page).toFill('input[class="MuiInputBase-input MuiFilledInput-input MuiInputBase-inputAdornedStart MuiFilledInput-inputAdornedStart"]', '/home/jovyan/work/NetPyNE-UI/workspace/uploads/aut_test_sim_config')
+        expect(page).toFill(selectors.PATH_INPUT_SELECTOR, '/home/jovyan/work/NetPyNE-UI/workspace/uploads/aut_test_sim_config')
         await page.waitForTimeout(PAGE_WAIT)
 
         await page.evaluate(() => {
             [...document.querySelectorAll('.MuiAccordionSummary-content')].find(element => element.innerText === "Advanced Options").click();
         });
 
-        await page.waitForSelector('ul[class="MuiList-root MuiList-padding"]')
-        await page.waitForSelector('input[type="checkbox"]')
+        await page.waitForSelector(selectors.EXPORT_OPTIONS_SELECTOR)
+        await page.waitForSelector(selectors.CHECKBOX_OPTION_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT)
 
-        const checkbox_buttons = await page.$$('input[type="checkbox"]')
+        const checkbox_buttons = await page.$$(selectors.CHECKBOX_OPTION_SELECTOR)
         await checkbox_buttons[1].click()
         await page.waitForTimeout(PAGE_WAIT)
 
         await page.waitForTimeout(PAGE_WAIT * 3)
-        await page.click('#appBarPerformActionButton')
+        await page.click(selectors.SAVE_BUTTON_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT)
         console.log('Model saved with SimConfig as Python')
 
@@ -351,21 +351,21 @@ describe('Save / Open File testing', () => {
     it('Check default Saved Model', async () => {
         console.log('Checking default saved model ...')
         await page.waitForTimeout(PAGE_WAIT * 2)
-        await page.waitForSelector('div[title="Python"]')
+        await page.waitForSelector(selectors.PYTHON_CONSOLE_TAB_SELECTOR)
 
-        await page.click('div[title="Python"]')
-        await page.waitForSelector('#pythonConsoleOutput')
+        await page.click(selectors.PYTHON_CONSOLE_TAB_SELECTOR)
+        await page.waitForSelector(selectors.PYTHON_CONSLE_SELECTOR)
 
         const elementHandle = await page.waitForSelector(
-            '#pythonConsoleFrame'
+            selectors.PYTHON_CONSOLE_FRAME_SELECTOR
         );
 
         const python_frame = await elementHandle.contentFrame();
 
-        await python_frame.waitForSelector('#ipython-main-app')
+        await python_frame.waitForSelector(selectors.MAIN_PYTHON_APP_SELECTOR)
 
-        await python_frame.waitForSelector('div.inner_cell')
-        const line = await python_frame.$('div.inner_cell')
+        await python_frame.waitForSelector(selectors.PYTHON_CELL_SELECTOR)
+        const line = await python_frame.$(selectors.PYTHON_CELL_SELECTOR)
         await line.click()
         await line.type('pwd')
 
@@ -373,17 +373,17 @@ describe('Save / Open File testing', () => {
         await page.keyboard.press('Enter');
         await page.keyboard.up('Shift');
 
-        await python_frame.waitForSelector('div[class="output_subarea output_text output_result"]')
+        await python_frame.waitForSelector(selectors.PYTHON_FIRST_OUTPUT_SELECTOR)
 
         await page.waitForTimeout(PAGE_WAIT * 3)
 
-        const first_code_output = await python_frame.$$eval('div[class="output_subarea output_text output_result"]', pwd_code_outputs => {
+        const first_code_output = await python_frame.$$eval(selectors.PYTHON_FIRST_OUTPUT_SELECTOR, pwd_code_outputs => {
             return pwd_code_outputs.map(pwd_code_output => pwd_code_output.innerText)
         })
 
         expect(first_code_output[0]).toBe("'/home/jovyan/work/NetPyNE-UI/workspace'")
 
-        const code_lines = await python_frame.$$('div.inner_cell')
+        const code_lines = await python_frame.$$(selectors.PYTHON_CELL_SELECTOR)
 
         await code_lines[1].type('cd uploads/aut_test/src')
 
@@ -393,15 +393,15 @@ describe('Save / Open File testing', () => {
 
         await page.waitForTimeout(PAGE_WAIT * 3)
 
-        const second_code_output = await python_frame.$$eval('div[class="output_subarea output_text output_stream output_stdout"]', cd_code_outputs => {
+        const second_code_output = await python_frame.$$eval(selectors.PYTHON_OUTPUT_SELECTOR, cd_code_outputs => {
             return cd_code_outputs.map(cd_code_output => cd_code_output.innerText)
         })
 
         expect(second_code_output[0]).toBe("/home/jovyan/work/NetPyNE-UI/workspace/uploads/aut_test/src\n")
 
-        const ls_code_lines = await python_frame.$$('div.inner_cell')
+        const ls_code_lines = await python_frame.$$(selectors.PYTHON_CELL_SELECTOR)
 
-        await ls_code_lines[1].type('ls -l')
+        await ls_code_lines[2].type('ls -l')
 
         await page.keyboard.down('Shift');
         await page.keyboard.press('Enter');
@@ -409,7 +409,7 @@ describe('Save / Open File testing', () => {
 
         await page.waitForTimeout(PAGE_WAIT * 3)
 
-        const third_code_output = await python_frame.$$eval('div[class="output_subarea output_text output_stream output_stdout"]', ls_code_outputs => {
+        const third_code_output = await python_frame.$$eval(selectors.PYTHON_OUTPUT_SELECTOR, ls_code_outputs => {
             return ls_code_outputs.map(ls_code_output => ls_code_output.innerText)
         })
 
@@ -423,17 +423,17 @@ describe('Save / Open File testing', () => {
     it('Check netParams.py Saved Model', async () => {
         console.log('Checking netParams.py saved model ...')
 
-        await page.waitForSelector('#pythonConsoleOutput')
+        await page.waitForSelector(selectors.PYTHON_CONSLE_SELECTOR)
 
         const elementHandle = await page.waitForSelector(
-            '#pythonConsoleFrame'
+            selectors.PYTHON_CONSOLE_FRAME_SELECTOR
         );
 
         const python_frame = await elementHandle.contentFrame();
 
-        await python_frame.waitForSelector('#ipython-main-app')
+        await python_frame.waitForSelector(selectors.MAIN_PYTHON_APP_SELECTOR)
 
-        const cd_code_lines = await python_frame.$$('div.inner_cell')
+        const cd_code_lines = await python_frame.$$(selectors.PYTHON_CELL_SELECTOR)
 
         await cd_code_lines[2].type('cd ../../')
 
@@ -443,7 +443,7 @@ describe('Save / Open File testing', () => {
 
         await page.waitForTimeout(PAGE_WAIT * 3)
 
-        const net_code_lines = await python_frame.$$('div.inner_cell')
+        const net_code_lines = await python_frame.$$(selectors.PYTHON_CELL_SELECTOR)
 
         await net_code_lines[3].type('cd aut_test_net_params/src')
         await page.keyboard.down('Shift');
@@ -452,9 +452,9 @@ describe('Save / Open File testing', () => {
 
         await page.waitForTimeout(PAGE_WAIT * 3)
 
-        const ls_code_lines = await python_frame.$$('div.inner_cell')
+        const ls_code_lines = await python_frame.$$(selectors.PYTHON_CELL_SELECTOR)
 
-        await ls_code_lines[3].type('ls -l')
+        await ls_code_lines[4].type('ls -l')
 
         await page.keyboard.down('Shift');
         await page.keyboard.press('Enter');
@@ -462,7 +462,7 @@ describe('Save / Open File testing', () => {
 
         await page.waitForTimeout(PAGE_WAIT * 3)
 
-        const netParam_code_output = await python_frame.$$eval('div[class="output_subarea output_text output_stream output_stdout"]', np_code_outputs => {
+        const netParam_code_output = await python_frame.$$eval(selectors.PYTHON_OUTPUT_SELECTOR, np_code_outputs => {
             return np_code_outputs.map(np_code_output => np_code_output.innerText)
         })
 
@@ -475,38 +475,19 @@ describe('Save / Open File testing', () => {
     it('Check cfg.py Saved Model', async () => {
         console.log('Checking cfg.py saved model ...')
 
-        await page.waitForSelector('#pythonConsoleOutput')
+        await page.waitForSelector(selectors.PYTHON_CONSLE_SELECTOR)
 
         const elementHandle = await page.waitForSelector(
-            '#pythonConsoleFrame'
+            selectors.PYTHON_CONSOLE_FRAME_SELECTOR
         );
 
         const python_frame = await elementHandle.contentFrame();
 
-        await python_frame.waitForSelector('#ipython-main-app')
+        await python_frame.waitForSelector(selectors.MAIN_PYTHON_APP_SELECTOR)
 
-        const cd_code_lines = await python_frame.$$('div.inner_cell')
+        const cd_code_lines = await python_frame.$$(selectors.PYTHON_CELL_SELECTOR)
 
-        await cd_code_lines[4].type('cd ../../')
-
-        await page.keyboard.down('Shift');
-        await page.keyboard.press('Enter');
-        await page.keyboard.up('Shift');
-
-        await page.waitForTimeout(PAGE_WAIT * 3)
-
-        const net_code_lines = await python_frame.$$('div.inner_cell')
-
-        await net_code_lines[5].type('cd aut_test_sim_config/src')
-        await page.keyboard.down('Shift');
-        await page.keyboard.press('Enter');
-        await page.keyboard.up('Shift');
-
-        await page.waitForTimeout(PAGE_WAIT * 3)
-
-        const ls_code_lines = await python_frame.$$('div.inner_cell')
-
-        await ls_code_lines[6].type('ls -l')
+        await cd_code_lines[5].type('cd ../../')
 
         await page.keyboard.down('Shift');
         await page.keyboard.press('Enter');
@@ -514,7 +495,26 @@ describe('Save / Open File testing', () => {
 
         await page.waitForTimeout(PAGE_WAIT * 3)
 
-        const simConfig_code_output = await python_frame.$$eval('div[class="output_subarea output_text output_stream output_stdout"]', sc_code_outputs => {
+        const net_code_lines = await python_frame.$$(selectors.PYTHON_CELL_SELECTOR)
+
+        await net_code_lines[6].type('cd aut_test_sim_config/src')
+        await page.keyboard.down('Shift');
+        await page.keyboard.press('Enter');
+        await page.keyboard.up('Shift');
+
+        await page.waitForTimeout(PAGE_WAIT * 3)
+
+        const ls_code_lines = await python_frame.$$(selectors.PYTHON_CELL_SELECTOR)
+
+        await ls_code_lines[7].type('ls -l')
+
+        await page.keyboard.down('Shift');
+        await page.keyboard.press('Enter');
+        await page.keyboard.up('Shift');
+
+        await page.waitForTimeout(PAGE_WAIT * 3)
+
+        const simConfig_code_output = await python_frame.$$eval(selectors.PYTHON_OUTPUT_SELECTOR, sc_code_outputs => {
             return sc_code_outputs.map(sc_code_output => sc_code_output.innerText)
         })
 
@@ -528,19 +528,19 @@ describe('Save / Open File testing', () => {
 
         console.log('Checking the edited Populations of the saved model ...')
 
-        await page.waitForSelector('#pythonConsoleOutput')
+        await page.waitForSelector(selectors.PYTHON_CONSLE_SELECTOR)
 
         const elementHandle = await page.waitForSelector(
-            '#pythonConsoleFrame'
+            selectors.PYTHON_CONSOLE_FRAME_SELECTOR
         );
 
         const python_frame = await elementHandle.contentFrame();
 
-        await python_frame.waitForSelector('#ipython-main-app')
+        await python_frame.waitForSelector(selectors.MAIN_PYTHON_APP_SELECTOR)
 
-        const code_lines = await python_frame.$$('div.inner_cell')
+        const code_lines = await python_frame.$$(selectors.PYTHON_CELL_SELECTOR)
 
-        await code_lines[7].type('cat netParams.json ')
+        await code_lines[8].type('cat netParams.json ')
 
         await page.keyboard.down('Shift');
         await page.keyboard.press('Enter');
@@ -548,7 +548,7 @@ describe('Save / Open File testing', () => {
 
         await page.waitForTimeout(PAGE_WAIT * 3)
 
-        const cat_code_output = await python_frame.$$eval('div[class="output_subarea output_text output_stream output_stdout"]', cat_code_outputs => {
+        const cat_code_output = await python_frame.$$eval(selectors.PYTHON_OUTPUT_SELECTOR, cat_code_outputs => {
             return cat_code_outputs.map(cat_code_output => cat_code_output.innerText)
         })
 
