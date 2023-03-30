@@ -1,4 +1,5 @@
-import React, {useState} from "react";
+import React, {useState, useRef} from "react";
+
 
 const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutorial, incrementTutorialStep, validateTutorialStep  }) => {
 
@@ -8,10 +9,6 @@ const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutoria
     setCount(count);
   };
 
-
-//   function isVisible(el) {
-//     return Boolean(el.offsetParent || el.offsetWidth || el.offsetHeight);
-// }
 
   const getDOMTarget = (target, config) => {
     // We query the DOM with the selector
@@ -32,11 +29,6 @@ const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutoria
 
     // we pass the element index as configuration or 0 by default
     return DOMtargets[config?.collectionIndex || 0 ];
-    // const DOMTarget = DOMtargets[config?.collectionIndex || 0 ];
-    // if (isVisible(DOMTarget)) {
-    //   return DOMTarget;
-    // }
-    // return null;
   }
 
   function calculateVisiblePosition(rect1, width2, height2) {
@@ -59,61 +51,77 @@ const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutoria
     return { x, y };
   }
 
-  const tourStep  = steps[requestedTourStep-1];
-  if(!tourStep)
+  const tourStep = steps[requestedTourStep-1];
+  if (!tourStep) {
     return null ;
+  }
 
   const target   = tourStep.target ;
   const content  = tourStep.content ;
 
-  const  DOMtarget = getDOMTarget(target, tourStep);
+  const DOMtarget = getDOMTarget(target, tourStep);
   const visible    = DOMtarget?.checkVisibility();
 
-  if (!visible)
-  {
+  if (!visible) {
     stopTutorial();
     return null ;
-  }else{
+  } else {
     validateTutorialStep({ tourStep: requestedTourStep });
   }
 
   const targetRect = DOMtarget.getBoundingClientRect();
-  const { x,y } = calculateVisiblePosition(targetRect, 150, 300);
+  const { x, y } = calculateVisiblePosition(targetRect, 150, 300);
 
   return (
-    <div style={{ position: "relative" }} id="tutorialBubble">
-      {lastCheckRender}
-      <div
+    <div>
+      <div id="tutorialTargetRectangle"
         style={{
           position: "absolute",
-          top: y,
-          left: x,
-          backgroundColor: "white",
-          borderRadius: "8px",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
-          padding: "16px",
-          maxWidth: "150px",
-          maxHeight: "300px",
-          fontSize: "16px",
-          lineHeight: "1.5",
+          top: targetRect.top - 4,
+          left: targetRect.left - 4,
+          pointerEvents: "none",
+          border: "solid 3px red",
+          width: targetRect.width + 8,
+          height: targetRect.height + 8,
           zIndex: 9999
         }}
-      >
-        <div>{content}</div>
-        <button onClick={incrementTutorialStep}
-        style={{
-            display: "block",
-            margin: "0 auto",
-            backgroundColor: "#333",
-            color: "#fff",
-            border: "none",
-            padding: "8px 16px",
-            borderRadius: "4px",
+      />
+      <div style={{ position: "relative" }} id="tutorialBubble">
+        {lastCheckRender}
+
+        <div
+          style={{
+            position: "absolute",
+            top: y,
+            left: x,
+            backgroundColor: "white",
+            borderRadius: "8px",
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+            padding: "16px",
+            maxWidth: "150px",
+            maxHeight: "300px",
             fontSize: "16px",
-            cursor: "pointer",
-          }}>
-          Close
-        </button>
+            lineHeight: "1.5",
+            zIndex: 9999
+          }}
+        >
+          <div>{content}</div>
+          <button onClick={incrementTutorialStep}
+          style={{
+              display: "block",
+              margin: "0 auto",
+              backgroundColor: "#333",
+              color: "#fff",
+              border: "none",
+              padding: "8px 16px",
+              borderRadius: "4px",
+              fontSize: "16px",
+              cursor: "pointer",
+            }}>
+            Skip
+          </button>
+          <p>{requestedTourStep}/{steps.length}</p>
+        </div>
       </div>
     </div>
   );
