@@ -9,7 +9,7 @@ const tutorial3_steps = [
     )
   },
   {
-    target: 'li[label*="Model 3a:"]',
+    target: 'li[label*="3a:"]',
     content: (
       <div>
         <p>Select the tutorial 3a.</p>
