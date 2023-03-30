@@ -325,9 +325,10 @@ describe('Save / Open File testing', () => {
         for (let i = 0; i < inputValue.length; i++) {
             await page.keyboard.press('Backspace');
         }
+        await page.waitForTimeout(PAGE_WAIT)
 
         expect(page).toFill(selectors.PATH_INPUT_SELECTOR, '/home/jovyan/work/NetPyNE-UI/workspace/uploads/aut_test_sim_config')
-        await page.waitForTimeout(PAGE_WAIT)
+        await page.waitForTimeout(PAGE_WAIT * 2)
 
         await page.evaluate(() => {
             [...document.querySelectorAll('.MuiAccordionSummary-content')].find(element => element.innerText === "Advanced Options").click();
