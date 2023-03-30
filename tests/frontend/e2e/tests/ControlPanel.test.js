@@ -297,6 +297,7 @@ describe('Test for the Control Panel - color picker', () => {
         await page.waitForTimeout(PAGE_WAIT)
         console.log('Filtering results')
 
+        await page.waitForTimeout(selectors.CONTROL_PANEL_FILTER_SELECTOR, {timeout: PAGE_WAIT})
         await expect(page).toFill(selectors.CONTROL_PANEL_FILTER_SELECTOR, 'E')
 
         await page.waitForTimeout(PAGE_WAIT)
