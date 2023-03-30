@@ -1,6 +1,8 @@
 import React, {useState, useRef} from "react";
 
 
+const rectMargin = 4;
+
 const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutorial, incrementTutorialStep, validateTutorialStep  }) => {
 
   const [count, setCount] = useState(0);
@@ -35,12 +37,17 @@ const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutoria
     const windowHeight = window.innerHeight;
     const windowWidth = window.innerWidth;
 
-    let x = rect1.left ;
-    let y = rect1.top  - windowHeight;
+    let x = rect1.left + (rect1.width / 2) - (width2 / 2);
+    let y = (rect1.top  - windowHeight) + rect1.height;
 
     // Check if element2 is outside the viewport horizontally
     if (x + width2 > windowWidth) {
       x = rect1.left - width2 ;
+    }
+
+    if (x < 0) {
+      x = rect1.left + rect1.width + (2 * rectMargin);
+      y = rect1.top - windowHeight - rect1.height - rectMargin;
     }
 
     // Check if element2 is outside the viewport vertically
@@ -77,12 +84,12 @@ const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutoria
       <div id="tutorialTargetRectangle"
         style={{
           position: "absolute",
-          top: targetRect.top - 4,
-          left: targetRect.left - 4,
+          top: targetRect.top - rectMargin,
+          left: targetRect.left - rectMargin,
           pointerEvents: "none",
           border: "solid 3px red",
-          width: targetRect.width + 8,
-          height: targetRect.height + 8,
+          width: targetRect.width + (2 * rectMargin),
+          height: targetRect.height + (2 * rectMargin),
           zIndex: 9999
         }}
       />
