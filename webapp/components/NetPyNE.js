@@ -13,6 +13,7 @@ import {
   TutorialObserver
 } from 'netpyne/components';
 
+import Rnd  from "react-rnd";
 
 const styles = ({ zIndex }) => ({
   root: {
@@ -109,6 +110,20 @@ class NetPyNE extends React.Component {
           <ErrorDialog />
           <LaunchDialog />
         </div>
+        <Rnd
+          size={{
+            width: 100,
+            height: 100
+          }}
+          position={{
+            x: 100,
+            y: 100
+          }}
+          disableDragging={true}
+          style={{
+            border: "solid"
+          }}
+        />
       </TutorialObserver>
     );
   }
