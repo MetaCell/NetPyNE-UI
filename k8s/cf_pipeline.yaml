@@ -63,7 +63,7 @@ steps:
         working_dir: /home/pptruser
         environment:
         - TEST_URL=http://netpyne_app:80
-        command: bash -c 'ls -l && npm run Tutorial_1_test'
+        command: bash -c 'ls -l && cd tests && ls -l && npm run Tutorial_1_test'
   # installing_chart:
   #   type: helm
   #   stage: deploy
