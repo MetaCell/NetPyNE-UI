@@ -10,7 +10,7 @@ import * as selectors from './selectors'
 
 
 //PAGE INFO:
-const baseURL =  'https://stage.netpyne.metacell.us/'
+const baseURL = process.env.TEST_URL || 'https://stage.netpyne.metacell.us/'
 const PAGE_WAIT = 3000;
 const TIMEOUT = 60000;
 
