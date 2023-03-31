@@ -10,7 +10,7 @@ import * as selectors from './selectors'
 
 
 //PAGE INFO:
-const baseURL = process.env.url || 'https://stage.netpyne.metacell.us/'
+const baseURL = process.env.TEST_URL || 'https://stage.netpyne.metacell.us/'
 const PAGE_WAIT = 3000;
 const TIMEOUT = 60000;
 
@@ -39,6 +39,7 @@ describe('Tutorial #1 for Smoke Testing', () => {
 
   beforeAll(async () => {
     await page.goto(baseURL);
+    console.log(baseURL);
     await page.waitForSelector(selectors.LOGIN_PAGE_SELECTOR);
     await page.waitForSelector(selectors.USERNAME_SELECTOR)
     await expect(page)
