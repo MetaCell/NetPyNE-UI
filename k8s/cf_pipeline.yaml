@@ -50,7 +50,7 @@ steps:
     composition:
       version: '2'
       services:
-        netpyne_app:
+        app:
           image: '${{BuildingNetPyNE-UI}}'
           working_dir: /home/pptruser
           ports:
@@ -59,11 +59,11 @@ steps:
       test:
         image: '${{test_build}}'
         links:
-         - netpyne_app
+         - app
         working_dir: /home/pptruser
         environment:
-        - TEST_URL=http://netpyne_app:80
-        command: bash -c 'ls -l && cd tests && ls -l && npm run Tutorial_1_test'
+        - TEST_URL=http://app:80
+        command: bash -c 'ls -l && npm run Tutorial_1_test'
   # installing_chart:
   #   type: helm
   #   stage: deploy
