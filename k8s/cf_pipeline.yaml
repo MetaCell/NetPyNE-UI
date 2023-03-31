@@ -38,7 +38,7 @@ steps:
     type: build
     title: Building NetPyNE test image
     image_name: netpyne-test
-    working_directory: ./NetPyNE-UI/tests/frontend/e2e
+    working_directory: ./tests/frontend/e2e
     dockerfile: Dockerfile.testing
     buildkit: true
   test:
@@ -46,7 +46,7 @@ steps:
     title: Running Tests
     description: Temporary test environment
     stage: test
-    working_directory: ./NetPyNE-UI/tests/frontend/e2e
+    working_directory: ./tests/frontend/e2e
     composition:
       version: '2'
       services:
