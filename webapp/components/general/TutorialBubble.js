@@ -25,7 +25,6 @@ const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutoria
 
     // if there is no DOM element, we stop the tutorial
     if (!DOMtargets || DOMtargets.length == 0) {
-      stopTutorial();
       return null;
     }
 
@@ -52,7 +51,7 @@ const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutoria
 
     // Check if element2 is outside the viewport vertically
     if (y + height2 > windowHeight) {
-      y =  - height2 ;
+      y = (rect1.top  - windowHeight) + rect1.height - height2 ;
     }
 
     return { x, y };
@@ -63,21 +62,22 @@ const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutoria
     return null ;
   }
 
-  const target   = tourStep.target ;
-  const content  = tourStep.content ;
+  const target = tourStep.target ;
+  const content = tourStep.content ;
 
   const DOMtarget = getDOMTarget(target, tourStep);
-  const visible    = DOMtarget?.checkVisibility();
+  const visible = DOMtarget?.checkVisibility();
 
   if (!visible) {
-    stopTutorial();
-    return null ;
-  } else {
-    validateTutorialStep({ tourStep: requestedTourStep });
+    return <></>;
   }
+
+  // validateTutorialStep({ tourStep: requestedTourStep });
 
   const targetRect = DOMtarget.getBoundingClientRect();
   const { x, y } = calculateVisiblePosition(targetRect, 150, 300);
+
+  const hasOtherSteps = requestedTourStep < steps.length;
 
   return (
     <div>
@@ -91,11 +91,11 @@ const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutoria
           width: targetRect.width + (2 * rectMargin),
           height: targetRect.height + (2 * rectMargin),
           zIndex: 9999
+    // stopTutorial();
         }}
       />
       <div style={{ position: "relative" }} id="tutorialBubble">
         {lastCheckRender}
-
         <div
           style={{
             position: "absolute",
@@ -113,6 +113,7 @@ const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutoria
           }}
         >
           <div>{content}</div>
+          {hasOtherSteps &&
           <button onClick={incrementTutorialStep}
           style={{
               display: "block",
@@ -125,10 +126,24 @@ const TutorialBubble = ({ requestedTourStep, steps, lastCheckRender, stopTutoria
               fontSize: "16px",
               cursor: "pointer",
             }}>
-            Skip
-          </button>
+            Next
+          </button>}
           <p>{requestedTourStep}/{steps.length}</p>
         </div>
+        <button onClick={stopTutorial}
+          style={{
+              display: "block",
+              margin: "0 auto",
+              backgroundColor: "#333",
+              color: "#fff",
+              border: "none",
+              padding: "8px 16px",
+              borderRadius: "4px",
+              fontSize: "16px",
+              cursor: "pointer",
+            }}>
+            {hasOtherSteps ? "Skip" : "Close"}
+          </button>
       </div>
     </div>
   );
