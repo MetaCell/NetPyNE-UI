@@ -51,14 +51,21 @@ const tutorial_steps = [
       </div>
     )
   },
+  // {
+  //   target: '#Population0',
+  //   content: (
+  //     <div>
+  //       <p>Select the first population</p>
+  //     </div>
+  //   )
+  // },
   {
-    target: 'MuiInputBase-input MuiFilledInput-input',
+    target: 'input[value*="Population"]',
     content: (
       <div>
         <p>Change the population name to “E” for excitatory</p>
       </div>
-    ),
-    collectionIndex: 2
+    )
   },
   {
     target: '#netParamspopParamsPopulation0cellType',
@@ -85,7 +92,7 @@ const tutorial_steps = [
     )
   },
   {
-    target: 'canvas',
+    target: 'flexlayout__tab_button flexlayout__tab_button_top flexlayout__tab_button--selected',
     content: (
       <div>
         <p>You can see the layout of our 40 pyr cells</p>
@@ -93,8 +100,7 @@ const tutorial_steps = [
         <p>You can choose colors from the control panel</p>
         <p>Most analysis plots (sidebar) are useless without having run a simulation</p>
       </div>
-    ),
-    collectionIndex: 0 
+    )
   },
   {
     target: 'material-icons MuiIcon-root',
@@ -106,7 +112,7 @@ const tutorial_steps = [
         <p>Explore moving and reshaping tabs (drag from the tab title)</p>
       </div>
     ),
-    collectionIndex: 2 
+    collectionIndex: 2
   },
   {
     target: 'MuiButtonBase-root MuiButton-root MuiButton-contained',
@@ -115,7 +121,7 @@ const tutorial_steps = [
         <p>Click on Back To Edit</p>
       </div>
     ),
-    collectionIndex: 6 
+    collectionIndex: 6
   },
   {
     target: 'flexlayout__tab_button_content',
@@ -124,7 +130,7 @@ const tutorial_steps = [
         <p>Click on Synaptic Mechanisms in tabs</p>
       </div>
     ),
-    collectionIndex: 2 
+    collectionIndex: 2
   },
   {
     target: '#newSynapseButton',
@@ -186,7 +192,7 @@ const tutorial_steps = [
         <p>Click on Connectivity Rules in tabs or sidebar</p>
       </div>
     ),
-    collectionIndex: 3 
+    collectionIndex: 3
   },
   {
     target: '#newConnectivityRuleButton',
@@ -203,7 +209,7 @@ const tutorial_steps = [
         <p>Select “exc” for Synaptic mechanism</p>
       </div>
     ),
-    collectionIndex: 8 
+    collectionIndex: 8
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
@@ -212,7 +218,7 @@ const tutorial_steps = [
         <p>Enter 0.1 in Probability of connection</p>
       </div>
     ),
-    collectionIndex: 9 
+    collectionIndex: 9
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
@@ -221,7 +227,7 @@ const tutorial_steps = [
         <p>Enter 0.005 in Weight of synaptic connection</p>
       </div>
     ),
-    collectionIndex: 10 
+    collectionIndex: 10
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
@@ -230,7 +236,7 @@ const tutorial_steps = [
         <p>Enter 5 in Connection delay</p>
       </div>
     ),
-    collectionIndex: 11 
+    collectionIndex: 11
   },
   {
     target: 'MuiBottomNavigationAction-wrapper',
@@ -239,7 +245,7 @@ const tutorial_steps = [
         <p>Click on PRE-SYNAPTIC CELLS CONDITIONS</p>
       </div>
     ),
-    collectionIndex: 1 
+    collectionIndex: 1
   },
   {
     target: 'MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiSelect-filled MuiInputBase-input MuiFilledInput-input',
@@ -248,7 +254,7 @@ const tutorial_steps = [
         <p>Select “exc” for Synaptic mechanism</p>
       </div>
     ),
-    collectionIndex: 1 
+    collectionIndex: 1
   },
   {
     target: 'MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiSelect-filled MuiInputBase-input MuiFilledInput-input',
@@ -257,7 +263,7 @@ const tutorial_steps = [
         <p>Enter 0.1 in Probability of connection</p>
       </div>
     ),
-    collectionIndex: 2 
+    collectionIndex: 2
   },
   {
     target: 'MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiSelect-filled MuiInputBase-input MuiFilledInput-input',
@@ -266,7 +272,7 @@ const tutorial_steps = [
         <p>Enter 0.005 in Weight of synaptic connection</p>
       </div>
     ),
-    collectionIndex: 3 
+    collectionIndex: 3
   },
   {
     target: 'MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiSelect-filled MuiInputBase-input MuiFilledInput-input',
@@ -275,8 +281,8 @@ const tutorial_steps = [
         <p>Enter 5 in Connection delayS</p>
       </div>
     ),
-    collectionIndex: 4 
-  }  
+    collectionIndex: 4
+  }
   ,{
     target: 'MuiBottomNavigationAction-wrapper',
     content: (
@@ -284,7 +290,7 @@ const tutorial_steps = [
         <p>Click on POST-SYNAPTIC CELLS CONDITIONS</p>
       </div>
     ),
-    collectionIndex: 2 
+    collectionIndex: 2
   },
   ,{
     target: 'netParamsconnParamsConnectivityRule0postCondspop',
@@ -301,7 +307,7 @@ const tutorial_steps = [
         <p>CREATE NETWORK</p>
       </div>
     ),
-    collectionIndex: 0 
+    collectionIndex: 0
   }
   ,{
     target: 'MuiButtonBase-root MuiListItem-root makeStyles-selected-23 MuiListItem-dense MuiListItem-button',
@@ -310,7 +316,7 @@ const tutorial_steps = [
         <p>Generate a 2D Net Plot</p>
       </div>
     ),
-    collectionIndex: 2 
+    collectionIndex: 2
   }
   ,{
     target: 'MuiButtonBase-root MuiButton-root MuiButton-contained',
@@ -539,7 +545,7 @@ const tutorial_steps = [
       </div>
     ),
     collectionIndex: 0
-  }    
+  }
   , {
     target: 'MuiBox-root MuiBox-root-451',
     content: (
@@ -557,7 +563,7 @@ const tutorial_steps = [
       </div>
     ),
     collectionIndex: 0
-  } 
+  }
   , {
     target: 'MuiButtonBase-root MuiListItem-root MuiMenuItem-root MuiMenuItem-gutters MuiListItem-gutters MuiListItem-button',
     content: (
