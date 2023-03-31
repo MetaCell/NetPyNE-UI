@@ -25,16 +25,16 @@ export default function TutorialObserver(props) {
   useEffect(() => {
     if (!tourRunning) {
       // Stop observing the DOM when the component unmounts
-      console.log("Stopping tutorial")
+      // console.log("Stopping tutorial")
       observer?.disconnect();
       return;
     }
     // Listen for new components being added to the DOM
-    console.log("Creating tutorial")
+    // console.log("Creating tutorial")
     const obs = new MutationObserver((mutationsList) => {
       if(mutationsList.length > 0) {
         bubbleUpdate();
-        console.log("Listening to updates")
+        // console.log("Listening to updates")
       }
     });
 
