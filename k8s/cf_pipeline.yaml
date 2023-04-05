@@ -41,7 +41,7 @@ steps:
     working_directory: ./tests/frontend/e2e
     dockerfile: Dockerfile.testing
     buildkit: true
-  test:
+  tutorial_test:
     type: composition
     title: Running Tutorial Tests
     description: Temporary test environment
@@ -64,7 +64,7 @@ steps:
         environment:
         - TEST_URL=http://app:8888
         command: bash -c 'ls -l && npm run Tutorial_1_test'
-  test:
+  feature_test:
     type: composition
     title: Running Feature Tests
     description: Temporary test environment
