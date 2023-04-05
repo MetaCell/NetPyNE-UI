@@ -54,7 +54,7 @@ steps:
           image: '${{BuildingNetPyNE-UI}}'
           working_dir: /home/pptruser
           ports:
-            - 80
+            - 8888
     composition_candidates:
       test:
         image: '${{test_build}}'
