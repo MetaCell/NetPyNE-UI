@@ -43,7 +43,30 @@ steps:
     buildkit: true
   test:
     type: composition
-    title: Running Tests
+    title: Running Tutorial Tests
+    description: Temporary test environment
+    stage: test
+    working_directory: ./tests/frontend/e2e
+    composition:
+      version: '2'
+      services:
+        app:
+          image: '${{BuildingNetPyNE-UI}}'
+          working_dir: /home/pptruser
+          ports:
+            - 8888
+    composition_candidates:
+      test:
+        image: '${{test_build}}'
+        links:
+         - app
+        working_dir: /home/pptruser
+        environment:
+        - TEST_URL=http://app:8888
+        command: bash -c 'ls -l && npm run Tutorial_1_test'
+  test:
+    type: composition
+    title: Running Feature Tests
     description: Temporary test environment
     stage: test
     working_directory: ./tests/frontend/e2e
