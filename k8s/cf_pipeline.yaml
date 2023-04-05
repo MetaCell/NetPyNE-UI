@@ -51,7 +51,7 @@ steps:
       version: '2'
       services:
         app:
-          image: '${{BuildingHub}}'
+          image: '${{BuildingNetPyNE-UI}}'
           working_dir: /home/pptruser
           ports:
             - 80
