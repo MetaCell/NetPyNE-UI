@@ -11,28 +11,25 @@ steps:
     repo: "MetaCell/NetPyNE-UI"
     revision: "${{CF_BRANCH}}"
     stage: "clone"
-  BuildingNetPyNE-UI:
+    when:
+      branch:
+        only:
+          - "${{CF_BRANCH}}"
+  netpyne-ui:
     title: Building NetPyNE-UI
     type: build
     stage: build
     image_name: netpyne-ui
     working_directory: ${{main_clone}}
-    tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}-${{CF_BUILD_TIMESTAMP}}'
+    tag: 'np-${{CF_SHORT_REVISION}}'
     build_arguments:
-      - NETPYNE_VERSION=${{NETPYNE_VERSION}}
-      - WORKSPACE_VERSION=${{WORKSPACE_VERSION}}
-      - PYGEPPETTO_VERSION=${{PYGEPPETTO_VERSION}}
-      - JUPYTER_GEPPETTO_VERSION=${{JUPYTER_GEPPETTO_VERSION}}
+      - GEPPETTO_VERSION=${{PYGEPPETTO_VERSION}}
       - BUILD_ARGS=${{BUILD_ARGS}}
     registry: ${{REGISTRY}}
-  BuildingHub:
-    title: Building Hub
-    type: build
-    stage: "build"
-    image_name: netpyne-hub
-    working_directory: k8s
-    tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}-${{CF_BUILD_TIMESTAMP}}'
-    registry: ${{REGISTRY}}
+    when:
+      branch:
+        only:
+          - "${{CF_BRANCH}}"
   test_build:
     stage: test
     type: build
@@ -51,7 +48,7 @@ steps:
       version: '2'
       services:
         app:
-          image: '${{BuildingNetPyNE-UI}}'
+          image: '${{netpyne-ui}}'
           working_dir: /home/pptruser
           ports:
             - 8888
@@ -74,7 +71,7 @@ steps:
       version: '2'
       services:
         app:
-          image: '${{BuildingNetPyNE-UI}}'
+          image: '${{netpyne-ui}}'
           working_dir: /home/pptruser
           ports:
             - 8888
