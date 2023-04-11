@@ -78,8 +78,6 @@ steps:
     composition_candidates:
       test:
         image: '${{test_build}}'
-        links:
-         - app
         working_dir: /home/pptruser
         environment:
         - TEST_URL=http://app:8888
