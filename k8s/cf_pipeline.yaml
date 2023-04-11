@@ -15,29 +15,32 @@ steps:
       branch:
         only:
           - "${{CF_BRANCH}}"
-  netpyne-ui:
-    title: Building NetPyNE-UI
-    type: build
-    stage: build
-    image_name: netpyne-ui
-    working_directory: ${{main_clone}}
-    tag: 'np-${{CF_SHORT_REVISION}}'
-    build_arguments:
-      - GEPPETTO_VERSION=${{PYGEPPETTO_VERSION}}
-      - BUILD_ARGS=${{BUILD_ARGS}}
-    registry: ${{REGISTRY}}
-    when:
-      branch:
-        only:
-          - "${{CF_BRANCH}}"
-  test_build:
-    stage: test
-    type: build
-    title: Building NetPyNE test image
-    image_name: netpyne-test
-    working_directory: ./tests/frontend/e2e
-    dockerfile: Dockerfile.testing
-    buildkit: true
+  builds:
+    type: parallel  
+    steps:
+      netpyne-ui:
+        title: Building NetPyNE-UI
+        type: build
+        stage: build
+        image_name: netpyne-ui
+        working_directory: ${{main_clone}}
+        tag: 'np-${{CF_SHORT_REVISION}}'
+        build_arguments:
+          - GEPPETTO_VERSION=${{PYGEPPETTO_VERSION}}
+          - BUILD_ARGS=${{BUILD_ARGS}}
+        registry: ${{REGISTRY}}
+        when:
+          branch:
+            only:
+              - "${{CF_BRANCH}}"
+      test_build:
+        stage: build
+        type: build
+        title: Building NetPyNE test image
+        image_name: netpyne-test
+        working_directory: ./tests/frontend/e2e
+        dockerfile: Dockerfile.testing
+        buildkit: true
   tutorial_test:
     type: composition
     title: Running Tutorial Tests
@@ -78,6 +81,8 @@ steps:
     composition_candidates:
       test:
         image: '${{test_build}}'
+        links:
+         - app
         working_dir: /home/pptruser
         environment:
         - TEST_URL=http://app:8888
