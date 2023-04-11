@@ -94,9 +94,9 @@ describe('Tutorial #2 for Smoke Testing', () => {
 
     await page.waitForTimeout(PAGE_WAIT)
 
-    await page.click(selectors.TUTORIALS_BUTTON_SELECTOR, { timeout: TIMEOUT })
+    await page.click(selectors.TEMPLATE_MODELS_BUTTON_SELECTOR, { timeout: TIMEOUT })
 
-    await page.click(selectors.TUTORIAL_2_SELECTOR, { timeout: TIMEOUT })
+    await page.click(selectors.MODEL_2_SELECTOR, { timeout: TIMEOUT })
     await page.waitForSelector(selectors.PYR_2_CELL_SELECTOR)
     await page.waitForSelector(selectors.INT_CELL_SELECTOR)
     await page.waitForTimeout(PAGE_WAIT)

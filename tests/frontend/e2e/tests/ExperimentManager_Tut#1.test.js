@@ -94,10 +94,10 @@ describe('Experiment Manager test using Tut#1', () => {
         await page.waitForTimeout(PAGE_WAIT * 2)
         await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT })
         await page.waitForTimeout(PAGE_WAIT)
-        await click(page, selectors.TUTORIALS_BUTTON_SELECTOR, { timeout: TIMEOUT })
+        await click(page, selectors.TEMPLATE_MODELS_BUTTON_SELECTOR, { timeout: TIMEOUT })
 
         console.log('Tutorial #1')
-        await click(page, selectors.TUTORIAL_1_SELECTOR, { timeout: TIMEOUT })
+        await click(page, selectors.MODEL_1_SELECTOR, { timeout: TIMEOUT })
         await page.waitForTimeout(PAGE_WAIT)
         await page.waitForSelector(selectors.PYR_CELL_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT)

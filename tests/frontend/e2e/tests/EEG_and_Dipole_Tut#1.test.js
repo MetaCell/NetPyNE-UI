@@ -96,10 +96,10 @@ describe('EEG and Dipole Plot Test using Tutorial#1', () => {
         await page.waitForTimeout(PAGE_WAIT * 3)
         await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT * 2 })
         await page.waitForTimeout(PAGE_WAIT * 2)
-        await page.click(selectors.TUTORIALS_BUTTON_SELECTOR, { timeout: TIMEOUT })
+        await page.click(selectors.TEMPLATE_MODELS_BUTTON_SELECTOR, { timeout: TIMEOUT })
 
         await console.log('Loading Tutorial #1')
-        await page.click(selectors.TUTORIAL_1_SELECTOR, { timeout: TIMEOUT })
+        await page.click(selectors.MODEL_1_SELECTOR, { timeout: TIMEOUT })
         await page.waitForSelector(selectors.PYR_CELL_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT)
 

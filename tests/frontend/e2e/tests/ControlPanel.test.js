@@ -89,11 +89,11 @@ describe('Test for the Control Panel - color picker', () => {
         await page.waitForTimeout(PAGE_WAIT * 2)
         await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT })
         await page.waitForTimeout(PAGE_WAIT)
-        await page.click(selectors.TUTORIALS_BUTTON_SELECTOR, { timeout: TIMEOUT })
+        await page.click(selectors.TEMPLATE_MODELS_BUTTON_SELECTOR, { timeout: TIMEOUT })
 
         console.log('Loading Tutorial #2')
 
-        await page.click(selectors.TUTORIAL_2_SELECTOR, { timeout: TIMEOUT })
+        await page.click(selectors.MODEL_2_SELECTOR, { timeout: TIMEOUT })
         await page.waitForTimeout(PAGE_WAIT)
         await page.waitForSelector(selectors.PYR_2_CELL_SELECTOR)
         await page.waitForSelector(selectors.INT_CELL_SELECTOR)
