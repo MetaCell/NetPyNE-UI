@@ -16,7 +16,8 @@ steps:
         only:
           - "${{CF_BRANCH}}"
   builds:
-    type: parallel  
+    type: parallel 
+    stage: build 
     steps:
       netpyne-ui:
         title: Building NetPyNE-UI
