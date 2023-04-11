@@ -2,6 +2,9 @@ import React from 'react';
 const tutorial2_steps = [
   {
     target: '#selectCellButton',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>We will create first a new cell using a cell template.</p>
@@ -11,6 +14,9 @@ const tutorial2_steps = [
   },
   {
     target: '#fromTemplateCellTemplate',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Select "Import cell template from file..."</p>
@@ -19,6 +25,9 @@ const tutorial2_steps = [
   },
   {
     target: '#importCellParamsFileName',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click on the folder icon to select the template:</p>
@@ -37,6 +46,9 @@ const tutorial2_steps = [
   // },
   {
     target: '#importCellParamsModFolder',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click on the folder icon to select the folder containing the "mod" file:</p>
@@ -54,6 +66,9 @@ const tutorial2_steps = [
   // },
   {
     target: '#appBarPerformActionButton',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click on "Import" to import the cell template.</p>
@@ -62,6 +77,9 @@ const tutorial2_steps = [
   },
   {
     target: '#PTcell',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Select the PT cell.</p>
@@ -70,6 +88,9 @@ const tutorial2_steps = [
   },
   {
     target: '#newSectionButton',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click on "Section" to see all the sections of the cell.</p>
@@ -78,6 +99,9 @@ const tutorial2_steps = [
   },
   {
     target: '#selectCellButton',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Go back to the cell creation and import a new one from a template as before.</p>
@@ -86,6 +110,9 @@ const tutorial2_steps = [
   },
   {
     target: '#importCellParamsFileName',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click on the folder icon to select the template.</p>
@@ -94,6 +121,9 @@ const tutorial2_steps = [
   },
   {
     target: '#TreeContainerCutting_component',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Select "NetPyNE tutorials &gt; netpyne_workspace-master &gt; cells &gt; SRI.hoc".</p>
@@ -102,6 +132,9 @@ const tutorial2_steps = [
   },
   {
     target: '#importCellParamsModFolder',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click on the folder icon to select the folder containing the "mod" file.</p>
@@ -110,6 +143,9 @@ const tutorial2_steps = [
   },
   {
     target: '#TreeContainerCutting_component',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Select like for the last cell: "NetPyNE tutorials &gt; netpyne_workspace-master &gt; mod".</p>
@@ -118,6 +154,9 @@ const tutorial2_steps = [
   },
   {
     target: 'img[src*="popParams"]',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click on "Populations" to change cells populations.</p>
@@ -126,6 +165,9 @@ const tutorial2_steps = [
   },
   {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Create now the network!</p>
@@ -134,6 +176,9 @@ const tutorial2_steps = [
   },
   {
     target: 'img[src*="experimentControlPanel"]',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>You can open the control panel to see the the cell population and identify them in the 3D view.</p>

@@ -2,32 +2,43 @@ import React from 'react';
 const tutorial_steps = [
   {
     target: '#selectCellButton',
+    title: (
+      <div>Import a simple cell model</div>
+    ),
     content: (
       <div>
-        <p>Import a simple cell model</p>
-        <p>Click on the + above Cell</p>
+        Click on the + above Cell
       </div>
     )
   },
   {
     target: '#BallStick_HHCellTemplate',
+    title: (
+      <div>Add Ball and stick HH cell</div>
+    ),
     content: (
       <div>
-        <p>Click on Ball and stick HH cell</p>
+        <p>Click on the menu item to add one Ball and stick HH cell</p>
       </div>
     )
   },
   {
     target: '#CellType0',
+    title: (
+      <div>Customise CellType0</div>
+    ),
     content: (
       <div>
-        <p>Click on CellType0 and the panel on the right will appear</p>
-        <p>Rename the cell type: “pyr” for pyramidal</p>
+        <p>Click on CellType0 and the panel on the right will appear.</p>
+        <p>Rename the cell type: “pyr” for pyramidal.</p>
       </div>
     )
   },
   {
     target: '#newSectionButton',
+    title: (
+      <div>Check imported cell's sections</div>
+    ),
     content: (
       <div>
         <p>Click on Section to see the sections that make up this imported cell type</p>
@@ -36,6 +47,9 @@ const tutorial_steps = [
   },
   {
     target: 'flexlayout__tab_button_content',
+    title: (
+      <div>Populations component</div>
+    ),
     content: (
       <div>
         <p>Click on the Populations tab or its icon in the sidebar</p>
@@ -45,6 +59,9 @@ const tutorial_steps = [
   },
   {
     target: '#newPopulationButton',
+    title: (
+      <div>Create a population</div>
+    ),
     content: (
       <div>
         <p>Click on the + above Population</p>
@@ -61,6 +78,9 @@ const tutorial_steps = [
   // },
   {
     target: 'input[value*="Population"]',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Change the population name to “E” for excitatory</p>
@@ -69,6 +89,9 @@ const tutorial_steps = [
   },
   {
     target: '#netParamspopParamsPopulation0cellType',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Set the Cell type to the pyr cell we imported earlier</p>
@@ -77,6 +100,9 @@ const tutorial_steps = [
   },
   {
     target: '#netParamspopParamsPopulation0numCells',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Enter 40 for the number of cells</p>
@@ -85,6 +111,9 @@ const tutorial_steps = [
   },
   {
     target: 'MuiButtonBase-root MuiButton-root MuiButton-contained MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedContained MuiButtonGroup-groupedContainedHorizontal MuiButtonGroup-groupedContainedPrimary MuiButton-containedPrimary',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Once we have a population with cells, we can create our network and visualize it</p>
@@ -93,6 +122,9 @@ const tutorial_steps = [
   },
   {
     target: 'flexlayout__tab_button flexlayout__tab_button_top flexlayout__tab_button--selected',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>You can see the layout of our 40 pyr cells</p>
@@ -104,6 +136,9 @@ const tutorial_steps = [
   },
   {
     target: 'material-icons MuiIcon-root',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>The 2D net plot shows cell positions</p>
@@ -116,6 +151,9 @@ const tutorial_steps = [
   },
   {
     target: 'MuiButtonBase-root MuiButton-root MuiButton-contained',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click on Back To Edit</p>
@@ -125,6 +163,9 @@ const tutorial_steps = [
   },
   {
     target: 'flexlayout__tab_button_content',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click on Synaptic Mechanisms in tabs</p>
@@ -134,6 +175,9 @@ const tutorial_steps = [
   },
   {
     target: '#newSynapseButton',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click on + above Synapse </p>
@@ -142,6 +186,9 @@ const tutorial_steps = [
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Name the synapse “exc”</p>
@@ -151,6 +198,9 @@ const tutorial_steps = [
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Leave the default mechanism Exp2Syn</p>
@@ -160,6 +210,9 @@ const tutorial_steps = [
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Enter 0.1 in Time constant for exponential 1 </p>
@@ -169,6 +222,9 @@ const tutorial_steps = [
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Enter 1.0 in Time constant for exponential 2</p>
@@ -178,6 +234,9 @@ const tutorial_steps = [
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Enter 0 in Reversal potential </p>
@@ -187,6 +246,9 @@ const tutorial_steps = [
   },
   {
     target: 'flexlayout__tab_button_content',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click on Connectivity Rules in tabs or sidebar</p>
@@ -196,6 +258,9 @@ const tutorial_steps = [
   },
   {
     target: '#newConnectivityRuleButton',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click on + above Connectivity Rule </p>
@@ -204,6 +269,9 @@ const tutorial_steps = [
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Select “exc” for Synaptic mechanism</p>
@@ -213,6 +281,9 @@ const tutorial_steps = [
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Enter 0.1 in Probability of connection</p>
@@ -222,6 +293,9 @@ const tutorial_steps = [
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Enter 0.005 in Weight of synaptic connection</p>
@@ -231,6 +305,9 @@ const tutorial_steps = [
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Enter 5 in Connection delay</p>
@@ -240,6 +317,9 @@ const tutorial_steps = [
   },
   {
     target: 'MuiBottomNavigationAction-wrapper',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click on PRE-SYNAPTIC CELLS CONDITIONS</p>
@@ -249,6 +329,9 @@ const tutorial_steps = [
   },
   {
     target: 'MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiSelect-filled MuiInputBase-input MuiFilledInput-input',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Select “exc” for Synaptic mechanism</p>
@@ -258,6 +341,9 @@ const tutorial_steps = [
   },
   {
     target: 'MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiSelect-filled MuiInputBase-input MuiFilledInput-input',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Enter 0.1 in Probability of connection</p>
@@ -267,6 +353,9 @@ const tutorial_steps = [
   },
   {
     target: 'MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiSelect-filled MuiInputBase-input MuiFilledInput-input',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Enter 0.005 in Weight of synaptic connection</p>
@@ -276,6 +365,9 @@ const tutorial_steps = [
   },
   {
     target: 'MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiSelect-filled MuiInputBase-input MuiFilledInput-input',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Enter 5 in Connection delayS</p>
@@ -285,6 +377,9 @@ const tutorial_steps = [
   }
   ,{
     target: 'MuiBottomNavigationAction-wrapper',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click on POST-SYNAPTIC CELLS CONDITIONS</p>
@@ -294,6 +389,9 @@ const tutorial_steps = [
   },
   ,{
     target: 'netParamsconnParamsConnectivityRule0postCondspop',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Select E for the Population</p>
@@ -302,6 +400,9 @@ const tutorial_steps = [
   }
   ,{
     target: 'MuiButtonBase-root MuiButton-root MuiButton-contained MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedContained MuiButtonGroup-groupedContainedHorizontal MuiButtonGroup-groupedContainedPrimary MuiButton-containedPrimary',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>CREATE NETWORK</p>
@@ -311,6 +412,9 @@ const tutorial_steps = [
   }
   ,{
     target: 'MuiButtonBase-root MuiListItem-root makeStyles-selected-23 MuiListItem-dense MuiListItem-button',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Generate a 2D Net Plot</p>
@@ -320,6 +424,9 @@ const tutorial_steps = [
   }
   ,{
     target: 'MuiButtonBase-root MuiButton-root MuiButton-contained',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Now we can see our connectivity</p>
@@ -330,6 +437,9 @@ const tutorial_steps = [
   }
   ,{
     target: 'flexlayout__tab_button_content',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click on Stim. Sources in tabs or sidebar</p>
@@ -339,6 +449,9 @@ const tutorial_steps = [
   }
   , {
     target: '#newStimulationSourceButton',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click on + above Source</p>
@@ -349,6 +462,9 @@ const tutorial_steps = [
   //stimulation input rules
   , {
     target: 'MuiInputBase-input MuiFilledInput-input',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Type “IClamp1” in The name of the stimulation source</p>
@@ -358,6 +474,9 @@ const tutorial_steps = [
   }
   , {
     target: 'MuiInputBase-input MuiFilledInput-input',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Leave the default IClamp as the Point process used as stimulator</p>
@@ -367,6 +486,9 @@ const tutorial_steps = [
   }
   , {
     target: 'MuiInputBase-input MuiFilledInput-input',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Set Current clamp delay to 20</p>
@@ -376,6 +498,9 @@ const tutorial_steps = [
   }
   , {
     target: 'MuiInputBase-input MuiFilledInput-input',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Set Current clamp duration to 5</p>
@@ -385,6 +510,9 @@ const tutorial_steps = [
   }
   , {
     target: 'MuiInputBase-input MuiFilledInput-input',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Set Current clamp amplitude to 0.1 </p>
@@ -395,6 +523,9 @@ const tutorial_steps = [
   //steam targets
   , {
     target: 'flexlayout__tab_button_content',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click on Stim. Targets in tabs or sidebar</p>
@@ -404,6 +535,9 @@ const tutorial_steps = [
   }
   , {
     target: '#newStimulationTargetButton',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>CClick on + above Target</p>
@@ -412,6 +546,9 @@ const tutorial_steps = [
   }
   , {
     target: 'MuiInputBase-input MuiFilledInput-input',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Type “IClamp1 cell0” in The name of the stimulation target </p>
@@ -421,6 +558,9 @@ const tutorial_steps = [
   }
   , {
     target: 'MuiInputBase-input MuiFilledInput-input',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Set Stimulation source to IClamp1</p>
@@ -430,6 +570,9 @@ const tutorial_steps = [
   }
   , {
     target: 'MuiInputBase-input MuiFilledInput-input',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Type “dend” in Target section</p>
@@ -439,6 +582,9 @@ const tutorial_steps = [
   }
   , {
     target: 'MuiInputBase-input MuiFilledInput-input',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Enter 1 in Target location</p>
@@ -449,6 +595,9 @@ const tutorial_steps = [
   //conditions tab
   , {
     target: '#stimTargetCondsTab',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click on CONDITIONS</p>
@@ -457,6 +606,9 @@ const tutorial_steps = [
   }
   , {
     target: '#netParamsstimTargetParamsstim_target0condscellList',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Enter 0 in Add new Target cell global indices</p>
@@ -466,6 +618,9 @@ const tutorial_steps = [
   }
   , {
     target: 'MuiInputBase-input MuiFilledInput-input',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click on Configuration in the tabs or sidebar</p>
@@ -476,6 +631,9 @@ const tutorial_steps = [
   //COnfiguration
   , {
     target: '#simConfigduration',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Change the Duration to 200</p>
@@ -484,6 +642,9 @@ const tutorial_steps = [
   }
   , {
     target: 'MuiBox-root MuiBox-root-391',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Change the Time Step to 0.1</p>
@@ -493,6 +654,9 @@ const tutorial_steps = [
   }
   , {
     target: 'MuiBottomNavigationAction-wrapper',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click on RECORD</p>
@@ -502,6 +666,9 @@ const tutorial_steps = [
   }
   , {
     target: '#simConfigrecordCells',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Enter 0 in Add new Cells to record traces from</p>
@@ -510,6 +677,9 @@ const tutorial_steps = [
   }
   , {
     target: '#simConfigrecordTraces-button',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click the + on the right</p>
@@ -520,6 +690,9 @@ const tutorial_steps = [
   //Plot Settings
   , {
     target: 'flexlayout__tab_button flexlayout__tab_button_top flexlayout__tab_button--unselected',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>We want to overlay the voltage traces from soma and dend</p>
@@ -530,6 +703,9 @@ const tutorial_steps = [
   }
   , {
     target: 'MuiButtonBase-root MuiFab-root MuiFab-sizeSmall MuiFab-primary',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click the + </p>
@@ -539,6 +715,9 @@ const tutorial_steps = [
   }
   , {
     target: 'MuiButtonBase-root MuiListItem-root MuiMenuItem-root MuiMenuItem-gutters MuiListItem-gutters MuiListItem-button',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click on Traces Plot</p>
@@ -548,6 +727,9 @@ const tutorial_steps = [
   }
   , {
     target: 'MuiBox-root MuiBox-root-451',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click in Cells to include then click gids then click cell 0</p>
@@ -557,6 +739,9 @@ const tutorial_steps = [
   }
   , {
     target: 'MuiBox-root MuiBox-root-451',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click in Cells to include then click gids then click cell 0</p>
@@ -566,6 +751,9 @@ const tutorial_steps = [
   }
   , {
     target: 'MuiButtonBase-root MuiListItem-root MuiMenuItem-root MuiMenuItem-gutters MuiListItem-gutters MuiListItem-button',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click in Cells to include then click gids then click cell 0</p>
@@ -575,6 +763,9 @@ const tutorial_steps = [
   }
   , {
     target: '#simConfiganalysisiplotTracesoverlay',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Check the box next to overlay data</p>
@@ -583,6 +774,9 @@ const tutorial_steps = [
   }
   , {
     target: 'MuiButton-label',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click on UPDATE NETWORK</p>
@@ -593,6 +787,9 @@ const tutorial_steps = [
   //run simulation
   , {
     target: 'material-icons MuiIcon-root',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Click on the 🚀 to launch</p>
@@ -605,6 +802,9 @@ const tutorial_steps = [
   //plots
   , {
     target: 'MuiListItemIcon-root makeStyles-icon-26',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Raster plot</p>
@@ -614,6 +814,9 @@ const tutorial_steps = [
   }
   , {
     target: 'MuiListItemIcon-root makeStyles-icon-26',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Voltage traces</p>
@@ -623,6 +826,9 @@ const tutorial_steps = [
   }
   , {
     target: 'MuiListItemIcon-root makeStyles-icon-26',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Spike histogram</p>
@@ -632,6 +838,9 @@ const tutorial_steps = [
   }
   , {
     target: 'MuiListItemIcon-root makeStyles-icon-26',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>Connectivity</p>
@@ -642,6 +851,9 @@ const tutorial_steps = [
   //Clear the GUI
   , {
     target: '#File',
+    title: (
+      <div>To be filled in</div>
+    ),
     content: (
       <div>
         <p>In the menu bar, click File then New then Blank</p>

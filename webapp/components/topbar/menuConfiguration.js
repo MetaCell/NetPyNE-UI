@@ -264,7 +264,7 @@ export default {
       },
     },
     {
-      label: 'Template models',
+      label: 'Examples',
       icon: '',
       position: 'bottom-start',
       style: topLevelMenuItemStyle,
