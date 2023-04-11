@@ -24,7 +24,6 @@ steps:
         type: build
         stage: build
         image_name: netpyne-ui
-        dockerfile: Dockerfile
         working_directory: ${{main_clone}}
         tag: 'np-${{CF_SHORT_REVISION}}'
         build_arguments:
