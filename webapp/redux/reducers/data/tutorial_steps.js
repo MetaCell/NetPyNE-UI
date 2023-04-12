@@ -30,7 +30,17 @@ const tutorial_steps = [
     content: (
       <div>
         <p>Click on CellType0 and the panel on the right will appear.</p>
-        <p>Rename the cell type: “pyr” for pyramidal.</p>
+      </div>
+    )
+  },
+  {
+    target: '#cellRuleName',
+    title: (
+      <div>Customise CellType0 name</div>
+    ),
+    content: (
+      <div>
+        <p>Rename the cell type: "pyr" for pyramidal.</p>
       </div>
     )
   },
@@ -46,17 +56,39 @@ const tutorial_steps = [
     )
   },
   {
-    target: 'flexlayout__tab_button_content',
+    target: 'input[value*="soma"]',
     title: (
-      <div>Populations component</div>
+      <div>Check imported cell's sections</div>
     ),
     content: (
       <div>
-        <p>Click on the Populations tab or its icon in the sidebar</p>
+        <p>We can check that the name of the section is "soma"</p>
       </div>
-    ),
-    collectionIndex: 1
+    )
   },
+  {
+    target: 'img[src*="popParams.svg"]',
+    title: (
+      <div>To be filled in</div>
+    ),
+    content: (
+      <div>
+        <p>Click on the Populations icon.</p>
+        <p>You can also find the each sidebar icons as tab in the top panel</p>
+      </div>
+    )
+  },
+  // {
+  //   target: 'div.flexlayout__tabset_tabbar_inner.flexlayout__tabset_tabbar_inner_top > div > div:nth-child(2)',
+  //   title: (
+  //     <div>Populations component</div>
+  //   ),
+  //   content: (
+  //     <div>
+  //       <p>Click on the Populations tab or its icon in the sidebar</p>
+  //     </div>
+  //   ),
+  // },
   {
     target: '#newPopulationButton',
     title: (
@@ -77,7 +109,7 @@ const tutorial_steps = [
   //   )
   // },
   {
-    target: 'input[value*="Population"]',
+    target: 'div.MuiBox-root.scrollbar.scrollchild > div.MuiBox-root > div',
     title: (
       <div>To be filled in</div>
     ),
@@ -88,7 +120,7 @@ const tutorial_steps = [
     )
   },
   {
-    target: '#netParamspopParamsPopulation0cellType',
+    target: 'div[id*="netParamspopParams"][id*="cellType"]',
     title: (
       <div>To be filled in</div>
     ),
@@ -99,7 +131,7 @@ const tutorial_steps = [
     )
   },
   {
-    target: '#netParamspopParamsPopulation0numCells',
+    target: 'input[id*="numCells"]',
     title: (
       <div>To be filled in</div>
     ),
@@ -110,7 +142,7 @@ const tutorial_steps = [
     )
   },
   {
-    target: 'MuiButtonBase-root MuiButton-root MuiButton-contained MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedContained MuiButtonGroup-groupedContainedHorizontal MuiButtonGroup-groupedContainedPrimary MuiButton-containedPrimary',
+    target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
     title: (
       <div>To be filled in</div>
     ),
@@ -162,16 +194,15 @@ const tutorial_steps = [
     collectionIndex: 6
   },
   {
-    target: 'flexlayout__tab_button_content',
+    target: 'img[src*="synMechParams.svg"]',
     title: (
       <div>To be filled in</div>
     ),
     content: (
       <div>
-        <p>Click on Synaptic Mechanisms in tabs</p>
+        <p>Click on Synaptic Mechanisms</p>
       </div>
     ),
-    collectionIndex: 2
   },
   {
     target: '#newSynapseButton',
@@ -245,7 +276,7 @@ const tutorial_steps = [
     collectionIndex: 6
   },
   {
-    target: 'flexlayout__tab_button_content',
+    target: 'img[src*="connParams.svg"]',
     title: (
       <div>To be filled in</div>
     ),
@@ -254,7 +285,6 @@ const tutorial_steps = [
         <p>Click on Connectivity Rules in tabs or sidebar</p>
       </div>
     ),
-    collectionIndex: 3
   },
   {
     target: '#newConnectivityRuleButton',
@@ -267,20 +297,74 @@ const tutorial_steps = [
       </div>
     )
   },
-  {
-    target: 'MuiInputBase-input MuiFilledInput-input',
+  { // ConnectivityName
+    target: '#ConnectivityName',
     title: (
       <div>To be filled in</div>
     ),
     content: (
       <div>
-        <p>Select “exc” for Synaptic mechanism</p>
+        <p>Name the rule "E-&gt;E" (without spaces)</p>
       </div>
     ),
-    collectionIndex: 8
+  },
+  { // netParamsconnParamsConnectivityRule0sec
+    target: 'input[id*="netParamsconnParams"][id*="sec"]',
+    title: (
+      <div>To be filled in</div>
+    ),
+    content: (
+      <div>
+        <p>Add "dend" as new postsynaptic neuron section</p>
+      </div>
+    ),
   },
   {
-    target: 'MuiInputBase-input MuiFilledInput-input',
+    target: 'button[id^="netParamsconnParams"][id$="sec-button"]',
+    title: (
+      <div>To be filled in</div>
+    ),
+    content: (
+      <div>
+        <p>Click on "+" to add the value</p>
+      </div>
+    ),
+  },
+  {
+    target: 'input[id*="netParamsconnParams"][id*="loc"]',
+    title: (
+      <div>To be filled in</div>
+    ),
+    content: (
+      <div>
+        <p>Enter 0.5 as new postsynaptic neuron location</p>
+      </div>
+    ),
+  },
+  {
+    target: 'button[id^="netParamsconnParams"][id$="loc-button"]',
+    title: (
+      <div>To be filled in</div>
+    ),
+    content: (
+      <div>
+        <p>Click on "+" to add the value</p>
+      </div>
+    ),
+  },
+  {
+    target: 'div[id*="netParamsconnParams"][id*="synMech"]',
+    title: (
+      <div>To be filled in</div>
+    ),
+    content: (
+      <div>
+        <p>Select "exc" for Synaptic mechanism</p>
+      </div>
+    ),
+  },
+  {
+    target: 'input[id*="netParamsconnParams"][id*="probability"]',
     title: (
       <div>To be filled in</div>
     ),
@@ -289,10 +373,9 @@ const tutorial_steps = [
         <p>Enter 0.1 in Probability of connection</p>
       </div>
     ),
-    collectionIndex: 9
   },
   {
-    target: 'MuiInputBase-input MuiFilledInput-input',
+    target: 'input[id*="netParamsconnParams"][id*="weight"]',
     title: (
       <div>To be filled in</div>
     ),
@@ -301,10 +384,9 @@ const tutorial_steps = [
         <p>Enter 0.005 in Weight of synaptic connection</p>
       </div>
     ),
-    collectionIndex: 10
   },
   {
-    target: 'MuiInputBase-input MuiFilledInput-input',
+    target: 'input[id*="netParamsconnParams"][id*="delay"]',
     title: (
       <div>To be filled in</div>
     ),
@@ -313,10 +395,12 @@ const tutorial_steps = [
         <p>Enter 5 in Connection delay</p>
       </div>
     ),
-    collectionIndex: 11
   },
+  //
+  // PRE SYNPTIC CELLS CONDITIONS
+  //
   {
-    target: 'MuiBottomNavigationAction-wrapper',
+    target: '#preCondsConnTab > span',
     title: (
       <div>To be filled in</div>
     ),
@@ -325,58 +409,23 @@ const tutorial_steps = [
         <p>Click on PRE-SYNAPTIC CELLS CONDITIONS</p>
       </div>
     ),
-    collectionIndex: 1
   },
   {
-    target: 'MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiSelect-filled MuiInputBase-input MuiFilledInput-input',
+    target: 'div[id*="netParamsconnParams"][id*="preCondspop"]',
     title: (
       <div>To be filled in</div>
     ),
     content: (
       <div>
-        <p>Select “exc” for Synaptic mechanism</p>
+        <p>Select E for the Population</p>
       </div>
-    ),
-    collectionIndex: 1
+    )
   },
+  //
+  // POST SYNPTIC CELLS CONDITIONS
+  //
   {
-    target: 'MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiSelect-filled MuiInputBase-input MuiFilledInput-input',
-    title: (
-      <div>To be filled in</div>
-    ),
-    content: (
-      <div>
-        <p>Enter 0.1 in Probability of connection</p>
-      </div>
-    ),
-    collectionIndex: 2
-  },
-  {
-    target: 'MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiSelect-filled MuiInputBase-input MuiFilledInput-input',
-    title: (
-      <div>To be filled in</div>
-    ),
-    content: (
-      <div>
-        <p>Enter 0.005 in Weight of synaptic connection</p>
-      </div>
-    ),
-    collectionIndex: 3
-  },
-  {
-    target: 'MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiSelect-filled MuiInputBase-input MuiFilledInput-input',
-    title: (
-      <div>To be filled in</div>
-    ),
-    content: (
-      <div>
-        <p>Enter 5 in Connection delayS</p>
-      </div>
-    ),
-    collectionIndex: 4
-  }
-  ,{
-    target: 'MuiBottomNavigationAction-wrapper',
+    target: '#postCondsConnTab > span',
     title: (
       <div>To be filled in</div>
     ),
@@ -385,10 +434,9 @@ const tutorial_steps = [
         <p>Click on POST-SYNAPTIC CELLS CONDITIONS</p>
       </div>
     ),
-    collectionIndex: 2
   },
-  ,{
-    target: 'netParamsconnParamsConnectivityRule0postCondspop',
+  {
+    target: 'div[id*="netParamsconnParams"][id*="postCondspop"]',
     title: (
       <div>To be filled in</div>
     ),
@@ -399,19 +447,18 @@ const tutorial_steps = [
     )
   }
   ,{
-    target: 'MuiButtonBase-root MuiButton-root MuiButton-contained MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedContained MuiButtonGroup-groupedContainedHorizontal MuiButtonGroup-groupedContainedPrimary MuiButton-containedPrimary',
+    target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
     title: (
       <div>To be filled in</div>
     ),
     content: (
       <div>
-        <p>CREATE NETWORK</p>
+        <p>Click on "CREATE NETWORK" (or "UPDATE NETWORK")</p>
       </div>
     ),
-    collectionIndex: 0
   }
   ,{
-    target: 'MuiButtonBase-root MuiListItem-root makeStyles-selected-23 MuiListItem-dense MuiListItem-button',
+    target: 'img[src*="d2NetPlot.svg"]',
     title: (
       <div>To be filled in</div>
     ),
@@ -420,34 +467,31 @@ const tutorial_steps = [
         <p>Generate a 2D Net Plot</p>
       </div>
     ),
-    collectionIndex: 2
   }
   ,{
-    target: 'MuiButtonBase-root MuiButton-root MuiButton-contained',
+    target: 'div [class*="SwitchPageButton"] .MuiButton-root',
     title: (
       <div>To be filled in</div>
     ),
     content: (
       <div>
         <p>Now we can see our connectivity</p>
-        <p>Click BACK TO EDIT when you are ready to continue</p>
+        <p>Click "BACK TO EDIT" when you are ready to continue</p>
       </div>
     ),
-    collectionIndex: 6
-  }
-  ,{
-    target: 'flexlayout__tab_button_content',
+  },
+  {
+    target: 'img[src*="stimSourceParams.svg"]',
     title: (
       <div>To be filled in</div>
     ),
     content: (
       <div>
-        <p>Click on Stim. Sources in tabs or sidebar</p>
+        <p>Open the Stimulation Sources panel</p>
       </div>
     ),
-    collectionIndex: 4
-  }
-  , {
+  },
+  {
     target: '#newStimulationSourceButton',
     title: (
       <div>To be filled in</div>
@@ -457,35 +501,34 @@ const tutorial_steps = [
         <p>Click on + above Source</p>
       </div>
     ),
-    collectionIndex: 4
-  }
-  //stimulation input rules
-  , {
-    target: 'MuiInputBase-input MuiFilledInput-input',
+  },
+  //
+  // Stimulation input rules
+  //
+  {
+    target: 'div.MuiCardContent-root div.MuiInputBase-formControl > input:not([id])',
     title: (
       <div>To be filled in</div>
     ),
     content: (
       <div>
-        <p>Type “IClamp1” in The name of the stimulation source</p>
+        <p>Type "IClamp1" in The name of the stimulation source</p>
       </div>
     ),
-    collectionIndex: 2
-  }
-  , {
-    target: 'MuiInputBase-input MuiFilledInput-input',
+  },
+  {
+    target: '#stimSourceSelect',
     title: (
       <div>To be filled in</div>
     ),
     content: (
       <div>
-        <p>Leave the default IClamp as the Point process used as stimulator</p>
+        <p>Set "IClamp" as the Point process used as stimulator</p>
       </div>
     ),
-    collectionIndex: 3
-  }
-  , {
-    target: 'MuiInputBase-input MuiFilledInput-input',
+  },
+  {
+    target: 'input[id^="netParamsstimSourceParams"][id$="del"]',
     title: (
       <div>To be filled in</div>
     ),
@@ -494,10 +537,9 @@ const tutorial_steps = [
         <p>Set Current clamp delay to 20</p>
       </div>
     ),
-    collectionIndex: 4
-  }
-  , {
-    target: 'MuiInputBase-input MuiFilledInput-input',
+  },
+  {
+    target: 'input[id^="netParamsstimSourceParams"][id$="dur"]',
     title: (
       <div>To be filled in</div>
     ),
@@ -506,10 +548,9 @@ const tutorial_steps = [
         <p>Set Current clamp duration to 5</p>
       </div>
     ),
-    collectionIndex: 5
-  }
-  , {
-    target: 'MuiInputBase-input MuiFilledInput-input',
+  },
+  {
+    target: 'input[id^="netParamsstimSourceParams"][id$="amp"]',
     title: (
       <div>To be filled in</div>
     ),
@@ -518,46 +559,45 @@ const tutorial_steps = [
         <p>Set Current clamp amplitude to 0.1 </p>
       </div>
     ),
-    collectionIndex: 6
-  }
-  //steam targets
-  , {
-    target: 'flexlayout__tab_button_content',
+  },
+  //
+  // Simulation targets
+  //
+  {
+    target: 'img[src$="stimTargetParams.svg"]',
     title: (
       <div>To be filled in</div>
     ),
     content: (
       <div>
-        <p>Click on Stim. Targets in tabs or sidebar</p>
+        <p>Open the on Stimulation Targets</p>
       </div>
     ),
-    collectionIndex: 5
-  }
-  , {
+  },
+  {
     target: '#newStimulationTargetButton',
     title: (
       <div>To be filled in</div>
     ),
     content: (
       <div>
-        <p>CClick on + above Target</p>
+        <p>Click on + above Target</p>
       </div>
     )
-  }
-  , {
-    target: 'MuiInputBase-input MuiFilledInput-input',
+  },
+  {
+    target: 'div.layoutVerticalFitInner div.MuiInputBase-formControl > input:not([id])',
     title: (
       <div>To be filled in</div>
     ),
     content: (
       <div>
-        <p>Type “IClamp1 cell0” in The name of the stimulation target </p>
+        <p>Type “IClamp1-&gt;cell0” in The name of the stimulation target </p>
       </div>
     ),
-    collectionIndex: 10
-  }
-  , {
-    target: 'MuiInputBase-input MuiFilledInput-input',
+  },
+  {
+    target: 'div[id*="netParamsstimTargetParams"][id*="source"]',
     title: (
       <div>To be filled in</div>
     ),
@@ -566,10 +606,9 @@ const tutorial_steps = [
         <p>Set Stimulation source to IClamp1</p>
       </div>
     ),
-    collectionIndex: 11
-  }
-  , {
-    target: 'MuiInputBase-input MuiFilledInput-input',
+  },
+  {
+    target: 'input[id*="netParamsstimTargetParams"][id*="sec"]',
     title: (
       <div>To be filled in</div>
     ),
@@ -578,10 +617,9 @@ const tutorial_steps = [
         <p>Type “dend” in Target section</p>
       </div>
     ),
-    collectionIndex: 12
-  }
-  , {
-    target: 'MuiInputBase-input MuiFilledInput-input',
+  },
+  {
+    target: 'input[id*="netParamsstimTargetParams"][id*="loc"]',
     title: (
       <div>To be filled in</div>
     ),
@@ -590,10 +628,11 @@ const tutorial_steps = [
         <p>Enter 1 in Target location</p>
       </div>
     ),
-    collectionIndex: 13
-  }
-  //conditions tab
-  , {
+  },
+  //
+  // Conditions tab
+  //
+  {
     target: '#stimTargetCondsTab',
     title: (
       <div>To be filled in</div>
@@ -603,33 +642,45 @@ const tutorial_steps = [
         <p>Click on CONDITIONS</p>
       </div>
     )
-  }
-  , {
-    target: '#netParamsstimTargetParamsstim_target0condscellList',
+  },
+  {
+    target: 'input[id*="netParamsstimTargetParams"][id*="condscellList"]',
     title: (
       <div>To be filled in</div>
     ),
     content: (
       <div>
-        <p>Enter 0 in Add new Target cell global indices</p>
-        <p>Click the + on the right</p>
+        <p>Enter 0 as new Target cell global indices</p>
       </div>
     )
-  }
-  , {
-    target: 'MuiInputBase-input MuiFilledInput-input',
+  },
+  {
+    target: 'button[id*="netParamsstimTargetParams"][id*="condscellList-button"]',
     title: (
       <div>To be filled in</div>
     ),
     content: (
       <div>
-        <p>Click on Configuration in the tabs or sidebar</p>
+        <p>Click the "+" to add the new target cell global indice</p>
+      </div>
+    )
+  },
+  //
+  // Configuration panel
+  //
+  {
+    target: 'img[src*="simConfig.svg"]',
+    title: (
+      <div>To be filled in</div>
+    ),
+    content: (
+      <div>
+        <p>Open the configuration panel</p>
       </div>
     ),
-    collectionIndex: 8
-  }
-  //COnfiguration
-  , {
+  },
+  // Simulation configuration
+  {
     target: '#simConfigduration',
     title: (
       <div>To be filled in</div>
@@ -639,9 +690,9 @@ const tutorial_steps = [
         <p>Change the Duration to 200</p>
       </div>
     )
-  }
-  , {
-    target: 'MuiBox-root MuiBox-root-391',
+  },
+  {
+    target: '#simConfigdt',
     title: (
       <div>To be filled in</div>
     ),
@@ -650,10 +701,9 @@ const tutorial_steps = [
         <p>Change the Time Step to 0.1</p>
       </div>
     ),
-    collectionIndex: 0
-  }
-  , {
-    target: 'MuiBottomNavigationAction-wrapper',
+  },
+  {
+    target: '#configRecord',
     title: (
       <div>To be filled in</div>
     ),
@@ -662,34 +712,56 @@ const tutorial_steps = [
         <p>Click on RECORD</p>
       </div>
     ),
-    collectionIndex: 3
-  }
-  , {
+  },
+  {
     target: '#simConfigrecordCells',
     title: (
       <div>To be filled in</div>
     ),
     content: (
       <div>
-        <p>Enter 0 in Add new Cells to record traces from</p>
+        <p>Enter 0 as new Cells to record traces from</p>
       </div>
     )
-  }
-  , {
+  },
+  {
+    target: '#simConfigrecordCells-button',
+    title: (
+      <div>To be filled in</div>
+    ),
+    content: (
+      <div>
+        <p>Click the "+" to add the value</p>
+      </div>
+    )
+  },
+  {
+    target: '#simConfigrecordTraces',
+    title: (
+      <div>To be filled in</div>
+    ),
+    content: (
+      <div>
+        <p>Type "{"V_dend: {sec: dend, loc: 1.0, var: v}"}"</p>
+      </div>
+    )
+  },
+  {
     target: '#simConfigrecordTraces-button',
     title: (
       <div>To be filled in</div>
     ),
     content: (
       <div>
-        <p>Click the + on the right</p>
-        <p>Type "V_dend... TODO FORMAT'</p>
+        <p>Click the "+" to add the expression</p>
       </div>
     )
-  }
-  //Plot Settings
-  , {
-    target: 'flexlayout__tab_button flexlayout__tab_button_top flexlayout__tab_button--unselected',
+  },
+  //
+  // Plot Settings
+  //
+  {
+    target: 'img[src$="analysis.svg"]',
     title: (
       <div>To be filled in</div>
     ),
@@ -699,69 +771,65 @@ const tutorial_steps = [
         <p>Go to Plot Settings</p>
       </div>
     ),
-    collectionIndex: 3
   }
   , {
-    target: 'MuiButtonBase-root MuiFab-root MuiFab-sizeSmall MuiFab-primary',
+    target: 'div.MuiAccordionSummary-root div.breadcrumb button.MuiButtonBase-root.MuiFab-root.MuiFab-sizeSmall.MuiFab-primary:not([id])',
     title: (
-      <div>To be filled in</div>
+      <div>Add a new plot</div>
     ),
     content: (
       <div>
         <p>Click the + </p>
       </div>
     ),
-    collectionIndex: 3
   }
   , {
-    target: 'MuiButtonBase-root MuiListItem-root MuiMenuItem-root MuiMenuItem-gutters MuiListItem-gutters MuiListItem-button',
+    target: 'li[value="iplotTraces"]',
     title: (
       <div>To be filled in</div>
     ),
     content: (
       <div>
-        <p>Click on Traces Plot</p>
+        <p>Select Traces Plot</p>
       </div>
     ),
-    collectionIndex: 0
   }
   , {
-    target: 'MuiBox-root MuiBox-root-451',
+    target: 'div.MuiPaper-elevation0 div.MuiBox-root div.MuiFormControl-root input.MuiFilledInput-input:not([id])',
     title: (
       <div>To be filled in</div>
     ),
     content: (
       <div>
-        <p>Click in Cells to include then click gids then click cell 0</p>
+        <p>Click on "Cells to include"</p>
       </div>
     ),
-    collectionIndex: 0
-  }
-  , {
-    target: 'MuiBox-root MuiBox-root-451',
+    waitFor: 'click',
+    collectionIndex: 1
+  },
+  {
+    target: 'li[value="gids"]',
     title: (
       <div>To be filled in</div>
     ),
     content: (
       <div>
-        <p>Click in Cells to include then click gids then click cell 0</p>
+        <p>Click "gids" then select "cell 0"</p>
       </div>
     ),
-    collectionIndex: 0
-  }
-  , {
-    target: 'MuiButtonBase-root MuiListItem-root MuiMenuItem-root MuiMenuItem-gutters MuiListItem-gutters MuiListItem-button',
+  },
+  {
+    target: 'div.MuiPaper-elevation0 div.MuiBox-root div.MuiFormControl-root input.MuiFilledInput-input:not([id])',
     title: (
       <div>To be filled in</div>
     ),
     content: (
       <div>
-        <p>Click in Cells to include then click gids then click cell 0</p>
+        <p>Click again on "Cells to include" to validate the selection</p>
       </div>
     ),
-    collectionIndex: 3
-  }
-  , {
+  },
+  {
     target: '#simConfiganalysisiplotTracesoverlay',
     title: (
       <div>To be filled in</div>
@@ -771,9 +839,9 @@ const tutorial_steps = [
         <p>Check the box next to overlay data</p>
       </div>
     )
-  }
-  , {
-    target: 'MuiButton-label',
+  },
+  {
+    target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
     title: (
       <div>To be filled in</div>
     ),
@@ -782,82 +850,104 @@ const tutorial_steps = [
         <p>Click on UPDATE NETWORK</p>
       </div>
     ),
-    collectionIndex: 7
-  }
-  //run simulation
-  , {
-    target: 'material-icons MuiIcon-root',
+  },
+  //
+  // run simulation
+  //
+  {
+    target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
     title: (
       <div>To be filled in</div>
     ),
     content: (
       <div>
-        <p>Click on the 🚀 to launch</p>
+        <p>Click SIMULATE</p>
         <p>Alternatively, in the menu bar, click Model and then Simulate network</p>
         <p>Explore the analysis plots</p>
       </div>
     ),
-    collectionIndex: 1
-  }
-  //plots
-  , {
-    target: 'MuiListItemIcon-root makeStyles-icon-26',
+  },
+  //
+  // plots
+  //
+  {
+    target: 'img[src*="rasterPlot"]',
     title: (
-      <div>To be filled in</div>
+      <div>Observe the different plots</div>
     ),
     content: (
       <div>
-        <p>Raster plot</p>
+        <p>Open the Raster plot panel</p>
       </div>
     ),
-    collectionIndex: 2
-  }
-  , {
-    target: 'MuiListItemIcon-root makeStyles-icon-26',
+  },
+  {
+    target: 'img[src$="tracesPlot.svg"]',
     title: (
-      <div>To be filled in</div>
+      <div>Observe the different plots</div>
     ),
     content: (
       <div>
-        <p>Voltage traces</p>
+        <p>Open the Cell traces panel to see the voltages</p>
       </div>
     ),
-    collectionIndex: 3
-  }
-  , {
-    target: 'MuiListItemIcon-root makeStyles-icon-26',
+  },
+  {
+    target: 'img[src*="spikePlot"]',
     title: (
-      <div>To be filled in</div>
+      <div>Observe the different plots</div>
     ),
     content: (
       <div>
-        <p>Spike histogram</p>
+        <p>Open the Spike histogram panel</p>
       </div>
     ),
-    collectionIndex: 4
-  }
-  , {
-    target: 'MuiListItemIcon-root makeStyles-icon-26',
+  },
+  {
+    target: 'img[src$="connectionPlot.svg"]',
     title: (
-      <div>To be filled in</div>
+      <div>Observe the different plots</div>
     ),
     content: (
       <div>
-        <p>Connectivity</p>
+        <p>Open the Connectivity panel</p>
       </div>
     ),
-    collectionIndex: 5
-  }
-  //Clear the GUI
-  , {
+  },
+  //
+  // Clear the GUI
+  //
+  {
     target: '#File',
     title: (
-      <div>To be filled in</div>
+      <div>Clear the kernel</div>
     ),
     content: (
       <div>
-        <p>In the menu bar, click File then New then Blank</p>
+        <p>In the menu bar, select "File"</p>
+      </div>
+    )
+  },
+  {
+    target: '#New',
+    title: (
+      <div>Clear the kernel</div>
+    ),
+    content: (
+      <div>
+        <p>Then click on "New"</p>
         <p>This is necessary to clear the kernel when changing models</p>
+      </div>
+    )
+  },
+  {
+    target: '#appBarPerformActionButton',
+    title: (
+      <div>Clear the kernel</div>
+    ),
+    content: (
+      <div>
+        <p>Finally, click on "CREATE" to clear the kernel</p>
       </div>
     )
   }
