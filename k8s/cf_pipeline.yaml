@@ -53,7 +53,6 @@ steps:
       services:
         app:
           image: '${{netpyne-ui}}'
-          working_dir: /home/pptruser
           ports:
             - 8888
     composition_candidates:
