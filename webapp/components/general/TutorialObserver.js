@@ -8,6 +8,7 @@ export default function TutorialObserver(props) {
 
   const {
     steps,
+    tourStep,
     requestedTourStep,
     startTutorialStep,
     stopTutorialStep,
@@ -62,6 +63,7 @@ export default function TutorialObserver(props) {
         <button onClick={ () => { startTutorialCallBack() }}>RESET TUTORIAL</button>
           <TutorialBubble
             requestedTourStep={requestedTourStep}
+            currentTourStep={tourStep}
             steps={steps}
             stopTutorial={() => stopTutorial()}
             incrementTutorialStep={doIncrementTutorialStep}

@@ -156,7 +156,7 @@ export const ExperimentEdit = connect(
     ...ownProps,
     updates: state.general.updates,
     widgets: state.widgets,
-    visible: state.widgets?.experimentManager?.status != WidgetStatus.HIDDEN 
+    visible: state.widgets?.experimentManager?.status != WidgetStatus.HIDDEN
   }),
   (dispatch) => ({
     editExperiment: (name, details) => dispatch(editExperiment(name, details)),
@@ -179,7 +179,7 @@ export const NetPyNE = connect(
   (dispatch) => ({
     pythonCallErrorDialogBox: (payload) => dispatch(openBackendErrorDialog(payload)),
     setWidgets: (payload) => dispatch(setWidgets(payload)),
-    setDefaultWidgets: () => dispatch(setDefaultWidgets),    
+    setDefaultWidgets: () => dispatch(setDefaultWidgets),
   }),
 )(_NetPyNE);
 

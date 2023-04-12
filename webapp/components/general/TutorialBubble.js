@@ -7,7 +7,7 @@ import {
 const rectMargin = 4;
 
 const TutorialBubble = ({
-  requestedTourStep, steps, lastCheckRender, stopTutorial, incrementTutorialStep, validateTutorialStep,
+  requestedTourStep, steps, lastCheckRender, stopTutorial, incrementTutorialStep, validateTutorialStep, currentTourStep
 }) => {
   const tutorialTarget = useRef(null)
 
@@ -68,7 +68,7 @@ const TutorialBubble = ({
   }
 
   const { target, title, content } = tourStep;
-  const waitFor = tourStep.waitFor || 'click';
+
 
   const DOMtarget = getDOMTarget(target, tourStep);
   const visible = DOMtarget?.checkVisibility();
@@ -78,24 +78,56 @@ const TutorialBubble = ({
   }
 
   // validateTutorialStep({ tourStep: requestedTourStep });
+  const isEditable = (el) => {
+    if (el && ~['input','textarea'].indexOf(el.tagName.toLowerCase())) {
+      return !el.readOnly && !el.disabled;
+    }
+    el = getSelection().anchorNode;
+    if (!el){
+      return false;
+    }
+    return el.parentNode.isContentEditable;
+  }
+
+  const isAnyEditable = (element) => {
+    if (isEditable(element)) {
+      return true;
+    }
+
+    for (const child of element.children) {
+      if (isAnyEditable(child)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   const listen = (event) => {
-      incrementTutorialStep();
-      tutorialTarget.current = null;
+    tutorialTarget.current = null;
+    incrementTutorialStep();
   }
 
   const stop = (event) => {
-      stopTutorial(event);
-      tutorialTarget.current = null;
+    stopTutorial(event);
+    tutorialTarget.current = null;
   }
 
-  if (!tutorialTarget.current) {
+  if (currentTourStep === requestedTourStep) {
+    tutorialTarget.current = null;
+  }
+
+  if (!tutorialTarget.current && currentTourStep !== requestedTourStep) {
     tutorialTarget.current = DOMtarget;
+    let waitFor = tourStep.waitFor;
+    if (!waitFor) {
+      waitFor = isAnyEditable(DOMtarget) ? 'fieldEdition' : 'click'
+    }
     switch (waitFor) {
       case 'click':
         if (requestedTourStep === steps.length) {
-          DOMtarget.addEventListener('click', stop, {once: true});
+          DOMtarget.addEventListener('click', stop, {once: true, capture: true});
         } else {
-          DOMtarget.addEventListener('click', listen, {once: true});
+          DOMtarget.addEventListener('click', listen, {once: true, capture: true});
         }
         break;
       case 'fieldEdition': // Do nothing, we wait for a click on "next"
