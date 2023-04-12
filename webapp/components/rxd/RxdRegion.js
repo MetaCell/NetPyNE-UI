@@ -251,7 +251,7 @@ const RxdRegion = (props) => {
                 multiple={1}
                 model={`${baseTag}['secs']`}
                 method="netpyne_geppetto.getAvailableRxDSections"
-                pythonParams={[props.id]}
+                pythonparams={[props.id]}
                 postProcessItems={postProcessSecs}
               />
             </NetPyNEField>
