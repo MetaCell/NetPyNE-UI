@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button, Grid } from '@material-ui/core';
 import {
   primaryColor, secondaryColor, bgLight, bgDark, primaryTextColor, secondaryTextColor, fontColor,
@@ -9,11 +9,13 @@ const rectMargin = 4;
 const TutorialBubble = ({
   requestedTourStep, steps, lastCheckRender, stopTutorial, incrementTutorialStep, validateTutorialStep,
 }) => {
-  const [count, setCount] = useState(0);
+  const tutorialTarget = useRef(null)
 
-  const forceUpdate = () => {
-    setCount(count);
-  };
+  useEffect(() => {
+    return () => {
+      tutorialTarget.current = null;
+    }
+  }, [])
 
   const getDOMTarget = (target, config) => {
     // We query the DOM with the selector
@@ -65,9 +67,8 @@ const TutorialBubble = ({
     return null;
   }
 
-  const { target } = tourStep;
-  const { title } = tourStep;
-  const { content } = tourStep;
+  const { target, title, content } = tourStep;
+  const waitFor = tourStep.waitFor || 'click';
 
   const DOMtarget = getDOMTarget(target, tourStep);
   const visible = DOMtarget?.checkVisibility();
@@ -77,6 +78,32 @@ const TutorialBubble = ({
   }
 
   // validateTutorialStep({ tourStep: requestedTourStep });
+  const listen = (event) => {
+      incrementTutorialStep();
+      tutorialTarget.current = null;
+  }
+
+  const stop = (event) => {
+      stopTutorial(event);
+      tutorialTarget.current = null;
+  }
+
+  if (!tutorialTarget.current) {
+    tutorialTarget.current = DOMtarget;
+    switch (waitFor) {
+      case 'click':
+        if (requestedTourStep === steps.length) {
+          DOMtarget.addEventListener('click', stop, {once: true});
+        } else {
+          DOMtarget.addEventListener('click', listen, {once: true});
+        }
+        break;
+      case 'fieldEdition': // Do nothing, we wait for a click on "next"
+        break;
+      default:
+        break;
+    }
+  }
 
   const targetRect = DOMtarget.getBoundingClientRect();
   const { x, y } = calculateVisiblePosition(targetRect, 150, 300);
@@ -143,8 +170,8 @@ const TutorialBubble = ({
               item
               xs={3}
               spacing={1}
-              alignItems="left"
-              justifyContent="left"
+              alignItems="flex-start"
+              justifyContent="flex-start"
             >
               <Grid item xs={12}>
                 <p style={{ color: '#fff' }}>
@@ -160,12 +187,12 @@ const TutorialBubble = ({
               item
               xs={9}
               spacing={1}
-              alignItems="right"
-              justifyContent="right"
+              alignItems="flex-end"
+              justifyContent="flex-end"
             >
               <Grid item xs={12}>
                 <Button
-                  onClick={stopTutorial}
+                  onClick={stop}
                   color="primary"
                   style={{
                     display: 'block',
@@ -186,7 +213,7 @@ const TutorialBubble = ({
                 {hasOtherSteps
                 && (
                 <Button
-                  onClick={incrementTutorialStep}
+                  onClick={listen}
                   style={{
                     display: 'block',
                     margin: '0 auto',
