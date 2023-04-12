@@ -3,7 +3,7 @@ const tutorial_steps = [
   {
     target: '#selectCellButton',
     title: (
-      <div>Import a simple cell model</div>
+      <div>Simple Cell Model Creation</div>
     ),
     content: (
       <div>
@@ -14,7 +14,7 @@ const tutorial_steps = [
   {
     target: '#BallStick_HHCellTemplate',
     title: (
-      <div>Add Ball and stick HH cell</div>
+      <div>New Cell Addition</div>
     ),
     content: (
       <div>
@@ -25,7 +25,7 @@ const tutorial_steps = [
   {
     target: '#CellType0',
     title: (
-      <div>Customise CellType0</div>
+      <div>Cell Customization</div>
     ),
     content: (
       <div>
@@ -36,7 +36,7 @@ const tutorial_steps = [
   {
     target: '#cellRuleName',
     title: (
-      <div>Customise CellType0 name</div>
+      <div>Cell Customization</div>
     ),
     content: (
       <div>
@@ -47,7 +47,7 @@ const tutorial_steps = [
   {
     target: '#newSectionButton',
     title: (
-      <div>Check imported cell's sections</div>
+      <div>Check Cell's Sections</div>
     ),
     content: (
       <div>
@@ -58,7 +58,7 @@ const tutorial_steps = [
   {
     target: 'input[value*="soma"]',
     title: (
-      <div>Check imported cell's sections</div>
+      <div>Check Cell's Sections</div>
     ),
     content: (
       <div>
@@ -69,7 +69,7 @@ const tutorial_steps = [
   {
     target: 'img[src*="popParams.svg"]',
     title: (
-      <div>To be filled in</div>
+      <div>Cell Population Creation</div>
     ),
     content: (
       <div>
@@ -92,7 +92,7 @@ const tutorial_steps = [
   {
     target: '#newPopulationButton',
     title: (
-      <div>Create a population</div>
+      <div>Cell Population Creation</div>
     ),
     content: (
       <div>
@@ -111,7 +111,7 @@ const tutorial_steps = [
   {
     target: 'div.MuiBox-root.scrollbar.scrollchild > div.MuiBox-root > div',
     title: (
-      <div>To be filled in</div>
+      <div>Cell Population Creation</div>
     ),
     content: (
       <div>
@@ -122,18 +122,18 @@ const tutorial_steps = [
   {
     target: 'div[id*="netParamspopParams"][id*="cellType"]',
     title: (
-      <div>To be filled in</div>
+      <div>Cell Population Creation</div>
     ),
     content: (
       <div>
-        <p>Set the Cell type to the pyr cell we imported earlier</p>
+        <p>Set the Cell type to the "pyr" cell we imported earlier</p>
       </div>
     )
   },
   {
     target: 'input[id*="numCells"]',
     title: (
-      <div>To be filled in</div>
+      <div>Cell Population Creation</div>
     ),
     content: (
       <div>
@@ -144,7 +144,7 @@ const tutorial_steps = [
   {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
     title: (
-      <div>To be filled in</div>
+      <div>Network Creation</div>
     ),
     content: (
       <div>
@@ -155,7 +155,7 @@ const tutorial_steps = [
   {
     target: 'flexlayout__tab_button flexlayout__tab_button_top flexlayout__tab_button--selected',
     title: (
-      <div>To be filled in</div>
+      <div>Network Visualization</div>
     ),
     content: (
       <div>
@@ -169,7 +169,7 @@ const tutorial_steps = [
   {
     target: 'material-icons MuiIcon-root',
     title: (
-      <div>To be filled in</div>
+      <div>2D Net Plot Panel</div>
     ),
     content: (
       <div>
@@ -184,7 +184,7 @@ const tutorial_steps = [
   {
     target: 'MuiButtonBase-root MuiButton-root MuiButton-contained',
     title: (
-      <div>To be filled in</div>
+      <div>Model Modifications</div>
     ),
     content: (
       <div>
@@ -196,7 +196,7 @@ const tutorial_steps = [
   {
     target: 'img[src*="synMechParams.svg"]',
     title: (
-      <div>To be filled in</div>
+      <div>Synaptic Mechanism Creation</div>
     ),
     content: (
       <div>
@@ -207,7 +207,7 @@ const tutorial_steps = [
   {
     target: '#newSynapseButton',
     title: (
-      <div>To be filled in</div>
+      <div>Synaptic Mechanism Creation</div>
     ),
     content: (
       <div>
@@ -218,7 +218,7 @@ const tutorial_steps = [
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
     title: (
-      <div>To be filled in</div>
+      <div>Synaptic Mechanism Creation</div>
     ),
     content: (
       <div>
@@ -230,7 +230,7 @@ const tutorial_steps = [
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
     title: (
-      <div>To be filled in</div>
+      <div>Synaptic Mechanism Creation</div>
     ),
     content: (
       <div>
@@ -242,7 +242,7 @@ const tutorial_steps = [
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
     title: (
-      <div>To be filled in</div>
+      <div>Synaptic Mechanism Creation</div>
     ),
     content: (
       <div>
@@ -254,7 +254,7 @@ const tutorial_steps = [
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
     title: (
-      <div>To be filled in</div>
+      <div>Synaptic Mechanism Creation</div>
     ),
     content: (
       <div>
@@ -266,7 +266,7 @@ const tutorial_steps = [
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
     title: (
-      <div>To be filled in</div>
+      <div>Synaptic Mechanism Creation</div>
     ),
     content: (
       <div>
@@ -278,7 +278,7 @@ const tutorial_steps = [
   {
     target: 'img[src*="connParams.svg"]',
     title: (
-      <div>To be filled in</div>
+      <div>Connectivity Rules Creation</div>
     ),
     content: (
       <div>
@@ -289,7 +289,7 @@ const tutorial_steps = [
   {
     target: '#newConnectivityRuleButton',
     title: (
-      <div>To be filled in</div>
+      <div>Connectivity Rules Creation</div>
     ),
     content: (
       <div>
@@ -300,7 +300,7 @@ const tutorial_steps = [
   { // ConnectivityName
     target: '#ConnectivityName',
     title: (
-      <div>To be filled in</div>
+      <div>Connectivity Rules Creation</div>
     ),
     content: (
       <div>
@@ -311,7 +311,7 @@ const tutorial_steps = [
   { // netParamsconnParamsConnectivityRule0sec
     target: 'input[id*="netParamsconnParams"][id*="sec"]',
     title: (
-      <div>To be filled in</div>
+      <div>Connectivity Rules Creation</div>
     ),
     content: (
       <div>
@@ -322,7 +322,7 @@ const tutorial_steps = [
   {
     target: 'button[id^="netParamsconnParams"][id$="sec-button"]',
     title: (
-      <div>To be filled in</div>
+      <div>Connectivity Rules Creation</div>
     ),
     content: (
       <div>
@@ -333,7 +333,7 @@ const tutorial_steps = [
   {
     target: 'input[id*="netParamsconnParams"][id*="loc"]',
     title: (
-      <div>To be filled in</div>
+      <div>Connectivity Rules Creation</div>
     ),
     content: (
       <div>
@@ -344,7 +344,7 @@ const tutorial_steps = [
   {
     target: 'button[id^="netParamsconnParams"][id$="loc-button"]',
     title: (
-      <div>To be filled in</div>
+      <div>Connectivity Rules Creation</div>
     ),
     content: (
       <div>
@@ -355,7 +355,7 @@ const tutorial_steps = [
   {
     target: 'div[id*="netParamsconnParams"][id*="synMech"]',
     title: (
-      <div>To be filled in</div>
+      <div>Connectivity Rules Creation</div>
     ),
     content: (
       <div>
@@ -366,7 +366,7 @@ const tutorial_steps = [
   {
     target: 'input[id*="netParamsconnParams"][id*="probability"]',
     title: (
-      <div>To be filled in</div>
+      <div>Connectivity Rules Creation</div>
     ),
     content: (
       <div>
@@ -377,7 +377,7 @@ const tutorial_steps = [
   {
     target: 'input[id*="netParamsconnParams"][id*="weight"]',
     title: (
-      <div>To be filled in</div>
+      <div>Connectivity Rules Creation</div>
     ),
     content: (
       <div>
@@ -388,7 +388,7 @@ const tutorial_steps = [
   {
     target: 'input[id*="netParamsconnParams"][id*="delay"]',
     title: (
-      <div>To be filled in</div>
+      <div>Connectivity Rules Creation</div>
     ),
     content: (
       <div>
@@ -402,7 +402,7 @@ const tutorial_steps = [
   {
     target: '#preCondsConnTab > span',
     title: (
-      <div>To be filled in</div>
+      <div>Connectivity Rules Creation</div>
     ),
     content: (
       <div>
@@ -413,7 +413,7 @@ const tutorial_steps = [
   {
     target: 'div[id*="netParamsconnParams"][id*="preCondspop"]',
     title: (
-      <div>To be filled in</div>
+      <div>Connectivity Rules Creation</div>
     ),
     content: (
       <div>
@@ -427,7 +427,7 @@ const tutorial_steps = [
   {
     target: '#postCondsConnTab > span',
     title: (
-      <div>To be filled in</div>
+      <div>Connectivity Rules Creation</div>
     ),
     content: (
       <div>
@@ -438,7 +438,7 @@ const tutorial_steps = [
   {
     target: 'div[id*="netParamsconnParams"][id*="postCondspop"]',
     title: (
-      <div>To be filled in</div>
+      <div>Connectivity Rules Creation</div>
     ),
     content: (
       <div>
@@ -449,7 +449,7 @@ const tutorial_steps = [
   ,{
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
     title: (
-      <div>To be filled in</div>
+      <div>Network Creation</div>
     ),
     content: (
       <div>
@@ -460,18 +460,18 @@ const tutorial_steps = [
   ,{
     target: 'img[src*="d2NetPlot.svg"]',
     title: (
-      <div>To be filled in</div>
+      <div>Plot Display</div>
     ),
     content: (
       <div>
-        <p>Generate a 2D Net Plot</p>
+        <p>Generate the 2D Net Plot</p>
       </div>
     ),
   }
   ,{
     target: 'div [class*="SwitchPageButton"] .MuiButton-root',
     title: (
-      <div>To be filled in</div>
+      <div>Model Modification</div>
     ),
     content: (
       <div>
@@ -483,7 +483,7 @@ const tutorial_steps = [
   {
     target: 'img[src*="stimSourceParams.svg"]',
     title: (
-      <div>To be filled in</div>
+      <div>Stimulation Sources Creation</div>
     ),
     content: (
       <div>
@@ -494,7 +494,7 @@ const tutorial_steps = [
   {
     target: '#newStimulationSourceButton',
     title: (
-      <div>To be filled in</div>
+      <div>Stimulation Sources Creation</div>
     ),
     content: (
       <div>
@@ -508,7 +508,7 @@ const tutorial_steps = [
   {
     target: 'div.MuiCardContent-root div.MuiInputBase-formControl > input:not([id])',
     title: (
-      <div>To be filled in</div>
+      <div>Stimulation Sources Creation</div>
     ),
     content: (
       <div>
@@ -519,7 +519,7 @@ const tutorial_steps = [
   {
     target: '#stimSourceSelect',
     title: (
-      <div>To be filled in</div>
+      <div>Stimulation Sources Creation</div>
     ),
     content: (
       <div>
@@ -530,7 +530,7 @@ const tutorial_steps = [
   {
     target: 'input[id^="netParamsstimSourceParams"][id$="del"]',
     title: (
-      <div>To be filled in</div>
+      <div>Stimulation Sources Creation</div>
     ),
     content: (
       <div>
@@ -541,7 +541,7 @@ const tutorial_steps = [
   {
     target: 'input[id^="netParamsstimSourceParams"][id$="dur"]',
     title: (
-      <div>To be filled in</div>
+      <div>Stimulation Sources Creation</div>
     ),
     content: (
       <div>
@@ -552,7 +552,7 @@ const tutorial_steps = [
   {
     target: 'input[id^="netParamsstimSourceParams"][id$="amp"]',
     title: (
-      <div>To be filled in</div>
+      <div>Stimulation Sources Creation</div>
     ),
     content: (
       <div>
@@ -566,7 +566,7 @@ const tutorial_steps = [
   {
     target: 'img[src$="stimTargetParams.svg"]',
     title: (
-      <div>To be filled in</div>
+      <div>Stimulation Targets Creation</div>
     ),
     content: (
       <div>
@@ -577,7 +577,7 @@ const tutorial_steps = [
   {
     target: '#newStimulationTargetButton',
     title: (
-      <div>To be filled in</div>
+      <div>Stimulation Targets Creation</div>
     ),
     content: (
       <div>
@@ -588,7 +588,7 @@ const tutorial_steps = [
   {
     target: 'div.layoutVerticalFitInner div.MuiInputBase-formControl > input:not([id])',
     title: (
-      <div>To be filled in</div>
+      <div>Stimulation Targets Creation</div>
     ),
     content: (
       <div>
@@ -599,7 +599,7 @@ const tutorial_steps = [
   {
     target: 'div[id*="netParamsstimTargetParams"][id*="source"]',
     title: (
-      <div>To be filled in</div>
+      <div>Stimulation Targets Creation</div>
     ),
     content: (
       <div>
@@ -610,7 +610,7 @@ const tutorial_steps = [
   {
     target: 'input[id*="netParamsstimTargetParams"][id*="sec"]',
     title: (
-      <div>To be filled in</div>
+      <div>Stimulation Targets Creation</div>
     ),
     content: (
       <div>
@@ -621,7 +621,7 @@ const tutorial_steps = [
   {
     target: 'input[id*="netParamsstimTargetParams"][id*="loc"]',
     title: (
-      <div>To be filled in</div>
+      <div>Stimulation Targets Creation</div>
     ),
     content: (
       <div>
@@ -635,7 +635,7 @@ const tutorial_steps = [
   {
     target: '#stimTargetCondsTab',
     title: (
-      <div>To be filled in</div>
+      <div>Conditions Setup</div>
     ),
     content: (
       <div>
@@ -646,7 +646,7 @@ const tutorial_steps = [
   {
     target: 'input[id*="netParamsstimTargetParams"][id*="condscellList"]',
     title: (
-      <div>To be filled in</div>
+      <div>Conditions Setup</div>
     ),
     content: (
       <div>
@@ -657,7 +657,7 @@ const tutorial_steps = [
   {
     target: 'button[id*="netParamsstimTargetParams"][id*="condscellList-button"]',
     title: (
-      <div>To be filled in</div>
+      <div>Conditions Setup</div>
     ),
     content: (
       <div>
@@ -671,7 +671,7 @@ const tutorial_steps = [
   {
     target: 'img[src*="simConfig.svg"]',
     title: (
-      <div>To be filled in</div>
+      <div>Simulation Configuration</div>
     ),
     content: (
       <div>
@@ -683,7 +683,7 @@ const tutorial_steps = [
   {
     target: '#simConfigduration',
     title: (
-      <div>To be filled in</div>
+      <div>Simulation Configuration</div>
     ),
     content: (
       <div>
@@ -694,7 +694,7 @@ const tutorial_steps = [
   {
     target: '#simConfigdt',
     title: (
-      <div>To be filled in</div>
+      <div>Simulation Configuration</div>
     ),
     content: (
       <div>
@@ -705,7 +705,7 @@ const tutorial_steps = [
   {
     target: '#configRecord',
     title: (
-      <div>To be filled in</div>
+      <div>Simulation Configuration</div>
     ),
     content: (
       <div>
@@ -716,7 +716,7 @@ const tutorial_steps = [
   {
     target: '#simConfigrecordCells',
     title: (
-      <div>To be filled in</div>
+      <div>Simulation Configuration</div>
     ),
     content: (
       <div>
@@ -727,7 +727,7 @@ const tutorial_steps = [
   {
     target: '#simConfigrecordCells-button',
     title: (
-      <div>To be filled in</div>
+      <div>Simulation Configuration</div>
     ),
     content: (
       <div>
@@ -738,7 +738,7 @@ const tutorial_steps = [
   {
     target: '#simConfigrecordTraces',
     title: (
-      <div>To be filled in</div>
+      <div>Simulation Configuration</div>
     ),
     content: (
       <div>
@@ -749,7 +749,7 @@ const tutorial_steps = [
   {
     target: '#simConfigrecordTraces-button',
     title: (
-      <div>To be filled in</div>
+      <div>Simulation Configuration</div>
     ),
     content: (
       <div>
@@ -763,7 +763,7 @@ const tutorial_steps = [
   {
     target: 'img[src$="analysis.svg"]',
     title: (
-      <div>To be filled in</div>
+      <div>Plot Settings</div>
     ),
     content: (
       <div>
@@ -775,18 +775,18 @@ const tutorial_steps = [
   , {
     target: 'div.MuiAccordionSummary-root div.breadcrumb button.MuiButtonBase-root.MuiFab-root.MuiFab-sizeSmall.MuiFab-primary:not([id])',
     title: (
-      <div>Add a new plot</div>
+      <div>Plot Settings</div>
     ),
     content: (
       <div>
-        <p>Click the + </p>
+        <p>Click the "+" to create a new plot</p>
       </div>
     ),
   }
   , {
     target: 'li[value="iplotTraces"]',
     title: (
-      <div>To be filled in</div>
+      <div>Plot Settings</div>
     ),
     content: (
       <div>
@@ -797,7 +797,7 @@ const tutorial_steps = [
   , {
     target: 'div.MuiPaper-elevation0 div.MuiBox-root div.MuiFormControl-root input.MuiFilledInput-input:not([id])',
     title: (
-      <div>To be filled in</div>
+      <div>Plot Settings</div>
     ),
     content: (
       <div>
@@ -810,7 +810,7 @@ const tutorial_steps = [
   {
     target: 'li[value="gids"]',
     title: (
-      <div>To be filled in</div>
+      <div>Plot Settings</div>
     ),
     content: (
       <div>
@@ -821,7 +821,7 @@ const tutorial_steps = [
   {
     target: 'div.MuiPaper-elevation0 div.MuiBox-root div.MuiFormControl-root input.MuiFilledInput-input:not([id])',
     title: (
-      <div>To be filled in</div>
+      <div>Plot Settings</div>
     ),
     content: (
       <div>
@@ -832,7 +832,7 @@ const tutorial_steps = [
   {
     target: '#simConfiganalysisiplotTracesoverlay',
     title: (
-      <div>To be filled in</div>
+      <div>Plot Settings</div>
     ),
     content: (
       <div>
@@ -843,7 +843,7 @@ const tutorial_steps = [
   {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
     title: (
-      <div>To be filled in</div>
+      <div>Updating</div>
     ),
     content: (
       <div>
@@ -857,7 +857,7 @@ const tutorial_steps = [
   {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
     title: (
-      <div>To be filled in</div>
+      <div>Simulation</div>
     ),
     content: (
       <div>
