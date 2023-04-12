@@ -3,7 +3,7 @@ const tutorial2_steps = [
   {
     target: '#selectCellButton',
     title: (
-      <div>To be filled in</div>
+      <div>Cell Creation</div>
     ),
     content: (
       <div>
@@ -15,7 +15,7 @@ const tutorial2_steps = [
   {
     target: '#fromTemplateCellTemplate',
     title: (
-      <div>To be filled in</div>
+      <div>Cell Creation</div>
     ),
     content: (
       <div>
@@ -26,7 +26,7 @@ const tutorial2_steps = [
   {
     target: '#importCellParamsFileName',
     title: (
-      <div>To be filled in</div>
+      <div>Cell Creation</div>
     ),
     content: (
       <div>
@@ -47,7 +47,7 @@ const tutorial2_steps = [
   {
     target: '#importCellParamsModFolder',
     title: (
-      <div>To be filled in</div>
+      <div>Cell Creation</div>
     ),
     content: (
       <div>
@@ -67,7 +67,7 @@ const tutorial2_steps = [
   {
     target: '#appBarPerformActionButton',
     title: (
-      <div>To be filled in</div>
+      <div>Cell Creation</div>
     ),
     content: (
       <div>
@@ -78,7 +78,7 @@ const tutorial2_steps = [
   {
     target: '#PTcell',
     title: (
-      <div>To be filled in</div>
+      <div>Cell Modifications</div>
     ),
     content: (
       <div>
@@ -89,7 +89,7 @@ const tutorial2_steps = [
   {
     target: '#newSectionButton',
     title: (
-      <div>To be filled in</div>
+      <div>Cell Modifications</div>
     ),
     content: (
       <div>
@@ -100,7 +100,7 @@ const tutorial2_steps = [
   {
     target: '#selectCellButton',
     title: (
-      <div>To be filled in</div>
+      <div>Cell Creation</div>
     ),
     content: (
       <div>
@@ -111,7 +111,7 @@ const tutorial2_steps = [
   {
     target: '#importCellParamsFileName',
     title: (
-      <div>To be filled in</div>
+      <div>Cell Creation</div>
     ),
     content: (
       <div>
@@ -122,7 +122,7 @@ const tutorial2_steps = [
   {
     target: '#TreeContainerCutting_component',
     title: (
-      <div>To be filled in</div>
+      <div>Cell Creation</div>
     ),
     content: (
       <div>
@@ -133,7 +133,7 @@ const tutorial2_steps = [
   {
     target: '#importCellParamsModFolder',
     title: (
-      <div>To be filled in</div>
+      <div>Cell Creation</div>
     ),
     content: (
       <div>
@@ -144,18 +144,19 @@ const tutorial2_steps = [
   {
     target: '#TreeContainerCutting_component',
     title: (
-      <div>To be filled in</div>
+      <div>Cell Creation</div>
     ),
     content: (
       <div>
-        <p>Select like for the last cell: "NetPyNE tutorials &gt; netpyne_workspace-master &gt; mod".</p>
+        <p>Select, as for the last created cell:</p>
+        <p>"NetPyNE tutorials &gt; netpyne_workspace-master &gt; mod".</p>
       </div>
     )
   },
   {
     target: 'img[src*="popParams"]',
     title: (
-      <div>To be filled in</div>
+      <div>Population Update</div>
     ),
     content: (
       <div>
@@ -166,7 +167,7 @@ const tutorial2_steps = [
   {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
     title: (
-      <div>To be filled in</div>
+      <div>Creation</div>
     ),
     content: (
       <div>
@@ -177,7 +178,7 @@ const tutorial2_steps = [
   {
     target: 'img[src*="experimentControlPanel"]',
     title: (
-      <div>To be filled in</div>
+      <div>Visualization</div>
     ),
     content: (
       <div>
