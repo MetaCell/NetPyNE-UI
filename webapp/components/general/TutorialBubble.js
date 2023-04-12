@@ -155,7 +155,7 @@ const TutorialBubble = ({
           borderRadius: '4px',
           pointerEvents: 'none',
           border: `solid 3px ${primaryColor}`,
-          zIndex: 9999,
+          zIndex: 1501,  // Just over the menus items (1500)
         }}
       />
       <div style={{ position: 'relative' }} id="tutorialBubble">
@@ -174,7 +174,7 @@ const TutorialBubble = ({
             maxHeight: '300px',
             fontSize: '16px',
             lineHeight: '1.5',
-            zIndex: 9999,
+            zIndex: 1501,  // Just over the menus items (1500)
           }}
         >
           <h3
