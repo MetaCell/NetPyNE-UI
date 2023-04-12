@@ -9,6 +9,8 @@ RUN npm ci
 
 USER pptruser
 COPY --chown=pptruser:pptruser . .
+
+USER $NB_UID
 	
 ENV TEST_URL=https://stage.netpyne.metacell.us/
 
