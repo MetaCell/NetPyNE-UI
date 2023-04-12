@@ -1,9 +1,10 @@
 import React from 'react';
 const tutorial3_steps = [
+  // Tutorial template selection
   {
     target: 'button[id="Examples"]',
     title: (
-      <div>To be filled in</div>
+      <div>Tutorial Template Selection</div>
     ),
     content: (
       <div>
@@ -14,7 +15,7 @@ const tutorial3_steps = [
   {
     target: 'li[label*="3a:"]',
     title: (
-      <div>To be filled in</div>
+      <div>Tutorial Template Selection</div>
     ),
     content: (
       <div>
@@ -22,10 +23,11 @@ const tutorial3_steps = [
       </div>
     )
   },
+  // Create and Simulate
   {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
     title: (
-      <div>To be filled in</div>
+      <div>Creation</div>
     ),
     content: (
       <div>
@@ -36,7 +38,7 @@ const tutorial3_steps = [
   {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
     title: (
-      <div>To be filled in</div>
+      <div>Simulation</div>
     ),
     content: (
       <div>
@@ -45,10 +47,11 @@ const tutorial3_steps = [
       </div>
     )
   },
+  // Opening of the Different Plots
   {
     target: 'div[aria-disabled=false] img[src*="rasterPlot"]',
     title: (
-      <div>To be filled in</div>
+      <div>Opening of the Different Plots</div>
     ),
     content: (
       <div>
@@ -59,7 +62,7 @@ const tutorial3_steps = [
   {
     target: 'div[aria-disabled=false] img[src*="LFPTimeSeriesPlot"]',
     title: (
-      <div>To be filled in</div>
+      <div>Opening of the Different Plots</div>
     ),
     content: (
       <div>
@@ -70,7 +73,7 @@ const tutorial3_steps = [
   {
     target: 'div[aria-disabled=false] img[src*="rxdConcentrationPlot"]',
     title: (
-      <div>To be filled in</div>
+      <div>Opening of the Different Plots</div>
     ),
     content: (
       <div>
@@ -81,7 +84,7 @@ const tutorial3_steps = [
   {
     target: 'div[aria-disabled=false] img[src*="spikePlot"]',
     title: (
-      <div>To be filled in</div>
+      <div>Opening of the Different Plots</div>
     ),
     content: (
       <div>
@@ -89,10 +92,11 @@ const tutorial3_steps = [
       </div>
     )
   },
+  // Go back to edit
   {
     target: 'div [class*="SwitchPageButton"] .MuiButton-root',
     title: (
-      <div>To be filled in</div>
+      <div>Model and Parameter Modifications</div>
     ),
     content: (
       <div>
@@ -100,10 +104,11 @@ const tutorial3_steps = [
       </div>
     )
   },
+  // RxD Configuration Modification
   {
     target: 'div[aria-disabled=false] img[src*="rxd.svg"]',
     title: (
-      <div>To be filled in</div>
+      <div>RxD Configuration Modification</div>
     ),
     content: (
       <div>
@@ -114,7 +119,7 @@ const tutorial3_steps = [
   {
     target: 'button.MuiTab-labelIcon:nth-child(2)',
     title: (
-      <div>To be filled in</div>
+      <div>RxD Configuration Modification</div>
     ),
     content: (
       <div>
@@ -125,7 +130,7 @@ const tutorial3_steps = [
   {
     target: '#ip3',
     title: (
-      <div>To be filled in</div>
+      <div>RxD Configuration Modification</div>
     ),
     content: (
       <div>
@@ -136,7 +141,7 @@ const tutorial3_steps = [
   {
     target: '#netParamsrxdParamsspeciesip3initial',
     title: (
-      <div>To be filled in</div>
+      <div>RxD Configuration Modification</div>
     ),
     content: (
       <div>
@@ -145,10 +150,11 @@ const tutorial3_steps = [
     ),
     waitFor: 'fieldEdition'
   },
+  // Update the model
   {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
     title: (
-      <div>To be filled in</div>
+      <div>Updating</div>
     ),
     content: (
       <div>
@@ -159,7 +165,7 @@ const tutorial3_steps = [
   {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
     title: (
-      <div>To be filled in</div>
+      <div>Simulation</div>
     ),
     content: (
       <div>
@@ -168,10 +174,11 @@ const tutorial3_steps = [
       </div>
     )
   },
+  // Open the plots
   {
     target: 'div[aria-disabled=false] img[src*="rasterPlot"]',
     title: (
-      <div>To be filled in</div>
+      <div>Plots Display</div>
     ),
     content: (
       <div>
