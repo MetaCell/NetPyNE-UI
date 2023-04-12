@@ -101,7 +101,7 @@ const tutorial3_steps = [
     )
   },
   {
-    target: 'div[aria-disabled=false] img[src*="rxd"]',
+    target: 'div[aria-disabled=false] img[src*="rxd.svg"]',
     title: (
       <div>To be filled in</div>
     ),
@@ -142,7 +142,8 @@ const tutorial3_steps = [
       <div>
         <p>Increase the initial concentration to 0.1.</p>
       </div>
-    )
+    ),
+    waitFor: 'fieldEdition'
   },
   {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
