@@ -40,7 +40,7 @@ const AboutContent = withStyles(styles)(({ classes }) => (
       <Typography variant="body2" color={secondaryColor}>
         NetPyNE is a Python package to facilitate the development, simulation,
         parallelization, and analysis of biological neuronal networks using the
-        NEURON simulator. Checkout our
+        NEURON simulator. Check out our
         {' '}
         <Link href="https://elifesciences.org/articles/44494" target="_blank">
           eLife paper.
