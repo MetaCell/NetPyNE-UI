@@ -814,9 +814,10 @@ const tutorial_steps = [
     ),
     content: (
       <div>
-        <p>Click "gids" then select "cell 0"</p>
+        <p>Hover on "gids" then select "cell 0"</p>
       </div>
     ),
+    waitFor: 'fieldEdition'
   },
   {
     target: 'div.MuiPaper-elevation0 div.MuiBox-root div.MuiFormControl-root input.MuiFilledInput-input:not([id])',
@@ -826,8 +827,11 @@ const tutorial_steps = [
     content: (
       <div>
         <p>Click again on "Cells to include" to validate the selection</p>
+        <p>Click then on "Next" to continue the tutorial</p>
       </div>
     ),
+    // waitFor: 'click',
+    collectionIndex: 1
   },
   {
     target: '#simConfiganalysisiplotTracesoverlay',
