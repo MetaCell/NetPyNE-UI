@@ -8,7 +8,7 @@ import { LoadingSpinner } from '@metacell/geppetto-meta-client/components';
 import { NetPyNE } from './components';
 import theme from './theme';
 import store from './redux/store';
-import '@metacell/geppetto-meta-ui/flex-layout/style/dark.scss';
+import '@metacell/geppetto-meta-ui/flex-layout/style/dark.css';
 
 global.GEPPETTO_CONFIGURATION = require('./GeppettoConfiguration.json');
 const { initGeppetto } = require('@metacell/geppetto-meta-client/GEPPETTO');
