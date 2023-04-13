@@ -67,10 +67,14 @@ const TutorialBubble = ({
     return null;
   }
 
+  const nextTourStep = steps[requestedTourStep];
+  const { target: nextTarget } = nextTourStep? nextTourStep: {target: undefined};
+
   const { target, title, content } = tourStep;
 
 
   const DOMtarget = getDOMTarget(target, tourStep);
+  const nextDOMtarget = getDOMTarget(nextTarget, nextTourStep);
   const visible = DOMtarget?.checkVisibility();
 
   if (!visible) {
@@ -141,6 +145,7 @@ const TutorialBubble = ({
   const { x, y } = calculateVisiblePosition(targetRect, 150, 300);
 
   const hasOtherSteps = requestedTourStep < steps.length;
+  const nextIsVisible = nextDOMtarget?.checkVisibility();
 
   return (
     <div>
@@ -242,7 +247,7 @@ const TutorialBubble = ({
                 >
                   {hasOtherSteps ? 'Skip' : 'Close'}
                 </Button>
-                {hasOtherSteps
+                {(hasOtherSteps && nextIsVisible)
                 && (
                 <Button
                   onClick={listen}
