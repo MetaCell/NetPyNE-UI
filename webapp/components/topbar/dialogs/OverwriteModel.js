@@ -39,8 +39,11 @@ const OverwriteModel = (props) => {
     if (value && value.startsWith('/')) { // We know we will be in a UNIX like env.
       return value
     }
+
+    const actualValue = !value? DEFAULT_DIR: value;
+
     Utils
-    .evalPythonMessage('netpyne_geppetto.getFullPath', [null, value])
+    .evalPythonMessage('netpyne_geppetto.getFullPath', [null, actualValue])
     .then((fullpath) => {
       setDstPath(`${fullpath}/`)
     })
