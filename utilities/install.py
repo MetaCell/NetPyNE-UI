@@ -188,7 +188,7 @@ def main(netpyne_branch, workspace_branch, geppetto_branch=None, skipNpm=False,
 
     cprint("Installing client packages")
     if not skipNpm:
-        if development:
+        if geppetto_branch:
             # install geppetto meta
             if os.path.exists(os.path.join(WEBAPP_DIR, '.yalc')):
                 execute(cmd=['rm', '-rf', '.yalc'], cwd=WEBAPP_DIR)
