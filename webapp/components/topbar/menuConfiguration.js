@@ -76,7 +76,7 @@ export const getTutorials = () => {
   }
   return tuts.sort()
     .map((tutFile) => {
-      const tutName = tutFile.replace('.py', '')
+      const tutName = tutFile.split("/").pop().replace('.py', '')
         .replace('gui', '')
         .replace('_', '');
       const tutLabel = TUTORIALS_LIST[tutName] !== undefined ? TUTORIALS_LIST[tutName] : tutName;
@@ -163,7 +163,7 @@ export default {
           icon: '',
           action: {
             handlerAction: 'redux',
-            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.LOAD],
+            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.LOAD_INDEX_WORKSPACE],
           },
         },
         {
@@ -171,8 +171,30 @@ export default {
           icon: '',
           action: {
             handlerAction: 'redux',
-            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.SAVE],
+            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.SAVE_INDEX_WORKSPACE],
           },
+        },
+        {
+          label: 'Legacy',
+          icon: '',
+          list: [
+            {
+              label: 'Open...',
+              icon: '',
+              action: {
+                handlerAction: 'redux',
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.LOAD],
+              },
+            },
+            {
+              label: 'Save...',
+              icon: '',
+              action: {
+                handlerAction: 'redux',
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.SAVE],
+              },
+            },
+          ],
         },
         {
           label: 'Import',
@@ -184,6 +206,22 @@ export default {
               action: {
                 handlerAction: 'redux',
                 parameters: [openTopbarDialog, TOPBAR_CONSTANTS.IMPORT_HLS],
+              },
+            },
+            {
+              label: 'From NeuroML2 (beta)...',
+              icon: '',
+              action: {
+                handlerAction: 'redux',
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.IMPORT_NEUROML],
+              },
+            },
+            {
+              label: 'From LEMS Simulation  (beta)...',
+              icon: '',
+              action: {
+                handlerAction: 'redux',
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.IMPORT_LEMS],
               },
             },
           ],

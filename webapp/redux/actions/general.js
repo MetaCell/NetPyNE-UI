@@ -6,6 +6,8 @@ export const UPDATE_CARDS = 'UPDATE_CARDS';
 export const SHOW_NETWORK = 'SHOW_NETWORK';
 export const CREATE_NETWORK = 'CREATE_NETWORK';
 export const CREATE_SIMULATE_NETWORK = 'CREATE_SIMULATE_NETWORK';
+export const REGISTER_MODEL_PATH = 'REGISTER_MODEL_PATH';
+export const LOAD_MODEL = 'LOAD_MODEL';
 export const SIMULATE_NETWORK = 'SIMULATE_NETWORK';
 export const EDIT_MODEL = 'EDIT_MODEL';
 export const RESET_MODEL = 'RESET_MODEL';
@@ -39,6 +41,16 @@ export const simulateNetwork = (allTrials = false) => ({
 export const showNetwork = { type: SHOW_NETWORK };
 
 export const editModel = { type: EDIT_MODEL };
+
+export const registerModelPath = (path) => ({
+  type: REGISTER_MODEL_PATH,
+  payload: path
+});
+
+export const loadModel = (path) => ({
+  type: LOAD_MODEL,
+  payload: path
+})
 
 export const resetModel = { type: RESET_MODEL };
 
