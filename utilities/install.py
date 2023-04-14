@@ -75,7 +75,9 @@ def checkout(folder, branch_or_tag, cwdp):
 
     print(f'Checking out {branch_or_tag}')
     try:
+        subprocess.call(['git', 'fetch'], cwd=newPath)
         subprocess.call(['git', 'checkout', branch_or_tag], cwd=newPath)
+        subprocess.call(['git', 'pull', 'origin', branch_or_tag], cwd=newPath)
     except Exception as e:
         logging.error('Cannot checkout branch or tag %s on %s', branch_or_tag, folder, exc_info=True)
 
@@ -96,33 +98,28 @@ def main(netpyne_branch, workspace_branch, geppetto_branch=None, skipNpm=False,
 
     if development:
         os.chdir(DEPS_DIR)
-
-        # cloning geppetto meta
-        cprint("Installing geppetto-meta")
-        clone(repository=META,
-              folder=META_DIR,
-              branch_or_tag=geppetto_branch
-              )
-
         # clone and install netpyne
-        cprint("Installing netpyne")
-        clone(repository=NETPYNE, branch_or_tag=netpyne_branch)
-        execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, NETPYNE_DIR))
-
-        # installing pygeppetto
-        cprint("Installing pygeppetto")
-        execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, META_DIR, PYGEPPETTO_DIR))
-        # installing jupyter geppetto
-        cprint("Installing jupyter geppetto")
-        execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, META_DIR, JUPYTER_DIR))
-        # installing core dependencies
-        execute(cmd=['pip', 'install', '-e', '.'], cwd=ROOT_DIR)
+        if geppetto_branch and geppetto_branch != 'master':
+            cprint("Installing geppetto-meta")
+            clone(repository=META, folder=META_DIR, branch_or_tag=geppetto_branch)
+            # installing pygeppetto
+            cprint("Installing pygeppetto")
+            execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, META_DIR, PYGEPPETTO_DIR))
+            # installing jupyter geppetto
+            cprint("Installing jupyter geppetto")
+            execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, META_DIR, JUPYTER_DIR))
+            # installing core dependencies
+            execute(cmd=['pip', 'install', '-e', '.'], cwd=ROOT_DIR)
         if netpyne_branch and netpyne_branch != 'master':
           cprint("Installing netpyne")
           clone(repository=NETPYNE, branch_or_tag=netpyne_branch)
           execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, NETPYNE_DIR))
     else:
         # install requirements
+        if geppetto_branch and geppetto_branch != 'master':
+            sys.exit("ERROR: geppetto-meta branch not supported in production mode")
+        if netpyne_branch and netpyne_branch != 'master':
+            sys.exit("ERROR: netpyne branch not supported in production mode")
         cprint("Installing UI python package...")
         execute(cmd=['pip', 'install', '-e', '.', '--no-deps'], cwd=ROOT_DIR)
 
