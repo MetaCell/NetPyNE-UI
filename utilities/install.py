@@ -203,7 +203,7 @@ def main(netpyne_branch, workspace_branch, geppetto_branch=None, skipNpm=False,
         else:
             # install jupyter geppetto
             cprint("Installing geppetto ui, client and core dependecies")
-            execute(cmd=['yarn', 'install', '--frozen-lockfile'], cwd=WEBAPP_DIR)
+            execute(cmd=['yarn', 'install', '--immutable'], cwd=WEBAPP_DIR)
             execute(cmd=['yarn', 'run', 'build'], cwd=WEBAPP_DIR)
 
 
@@ -235,9 +235,6 @@ if __name__ == "__main__":
 
     args = parser.parse_args(sys.argv[1:])
     print('Install arguments:\n', args)
-
-    cprint(args.netpyne_version)
-    sys.exit()
 
     main(skipNpm=args.skipNpm, skipTest=args.skipTest, development=args.development,
         netpyne_branch=args.netpyne_version,
