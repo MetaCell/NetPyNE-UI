@@ -32,7 +32,7 @@ const saveOptions = [
   },
 ];
 
-const DEFAULT_DIR = "uploads";
+const DEFAULT_DIR = "saved_models";
 
 const OverwriteModel = (props) => {
   const updateFullPath = (value) => {
