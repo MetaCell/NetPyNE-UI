@@ -173,10 +173,12 @@ const TutorialBubble = ({
             backgroundColor: '#434343',
             borderRadius: '4px',
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+            border: `solid 1px ${primaryColor}`,
             padding: '16px',
             minWidth: '150px',
+            minHeight: '150px',
             maxWidth: '300px',
-            maxHeight: '300px',
+            maxHeight: '450px',
             fontSize: '16px',
             lineHeight: '1.5',
             zIndex: 1501,  // Just over the menus items (1500)
@@ -247,15 +249,16 @@ const TutorialBubble = ({
                 >
                   {hasOtherSteps ? 'Skip' : 'Close'}
                 </Button>
-                {(hasOtherSteps && nextIsVisible)
+                {(hasOtherSteps)
                 && (
                 <Button
                   onClick={listen}
+                  disabled={!nextIsVisible}
                   style={{
                     display: 'block',
                     margin: '0 auto',
                     backgroundColor: primaryColor,
-                    color: '#fff',
+                    color: !nextIsVisible ? secondaryTextColor : primaryTextColor,
                     border: 'none',
                     padding: '8px 16px',
                     borderRadius: '4px',
