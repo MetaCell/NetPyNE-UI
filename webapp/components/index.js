@@ -57,6 +57,7 @@ import _NetPyNEInclude from './definition/plots/NetPyNEInclude';
 import _NetPyNEInstantiated from './instantiation/NetPyNEInstantiated';
 import _NetWorkControlButtons from './instantiation/NetWorkControlButtons';
 import _ActionDialog from './topbar/dialogs/ActionDialog';
+import _ActionValidationDialog from './topbar/dialogs/ActionValidationDialog';
 import _Drawer from './drawer/Drawer';
 import _Topbar from './topbar/Topbar';
 import _SwitchPageButton from './topbar/SwitchPageButton';
@@ -177,6 +178,7 @@ export const Dimensions = connect(
 export const NetPyNE = connect(
   null,
   (dispatch) => ({
+    dispatchAction: (action) => dispatch(action),
     pythonCallErrorDialogBox: (payload) => dispatch(openBackendErrorDialog(payload)),
     setWidgets: (payload) => dispatch(setWidgets(payload)),
     setDefaultWidgets: () => dispatch(setDefaultWidgets),
@@ -294,6 +296,17 @@ export const ActionDialog = connect(
     closeBackendErrorDialog: () => dispatch(closeBackendErrorDialog),
   }),
 )(_ActionDialog);
+
+export const ActionValidationDialog = connect(
+  (state) => ({
+    ...state.errors,
+    openDialog: true,
+  }),
+  (dispatch) => ({
+    pythonCall: (cmd, args) => dispatch(pythonCall(cmd, args)),
+    closeBackendErrorDialog: () => dispatch(closeBackendErrorDialog),
+  }),
+)(_ActionValidationDialog);
 
 export const ErrorDialog = connect(
   (state) => ({

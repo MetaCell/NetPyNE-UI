@@ -188,10 +188,10 @@ const RxdRegion = (props) => {
                 disabled={1}
                 label="parameter"
                 variant="filled"
-                defaultValue={`${baseTag}['geometry']['${item}']`}
+                defaultValue={`${item}`}
               />
             </div>
-            <div className="scrollbar scrollchild spacechild" style={{ flex: '0 0 7em' }}>
+            <div className="scrollbar scrollchild spacechild" style={{ flex: '0 0 18em' }}>
               <NetPyNETextField
                 fullWidth
                 label="value"
