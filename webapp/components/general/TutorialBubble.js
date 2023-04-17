@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Button, Grid } from '@material-ui/core';
+import { Box, Button, Grid, Typography } from '@material-ui/core';
 import {
   primaryColor, secondaryColor, bgLight, bgDark, primaryTextColor, secondaryTextColor, fontColor,
 } from '../../theme';
@@ -37,7 +37,7 @@ const TutorialBubble = ({
     return DOMtargets[config?.collectionIndex || 0];
   };
 
-  function calculateVisiblePosition (rect1, width2, height2) {
+  function calculateVisiblePosition(rect1, width2, height2) {
     const windowHeight = window.innerHeight;
     const windowWidth = window.innerWidth;
 
@@ -68,7 +68,7 @@ const TutorialBubble = ({
   }
 
   const nextTourStep = steps[requestedTourStep];
-  const { target: nextTarget } = nextTourStep? nextTourStep: {target: undefined};
+  const { target: nextTarget } = nextTourStep ? nextTourStep : { target: undefined };
 
   const { target, title, content } = tourStep;
 
@@ -83,11 +83,11 @@ const TutorialBubble = ({
 
   // validateTutorialStep({ tourStep: requestedTourStep });
   const isEditable = (el) => {
-    if (el && ~['input','textarea'].indexOf(el.tagName.toLowerCase())) {
+    if (el && ~['input', 'textarea'].indexOf(el.tagName.toLowerCase())) {
       return !el.readOnly && !el.disabled;
     }
     el = getSelection().anchorNode;
-    if (!el){
+    if (!el) {
       return false;
     }
     return el.parentNode.isContentEditable;
@@ -129,9 +129,9 @@ const TutorialBubble = ({
     switch (waitFor) {
       case 'click':
         if (requestedTourStep === steps.length) {
-          DOMtarget.addEventListener('click', stop, {once: true, capture: true});
+          DOMtarget.addEventListener('click', stop, { once: true, capture: true });
         } else {
-          DOMtarget.addEventListener('click', listen, {once: true, capture: true});
+          DOMtarget.addEventListener('click', listen, { once: true, capture: true });
         }
         break;
       case 'fieldEdition': // Do nothing, we wait for a click on "next"
@@ -148,136 +148,61 @@ const TutorialBubble = ({
   const nextIsVisible = nextDOMtarget?.checkVisibility();
 
   return (
-    <div>
-      <div
+    <Box className='tutorials'>
+      <Box
+        className='tutorials_highlight'
         id="tutorialTargetRectangle"
         style={{
-          position: 'absolute',
           top: targetRect.top - rectMargin,
           left: targetRect.left - rectMargin,
           width: targetRect.width + (2 * rectMargin),
           height: targetRect.height + (2 * rectMargin),
-          borderRadius: '4px',
-          pointerEvents: 'none',
-          border: `solid 3px ${primaryColor}`,
-          zIndex: 1501,  // Just over the menus items (1500)
+          borderColor: primaryColor,
+
         }}
       />
-      <div style={{ position: 'relative' }} id="tutorialBubble">
+
+      <Box className='tutorials_wrapper' id="tutorialBubble">
         {lastCheckRender}
-        <div
-          style={{
-            position: 'absolute',
-            top: y,
-            left: x,
-            backgroundColor: '#434343',
-            borderRadius: '4px',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
-            border: `solid 1px ${primaryColor}`,
-            padding: '16px',
-            minWidth: '150px',
-            minHeight: '150px',
-            maxWidth: '300px',
-            maxHeight: '450px',
-            fontSize: '16px',
-            lineHeight: '1.5',
-            zIndex: 1501,  // Just over the menus items (1500)
-          }}
-        >
-          <h3
-            style={{
-              marginTop: 0,
-              color: fontColor,
-            }}
-          >
+
+        <Box className='tutorials_content' style={{
+          top: y,
+          left: x,
+        }}>
+          <Typography component='h3'>
             {title}
-          </h3>
+          </Typography>
 
-          <div
-            style={{
-              color: fontColor,
-              paddingBottom: '20px',
-            }}
-          >
-            {content}
-          </div>
+          {content}
 
-          <Grid alignItems="flex-start" container spacing={1}>
-            <Grid
-              container
-              direction="column"
-              item
-              xs={3}
-              spacing={1}
-              alignItems="flex-start"
-              justifyContent="flex-start"
-            >
-              <Grid item xs={12}>
-                <p style={{ color: '#fff' }}>
-                  {requestedTourStep}
-                  /
-                  {steps.length}
-                </p>
-              </Grid>
-            </Grid>
-            <Grid
-              container
-              direction="column"
-              item
-              xs={9}
-              spacing={1}
-              alignItems="flex-end"
-              justifyContent="flex-end"
-            >
-              <Grid item xs={12}>
+          <Box pt={2.5} display='flex' alignItems='center' justifyContent='space-between'>
+            <Typography>
+              {requestedTourStep}/{steps.length}
+            </Typography>
+
+            <Box display='flex' alignItems='center'>
+              <Button
+                onClick={stop}
+                color="primary"
+              >
+                {hasOtherSteps ? 'Skip' : 'Close'}
+              </Button>
+
+              {hasOtherSteps && (
                 <Button
-                  onClick={stop}
+                  variant='contained'
                   color="primary"
-                  style={{
-                    display: 'block',
-                    margin: '0 auto',
-                    color: primaryColor,
-                    border: 'none',
-                    padding: '8px 16px',
-                    borderRadius: '4px',
-                    fontSize: '16px',
-                    cursor: 'pointer',
-                    position: 'absolute',
-                    right: '85px',
-                    bottom: '25px',
-                  }}
-                >
-                  {hasOtherSteps ? 'Skip' : 'Close'}
-                </Button>
-                {(hasOtherSteps)
-                && (
-                <Button
                   onClick={listen}
                   disabled={!nextIsVisible}
-                  style={{
-                    display: 'block',
-                    margin: '0 auto',
-                    backgroundColor: primaryColor,
-                    color: !nextIsVisible ? secondaryTextColor : primaryTextColor,
-                    border: 'none',
-                    padding: '8px 16px',
-                    borderRadius: '4px',
-                    fontSize: '16px',
-                    cursor: 'pointer',
-                    position: 'absolute',
-                    right: '15px',
-                    bottom: '25px',
-                  }}
                 >
                   Next
                 </Button>
-                )}
-              </Grid>
-            </Grid>
-          </Grid>
-        </div>
-      </div>
-    </div>
+              )}
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
