@@ -24,7 +24,9 @@ import {
   RESET_MODEL,
   showNetwork,
   addInstancesToCanvas,
-  openConfirmationDialog
+  openConfirmationDialog,
+  registerModelPath,
+  LOAD_MODEL
 } from '../actions/general';
 import { OPEN_BACKEND_ERROR_DIALOG, CLOSE_BACKEND_ERROR_DIALOG, openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
@@ -503,6 +505,21 @@ export default (store) => (next) => (action) => {
     case CLOSE_BACKEND_ERROR_DIALOG: {
       next(GeppettoActions.setWidgets(store.getState().widgets));
       next(action);
+      break;
+    }
+    case LOAD_MODEL: {
+      const path = action.payload;
+      Utils.evalPythonMessage('netpyne_geppetto.loadFromIndexFile', [path])
+           .then(() => {
+            // const fileName = fieldValue.path.replace(/^.*[\\/]/, '');
+            // const path = fieldValue.path
+            //   .split(fileName)
+            //   .slice(0, -1)
+            //   .join('');
+            // const action = registerModelPath(path);
+            // this.props.dispatchAction(action);
+            store.dispatch(registerModelPath(path));
+      });
       break;
     }
     default: {
