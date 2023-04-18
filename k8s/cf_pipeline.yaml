@@ -62,7 +62,7 @@ steps:
          - app
         working_dir: /home/pptruser
         environment:
-        - TEST_URL=http://app:8888
+        - TEST_URL=http://app:8888/geppetto
         command: bash -c 'ls -l && npm run Tutorial_1_test'
   feature_test:
     type: composition
