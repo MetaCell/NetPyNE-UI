@@ -43,7 +43,7 @@ describe('Tutorial #1 for Smoke Testing', () => {
     await console.log(baseURL);
     await console.log(page.url())
     await console.log(page.title())
-    await page.waitForSelector(selectors.LOGIN_PAGE_SELECTOR, {timeout: TIMEOUT * 5});
+    await page.waitForSelector(selectors.LOGIN_PAGE_SELECTOR, {timeout: TIMEOUT * 3});
     await page.waitForSelector(selectors.USERNAME_SELECTOR)
     await expect(page)
       .toFill(selectors.USERNAME_SELECTOR, USERNAME, { timeout: TIMEOUT });
