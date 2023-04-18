@@ -7,9 +7,9 @@ COPY package-lock.json .
 
 RUN npm ci
 
-USER pptruser
-COPY --chown=pptruser:pptruser . .
-	
+# USER pptruser
+# COPY --chown=pptruser:pptruser . .
+COPY . .
 ENV TEST_URL=https://stage.netpyne.metacell.us/
 
 
