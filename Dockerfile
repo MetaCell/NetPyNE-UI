@@ -58,7 +58,7 @@ ENV NEURON_HOME=/opt/conda
 # For lfpykit 0.4
 # RUN wget -P $(pip show LFPykit | grep "Location:" | awk '{print $2"/lfpykit"}') https://www.parralab.org/nyhead/sa_nyhead.mat
 # For lpfykit 0.5
-RUN wget --no-check-certificate -P ${FOLDER}/workspace https://www.parralab.org/nyhead/sa_nyhead.mat
+# RUN wget --no-check-certificate -P ${FOLDER}/workspace https://www.parralab.org/nyhead/sa_nyhead.mat
 
 USER $NB_UID
 
