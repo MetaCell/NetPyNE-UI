@@ -10,6 +10,7 @@ import {
   Dialog,
   ConfirmationDialog,
   LaunchDialog,
+  TutorialObserver
 } from 'netpyne/components';
 import { loadModel } from '../redux/actions/general';
 
@@ -38,6 +39,7 @@ const styles = ({ zIndex }) => ({
   },
   noGrow: { flexGrow: 0 },
 });
+
 
 class NetPyNE extends React.Component {
   constructor (props) {
@@ -108,27 +110,29 @@ class NetPyNE extends React.Component {
 
     const Layout = LayoutManager();
     return (
-      <div className={classes.root}>
-        <div className={classes.container}>
-          <div className={classes.topbar}>
-            <Topbar />
+      <TutorialObserver>
+        <div className={classes.root}>
+          <div className={classes.container}>
+            <div className={classes.topbar}>
+              <Topbar />
+            </div>
+            <Box p={1} flex={1} display="flex" alignItems="stretch">
+              <Grid container spacing={1} className={classes.content} alignItems="stretch">
+                <Grid item className={classes.noGrow}>
+                  <Drawer />
+                </Grid>
+                <Grid item>
+                  <Layout />
+                </Grid>
+              </Grid>
+            </Box>
           </div>
-          <Box p={1} flex={1} display="flex" alignItems="stretch">
-            <Grid container spacing={1} className={classes.content} alignItems="stretch">
-              <Grid item className={classes.noGrow}>
-                <Drawer />
-              </Grid>
-              <Grid item>
-                <Layout />
-              </Grid>
-            </Grid>
-          </Box>
+          <Dialog />
+          <ConfirmationDialog />
+          <ErrorDialog />
+          <LaunchDialog />
         </div>
-        <Dialog />
-        <ConfirmationDialog />
-        <ErrorDialog />
-        <LaunchDialog />
-      </div>
+      </TutorialObserver>
     );
   }
 }

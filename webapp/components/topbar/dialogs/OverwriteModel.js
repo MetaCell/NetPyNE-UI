@@ -32,15 +32,18 @@ const saveOptions = [
   },
 ];
 
-const DEFAULT_DIR = "uploads";
+const DEFAULT_DIR = "saved_models";
 
 const OverwriteModel = (props) => {
   const updateFullPath = (value) => {
     if (value && value.startsWith('/')) { // We know we will be in a UNIX like env.
       return value
     }
+
+    const actualValue = !value? DEFAULT_DIR: value;
+
     Utils
-    .evalPythonMessage('netpyne_geppetto.getFullPath', [null, value])
+    .evalPythonMessage('netpyne_geppetto.getFullPath', [null, actualValue])
     .then((fullpath) => {
       setDstPath(`${fullpath}/`)
     })
