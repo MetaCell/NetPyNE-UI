@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Box, Button, Grid, Typography } from '@material-ui/core';
+import {
+  Box, Button, Grid, Typography,
+} from '@material-ui/core';
 import {
   primaryColor, secondaryColor, bgLight, bgDark, primaryTextColor, secondaryTextColor, fontColor,
 } from '../../theme';
@@ -7,15 +9,13 @@ import {
 const rectMargin = 4;
 
 const TutorialBubble = ({
-  requestedTourStep, steps, lastCheckRender, stopTutorial, incrementTutorialStep, validateTutorialStep, currentTourStep
+  requestedTourStep, steps, lastCheckRender, stopTutorial, incrementTutorialStep, validateTutorialStep, currentTourStep,
 }) => {
-  const tutorialTarget = useRef(null)
+  const tutorialTarget = useRef(null);
 
-  useEffect(() => {
-    return () => {
-      tutorialTarget.current = null;
-    }
-  }, [])
+  useEffect(() => () => {
+    tutorialTarget.current = null;
+  }, []);
 
   const getDOMTarget = (target, config) => {
     // We query the DOM with the selector
@@ -37,7 +37,7 @@ const TutorialBubble = ({
     return DOMtargets[config?.collectionIndex || 0];
   };
 
-  function calculateVisiblePosition(rect1, width2, height2) {
+  function calculateVisiblePosition (rect1, width2, height2) {
     const windowHeight = window.innerHeight;
     const windowWidth = window.innerWidth;
 
@@ -68,10 +68,9 @@ const TutorialBubble = ({
   }
 
   const nextTourStep = steps[requestedTourStep];
-  const { target: nextTarget } = nextTourStep ? nextTourStep : { target: undefined };
+  const { target: nextTarget } = nextTourStep || { target: undefined };
 
   const { target, title, content } = tourStep;
-
 
   const DOMtarget = getDOMTarget(target, tourStep);
   const nextDOMtarget = getDOMTarget(nextTarget, nextTourStep);
@@ -91,7 +90,7 @@ const TutorialBubble = ({
       return false;
     }
     return el.parentNode.isContentEditable;
-  }
+  };
 
   const isAnyEditable = (element) => {
     if (isEditable(element)) {
@@ -104,17 +103,17 @@ const TutorialBubble = ({
       }
     }
     return false;
-  }
+  };
 
   const listen = (event) => {
     tutorialTarget.current = null;
     incrementTutorialStep();
-  }
+  };
 
   const stop = (event) => {
     stopTutorial(event);
     tutorialTarget.current = null;
-  }
+  };
 
   if (currentTourStep === requestedTourStep) {
     tutorialTarget.current = null;
@@ -122,9 +121,9 @@ const TutorialBubble = ({
 
   if (!tutorialTarget.current && currentTourStep !== requestedTourStep) {
     tutorialTarget.current = DOMtarget;
-    let waitFor = tourStep.waitFor;
+    let { waitFor } = tourStep;
     if (!waitFor) {
-      waitFor = isAnyEditable(DOMtarget) ? 'fieldEdition' : 'click'
+      waitFor = isAnyEditable(DOMtarget) ? 'fieldEdition' : 'click';
     }
     switch (waitFor) {
       case 'click':
@@ -148,9 +147,9 @@ const TutorialBubble = ({
   const nextIsVisible = nextDOMtarget?.checkVisibility();
 
   return (
-    <Box className='tutorials'>
+    <Box className="tutorials">
       <Box
-        className='tutorials_highlight'
+        className="tutorials_highlight"
         id="tutorialTargetRectangle"
         style={{
           top: targetRect.top - rectMargin,
@@ -162,25 +161,28 @@ const TutorialBubble = ({
         }}
       />
 
-      <Box className='tutorials_wrapper' id="tutorialBubble">
-        {lastCheckRender}
-
-        <Box className='tutorials_content' style={{
-          top: y,
-          left: x,
-        }}>
-          <Typography component='h3'>
+      <Box className="tutorials_wrapper" id="tutorialBubble">
+        <Box
+          className="tutorials_content"
+          style={{
+            top: y,
+            left: x,
+          }}
+        >
+          <Typography component="h3">
             {title}
           </Typography>
 
           {content}
 
-          <Box pt={2.5} display='flex' alignItems='center' justifyContent='space-between'>
+          <Box pt={2.5} display="flex" alignItems="center" justifyContent="space-between">
             <Typography>
-              {requestedTourStep}/{steps.length}
+              {requestedTourStep}
+              /
+              {steps.length}
             </Typography>
 
-            <Box display='flex' alignItems='center'>
+            <Box display="flex" alignItems="center">
               <Button
                 onClick={stop}
                 color="primary"
@@ -190,7 +192,7 @@ const TutorialBubble = ({
 
               {hasOtherSteps && (
                 <Button
-                  variant='contained'
+                  variant="contained"
                   color="primary"
                   onClick={listen}
                   disabled={!nextIsVisible}

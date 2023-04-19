@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import TutorialBubble from './TutorialBubble';
 
-export default function TutorialObserver(props) {
+export default function TutorialObserver (props) {
   const tourRunning = useSelector((state) => state.tutorial.tourRunning);
   const [observer, setObserver] = useState(null);
 
@@ -16,11 +16,11 @@ export default function TutorialObserver(props) {
     validateTutorialStep,
     checkBubbleRender,
     lastCheckRender,
-    children
+    children,
   } = props;
 
   const bubbleUpdate = () => {
-    checkBubbleRender({ epoch: Date.now() })
+    checkBubbleRender({ epoch: Date.now() });
   };
 
   useEffect(() => {
@@ -31,8 +31,9 @@ export default function TutorialObserver(props) {
       return;
     }
     // Listen for new components being added to the DOM
+    // eslint-disable-next-line no-undef
     const obs = new MutationObserver((mutationsList) => {
-      if(mutationsList.length > 0) {
+      if (mutationsList.length > 0) {
         bubbleUpdate();
       }
     });
@@ -44,23 +45,22 @@ export default function TutorialObserver(props) {
 
   const startTutorialCallBack = () => {
     startTutorialStep();
-  }
+  };
 
   const stopTutorial = () => {
     stopTutorialStep();
-  }
+  };
 
   const doIncrementTutorialStep = () => {
-    validateTutorialStep({ tourStep: requestedTourStep })
-    incrementTutorialStep()
-  }
+    validateTutorialStep({ tourStep: requestedTourStep });
+    incrementTutorialStep();
+  };
 
   return (
     <>
       {children}
       {tourRunning && (
         <>
-        <button onClick={ () => { startTutorialCallBack() }}>RESET TUTORIAL</button>
           <TutorialBubble
             requestedTourStep={requestedTourStep}
             currentTourStep={tourStep}
@@ -70,7 +70,8 @@ export default function TutorialObserver(props) {
             validateTutorialStep={validateTutorialStep}
             lastCheckRender={lastCheckRender}
           />
-        </>)}
+        </>
+      )}
     </>
   );
 }
