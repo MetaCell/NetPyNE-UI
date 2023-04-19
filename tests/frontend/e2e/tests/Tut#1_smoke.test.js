@@ -44,7 +44,6 @@ describe('Tutorial #1 for Smoke Testing', () => {
     await console.log(page.url())
     const pageTitle = await page.title();
     console.log(pageTitle);
-    await page.waitForSelector('form[action="/hub/login?next=%2Ftree%2F"]',{timeout: TIMEOUT})
     await page.waitForSelector(selectors.LOGIN_PAGE_SELECTOR, {timeout: TIMEOUT * 3});
     await page.waitForSelector(selectors.USERNAME_SELECTOR)
     await expect(page)
