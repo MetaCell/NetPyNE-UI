@@ -18,6 +18,7 @@ import {
   createAndSimulateNetwork, showNetwork, pythonCall, deleteNetParamsObj, resetModel,
   setDefaultWidgets, changeInstanceColor, openConfirmationDialog, closeConfirmationDialog, selectInstances,
 } from '../redux/actions/general';
+import { runControlledStep, startTutorial, stopTutorial, addDiscoveredStep, runControlledStepByElementId, incrementTutorialStep, validateTutorialStep, checkBubbleRender } from '../redux/actions/tutorials';
 
 import {
   cloneExperiment,
@@ -71,6 +72,7 @@ import _ExperimentManager from './experiments/ExperimentManager';
 import _LaunchDialog from './topbar/dialogs/LaunchDialog';
 import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole';
 import _PlotViewer from './general/PlotViewer';
+import _TutorialObserver from './general/TutorialObserver';
 import _ExperimentControlPanel from './general/ExperimentControlPanel';
 import _Rxd from './rxd/Wrapper';
 import { WidgetStatus } from '@metacell/geppetto-meta-client/common/layout/model';
@@ -423,6 +425,27 @@ export const Rxd = connect(
     _Rxd,
   ),
 );
+
+export const TutorialObserver = connect(
+  (state) => ({
+    steps: state.tutorial.steps,
+    tourStep: state.tutorial.tourStep,
+    tourRunning: state.tutorial.tourRunning,
+    requestedTourStep: state.tutorial.requestedTourStep,
+    lastCheckRender: state.tutorial.lastCheckRender,
+  }),
+  (dispatch) => ({
+    startTutorialStep: () => { dispatch(startTutorial()) },
+    runControlledStep: () => { dispatch(runControlledStep()) },
+    stopTutorialStep: () => { dispatch(stopTutorial()) },
+    validateTutorialStep: (e) => { dispatch(validateTutorialStep(e)) },
+    addDiscoveredStep: (nodeIdList) => { dispatch(addDiscoveredStep(nodeIdList)) },
+    runControlledStepByElementId: (e) => { dispatch(runControlledStepByElementId(e))},
+    incrementTutorialStep: (e) => { dispatch(incrementTutorialStep()); },
+    checkBubbleRender: (e) => { dispatch(checkBubbleRender(e))}
+  }),
+)(_TutorialObserver);
+
 
 // ---------------------------------------------------------------------------------------- //
 

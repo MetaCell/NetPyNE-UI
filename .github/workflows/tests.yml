@@ -58,6 +58,28 @@ jobs:
           npm run Experiment_Manager_test
       env:
           CI: true
+  Control_Panel-test:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-20.04
+    container: lironavon/docker-puppeteer-container:14.16.0
+    env:
+      CI: true
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+          node-version: ${{ matrix.node-version }}
+          cache-dependency-path: frontend/e2e/tests/package-lock.json
+    - name: Control Panel test using Tut#2
+      run: |
+          cd tests/frontend/e2e
+          #install dependencies
+          npm ci
+          # run Control Panel test
+          npm run Control_Panel_test
+      env:
+          CI: true
   Tutorial_1-SmokeTest:
     # The type of runner that the job will run on
     runs-on: ubuntu-20.04

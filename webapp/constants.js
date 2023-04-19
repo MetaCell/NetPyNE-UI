@@ -696,12 +696,12 @@ export const EXPERIMENT_TEXTS = {
 };
 
 export const TUTORIALS_LIST = {
-  tut1: 'Tut 1: Simple cell network',
-  tut2: 'Tut 2: Detailed cell network',
-  tut3: 'Tut 3a: Multiscale network (low IP3)',
-  tut3_ip3high: 'Tut 3b: Multiscale network (high IP3)',
-  tut3_norxd: 'Tut 3c: Multiscale network (no RxD)',
-  tut_osc: 'Tut 4: Simple oscillatory network',
+  tut1: 'Model 1: Simple cell network',
+  tut2: 'Model 2: Detailed cell network',
+  tut3: 'Model 3a: Multiscale network (low IP3)',
+  tut3_ip3high: 'Model 3b: Multiscale network (high IP3)',
+  tut3_norxd: 'Model 3c: Multiscale network (no RxD)',
+  tut_osc: 'Model 4: Simple oscillatory network',
 };
 
 export const EXPERIMENT_VIEWS = {
