@@ -41,6 +41,12 @@ describe('Tutorial #1 for Smoke Testing', () => {
     await page.goto(baseURL);
     await page.waitForTimeout(PAGE_WAIT)
     await console.log(baseURL);
+
+    await page.on('response', response => {
+        expect(response.status).not.toEqual(404)
+      
+    })
+
     await console.log(page.url())
     const pageTitle = await page.title();
     console.log(pageTitle);
