@@ -1,4 +1,4 @@
-FROM node:13.14 as jsbuild
+FROM node:14.21.3-bullseye as jsbuild
 
 WORKDIR /app
 
