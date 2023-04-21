@@ -23,6 +23,7 @@ const tutorial2_steps = [
       </div>
     )
   },
+  // Import cell values modification
   {
     target: '#importCellParamsRuleLabel',
     title: (
@@ -46,7 +47,7 @@ const tutorial2_steps = [
     )
   },
   {
-    target: '#importCellParamsFileName',
+    target: '.fa-folder',
     title: (
       <div>Cell Creation</div>
     ),
@@ -58,16 +59,17 @@ const tutorial2_steps = [
       </div>
     )
   },
-  // {
-  //   target: '#TreeContainerCutting_component',
-  //   content: (
-  //     <div>
-  //       <p>Select "NetPyNE tutorials &gt; netpyne_workspace-master &gt; cells &gt; PTcells.hoc".</p>
-  //     </div>
-  //   )
-  // },
   {
-    target: '#importCellParamsModFolder',
+    target: '#browserAccept',
+    content: (
+      <div>
+        <p>Select "NetPyNE-UI &gt; workspace &gt; cells &gt; PTcells.hoc"</p>
+        <p>and click on "Select"</p>
+      </div>
+    )
+  },
+  {
+    target: '.fa-folder',
     title: (
       <div>Cell Creation</div>
     ),
@@ -75,6 +77,16 @@ const tutorial2_steps = [
       <div>
         <p>Click on the folder icon to select the folder containing the "mod" file:</p>
         <p>"NetPyNE-UI &gt; workspace &gt; mod</p>
+      </div>
+    ),
+    collectionIndex: 1
+  },
+  {
+    target: '#browserAccept',
+    content: (
+      <div>
+        <p>Select "NetPyNE-UI &gt; workspace &gt; mod"</p>
+        <p>and click on "Select"</p>
       </div>
     )
   },
@@ -89,14 +101,6 @@ const tutorial2_steps = [
       </div>
     )
   },
-  // {
-  //   target: '#TreeContainerCutting_component',
-  //   content: (
-  //     <div>
-  //       <p>Select "NetPyNE tutorials &gt; netpyne_workspace-master &gt; mod".</p>
-  //     </div>
-  //   )
-  // },
   {
     target: '#appBarPerformActionButton',
     title: (
