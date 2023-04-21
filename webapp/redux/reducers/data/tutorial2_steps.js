@@ -53,7 +53,7 @@ const tutorial2_steps = [
     content: (
       <div>
         <p>Click on the folder icon to select the template:</p>
-        <p> NetPyNE tutorials &gt; netpyne_workspace-master</p>
+        <p> NetPyNE-UI &gt; workspace</p>
         <p> &gt; cells &gt; PTcells.hoc</p>
       </div>
     )
