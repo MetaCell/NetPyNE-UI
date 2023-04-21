@@ -8,7 +8,7 @@ const tutorial3_steps = [
     ),
     content: (
       <div>
-        <p>Open the tutorial menu.</p>
+        <p>Open the "Examples" menu.</p>
       </div>
     )
   },
@@ -19,7 +19,7 @@ const tutorial3_steps = [
     ),
     content: (
       <div>
-        <p>Select the tutorial 3a.</p>
+        <p>Select the "Model 3a".</p>
       </div>
     )
   },
