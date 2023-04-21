@@ -24,6 +24,28 @@ const tutorial2_steps = [
     )
   },
   {
+    target: '#importCellParamsRuleLabel',
+    title: (
+      <div>Cell Creation</div>
+    ),
+    content: (
+      <div>
+        <p>Change the cell rule label to "PTcell"</p>
+      </div>
+    )
+  },
+  {
+    target: '#importCellParamsCellName',
+    title: (
+      <div>Cell Creation</div>
+    ),
+    content: (
+      <div>
+        <p>Change the template/cell name to "PTcell"</p>
+      </div>
+    )
+  },
+  {
     target: '#importCellParamsFileName',
     title: (
       <div>Cell Creation</div>
@@ -52,7 +74,18 @@ const tutorial2_steps = [
     content: (
       <div>
         <p>Click on the folder icon to select the folder containing the "mod" file:</p>
-        <p>"NetPyNE tutorials &gt; netpyne_workspace-master &gt; mod</p>
+        <p>"NetPyNE-UI &gt; workspace &gt; mod</p>
+      </div>
+    )
+  },
+  {
+    target: '#importCellParamsCompileMod',
+    title: (
+      <div>Cell Creation</div>
+    ),
+    content: (
+      <div>
+        <p>Activate the compilation of mod files</p>
       </div>
     )
   },
