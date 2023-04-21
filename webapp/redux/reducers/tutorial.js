@@ -18,7 +18,7 @@ export default (state = TUTORIAL_DEFAULT_STATE, action) => {
     case START_TUTORIAL:
       return {...state, tourRunning: true, requestedTourStep: 1, steps: action.payload }
     case STOP_TUTORIAL:
-      return {...state, tourRunning: false }
+      return {...state, tourRunning: false, tourStep: 0 }
     case INCREMENT_TUTORIAL_STEP:
       return {...state, requestedTourStep: state.tourStep + 1 }
     case RUN_CONTROLLED_STEP:

@@ -111,8 +111,8 @@ const TutorialBubble = ({
   };
 
   const stop = (event) => {
-    stopTutorial(event);
     tutorialTarget.current = null;
+    stopTutorial(event);
   };
 
   if (currentTourStep === requestedTourStep) {
