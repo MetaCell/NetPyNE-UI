@@ -174,15 +174,60 @@ const tutorial3_steps = [
       </div>
     )
   },
-  // Open the plots
+  // ReOpen the plots
+  // {
+  //   target: 'div[aria-disabled=false] img[src*="rasterPlot"]',
+  //   title: (
+  //     <div>Plots Display</div>
+  //   ),
+  //   content: (
+  //     <div>
+  //       <p>Reopen the Raster Plot, the LFP Time Series Plot, the RxD Concentration Plot and the Spike History Plot to see how the plots are impatected by the modification.</p>
+  //     </div>
+  //   )
+  // },
   {
-    target: 'div[aria-disabled=false] img[src*="rasterPlot"]',
+    target: 'img[src*="rasterPlot"]',
     title: (
       <div>Plots Display</div>
     ),
     content: (
       <div>
-        <p>Reopen the Raster Plot, the LFP Time Series Plot, the RxD Concentration Plot and the Spike History Plot to see how the plots are impatected by the modification.</p>
+        <p>Reopen the different plots to see how they are impatected by the modification.</p>
+        <p>Open the Raster Plot, the LFP Time Series Plot, the RxD Concentration Plot and the Spike History Plot.</p>
+      </div>
+    )
+  },
+  {
+    target: 'img[src*="LFPTimeSeriesPlot"]',
+    title: (
+      <div>Plots Display</div>
+    ),
+    content: (
+      <div>
+        <p>LFP Time Series Plot.</p>
+      </div>
+    )
+  },
+  {
+    target: 'img[src*="rxdConcentrationPlot"]',
+    title: (
+      <div>Plots Display</div>
+    ),
+    content: (
+      <div>
+        <p>RxD Concentration Plot.</p>
+      </div>
+    )
+  },
+  {
+    target: 'img[src*="spikePlot"]',
+    title: (
+      <div>Plots Display</div>
+    ),
+    content: (
+      <div>
+        <p>Spike History Plot.</p>
       </div>
     )
   },
