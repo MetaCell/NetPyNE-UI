@@ -47,7 +47,8 @@ const TutorialBubble = ({
 
     // Check if element2 is outside the viewport horizontally
     if (x + width2 > windowWidth) {
-      x = rect1.left - width2;
+      // x = rect1.left - width2;
+      x = rect1.left - ((x + width2) - windowWidth + rectMargin);
     }
 
     if (x < 0) {
