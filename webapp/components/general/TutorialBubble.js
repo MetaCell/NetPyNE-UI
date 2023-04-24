@@ -41,8 +41,9 @@ const TutorialBubble = ({
     const windowHeight = window.innerHeight;
     const windowWidth = window.innerWidth;
 
-    let x = rect1.left + (rect1.width / 2) - (width2 / 2);
-    let y = (rect1.top - windowHeight) + rect1.height;
+    // let x = rect1.left + (rect1.width / 2) - (width2 / 2); // bubble is aligned with center of the rectangle
+    let x = rect1.left;  // bubble is aligned with the left of the rectangle
+    let y = (rect1.top - windowHeight) + rect1.height + rectMargin;
 
     // Check if element2 is outside the viewport horizontally
     if (x + width2 > windowWidth) {
@@ -141,7 +142,7 @@ const TutorialBubble = ({
   }
 
   const targetRect = DOMtarget.getBoundingClientRect();
-  const { x, y } = calculateVisiblePosition(targetRect, 150, 300);
+  const { x, y } = calculateVisiblePosition(targetRect, 400, 184);
 
   const hasOtherSteps = requestedTourStep < steps.length;
   const nextIsVisible = nextDOMtarget?.checkVisibility();
