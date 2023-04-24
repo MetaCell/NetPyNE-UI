@@ -45,7 +45,7 @@ RUN jupyter nbextension enable --py --sys-prefix jupyter_geppetto
 RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension
 RUN jupyter serverextension enable --py --sys-prefix jupyter_geppetto
 
-RUN python utilities/install.py ${BUILD_ARGS} --workspace $WORKSPACE_VERSION --npm-skip
+RUN python utilities/install.py ${BUILD_ARGS} --workspace $WORKSPACE_VERSION
 
 RUN jupyter labextension disable @jupyterlab/hub-extension
 
