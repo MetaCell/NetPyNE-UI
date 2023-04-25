@@ -201,7 +201,7 @@ const tutorial2_steps = [
       <div>
         <p>Click on the folder icon to select the template:</p>
         <p> NetPyNE-UI &gt; workspace</p>
-        <p> &gt; cells &gt; PTcells.hoc</p>
+        <p> &gt; cells &gt; SRI.hoc</p>
       </div>
     )
   },
@@ -334,9 +334,20 @@ const tutorial2_steps = [
       <div>Population Creation</div>
     ),
     content: (
+      <p>Select the cell type</p>
+    ),
+    waitFor: 'click',
+    grabGlobalClick: true
+  },
+  {
+    target: 'li[data-value^="SRI"]',
+    title: (
+      <div>Population Creation</div>
+    ),
+    content: (
       <p>Select "SRI"</p>
     )
-  }, //netParamspopParamsPopulation0numCells
+  },
   {
     target: 'input[id^="netParamspopParams"][id$="numCells"]',
     title: (

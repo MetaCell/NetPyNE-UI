@@ -123,17 +123,15 @@ const TutorialBubble = ({
 
   if (!tutorialTarget.current && currentTourStep !== requestedTourStep) {
     tutorialTarget.current = DOMtarget;
-    let { waitFor } = tourStep;
+    let { waitFor, grabGlobalClick } = tourStep;
     if (!waitFor) {
       waitFor = isAnyEditable(DOMtarget) ? 'fieldEdition' : 'click';
     }
     switch (waitFor) {
       case 'click':
-        if (requestedTourStep === steps.length) {
-          DOMtarget.addEventListener('click', stop, { once: true, capture: true });
-        } else {
-          DOMtarget.addEventListener('click', listen, { once: true, capture: true });
-        }
+        const nextAction = requestedTourStep === steps.length ? stop : listen;
+        const listenerTarget = grabGlobalClick ? document : DOMtarget;
+        listenerTarget.addEventListener('click', nextAction, { once: true, capture: true });
         break;
       case 'fieldEdition': // Do nothing, we wait for a click on "next"
         break;
