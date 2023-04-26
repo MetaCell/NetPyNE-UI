@@ -88,7 +88,19 @@ const tutorial_steps = [
     target: 'div[id*="netParamspopParams"][id*="cellType"]',
     title: 'Cell Population Creation',
     content: (
-      <p>Set the Cell type to the "pyr" cell we imported earlier</p>
+      <p>Select the cell type to the one we imported earlier ("pyr")</p>
+      // <p>Set the Cell type to the "pyr" cell we imported earlier</p>
+    ),
+    waitFor: 'click',
+    grabGlobalClick: true
+  },
+  {
+    target: 'li[data-value^="pyr"]',
+    title: (
+      <div>Population Creation</div>
+    ),
+    content: (
+      <p>Select "pyr"</p>
     )
   },
   {
