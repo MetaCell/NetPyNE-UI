@@ -130,7 +130,7 @@ const tutorial_steps = [
     )
   },
   {
-    target: 'material-icons MuiIcon-root',
+    target: 'img[src*="d2NetPlot"]',
     title: '2D Net Plot Panel',
     content: (
       <>
@@ -140,7 +140,6 @@ const tutorial_steps = [
         <p>Explore moving and reshaping tabs (drag from the tab title)</p>
       </>
     ),
-    collectionIndex: 2
   },
   {
     target: 'MuiButtonBase-root MuiButton-root MuiButton-contained',
