@@ -224,6 +224,42 @@ const tutorial_steps = [
       <p>Name the rule "E-&gt;E" (without spaces)</p>
     ),
   },
+  {
+    target: 'input[id*="netParamsconnParams"][id*="weight"]',
+    title: 'Connectivity Rules Creation',
+    content: (
+      <>
+        <p>Enter 0.005 in Weight of synaptic connection</p>
+      </>
+    ),
+  },
+  {
+    target: 'input[id*="netParamsconnParams"][id*="probability"]',
+    title: 'Connectivity Rules Creation',
+    content: (
+      <>
+        <p>Enter 0.1 in Probability of connection</p>
+      </>
+    ),
+  },
+  {
+    target: 'input[id*="netParamsconnParams"][id*="delay"]',
+    title: 'Connectivity Rules Creation',
+    content: (
+      <>
+        <p>Enter 5 in Connection delay</p>
+      </>
+    ),
+  },
+  {
+    target: 'div[id*="netParamsconnParams"][id*="synMech"]',
+    title: 'Connectivity Rules Creation',
+    content: (
+      <>
+        <p>Select "exc" for Synaptic mechanism</p>
+      </>
+    ),
+  },
   { // netParamsconnParamsConnectivityRule0sec
     target: 'input[id*="netParamsconnParams"][id*="sec"]',
     title: 'Connectivity Rules Creation',
@@ -257,42 +293,6 @@ const tutorial_steps = [
     content: (
       <>
         <p>Click on "+" to add the value</p>
-      </>
-    ),
-  },
-  {
-    target: 'div[id*="netParamsconnParams"][id*="synMech"]',
-    title: 'Connectivity Rules Creation',
-    content: (
-      <>
-        <p>Select "exc" for Synaptic mechanism</p>
-      </>
-    ),
-  },
-  {
-    target: 'input[id*="netParamsconnParams"][id*="probability"]',
-    title: 'Connectivity Rules Creation',
-    content: (
-      <>
-        <p>Enter 0.1 in Probability of connection</p>
-      </>
-    ),
-  },
-  {
-    target: 'input[id*="netParamsconnParams"][id*="weight"]',
-    title: 'Connectivity Rules Creation',
-    content: (
-      <>
-        <p>Enter 0.005 in Weight of synaptic connection</p>
-      </>
-    ),
-  },
-  {
-    target: 'input[id*="netParamsconnParams"][id*="delay"]',
-    title: 'Connectivity Rules Creation',
-    content: (
-      <>
-        <p>Enter 5 in Connection delay</p>
       </>
     ),
   },
