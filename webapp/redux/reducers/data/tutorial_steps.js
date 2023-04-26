@@ -31,7 +31,7 @@ const tutorial_steps = [
     target: '#newSectionButton',
     title: 'Check Cell"s Sections',
     content: (
-      <p>Click on Section to see the sections that make up this imported cell type</p>
+      <p>Click on Section to see the sections that make up this cell type</p>
     )
   },
   {
@@ -47,7 +47,7 @@ const tutorial_steps = [
     content: (
       <>
         <p>Click on the Populations icon.</p>
-        <p>You can also find the each sidebar icons as tab in the top panel</p>
+        <p>You can also find each sidebar icons as a tab in the top panel</p>
       </>
     )
   },
@@ -88,7 +88,7 @@ const tutorial_steps = [
     target: 'div[id*="netParamspopParams"][id*="cellType"]',
     title: 'Cell Population Creation',
     content: (
-      <p>Select the cell type to the one we imported earlier ("pyr")</p>
+      <p>Select the cell type to the one we created earlier ("pyr")</p>
       // <p>Set the Cell type to the "pyr" cell we imported earlier</p>
     ),
     waitFor: 'click',
