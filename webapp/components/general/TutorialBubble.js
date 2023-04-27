@@ -72,7 +72,7 @@ const TutorialBubble = ({
   const nextTourStep = steps[requestedTourStep];
   const { target: nextTarget } = nextTourStep || { target: undefined };
 
-  const { target, title, content } = tourStep;
+  const { target, validation, title, content } = tourStep;
 
   const DOMtarget = getDOMTarget(target, tourStep);
   const nextDOMtarget = getDOMTarget(nextTarget, nextTourStep);
@@ -115,6 +115,17 @@ const TutorialBubble = ({
   const stop = (event) => {
     tutorialTarget.current = null;
     stopTutorial(event);
+  };
+
+  const isNextDisabled = (validationTarget, step, isDisabled) => {
+    if (validationTarget) {
+      const validationDOMTarget = getDOMTarget(validationTarget, undefined);
+      if (validationDOMTarget && validationDOMTarget.checkVisibility()) {
+        return !isDisabled;
+      }
+      return true;
+    }
+    return !isDisabled;
   };
 
   if (currentTourStep === requestedTourStep) {
@@ -195,7 +206,7 @@ const TutorialBubble = ({
                   variant="contained"
                   color="primary"
                   onClick={listen}
-                  disabled={!nextIsVisible}
+                  disabled={isNextDisabled(validation, tourStep, isNextDisabled)}
                 >
                   Next
                 </Button>

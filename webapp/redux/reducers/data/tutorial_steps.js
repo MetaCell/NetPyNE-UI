@@ -22,6 +22,7 @@ const tutorial_steps = [
   },
   {
     target: '#cellRuleName',
+    validation: 'input[value="pyr"]',
     title: 'Cell Customization',
     content: (
       <p>Rename the cell type: "pyr" for pyramidal.</p>
