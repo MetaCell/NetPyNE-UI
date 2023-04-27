@@ -32,7 +32,7 @@ const tutorial_steps = [
     target: '#newSectionButton',
     title: 'Check Cell"s Sections',
     content: (
-      <p>Click on Section to see the sections that make up this imported cell type</p>
+      <p>Click on Section to see the sections that make up this cell type</p>
     )
   },
   {
@@ -48,7 +48,7 @@ const tutorial_steps = [
     content: (
       <>
         <p>Click on the Populations icon.</p>
-        <p>You can also find the each sidebar icons as tab in the top panel</p>
+        <p>You can also find each sidebar icons as a tab in the top panel</p>
       </>
     )
   },
@@ -89,7 +89,7 @@ const tutorial_steps = [
     target: 'div[id*="netParamspopParams"][id*="cellType"]',
     title: 'Cell Population Creation',
     content: (
-      <p>Select the cell type to the one we imported earlier ("pyr")</p>
+      <p>Select the cell type to the one we created earlier ("pyr")</p>
       // <p>Set the Cell type to the "pyr" cell we imported earlier</p>
     ),
     waitFor: 'click',
@@ -131,7 +131,7 @@ const tutorial_steps = [
     )
   },
   {
-    target: 'material-icons MuiIcon-root',
+    target: 'img[src*="d2NetPlot"]',
     title: '2D Net Plot Panel',
     content: (
       <>
@@ -141,7 +141,6 @@ const tutorial_steps = [
         <p>Explore moving and reshaping tabs (drag from the tab title)</p>
       </>
     ),
-    collectionIndex: 2
   },
   {
     target: 'MuiButtonBase-root MuiButton-root MuiButton-contained',
@@ -226,6 +225,42 @@ const tutorial_steps = [
       <p>Name the rule "E-&gt;E" (without spaces)</p>
     ),
   },
+  {
+    target: 'input[id*="netParamsconnParams"][id*="weight"]',
+    title: 'Connectivity Rules Creation',
+    content: (
+      <>
+        <p>Enter 0.005 in Weight of synaptic connection</p>
+      </>
+    ),
+  },
+  {
+    target: 'input[id*="netParamsconnParams"][id*="probability"]',
+    title: 'Connectivity Rules Creation',
+    content: (
+      <>
+        <p>Enter 0.1 in Probability of connection</p>
+      </>
+    ),
+  },
+  {
+    target: 'input[id*="netParamsconnParams"][id*="delay"]',
+    title: 'Connectivity Rules Creation',
+    content: (
+      <>
+        <p>Enter 5 in Connection delay</p>
+      </>
+    ),
+  },
+  {
+    target: 'div[id*="netParamsconnParams"][id*="synMech"]',
+    title: 'Connectivity Rules Creation',
+    content: (
+      <>
+        <p>Select "exc" for Synaptic mechanism</p>
+      </>
+    ),
+  },
   { // netParamsconnParamsConnectivityRule0sec
     target: 'input[id*="netParamsconnParams"][id*="sec"]',
     title: 'Connectivity Rules Creation',
@@ -259,42 +294,6 @@ const tutorial_steps = [
     content: (
       <>
         <p>Click on "+" to add the value</p>
-      </>
-    ),
-  },
-  {
-    target: 'div[id*="netParamsconnParams"][id*="synMech"]',
-    title: 'Connectivity Rules Creation',
-    content: (
-      <>
-        <p>Select "exc" for Synaptic mechanism</p>
-      </>
-    ),
-  },
-  {
-    target: 'input[id*="netParamsconnParams"][id*="probability"]',
-    title: 'Connectivity Rules Creation',
-    content: (
-      <>
-        <p>Enter 0.1 in Probability of connection</p>
-      </>
-    ),
-  },
-  {
-    target: 'input[id*="netParamsconnParams"][id*="weight"]',
-    title: 'Connectivity Rules Creation',
-    content: (
-      <>
-        <p>Enter 0.005 in Weight of synaptic connection</p>
-      </>
-    ),
-  },
-  {
-    target: 'input[id*="netParamsconnParams"][id*="delay"]',
-    title: 'Connectivity Rules Creation',
-    content: (
-      <>
-        <p>Enter 5 in Connection delay</p>
       </>
     ),
   },
