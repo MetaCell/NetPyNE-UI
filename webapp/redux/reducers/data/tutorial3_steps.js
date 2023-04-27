@@ -148,7 +148,8 @@ const tutorial3_steps = [
         <p>Increase the initial concentration to 0.1.</p>
       </div>
     ),
-    waitFor: 'fieldEdition'
+    waitFor: 'fieldEdition',
+    validation: '0.1'
   },
   // Update the model
   {
