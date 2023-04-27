@@ -26,7 +26,8 @@ const tutorial_steps = [
     title: 'Cell Customization',
     content: (
       <p>Rename the cell type: "pyr" for pyramidal.</p>
-    )
+      ),
+    validation: 'pyr'
   },
   {
     target: '#newSectionButton',
@@ -83,7 +84,8 @@ const tutorial_steps = [
     title: 'Cell Population Creation',
     content: (
       <p>Change the population name to “E” for excitatory</p>
-    )
+    ),
+    validation: 'input[value="E"]',
   },
   {
     target: 'div[id*="netParamspopParams"][id*="cellType"]',
@@ -109,7 +111,8 @@ const tutorial_steps = [
     title: 'Cell Population Creation',
     content: (
       <p>Enter 40 for the number of cells</p>
-    )
+    ),
+    validation: '40',
   },
   {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
@@ -170,7 +173,8 @@ const tutorial_steps = [
     content: (
       <p>Name the synapse “exc”</p>
     ),
-    collectionIndex: 2
+    collectionIndex: 2,
+    validation: 'exc'
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
@@ -186,15 +190,17 @@ const tutorial_steps = [
     content: (
       <p>Enter 0.1 in Time constant for exponential 1 </p>
     ),
-    collectionIndex: 4
+    collectionIndex: 4,
+    validation: '0.1'
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
     title: 'Synaptic Mechanism Creation',
     content: (
-      <p>Enter 1.0 in Time constant for exponential 2</p>
+      <p>Enter 1.0 (or 1) in Time constant for exponential 2</p>
     ),
-    collectionIndex: 5
+    collectionIndex: 5,
+    validation: '1'
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
@@ -202,7 +208,8 @@ const tutorial_steps = [
     content: (
       <p>Enter 0 in Reversal potential </p>
     ),
-    collectionIndex: 6
+    collectionIndex: 6,
+    validation: '0'
   },
   {
     target: 'img[src*="connParams.svg"]',
@@ -224,6 +231,7 @@ const tutorial_steps = [
     content: (
       <p>Name the rule "E-&gt;E" (without spaces)</p>
     ),
+    validation: 'E->E'
   },
   {
     target: 'input[id*="netParamsconnParams"][id*="weight"]',
@@ -233,6 +241,7 @@ const tutorial_steps = [
         <p>Enter 0.005 in Weight of synaptic connection</p>
       </>
     ),
+    validation: '0.005'
   },
   {
     target: 'input[id*="netParamsconnParams"][id*="probability"]',
@@ -242,6 +251,7 @@ const tutorial_steps = [
         <p>Enter 0.1 in Probability of connection</p>
       </>
     ),
+    validation: '0.1'
   },
   {
     target: 'input[id*="netParamsconnParams"][id*="delay"]',
@@ -251,6 +261,7 @@ const tutorial_steps = [
         <p>Enter 5 in Connection delay</p>
       </>
     ),
+    validation: '5'
   },
   {
     target: 'div[id*="netParamsconnParams"][id*="synMech"]',
@@ -269,6 +280,7 @@ const tutorial_steps = [
         <p>Add "dend" as new postsynaptic neuron section</p>
       </>
     ),
+    validation: 'dend'
   },
   {
     target: 'button[id^="netParamsconnParams"][id$="sec-button"]',
@@ -287,6 +299,7 @@ const tutorial_steps = [
         <p>Enter 0.5 as new postsynaptic neuron location</p>
       </>
     ),
+    validation: '0.5'
   },
   {
     target: 'button[id^="netParamsconnParams"][id$="loc-button"]',
@@ -396,13 +409,25 @@ const tutorial_steps = [
         <p>Type "IClamp1" in The name of the stimulation source</p>
       </>
     ),
+    validation: 'IClamp1'
   },
   {
     target: '#stimSourceSelect',
     title: 'Stimulation Sources Creation',
     content: (
       <>
-        <p>Set "IClamp" as the Point process used as stimulator</p>
+        <p>Set the Point process used as stimulator</p>
+      </>
+    ),
+    waitFor: 'click',
+    grabGlobalClick: true
+  },
+  {
+    target: 'li[data-value^="IClamp"]',
+    title: 'Stimulation Sources Creation',
+    content: (
+      <>
+        <p>Select "IClamp" as the Point process</p>
       </>
     ),
   },
@@ -414,6 +439,7 @@ const tutorial_steps = [
         <p>Set Current clamp delay to 20</p>
       </>
     ),
+    validation: '20'
   },
   {
     target: 'input[id^="netParamsstimSourceParams"][id$="dur"]',
@@ -423,6 +449,7 @@ const tutorial_steps = [
         <p>Set Current clamp duration to 5</p>
       </>
     ),
+    validation: '5'
   },
   {
     target: 'input[id^="netParamsstimSourceParams"][id$="amp"]',
@@ -432,6 +459,7 @@ const tutorial_steps = [
         <p>Set Current clamp amplitude to 0.1 </p>
       </>
     ),
+    validation: '0.1'
   },
   //
   // Simulation targets
@@ -462,6 +490,7 @@ const tutorial_steps = [
         <p>Type “IClamp1-&gt;cell0” in The name of the stimulation target </p>
       </>
     ),
+    validation: 'IClamp1->cell0'
   },
   {
     target: 'div[id*="netParamsstimTargetParams"][id*="source"]',
@@ -480,6 +509,7 @@ const tutorial_steps = [
         <p>Type “dend” in Target section</p>
       </>
     ),
+    validation: 'dend'
   },
   {
     target: 'input[id*="netParamsstimTargetParams"][id*="loc"]',
@@ -489,6 +519,7 @@ const tutorial_steps = [
         <p>Enter 1 in Target location</p>
       </>
     ),
+    validation: '1'
   },
   //
   // Conditions tab
@@ -509,7 +540,8 @@ const tutorial_steps = [
       <>
         <p>Enter 0 as new Target cell global indices</p>
       </>
-    )
+    ),
+    validation: '0'
   },
   {
     target: 'button[id*="netParamsstimTargetParams"][id*="condscellList-button"]',
@@ -540,7 +572,8 @@ const tutorial_steps = [
       <>
         <p>Change the Duration to 200</p>
       </>
-    )
+    ),
+    validation: '200'
   },
   {
     target: '#simConfigdt',
@@ -550,6 +583,7 @@ const tutorial_steps = [
         <p>Change the Time Step to 0.1</p>
       </>
     ),
+    validation: '0.1'
   },
   {
     target: '#configRecord',
@@ -567,7 +601,8 @@ const tutorial_steps = [
       <>
         <p>Enter 0 as new Cells to record traces from</p>
       </>
-    )
+    ),
+    validation: '0'
   },
   {
     target: '#simConfigrecordCells-button',
@@ -584,8 +619,10 @@ const tutorial_steps = [
     content: (
       <>
         <p>Type "{"V_dend: {sec: dend, loc: 1.0, var: v}"}"</p>
+        <p>(note: the tutorial input validation is case and space sensitive)</p>
       </>
-    )
+    ),
+    validation: 'V_dend: {sec: dend, loc: 1.0, var: v}'
   },
   {
     target: '#simConfigrecordTraces-button',
