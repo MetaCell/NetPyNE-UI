@@ -33,7 +33,8 @@ const tutorial2_steps = [
       <div>
         <p>Change the cell rule label to "PTcell"</p>
       </div>
-    )
+    ),
+    validation: 'PTcell'
   },
   {
     target: '#importCellParamsCellName',
@@ -44,7 +45,8 @@ const tutorial2_steps = [
       <div>
         <p>Change the template/cell name to "PTcell"</p>
       </div>
-    )
+    ),
+    validation: 'PTcell'
   },
   {
     target: '.fa-folder',
@@ -55,7 +57,7 @@ const tutorial2_steps = [
       <div>
         <p>Click on the folder icon to select the template:</p>
         <p> NetPyNE-UI &gt; workspace</p>
-        <p> &gt; cells &gt; PTcells.hoc</p>
+        <p> &gt; cells &gt; PTcell.hoc</p>
       </div>
     )
   },
@@ -179,7 +181,8 @@ const tutorial2_steps = [
       <div>
         <p>Change the cell rule label to "SRI"</p>
       </div>
-    )
+    ),
+    validation: 'SRI'
   },
   {
     target: '#importCellParamsCellName',
@@ -190,7 +193,8 @@ const tutorial2_steps = [
       <div>
         <p>Change the template/cell name to "SRI"</p>
       </div>
-    )
+    ),
+    validation: 'SRI'
   },
   {
     target: '.fa-folder',
@@ -288,7 +292,8 @@ const tutorial2_steps = [
     ),
     content: (
       <p>Change the population name to "E"</p>
-    )
+    ),
+    validation: 'input[value="E"]'
   },
   {
     target: 'div[id^="netParamspopParams"][id$="cellType"]',
@@ -306,7 +311,8 @@ const tutorial2_steps = [
     ),
     content: (
       <p>Enter 2 as number of cells</p>
-    )
+    ),
+    validation: '2'
   },
   {
     target: '#newPopulationButton',
@@ -326,7 +332,8 @@ const tutorial2_steps = [
     ),
     content: (
       <p>Change the population name to "I"</p>
-    )
+    ),
+    validation: 'input[value="I"]'
   },
   {
     target: 'div[id^="netParamspopParams"][id$="cellType"]',
@@ -355,7 +362,8 @@ const tutorial2_steps = [
     ),
     content: (
       <p>Enter 2 as number of cells</p>
-    )
+    ),
+    validation: '2'
   },
   // Network creation
   {
