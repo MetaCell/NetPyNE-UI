@@ -55,8 +55,8 @@ const tutorial_steps = [
     title: 'Create a cell population',
     content: (
       <>
-        <p>Click on the Populations icon.</p>
-        <p>You can also find each sidebar icons as a tab in the top panel</p>
+        <p>Click on the Populations icon on the left sidebar</p> 
+        <p>You can also find each icon as a tab in the top panel</p>
       </>
     )
   },
@@ -73,7 +73,7 @@ const tutorial_steps = [
   // },
   {
     target: '#newPopulationButton',
-    title: 'Cell Population Creation',
+    title: 'Create a cell population',
     content: (
       <p>Click on the + above Population</p>
     )
@@ -88,7 +88,7 @@ const tutorial_steps = [
   // },
   {
     target: 'div.MuiBox-root.scrollbar.scrollchild > div.MuiBox-root > div',
-    title: 'Cell Population Creation',
+    title: 'Create a cell population',
     content: (
       <p>Change the population name to “E” for excitatory</p>
     ),
@@ -96,9 +96,9 @@ const tutorial_steps = [
   },
   {
     target: 'div[id*="netParamspopParams"][id*="cellType"]',
-    title: 'Cell Population Creation',
+    title: 'Create a cell population', // NOTE: not possible to see "pyr" in the drop-down menu
     content: (
-      <p>Select the cell type to the one we created earlier ("pyr")</p>
+      <p>Select the cell type we just created ("pyr")</p> 
       // <p>Set the Cell type to the "pyr" cell we imported earlier</p>
     ),
     waitFor: 'click',
@@ -107,7 +107,7 @@ const tutorial_steps = [
   {
     target: 'li[data-value^="pyr"]',
     title: (
-      <div>Population Creation</div>
+      <div>Create a cell population</div>
     ),
     content: (
       <p>Select "pyr"</p>
@@ -115,17 +115,17 @@ const tutorial_steps = [
   },
   {
     target: 'input[id*="numCells"]',
-    title: 'Cell Population Creation',
+    title: 'Create a cell population',
     content: (
-      <p>Enter 40 for the number of cells</p>
+      <p>Set the number of cells to 40 </p>
     ),
     validation: '40',
   },
   {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
-    title: 'Network Creation',
+    title: 'Create the Network',
     content: (
-      <p>Once we have a population with cells, we can create our network and visualize it</p>
+      <p>Now we can ask NetPyNE to create (instantiate) and visualize a network based on the specs we provided. Just click on Create Network. </p>
     )
   },
   {
@@ -133,10 +133,10 @@ const tutorial_steps = [
     title: 'Network Visualization',
     content: (
       <>
-        <p>You can see the layout of our 40 pyr cells</p>
+        <p>You can see the layout and shape of our 40 pyr cells</p>
         <p>You can rotate, pan, and zoom</p>
-        <p>You can choose colors from the control panel</p>
-        <p>Most analysis plots (sidebar) are useless without having run a simulation</p>
+        <p>You can change their colors from the control panel (gear icon on the left sidebar) </p>
+        <p>Most analysis plots (sidebar) are unavailable before running a simulation</p>
       </>
     )
   },
@@ -145,10 +145,7 @@ const tutorial_steps = [
     title: '2D Net Plot Panel',
     content: (
       <>
-        <p>The 2D net plot shows cell positions</p>
-        <p>No connectivity has been added yet</p>
-        <p>Explore the interactive plot</p>
-        <p>Explore moving and reshaping tabs (drag from the tab title)</p>
+        <p>Click on the 2D net plot shows the cell positions</p>
       </>
     ),
   },
@@ -772,6 +769,7 @@ const tutorial_steps = [
     content: (
       <>
         <p>Open the Connectivity panel</p>
+        <p>Explore moving and reshaping tabs (drag from the tab title)</p>
       </>
     ),
   },
