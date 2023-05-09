@@ -1,51 +1,58 @@
-import React from 'react';
+import React from 'react'; 
 
 const tutorial_steps = [
   {
     target: '#selectCellButton',
-    title: 'Simple Cell Model Creation',
+    title: 'Create a new cell type',
     content: <p>Click on the + above Cell</p>
   },
   {
     target: '#BallStick_HHCellTemplate',
-    title: 'New Cell Addition',
+    title: 'Create a new cell type',
     content: (
-      <p>Click on the menu item to add one Ball and stick HH cell</p>
+      <p>Click on the menu item to select the "Ball and stick HH cell" template</p>
     )
   },
   {
     target: '#CellType0',
-    title: 'Cell Customization',
+    title: 'Edit the new cell type properties',
     content: (
-      <p>Click on CellType0 and the panel on the right will appear.</p>
+      <p>Click on CellType0 to edit its properties via the panel on the right.</p>
     )
   },
   {
     target: '#cellRuleName',
     validation: 'input[value="pyr"]',
-    title: 'Cell Customization',
+    title: 'Edit the new cell type properties',
     content: (
-      <p>Rename the cell type: "pyr" for pyramidal.</p>
+      <p>Rename the cell type to "pyr" (for pyramidal).</p>
       ),
     validation: 'pyr'
   },
   {
     target: '#newSectionButton',
-    title: 'Check Cell"s Sections',
+    title: 'Explore the new cell type properties',
     content: (
-      <p>Click on Section to see the sections that make up this cell type</p>
+      <p>Click on Section to see the sections (compartments) of this cell type</p>
     )
   },
   {
     target: 'input[value*="soma"]',
-    title: 'Check Cell"s Sections',
+    title: "Explore the new cell type properties",
     content: (
-      <p>We can check that the name of the section is "soma"</p>
+      <p>We can see that the name of this section is "soma"</p>
+    )
+  },
+   {
+    target: '#Geometry', // check
+    title: "Explore the new cell type properties",
+    content: (
+      <p>In the geometry tab we can see the dimensions of this section (cylinder of 12 by 12 um)</p>
     )
   },
   {
     target: 'img[src*="popParams.svg"]',
-    title: 'Cell Population Creation',
+    title: 'Create a cell population',
     content: (
       <>
         <p>Click on the Populations icon.</p>
