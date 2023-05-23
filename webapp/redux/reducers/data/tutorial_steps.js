@@ -129,6 +129,7 @@ const tutorial_steps = [
     )
   },
   {
+    // NOTE: the tutorial can continue even if user doesn't instantiate network
     target: 'flexlayout__tab_button flexlayout__tab_button_top flexlayout__tab_button--selected',
     title: 'Network Visualization',
     content: (
@@ -142,16 +143,16 @@ const tutorial_steps = [
   },
   {
     target: 'img[src*="d2NetPlot"]',
-    title: '2D Net Plot Panel',
+    title: '2D Network Plot',
     content: (
       <>
-        <p>Click on the 2D net plot shows the cell positions</p>
+        <p>Click on the 2D net plot to show the cell 2D locations</p>
       </>
     ),
   },
   {
     target: 'MuiButtonBase-root MuiButton-root MuiButton-contained',
-    title: 'Model Modifications',
+    title: 'Continue building the model',
     content: (
       <p>Click on Back To Edit</p>
     ),
@@ -159,21 +160,21 @@ const tutorial_steps = [
   },
   {
     target: 'img[src*="synMechParams.svg"]',
-    title: 'Synaptic Mechanism Creation',
+    title: 'Create a synaptic mechanism',
     content: (
-      <p>Click on Synaptic Mechanisms</p>
+      <p>Click on Synaptic Mechanisms icon on the left sidebar</p>
     ),
   },
   {
     target: '#newSynapseButton',
-    title: 'Synaptic Mechanism Creation',
+    title: 'Create a synaptic mechanism',
     content: (
       <p>Click on + above Synapse </p>
     )
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
-    title: 'Synaptic Mechanism Creation',
+    title: 'Create a synaptic mechanism',
     content: (
       <p>Name the synapse “exc”</p>
     ),
@@ -182,56 +183,56 @@ const tutorial_steps = [
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
-    title: 'Synaptic Mechanism Creation',
+    title: 'Create a synaptic mechanism',
     content: (
-      <p>Leave the default mechanism Exp2Syn</p>
+      <p>Leave the default mechanism type, Exp2Syn</p>
     ),
     collectionIndex: 3
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
-    title: 'Synaptic Mechanism Creation',
+    title: 'Create a synaptic mechanism',
     content: (
-      <p>Enter 0.1 in Time constant for exponential 1 </p>
+      <p>Enter 0.1 in Time constant for exponential 1 (rise time) </p>
     ),
     collectionIndex: 4,
     validation: '0.1'
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
-    title: 'Synaptic Mechanism Creation',
+    title: 'Create a synaptic mechanism',
     content: (
-      <p>Enter 1.0 (or 1) in Time constant for exponential 2</p>
+      <p>Enter 1.0 (or 1) in Time constant for exponential 2 (fall time)</p>
     ),
     collectionIndex: 5,
     validation: '1'
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
-    title: 'Synaptic Mechanism Creation',
+    title: 'Create a synaptic mechanism',
     content: (
-      <p>Enter 0 in Reversal potential </p>
+      <p>Enter 0 in Reversal potential (mV) to make this an excitatory synapse </p>
     ),
     collectionIndex: 6,
     validation: '0'
   },
   {
     target: 'img[src*="connParams.svg"]',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <p>Click on Connectivity Rules in tabs or sidebar</p>
     ),
   },
   {
     target: '#newConnectivityRuleButton',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <p>Click on + above Connectivity Rule </p>
     )
   },
   { // ConnectivityName
     target: '#ConnectivityName',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <p>Name the rule "E-&gt;E" (without spaces)</p>
     ),
@@ -239,7 +240,7 @@ const tutorial_steps = [
   },
   {
     target: 'input[id*="netParamsconnParams"][id*="weight"]',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
         <p>Enter 0.005 in Weight of synaptic connection</p>
@@ -249,7 +250,7 @@ const tutorial_steps = [
   },
   {
     target: 'input[id*="netParamsconnParams"][id*="probability"]',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
         <p>Enter 0.1 in Probability of connection</p>
@@ -259,17 +260,17 @@ const tutorial_steps = [
   },
   {
     target: 'input[id*="netParamsconnParams"][id*="delay"]',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
-        <p>Enter 5 in Connection delay</p>
+        <p>Enter 5 in Connection delay (ms)</p>
       </>
     ),
     validation: '5'
   },
   {
     target: 'div[id*="netParamsconnParams"][id*="synMech"]',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
         <p>Select "exc" for Synaptic mechanism</p>
@@ -278,17 +279,17 @@ const tutorial_steps = [
   },
   { // netParamsconnParamsConnectivityRule0sec
     target: 'input[id*="netParamsconnParams"][id*="sec"]',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
-        <p>Add "dend" as new postsynaptic neuron section</p>
+        <p>Enter "dend" as the postsynaptic neuron section</p>
       </>
     ),
     validation: 'dend'
   },
   {
     target: 'button[id^="netParamsconnParams"][id$="sec-button"]',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
         <p>Click on "+" to add the value</p>
@@ -297,17 +298,17 @@ const tutorial_steps = [
   },
   {
     target: 'input[id*="netParamsconnParams"][id*="loc"]',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
-        <p>Enter 0.5 as new postsynaptic neuron location</p>
+        <p>Enter 0.5 as the postsynaptic neuron location</p>
       </>
     ),
     validation: '0.5'
   },
   {
     target: 'button[id^="netParamsconnParams"][id$="loc-button"]',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
         <p>Click on "+" to add the value</p>
@@ -319,19 +320,19 @@ const tutorial_steps = [
   //
   {
     target: '#preCondsConnTab > span',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
-        <p>Click on PRE-SYNAPTIC CELLS CONDITIONS</p>
+        <p>Click on PRE-SYNAPTIC CELLS CONDITIONS tab to specify the subset of cells that will constitute the pre-synpatic population </p>
       </>
     ),
   },
   {
     target: 'div[id*="netParamsconnParams"][id*="preCondspop"]',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
-        <p>Select E for the Population</p>
+        <p>You can decide which cells to connect based on multiple cell properties such as the cell type, population or location. In this case, select E for the Population</p>
       </>
     )
   },
@@ -340,37 +341,37 @@ const tutorial_steps = [
   //
   {
     target: '#postCondsConnTab > span',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
-        <p>Click on POST-SYNAPTIC CELLS CONDITIONS</p>
+        <p>Click on POST-SYNAPTIC CELLS CONDITIONS tab to specify the subset of cells that will constitute the post-synpatic population</p>
       </>
     ),
   },
   {
     target: 'div[id*="netParamsconnParams"][id*="postCondspop"]',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
-        <p>Select E for the Population</p>
+        <p>Select E for the Population to complete this simple connectivity rule, connecting E cells to E cells recurrently (with a probability of 0.1) </p>
       </>
     )
   }
   , {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
-    title: 'Network Creation',
+    title: 'Create the network',
     content: (
       <>
-        <p>Click on "CREATE NETWORK" (or "UPDATE NETWORK")</p>
+        <p>Click on ""UPDATE NETWORK""</p>
       </>
     ),
   }
   , {
     target: 'img[src*="d2NetPlot.svg"]',
-    title: 'Plot Display',
+    title: '2D Network Plot',
     content: (
       <>
-        <p>Generate the 2D Net Plot</p>
+        <p>Click on the 2D Network Plot, which should now show the connections between neurons</p>
       </>
     ),
   }
@@ -379,23 +380,26 @@ const tutorial_steps = [
     title: 'Model Modification',
     content: (
       <>
-        <p>Now we can see our connectivity</p>
-        <p>Click "BACK TO EDIT" when you are ready to continue</p>
+        <p>Connections are shown as yellow lines between the neurons</p>
+        <p>The network has connections but no external stimulation yet</p>
+        <p>Click "BACK TO EDIT" to continue building the model and add some stimulation</p>
+
       </>
     ),
   },
   {
     target: 'img[src*="stimSourceParams.svg"]',
-    title: 'Stimulation Sources Creation',
+    title: 'Create a Stimulation Source',
     content: (
       <>
+        <p>To add stimulation we will first create a source of stimulation (e.g. a current clampz) and then target that stimulation at some subset of cells.</p>
         <p>Open the Stimulation Sources panel</p>
       </>
     ),
   },
   {
     target: '#newStimulationSourceButton',
-    title: 'Stimulation Sources Creation',
+    title: 'Create a Stimulation Source',
     content: (
       <>
         <p>Click on + above Source</p>
@@ -407,7 +411,7 @@ const tutorial_steps = [
   //
   {
     target: 'div.MuiCardContent-root div.MuiInputBase-formControl > input:not([id])',
-    title: 'Stimulation Sources Creation',
+    title: 'Create a Stimulation Source',
     content: (
       <>
         <p>Type "IClamp1" in The name of the stimulation source</p>
@@ -417,7 +421,7 @@ const tutorial_steps = [
   },
   {
     target: '#stimSourceSelect',
-    title: 'Stimulation Sources Creation',
+    title: 'Create a Stimulation Source',
     content: (
       <>
         <p>Set the Point process used as stimulator</p>
@@ -428,7 +432,7 @@ const tutorial_steps = [
   },
   {
     target: 'li[data-value^="IClamp"]',
-    title: 'Stimulation Sources Creation',
+    title: 'Create a Stimulation Source',
     content: (
       <>
         <p>Select "IClamp" as the Point process</p>
@@ -437,7 +441,7 @@ const tutorial_steps = [
   },
   {
     target: 'input[id^="netParamsstimSourceParams"][id$="del"]',
-    title: 'Stimulation Sources Creation',
+    title: 'Create a Stimulation Source',
     content: (
       <>
         <p>Set Current clamp delay to 20</p>
@@ -447,7 +451,7 @@ const tutorial_steps = [
   },
   {
     target: 'input[id^="netParamsstimSourceParams"][id$="dur"]',
-    title: 'Stimulation Sources Creation',
+    title: 'Create a Stimulation Source',
     content: (
       <>
         <p>Set Current clamp duration to 5</p>
@@ -457,7 +461,7 @@ const tutorial_steps = [
   },
   {
     target: 'input[id^="netParamsstimSourceParams"][id$="amp"]',
-    title: 'Stimulation Sources Creation',
+    title: 'Create a Stimulation Source',
     content: (
       <>
         <p>Set Current clamp amplitude to 0.1 </p>
