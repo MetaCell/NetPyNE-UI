@@ -15,6 +15,14 @@ export class NetPyNEPythonConsole extends Component {
     console.info("unmounting python console");
   }
 
+  handleChange = (event) => {
+    // Handle the change event here
+    console.log('Element changed:', event.target.value);
+    // Fire up your custom event or call a specific function
+    // For example:
+    // this.props.onElementChange(event.target.value);
+  };
+
   componentDidMount() {
 
   }

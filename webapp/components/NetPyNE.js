@@ -45,6 +45,9 @@ class NetPyNE extends React.Component {
   constructor (props) {
     super(props);
     this.openPythonCallDialog = this.openPythonCallDialog.bind(this);
+    this.targetNode = null;
+    this.observer = null;
+    this.notebookValues = [];
   }
 
   componentDidMount () {
@@ -55,6 +58,31 @@ class NetPyNE extends React.Component {
     } = this.props;
 
     setDefaultWidgets();
+
+    this.targetNode = document.documentElement; // Select the top-level element
+
+    this.observer = new MutationObserver((mutations) => {
+      const currentNotebookValues = [];
+      mutations.forEach((mutation) => {
+        // Check if an iframe with the specific ID is added as a child
+        const iframeElement = mutation.target.querySelector('#pythonConsoleFrame');
+        if (iframeElement) {
+          const cells = document.getElementById('pythonConsoleFrame').contentDocument.querySelectorAll('.CodeMirror-line');
+          cells.forEach(cell => {
+            const childrenCells = cell.childNodes[0].children ;
+            for (let child of childrenCells)
+              currentNotebookValues.push(child.innerHTML);
+          });
+          const notebookDiff = this.notebookValues.filter((item) => !currentNotebookValues.includes(item));
+          if (notebookDiff.length > 0)
+            console.log('Python console changed')
+          this.notebookValues = currentNotebookValues ;
+        }
+      });
+    });
+
+    const observerConfig = { childList: true, subtree: true };
+    this.observer.observe(this.targetNode, observerConfig);
   }
 
   componentWillUnmount () {
@@ -75,7 +103,10 @@ class NetPyNE extends React.Component {
     }
   }
 
-  
+  handlePyhtonCellBlur = (event) => {
+    // Handle the blur event here
+    console.log('Element blurred:', event.target);
+  }
 
   render () {
     const { classes } = this.props;
