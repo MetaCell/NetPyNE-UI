@@ -39,7 +39,37 @@ const styles = ({ zIndex }) => ({
   noGrow: { flexGrow: 0 },
 });
 
+function compareDictionaries(dict1, dict2) {
+  const differences = {};
 
+  // Step 1: Check the number of keys
+  const dict1Keys = Object.keys(dict1);
+  const dict2Keys = Object.keys(dict2);
+  if (dict1Keys.length !== dict2Keys.length) {
+    differences["keysUnmatch"] = true;
+  }
+
+  // Step 2: Compare key-value pairs in one direction
+  for (const key of dict1Keys) {
+    if (!dict2.hasOwnProperty(key)) {
+      differences[key] = dict1[key];
+    } else if (dict1[key] !== dict2[key]) {
+      differences[key] = dict1[key];
+    }
+  }
+
+  // Step 3: Compare key-value pairs in the other direction
+  for (const key of dict2Keys) {
+    if (!dict1.hasOwnProperty(key)) {
+      differences[key] = dict2[key];
+    } else if (dict2[key] !== dict1[key]) {
+      differences[key] = dict2[key];
+    }
+  }
+
+  // Step 4: Return differences dictionary
+  return differences;
+}
 
 class NetPyNE extends React.Component {
   constructor (props) {
@@ -47,7 +77,7 @@ class NetPyNE extends React.Component {
     this.openPythonCallDialog = this.openPythonCallDialog.bind(this);
     this.targetNode = null;
     this.observer = null;
-    this.notebookValues = [];
+    this.notebookValues = {};
   }
 
   componentDidMount () {
@@ -62,20 +92,34 @@ class NetPyNE extends React.Component {
     this.targetNode = document.documentElement; // Select the top-level element
 
     this.observer = new MutationObserver((mutations) => {
-      const currentNotebookValues = [];
+      const currentNotebookValues = {};
       mutations.forEach((mutation) => {
         // Check if an iframe with the specific ID is added as a child
         const iframeElement = mutation.target.querySelector('#pythonConsoleFrame');
         if (iframeElement) {
           const cells = document.getElementById('pythonConsoleFrame').contentDocument.querySelectorAll('.CodeMirror-line');
-          cells.forEach(cell => {
-            const childrenCells = cell.childNodes[0].children ;
-            for (let child of childrenCells)
-              currentNotebookValues.push(child.innerHTML);
+          cells.forEach( cell => {
+            const childrenCell = cell.children[0].children ;
+            let routes = [];
+            let val ; 
+            for (let i = 0; i < childrenCell.length; i++) {
+              const e = childrenCell[i];
+              if (e.className == "cm-string")
+                val = e.innerHTML ;
+              if ( e.className == "cm-variable" || e.className == "cm-property" )
+                routes.push(e.innerHTML);
+            }
+            if ( routes.length > 0 )
+            {
+              const property = routes.join('.');
+              currentNotebookValues[property] = val ;
+            }
           });
-          const notebookDiff = this.notebookValues.filter((item) => !currentNotebookValues.includes(item));
-          if (notebookDiff.length > 0)
-            console.log('Python console changed')
+          const notebookDiff = compareDictionaries(currentNotebookValues, this.notebookValues);
+          if (Object.keys(notebookDiff).length > 0)
+          {
+            console.log('Python console changed, fire up redux action so components refresh');
+          }
           this.notebookValues = currentNotebookValues ;
         }
       });
