@@ -141,14 +141,34 @@ def create_notebook(filename):
     directory = os.path.dirname(filename)
     if not os.path.exists(directory):
         os.makedirs(directory)
+
+    #javascript inject listener to notebook to propagate events
+    javascript_listener = """
+%%javascript
+
+// Add event listener to detect notebook cell changes
+Jupyter.notebook.events.on('execute.CodeCell', function(event, data) {
+  var changedCellIndex = data.cell_index;
+  var changedCell = Jupyter.notebook.get_cell(changedCellIndex);
+
+  // Extract the changed value from the cell
+  var changedValue = changedCell.get_text();
+
+  // Send the changed value to the parent window
+  window.parent.postMessage(changedValue, '*');
+});
+"""
+
     nb0 = new_notebook(cells=[nbf.v4.new_markdown_cell("""# Welcome to the NetPyNE-ui!
     
     """),
                               nbf.v4.new_code_cell(
+                                  javascript_listener),
+                              nbf.v4.new_code_cell(
                                   'netpyne_geppetto.netParams'),
                               nbf.v4.new_code_cell(
-                                  'netpyne_geppetto.simConfig')
-                              ], metadata={"kernelspec": {
+                                  'netpyne_geppetto.simConfig')]
+                              , metadata={"kernelspec": {
                                   "display_name": "Python 3",
                                   "language": "python",
                                   "name": "python3"
