@@ -75,9 +75,10 @@ class NetPyNE extends React.Component {
   constructor (props) {
     super(props);
     this.openPythonCallDialog = this.openPythonCallDialog.bind(this);
-    this.targetNode = null;
-    this.observer = null;
-    this.notebookValues = {};
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log(this.props);
   }
 
   componentDidMount () {
@@ -88,45 +89,6 @@ class NetPyNE extends React.Component {
     } = this.props;
 
     setDefaultWidgets();
-
-    this.targetNode = document.documentElement; // Select the top-level element
-
-    this.observer = new MutationObserver((mutations) => {
-      const currentNotebookValues = {};
-      mutations.forEach((mutation) => {
-        // Check if an iframe with the specific ID is added as a child
-        const iframeElement = mutation.target.querySelector('#pythonConsoleFrame');
-        if (iframeElement) {
-          const cells = document.getElementById('pythonConsoleFrame').contentDocument.querySelectorAll('.CodeMirror-line');
-          cells.forEach( cell => {
-            const childrenCell = cell.children[0].children ;
-            let routes = [];
-            let val ; 
-            for (let i = 0; i < childrenCell.length; i++) {
-              const e = childrenCell[i];
-              if (e.className == "cm-string")
-                val = e.innerHTML ;
-              if ( e.className == "cm-variable" || e.className == "cm-property" )
-                routes.push(e.innerHTML);
-            }
-            if ( routes.length > 0 )
-            {
-              const property = routes.join('.');
-              currentNotebookValues[property] = val ;
-            }
-          });
-          const notebookDiff = compareDictionaries(currentNotebookValues, this.notebookValues);
-          if (Object.keys(notebookDiff).length > 0)
-          {
-            console.log('Python console changed, fire up redux action so components refresh');
-          }
-          this.notebookValues = currentNotebookValues ;
-        }
-      });
-    });
-
-    const observerConfig = { childList: true, subtree: true };
-    this.observer.observe(this.targetNode, observerConfig);
   }
 
   componentWillUnmount () {

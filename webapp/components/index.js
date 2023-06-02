@@ -307,6 +307,7 @@ export const ErrorDialog = connect(
 export const NetPyNEPythonConsole = connect(
   (state) => ({
     extensionLoaded: state.client.jupyter_geppetto_extension.loaded,
+    notebookVisible: state.widgets?.python?.status != WidgetStatus.MINIMIZED
   }),
   null,
 )(_NetPyNEPythonConsole);

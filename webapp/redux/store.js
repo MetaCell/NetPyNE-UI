@@ -3,7 +3,6 @@ import all from './reducers/all';
 
 import { EXPERIMENTS_DEFAULT_STATE } from './reducers/experiments';
 import { GENERAL_DEFAULT_STATE } from './reducers/general';
-import { NOTEBOOK_DEFAULT_STATE } from './reducers/notebook';
 
 import middleware from './middleware/middleware';
 import plotMiddleware from './middleware/plotMiddleware';
@@ -14,7 +13,6 @@ import componentMap from '../components/layout/componentsMap';
 
 const INIT_STATE = {
   general: GENERAL_DEFAULT_STATE,
-  notebook: NOTEBOOK_DEFAULT_STATE,
   experiments: EXPERIMENTS_DEFAULT_STATE,
 };
 

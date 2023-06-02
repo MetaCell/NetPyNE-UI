@@ -159,6 +159,7 @@ function addMetadataToWindow(data) {
 const errorMessageFilter = new PythonMessageFilter();
 
 export default (store) => (next) => (action) => {
+  //store.dispatch(action); //notify the reducer 
   const switchLayoutAction = (edit = true, reset = true) => {
     previousLayout[store.getState().general.editMode ? 'edit' : 'network'] = store.getState().layout;
     previousWidgets[store.getState().general.editMode ? 'edit' : 'network'] = store.getState().widgets;
