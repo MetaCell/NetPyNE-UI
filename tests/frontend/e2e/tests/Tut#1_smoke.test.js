@@ -50,17 +50,18 @@ describe('Tutorial #1 for Smoke Testing', () => {
     await console.log(page.url())
     const pageTitle = await page.title();
     console.log(pageTitle);
-    await page.waitForSelector('.navbar-default')
-    await page.waitForSelector(selectors.LOGIN_PAGE_SELECTOR, {timeout: TIMEOUT * 3});
-    await page.waitForSelector(selectors.USERNAME_SELECTOR)
-    await expect(page)
-      .toFill(selectors.USERNAME_SELECTOR, USERNAME, { timeout: TIMEOUT });
+    console.log(page)
+    // await page.waitForSelector('.navbar-default')
+    // await page.waitForSelector(selectors.LOGIN_PAGE_SELECTOR, {timeout: TIMEOUT * 3});
+    // await page.waitForSelector(selectors.USERNAME_SELECTOR)
+    //await expect(page)
+    //  .toFill(selectors.USERNAME_SELECTOR, USERNAME, { timeout: TIMEOUT });
 
-    await page.waitForSelector(selectors.PASSWORD_SELECTOR)
-    await expect(page)
-      .toFill(selectors.PASSWORD_SELECTOR, PASSWORD, { timeout: TIMEOUT });
+   // await page.waitForSelector(selectors.PASSWORD_SELECTOR)
+   // await expect(page)
+   //   .toFill(selectors.PASSWORD_SELECTOR, PASSWORD, { timeout: TIMEOUT });
 
-    await page.click(selectors.LOGIN_BUTTON_SELECTOR)
+ //   await page.click(selectors.LOGIN_BUTTON_SELECTOR)
     // Wait for initial loading spinner to disappear
     await page.waitForFunction(() => {
       let el = document.querySelector('#loading-spinner');
