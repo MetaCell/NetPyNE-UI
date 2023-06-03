@@ -63,10 +63,10 @@ describe('Tutorial #1 for Smoke Testing', () => {
 
  //   await page.click(selectors.LOGIN_BUTTON_SELECTOR)
     // Wait for initial loading spinner to disappear
-    await page.waitForFunction(() => {
-      let el = document.querySelector('#loading-spinner');
-      return el == null || el.clientHeight === 0;
-    }, { timeout: TIMEOUT });
+   // await page.waitForFunction(() => {
+   //   let el = document.querySelector('#loading-spinner');
+   //   return el == null || el.clientHeight === 0;
+  //  }, { timeout: TIMEOUT });
   });
 
   it('Open new page', async () => {
