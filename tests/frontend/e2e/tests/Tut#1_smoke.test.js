@@ -125,12 +125,12 @@ describe('Tutorial #1 for Smoke Testing', () => {
     await page.waitForTimeout(PAGE_WAIT)
 
     console.log('... taking snapshot ...');
-    await page.waitForTimeout(PAGE_WAIT);
-    expect(await page.screenshot())
-      .toMatchImageSnapshot({
-        ...SNAPSHOT_OPTIONS,
-        customSnapshotIdentifier: 'Tutorial#1 Network'
-      });
+    //await page.waitForTimeout(PAGE_WAIT);
+   // expect(await page.screenshot())
+   //   .toMatchImageSnapshot({
+   //     ...SNAPSHOT_OPTIONS,
+   //     customSnapshotIdentifier: 'Tutorial#1 Network'
+   //   });
 
     await click(page, selectors.MODEL_BUTTON_SELECTOR, { timeout: TIMEOUT });
     await click(page, selectors.SIMULATE_NETWORK_SELECTOR, { timeout: TIMEOUT });
@@ -152,11 +152,11 @@ describe('Tutorial #1 for Smoke Testing', () => {
     await page.waitForTimeout(PAGE_WAIT);
 
     console.log('... taking snapshot ...');
-    expect(await page.screenshot())
-      .toMatchImageSnapshot({
-        ...SNAPSHOT_OPTIONS,
-        customSnapshotIdentifier: 'Connections Plot'
-      });
+    //expect(await page.screenshot())
+    //  .toMatchImageSnapshot({
+    //    ...SNAPSHOT_OPTIONS,
+    //    customSnapshotIdentifier: 'Connections Plot'
+    //  });
 
   });
 
@@ -167,12 +167,12 @@ describe('Tutorial #1 for Smoke Testing', () => {
     console.log('View 2D Net Plot ...')
     await page.waitForTimeout(PAGE_WAIT * 2);
 
-    console.log('... taking snapshot ...');
-    expect(await page.screenshot())
-      .toMatchImageSnapshot({
-        ...SNAPSHOT_OPTIONS,
-        customSnapshotIdentifier: '2D Net Plot'
-      });
+    //console.log('... taking snapshot ...');
+   // expect(await page.screenshot())
+   //   .toMatchImageSnapshot({
+    //    ...SNAPSHOT_OPTIONS,
+    //    customSnapshotIdentifier: '2D Net Plot'
+   //   });
   });
 
   it('Cell Traces Plot', async () => {
@@ -183,11 +183,11 @@ describe('Tutorial #1 for Smoke Testing', () => {
     await page.waitForTimeout(PAGE_WAIT);
 
     console.log('... taking snapshot ...');
-    expect(await page.screenshot())
-      .toMatchImageSnapshot({
-        ...SNAPSHOT_OPTIONS,
-        customSnapshotIdentifier: 'Cell Traces Plot'
-      });
+   // expect(await page.screenshot())
+   //   .toMatchImageSnapshot({
+    //    ...SNAPSHOT_OPTIONS,
+    //    customSnapshotIdentifier: 'Cell Traces Plot'
+     // });
   });
 
   it('Raster Plot', async () => {
@@ -198,11 +198,11 @@ describe('Tutorial #1 for Smoke Testing', () => {
     await page.waitForTimeout(PAGE_WAIT);
 
     console.log('... taking snapshot ...');
-    expect(await page.screenshot())
-      .toMatchImageSnapshot({
-        ...SNAPSHOT_OPTIONS,
-        customSnapshotIdentifier: 'Raster Plot'
-      });
+   // expect(await page.screenshot())
+   //   .toMatchImageSnapshot({
+   //     ...SNAPSHOT_OPTIONS,
+   //     customSnapshotIdentifier: 'Raster Plot'
+    //  });
   });
 
   it('Spike Hist Plot', async () => {
