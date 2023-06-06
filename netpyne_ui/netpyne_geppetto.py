@@ -509,7 +509,12 @@ class NetPyNEGeppetto:
             # TODO: this must be integrated into the general lifecycle of "model change -> simulate"
             #   Shouldn't be specific to Import
             sim.clearAll()
-
+        try:
+            loadModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'], modelParameters.get("forceRecompile", True))
+        except Exception:
+            message = "Error while importing/compiling mods"
+            logging.exception(message)
+            return utils.getJSONError(message, sys.exc_info())
         try:
             # Get Current dir
             owd = os.getcwd()

@@ -392,6 +392,7 @@ export default (store) => (next) => (action) => {
         modFolder: 'mod',
         loadMod: false,
         compileMod: false,
+        forceRecompile: false,
 
         netParamsPath: '.',
         netParamsModuleName: tutName,
