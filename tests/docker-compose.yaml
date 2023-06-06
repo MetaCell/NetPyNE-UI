@@ -1,0 +1,18 @@
+version: '3.3'
+services:
+      myapp:
+          image: "gcr.io/metacellllc/netpyne-ui:np-601f896" 
+          user: 1000:1000
+          ports:
+            - "8888:8888"
+          command: "./NetPyNE-UI"
+
+      test:
+        image: us.gcr.io/metacellllc/netpyne_test@sha256:6b9dd59d37aa8d7085cca128081505f86580860f085cbb1452162dd9c13a8114
+        working_dir: /home/pptruser
+        user: 1000:1000
+        environment:
+          TEST_URL: http://myapp:8888
+        command: bash -c 'sleep 30 && ls -l && npm run Tutorial_1_test'
+        depends_on:
+        - myapp
