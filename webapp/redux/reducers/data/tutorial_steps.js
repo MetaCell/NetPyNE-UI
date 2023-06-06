@@ -392,7 +392,7 @@ const tutorial_steps = [
     title: 'Create a Stimulation Source',
     content: (
       <>
-        <p>To add stimulation we will first create a source of stimulation (e.g. a current clampz) and then target that stimulation at some subset of cells.</p>
+        <p>To add stimulation we will first create a source of stimulation (e.g. a current clamp) and then target some subset of cells with that source of stimulation.</p>
         <p>Open the Stimulation Sources panel</p>
       </>
     ),
@@ -474,16 +474,17 @@ const tutorial_steps = [
   //
   {
     target: 'img[src$="stimTargetParams.svg"]',
-    title: 'Stimulation Targets Creation',
+    title: 'Create a Stimulation Target',
     content: (
       <>
+        <p>Now that we have a source of stimulation, we can select a subset of cells to target with this stimulation.</p>
         <p>Open the on Stimulation Targets</p>
       </>
     ),
   },
   {
     target: '#newStimulationTargetButton',
-    title: 'Stimulation Targets Creation',
+    title: 'Create a Stimulation Target',
     content: (
       <>
         <p>Click on + above Target</p>
@@ -492,28 +493,29 @@ const tutorial_steps = [
   },
   {
     target: 'div.layoutVerticalFitInner div.MuiInputBase-formControl > input:not([id])',
-    title: 'Stimulation Targets Creation',
+    title: 'Create a Stimulation Target',
     content: (
       <>
-        <p>Type “IClamp1-&gt;cell0” in The name of the stimulation target </p>
+        <p>Type “IClamp1-&gt;cell0” as the name of the stimulation target (this is just an arbitrary label) </p>
       </>
     ),
     validation: 'IClamp1->cell0'
   },
   {
     target: 'div[id*="netParamsstimTargetParams"][id*="source"]',
-    title: 'Stimulation Targets Creation',
+    title: 'Create a Stimulation Target',
     content: (
       <>
-        <p>Set Stimulation source to IClamp1</p>
+        <p>Set Stimulation source to IClamp1 (this is the source of stimulation we just created)</p>
       </>
     ),
   },
   {
     target: 'input[id*="netParamsstimTargetParams"][id*="sec"]',
-    title: 'Stimulation Targets Creation',
+    title: 'Create a Stimulation Target',
     content: (
       <>
+        <p>We will place the current injection at the end of the dendrite</p>
         <p>Type “dend” in Target section</p>
       </>
     ),
@@ -521,7 +523,7 @@ const tutorial_steps = [
   },
   {
     target: 'input[id*="netParamsstimTargetParams"][id*="loc"]',
-    title: 'Stimulation Targets Creation',
+    title: 'Create a Stimulation Target',
     content: (
       <>
         <p>Enter 1 in Target location</p>
@@ -534,18 +536,20 @@ const tutorial_steps = [
   //
   {
     target: '#stimTargetCondsTab',
-    title: 'Conditions Setup',
+    title: 'Create a Stimulation Target',
     content: (
       <>
+        <p>We can now specify the conditions of the subset of cells that will receive this stimulation (current injection_</p>
         <p>Click on CONDITIONS</p>
       </>
     )
   },
   {
     target: 'input[id*="netParamsstimTargetParams"][id*="condscellList"]',
-    title: 'Conditions Setup',
+    title: 'Create a Stimulation Target',
     content: (
       <>
+        <p>In this case we just want to target a single cell (the one with gid 0)</p>
         <p>Enter 0 as new Target cell global indices</p>
       </>
     ),
@@ -553,7 +557,7 @@ const tutorial_steps = [
   },
   {
     target: 'button[id*="netParamsstimTargetParams"][id*="condscellList-button"]',
-    title: 'Conditions Setup',
+    title: 'Create a Stimulation Target',
     content: (
       <>
         <p>Click the "+" to add the new target cell global indice</p>
@@ -568,6 +572,7 @@ const tutorial_steps = [
     title: 'Simulation Configuration',
     content: (
       <>
+        <p>To finish off we can set some of the simulation configuration options (e.g. the simulation duration, what to record, etc.)</p>
         <p>Open the configuration panel</p>
       </>
     ),
@@ -578,7 +583,7 @@ const tutorial_steps = [
     title: 'Simulation Configuration',
     content: (
       <>
-        <p>Change the Duration to 200</p>
+        <p>Change the Duration to 200 ms</p>
       </>
     ),
     validation: '200'
@@ -588,7 +593,7 @@ const tutorial_steps = [
     title: 'Simulation Configuration',
     content: (
       <>
-        <p>Change the Time Step to 0.1</p>
+        <p>Change the Time Step to 0.1 ms</p>
       </>
     ),
     validation: '0.1'
@@ -598,7 +603,7 @@ const tutorial_steps = [
     title: 'Simulation Configuration',
     content: (
       <>
-        <p>Click on RECORD</p>
+        <p>Click on RECORD to specify what cells and variables (e.g. voltage) to record from</p>
       </>
     ),
   },
@@ -607,7 +612,7 @@ const tutorial_steps = [
     title: 'Simulation Configuration',
     content: (
       <>
-        <p>Enter 0 as new Cells to record traces from</p>
+        <p>Enter 0 in new Cells to record traces from (this means recording from the cell with global id = 0) </p>
       </>
     ),
     validation: '0'
@@ -626,7 +631,8 @@ const tutorial_steps = [
     title: 'Simulation Configuration',
     content: (
       <>
-        <p>Type "{"V_dend: {sec: dend, loc: 1.0, var: v}"}"</p>
+        <p>Click on Add new traces to record from cells and type:</p>
+        <p> {"V_dend: {sec: dend, loc: 1.0, var: v}"}</p>
         <p>(note: the tutorial input validation is case and space sensitive)</p>
       </>
     ),
@@ -638,6 +644,8 @@ const tutorial_steps = [
     content: (
       <>
         <p>Click the "+" to add the expression</p>
+        <p>Adding this line will make NetPyNE record the voltage from the cell dendrite  </p>
+        <p>Note that recording from the soma was there by default </p>
       </>
     )
   },
@@ -649,7 +657,7 @@ const tutorial_steps = [
     title: 'Plot Settings',
     content: (
       <>
-        <p>We want to overlay the voltage traces from soma and dend</p>
+        <p>Now we can change some of the plotting/visualization settings, e.g. let's overlay the voltage traces from soma and dend for cell 0</p>
         <p>Go to Plot Settings</p>
       </>
     ),
@@ -659,7 +667,7 @@ const tutorial_steps = [
     title: 'Plot Settings',
     content: (
       <>
-        <p>Click the "+" to create a new plot</p>
+        <p>Click the "+" to add settings for a new plot type</p>
       </>
     ),
   }
@@ -710,15 +718,16 @@ const tutorial_steps = [
     title: 'Plot Settings',
     content: (
       <>
-        <p>Check the box next to overlay data</p>
+        <p>Check the box next to "overlay data"</p>
       </>
     )
   },
   {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
-    title: 'Updating',
+    title: 'Update and simulate network',
     content: (
       <>
+        <p>Ok so now let's see the result of our changes!</p>
         <p>Click on UPDATE NETWORK</p>
       </>
     ),
@@ -728,12 +737,12 @@ const tutorial_steps = [
   //
   {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
-    title: 'Simulation',
+    title: 'Update and simulate network',
     content: (
       <>
         <p>Click SIMULATE</p>
         <p>Alternatively, in the menu bar, click Model and then Simulate network</p>
-        <p>Explore the analysis plots</p>
+        <p>This will show the updated network where we can plot some of the simulation results</p>
       </>
     ),
   },
@@ -742,38 +751,34 @@ const tutorial_steps = [
   //
   {
     target: 'img[src*="rasterPlot"]',
-    title: 'Observe the different plots',
+    title: 'Visualize the simulation results',
     content: (
       <>
         <p>Open the Raster plot panel</p>
+        <p>You should see cell 0 spiking first due to the current injection stimulus (IClamp)</p>
+        <p>Due to the connectivity we added, other cells will start firing next </p>
+
       </>
     ),
   },
   {
     target: 'img[src$="tracesPlot.svg"]',
-    title: 'Observe the different plots',
+    title: 'Visualize the simulation results',
     content: (
       <>
         <p>Open the Cell traces panel to see the voltages</p>
+        <p>You should see the voltage at the soma and dendrite of cell 0 (notice we previously customized this particular plot)</p>
       </>
     ),
   },
   {
     target: 'img[src*="spikePlot"]',
-    title: 'Observe the different plots',
+    title: 'Visualize the simulation results',
     content: (
       <>
         <p>Open the Spike histogram panel</p>
-      </>
-    ),
-  },
-  {
-    target: 'img[src$="connectionPlot.svg"]',
-    title: 'Observe the different plots',
-    content: (
-      <>
-        <p>Open the Connectivity panel</p>
-        <p>Explore moving and reshaping tabs (drag from the tab title)</p>
+        <p>This plot can be useful to analyze the network activity such as oscillations </p>
+        <p>You can explore moving aroud and reshaping the plot tabs (drag from the tab title)</p>
       </>
     ),
   },
@@ -782,29 +787,32 @@ const tutorial_steps = [
   //
   {
     target: '#File',
-    title: 'Clear the kernel',
+    title: 'Clear the environment to prepare for the next model',
     content: (
       <>
-        <p>In the menu bar, select "File"</p>
+        <p>To ensure there are no issues before trying the next model or tutorial we recommend clearing the environment (the Python Kernel) </p>
+        <p>To do this, in the menu bar, select "File"</p>
       </>
     )
   },
   {
     target: '#New',
-    title: 'Clear the kernel',
+    title: 'Clear the environment to prepare for the next model',
     content: (
       <>
         <p>Then click on "New"</p>
-        <p>This is necessary to clear the kernel when changing models</p>
       </>
     )
   },
   {
     target: '#appBarPerformActionButton',
-    title: 'Clear the kernel',
+    title: 'Clear the environment to prepare for the next model',
     content: (
+      <>
       <p>Finally, click on "CREATE" to clear the kernel</p>
-    )
+      <p>Congratulations! You have completed Tutorial 1! Plase check the next tutorial focused on importing morphologically realistic neurons! </p>
+      </>
+      )
   }
 ]
 export default tutorial_steps;
