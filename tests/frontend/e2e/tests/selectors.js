@@ -1,6 +1,6 @@
 
 export const BASE_PAGE_SELECTOR = '.NetPyNE-root-1'
-export const TEMPLATE_MODELS_BUTTON_SELECTOR = 'button[id = "Template models"]' //changed
+export const TEMPLATE_MODELS_BUTTON_SELECTOR = 'button[id = "Examples"]' //changed
 export const MODEL_BUTTON_SELECTOR = 'button[id="Model"]'
 export const CREATE_NETWORK_SELECTOR = 'li[id="Create network"]'
 export const CREATE_AND_SIMULATE_NETWORK_SELECTOR = 'li[id="Create and simulate network"]'
