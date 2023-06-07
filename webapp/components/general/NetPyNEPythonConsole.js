@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-
 import { PythonConsole } from '@metacell/geppetto-meta-ui/python-console/PythonConsole';
-import { updateConsole } from '../../redux/actions/console';
 
 function compareConsoleDictionaries(dict1, dict2) {
   const differences = {};
@@ -41,6 +39,7 @@ export class NetPyNEPythonConsole extends Component {
     this.focusNotebookValues = null ;
     this.container = null ;
     this.notebookVisible = false ;
+    this.updateConsole = undefined ;
   }
 
   getIFrameContent () {
@@ -79,8 +78,6 @@ export class NetPyNEPythonConsole extends Component {
       var iframeWindow     = this.container.contentWindow;
       iframeWindow.onblur  = this.handleIframeBlur ;
       iframeWindow.onfocus = this.handleIframeFocus ;
-
-      const content = this.getIFrameContent();
     }
     return false;
   }
@@ -89,8 +86,7 @@ export class NetPyNEPythonConsole extends Component {
     const notebookValues = this.getIFrameContent();
     const diff = compareConsoleDictionaries(this.focusNotebookValues, notebookValues );
     if ( Object.keys(diff).length > 0 )
-      alert();
-      //updateConsole({ commands: diff });
+      this.props.updateConsole({ commands: diff });
   }
 
   handleIframeFocus = (event) => {

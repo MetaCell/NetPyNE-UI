@@ -1,5 +1,5 @@
 // Action Types
-export const UPDATE_CONSOLE = 'OPEN_DRAWER_DIALOG_BOX';
+export const UPDATE_CONSOLE = 'UPDATE_CONSOLE';
 
 // Actions
 export const updateConsole = (commands) => ({
