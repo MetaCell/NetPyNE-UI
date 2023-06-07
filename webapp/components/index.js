@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import TextField from '@material-ui/core/TextField';
 import { getLayoutManagerInstance } from '@metacell/geppetto-meta-client/common/layout/LayoutManager';
 import {
   addWidget,
@@ -28,7 +29,6 @@ import {
 } from '../redux/actions/experiments';
 
 import { updateConsole } from '../redux/actions/console';
-
 import {
   openTopbarDialog,
   closeTopbarDialog,
@@ -70,7 +70,6 @@ import _ExperimentEdit from './experiments/ExperimentEdit';
 import _ExperimentManager from './experiments/ExperimentManager';
 import _LaunchDialog from './topbar/dialogs/LaunchDialog';
 import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole';
-import _NetPyNEField from './general/NetPyNEField';
 import _PlotViewer from './general/PlotViewer';
 import _ExperimentControlPanel from './general/ExperimentControlPanel';
 import _Rxd from './rxd/Wrapper';
@@ -80,20 +79,15 @@ const updateCardsDispatch = (dispatch) => ({ updateCards: () => dispatch(updateC
 
 // Python controlled
 
-export const NetPyNETextField = connect(
+export const NetPyNETextField = PythonControlledCapability.createPythonControlledControl(
+  TextField,
+);
+
+export const NetPyNECellRules = connect(
   (state, ownProps) => ({
     ...ownProps,
     commands: state.console.commands,
   }),
-  null,
-)(
-  PythonControlledCapability.createPythonControlledComponent(
-    _NetPyNEField,
-  ),
-);
-
-export const NetPyNECellRules = connect(
-  null,
   updateCardsDispatch,
 )(
   PythonControlledCapability.createPythonControlledComponent(
@@ -320,7 +314,7 @@ export const NetPyNEPythonConsole = connect(
     notebookVisible: state.widgets?.python?.status != WidgetStatus.MINIMIZED
   }),
   (dispatch) => ({
-    updateConsole: (command) => dispatch(updateConsole(command)),
+    updateConsole: (commands) => dispatch(updateConsole(commands))
   }),
 )(_NetPyNEPythonConsole);
 
