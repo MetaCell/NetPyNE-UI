@@ -38,7 +38,36 @@ export class NetPyNEPythonConsole extends Component {
   constructor (props) {
     super(props);
     this.observer = null ;
-    this.notebookValues = null ;
+    this.focusNotebookValues = null ;
+    this.container = null ;
+    this.notebookVisible = false ;
+  }
+
+  getIFrameContent () {
+    const content = this.container.contentDocument ;
+    const cells   = content.querySelectorAll('.CodeMirror-line');
+    let currentNotebookValues = {} ;
+    if (cells.length > 0)
+    {
+      cells.forEach( cell => {
+        const childrenCell = cell.children[0].children  ;
+        let routes = [];
+        let val ; 
+        for (let i = 0; i < childrenCell.length; i++) {
+          const e = childrenCell[i];
+          if (e.className == "cm-string")
+            val = e.innerHTML ;
+          if ( e.className == "cm-variable" || e.className == "cm-property" )
+            routes.push(e.innerHTML);
+        }
+        if ( routes.length > 0 )
+        {
+          const property = routes.join('.');
+          currentNotebookValues[property] = val ;
+        }
+      });
+    }
+    return currentNotebookValues ;
   }
   
   shouldComponentUpdate (nextProps) {
@@ -47,59 +76,29 @@ export class NetPyNEPythonConsole extends Component {
     }
     if (nextProps.notebookVisible)
     {
-      const iframe = document.getElementById('pythonConsoleFrame') ;
+      var iframeWindow     = this.container.contentWindow;
+      iframeWindow.onblur  = this.handleIframeBlur ;
+      iframeWindow.onfocus = this.handleIframeFocus ;
 
-      this.observer = new MutationObserver((mutations) => {
-        const currentNotebookValues = {};
-        mutations.forEach((mutation) => {
-
-            const cells = mutation.target.querySelectorAll('.CodeMirror-line');
-            if (cells.length > 0)
-            {
-              cells.forEach( cell => {
-                const childrenCell = cell.children[0].children  ;
-                let routes = [];
-                let val ; 
-                for (let i = 0; i < childrenCell.length; i++) {
-                  const e = childrenCell[i];
-                  if (e.className == "cm-string")
-                    val = e.innerHTML ;
-                  if ( e.className == "cm-variable" || e.className == "cm-property" )
-                    routes.push(e.innerHTML);
-                }
-                if ( routes.length > 0 )
-                {
-                  const property = routes.join('.');
-                  currentNotebookValues[property] = val ;
-                }
-              });
-              const notebookDiff = compareConsoleDictionaries(currentNotebookValues, this.notebookValues);
-              if (Object.keys(notebookDiff).length > 0)
-                handleConsoleChange(currentNotebookValues); //propagate current values
-              this.notebookValues = currentNotebookValues ;
-            }
-        });
-      });
-  
-      const observerConfig = { childList: true, subtree: true };
-      this.observer.observe(iframe.contentDocument, observerConfig);
-    }
-    else {
-      this.observer.disconnect();
+      const content = this.getIFrameContent();
     }
     return false;
   }
 
-  componentWillUnmount() {
-    console.info("unmounting python console");
+  handleIframeBlur = (event) => {
+    const notebookValues = this.getIFrameContent();
+    const diff = compareConsoleDictionaries(this.focusNotebookValues, notebookValues );
+    if ( Object.keys(diff).length > 0 )
+      alert();
+      //updateConsole({ commands: diff });
   }
 
-  handleConsoleChange = (event) => {
-    updateConsole({ commands: event })
-  };
+  handleIframeFocus = (event) => {
+    this.focusNotebookValues = this.getIFrameContent();
+  }
 
   componentDidMount() {
-
+   this.container = document.getElementById('pythonConsoleFrame') 
   }
 
   render() {

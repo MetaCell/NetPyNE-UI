@@ -3,6 +3,7 @@ import all from './reducers/all';
 
 import { EXPERIMENTS_DEFAULT_STATE } from './reducers/experiments';
 import { GENERAL_DEFAULT_STATE } from './reducers/general';
+import { INITIAL_CONSOLE_STATE } from './reducers/console';
 
 import middleware from './middleware/middleware';
 import plotMiddleware from './middleware/plotMiddleware';
@@ -14,6 +15,7 @@ import componentMap from '../components/layout/componentsMap';
 const INIT_STATE = {
   general: GENERAL_DEFAULT_STATE,
   experiments: EXPERIMENTS_DEFAULT_STATE,
+  console: INITIAL_CONSOLE_STATE
 };
 
 const store = createStore(
