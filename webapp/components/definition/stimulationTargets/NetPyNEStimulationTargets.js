@@ -94,6 +94,9 @@ export default class NetPyNEStimulationTargets extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
+    if (this.props.commands !== prevProps.commands)
+      this.forceUpdate();
+  
     const newStimulationTargetName = this.hasSelectedStimulationTargetBeenRenamed(
       prevState,
       this.state,

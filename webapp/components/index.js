@@ -122,7 +122,7 @@ export const NetPyNEConnectivityRules = connect(
   null,
 )(
   PythonControlledCapability.createPythonControlledComponent(
-    _NetPyNECellRules,
+    _NetPyNEConnectivityRules,
   ),
 );
 

@@ -246,6 +246,8 @@ class ListComponent extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
+    if (this.props.commands !== prevProps.commands)
+      this.forceUpdate();
     const newValue = this.convertFromPython(
       prevProps,
       prevState,
