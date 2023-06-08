@@ -27,7 +27,7 @@ class Select extends React.Component {
           value={value}
           onChange={this.props.onChange}
           multiple={!!this.props.multiple}
-          pythonParams={this.props.pythonParams}
+          pythonparams={this.props.pythonparams}
         >
           {this.props.children}
         </MuiSelect>

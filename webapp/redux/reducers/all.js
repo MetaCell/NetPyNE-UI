@@ -3,6 +3,7 @@ import general from './general';
 import errors from './errors';
 import drawer from './drawer';
 import topbar from './topbar';
+import tutorial from './tutorial'
 import experiments from './experiments';
 import console from './console';
 
@@ -12,5 +13,6 @@ export default {
   drawer: drawer,
   topbar: topbar,
   console: console,
+  tutorial: tutorial,
   experiments: experiments,
 };

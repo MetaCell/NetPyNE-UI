@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactResizeDetector from 'react-resize-detector';
 import { PythonConsole } from '@metacell/geppetto-meta-ui/python-console/PythonConsole';
 
 function compareConsoleDictionaries(dict1, dict2) {
@@ -97,9 +98,17 @@ export class NetPyNEPythonConsole extends Component {
    this.container = document.getElementById('pythonConsoleFrame') 
   }
 
-  render() {
+  componentWillUnmount () {
+    console.info('unmounting python console');
+  }
+
+  render () {
     const notebookName = GEPPETTO_CONFIGURATION.notebookName || "notebook.ipynb";
-    return <PythonConsole pythonNotebookPath={`notebooks/${notebookName}`} extensionLoaded={this.props.extensionLoaded} />
+    return (
+      <ReactResizeDetector handleWidth handleHeight>
+        {({ width, height }) => <PythonConsole pythonNotebookPath={`notebooks/${notebookName}`} extensionLoaded={this.props.extensionLoaded} iframeHeight={height} />}
+      </ReactResizeDetector>
+    );
   }
 }
 

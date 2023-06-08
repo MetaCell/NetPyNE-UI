@@ -1,4 +1,4 @@
-FROM node:13.14 as jsbuild
+FROM node:14.21.3-bullseye as jsbuild
 
 WORKDIR /app
 
@@ -18,10 +18,10 @@ RUN rm -Rf node_modules/*
 FROM jupyter/base-notebook:hub-1.5.0
 ENV NB_UID=jovyan
 ENV FOLDER=netpyne
-ARG GEPPETTO_VERSION=development
 ARG BUILD_ARGS=""
-ARG NETPYNE_VERSION=master
 ARG WORKSPACE_VERSION=master
+# ARG GEPPETTO_VERSION=development
+# ARG NETPYNE_VERSION=master
 
 ENV FOLDER=/home/jovyan/work/NetPyNE-UI
 
@@ -32,10 +32,9 @@ RUN apt-get update -qq &&\
     apt-get install python3-tk vim nano unzip git make libtool g++ -qq pkg-config libfreetype6-dev libpng-dev libopenmpi-dev  openjdk-11-jre-headless -y -y
 RUN conda install python=3.7 -y
 
-
 WORKDIR $FOLDER
 COPY --chown=1000:1000 requirements.txt requirements.txt
-RUN pip install -r requirements.txt --no-cache-dir --prefer-binary
+RUN --mount=type=cache,target=/root/.cache python -m pip install --upgrade pip && pip install -r requirements.txt --prefer-binary
 
 COPY --chown=$NB_UID:1000 . .
 COPY --from=jsbuild --chown=$NB_UID:1000 /app webapp
@@ -46,7 +45,7 @@ RUN jupyter nbextension enable --py --sys-prefix jupyter_geppetto
 RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension
 RUN jupyter serverextension enable --py --sys-prefix jupyter_geppetto
 
-RUN python utilities/install.py ${BUILD_ARGS} --geppetto ${GEPPETTO_VERSION} --netpyne $NETPYNE_VERSION --workspace WORKSPACE_VERSION --npm-skip
+RUN python utilities/install.py ${BUILD_ARGS} --workspace $WORKSPACE_VERSION
 
 RUN jupyter labextension disable @jupyterlab/hub-extension
 

@@ -385,7 +385,7 @@ define((require) => {
         }
 
         callPythonMethod = (value) => {
-          const params = this.props?.pythonParams || [];
+          const params = this.props?.pythonparams || [];
           if (this.props.method) {
             GeppettoUtils.evalPythonMessage(this.props.method, params)
               .then((response) => {

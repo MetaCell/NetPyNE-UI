@@ -10,8 +10,9 @@ import {
   Dialog,
   ConfirmationDialog,
   LaunchDialog,
+  TutorialObserver
 } from 'netpyne/components';
-
+import { loadModel } from '../redux/actions/general';
 
 const styles = ({ zIndex }) => ({
   root: {
@@ -39,42 +40,11 @@ const styles = ({ zIndex }) => ({
   noGrow: { flexGrow: 0 },
 });
 
-function compareDictionaries(dict1, dict2) {
-  const differences = {};
-
-  // Step 1: Check the number of keys
-  const dict1Keys = Object.keys(dict1);
-  const dict2Keys = Object.keys(dict2);
-  if (dict1Keys.length !== dict2Keys.length) {
-    differences["keysUnmatch"] = true;
-  }
-
-  // Step 2: Compare key-value pairs in one direction
-  for (const key of dict1Keys) {
-    if (!dict2.hasOwnProperty(key)) {
-      differences[key] = dict1[key];
-    } else if (dict1[key] !== dict2[key]) {
-      differences[key] = dict1[key];
-    }
-  }
-
-  // Step 3: Compare key-value pairs in the other direction
-  for (const key of dict2Keys) {
-    if (!dict1.hasOwnProperty(key)) {
-      differences[key] = dict2[key];
-    } else if (dict2[key] !== dict1[key]) {
-      differences[key] = dict2[key];
-    }
-  }
-
-  // Step 4: Return differences dictionary
-  return differences;
-}
-
 class NetPyNE extends React.Component {
   constructor (props) {
     super(props);
     this.openPythonCallDialog = this.openPythonCallDialog.bind(this);
+    this.loaded = false;
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -89,6 +59,35 @@ class NetPyNE extends React.Component {
     } = this.props;
 
     setDefaultWidgets();
+
+    // Listen messages
+    const loadFromEvent = (event) => {
+      // Here we would expect some cross-origin check, but we don't do anything more than load a model here
+      switch (event.data.type) {
+        case 'INIT_INSTANCE':
+          if (this.loaded) {
+            return;
+          }
+          this.loaded = true;
+          console.log('Netpyne is ready');
+          if (window !== window.parent) {
+            window.parent.postMessage({
+              type: 'APP_READY',
+            }, '*');
+          }
+          break;
+        case 'LOAD_RESOURCE':
+          // eslint-disable-next-line no-case-declarations
+          const resource = event.data.payload;
+          this.props.dispatchAction(loadModel(resource));
+          break;
+        default:
+          break;
+      }
+    };
+    // A message from the parent frame can specify the file to load
+    window.addEventListener('message', loadFromEvent);
+    // window.load = loadFromEvent
   }
 
   componentWillUnmount () {
@@ -109,37 +108,34 @@ class NetPyNE extends React.Component {
     }
   }
 
-  handlePyhtonCellBlur = (event) => {
-    // Handle the blur event here
-    console.log('Element blurred:', event.target);
-  }
-
   render () {
     const { classes } = this.props;
 
     const Layout = LayoutManager();
     return (
-      <div className={classes.root}>
-        <div className={classes.container}>
-          <div className={classes.topbar}>
-            <Topbar />
+      <TutorialObserver>
+        <div className={classes.root}>
+          <div className={classes.container}>
+            <div className={classes.topbar}>
+              <Topbar />
+            </div>
+            <Box p={1} flex={1} display="flex" alignItems="stretch">
+              <Grid container spacing={1} className={classes.content} alignItems="stretch">
+                <Grid item className={classes.noGrow}>
+                  <Drawer />
+                </Grid>
+                <Grid item>
+                  <Layout />
+                </Grid>
+              </Grid>
+            </Box>
           </div>
-          <Box p={1} flex={1} display="flex" alignItems="stretch">
-            <Grid container spacing={1} className={classes.content} alignItems="stretch">
-              <Grid item className={classes.noGrow}>
-                <Drawer />
-              </Grid>
-              <Grid item>
-                <Layout />
-              </Grid>
-            </Grid>
-          </Box>
+          <Dialog />
+          <ConfirmationDialog />
+          <ErrorDialog />
+          <LaunchDialog />
         </div>
-        <Dialog />
-        <ConfirmationDialog />
-        <ErrorDialog />
-        <LaunchDialog />
-      </div>
+      </TutorialObserver>
     );
   }
 }
