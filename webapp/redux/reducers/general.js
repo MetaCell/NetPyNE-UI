@@ -14,6 +14,7 @@ export const GENERAL_DEFAULT_STATE = {
   confirmationDialogTitle: '',
   confirmationDialogMessage: '',
   confirmationDialogOnConfirm: {},
+  notebookOpened: false,
   automaticSimulation: false,
   automaticInstantiation: false,
   confirmationDialogOpen: false,

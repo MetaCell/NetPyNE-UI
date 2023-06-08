@@ -40,12 +40,15 @@ const styles = ({ zIndex }) => ({
   noGrow: { flexGrow: 0 },
 });
 
-
 class NetPyNE extends React.Component {
   constructor (props) {
     super(props);
     this.openPythonCallDialog = this.openPythonCallDialog.bind(this);
     this.loaded = false;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log(this.props);
   }
 
   componentDidMount () {
