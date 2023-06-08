@@ -58,8 +58,8 @@ export class NetPyNEPythonConsole extends Component {
             val = e.innerHTML ;
           if ( e.className == "cm-variable" || e.className == "cm-property" )
             routes.push(e.innerHTML);
-        }
-        if ( routes.length > 0 )
+      }
+        if ( routes?.length > 0 && val?.length > 0)
         {
           const property = routes.join('.');
           currentNotebookValues[property] = val ;

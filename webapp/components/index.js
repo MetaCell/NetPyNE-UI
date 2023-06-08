@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import TextField from '@material-ui/core/TextField';
 import { getLayoutManagerInstance } from '@metacell/geppetto-meta-client/common/layout/LayoutManager';
 import {
   addWidget,
@@ -39,7 +38,7 @@ import _NetPyNEConnectivityRules from './definition/connectivity/NetPyNEConnecti
 import _NetPyNEPlots from './definition/plots/NetPyNEPlots';
 import _ListComponent from './general/List';
 import _AdapterComponent from './general/AdapterComponent';
-import Checkbox from './general/Checkbox';
+import _CheckBox from './general/Checkbox';
 import _NetPyNEStimulationTargets from './definition/stimulationTargets/NetPyNEStimulationTargets';
 import _Dimensions from './definition/populations/Dimensions';
 import _NetPyNE from './NetPyNE';
@@ -74,13 +73,33 @@ import _PlotViewer from './general/PlotViewer';
 import _ExperimentControlPanel from './general/ExperimentControlPanel';
 import _Rxd from './rxd/Wrapper';
 import { WidgetStatus } from '@metacell/geppetto-meta-client/common/layout/model';
-
+import _NetPyNETextField from './general/NetPyNETextField';
 const updateCardsDispatch = (dispatch) => ({ updateCards: () => dispatch(updateCards) });
 
 // Python controlled
 
-export const NetPyNETextField = PythonControlledCapability.createPythonControlledControl(
-  TextField,
+export const NetPyNETextField = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    commands: state.console.commands,
+  }),
+  null,
+)(
+  PythonControlledCapability.createPythonControlledComponent(
+    _NetPyNETextField,
+  ),
+);
+
+export const NetPyNECheckBox = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    commands: state.console.commands,
+  }),
+  null,
+)(
+  PythonControlledCapability.createPythonControlledComponent(
+    _CheckBox,
+  ),
 );
 
 export const NetPyNECellRules = connect(
@@ -95,33 +114,79 @@ export const NetPyNECellRules = connect(
   ),
 );
 
-export const NetPyNEConnectivityRules = PythonControlledCapability.createPythonControlledComponent(
-  _NetPyNEConnectivityRules,
+export const NetPyNEConnectivityRules = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    commands: state.console.commands,
+  }),
+  null,
+)(
+  PythonControlledCapability.createPythonControlledComponent(
+    _NetPyNECellRules,
+  ),
 );
 
-export const NetPyNEPlots = PythonControlledCapability.createPythonControlledComponent(
-  _NetPyNEPlots,
+export const NetPyNEPlots = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    commands: state.console.commands,
+  }),
+  null,
+)(
+  PythonControlledCapability.createPythonControlledComponent(
+    _NetPyNEPlots,
+  ),
 );
 
-export const ListComponent = PythonControlledCapability.createPythonControlledControl(
-  _ListComponent,
+export const ListComponent = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    commands: state.console.commands,
+  }),
+  null,
+)(
+  PythonControlledCapability.createPythonControlledComponent(
+    _ListComponent,
+  ),
 );
 
-export const AdapterComponent = PythonControlledCapability.createPythonControlledControl(
-  _AdapterComponent,
+export const AdapterComponent = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    commands: state.console.commands,
+  }),
+  null,
+)(
+  PythonControlledCapability.createPythonControlledComponent(
+    _AdapterComponent,
+  ),
 );
 
-export const NetPyNECheckbox = PythonControlledCapability.createPythonControlledControl(
-  Checkbox,
+export const NetPyNEStimulationTargets = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    commands: state.console.commands,
+  }),
+  null,
+)(
+  PythonControlledCapability.createPythonControlledComponent(
+    _NetPyNEStimulationTargets,
+  ),
 );
 
-export const NetPyNEStimulationTargets = PythonControlledCapability.createPythonControlledComponent(
-  _NetPyNEStimulationTargets,
+export const SelectField = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    commands: state.console.commands,
+  }),
+  null,
+)(
+  PythonControlledCapability.createPythonControlledComponent(
+    _SelectField,
+  ),
 );
 
-export const SelectField = PythonControlledCapability.createPythonControlledControl(
-  _SelectField,
-);
+// END of python controlled capability
 
 export const Experiments = connect(
   (state, ownProps) => ({
