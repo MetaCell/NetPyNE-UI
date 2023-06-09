@@ -394,7 +394,7 @@ const tutorial2_steps = [
         <p>You can zoom in and out to see, for example, the detailed apical tuft dendrites.</p>
         <p>You can open the control panel to see the the cell population and identify them in the 3D view.</p>
         <p>...</p>
-        <p>The tutorial ends here, but to see the cells in action go to the Examples menu and load Tutorial 2.</p>
+        <p>The tutorial ends here, but to see the cells in action go to the Examples menu and load Model 2.</p>
         <p>This includes the full toy model, with connectivity between the cells and stimulation.</p>
         <p>Once you simulate the model, you will be able to see the cell voltages and network spikes.</p>
         <p>Continue to tutorial 3 to discover how to create a multiscale cortical network with LFP recording and reaction-diffusion!</p>
