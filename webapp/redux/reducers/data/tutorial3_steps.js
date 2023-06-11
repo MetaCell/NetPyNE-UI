@@ -1,21 +1,25 @@
 import React from 'react';
 const tutorial3_steps = [
-  // Tutorial template selection
+  // Load Multiscale Network (Tutorial 3)
   {
     target: 'button[id="Examples"]',
     title: (
-      <div>Tutorial Template Selection</div>
+      <div>Load Multiscale Network (Tutorial 3)</div>
     ),
     content: (
       <div>
-        <p>Open the "Examples" menu.</p>
+        <p>In this final tutorial we will examine a toy model of a cortical network.</p>
+        <p>The model includes 3 cortical layers, neurons with reaction-diffusion and calculation of local field potentials (LFPs) .</p>
+        <p>We will see how modifying a parameter at the molecular scale affects the cell and network firing and LFP scales.</p>
+        <p>...</p>
+        <p>Start by opening the "Examples" menu.</p>
       </div>
     )
   },
   {
     target: 'li[label*="3a:"]',
     title: (
-      <div>Tutorial Template Selection</div>
+      <div>Load Multiscale Network (Tutorial 3)</div>
     ),
     content: (
       <div>
@@ -23,27 +27,45 @@ const tutorial3_steps = [
       </div>
     )
   },
+
+  // Explore the network
+  {
+    target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)', // NEEDS UPDATING !!!
+    title: (
+      <div>Explore the network </div>
+    ),
+    content: (
+      <div>
+        <p>Click on the populations panel to explore the 6 populations in the network.</p>
+        <p>We have excitatory (E) and inhibitory (I) population in layers 2, 4 and 5.</p>
+        <p>Select any of the populations and click on "Spatial Distribution"</p>
+        <p>Here you will see how the Y-axis range defines the cortical depth of that layer.</p>
+      </div>
+    )
+  },
+
   // Create and Simulate
   {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
     title: (
-      <div>Creation</div>
+      <div>Create the network </div>
     ),
     content: (
       <div>
-        <p>Create/update the network to visualize its 3D representation and associate plots.</p>
+        <p>Click on create/update the network to visualize its 3D representation and associate plots.</p>
+        <p>You can then use the Control Panel icon to color different populations.</p>
       </div>
     )
   },
   {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
     title: (
-      <div>Simulation</div>
+      <div>Simulate the network</div>
     ),
     content: (
       <div>
-        <p>Simulate the network model.</p>
-        <p>Please note that the simulation takes time and depends on the resources of the host machine.</p>
+        <p>Now simulate the network model.</p>
+        <p>Please note that the simulation will take some time as these cells include a reaction-diffusion component.</p>
       </div>
     )
   },
@@ -51,55 +73,96 @@ const tutorial3_steps = [
   {
     target: 'div[aria-disabled=false] img[src*="rasterPlot"]',
     title: (
-      <div>Opening of the Different Plots</div>
+      <div>Visualize the simulation results</div>
     ),
     content: (
       <div>
-        <p>Open the Raster Plot, the LFP Time Series Plot, the RxD Concentration Plot and the Spike History Plot.</p>
+        <p>We will open different plots to visualize the network activity.</p>
+        <p>Note that the network shows some synchronized activity (oscillations) across layers. </p>
+        <p>This can be seen in the spike raster plot, spike histogram and LFP.</p>
+        <p>We will also visualize the intracellular and extracellular concentration of Calcium.</p>
+        <p>Calcium concentration affects the activity of the neurons.</p>
+
       </div>
     )
   },
+
   {
-    target: 'div[aria-disabled=false] img[src*="LFPTimeSeriesPlot"]',
+    target: 'div[aria-disabled=false] img[src*="spikePlot"]', // NEEDS UPDATING !!!
     title: (
-      <div>Opening of the Different Plots</div>
+      <div>Visualize the simulation results</div>
     ),
     content: (
       <div>
-        <p>LFP Time Series Plot.</p>
+        <p>Open the Cell Traces Plot.</p>
+        <p>Notice the intra- and extracelullar concentration of Calcium.</p>
       </div>
     )
   },
   {
     target: 'div[aria-disabled=false] img[src*="rxdConcentrationPlot"]',
     title: (
-      <div>Opening of the Different Plots</div>
+      <div>Visualize the simulation results</div>
     ),
     content: (
       <div>
-        <p>RxD Concentration Plot.</p>
+        <p>Open the RxD Concentration Plot.</p>
+        <p>In this 2D view, the extracellular regions around cell locations show decreased Calcium concentration.</p>
+      </div>
+    )
+  },
+  {
+    target: 'div[aria-disabled=false] img[src*="spikePlot"]', // NEEDS UPDATING !!!
+    title: (
+      <div>Visualize the simulation results</div>
+    ),
+    content: (
+      <div>
+        <p>Open the Spike Raster Plot.</p>
+        <p>Play around dragging plots in the Flex Layout so you can visualize all at the same time.</p>
       </div>
     )
   },
   {
     target: 'div[aria-disabled=false] img[src*="spikePlot"]',
     title: (
-      <div>Opening of the Different Plots</div>
+      <div>Visualize the simulation results</div>
     ),
     content: (
       <div>
-        <p>Spike History Plot.</p>
+        <p>Open the Spike Histogram Plot.</p>
       </div>
     )
   },
+  {
+    target: 'div[aria-disabled=false] img[src*="LFPTimeSeriesPlot"]',
+    title: (
+      <div>Visualize the simulation results</div>
+    ),
+    content: (
+      <div>
+        <p>Open the LFP Time Series Plot.</p>
+        <p>Notice the network oscillations in both the spiking and LFP plots.</p>
+      </div>
+    )
+  },
+
+
   // Go back to edit
   {
     target: 'div [class*="SwitchPageButton"] .MuiButton-root',
     title: (
-      <div>Model and Parameter Modifications</div>
+      <div>RxD parameter modification</div>
     ),
     content: (
       <div>
+        <p>We are now going to modify an RxD molecular scale parameter to see how it affects network activity.</p>
+        <p>Pyramidal neurons have the following RxD reaction:
+        <p>1) mGLuR</p>
+
+        </p>
+
+
         <p>Go back to the network edition.</p>
       </div>
     )
@@ -108,7 +171,7 @@ const tutorial3_steps = [
   {
     target: 'div[aria-disabled=false] img[src*="rxd.svg"]',
     title: (
-      <div>RxD Configuration Modification</div>
+      <div>RxD parameter modification</div>
     ),
     content: (
       <div>
@@ -119,7 +182,7 @@ const tutorial3_steps = [
   {
     target: 'button.MuiTab-labelIcon:nth-child(2)',
     title: (
-      <div>RxD Configuration Modification</div>
+      <div>RxD parameter modification</div>
     ),
     content: (
       <div>
@@ -130,7 +193,7 @@ const tutorial3_steps = [
   {
     target: '#ip3',
     title: (
-      <div>RxD Configuration Modification</div>
+      <div>RxD parameter modification</div>
     ),
     content: (
       <div>
@@ -141,7 +204,7 @@ const tutorial3_steps = [
   {
     target: '#netParamsrxdParamsspeciesip3initial',
     title: (
-      <div>RxD Configuration Modification</div>
+      <div>RxD parameter modification</div>
     ),
     content: (
       <div>
@@ -155,7 +218,7 @@ const tutorial3_steps = [
   {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
     title: (
-      <div>Updating</div>
+      <div>Update the network model</div>
     ),
     content: (
       <div>
@@ -166,7 +229,7 @@ const tutorial3_steps = [
   {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
     title: (
-      <div>Simulation</div>
+      <div>Simulate the network model</div>
     ),
     content: (
       <div>
