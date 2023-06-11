@@ -147,7 +147,6 @@ const tutorial3_steps = [
     )
   },
 
-
   // Go back to edit
   {
     target: 'div [class*="SwitchPageButton"] .MuiButton-root',
@@ -158,12 +157,17 @@ const tutorial3_steps = [
       <div>
         <p>We are now going to modify an RxD molecular scale parameter to see how it affects network activity.</p>
         <p>Pyramidal neurons have the following RxD reaction:
-        <p>1) mGLuR</p>
-
+        <p>1) metabotropic glutamatergic receptor (mGLuR) gets activated (not part of model)</p>
+        <p>2) cytosol IP3 increases (we will model this change directly)</p>
+        <p>3) endoplasmic reticulum (ER) IP3 receptors open</p>
+        <p>4) ER calcium released to cytosol</p>
+        <p>5) calcium-dependent potassium (kBk/Kca) channels open  </p>
+        <p>6) potassium (K) flows inside the cell </p>
+        <p>7) hyperpolarizing K current reduces cell firing </p>
+        <p>So by increasing the initial concentration of IP3, we should reduce the network activity... </p>
+        <p>Let's try that! </p>
         </p>
-
-
-        <p>Go back to the network edition.</p>
+        <p>Click on Go Back to Edit.</p>
       </div>
     )
   },
@@ -175,7 +179,7 @@ const tutorial3_steps = [
     ),
     content: (
       <div>
-        <p>Select the RxD Configuration.</p>
+        <p>Select the Reaction-Diffusion panel.</p>
       </div>
     )
   },
@@ -197,7 +201,7 @@ const tutorial3_steps = [
     ),
     content: (
       <div>
-        <p>Select IP3 to increate the initial concentration.</p>
+        <p>Select the IP3 species.</p>
       </div>
     )
   },
@@ -208,7 +212,7 @@ const tutorial3_steps = [
     ),
     content: (
       <div>
-        <p>Increase the initial concentration to 0.1.</p>
+        <p>Increase the IP3 initial concentration from 0 to 0.1 </p>
       </div>
     ),
     waitFor: 'fieldEdition',
@@ -222,7 +226,7 @@ const tutorial3_steps = [
     ),
     content: (
       <div>
-        <p>Update the network model.</p>
+        <p>Click on Create or Update the network model.</p>
       </div>
     )
   },
@@ -234,7 +238,7 @@ const tutorial3_steps = [
     content: (
       <div>
         <p>And simulate the modified network model.</p>
-        <p>Please note that the simulation takes time and depends on the resources of the host machine.</p>
+        <p>As mentioned before, the simulation may take a few minutes due to the RxD component.</p>
       </div>
     )
   },
@@ -257,41 +261,68 @@ const tutorial3_steps = [
     ),
     content: (
       <div>
-        <p>Reopen the different plots to see how they are impatected by the modification.</p>
-        <p>Open the Raster Plot, the LFP Time Series Plot, the RxD Concentration Plot and the Spike History Plot.</p>
+        <p>Reopen the different plots to see how the modification of IP3 concentration has impacted the network activity.</p>
+        <p>Open the Cell Traces, RxD Concentration Plot, Raster Plot, Spike Histogram Plot, LFP Time Series Plot, and </p>
       </div>
     )
   },
   {
-    target: 'img[src*="LFPTimeSeriesPlot"]',
+    target: 'div[aria-disabled=false] img[src*="spikePlot"]', // NEEDS UPDATING !!!
     title: (
-      <div>Plots Display</div>
+      <div>Visualize the simulation results</div>
     ),
     content: (
       <div>
-        <p>LFP Time Series Plot.</p>
+        <p>Open the Cell Traces Plot.</p>
+        <p>Notice the higher intracellular concentration of Calcium and the spiking dies off after 500ms.</p>
       </div>
     )
   },
   {
-    target: 'img[src*="rxdConcentrationPlot"]',
+    target: 'div[aria-disabled=false] img[src*="rxdConcentrationPlot"]',
     title: (
-      <div>Plots Display</div>
+      <div>Visualize the simulation results</div>
     ),
     content: (
       <div>
-        <p>RxD Concentration Plot.</p>
+        <p>Open the RxD Concentration Plot.</p>
       </div>
     )
   },
   {
-    target: 'img[src*="spikePlot"]',
+    target: 'div[aria-disabled=false] img[src*="spikePlot"]', // NEEDS UPDATING !!!
     title: (
-      <div>Plots Display</div>
+      <div>Visualize the simulation results</div>
     ),
     content: (
       <div>
-        <p>Spike History Plot.</p>
+        <p>Open the Spike Raster Plot.</p>
+        <p>Notice how the network activity decreases after 500ms.</p>
+      </div>
+    )
+  },
+  {
+    target: 'div[aria-disabled=false] img[src*="spikePlot"]',
+    title: (
+      <div>Visualize the simulation results</div>
+    ),
+    content: (
+      <div>
+        <p>Open the Spike Histogram Plot.</p>
+        <p>Notice how the network activity decreases after 500ms.</p>
+      </div>
+    )
+  },
+  {
+    target: 'div[aria-disabled=false] img[src*="LFPTimeSeriesPlot"]',
+    title: (
+      <div>Visualize the simulation results</div>
+    ),
+    content: (
+      <div>
+        <p>Open the LFP Time Series Plot.</p>
+        <p>Similarly, after 500ms the LFP amplitude decreases, as a result of increasing the IP3 concentration. </p>
+        <p>This demonstrates a multiscale interaction between molecular properties and LFP activity in a toy cortical network model.</p>
       </div>
     )
   },
