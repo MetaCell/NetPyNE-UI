@@ -30,7 +30,7 @@ const tutorial3_steps = [
 
   // Explore the network
   {
-    target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)', // NEEDS UPDATING !!!
+    target: 'img[src*="popParams"]',
     title: (
       <div>Explore the network </div>
     ),
@@ -88,7 +88,7 @@ const tutorial3_steps = [
   },
 
   {
-    target: 'div[aria-disabled=false] img[src*="spikePlot"]', // NEEDS UPDATING !!!
+    target: 'div[aria-disabled=false] img[src*="tracesPlot"]',
     title: (
       <div>Visualize the simulation results</div>
     ),
@@ -112,7 +112,7 @@ const tutorial3_steps = [
     )
   },
   {
-    target: 'div[aria-disabled=false] img[src*="spikePlot"]', // NEEDS UPDATING !!!
+    target: 'div[aria-disabled=false] img[src*="rasterPlot"]',
     title: (
       <div>Visualize the simulation results</div>
     ),
@@ -267,7 +267,7 @@ const tutorial3_steps = [
     )
   },
   {
-    target: 'div[aria-disabled=false] img[src*="spikePlot"]', // NEEDS UPDATING !!!
+    target: 'div[aria-disabled=false] img[src*="tracesPlot"]',
     title: (
       <div>Visualize the simulation results</div>
     ),
@@ -290,7 +290,7 @@ const tutorial3_steps = [
     )
   },
   {
-    target: 'div[aria-disabled=false] img[src*="spikePlot"]', // NEEDS UPDATING !!!
+    target: 'div[aria-disabled=false] img[src*="rasterPlot"]',
     title: (
       <div>Visualize the simulation results</div>
     ),
