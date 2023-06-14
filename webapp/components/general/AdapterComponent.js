@@ -27,6 +27,8 @@ export default class AdapterComponent extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
+    if (this.props.commands !== prevProps.commands)
+      this.forceUpdate();
     const newValue = this.props.convertFromPython(prevProps, prevState, this.props.value);
     if (newValue != undefined) {
       this.setState(newValue);
