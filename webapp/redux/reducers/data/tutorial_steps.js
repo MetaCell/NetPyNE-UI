@@ -1,55 +1,62 @@
-import React from 'react';
+import React from 'react'; 
 
 const tutorial_steps = [
   {
     target: '#selectCellButton',
-    title: 'Simple Cell Model Creation',
+    title: 'Create a new cell type',
     content: <p>Click on the + above Cell</p>
   },
   {
     target: '#BallStick_HHCellTemplate',
-    title: 'New Cell Addition',
+    title: 'Create a new cell type',
     content: (
-      <p>Click on the menu item to add one Ball and stick HH cell</p>
+      <p>Click on the menu item to select the "Ball and stick HH cell" template</p>
     )
   },
   {
     target: '#CellType0',
-    title: 'Cell Customization',
+    title: 'Edit the new cell type properties',
     content: (
-      <p>Click on CellType0 and the panel on the right will appear.</p>
+      <p>Click on CellType0 to edit its properties via the panel on the right.</p>
     )
   },
   {
     target: '#cellRuleName',
     validation: 'input[value="pyr"]',
-    title: 'Cell Customization',
+    title: 'Edit the new cell type properties',
     content: (
-      <p>Rename the cell type: "pyr" for pyramidal.</p>
+      <p>Rename the cell type to "pyr" (for pyramidal).</p>
       ),
     validation: 'pyr'
   },
   {
     target: '#newSectionButton',
-    title: 'Check Cell"s Sections',
+    title: 'Explore the new cell type properties',
     content: (
-      <p>Click on Section to see the sections that make up this cell type</p>
+      <p>Click on Section to see the sections (compartments) of this cell type</p>
     )
   },
   {
     target: 'input[value*="soma"]',
-    title: 'Check Cell"s Sections',
+    title: "Explore the new cell type properties",
     content: (
-      <p>We can check that the name of the section is "soma"</p>
+      <p>We can see that the name of this section is "soma"</p>
+    )
+  },
+   {
+    target: '#Geometry', // check
+    title: "Explore the new cell type properties",
+    content: (
+      <p>In the geometry tab we can see the dimensions of this section (cylinder of 12 by 12 um)</p>
     )
   },
   {
     target: 'img[src*="popParams.svg"]',
-    title: 'Cell Population Creation',
+    title: 'Create a cell population',
     content: (
       <>
-        <p>Click on the Populations icon.</p>
-        <p>You can also find each sidebar icons as a tab in the top panel</p>
+        <p>Click on the Populations icon on the left sidebar</p> 
+        <p>You can also find each icon as a tab in the top panel</p>
       </>
     )
   },
@@ -66,7 +73,7 @@ const tutorial_steps = [
   // },
   {
     target: '#newPopulationButton',
-    title: 'Cell Population Creation',
+    title: 'Create a cell population',
     content: (
       <p>Click on the + above Population</p>
     )
@@ -81,7 +88,7 @@ const tutorial_steps = [
   // },
   {
     target: 'div.MuiBox-root.scrollbar.scrollchild > div.MuiBox-root > div',
-    title: 'Cell Population Creation',
+    title: 'Create a cell population',
     content: (
       <p>Change the population name to “E” for excitatory</p>
     ),
@@ -89,9 +96,9 @@ const tutorial_steps = [
   },
   {
     target: 'div[id*="netParamspopParams"][id*="cellType"]',
-    title: 'Cell Population Creation',
+    title: 'Create a cell population', // NOTE: not possible to see "pyr" in the drop-down menu
     content: (
-      <p>Select the cell type to the one we created earlier ("pyr")</p>
+      <p>Select the cell type we just created ("pyr")</p> 
       // <p>Set the Cell type to the "pyr" cell we imported earlier</p>
     ),
     waitFor: 'click',
@@ -100,7 +107,7 @@ const tutorial_steps = [
   {
     target: 'li[data-value^="pyr"]',
     title: (
-      <div>Population Creation</div>
+      <div>Create a cell population</div>
     ),
     content: (
       <p>Select "pyr"</p>
@@ -108,46 +115,44 @@ const tutorial_steps = [
   },
   {
     target: 'input[id*="numCells"]',
-    title: 'Cell Population Creation',
+    title: 'Create a cell population',
     content: (
-      <p>Enter 40 for the number of cells</p>
+      <p>Set the number of cells to 40 </p>
     ),
     validation: '40',
   },
   {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
-    title: 'Network Creation',
+    title: 'Create the Network',
     content: (
-      <p>Once we have a population with cells, we can create our network and visualize it</p>
+      <p>Now we can ask NetPyNE to create (instantiate) and visualize a network based on the specs we provided. Just click on Create Network. </p>
     )
   },
   {
+    // NOTE: the tutorial can continue even if user doesn't instantiate network
     target: 'flexlayout__tab_button flexlayout__tab_button_top flexlayout__tab_button--selected',
     title: 'Network Visualization',
     content: (
       <>
-        <p>You can see the layout of our 40 pyr cells</p>
+        <p>You can see the layout and shape of our 40 pyr cells</p>
         <p>You can rotate, pan, and zoom</p>
-        <p>You can choose colors from the control panel</p>
-        <p>Most analysis plots (sidebar) are useless without having run a simulation</p>
+        <p>You can change their colors from the control panel (gear icon on the left sidebar) </p>
+        <p>Most analysis plots (sidebar) are unavailable before running a simulation</p>
       </>
     )
   },
   {
     target: 'img[src*="d2NetPlot"]',
-    title: '2D Net Plot Panel',
+    title: '2D Network Plot',
     content: (
       <>
-        <p>The 2D net plot shows cell positions</p>
-        <p>No connectivity has been added yet</p>
-        <p>Explore the interactive plot</p>
-        <p>Explore moving and reshaping tabs (drag from the tab title)</p>
+        <p>Click on the 2D net plot to show the cell 2D locations</p>
       </>
     ),
   },
   {
     target: 'MuiButtonBase-root MuiButton-root MuiButton-contained',
-    title: 'Model Modifications',
+    title: 'Continue building the model',
     content: (
       <p>Click on Back To Edit</p>
     ),
@@ -155,21 +160,21 @@ const tutorial_steps = [
   },
   {
     target: 'img[src*="synMechParams.svg"]',
-    title: 'Synaptic Mechanism Creation',
+    title: 'Create a synaptic mechanism',
     content: (
-      <p>Click on Synaptic Mechanisms</p>
+      <p>Click on Synaptic Mechanisms icon on the left sidebar</p>
     ),
   },
   {
     target: '#newSynapseButton',
-    title: 'Synaptic Mechanism Creation',
+    title: 'Create a synaptic mechanism',
     content: (
       <p>Click on + above Synapse </p>
     )
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
-    title: 'Synaptic Mechanism Creation',
+    title: 'Create a synaptic mechanism',
     content: (
       <p>Name the synapse “exc”</p>
     ),
@@ -178,56 +183,56 @@ const tutorial_steps = [
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
-    title: 'Synaptic Mechanism Creation',
+    title: 'Create a synaptic mechanism',
     content: (
-      <p>Leave the default mechanism Exp2Syn</p>
+      <p>Leave the default mechanism type, Exp2Syn</p>
     ),
     collectionIndex: 3
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
-    title: 'Synaptic Mechanism Creation',
+    title: 'Create a synaptic mechanism',
     content: (
-      <p>Enter 0.1 in Time constant for exponential 1 </p>
+      <p>Enter 0.1 in Time constant for exponential 1 (rise time) </p>
     ),
     collectionIndex: 4,
     validation: '0.1'
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
-    title: 'Synaptic Mechanism Creation',
+    title: 'Create a synaptic mechanism',
     content: (
-      <p>Enter 1.0 (or 1) in Time constant for exponential 2</p>
+      <p>Enter 1.0 (or 1) in Time constant for exponential 2 (fall time)</p>
     ),
     collectionIndex: 5,
     validation: '1'
   },
   {
     target: 'MuiInputBase-input MuiFilledInput-input',
-    title: 'Synaptic Mechanism Creation',
+    title: 'Create a synaptic mechanism',
     content: (
-      <p>Enter 0 in Reversal potential </p>
+      <p>Enter 0 in Reversal potential (mV) to make this an excitatory synapse </p>
     ),
     collectionIndex: 6,
     validation: '0'
   },
   {
     target: 'img[src*="connParams.svg"]',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <p>Click on Connectivity Rules in tabs or sidebar</p>
     ),
   },
   {
     target: '#newConnectivityRuleButton',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <p>Click on + above Connectivity Rule </p>
     )
   },
   { // ConnectivityName
     target: '#ConnectivityName',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <p>Name the rule "E-&gt;E" (without spaces)</p>
     ),
@@ -235,7 +240,7 @@ const tutorial_steps = [
   },
   {
     target: 'input[id*="netParamsconnParams"][id*="weight"]',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
         <p>Enter 0.005 in Weight of synaptic connection</p>
@@ -245,7 +250,7 @@ const tutorial_steps = [
   },
   {
     target: 'input[id*="netParamsconnParams"][id*="probability"]',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
         <p>Enter 0.1 in Probability of connection</p>
@@ -255,17 +260,17 @@ const tutorial_steps = [
   },
   {
     target: 'input[id*="netParamsconnParams"][id*="delay"]',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
-        <p>Enter 5 in Connection delay</p>
+        <p>Enter 5 in Connection delay (ms)</p>
       </>
     ),
     validation: '5'
   },
   {
     target: 'div[id*="netParamsconnParams"][id*="synMech"]',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
         <p>Select "exc" for Synaptic mechanism</p>
@@ -274,17 +279,17 @@ const tutorial_steps = [
   },
   { // netParamsconnParamsConnectivityRule0sec
     target: 'input[id*="netParamsconnParams"][id*="sec"]',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
-        <p>Add "dend" as new postsynaptic neuron section</p>
+        <p>Enter "dend" as the postsynaptic neuron section</p>
       </>
     ),
     validation: 'dend'
   },
   {
     target: 'button[id^="netParamsconnParams"][id$="sec-button"]',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
         <p>Click on "+" to add the value</p>
@@ -293,17 +298,17 @@ const tutorial_steps = [
   },
   {
     target: 'input[id*="netParamsconnParams"][id*="loc"]',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
-        <p>Enter 0.5 as new postsynaptic neuron location</p>
+        <p>Enter 0.5 as the postsynaptic neuron location</p>
       </>
     ),
     validation: '0.5'
   },
   {
     target: 'button[id^="netParamsconnParams"][id$="loc-button"]',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
         <p>Click on "+" to add the value</p>
@@ -315,19 +320,19 @@ const tutorial_steps = [
   //
   {
     target: '#preCondsConnTab > span',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
-        <p>Click on PRE-SYNAPTIC CELLS CONDITIONS</p>
+        <p>Click on PRE-SYNAPTIC CELLS CONDITIONS tab to specify the subset of cells that will constitute the pre-synpatic population </p>
       </>
     ),
   },
   {
     target: 'div[id*="netParamsconnParams"][id*="preCondspop"]',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
-        <p>Select E for the Population</p>
+        <p>You can decide which cells to connect based on multiple cell properties such as the cell type, population or location. In this case, select E for the Population</p>
       </>
     )
   },
@@ -336,37 +341,37 @@ const tutorial_steps = [
   //
   {
     target: '#postCondsConnTab > span',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
-        <p>Click on POST-SYNAPTIC CELLS CONDITIONS</p>
+        <p>Click on POST-SYNAPTIC CELLS CONDITIONS tab to specify the subset of cells that will constitute the post-synpatic population</p>
       </>
     ),
   },
   {
     target: 'div[id*="netParamsconnParams"][id*="postCondspop"]',
-    title: 'Connectivity Rules Creation',
+    title: 'Create a connectivity rule',
     content: (
       <>
-        <p>Select E for the Population</p>
+        <p>Select E for the Population to complete this simple connectivity rule, connecting E cells to E cells recurrently (with a probability of 0.1) </p>
       </>
     )
   }
   , {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
-    title: 'Network Creation',
+    title: 'Create the network',
     content: (
       <>
-        <p>Click on "CREATE NETWORK" (or "UPDATE NETWORK")</p>
+        <p>Click on ""UPDATE NETWORK""</p>
       </>
     ),
   }
   , {
     target: 'img[src*="d2NetPlot.svg"]',
-    title: 'Plot Display',
+    title: '2D Network Plot',
     content: (
       <>
-        <p>Generate the 2D Net Plot</p>
+        <p>Click on the 2D Network Plot, which should now show the connections between neurons</p>
       </>
     ),
   }
@@ -375,23 +380,26 @@ const tutorial_steps = [
     title: 'Model Modification',
     content: (
       <>
-        <p>Now we can see our connectivity</p>
-        <p>Click "BACK TO EDIT" when you are ready to continue</p>
+        <p>Connections are shown as yellow lines between the neurons</p>
+        <p>The network has connections but no external stimulation yet</p>
+        <p>Click "BACK TO EDIT" to continue building the model and add some stimulation</p>
+
       </>
     ),
   },
   {
     target: 'img[src*="stimSourceParams.svg"]',
-    title: 'Stimulation Sources Creation',
+    title: 'Create a Stimulation Source',
     content: (
       <>
+        <p>To add stimulation we will first create a source of stimulation (e.g. a current clamp) and then target some subset of cells with that source of stimulation.</p>
         <p>Open the Stimulation Sources panel</p>
       </>
     ),
   },
   {
     target: '#newStimulationSourceButton',
-    title: 'Stimulation Sources Creation',
+    title: 'Create a Stimulation Source',
     content: (
       <>
         <p>Click on + above Source</p>
@@ -403,7 +411,7 @@ const tutorial_steps = [
   //
   {
     target: 'div.MuiCardContent-root div.MuiInputBase-formControl > input:not([id])',
-    title: 'Stimulation Sources Creation',
+    title: 'Create a Stimulation Source',
     content: (
       <>
         <p>Type "IClamp1" in The name of the stimulation source</p>
@@ -413,7 +421,7 @@ const tutorial_steps = [
   },
   {
     target: '#stimSourceSelect',
-    title: 'Stimulation Sources Creation',
+    title: 'Create a Stimulation Source',
     content: (
       <>
         <p>Set the Point process used as stimulator</p>
@@ -424,7 +432,7 @@ const tutorial_steps = [
   },
   {
     target: 'li[data-value^="IClamp"]',
-    title: 'Stimulation Sources Creation',
+    title: 'Create a Stimulation Source',
     content: (
       <>
         <p>Select "IClamp" as the Point process</p>
@@ -433,7 +441,7 @@ const tutorial_steps = [
   },
   {
     target: 'input[id^="netParamsstimSourceParams"][id$="del"]',
-    title: 'Stimulation Sources Creation',
+    title: 'Create a Stimulation Source',
     content: (
       <>
         <p>Set Current clamp delay to 20</p>
@@ -443,7 +451,7 @@ const tutorial_steps = [
   },
   {
     target: 'input[id^="netParamsstimSourceParams"][id$="dur"]',
-    title: 'Stimulation Sources Creation',
+    title: 'Create a Stimulation Source',
     content: (
       <>
         <p>Set Current clamp duration to 5</p>
@@ -453,7 +461,7 @@ const tutorial_steps = [
   },
   {
     target: 'input[id^="netParamsstimSourceParams"][id$="amp"]',
-    title: 'Stimulation Sources Creation',
+    title: 'Create a Stimulation Source',
     content: (
       <>
         <p>Set Current clamp amplitude to 0.1 </p>
@@ -466,16 +474,17 @@ const tutorial_steps = [
   //
   {
     target: 'img[src$="stimTargetParams.svg"]',
-    title: 'Stimulation Targets Creation',
+    title: 'Create a Stimulation Target',
     content: (
       <>
+        <p>Now that we have a source of stimulation, we can select a subset of cells to target with this stimulation.</p>
         <p>Open the on Stimulation Targets</p>
       </>
     ),
   },
   {
     target: '#newStimulationTargetButton',
-    title: 'Stimulation Targets Creation',
+    title: 'Create a Stimulation Target',
     content: (
       <>
         <p>Click on + above Target</p>
@@ -484,28 +493,29 @@ const tutorial_steps = [
   },
   {
     target: 'div.layoutVerticalFitInner div.MuiInputBase-formControl > input:not([id])',
-    title: 'Stimulation Targets Creation',
+    title: 'Create a Stimulation Target',
     content: (
       <>
-        <p>Type “IClamp1-&gt;cell0” in The name of the stimulation target </p>
+        <p>Type “IClamp1-&gt;cell0” as the name of the stimulation target (this is just an arbitrary label) </p>
       </>
     ),
     validation: 'IClamp1->cell0'
   },
   {
     target: 'div[id*="netParamsstimTargetParams"][id*="source"]',
-    title: 'Stimulation Targets Creation',
+    title: 'Create a Stimulation Target',
     content: (
       <>
-        <p>Set Stimulation source to IClamp1</p>
+        <p>Set Stimulation source to IClamp1 (this is the source of stimulation we just created)</p>
       </>
     ),
   },
   {
     target: 'input[id*="netParamsstimTargetParams"][id*="sec"]',
-    title: 'Stimulation Targets Creation',
+    title: 'Create a Stimulation Target',
     content: (
       <>
+        <p>We will place the current injection at the end of the dendrite</p>
         <p>Type “dend” in Target section</p>
       </>
     ),
@@ -513,7 +523,7 @@ const tutorial_steps = [
   },
   {
     target: 'input[id*="netParamsstimTargetParams"][id*="loc"]',
-    title: 'Stimulation Targets Creation',
+    title: 'Create a Stimulation Target',
     content: (
       <>
         <p>Enter 1 in Target location</p>
@@ -526,18 +536,20 @@ const tutorial_steps = [
   //
   {
     target: '#stimTargetCondsTab',
-    title: 'Conditions Setup',
+    title: 'Create a Stimulation Target',
     content: (
       <>
+        <p>We can now specify the conditions of the subset of cells that will receive this stimulation (current injection_</p>
         <p>Click on CONDITIONS</p>
       </>
     )
   },
   {
     target: 'input[id*="netParamsstimTargetParams"][id*="condscellList"]',
-    title: 'Conditions Setup',
+    title: 'Create a Stimulation Target',
     content: (
       <>
+        <p>In this case we just want to target a single cell (the one with gid 0)</p>
         <p>Enter 0 as new Target cell global indices</p>
       </>
     ),
@@ -545,7 +557,7 @@ const tutorial_steps = [
   },
   {
     target: 'button[id*="netParamsstimTargetParams"][id*="condscellList-button"]',
-    title: 'Conditions Setup',
+    title: 'Create a Stimulation Target',
     content: (
       <>
         <p>Click the "+" to add the new target cell global indice</p>
@@ -560,6 +572,7 @@ const tutorial_steps = [
     title: 'Simulation Configuration',
     content: (
       <>
+        <p>To finish off we can set some of the simulation configuration options (e.g. the simulation duration, what to record, etc.)</p>
         <p>Open the configuration panel</p>
       </>
     ),
@@ -570,7 +583,7 @@ const tutorial_steps = [
     title: 'Simulation Configuration',
     content: (
       <>
-        <p>Change the Duration to 200</p>
+        <p>Change the Duration to 200 ms</p>
       </>
     ),
     validation: '200'
@@ -580,7 +593,7 @@ const tutorial_steps = [
     title: 'Simulation Configuration',
     content: (
       <>
-        <p>Change the Time Step to 0.1</p>
+        <p>Change the Time Step to 0.1 ms</p>
       </>
     ),
     validation: '0.1'
@@ -590,7 +603,7 @@ const tutorial_steps = [
     title: 'Simulation Configuration',
     content: (
       <>
-        <p>Click on RECORD</p>
+        <p>Click on RECORD to specify what cells and variables (e.g. voltage) to record from</p>
       </>
     ),
   },
@@ -599,7 +612,7 @@ const tutorial_steps = [
     title: 'Simulation Configuration',
     content: (
       <>
-        <p>Enter 0 as new Cells to record traces from</p>
+        <p>Enter 0 in new Cells to record traces from (this means recording from the cell with global id = 0) </p>
       </>
     ),
     validation: '0'
@@ -618,7 +631,8 @@ const tutorial_steps = [
     title: 'Simulation Configuration',
     content: (
       <>
-        <p>Type "{"V_dend: {sec: dend, loc: 1.0, var: v}"}"</p>
+        <p>Click on Add new traces to record from cells and type:</p>
+        <p> {"V_dend: {sec: dend, loc: 1.0, var: v}"}</p>
         <p>(note: the tutorial input validation is case and space sensitive)</p>
       </>
     ),
@@ -630,6 +644,8 @@ const tutorial_steps = [
     content: (
       <>
         <p>Click the "+" to add the expression</p>
+        <p>Adding this line will make NetPyNE record the voltage from the cell dendrite  </p>
+        <p>Note that recording from the soma was there by default </p>
       </>
     )
   },
@@ -641,7 +657,7 @@ const tutorial_steps = [
     title: 'Plot Settings',
     content: (
       <>
-        <p>We want to overlay the voltage traces from soma and dend</p>
+        <p>Now we can change some of the plotting/visualization settings, e.g. let's overlay the voltage traces from soma and dend for cell 0</p>
         <p>Go to Plot Settings</p>
       </>
     ),
@@ -651,7 +667,7 @@ const tutorial_steps = [
     title: 'Plot Settings',
     content: (
       <>
-        <p>Click the "+" to create a new plot</p>
+        <p>Click the "+" to add settings for a new plot type</p>
       </>
     ),
   }
@@ -702,15 +718,16 @@ const tutorial_steps = [
     title: 'Plot Settings',
     content: (
       <>
-        <p>Check the box next to overlay data</p>
+        <p>Check the box next to "overlay data"</p>
       </>
     )
   },
   {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
-    title: 'Updating',
+    title: 'Update and simulate network',
     content: (
       <>
+        <p>Ok so now let's see the result of our changes!</p>
         <p>Click on UPDATE NETWORK</p>
       </>
     ),
@@ -720,12 +737,12 @@ const tutorial_steps = [
   //
   {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
-    title: 'Simulation',
+    title: 'Update and simulate network',
     content: (
       <>
         <p>Click SIMULATE</p>
         <p>Alternatively, in the menu bar, click Model and then Simulate network</p>
-        <p>Explore the analysis plots</p>
+        <p>This will show the updated network where we can plot some of the simulation results</p>
       </>
     ),
   },
@@ -734,37 +751,34 @@ const tutorial_steps = [
   //
   {
     target: 'img[src*="rasterPlot"]',
-    title: 'Observe the different plots',
+    title: 'Visualize the simulation results',
     content: (
       <>
         <p>Open the Raster plot panel</p>
+        <p>You should see cell 0 spiking first due to the current injection stimulus (IClamp)</p>
+        <p>Due to the connectivity we added, other cells will start firing next </p>
+
       </>
     ),
   },
   {
     target: 'img[src$="tracesPlot.svg"]',
-    title: 'Observe the different plots',
+    title: 'Visualize the simulation results',
     content: (
       <>
         <p>Open the Cell traces panel to see the voltages</p>
+        <p>You should see the voltage at the soma and dendrite of cell 0 (notice we previously customized this particular plot)</p>
       </>
     ),
   },
   {
     target: 'img[src*="spikePlot"]',
-    title: 'Observe the different plots',
+    title: 'Visualize the simulation results',
     content: (
       <>
         <p>Open the Spike histogram panel</p>
-      </>
-    ),
-  },
-  {
-    target: 'img[src$="connectionPlot.svg"]',
-    title: 'Observe the different plots',
-    content: (
-      <>
-        <p>Open the Connectivity panel</p>
+        <p>This plot can be useful to analyze the network activity such as oscillations </p>
+        <p>You can explore moving aroud and reshaping the plot tabs (drag from the tab title)</p>
       </>
     ),
   },
@@ -773,29 +787,32 @@ const tutorial_steps = [
   //
   {
     target: '#File',
-    title: 'Clear the kernel',
+    title: 'Clear the environment to prepare for the next model',
     content: (
       <>
-        <p>In the menu bar, select "File"</p>
+        <p>To ensure there are no issues before trying the next model or tutorial we recommend clearing the environment (the Python Kernel) </p>
+        <p>To do this, in the menu bar, select "File"</p>
       </>
     )
   },
   {
     target: '#New',
-    title: 'Clear the kernel',
+    title: 'Clear the environment to prepare for the next model',
     content: (
       <>
         <p>Then click on "New"</p>
-        <p>This is necessary to clear the kernel when changing models</p>
       </>
     )
   },
   {
     target: '#appBarPerformActionButton',
-    title: 'Clear the kernel',
+    title: 'Clear the environment to prepare for the next model',
     content: (
+      <>
       <p>Finally, click on "CREATE" to clear the kernel</p>
-    )
+      <p>Congratulations! You have completed Tutorial 1! Plase check the next tutorial focused on importing morphologically realistic neurons! </p>
+      </>
+      )
   }
 ]
 export default tutorial_steps;

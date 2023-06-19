@@ -3,19 +3,20 @@ const tutorial2_steps = [
   {
     target: '#selectCellButton',
     title: (
-      <div>Cell Creation</div>
+      <div>Import a detailed cell type (pyramidal neuron)</div>
     ),
     content: (
       <div>
-        <p>We will create first a new cell using a cell template.</p>
-        <p>Click on the "+" to create a new cell.</p>
+        <p>In this tutorial we will import an existing cell type with a detailed morphology and biophysics.</p>
+        <p>Specifically, we will import a  mouse motor cortex layer 5B pyramidal tract (PT) corticospinal neuron.</p>
+        <p>Click on the "+" to create a new cell type.</p>
       </div>
     )
   },
   {
     target: '#fromTemplateCellTemplate',
     title: (
-      <div>Cell Creation</div>
+      <div>Import a detailed cell type (inhibitory interneuron)</div>
     ),
     content: (
       <div>
@@ -27,7 +28,7 @@ const tutorial2_steps = [
   {
     target: '#importCellParamsRuleLabel',
     title: (
-      <div>Cell Creation</div>
+      <div>Import a detailed cell type (pyramidal neuron)</div>
     ),
     content: (
       <div>
@@ -39,7 +40,7 @@ const tutorial2_steps = [
   {
     target: '#importCellParamsCellName',
     title: (
-      <div>Cell Creation</div>
+      <div>Import a detailed cell type (pyramidal neuron)</div>
     ),
     content: (
       <div>
@@ -51,7 +52,7 @@ const tutorial2_steps = [
   {
     target: '.fa-folder',
     title: (
-      <div>Cell Creation</div>
+      <div>Import a detailed cell type (pyramidal neuron)</div>
     ),
     content: (
       <div>
@@ -73,7 +74,7 @@ const tutorial2_steps = [
   {
     target: '.fa-folder',
     title: (
-      <div>Cell Creation</div>
+      <div>Import a detailed cell type (pyramidal neuron)</div>
     ),
     content: (
       <div>
@@ -95,7 +96,7 @@ const tutorial2_steps = [
   {
     target: '#importCellParamsCompileMod',
     title: (
-      <div>Cell Creation</div>
+      <div>Import a detailed cell type (pyramidal neuron)</div>
     ),
     content: (
       <div>
@@ -106,7 +107,7 @@ const tutorial2_steps = [
   {
     target: '#appBarPerformActionButton',
     title: (
-      <div>Cell Creation</div>
+      <div>Import a detailed cell type (pyramidal neuron)</div>
     ),
     content: (
       <div>
@@ -117,7 +118,7 @@ const tutorial2_steps = [
   {
     target: '#PTcell',
     title: (
-      <div>Cell Modifications</div>
+      <div>Explore the imported cell</div>
     ),
     content: (
       <div>
@@ -128,22 +129,25 @@ const tutorial2_steps = [
   {
     target: '#newSectionButton',
     title: (
-      <div>Cell Modifications</div>
+      <div>Explore the imported cell</div>
     ),
     content: (
       <div>
         <p>Click on "Section" to see all the sections of the cell.</p>
+        <p>You will see that it has hundreds of sections, including soma and basal and apicals dendrites.</p>
+        <p>If you click on Mechs, you will be able to explore the ion channels in each section.</p>
+        <p>You can of course modify any morphology and biophysical properties.</p>
       </div>
     )
   },
   {
     target: '#selectCellButton',
     title: (
-      <div>Cell Creation</div>
+      <div>Import a detailed cell type (inhibitory interneuron)</div>
     ),
     content: (
       <div>
-        <p>Go back to the cell creation and import a new one from a template as before.</p>
+        <p>Go back to the Import a detailed cell type (inhibitory interneuron) and import a new one from a template as before.</p>
       </div>
     )
   },
@@ -151,11 +155,11 @@ const tutorial2_steps = [
   {
     target: '#selectCellButton',
     title: (
-      <div>Cell Creation</div>
+      <div>Import a detailed cell type (inhibitory interneuron)</div>
     ),
     content: (
       <div>
-        <p>We will create first a new cell using a cell template.</p>
+        <p>Next, we will import a second cell type, in this an inhibitory interneuron.</p>
         <p>Click on the "+" to create a new cell.</p>
       </div>
     )
@@ -163,7 +167,7 @@ const tutorial2_steps = [
   {
     target: '#fromTemplateCellTemplate',
     title: (
-      <div>Cell Creation</div>
+      <div>Import a detailed cell type (inhibitory interneuron)</div>
     ),
     content: (
       <div>
@@ -175,11 +179,11 @@ const tutorial2_steps = [
   {
     target: '#importCellParamsRuleLabel',
     title: (
-      <div>Cell Creation</div>
+      <div>Import a detailed cell type (inhibitory interneuron)</div>
     ),
     content: (
       <div>
-        <p>Change the cell rule label to "SRI"</p>
+        <p>Change the cell rule label to "SRI" (striatal cholinergice interneuron)</p>
       </div>
     ),
     validation: 'SRI'
@@ -187,7 +191,7 @@ const tutorial2_steps = [
   {
     target: '#importCellParamsCellName',
     title: (
-      <div>Cell Creation</div>
+      <div>Import a detailed cell type (inhibitory interneuron)</div>
     ),
     content: (
       <div>
@@ -199,7 +203,7 @@ const tutorial2_steps = [
   {
     target: '.fa-folder',
     title: (
-      <div>Cell Creation</div>
+      <div>Import a detailed cell type (inhibitory interneuron)</div>
     ),
     content: (
       <div>
@@ -221,7 +225,7 @@ const tutorial2_steps = [
   {
     target: '.fa-folder',
     title: (
-      <div>Cell Creation</div>
+      <div>Import a detailed cell type (inhibitory interneuron)</div>
     ),
     content: (
       <div>
@@ -243,7 +247,7 @@ const tutorial2_steps = [
   {
     target: '#importCellParamsCompileMod',
     title: (
-      <div>Cell Creation</div>
+      <div>Import a detailed cell type (inhibitory interneuron)</div>
     ),
     content: (
       <div>
@@ -254,7 +258,7 @@ const tutorial2_steps = [
   {
     target: '#appBarPerformActionButton',
     title: (
-      <div>Cell Creation</div>
+      <div>Import a detailed cell type (inhibitory interneuron)</div>
     ),
     content: (
       <div>
@@ -266,10 +270,11 @@ const tutorial2_steps = [
   {
     target: 'img[src*="popParams"]',
     title: (
-      <div>Population Creation</div>
+      <div>Create two populations</div>
     ),
     content: (
       <div>
+        <p>Now that we have defined 2 cell types, we can create the corresponding populations.</p>
         <p>Click on "Populations" to create new cells populations.</p>
       </div>
     )
@@ -277,28 +282,28 @@ const tutorial2_steps = [
   {
     target: '#newPopulationButton',
     title: (
-      <div>Population Creation</div>
+      <div>Create two populations</div>
     ),
     content: (
       <div>
-        <p>Create a new population for PTcell</p>
+        <p>Create a new population for the PTcell</p>
       </div>
     )
   },
   {
     target: 'div.MuiBox-root.scrollbar.scrollchild > div.MuiBox-root > div',
     title: (
-      <div>Population Creation</div>
+      <div>Create two populations</div>
     ),
     content: (
-      <p>Change the population name to "E"</p>
+      <p>Change the population name to "E" for excitatory</p>
     ),
     validation: 'input[value="E"]'
   },
   {
     target: 'div[id^="netParamspopParams"][id$="cellType"]',
     title: (
-      <div>Population Creation</div>
+      <div>Create two populations</div>
     ),
     content: (
       <p>Select "PTcell"</p>
@@ -307,38 +312,39 @@ const tutorial2_steps = [
   {
     target: 'input[id^="netParamspopParams"][id$="numCells"]',
     title: (
-      <div>Population Creation</div>
+      <div>Create two populations</div>
     ),
     content: (
-      <p>Enter 2 as number of cells</p>
+      <p>Enter 2 as number of cells.</p>,
+      <p>Remember, this is just a toy model to illustrate how to import detailed cells.</p>
     ),
     validation: '2'
   },
   {
     target: '#newPopulationButton',
     title: (
-      <div>Population Creation</div>
+      <div>Create two populations</div>
     ),
     content: (
       <div>
-        <p>Create a new population for SRI</p>
+        <p>Create a new population for the inhibitory neuron, SRI</p>
       </div>
     )
   },
   {
     target: 'div.MuiBox-root.scrollbar.scrollchild > div.MuiBox-root > div',
     title: (
-      <div>Population Creation</div>
+      <div>Create two populations</div>
     ),
     content: (
-      <p>Change the population name to "I"</p>
+      <p>Change the population name to "I" (inhibitory)</p>
     ),
     validation: 'input[value="I"]'
   },
   {
     target: 'div[id^="netParamspopParams"][id$="cellType"]',
     title: (
-      <div>Population Creation</div>
+      <div>Create two populations</div>
     ),
     content: (
       <p>Select the cell type</p>
@@ -349,7 +355,7 @@ const tutorial2_steps = [
   {
     target: 'li[data-value^="SRI"]',
     title: (
-      <div>Population Creation</div>
+      <div>Create two populations</div>
     ),
     content: (
       <p>Select "SRI"</p>
@@ -358,7 +364,7 @@ const tutorial2_steps = [
   {
     target: 'input[id^="netParamspopParams"][id$="numCells"]',
     title: (
-      <div>Population Creation</div>
+      <div>Create two populations</div>
     ),
     content: (
       <p>Enter 2 as number of cells</p>
@@ -369,22 +375,30 @@ const tutorial2_steps = [
   {
     target: '.MuiGrid-item .MuiButton-root:nth-last-child(2)',
     title: (
-      <div>Creation</div>
+      <div>Creation the network</div>
     ),
     content: (
       <div>
-        <p>Create now the network!</p>
+        <p>Click on the Create network button to generate the small toy network with detailed cells!</p>
       </div>
     )
   },
   {
     target: 'img[src*="experimentControlPanel"]',
     title: (
-      <div>Visualization</div>
+      <div>Visualize the cells</div>
     ),
     content: (
       <div>
+        <p>Enjoy exploring the beautiful morphologies of these 4 detailed neurons.</p>
+        <p>You can zoom in and out to see, for example, the detailed apical tuft dendrites.</p>
         <p>You can open the control panel to see the the cell population and identify them in the 3D view.</p>
+        <p>...</p>
+        <p>The tutorial ends here, but to see the cells in action go to the Examples menu and load Model 2.</p>
+        <p>This includes the full toy model, with connectivity between the cells and stimulation.</p>
+        <p>Once you simulate the model, you will be able to see the cell voltages and network spikes.</p>
+        <p>Continue to tutorial 3 to discover how to create a multiscale cortical network with LFP recording and reaction-diffusion!</p>
+
       </div>
     )
   }
