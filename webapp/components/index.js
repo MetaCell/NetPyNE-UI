@@ -76,6 +76,7 @@ import _TutorialObserver from './general/TutorialObserver';
 import _ExperimentControlPanel from './general/ExperimentControlPanel';
 import _Rxd from './rxd/Wrapper';
 import { WidgetStatus } from '@metacell/geppetto-meta-client/common/layout/model';
+import Textbox from './general/Textbox';
 
 const updateCardsDispatch = (dispatch) => ({ updateCards: () => dispatch(updateCards) });
 
@@ -84,6 +85,18 @@ const updateCardsDispatch = (dispatch) => ({ updateCards: () => dispatch(updateC
 export const NetPyNETextField = PythonControlledCapability.createPythonControlledControl(
   TextField,
 );
+
+// export const NetPyNETextField = connect(
+//   (state, ownProps) => ({
+//     ...ownProps,
+//     commands: state.console.commands,
+//   }),
+//   null,
+// )(
+//   PythonControlledCapability.createPythonControlledComponent(
+//     Textbox,
+//   ),
+// );
 
 export const NetPyNECellRules = connect(
   (state, ownProps) => ({
@@ -140,6 +153,18 @@ export const AdapterComponent = connect(
 export const NetPyNECheckbox = PythonControlledCapability.createPythonControlledControl(
   Checkbox,
 );
+
+// export const NetPyNECheckbox = connect(
+//   (state, ownProps) => ({
+//     ...ownProps,
+//     commands: state.console.commands,
+//   }),
+//   null,
+// )(
+//   PythonControlledCapability.createPythonControlledComponent(
+//     Checkbox,
+//   ),
+// );
 
 export const NetPyNEStimulationTargets = connect(
   (state, ownProps) => ({

@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import Box from '@material-ui/core/Box';
 import FormGroup from '@material-ui/core/FormGroup';
-import MuiCheckbox from '@material-ui/core/Checkbox';
+import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import { bgLight } from '../../theme';
 
-export default class Checkbox extends Component {
+export default class Textbox extends Component {
   componentDidUpdate (prevProps, prevState) {
     if (this.props.commands !== prevProps.commands)
       this.forceUpdate();
@@ -37,11 +37,11 @@ export default class Checkbox extends Component {
           label={this.props.label ? this.props.label : ''}
           control={(
             <Box ml={1}>
-              <MuiCheckbox
+              <TextField
                 id={this.props.id}
                 color="primary"
                 disabled={!!this.props.disabled}
-                checked={this.props.checked || false}
+                value={this.props.value}
                 onChange={this.props.onChange}
               />
             </Box>
