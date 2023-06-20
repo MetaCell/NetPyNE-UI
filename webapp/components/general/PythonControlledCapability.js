@@ -59,17 +59,6 @@ define((require) => {
           this.disconnectFromPython();
         }
 
-        // UNSAFE_componentWillReceiveProps (nextProps) {
-        //   this.disconnectFromPython();
-        //   this.id = (nextProps.id === undefined) ? nextProps.model : nextProps.id;
-
-        //   GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
-        //   this.connectToPython(this.state.componentType, nextProps.model);
-        //   if (this.state.value !== nextProps.value) {
-        //     this.setState({ value: (nextProps.value === undefined) ? '' : nextProps.value });
-        //   }
-        // }
-
         componentDidMount () {
           this._isMounted = true;
           GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this, true);
@@ -111,7 +100,8 @@ define((require) => {
 
         refreshPython() {
           this.disconnectFromPython();
-          this.connectToPython(this.state.componentType, nextProps.model);
+          GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
+          this.connectToPython(this.state.componentType, this.props.model);
         }
 
         componentDidUpdate (prevProps, prevState) {
@@ -241,6 +231,7 @@ define((require) => {
         // Checkbox
         handleUpdateCheckbox (event, isInputChecked) {
           this.updatePythonValue(isInputChecked);
+          this.refreshPython();
         }
 
         render () {
