@@ -59,6 +59,17 @@ define((require) => {
           this.disconnectFromPython();
         }
 
+        UNSAFE_componentWillReceiveProps (nextProps) {
+          this.disconnectFromPython();
+          this.id = (nextProps.id === undefined) ? nextProps.model : nextProps.id;
+
+          GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
+          this.connectToPython(this.state.componentType, nextProps.model);
+          if (this.state.value !== nextProps.value) {
+            this.setState({ value: (nextProps.value === undefined) ? '' : nextProps.value });
+          }
+        }
+
         componentDidMount () {
           this._isMounted = true;
           GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this, true);
@@ -68,16 +79,6 @@ define((require) => {
           if (this.props.value !== undefined) {
             this.setState({ value: this.props.value });
           }
-          this.refreshPython();
-        }
-        refreshPython() {
-          this.disconnectFromPython();
-          GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
-          this.connectToPython(this.state.componentType, this.props.model);
-        }
-        UNSAFE_componentWillReceiveProps (nextProps) {
-          if ( this.props !== nextProps )
-            this.refreshPython();
         }
       }
 
@@ -100,19 +101,52 @@ define((require) => {
           this.handleChange = (this.props.handleChange === undefined) ? this.handleChange.bind(this) : this.props.handleChange.bind(this);
           this.handleUpdateInput = this.handleUpdateInput.bind(this);
           this.handleUpdateCheckbox = this.handleUpdateCheckbox.bind(this);
-          this.commands = undefined ;
         }
 
         componentDidMount () {
           super.componentDidMount();
-          this.refreshPython();
-          //this.UNRELIABLE_SyncDefaultValueWithPython();
+          this.UNRELIABLE_SyncDefaultValueWithPython();
         }
 
-        refreshPython() {
+        /*
+         * since we don't know when a component will be synched with python,
+         * we can't know when to check if this.state.value should be replaced
+         * with this.props.default
+         */
+        UNRELIABLE_SyncDefaultValueWithPython (timeInterval = 600, attemps = 0) {
+          if (attemps < 3) {
+            setTimeout(() => {
+              if (this.props.default && this.state.value === '') {
+                if (this.syncValueWithPython) {
+                  // this function is added by jupyter_geppetto after the component is synched with python
+                  this.syncValueWithPython(this.props.default);
+                } else {
+                  this.UNRELIABLE_SyncDefaultValueWithPython(timeInterval * 2, attemps + 1);
+                }
+              }
+            }, timeInterval);
+          } else {
+            console.warn(`Tried to sync default value for ${this.props.model} and failed after 3 attempts.`);
+          }
+        }
+
+        UNSAFE_componentWillReceiveProps (nextProps) {
           this.disconnectFromPython();
+          this.id = (nextProps.id === undefined) ? nextProps.model : nextProps.id;
           GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
-          this.connectToPython(this.state.componentType, this.props.model);
+          this.connectToPython(this.state.componentType, nextProps.model);
+          if ((this.state.searchText !== nextProps.searchText) && (nextProps.searchText !== undefined)) {
+            this.setState({ searchText: nextProps.searchText });
+          }
+          if ((this.state.checked !== nextProps.checked) && (nextProps.checked !== undefined)) {
+            this.setState({ checked: nextProps.checked });
+          }
+          if ((this.state.value !== nextProps.value) && (nextProps.value !== undefined)) {
+            this.setState({ value: nextProps.value });
+          }
+          if ((this.state.model !== nextProps.model) && (nextProps.model !== undefined)) {
+            this.setState({ model: nextProps.model });
+          }
         }
 
         componentDidUpdate (prevProps, prevState) {
@@ -151,7 +185,7 @@ define((require) => {
             && this.state.value === ''
             && this.props.default
           ) {
-            //this.UNRELIABLE_SyncDefaultValueWithPython(1000);
+            this.UNRELIABLE_SyncDefaultValueWithPython(1000);
           }
         }
 
@@ -242,7 +276,6 @@ define((require) => {
         // Checkbox
         handleUpdateCheckbox (event, isInputChecked) {
           this.updatePythonValue(isInputChecked);
-          this.refreshPython();
         }
 
         render () {
@@ -329,8 +362,12 @@ define((require) => {
         }
 
         UNSAFE_componentWillReceiveProps (nextProps) {
-          if (this.props !== nextProps)
-            this.refreshPython();
+          this.disconnectFromPython();
+          this.id = (nextProps.id === undefined) ? nextProps.model : nextProps.id;
+
+          GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
+          this.connectToPython(this.state.componentType, nextProps.model);
+          this.callPythonMethod();
         }
 
         updatePythonValue (newValue) {
@@ -383,7 +420,7 @@ define((require) => {
         }
 
         callPythonMethod = (value) => {
-          const params = this.props?.pythonparams || [];
+          const params = this.props?.pythonParams || [];
           if (this.props.method) {
             GeppettoUtils.evalPythonMessage(this.props.method, params)
               .then((response) => {
