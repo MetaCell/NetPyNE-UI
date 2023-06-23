@@ -68,6 +68,7 @@ define((require) => {
           if (this.props.value !== undefined) {
             this.setState({ value: this.props.value });
           }
+          this.refreshPython();
         }
         refreshPython() {
           this.disconnectFromPython();
@@ -104,6 +105,7 @@ define((require) => {
 
         componentDidMount () {
           super.componentDidMount();
+          this.refreshPython();
           //this.UNRELIABLE_SyncDefaultValueWithPython();
         }
 
