@@ -69,6 +69,15 @@ define((require) => {
             this.setState({ value: this.props.value });
           }
         }
+        refreshPython() {
+          this.disconnectFromPython();
+          GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
+          this.connectToPython(this.state.componentType, this.props.model);
+        }
+        UNSAFE_componentWillReceiveProps (nextProps) {
+          if ( this.props !== nextProps )
+            this.refreshPython();
+        }
       }
 
       return PythonControlledComponent;
@@ -318,12 +327,8 @@ define((require) => {
         }
 
         UNSAFE_componentWillReceiveProps (nextProps) {
-          this.disconnectFromPython();
-          this.id = (nextProps.id === undefined) ? nextProps.model : nextProps.id;
-
-          GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
-          this.connectToPython(this.state.componentType, nextProps.model);
-          this.callPythonMethod();
+          if (this.props !== nextProps)
+            this.refreshPython();
         }
 
         updatePythonValue (newValue) {
