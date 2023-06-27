@@ -943,10 +943,10 @@ class NetPyNEGeppetto:
             cell_types.add(p)
         return sorted(cell_types)
 
-    def getAvailableRxDSections(self, selectedRegion):
+    def getAvailableRxDSections(self, selectedRegion = None):
         sections = set([])
         sections.add('all')
-        if selectedRegion in self.netParams.rxdParams.regions and self.netParams.rxdParams.regions[selectedRegion].get('cells'):
+        if selectedRegion and selectedRegion in self.netParams.rxdParams.regions and self.netParams.rxdParams.regions[selectedRegion].get('cells'):
             if 'all' in self.netParams.rxdParams.regions[selectedRegion]['cells']:
                 for cellRule in self.netParams.cellParams:
                     for cellSect in self.netParams.cellParams[cellRule]['secs']:
