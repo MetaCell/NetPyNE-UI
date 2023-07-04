@@ -60,14 +60,14 @@ define((require) => {
         }
 
         UNSAFE_componentWillReceiveProps (nextProps) {
-          this.disconnectFromPython();
-          this.id = (nextProps.id === undefined) ? nextProps.model : nextProps.id;
+          // this.disconnectFromPython();
+          // this.id = (nextProps.id === undefined) ? nextProps.model : nextProps.id;
 
-          GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
-          this.connectToPython(this.state.componentType, nextProps.model);
-          if (this.state.value !== nextProps.value) {
-            this.setState({ value: (nextProps.value === undefined) ? '' : nextProps.value });
-          }
+          // GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
+          // this.connectToPython(this.state.componentType, nextProps.model);
+          // if (this.state.value !== nextProps.value) {
+          //   this.setState({ value: (nextProps.value === undefined) ? '' : nextProps.value });
+          // }
         }
 
         componentDidMount () {
@@ -114,20 +114,20 @@ define((require) => {
          * with this.props.default
          */
         UNRELIABLE_SyncDefaultValueWithPython (timeInterval = 600, attemps = 0) {
-          if (attemps < 3) {
-            setTimeout(() => {
-              if (this.props.default && this.state.value === '') {
-                if (this.syncValueWithPython) {
-                  // this function is added by jupyter_geppetto after the component is synched with python
-                  this.syncValueWithPython(this.props.default);
-                } else {
-                  this.UNRELIABLE_SyncDefaultValueWithPython(timeInterval * 2, attemps + 1);
-                }
-              }
-            }, timeInterval);
-          } else {
-            console.warn(`Tried to sync default value for ${this.props.model} and failed after 3 attempts.`);
-          }
+          // if (attemps < 3) {
+          //   setTimeout(() => {
+          //     if (this.props.default && this.state.value === '') {
+          //       if (this.syncValueWithPython) {
+          //         // this function is added by jupyter_geppetto after the component is synched with python
+          //         this.syncValueWithPython(this.props.default);
+          //       } else {
+          //         this.UNRELIABLE_SyncDefaultValueWithPython(timeInterval * 2, attemps + 1);
+          //       }
+          //     }
+          //   }, timeInterval);
+          // } else {
+          //   console.warn(`Tried to sync default value for ${this.props.model} and failed after 3 attempts.`);
+          // }
         }
 
         UNSAFE_componentWillReceiveProps (nextProps) {
