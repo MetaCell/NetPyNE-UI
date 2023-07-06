@@ -37,7 +37,8 @@ def loadModMechFiles(compileMod, modFolder, forceRecompile=False):
             if os.path.exists(modPath):
                 if forceRecompile:
                     shutil.rmtree(modPath)
-                return
+                else:
+                    return
 
             os.chdir(modFolder)
             subprocess.call(["nrnivmodl"])
