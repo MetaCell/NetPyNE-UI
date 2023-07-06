@@ -400,7 +400,7 @@ export default (store) => (next) => (action) => {
 
       const params = {
         modFolder: dirname + '/mod',
-        loadMod: false,
+        loadMod: true,
         compileMod: true,
         forceRecompile: false,
 

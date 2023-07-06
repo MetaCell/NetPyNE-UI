@@ -46,7 +46,6 @@ from netpyne_ui.mod_utils import loadModMechFiles
 
 os.chdir(constants.NETPYNE_WORKDIR_PATH)
 
-neuron.nrn_dll_loaded.append(os.path.join(NETPYNE_WORKDIR_PATH, 'mod'))  # Avoids to load workspace modfiles twice
 
 class NetPyNEGeppetto:
 
@@ -581,7 +580,7 @@ class NetPyNEGeppetto:
                 #   Only on import or better before every simulation or network instantiation?
                 sim.initialize()
             return utils.getJSONReply()
-        except Exception:
+        except:
             message = "Error while importing the NetPyNE model"
             logging.exception(message)
             return utils.getJSONError(message, sys.exc_info())
