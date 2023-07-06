@@ -401,7 +401,8 @@ export default (store) => (next) => (action) => {
       const params = {
         modFolder: dirname + '/mod',
         loadMod: false,
-        compileMod: true,
+        compileMod: false,
+        forceRecompile: false,
 
         netParamsPath: dirname,
         netParamsModuleName: tutName,
