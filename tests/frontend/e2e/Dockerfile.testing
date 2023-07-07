@@ -1,23 +1,17 @@
 FROM ghcr.io/puppeteer/puppeteer:16.1.0
 
-
-
 COPY package.json .
 COPY package-lock.json .
 
 RUN npm ci
 
-# USER pptruser
-# COPY --chown=pptruser:pptruser . .
-COPY . .
+USER node
+COPY --chown=node:node . .
+
 ENV TEST_URL=https://stage.netpyne.metacell.us/
 
-
 # Add the following lines to change permissions
-USER root
-RUN chown -R pptruser:pptruser /home/pptruser
-
-USER pptruser
+USER node
 
 
 
