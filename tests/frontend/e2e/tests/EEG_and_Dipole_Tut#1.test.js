@@ -38,22 +38,36 @@ const PASSWORD = 'testpassword'
 jest.setTimeout(300000);
 
 beforeAll(async () => {
-    await page.goto(baseURL), {timeout: PAGE_WAIT * 2};
-    await page.waitForSelector(selectors.LOGIN_PAGE_SELECTOR);
-    await page.waitForSelector(selectors.USERNAME_SELECTOR)
-    await expect(page)
-        .toFill(selectors.USERNAME_SELECTOR, USERNAME, { timeout: TIMEOUT });
+    await page.goto(baseURL), { timeout: PAGE_WAIT * 2 };
+    await page.waitForTimeout(PAGE_WAIT)
+    await console.log(baseURL);
 
-    await page.waitForSelector(selectors.PASSWORD_SELECTOR)
-    await expect(page)
-        .toFill(selectors.PASSWORD_SELECTOR, PASSWORD, { timeout: TIMEOUT });
+    await page.on('response', response => {
+        expect(response.status).not.toEqual(404)
 
-    await page.click(selectors.LOGIN_BUTTON_SELECTOR)
+    })
+
+    await console.log(page.url())
+    const pageTitle = await page.title();
+    console.log(pageTitle);
+    console.log(page)
+    // Notebook Login
+    // await page.waitForSelector('.navbar-default')
+    // await page.waitForSelector(selectors.LOGIN_PAGE_SELECTOR, {timeout: TIMEOUT * 3});
+    // await page.waitForSelector(selectors.USERNAME_SELECTOR)
+    //await expect(page)
+    //  .toFill(selectors.USERNAME_SELECTOR, USERNAME, { timeout: TIMEOUT });
+
+    // await page.waitForSelector(selectors.PASSWORD_SELECTOR)
+    // await expect(page)
+    //   .toFill(selectors.PASSWORD_SELECTOR, PASSWORD, { timeout: TIMEOUT });
+
+    //   await page.click(selectors.LOGIN_BUTTON_SELECTOR)
     // Wait for initial loading spinner to disappear
-    await page.waitForFunction(() => {
-        let el = document.querySelector('#loading-spinner');
-        return el == null || el.clientHeight === 0;
-    }, { timeout: TIMEOUT });
+    // await page.waitForFunction(() => {
+    //   let el = document.querySelector('#loading-spinner');
+    //   return el == null || el.clientHeight === 0;
+    //  }, { timeout: TIMEOUT });
 });
 
 

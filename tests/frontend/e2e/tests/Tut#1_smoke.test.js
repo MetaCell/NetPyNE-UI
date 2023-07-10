@@ -51,6 +51,7 @@ describe('Tutorial #1 for Smoke Testing', () => {
     const pageTitle = await page.title();
     console.log(pageTitle);
     console.log(page)
+    // Notebook Login
     // await page.waitForSelector('.navbar-default')
     // await page.waitForSelector(selectors.LOGIN_PAGE_SELECTOR, {timeout: TIMEOUT * 3});
     // await page.waitForSelector(selectors.USERNAME_SELECTOR)
