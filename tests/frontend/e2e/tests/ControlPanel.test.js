@@ -36,6 +36,7 @@ jest.setTimeout(300000);
 describe('Test for the Control Panel - color picker', () => {
 
     beforeAll(async () => {
+        await page.setDefaultNavigationTimeout(0);
         await page.goto(baseURL), { timeout: PAGE_WAIT * 2 };
         await page.waitForTimeout(PAGE_WAIT)
         await console.log(baseURL);
