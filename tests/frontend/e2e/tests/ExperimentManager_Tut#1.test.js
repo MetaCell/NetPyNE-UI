@@ -41,7 +41,7 @@ jest.setTimeout(300000);
 describe('Experiment Manager test using Tut#1', () => {
 
     beforeAll(async () => {
-        await page.goto(baseURL);
+        await page.goto(baseURL), {timeout: PAGE_WAIT * 2};
         await page.waitForSelector(selectors.LOGIN_PAGE_SELECTOR);
         await page.waitForSelector(selectors.USERNAME_SELECTOR)
         await expect(page)

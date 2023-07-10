@@ -38,7 +38,7 @@ jest.setTimeout(300000);
 describe('Tutorial #1 for Smoke Testing', () => {
 
   beforeAll(async () => {
-    await page.goto(baseURL);
+    await page.goto(baseURL), {timeout: PAGE_WAIT * 2};
     await page.waitForTimeout(PAGE_WAIT)
     await console.log(baseURL);
 
