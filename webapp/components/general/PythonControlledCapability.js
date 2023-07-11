@@ -131,22 +131,26 @@ define((require) => {
         }
 
         UNSAFE_componentWillReceiveProps (nextProps) {
-          this.disconnectFromPython();
-          this.id = (nextProps.id === undefined) ? nextProps.model : nextProps.id;
-          GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
-          this.connectToPython(this.state.componentType, nextProps.model);
-          if ((this.state.searchText !== nextProps.searchText) && (nextProps.searchText !== undefined)) {
-            this.setState({ searchText: nextProps.searchText });
-          }
-          if ((this.state.checked !== nextProps.checked) && (nextProps.checked !== undefined)) {
-            this.setState({ checked: nextProps.checked });
-          }
-          if ((this.state.value !== nextProps.value) && (nextProps.value !== undefined)) {
-            this.setState({ value: nextProps.value });
-          }
-          if ((this.state.model !== nextProps.model) && (nextProps.model !== undefined)) {
-            this.setState({ model: nextProps.model });
-          }
+          const matchingProps = JSON.stringify(this.props) == JSON.stringify(nextProps);
+          if (!matchingProps)
+          {
+              this.disconnectFromPython();
+              this.id = (nextProps.id === undefined) ? nextProps.model : nextProps.id;
+              GEPPETTO.ComponentFactory.addExistingComponent(this.state.componentType, this);
+              this.connectToPython(this.state.componentType, nextProps.model);
+              if ((this.state.searchText !== nextProps.searchText) && (nextProps.searchText !== undefined)) {
+                this.setState({ searchText: nextProps.searchText });
+              }
+              if ((this.state.checked !== nextProps.checked) && (nextProps.checked !== undefined)) {
+                this.setState({ checked: nextProps.checked });
+              }
+              if ((this.state.value !== nextProps.value) && (nextProps.value !== undefined)) {
+                this.setState({ value: nextProps.value });
+              }
+              if ((this.state.model !== nextProps.model) && (nextProps.model !== undefined)) {
+                this.setState({ model: nextProps.model });
+            }
+          }          
         }
 
         componentDidUpdate (prevProps, prevState) {
