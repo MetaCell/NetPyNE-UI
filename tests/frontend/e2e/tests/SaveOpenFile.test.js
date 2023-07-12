@@ -8,7 +8,7 @@ import * as selectors from './selectors'
 
 
 //PAGE INFO:
-const baseURL = process.env.url || 'https://stage.netpyne.metacell.us/'
+const baseURL = process.env.url || 'https://test.netpyne.metacell.us/'
 const PAGE_WAIT = 3000;
 const TIMEOUT = 60000;
 
@@ -262,7 +262,7 @@ describe('Save / Open File testing', () => {
         await page.click(selectors.PATH_INPUT_SELECTOR, { clickCount: 3 });
         await page.waitForTimeout(PAGE_WAIT)
 
-        expect(page).toFill(selectors.PATH_INPUT_SELECTOR, '/home/jovyan/work/NetPyNE-UI/workspace/uploads/aut_test')
+        expect(page).toFill(selectors.PATH_INPUT_SELECTOR, 'aut_test')
         await page.waitForTimeout(PAGE_WAIT * 2)
         await page.click(selectors.SAVE_BUTTON_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT)
@@ -286,7 +286,7 @@ describe('Save / Open File testing', () => {
             await page.keyboard.press('Backspace');
         }
 
-        expect(page).toFill(selectors.PATH_INPUT_SELECTOR, '/home/jovyan/work/NetPyNE-UI/workspace/uploads/aut_test_net_params')
+        expect(page).toFill(selectors.PATH_INPUT_SELECTOR, 'aut_test_net_params')
         await page.waitForTimeout(PAGE_WAIT)
 
         await page.evaluate(() => {
@@ -327,7 +327,7 @@ describe('Save / Open File testing', () => {
         }
         await page.waitForTimeout(PAGE_WAIT)
 
-        expect(page).toFill(selectors.PATH_INPUT_SELECTOR, '/home/jovyan/work/NetPyNE-UI/workspace/uploads/aut_test_sim_config')
+        expect(page).toFill(selectors.PATH_INPUT_SELECTOR, 'aut_test_sim_config')
         await page.waitForTimeout(PAGE_WAIT * 2)
 
         await page.evaluate(() => {
@@ -398,7 +398,7 @@ describe('Save / Open File testing', () => {
             return cd_code_outputs.map(cd_code_output => cd_code_output.innerText)
         })
 
-        expect(second_code_output[0]).toBe("/home/jovyan/work/NetPyNE-UI/workspace/uploads/aut_test/src\n")
+        expect(second_code_output[0]).toBe("/home/jovyan/work/NetPyNE-UI/workspace/saved_models/aut_test/src\n")
 
         const ls_code_lines = await python_frame.$$(selectors.PYTHON_CELL_SELECTOR)
 
