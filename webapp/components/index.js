@@ -19,7 +19,7 @@ import {
   setDefaultWidgets, changeInstanceColor, openConfirmationDialog, closeConfirmationDialog, selectInstances,
 } from '../redux/actions/general';
 import { runControlledStep, startTutorial, stopTutorial, addDiscoveredStep, runControlledStepByElementId, incrementTutorialStep, validateTutorialStep, checkBubbleRender } from '../redux/actions/tutorials';
-
+import { updateConsole } from '../redux/actions/console';
 import {
   cloneExperiment,
 
@@ -76,6 +76,7 @@ import _TutorialObserver from './general/TutorialObserver';
 import _ExperimentControlPanel from './general/ExperimentControlPanel';
 import _Rxd from './rxd/Wrapper';
 import { WidgetStatus } from '@metacell/geppetto-meta-client/common/layout/model';
+import Textbox from './general/Textbox';
 
 const updateCardsDispatch = (dispatch) => ({ updateCards: () => dispatch(updateCards) });
 
@@ -85,8 +86,23 @@ export const NetPyNETextField = PythonControlledCapability.createPythonControlle
   TextField,
 );
 
+// export const NetPyNETextField = connect(
+//   (state, ownProps) => ({
+//     ...ownProps,
+//     commands: state.console.commands,
+//   }),
+//   null,
+// )(
+//   PythonControlledCapability.createPythonControlledComponent(
+//     Textbox,
+//   ),
+// );
+
 export const NetPyNECellRules = connect(
-  null,
+  (state, ownProps) => ({
+    ...ownProps,
+    commands: state.console.commands,
+  }),
   updateCardsDispatch,
 )(
   PythonControlledCapability.createPythonControlledComponent(
@@ -94,32 +110,84 @@ export const NetPyNECellRules = connect(
   ),
 );
 
-export const NetPyNEConnectivityRules = PythonControlledCapability.createPythonControlledComponent(
-  _NetPyNEConnectivityRules,
+export const NetPyNEConnectivityRules = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    commands: state.console.commands,
+  }),
+  null,
+)(
+  PythonControlledCapability.createPythonControlledComponent(
+    _NetPyNEConnectivityRules,
+  ),
 );
 
-export const NetPyNEPlots = PythonControlledCapability.createPythonControlledComponent(
-  _NetPyNEPlots,
+export const NetPyNEPlots = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    commands: state.console.commands,
+  }),
+  null,
+)(
+  PythonControlledCapability.createPythonControlledComponent(
+    _NetPyNEPlots,
+  ),
 );
 
 export const ListComponent = PythonControlledCapability.createPythonControlledControl(
   _ListComponent,
 );
 
-export const AdapterComponent = PythonControlledCapability.createPythonControlledControl(
-  _AdapterComponent,
+export const AdapterComponent = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    commands: state.console.commands,
+  }),
+  null,
+)(
+  PythonControlledCapability.createPythonControlledComponent(
+    _AdapterComponent,
+  ),
 );
 
 export const NetPyNECheckbox = PythonControlledCapability.createPythonControlledControl(
   Checkbox,
 );
 
-export const NetPyNEStimulationTargets = PythonControlledCapability.createPythonControlledComponent(
-  _NetPyNEStimulationTargets,
+// export const NetPyNECheckbox = connect(
+//   (state, ownProps) => ({
+//     ...ownProps,
+//     commands: state.console.commands,
+//   }),
+//   null,
+// )(
+//   PythonControlledCapability.createPythonControlledComponent(
+//     Checkbox,
+//   ),
+// );
+
+export const NetPyNEStimulationTargets = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    commands: state.console.commands,
+  }),
+  null,
+)(
+  PythonControlledCapability.createPythonControlledComponent(
+    _NetPyNEStimulationTargets,
+  ),
 );
 
-export const SelectField = PythonControlledCapability.createPythonControlledControl(
-  _SelectField,
+export const SelectField = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    commands: state.console.commands,
+  }),
+  null,
+)(
+  PythonControlledCapability.createPythonControlledComponent(
+    _SelectField,
+  ),
 );
 
 export const Experiments = connect(
@@ -322,8 +390,11 @@ export const ErrorDialog = connect(
 export const NetPyNEPythonConsole = connect(
   (state) => ({
     extensionLoaded: state.client.jupyter_geppetto_extension.loaded,
+    notebookVisible: state.widgets?.python?.status != WidgetStatus.MINIMIZED
   }),
-  null,
+  (dispatch) => ({
+    updateConsole: (commands) => dispatch(updateConsole(commands))
+  }),
 )(_NetPyNEPythonConsole);
 
 export const Drawer = connect(

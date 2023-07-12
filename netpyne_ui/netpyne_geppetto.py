@@ -46,7 +46,6 @@ from netpyne_ui.mod_utils import loadModMechFiles
 
 os.chdir(constants.NETPYNE_WORKDIR_PATH)
 
-neuron.nrn_dll_loaded.append(os.path.join(NETPYNE_WORKDIR_PATH, 'mod'))  # Avoids to load workspace modfiles twice
 
 class NetPyNEGeppetto:
 
@@ -79,17 +78,6 @@ class NetPyNEGeppetto:
         ])
         if not simulations.local.is_running():
             [experiments.set_to_error(e) for e in running_exps]
-
-        # sys.stdin = open(os.path.join(constants.HERE, "stdin.txt"),'r') # FIXES library asking for input to download -- eg lfpykit models
-
-        # from ipykernel import kernelbase
-
-        # def raw_input(self, prompt=''):
-        #     return "y"
-        # kernelbase.Kernel.raw_input = raw_input
-
-        # from lfpykit.eegmegcalc import NYHeadModel
-        # NYHeadModel()
 
     def getData(self):
         return {
@@ -550,7 +538,7 @@ class NetPyNEGeppetto:
             #   Shouldn't be specific to Import
             sim.clearAll()
         try:
-            loadModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
+            loadModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'], modelParameters.get("forceRecompile", True))
         except Exception:
             message = "Error while importing/compiling mods"
             logging.exception(message)
@@ -592,7 +580,7 @@ class NetPyNEGeppetto:
                 #   Only on import or better before every simulation or network instantiation?
                 sim.initialize()
             return utils.getJSONReply()
-        except Exception:
+        except:
             message = "Error while importing the NetPyNE model"
             logging.exception(message)
             return utils.getJSONError(message, sys.exc_info())
@@ -943,10 +931,10 @@ class NetPyNEGeppetto:
             cell_types.add(p)
         return sorted(cell_types)
 
-    def getAvailableRxDSections(self, selectedRegion):
+    def getAvailableRxDSections(self, selectedRegion = None):
         sections = set([])
         sections.add('all')
-        if selectedRegion in self.netParams.rxdParams.regions and self.netParams.rxdParams.regions[selectedRegion].get('cells'):
+        if selectedRegion and selectedRegion in self.netParams.rxdParams.regions and self.netParams.rxdParams.regions[selectedRegion].get('cells'):
             if 'all' in self.netParams.rxdParams.regions[selectedRegion]['cells']:
                 for cellRule in self.netParams.cellParams:
                     for cellSect in self.netParams.cellParams[cellRule]['secs']:

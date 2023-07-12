@@ -17,6 +17,7 @@ export const GENERAL_DEFAULT_STATE = {
   automaticSimulation: false,
   automaticInstantiation: false,
   confirmationDialogOpen: false,
+  notebookOpened: false,
   theme: 'gui',
   instances: [],
 };

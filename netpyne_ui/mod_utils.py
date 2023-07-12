@@ -1,3 +1,4 @@
+import logging
 import shutil
 import subprocess
 import os
@@ -26,24 +27,30 @@ def is_loaded_mechanisms():
         return True
 
 
-def loadModMechFiles(compileMod, modFolder):
+def loadModMechFiles(compileMod, modFolder, forceRecompile=False):
     # Create Symbolic link
 
-    if compileMod:
         try:
+
             owd = os.getcwd()
-            modPath = os.path.join(str(modFolder), "x86_64")
+            if compileMod:
+                
+                compiledModPath = os.path.join(str(modFolder), "x86_64")
 
-            if os.path.exists(modPath):
-                shutil.rmtree(modPath)
+                if os.path.exists(compiledModPath) and forceRecompile:
+                        logging.info("Forcing mod files to recompile in %s" % modFolder)
+                        shutil.rmtree(compiledModPath)
 
-            os.chdir(modFolder)
-            subprocess.call(["nrnivmodl"])
-            os.chdir('..')
+                if not os.path.exists(compiledModPath):
+                    logging.info("Compiling mod files in %s" % modFolder)
+                    os.chdir(modFolder)
+                    subprocess.call(["nrnivmodl"])
+                    os.chdir('..')
 
             try:
                 neuron.load_mechanisms(str(modFolder))
             except:
+                logging.exception("Error loading mechanisms")
                 raise
         finally:
             os.chdir(owd)

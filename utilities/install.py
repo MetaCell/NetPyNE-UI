@@ -125,7 +125,7 @@ def main(netpyne_branch, workspace_branch, geppetto_branch=None, skipNpm=False,
       cprint("Cloning workspace")
       clone(repository=WORKSPACE, branch_or_tag=workspace_branch, folder=WORKSPACE_DIR, cwdp=ROOT_DIR)
       cprint("Compiling workspace modules")
-      compile_mod()
+      #compile_mod()
 
     if not skipNpm and os.path.exists(os.path.join(DEPS_DIR, META_DIR, JUPYTER_DIR)):
         cprint("Building Jupyter Geppetto extension...")
