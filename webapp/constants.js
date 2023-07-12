@@ -29,6 +29,7 @@ export const NETPYNE_COMMANDS = {
   simulateModel: 'netpyne_geppetto.simulateNetPyNEModelInGeppetto',
   importModel: 'netpyne_geppetto.importModel',
   exportModel: 'netpyne_geppetto.exportModel',
+  saveModel: 'netpyne_geppetto.saveToIndexFile',
   exportHLS: 'netpyne_geppetto.exportHLS',
   plotFigure: 'netpyne_geppetto.getPlot',
   deleteParam: 'netpyne_geppetto.deleteParam',
@@ -72,6 +73,9 @@ export const PYTHON_CONSOLE_WIDGET = {
  */
 export const TOPBAR_CONSTANTS = {
   LOAD: 'LOAD',
+  LOAD_INDEX: 'LOAD_INDEX',
+  LOAD_INDEX_WORKSPACE: 'LOAD_INDEX_WORKSPACE',
+  SAVE_INDEX_WORKSPACE: 'SAVE_INDEX_WORKSPACE',
   SAVE: 'SAVE',
   IMPORT_HLS: 'IMPORT_HLS',
   EXPORT_HLS: 'EXPORT_HLS',
@@ -692,12 +696,12 @@ export const EXPERIMENT_TEXTS = {
 };
 
 export const TUTORIALS_LIST = {
-  tut1: 'Tut 1: Simple cell network',
-  tut2: 'Tut 2: Detailed cell network',
-  tut3: 'Tut 3a: Multiscale network (low IP3)',
-  tut3_ip3high: 'Tut 3b: Multiscale network (high IP3)',
-  tut3_norxd: 'Tut 3c: Multiscale network (no RxD)',
-  tut_osc: 'Tut 4: Simple oscillatory network',
+  tut1: 'Model 1: Simple cell network',
+  tut2: 'Model 2: Detailed cell network',
+  tut3: 'Model 3a: Multiscale network (low IP3)',
+  tut3_ip3high: 'Model 3b: Multiscale network (high IP3)',
+  tut3_norxd: 'Model 3c: Multiscale network (no RxD)',
+  tut_osc: 'Model 4: Simple oscillatory network',
 };
 
 export const EXPERIMENT_VIEWS = {

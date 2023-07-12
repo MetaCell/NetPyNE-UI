@@ -12,7 +12,6 @@ import { ActionDialog, Tooltip } from 'netpyne/components';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import FileBrowser from '../../general/FileBrowser';
 import Checkbox from '../../general/Checkbox';
-import { registerModelPath } from '../../../redux/actions/general';
 
 const styles = ({
   spacing,
@@ -43,11 +42,11 @@ const loadOptions = [
   },
 ];
 
-class LoadFile extends React.Component {
+class LoadFileIndex extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      jsonModelFolder: '',
+      jsonModelFolder: '/Users/infectuz/Desktop/examples/CA3model_3pops/index.npjson',
       modFolder: '',
       compileMod: false,
       explorerDialogOpen: false,
@@ -84,12 +83,10 @@ class LoadFile extends React.Component {
         case 'modFolder':
           newState.modFolder = fieldValue.path;
           newState.modPath = path;
-          registerModelPath(path);
           break;
         case 'jsonModelFolder':
           newState.jsonModelFolder = fieldValue.path;
           newState.jsonPath = path;
-          registerModelPath(path);
           break;
         default:
           throw Error('Not a valid parameter!');
@@ -125,11 +122,11 @@ class LoadFile extends React.Component {
 
     return (
       <ActionDialog
-        title="Open JSON file"
+        title="Open INDEX file"
         buttonLabel="Load"
         message="LOADING FILE"
         isFormValid={this.isFormValid}
-        command="netpyne_geppetto.loadModel"
+        command="netpyne_geppetto.loadFromIndexFile"
         args={{
           ...this.state,
           tab,
@@ -138,92 +135,25 @@ class LoadFile extends React.Component {
         }}
         {...this.props}
       >
-        <Box>
-          <Box display="flex" alignItems="center">
-            <Tooltip title="File explorer" placement="top">
-              <FolderOpenIcon
-                className="dialog-folder-icon"
-                onClick={() => this.showExplorerDialog('jsonModelFolder', false)}
-              />
-            </Tooltip>
-            <TextField
-              xs={12}
-              sm={8}
-              fullWidth
-              variant="filled"
-              label="JSON file"
-              value={this.state.jsonModelFolder}
-              onChange={(event) => this.setState({ jsonModelFolder: event.target.value })}
-              helperText={
-                this.state.jsonPath != '' ? `path: ${this.state.jsonPath}` : ''
-              }
-              InputProps={{ disableUnderline: true }}
+        <Box display="flex" alignItems="center">
+          <Tooltip title="File explorer" placement="top">
+            <FolderOpenIcon
+              className="dialog-folder-icon"
+              onClick={() => this.showExplorerDialog('jsonModelFolder', false)}
             />
-          </Box>
-          <Box pl={3}>
-            <List style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-            }}
-            >
-              {loadOptions.map((loadOption, index) => (
-                <ListItem style={{ width: '50%' }} key={index}>
-                  <ListItemIcon>
-                    <Checkbox
-                      onChange={() => this.setState(
-                        ({
-                          [loadOption.state]: oldState,
-                          ...others
-                        }) => ({ [loadOption.state]: !oldState }),
-                      )}
-                      checked={this.state[loadOption.state]}
-                      noBackground
-                    />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={loadOption.label}
-                    secondary={loadOption.label2}
-                    className={
-                      this.state[loadOption.state] ? '' : 'checkbox-unselected'
-                    }
-                  />
-                </ListItem>
-              ))}
-            </List>
-          </Box>
-          <Box display="flex" alignItems="center">
-            <Box width="50%" display="flex" alignItems="center">
-              <Tooltip title="File explorer" placement="top">
-                <FolderOpenIcon
-                  className="dialog-folder-icon"
-                  onClick={() => this.showExplorerDialog('modFolder', true)}
-                />
-              </Tooltip>
-              <TextField
-                variant="filled"
-                fullWidth
-                label="Mod folder"
-                value={this.state.modFolder}
-                onChange={(event) => this.setState({ modFolder: event.target.value })}
-                InputProps={{ disableUnderline: true }}
-              />
-            </Box>
-            <Box width="50%" pl={3.5}>
-              <Checkbox
-                fullWidth
-                noBackground
-                label="Compile mod files"
-                checked={this.state.compileMod}
-                onChange={() => this.setState((prevState) => ({ compileMod: !prevState.compileMod }))}
-              />
-            </Box>
-          </Box>
-
-          <FileBrowser
-            open={this.state.explorerDialogOpen}
-            exploreOnlyDirs={this.state.exploreOnlyDirs}
-            filterFiles=".json"
-            onRequestClose={(selection) => this.closeExplorerDialog(selection)}
+          </Tooltip>
+          <TextField
+            xs={12}
+            sm={8}
+            fullWidth
+            variant="filled"
+            label="INDEX file"
+            value={this.state.jsonModelFolder}
+            onChange={(event) => this.setState({ jsonModelFolder: event.target.value })}
+            helperText={
+              this.state.jsonPath != '' ? `path: ${this.state.jsonPath}` : ''
+            }
+            InputProps={{ disableUnderline: true }}
           />
         </Box>
       </ActionDialog>
@@ -231,4 +161,4 @@ class LoadFile extends React.Component {
   }
 }
 
-export default withStyles(styles)(LoadFile);
+export default withStyles(styles)(LoadFileIndex);

@@ -618,3 +618,55 @@ body {
     }
   }
 }
+
+.tutorials {
+	&_highlight {
+		position: absolute;
+		border-radius: 0.25rem;
+		pointer-events: none;
+		border: solid 0.125rem;
+		z-index: 1501; // Just over the menus items (1500)
+	}
+
+	&_wrapper {
+		position: relative;
+	}
+
+	&_content {
+		position: absolute;
+		background: @bgRegular;
+		box-shadow: @tutorialShadow;
+		backdrop-filter: blur(1.25rem);
+		border-radius: 0.25rem;
+		padding: 1.25rem;
+		width: 25rem;
+		z-index: 1501; // Just over the menus items (1500)
+
+		h3 {
+			margin: 0 0 0.75rem;
+			font-weight: 600;
+			font-size: 1.25rem;
+			line-height: 1.5rem;
+			color: @textColor;
+		}
+
+		p {
+			font-weight: 400;
+			font-size: 1rem;
+			margin: 0;
+			line-height: 1.5rem;
+			color: rgba(@textColor, 0.8);
+
+      & + p {
+        margin-top: 0.5rem;
+      }
+		}
+
+		.MuiButton-root {
+			font-weight: 600;
+			&:not(:first-child) {
+				margin-left: 0.5rem;
+			}
+		}
+	}
+}

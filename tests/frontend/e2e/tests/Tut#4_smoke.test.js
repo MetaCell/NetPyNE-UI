@@ -9,7 +9,7 @@ import * as selectors from './selectors'
 
 
 //PAGE INFO:
-const baseURL = process.env.url || 'https://stage.netpyne.metacell.us/'
+const baseURL = process.env.url || 'https://test.netpyne.metacell.us/'
 const PAGE_WAIT = 3000;
 const TIMEOUT = 60000;
 
@@ -18,7 +18,7 @@ const SNAPSHOT_OPTIONS = {
   customSnapshotsDir: `./tests/snapshots/${scriptName}`,
   comparisonMethod: 'ssim',
   failureThresholdType: 'percent',
-  failureThreshold: 0.5
+  failureThreshold: 0.3
 };
 
 

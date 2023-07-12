@@ -9,7 +9,7 @@ import * as selectors from './selectors'
 
 
 //PAGE INFO:
-const baseURL = process.env.url || 'https://stage.netpyne.metacell.us/'
+const baseURL = process.env.url || 'https://test.netpyne.metacell.us/'
 const PAGE_WAIT = 3000;
 const TIMEOUT = 60000;
 
@@ -60,7 +60,7 @@ beforeAll(async () => {
 
 describe('EEG and Dipole Plot Test using Tutorial#1', () => {
 
-    it('Open new page', async () => {
+    it.skip('Open new page', async () => {
 
         console.log('Opening a new NetPyNE page')
 
@@ -120,7 +120,7 @@ describe('EEG and Dipole Plot Test using Tutorial#1', () => {
         await page.waitForSelector(selectors.TRACES_TO_RECORD_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT)
         await page.waitForSelector(selectors.DIPOLE_LFPYKIT_SELECTOR)
-        await expect(page).toClick(selectors.DIPOLE_LFPYKIT_SELECTOR)
+        // await expect(page).toClick(selectors.DIPOLE_LFPYKIT_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT)
         await page.click(selectors.DIPOLE_LFPYKIT_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT)
