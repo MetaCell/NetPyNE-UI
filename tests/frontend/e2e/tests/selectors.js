@@ -1,8 +1,9 @@
 
 export const BASE_PAGE_SELECTOR = '.NetPyNE-root-1'
-export const TUTORIALS_BUTTON_SELECTOR = 'button[id = "Tutorials"]'
+export const TUTORIALS_BUTTON_SELECTOR = 'button[id = "Examples"]'
 export const MODEL_BUTTON_SELECTOR = 'button[id="Model"]'
 export const CREATE_NETWORK_SELECTOR = 'li[id="Create network"]'
+export const CREATE_AND_SIMULATE_NETWORK_SELECTOR = 'li[id="Create and simulate network"]'
 export const SIMULATE_NETWORK_SELECTOR = 'li[id="Simulate network"]'
 export const SIMULATE_TOP_RIGHT_BUTTON_SELECTOR = 'div[class="MuiButtonGroup-root MuiButtonGroup-contained"]'
 export const SIMULATION_PAGE_SELECTOR = 'canvas'
@@ -12,12 +13,12 @@ export const USERNAME_SELECTOR = '#username_input';
 export const PASSWORD_SELECTOR = '#password_input';
 export const LOGIN_BUTTON_SELECTOR = '#login_submit';
 export const SELECT_CELL_BUTTON_SELECTOR = '#selectCellButton';
-export const TUTORIAL_1_SELECTOR = "li[id='Tut 1: Simple cell network']";
-export const TUTORIAL_2_SELECTOR = "li[id='Tut 2: Detailed cell network']"
-export const TUTORIAL_3A_SELECTOR =  "li[id='Tut 3a: Multiscale network (low IP3)']"
-export const TUTORIAL_3B_SELECTOR = "li[id='Tut 3b: Multiscale network (high IP3)']"
-export const TUTORIAL_3C_SELECTOR = "li[id='Tut 3c: Multiscale network (no RxD)']"
-export const TUTORIAL_4_SELECTOR = "li[id='Tut 4: Simple oscillatory network']"
+export const TUTORIAL_1_SELECTOR = "li[id='Model 1: Simple cell network']";
+export const TUTORIAL_2_SELECTOR = "li[id='Model 2: Detailed cell network']"
+export const TUTORIAL_3A_SELECTOR =  "li[id='Model 3a: Multiscale network (low IP3)']"
+export const TUTORIAL_3B_SELECTOR = "li[id='Model 3b: Multiscale network (high IP3)']"
+export const TUTORIAL_3C_SELECTOR = "li[id='Model 3c: Multiscale network (no RxD)']"
+export const TUTORIAL_4_SELECTOR = "li[id='Model 4: Simple oscillatory network']"
 export const PYR_CELL_SELECTOR = '#pyr';
 export const PYR_2_CELL_SELECTOR = '#PYR'
 export const INT_CELL_SELECTOR = '#INT'
@@ -78,3 +79,25 @@ export const COLOR_RECT_SELECTOR = 'rect[rx="5"]'
 export const CONTROL_PANEL_NETWORK_ROWS_SELECTOR = 'div[class = "MuiTypography-root MuiTreeItem-label MuiTypography-body1"]'
 export const CONTROL_PANEL_TABLE_SELECTOR = 'div[class="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-space-between"]'
 export const CONTROL_PANEL_FILTER_SELECTOR = 'input[class="MuiInputBase-input MuiOutlinedInput-input"]'
+export const FILE_SYSTEM_SELECTOR = '.ReactVirtualized__Grid__innerScrollContainer'
+export const LEVEL_UP_SELECTOR ='.fa-level-up'
+export const FOLDERS_SELECTOR ='div[class = "rst__rowContents rst__rowContentsDragDisabled"]'
+export const SELECT_BUTTON_SELECTOR ='#browserAccept'
+export const E_RULE_SELECTOR ='#Erule'
+export const NETWORK_CREATION_MENU_BUTTON_SELECTOR ='button[aria-label="select merge strategy"]'
+export const NETWORK_CREATION_MENU_ITEMS_SELECTOR ='#split-button-menu > li'
+export const NETWORK_CREATION_BUTTON_SELECTOR ='div[aria-label="split button"]'
+export const POPULATIONS_TAB_SELECTOR ='div[title="Populations"]'
+export const SAVE_MENU_SELECTOR ='h2[class="MuiTypography-root MuiTypography-h6"]'
+export const PATH_INPUT_SELECTOR ='input[class="MuiInputBase-input MuiFilledInput-input MuiInputBase-inputAdornedStart MuiFilledInput-inputAdornedStart"]'
+export const SAVE_BUTTON_SELECTOR ='#appBarPerformActionButton'
+export const EXPORT_OPTIONS_SELECTOR ='ul[class="MuiList-root MuiList-padding"]'
+export const CHECKBOX_OPTION_SELECTOR ='input[type="checkbox"]'
+export const PYTHON_CONSOLE_TAB_SELECTOR ='div[title="Python"]'
+export const PYTHON_CONSLE_SELECTOR ='#pythonConsoleOutput'
+export const PYTHON_CONSOLE_FRAME_SELECTOR ='#pythonConsoleFrame'
+export const MAIN_PYTHON_APP_SELECTOR ='#ipython-main-app'
+export const PYTHON_CELL_SELECTOR ='div.inner_cell'
+export const PYTHON_OUTPUT_SELECTOR ='div[class="output_subarea output_text output_stream output_stdout"]'
+export const PYTHON_FIRST_OUTPUT_SELECTOR ='div[class="output_subarea output_text output_result"]'
+
