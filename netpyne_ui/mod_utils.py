@@ -51,6 +51,9 @@ def loadModMechFiles(compileMod, modFolder, forceRecompile=False):
                 neuron.load_mechanisms(str(modFolder))
             except:
                 logging.exception("Error loading mechanisms")
+                if not forceRecompile:
+                    logging.info("Trying to recompile mod files")
+                    loadModMechFiles(True, modFolder, forceRecompile=True)
                 raise
         finally:
             os.chdir(owd)
