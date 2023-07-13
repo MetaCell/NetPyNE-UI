@@ -36,13 +36,14 @@ def convertLEMSSimulation(lemsFileName, compileMod=True):
         if version.parse(pyneuroml.__version__) >= version.parse("1.0.9"):
             result, output_msg = pynml.run_lems_with_jneuroml_netpyne(
                 lemsFileName, only_generate_json=True, exit_on_fail=False,
-                return_string=True)
+                return_string=True, max_memory="1G")
             
             if result is False:
                 raise Exception(f"Error loading lems file: {output_msg}")
         else:
             result = pynml.run_lems_with_jneuroml_netpyne(
-                lemsFileName, only_generate_json=True, exit_on_fail=False)
+                lemsFileName, only_generate_json=True, exit_on_fail=False,
+                max_memory="1G")
             
             if result is False:
                 raise Exception("Error loading lems file")
