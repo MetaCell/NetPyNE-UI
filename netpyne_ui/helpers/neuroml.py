@@ -2,7 +2,9 @@ import os
 import sys
 import logging
 from netpyne.specs import simConfig
+from packaging import version
 
+import pyneuroml
 from pyneuroml import pynml
 from pyneuroml.lems import generate_lems_file_for_neuroml
 from pyneuroml.pynml import read_neuroml2_file
@@ -30,11 +32,21 @@ def convertLEMSSimulation(lemsFileName, compileMod=True):
             % fullLemsFileName
         )
 
-        result = pynml.run_lems_with_jneuroml_netpyne(
-            lemsFileName, only_generate_json=True, exit_on_fail=False)
-        
-        if result == False:
-            raise Exception("Error loading lems file")
+        # feature to return output added in 1.0.9
+        if version.parse(pyneuroml.__version__) >= version.parse("1.0.9"):
+            result, output_msg = pynml.run_lems_with_jneuroml_netpyne(
+                lemsFileName, only_generate_json=True, exit_on_fail=False,
+                return_string=True)
+            
+            if result is False:
+                raise Exception(f"Error loading lems file: {output_msg}")
+        else:
+            result = pynml.run_lems_with_jneuroml_netpyne(
+                lemsFileName, only_generate_json=True, exit_on_fail=False)
+            
+            if result is False:
+                raise Exception("Error loading lems file")
+
         lems = pynml.read_lems_file(lemsFileName)
 
         np_json_fname = fullLemsFileName.replace('.xml','_netpyne_data.json')
