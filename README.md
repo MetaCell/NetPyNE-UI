@@ -7,7 +7,7 @@
 
 ![Screenshot](https://github.com/MetaCell/NetPyNE-UI/raw/documentation/docs/netpyneui.png)
 
-This repository hosts the User Interface for [NetPyNE](http://www.neurosimlab.org/netpyne/). NetPyNE is a python package
+This repository hosts the User Interface for [NetPyNE](https://netpyne.v2.opensourcebrain.org/). NetPyNE is a python package
 to facilitate the development, parallel simulation and analysis of biological neuronal networks using the NEURON
 simulator.
 
