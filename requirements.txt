@@ -63,7 +63,7 @@ pycosat==0.6.3
 pycparser==2.20
 pyecore==0.11.7
 pygeppetto==0.8.1
-Pygments==2.6.1
+Pygments==2.15.0
 PyJWT==1.7.1
 PyLEMS==0.4.9.3
 pyNeuroML>=0.7.1
