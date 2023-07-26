@@ -54,7 +54,7 @@ describe('Tutorial #2 for Smoke Testing', () => {
     }, { timeout: TIMEOUT });
   });
 
-  it.skip('Open new page', async () => {
+  it('Open new page', async () => {
 
     console.log('Opening a new NetPyNE page')
 

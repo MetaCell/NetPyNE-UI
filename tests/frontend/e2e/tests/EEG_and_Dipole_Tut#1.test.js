@@ -60,7 +60,7 @@ beforeAll(async () => {
 
 describe('EEG and Dipole Plot Test using Tutorial#1', () => {
 
-    it.skip('Open new page', async () => {
+    it('Open new page', async () => {
 
         console.log('Opening a new NetPyNE page')
 
