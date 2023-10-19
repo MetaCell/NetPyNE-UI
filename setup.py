@@ -3,11 +3,14 @@ import fnmatch
 import os
 from glob import glob
 
-#This block copies resources to the server so we avoid jupyter nbextension install --py --sys-prefix jupyter_geppetto
+# This block copies resources to the server so we avoid jupyter nbextension install --py --sys-prefix jupyter_geppetto
 data_files = []
-data_files.append(('geppetto/src/main/webapp/build/', glob('src/jupyter_geppetto/geppetto/src/main/webapp/build/*.js')))
-data_files.append(('geppetto/src/main/webapp/build/', glob('src/jupyter_geppetto/geppetto/src/main/webapp/build/*.vm')))
-data_files.append(('geppetto/geppetto/src/main/webapp/build/', glob('src/jupyter_geppetto/geppetto/src/main/webapp/build/fonts/*')))
+data_files.append(('geppetto/src/main/webapp/build/',
+                  glob('src/jupyter_geppetto/geppetto/src/main/webapp/build/*.js')))
+data_files.append(('geppetto/src/main/webapp/build/',
+                  glob('src/jupyter_geppetto/geppetto/src/main/webapp/build/*.vm')))
+data_files.append(('geppetto/geppetto/src/main/webapp/build/',
+                  glob('src/jupyter_geppetto/geppetto/src/main/webapp/build/fonts/*')))
 for root, dirnames, filenames in os.walk('src/jupyter_geppetto/geppetto/src/main/webapp/js/'):
     for filename in fnmatch.filter(filenames, '*'):
         data_files.append((root[3:], [os.path.join(root, filename)]))
@@ -15,7 +18,7 @@ for root, dirnames, filenames in os.walk('src/jupyter_geppetto/geppetto/src/main
 
 setuptools.setup(
     name="netpyne_ui",
-    version="0.9.1",
+    version="1.0.0",
     url="https://github.com/MetaCell/NetPyNE-UI",
     author="MetaCell",
     author_email="info@metacell.us",

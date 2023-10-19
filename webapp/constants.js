@@ -29,6 +29,7 @@ export const NETPYNE_COMMANDS = {
   simulateModel: 'netpyne_geppetto.simulateNetPyNEModelInGeppetto',
   importModel: 'netpyne_geppetto.importModel',
   exportModel: 'netpyne_geppetto.exportModel',
+  saveModel: 'netpyne_geppetto.saveToIndexFile',
   exportHLS: 'netpyne_geppetto.exportHLS',
   plotFigure: 'netpyne_geppetto.getPlot',
   deleteParam: 'netpyne_geppetto.deleteParam',
@@ -36,6 +37,8 @@ export const NETPYNE_COMMANDS = {
   getExperiments: 'netpyne_geppetto.experiments.get_experiments',
   cloneExperiment: 'netpyne_geppetto.cloneExperiment',
   viewExperimentResults: 'netpyne_geppetto.viewExperimentResult',
+  importNeuroML: 'netpyne_geppetto.importNeuroML',
+  importLEMS: 'netpyne_geppetto.importLEMS',
 };
 
 export const REAL_TYPE = {
@@ -70,6 +73,9 @@ export const PYTHON_CONSOLE_WIDGET = {
  */
 export const TOPBAR_CONSTANTS = {
   LOAD: 'LOAD',
+  LOAD_INDEX: 'LOAD_INDEX',
+  LOAD_INDEX_WORKSPACE: 'LOAD_INDEX_WORKSPACE',
+  SAVE_INDEX_WORKSPACE: 'SAVE_INDEX_WORKSPACE',
   SAVE: 'SAVE',
   IMPORT_HLS: 'IMPORT_HLS',
   EXPORT_HLS: 'EXPORT_HLS',
@@ -84,6 +90,8 @@ export const TOPBAR_CONSTANTS = {
   BACK_TO_EDITION: 'BACK TO EDIT',
   NEW_PAGE: 'NEW_PAGE',
   NETWORK_MODEL: 'NETWORK_MODEL',
+  IMPORT_NEUROML: 'IMPORT_NEUROML',
+  IMPORT_LEMS: 'IMPORT_LEMS'
 };
 
 /*
@@ -688,12 +696,12 @@ export const EXPERIMENT_TEXTS = {
 };
 
 export const TUTORIALS_LIST = {
-  tut1: 'Tut 1: Simple cell network',
-  tut2: 'Tut 2: Detailed cell network',
-  tut3: 'Tut 3a: Multiscale network (low IP3)',
-  tut3_ip3high: 'Tut 3b: Multiscale network (high IP3)',
-  tut3_norxd: 'Tut 3c: Multiscale network (no RxD)',
-  tut_osc: 'Tut 4: Simple oscillatory network',
+  tut1: 'Model 1: Simple cell network',
+  tut2: 'Model 2: Detailed cell network',
+  tut3: 'Model 3a: Multiscale network (low IP3)',
+  tut3_ip3high: 'Model 3b: Multiscale network (high IP3)',
+  tut3_norxd: 'Model 3c: Multiscale network (no RxD)',
+  tut_osc: 'Model 4: Simple oscillatory network',
 };
 
 export const EXPERIMENT_VIEWS = {
@@ -708,7 +716,7 @@ export const LAUNCH_MODAL = {
   modelState: 'model',
   experimentState: 'experiment',
   actionSimulate: 'Simulate',
-  defaultResource: 'Local Machine',
+  defaultResource: 'Server',
   errorText: 'Please check the input',
 };
 

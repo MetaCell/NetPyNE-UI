@@ -7,6 +7,7 @@ export const GENERAL_DEFAULT_STATE = {
   updates: 0,
   editMode: true,
   modelState: MODEL_STATE.NOT_INSTANTIATED,
+  modelPath: null,
   dialogOpen: false,
   dialogTitle: '',
   dialogMessage: '',
@@ -16,6 +17,7 @@ export const GENERAL_DEFAULT_STATE = {
   automaticSimulation: false,
   automaticInstantiation: false,
   confirmationDialogOpen: false,
+  notebookOpened: false,
   theme: 'gui',
   instances: [],
 };
@@ -60,6 +62,8 @@ export default function reduceGeneral (state = GENERAL_DEFAULT_STATE, action) {
       return { ...state, editMode: false, modelState: MODEL_STATE.SIMULATED };
     case Actions.SIMULATE_NETWORK:
       return { ...state, editMode: false, modelState: MODEL_STATE.SIMULATED };
+    case Actions.REGISTER_MODEL_PATH:
+      return { ...state, modelPath: action.payload };
     case Actions.EDIT_MODEL:
       return { ...state, editMode: true, updates: state.updates + 1 };
     case Actions.RESET_MODEL:

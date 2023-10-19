@@ -60,7 +60,7 @@ def clone(repository, folder=None, branch_or_tag=None, cwdp=DEPS_DIR, recursive=
 
         if exit_code != 0:
             raise SystemExit(f'Failed to clone repository {repository} into {folder}')
-        
+
     if not os.path.exists(os.path.join(cwdp, folder, '.git')):
         print(f'Skipping checkout of {repository}: folder is not a git repository')
         return
@@ -75,7 +75,9 @@ def checkout(folder, branch_or_tag, cwdp):
 
     print(f'Checking out {branch_or_tag}')
     try:
+        subprocess.call(['git', 'fetch'], cwd=newPath)
         subprocess.call(['git', 'checkout', branch_or_tag], cwd=newPath)
+        subprocess.call(['git', 'pull', 'origin', branch_or_tag], cwd=newPath)
     except Exception as e:
         logging.error('Cannot checkout branch or tag %s on %s', branch_or_tag, folder, exc_info=True)
 
@@ -85,29 +87,21 @@ def compile_mod():
 
 
 def main(netpyne_branch, workspace_branch, geppetto_branch=None, skipNpm=False,
-         skipTest=False, development=False):
+        skipTest=False, development=False):
     cprint("Installing requirements")
     execute(cmd=['pip', 'install', '-r', 'requirements.txt'], cwd=ROOT_DIR)
+    cprint("Installing UI python package...")
+    execute(cmd=['pip', 'install', '-e', '.', '--no-deps'], cwd=ROOT_DIR)
 
     if not os.path.exists(DEPS_DIR):
         os.mkdir(DEPS_DIR)
 
-
-    if development:
+    if geppetto_branch:
+        if geppetto_branch.replace(" ", "") is '':
+            geppetto_branch = 'development'
         os.chdir(DEPS_DIR)
-
-        # cloning geppetto meta
         cprint("Installing geppetto-meta")
-        clone(repository=META,
-              folder=META_DIR,
-              branch_or_tag=geppetto_branch
-              )
-
-        # clone and install netpyne
-        cprint("Installing netpyne")
-        clone(repository=NETPYNE, branch_or_tag=netpyne_branch)
-        execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, NETPYNE_DIR))
-
+        clone(repository=META, folder=META_DIR, branch_or_tag=geppetto_branch)
         # installing pygeppetto
         cprint("Installing pygeppetto")
         execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, META_DIR, PYGEPPETTO_DIR))
@@ -116,28 +110,30 @@ def main(netpyne_branch, workspace_branch, geppetto_branch=None, skipNpm=False,
         execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, META_DIR, JUPYTER_DIR))
         # installing core dependencies
         execute(cmd=['pip', 'install', '-e', '.'], cwd=ROOT_DIR)
-        if netpyne_branch and netpyne_branch != 'master':
-          cprint("Installing netpyne")
-          clone(repository=NETPYNE, branch_or_tag=netpyne_branch)
-          execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, NETPYNE_DIR))
-    else:
-        # install requirements
-        cprint("Installing UI python package...")
-        execute(cmd=['pip', 'install', '-e', '.', '--no-deps'], cwd=ROOT_DIR)
+    if netpyne_branch:
+        if netpyne_branch.replace(" ", "") is '':
+            netpyne_branch = 'development'
+        os.chdir(DEPS_DIR)
+        cprint("Installing netpyne")
+        clone(repository=NETPYNE, branch_or_tag=netpyne_branch)
+        execute(cmd=['pip', 'install', '-e', '.'], cwd=os.path.join(DEPS_DIR, NETPYNE_DIR))
+
+
 
     os.chdir(ROOT_DIR)
-    cprint("Cloning workspace")
-    clone(repository=WORKSPACE, branch_or_tag=workspace_branch, folder=WORKSPACE_DIR, cwdp=ROOT_DIR)
-    cprint("Compiling workspace modules")
-    compile_mod()
+    if workspace_branch:
+      cprint("Cloning workspace")
+      clone(repository=WORKSPACE, branch_or_tag=workspace_branch, folder=WORKSPACE_DIR, cwdp=ROOT_DIR)
+      cprint("Compiling workspace modules")
+      #compile_mod()
 
     if not skipNpm and os.path.exists(os.path.join(DEPS_DIR, META_DIR, JUPYTER_DIR)):
         cprint("Building Jupyter Geppetto extension...")
         execute(cmd=['npm', 'ci'], cwd=os.path.join(DEPS_DIR, META_DIR, JUPYTER_DIR, 'js'))
         execute(cmd=['npm', 'run', 'build-dev' if development else 'build'],
                 cwd=os.path.join(DEPS_DIR, META_DIR, JUPYTER_DIR, 'js'))
-  
-    execute(cmd=['jupyter', 'nbextension', 'uninstall', 'jupyter_geppetto'])                                                                            
+
+    execute(cmd=['jupyter', 'nbextension', 'uninstall', 'jupyter_geppetto'])
     execute(cmd=['jupyter', 'nbextension', 'install', '--py', '--symlink', '--sys-prefix', 'jupyter_geppetto'])
     execute(cmd=['jupyter', 'nbextension', 'enable', '--py', '--sys-prefix', 'jupyter_geppetto'])
     execute(cmd=['jupyter', 'nbextension', 'enable', '--py', '--sys-prefix', 'widgetsnbextension'])
@@ -188,11 +184,11 @@ def main(netpyne_branch, workspace_branch, geppetto_branch=None, skipNpm=False,
         cprint("Installing test libraries")
         execute(cmd=['pip', 'install', '-r', 'requirements-test.txt'], cwd=ROOT_DIR)
         cprint("Testing NetPyNE")
-        # execute("python -m unittest netpyne_ui.tests.netpyne_model_interpreter_test".split())
+        execute("python -m pytest tests".split())
 
     cprint("Installing client packages")
     if not skipNpm:
-        if development:
+        if geppetto_branch:
             # install geppetto meta
             if os.path.exists(os.path.join(WEBAPP_DIR, '.yalc')):
                 execute(cmd=['rm', '-rf', '.yalc'], cwd=WEBAPP_DIR)
@@ -207,7 +203,7 @@ def main(netpyne_branch, workspace_branch, geppetto_branch=None, skipNpm=False,
         else:
             # install jupyter geppetto
             cprint("Installing geppetto ui, client and core dependecies")
-            execute(cmd=['yarn', 'install', '--frozen-lockfile'], cwd=WEBAPP_DIR)
+            execute(cmd=['yarn', 'install', '--immutable'], cwd=WEBAPP_DIR)
             execute(cmd=['yarn', 'run', 'build'], cwd=WEBAPP_DIR)
 
 
@@ -226,7 +222,7 @@ if __name__ == "__main__":
                         help='Install for development.')
 
     parser.add_argument('--netpyne', '-vn', dest='netpyne_version', action="store",
-                        default=os.getenv('NETPYNE_VERSION', 'development'),
+                        default=os.getenv('NETPYNE_VERSION', None),
                         help='Specify NetPyNE library branch or tag.')
 
     parser.add_argument('--workspace', '-vw', dest='workspace_version', action="store",
@@ -234,14 +230,14 @@ if __name__ == "__main__":
                         help='Specify workspace branch or tag.')
 
     parser.add_argument('--geppetto', '-vp', dest='geppetto_version', action="store",
-                        default=os.getenv('GEPPETTO_VERSION', 'development'),
+                        default=os.getenv('GEPPETTO_VERSION', None),
                         help='Specify Pygeppetto library branch or tag (only for dev build).')
 
     args = parser.parse_args(sys.argv[1:])
     print('Install arguments:\n', args)
 
     main(skipNpm=args.skipNpm, skipTest=args.skipTest, development=args.development,
-         netpyne_branch=args.netpyne_version,
-         workspace_branch=args.workspace_version,
-         geppetto_branch=args.geppetto_version,
-         )
+        netpyne_branch=args.netpyne_version,
+        workspace_branch=args.workspace_version,
+        geppetto_branch=args.geppetto_version,
+        )

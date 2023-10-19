@@ -102,9 +102,9 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
                 id={`${parameter.name}-from`}
                 label="From"
                 variant="filled"
-                type="number"
+                type="text" inputMode="numeric"
                 value={parameter?.minVal || parameter?.min}
-                onChange={(e) => handleRangeInput(e.target.value, index, parameter, 'min')}
+                onChange={(e) => handleRangeInput(e.target, index, parameter, 'min')}
                 error={parameter?.minerror}
                 helperText={parameter?.minhelperText}
                 autoComplete="off"
@@ -115,9 +115,9 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
                 id={`${parameter.name}-to`}
                 label="To"
                 variant="filled"
-                type="number"
+                type="text" inputMode="numeric"
                 value={parameter?.maxVal || parameter?.max}
-                onChange={(e) => handleRangeInput(e.target.value, index, parameter, 'max')}
+                onChange={(e) => handleRangeInput(e.target, index, parameter, 'max')}
                 error={parameter?.maxerror}
                 helperText={parameter?.maxhelperText}
                 autoComplete="off"
@@ -128,9 +128,8 @@ const ParameterRow = (parameter, index, handleParamSelection, handleChange, hand
                 id={`${parameter.name}-step`}
                 label="Step"
                 variant="filled"
-                type="number"
-                value={parameter?.stepVal || parameter?.step}
-                onChange={(e) => handleRangeInput(e.target.value, index, parameter, 'step')}
+                type="text" inputMode="numeric"
+                onChange={(e) => handleRangeInput(e.target, index, parameter, 'step')}
                 error={parameter?.steperror}
                 helperText={parameter?.stephelperText}
                 autoComplete="off"
@@ -463,10 +462,12 @@ const ExperimentEdit = (props) => {
     setGroupParameters(newGroupParams);
   };
 
-  const handleRangeInput = (val, index, parameter, key) => {
+  const handleRangeInput = (input, index, parameter, key) => {
+    const val = input.value ;
     const newParameters = parameter.inGroup ? [...groupParameters] : [...parameters];
     newParameters[index] = ExperimentHelper.validateRangeParameter(parameter, val, key);
     setParamChange(parameter.inGroup, newParameters);
+    input.value = val ;
   };
 
   const handleInputValues = (val, index, parameter) => {

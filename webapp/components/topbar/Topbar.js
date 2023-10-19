@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import Menu from '@metacell/geppetto-meta-ui/menu/Menu';
-
+import FileBrowser from '../general/FileBrowser';
+import Utils from 'root/Utils';
 import { withStyles } from '@material-ui/core/styles';
 import { SwitchPageButton } from 'netpyne/components';
 import toolbarConfig, {
@@ -13,15 +14,23 @@ import toolbarConfig, {
 import { bgRegular } from '../../theme';
 import Splash from '../general/Splash';
 
+import ImportFileDialog from './dialogs/ImportFileDialog';
 import LoadFileDialog from './dialogs/LoadFile';
+import LoadFileIndexDialog from './dialogs/LoadFileIndex';
 import SaveFileDialog from './dialogs/SaveFile';
 import NewModelDialog from './dialogs/NewModel';
 import ImportExportHLSDialog from './dialogs/ImportExportHLS';
 import ImportCellParamsDialog from './dialogs/ImportCellParams';
 import UploadDownloadFilesDialog from './dialogs/UploadDownloadFiles';
 
-import { TOPBAR_CONSTANTS, MODEL_STATE, DEFAULT_CONFIRMATION_DIALOG_MESSAGE } from '../../constants';
-import { LOAD_TUTORIAL } from '../../redux/actions/general';
+import tutorial_steps from '../../redux/reducers/data/tutorial_steps';
+import tutorial2_steps from '../../redux/reducers/data/tutorial2_steps';
+import tutorial3_steps from '../../redux/reducers/data/tutorial3_steps';
+
+import { startTutorial } from '../../redux/actions/tutorials';
+import { TOPBAR_CONSTANTS, MODEL_STATE, DEFAULT_CONFIRMATION_DIALOG_MESSAGE, NETPYNE_COMMANDS } from '../../constants';
+import { LOAD_TUTORIAL, registerModelPath, loadModel } from '../../redux/actions/general';
+import OverwriteModel from './dialogs/OverwriteModel';
 
 const styles = () => ({
   topbar: {
@@ -32,6 +41,7 @@ const styles = () => ({
   },
 });
 
+
 class Topbar extends Component {
   snackBarMessage = '';
 
@@ -40,6 +50,15 @@ class Topbar extends Component {
     this.state = { openSnackBar: false };
     this.menuHandler = this.menuHandler.bind(this);
   }
+
+  closeExplorerDialog (fieldValue) {
+    if (fieldValue) {
+      const path = fieldValue.path
+      this.props.dispatchAction(loadModel(path));
+    }
+    this.handleClose();
+  }
+
 
   handleOpenSnackBar (message) {
     this.snackBarMessage = message;
@@ -106,7 +125,13 @@ class Topbar extends Component {
 
         break;
       }
-
+      case 'triggerTutorials': {
+        const [index] = click.parameters;
+        const tutorials = [tutorial_steps, tutorial2_steps, tutorial3_steps];
+        const action = startTutorial(tutorials[index]);
+        this.props.dispatchAction(action);
+        break;
+      }
       default:
         console.log(`Menu action not mapped, it is ${click}`);
     }
@@ -134,6 +159,33 @@ class Topbar extends Component {
         case TOPBAR_CONSTANTS.LOAD:
           content = (
             <LoadFileDialog
+              open={dialogOpen}
+              onRequestClose={() => this.handleClose()}
+            />
+          );
+          break;
+        case TOPBAR_CONSTANTS.SAVE_INDEX_WORKSPACE:
+          content = (
+            <OverwriteModel
+              open={dialogOpen}
+              onRequestClose={() => this.handleClose()}
+            />
+          );
+          break;
+        case TOPBAR_CONSTANTS.LOAD_INDEX_WORKSPACE:
+          content = (
+            <FileBrowser
+              open={dialogOpen}
+              exploreOnlyDirs={true}
+              // filterFiles=".npjson"
+              startDir=""
+              onRequestClose={(selection) => this.closeExplorerDialog(selection)}
+            />
+          );
+          break;
+        case TOPBAR_CONSTANTS.LOAD_INDEX:
+          content = (
+            <LoadFileIndexDialog
               open={dialogOpen}
               onRequestClose={() => this.handleClose()}
             />
@@ -209,6 +261,32 @@ class Topbar extends Component {
             />
           );
           break;
+          case TOPBAR_CONSTANTS.IMPORT_NEUROML:
+            content = (
+              <ImportFileDialog
+                open={dialogOpen}
+                onRequestClose={() => this.handleClose()}
+                title="Import from NeuroML 2"
+                command={NETPYNE_COMMANDS.importNeuroML}
+                modelState={modelState}
+                extension=".net.nml"
+                openConfirmationDialog={(payload) => openConfirmationDialog(payload)}
+              />
+            );
+            break;
+            case TOPBAR_CONSTANTS.IMPORT_LEMS:
+              content = (
+                <ImportFileDialog
+                  open={dialogOpen}
+                  onRequestClose={() => this.handleClose()}
+                  command={NETPYNE_COMMANDS.importLEMS}
+                  title="Import simulation from LEMS"
+                  modelState={modelState}
+                  extension=".xml"
+                  openConfirmationDialog={(payload) => openConfirmationDialog(payload)}
+                />
+              );
+              break;
         default:
           content = <div />;
           break;

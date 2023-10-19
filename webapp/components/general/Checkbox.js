@@ -7,6 +7,10 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { bgLight } from '../../theme';
 
 export default class Checkbox extends Component {
+  componentDidUpdate (prevProps, prevState) {
+    if (this.props.commands !== prevProps.commands)
+      this.forceUpdate();
+  }
   render () {
     const {
       fullWidth,

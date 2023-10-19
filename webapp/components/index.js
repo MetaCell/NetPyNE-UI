@@ -18,7 +18,8 @@ import {
   createAndSimulateNetwork, showNetwork, pythonCall, deleteNetParamsObj, resetModel,
   setDefaultWidgets, changeInstanceColor, openConfirmationDialog, closeConfirmationDialog, selectInstances,
 } from '../redux/actions/general';
-
+import { runControlledStep, startTutorial, stopTutorial, addDiscoveredStep, runControlledStepByElementId, incrementTutorialStep, validateTutorialStep, checkBubbleRender } from '../redux/actions/tutorials';
+import { updateConsole } from '../redux/actions/console';
 import {
   cloneExperiment,
 
@@ -56,6 +57,7 @@ import _NetPyNEInclude from './definition/plots/NetPyNEInclude';
 import _NetPyNEInstantiated from './instantiation/NetPyNEInstantiated';
 import _NetWorkControlButtons from './instantiation/NetWorkControlButtons';
 import _ActionDialog from './topbar/dialogs/ActionDialog';
+import _ActionValidationDialog from './topbar/dialogs/ActionValidationDialog';
 import _Drawer from './drawer/Drawer';
 import _Topbar from './topbar/Topbar';
 import _SwitchPageButton from './topbar/SwitchPageButton';
@@ -70,9 +72,11 @@ import _ExperimentManager from './experiments/ExperimentManager';
 import _LaunchDialog from './topbar/dialogs/LaunchDialog';
 import _NetPyNEPythonConsole from './general/NetPyNEPythonConsole';
 import _PlotViewer from './general/PlotViewer';
+import _TutorialObserver from './general/TutorialObserver';
 import _ExperimentControlPanel from './general/ExperimentControlPanel';
 import _Rxd from './rxd/Wrapper';
 import { WidgetStatus } from '@metacell/geppetto-meta-client/common/layout/model';
+import Textbox from './general/Textbox';
 
 const updateCardsDispatch = (dispatch) => ({ updateCards: () => dispatch(updateCards) });
 
@@ -82,8 +86,23 @@ export const NetPyNETextField = PythonControlledCapability.createPythonControlle
   TextField,
 );
 
+// export const NetPyNETextField = connect(
+//   (state, ownProps) => ({
+//     ...ownProps,
+//     commands: state.console.commands,
+//   }),
+//   null,
+// )(
+//   PythonControlledCapability.createPythonControlledComponent(
+//     Textbox,
+//   ),
+// );
+
 export const NetPyNECellRules = connect(
-  null,
+  (state, ownProps) => ({
+    ...ownProps,
+    commands: state.console.commands,
+  }),
   updateCardsDispatch,
 )(
   PythonControlledCapability.createPythonControlledComponent(
@@ -91,32 +110,84 @@ export const NetPyNECellRules = connect(
   ),
 );
 
-export const NetPyNEConnectivityRules = PythonControlledCapability.createPythonControlledComponent(
-  _NetPyNEConnectivityRules,
+export const NetPyNEConnectivityRules = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    commands: state.console.commands,
+  }),
+  null,
+)(
+  PythonControlledCapability.createPythonControlledComponent(
+    _NetPyNEConnectivityRules,
+  ),
 );
 
-export const NetPyNEPlots = PythonControlledCapability.createPythonControlledComponent(
-  _NetPyNEPlots,
+export const NetPyNEPlots = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    commands: state.console.commands,
+  }),
+  null,
+)(
+  PythonControlledCapability.createPythonControlledComponent(
+    _NetPyNEPlots,
+  ),
 );
 
 export const ListComponent = PythonControlledCapability.createPythonControlledControl(
   _ListComponent,
 );
 
-export const AdapterComponent = PythonControlledCapability.createPythonControlledControl(
-  _AdapterComponent,
+export const AdapterComponent = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    commands: state.console.commands,
+  }),
+  null,
+)(
+  PythonControlledCapability.createPythonControlledComponent(
+    _AdapterComponent,
+  ),
 );
 
 export const NetPyNECheckbox = PythonControlledCapability.createPythonControlledControl(
   Checkbox,
 );
 
-export const NetPyNEStimulationTargets = PythonControlledCapability.createPythonControlledComponent(
-  _NetPyNEStimulationTargets,
+// export const NetPyNECheckbox = connect(
+//   (state, ownProps) => ({
+//     ...ownProps,
+//     commands: state.console.commands,
+//   }),
+//   null,
+// )(
+//   PythonControlledCapability.createPythonControlledComponent(
+//     Checkbox,
+//   ),
+// );
+
+export const NetPyNEStimulationTargets = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    commands: state.console.commands,
+  }),
+  null,
+)(
+  PythonControlledCapability.createPythonControlledComponent(
+    _NetPyNEStimulationTargets,
+  ),
 );
 
-export const SelectField = PythonControlledCapability.createPythonControlledControl(
-  _SelectField,
+export const SelectField = connect(
+  (state, ownProps) => ({
+    ...ownProps,
+    commands: state.console.commands,
+  }),
+  null,
+)(
+  PythonControlledCapability.createPythonControlledComponent(
+    _SelectField,
+  ),
 );
 
 export const Experiments = connect(
@@ -154,7 +225,7 @@ export const ExperimentEdit = connect(
     ...ownProps,
     updates: state.general.updates,
     widgets: state.widgets,
-    visible: state.widgets?.experimentManager?.status != WidgetStatus.HIDDEN 
+    visible: state.widgets?.experimentManager?.status != WidgetStatus.HIDDEN
   }),
   (dispatch) => ({
     editExperiment: (name, details) => dispatch(editExperiment(name, details)),
@@ -175,9 +246,10 @@ export const Dimensions = connect(
 export const NetPyNE = connect(
   null,
   (dispatch) => ({
+    dispatchAction: (action) => dispatch(action),
     pythonCallErrorDialogBox: (payload) => dispatch(openBackendErrorDialog(payload)),
     setWidgets: (payload) => dispatch(setWidgets(payload)),
-    setDefaultWidgets: () => dispatch(setDefaultWidgets),    
+    setDefaultWidgets: () => dispatch(setDefaultWidgets),
   }),
 )(_NetPyNE);
 
@@ -293,6 +365,17 @@ export const ActionDialog = connect(
   }),
 )(_ActionDialog);
 
+export const ActionValidationDialog = connect(
+  (state) => ({
+    ...state.errors,
+    openDialog: true,
+  }),
+  (dispatch) => ({
+    pythonCall: (cmd, args) => dispatch(pythonCall(cmd, args)),
+    closeBackendErrorDialog: () => dispatch(closeBackendErrorDialog),
+  }),
+)(_ActionValidationDialog);
+
 export const ErrorDialog = connect(
   (state) => ({
     ...state.errors,
@@ -307,8 +390,11 @@ export const ErrorDialog = connect(
 export const NetPyNEPythonConsole = connect(
   (state) => ({
     extensionLoaded: state.client.jupyter_geppetto_extension.loaded,
+    notebookVisible: state.widgets?.python?.status != WidgetStatus.MINIMIZED
   }),
-  null,
+  (dispatch) => ({
+    updateConsole: (commands) => dispatch(updateConsole(commands))
+  }),
 )(_NetPyNEPythonConsole);
 
 export const Drawer = connect(
@@ -410,6 +496,27 @@ export const Rxd = connect(
     _Rxd,
   ),
 );
+
+export const TutorialObserver = connect(
+  (state) => ({
+    steps: state.tutorial.steps,
+    tourStep: state.tutorial.tourStep,
+    tourRunning: state.tutorial.tourRunning,
+    requestedTourStep: state.tutorial.requestedTourStep,
+    lastCheckRender: state.tutorial.lastCheckRender,
+  }),
+  (dispatch) => ({
+    startTutorialStep: () => { dispatch(startTutorial()) },
+    runControlledStep: () => { dispatch(runControlledStep()) },
+    stopTutorialStep: () => { dispatch(stopTutorial()) },
+    validateTutorialStep: (e) => { dispatch(validateTutorialStep(e)) },
+    addDiscoveredStep: (nodeIdList) => { dispatch(addDiscoveredStep(nodeIdList)) },
+    runControlledStepByElementId: (e) => { dispatch(runControlledStepByElementId(e))},
+    incrementTutorialStep: (e) => { dispatch(incrementTutorialStep()); },
+    checkBubbleRender: (e) => { dispatch(checkBubbleRender(e))}
+  }),
+)(_TutorialObserver);
+
 
 // ---------------------------------------------------------------------------------------- //
 

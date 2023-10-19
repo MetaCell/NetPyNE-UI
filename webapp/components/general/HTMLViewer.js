@@ -3,6 +3,8 @@ import React, { Component, createRef } from 'react';
 import HTMLViewer from '@metacell/geppetto-meta-ui/html-viewer/HTMLViewer';
 
 import { withStyles } from '@material-ui/core/styles';
+import { CircularProgress } from '@material-ui/core';
+import { primaryColor } from '../../theme';
 
 const style = ({ palette }) => ({
   container: {
@@ -23,11 +25,11 @@ class CustomHTMLViewer extends Component {
 
   componentDidMount () {
     window.addEventListener('resize', this.delayedResize.bind(this));
-    this.resizeIfNeeded();
+    this.resizeIfNeeded(true);
   }
 
   componentDidUpdate () {
-    this.resizeIfNeeded();
+    this.resizeIfNeeded(true);
   }
 
   componentWillUnmount () {
@@ -44,7 +46,7 @@ class CustomHTMLViewer extends Component {
 
   getSvgComponent () {
     // svg element
-    return this.containerRef.current.children[0].children[0].children[0];
+    return this.containerRef?.current?.children[0]?.children[0]?.children[0];
   }
 
   wasParentResized (dimensions) {
@@ -63,10 +65,10 @@ class CustomHTMLViewer extends Component {
     }
   }
 
-  resizeIfNeeded () {
+  resizeIfNeeded (force = false) {
     const dimensions = this.getParentSize();
 
-    if (dimensions !== false && this.wasParentResized(dimensions)) {
+    if ((dimensions !== false && this.wasParentResized(dimensions)) || (force)) {
       this.dimensions = dimensions;
       this.adjustSVGSize();
     }
@@ -77,7 +79,20 @@ class CustomHTMLViewer extends Component {
   }
 
   render () {
-    const { classes } = this.props;
+    const { classes, content } = this.props;
+    if (content === undefined) {
+      return (
+        <CircularProgress
+          color={primaryColor}
+          style={{
+            position: 'absolute',
+            margin: 'auto',
+            top: '50%',
+            left: '50%',
+          }}
+        />
+      );
+    }
     return (
       <div id="plot" className={classes.container} ref={this.containerRef}>
         <HTMLViewer {...this.props} style={{ backgroundColor: 'inherit' }} />

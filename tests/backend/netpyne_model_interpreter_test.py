@@ -80,7 +80,7 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
 
         self.getGeppettoModel(netParams, simConfig)
 
-    @unittest.skip("Neuron restart kernel issue")
+    # @unittest.skip("Neuron restart kernel issue")
     def test_tut1(self):
         print("------------------------------------")
         print("Tutorial 1 Instantiation:")
@@ -88,7 +88,7 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         from gui_tut1 import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
 
-    @unittest.skip("Neuron restart kernel issue")
+    # @unittest.skip("Neuron restart kernel issue")
     def test_tut2(self):
         print("------------------------------------")
         print("Tutorial 2 Instantiation:")
@@ -96,7 +96,7 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         from gui_tut2 import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
 
-    @unittest.skip("Neuron restart kernel issue")
+    # @unittest.skip("Neuron restart kernel issue")
     def test_tut3(self):
         print("------------------------------------")
         print("Tutorial 3 Instantiation:")
@@ -104,7 +104,7 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         from gui_tut3 import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
 
-    @unittest.skip("Neuron restart kernel issue")
+    # @unittest.skip("Neuron restart kernel issue")
     def test_tut4(self):
         print("------------------------------------")
         print("Tutorial 3 ip3high Instantiation:")
@@ -113,7 +113,7 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         from gui_tut3_ip3high import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
 
-    @unittest.skip("Neuron restart kernel issue")
+    # @unittest.skip("Neuron restart kernel issue")
     def test_tut5(self):
         print("------------------------------------")
         print("Tutorial 3 norxd Instantiation:")
@@ -121,7 +121,7 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         from gui_tut3_norxd import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
 
-    @unittest.skip("Neuron restart kernel issue")
+    # @unittest.skip("Neuron restart kernel issue")
     def test_tut6(self):
         print("------------------------------------")
         print("Tutorial 3 osc Instantiation:")

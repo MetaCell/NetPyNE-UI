@@ -1,17 +1,23 @@
 import React, { Component } from 'react';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import { connect } from 'react-redux';
+import { runControlledStep } from '../../../redux/actions/tutorials';
 
 import Fab from '@material-ui/core/Fab';
 import Tooltip from '../../general/Tooltip';
 import Utils from '../../../Utils';
 
-export default class NetPyNENewPlot extends React.Component {
+class NetPyNENewPlot extends React.Component {
   constructor (props) {
     super(props);
     this.handleClick = this.handleSelection.bind(this);
     this.handleButtonClick = this.handleButtonClick.bind(this);
     this.state = { anchorEl: null };
+  }
+
+  componentDidMount() {
+    //this.props.dispatch(runControlledStep({ tourStep: 1 }));
   }
 
   handleButtonClick = (event) => {
@@ -42,7 +48,10 @@ export default class NetPyNENewPlot extends React.Component {
       handleButtonClick,
       anchorEl,
       clearAnchorEl,
+      tourRunning
     } = this.props;
+
+    const displayMenu = Boolean(anchorEl);
 
     return (
       <div>
@@ -71,7 +80,7 @@ export default class NetPyNENewPlot extends React.Component {
         </Tooltip>
 
         <Menu
-          open={Boolean(anchorEl)}
+          open={displayMenu}
           id="selectCellMenu"
           anchorEl={anchorEl}
           onClose={() => clearAnchorEl()}
@@ -117,3 +126,11 @@ export default class NetPyNENewPlot extends React.Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    tourRunning: state.tutorial.tourRunning
+  };
+};
+
+export default connect(mapStateToProps)(NetPyNENewPlot);
