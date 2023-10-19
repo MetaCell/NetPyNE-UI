@@ -249,7 +249,7 @@ describe('Save / Open File testing', () => {
 
     it('Save model', async () => {
         console.log('Saving model ...')
-
+        await page.waitForSelector(selectors.FILE_TAB_SELECTOR)
         await page.click(selectors.FILE_TAB_SELECTOR)
         await page.waitForSelector(selectors.NEW_FILE_SELECTOR, { timeout: PAGE_WAIT * 3 })
         await page.waitForTimeout(PAGE_WAIT)
@@ -258,10 +258,9 @@ describe('Save / Open File testing', () => {
         })
         await page.waitForSelector(selectors.SAVE_MENU_SELECTOR)
 
-        const inputValue = await page.$eval(selectors.PATH_INPUT_SELECTOR, el => el.value);
+        // const inputValue = await page.$eval(selectors.PATH_INPUT_SELECTOR, el => el.value);
         await page.click(selectors.PATH_INPUT_SELECTOR, { clickCount: 3 });
         await page.waitForTimeout(PAGE_WAIT)
-
         expect(page).toFill(selectors.PATH_INPUT_SELECTOR, 'aut_test')
         await page.waitForTimeout(PAGE_WAIT * 2)
         await page.click(selectors.SAVE_BUTTON_SELECTOR)
@@ -281,10 +280,11 @@ describe('Save / Open File testing', () => {
         })
         await page.waitForSelector(selectors.SAVE_MENU_SELECTOR)
 
-        const inputValue = await page.$eval(selectors.PATH_INPUT_SELECTOR, el => el.value);
-        for (let i = 0; i < inputValue.length; i++) {
-            await page.keyboard.press('Backspace');
-        }
+        // const inputValue = await page.$eval(selectors.PATH_INPUT_SELECTOR, el => el.value);
+        // for (let i = 0; i < inputValue.length; i++) {
+        //     await page.keyboard.press('Backspace');
+        // }
+        await page.waitForTimeout(PAGE_WAIT)
 
         expect(page).toFill(selectors.PATH_INPUT_SELECTOR, 'aut_test_net_params')
         await page.waitForTimeout(PAGE_WAIT)
