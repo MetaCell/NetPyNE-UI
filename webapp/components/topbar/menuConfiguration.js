@@ -163,7 +163,7 @@ export default {
           icon: '',
           action: {
             handlerAction: 'redux',
-            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.LOAD],
+            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.LOAD_INDEX_WORKSPACE],
           },
         },
         {
@@ -171,8 +171,30 @@ export default {
           icon: '',
           action: {
             handlerAction: 'redux',
-            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.SAVE],
+            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.SAVE_INDEX_WORKSPACE],
           },
+        },
+        {
+          label: 'Legacy',
+          icon: '',
+          list: [
+            {
+              label: 'Open...',
+              icon: '',
+              action: {
+                handlerAction: 'redux',
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.LOAD],
+              },
+            },
+            {
+              label: 'Save...',
+              icon: '',
+              action: {
+                handlerAction: 'redux',
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.SAVE],
+              },
+            },
+          ],
         },
         {
           label: 'Import',
@@ -264,7 +286,7 @@ export default {
       },
     },
     {
-      label: 'Tutorials',
+      label: 'Examples',
       icon: '',
       position: 'bottom-start',
       style: topLevelMenuItemStyle,
@@ -286,6 +308,36 @@ export default {
             handlerAction: TOPBAR_CONSTANTS.NEW_PAGE,
             parameters: ['http://netpyne.org/'],
           },
+        },
+        {
+          label: 'Tutorials',
+          icon: '',
+          list: [
+            {
+              label: 'Open tutorial 1',
+              icon: '',
+              action: {
+                handlerAction: 'triggerTutorials',
+                parameters: [0],
+              },
+            },
+            {
+              label: 'Open tutorial 2',
+              icon: '',
+              action: {
+                handlerAction: 'triggerTutorials',
+                parameters: [1],
+              },
+            },
+            {
+              label: 'Open tutorial 3',
+              icon: '',
+              action: {
+                handlerAction: 'triggerTutorials',
+                parameters: [2],
+              },
+            },
+          ],
         },
       ],
     },

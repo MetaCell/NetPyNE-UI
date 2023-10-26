@@ -13,6 +13,7 @@ import importlib
 import json
 import logging
 import os
+from pathlib import Path
 import pprint
 import re
 import sys
@@ -45,7 +46,6 @@ from netpyne_ui.mod_utils import loadModMechFiles
 
 os.chdir(constants.NETPYNE_WORKDIR_PATH)
 
-neuron.nrn_dll_loaded.append(os.path.join(NETPYNE_WORKDIR_PATH, 'mod'))  # Avoids to load workspace modfiles twice
 
 class NetPyNEGeppetto:
 
@@ -78,17 +78,6 @@ class NetPyNEGeppetto:
         ])
         if not simulations.local.is_running():
             [experiments.set_to_error(e) for e in running_exps]
-
-        # sys.stdin = open(os.path.join(constants.HERE, "stdin.txt"),'r') # FIXES library asking for input to download -- eg lfpykit models
-
-        # from ipykernel import kernelbase
-
-        # def raw_input(self, prompt=''):
-        #     return "y"
-        # kernelbase.Kernel.raw_input = raw_input
-
-        # from lfpykit.eegmegcalc import NYHeadModel
-        # NYHeadModel()
 
     def getData(self):
         return {
@@ -511,7 +500,32 @@ class NetPyNEGeppetto:
                 # Load again because gatherData removed simData
                 sim.loadSimData(json_path)
 
+    def loadFromIndexFile(self, json_path: str):
+        cfg, netParams = sim.loadModel(json_path, loadMechs=True, ignoreMechAlreadyExistsError=True)
+        self.simConfig = cfg
+        self.netParams = netParams
 
+        if isinstance(self.netParams, dict):
+          self.netParams = specs.NetParams(self.netParams)
+
+        if isinstance(self.simConfig, dict):
+          self.simConfig = specs.SimConfig(self.simConfig)
+
+        for key, value in self.netParams.cellParams.items():
+            if hasattr(value, 'todict'):
+                self.netParams.cellParams[key] = value.todict()
+
+        # TODO: when should sim.initialize be called?
+        #   Only on import or better before every simulation or network instantiation?
+        sim.initialize()
+
+    def saveToIndexFile(self, srcPath, dstPath, exportNetParamsAsPython, exportSimConfigAsPython):
+        sim.saveModel(netParams=self.netParams,
+                      simConfig=self.simConfig,
+                      srcPath=srcPath,
+                      dstPath=dstPath,
+                      exportNetParamsAsPython=exportNetParamsAsPython,
+                      exportSimConfigAsPython=exportSimConfigAsPython)
 
     def importModel(self, modelParameters):
         """ Imports a model stored in form of Python files.
@@ -524,7 +538,7 @@ class NetPyNEGeppetto:
             #   Shouldn't be specific to Import
             sim.clearAll()
         try:
-            loadModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'])
+            loadModMechFiles(modelParameters['compileMod'], modelParameters['modFolder'], modelParameters.get("forceRecompile", True))
         except Exception:
             message = "Error while importing/compiling mods"
             logging.exception(message)
@@ -566,7 +580,7 @@ class NetPyNEGeppetto:
                 #   Only on import or better before every simulation or network instantiation?
                 sim.initialize()
             return utils.getJSONReply()
-        except Exception:
+        except:
             message = "Error while importing the NetPyNE model"
             logging.exception(message)
             return utils.getJSONError(message, sys.exc_info())
@@ -575,7 +589,7 @@ class NetPyNEGeppetto:
 
     def importNeuroML(self, modelParameters):
         from netpyne_ui.helpers import neuroml
-       
+
 
         try:
             # Get Current dir
@@ -584,9 +598,9 @@ class NetPyNEGeppetto:
             with redirect_stdout(sys.__stdout__):
                 # NetParams
                 filename = str(modelParameters["fileName"])
-               
+
                 json_fname = neuroml.convertNeuroML2(filename, compileMod=modelParameters["compileMod"])
-                   
+
             return self.loadModel(args=dict(
                 compileMod=True,
                 modFolder=os.path.dirname(json_fname),
@@ -605,7 +619,7 @@ class NetPyNEGeppetto:
 
     def importLEMS(self, modelParameters):
         from netpyne_ui.helpers import neuroml
-       
+
 
         try:
             # Get Current dir
@@ -614,7 +628,7 @@ class NetPyNEGeppetto:
             with redirect_stdout(sys.__stdout__):
                 # NetParams
                 filename = str(modelParameters["fileName"])
-               
+
                 json_fname =  neuroml.convertLEMSSimulation(filename)
 
             return self.loadModel(args=dict(
@@ -789,10 +803,21 @@ class NetPyNEGeppetto:
             return self.simConfig.analysis[plot_name]
         return {}
 
-    def getDirList(self, dir=None, onlyDirs=False, filterFiles=False):
-        # Get Current dir
+    def checkFileExists(self, path):
+        path = Path(path or '')
+        return path.exists()
+
+    def getFullPath(self, dir, subDir):
         if dir is None or dir == '':
-            dir = os.path.join(os.getcwd(), constants.NETPYNE_WORKDIR_PATH)
+            base = constants.NETPYNE_WORKDIR_PATH
+            if subDir:
+                base = os.path.join(base, subDir)
+            dir = os.path.join(os.getcwd(), base)
+        return dir
+
+    def getDirList(self, dir=None, onlyDirs=False, filterFiles=False, subDir=None):
+        # Get Current dir
+        dir = self.getFullPath(dir, subDir)
         dir_list = []
         file_list = []
         for f in sorted(os.listdir(str(dir)), key=str.lower):
@@ -810,6 +835,13 @@ class NetPyNEGeppetto:
     def getPlot(self, plotName, LFPflavour, theme='gui'):
         try:
             with redirect_stdout(sys.__stdout__):
+                availablePlots = self.checkAvailablePlots()
+                checkCondition = availablePlots.get(plotName.replace('iplot', 'plot'), False)
+
+                if checkCondition is False:
+                    logging.info("Plot " + plotName + " not available")
+                    return -1
+
                 args = self.getPlotSettings(plotName)
                 if LFPflavour:
                     args['plots'] = [LFPflavour]
@@ -899,10 +931,10 @@ class NetPyNEGeppetto:
             cell_types.add(p)
         return sorted(cell_types)
 
-    def getAvailableRxDSections(self, selectedRegion):
+    def getAvailableRxDSections(self, selectedRegion = None):
         sections = set([])
         sections.add('all')
-        if selectedRegion in self.netParams.rxdParams.regions and self.netParams.rxdParams.regions[selectedRegion].get('cells'):
+        if selectedRegion and selectedRegion in self.netParams.rxdParams.regions and self.netParams.rxdParams.regions[selectedRegion].get('cells'):
             if 'all' in self.netParams.rxdParams.regions[selectedRegion]['cells']:
                 for cellRule in self.netParams.cellParams:
                     for cellSect in self.netParams.cellParams[cellRule]['secs']:

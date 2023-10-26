@@ -112,7 +112,7 @@ const RxdConstants = (props) => {
               disabled={1}
               label="parameter"
               variant="filled"
-              defaultValue={`${baseTag}['${constant}']`}
+              defaultValue={`${constant}`}
             />
           </div>
           <div className="scrollbar scrollchild spacechild">

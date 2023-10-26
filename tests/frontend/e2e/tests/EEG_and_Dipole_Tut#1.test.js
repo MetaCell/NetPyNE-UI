@@ -9,7 +9,7 @@ import * as selectors from './selectors'
 
 
 //PAGE INFO:
-const baseURL = process.env.url || 'https://stage.netpyne.metacell.us/'
+const baseURL = process.env.url || 'https://test.netpyne.metacell.us/'
 const PAGE_WAIT = 3000;
 const TIMEOUT = 60000;
 
@@ -26,9 +26,11 @@ const SNAPSHOT_OPTIONS = {
 
 
 
+let r = (Math.random() + 1).toString(36).substring(2);
+
 //USERS:
-const USERNAME = 'EEGDipole_TestUser_'
-const PASSWORD = 'password'
+const USERNAME = `TestUser${r}`
+const PASSWORD = 'testpassword'
 
 
 //TESTS:
@@ -65,15 +67,16 @@ describe('EEG and Dipole Plot Test using Tutorial#1', () => {
         await page.on("dialog", dialog =>
             dialog.accept());
 
-        await page.waitForSelector('#File', { timeout: PAGE_WAIT * 20 })
-        await page.waitForTimeout(PAGE_WAIT * 6)
-        await page.click('#File')
-        await page.waitForSelector('#New', { timeout: PAGE_WAIT * 10 })
+        await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT * 6, visible: true })
+        await page.waitForSelector(selectors.FILE_TAB_SELECTOR, { timeout: PAGE_WAIT * 3 })
         await page.waitForTimeout(PAGE_WAIT)
-        await page.click('#New')
+        await page.click(selectors.FILE_TAB_SELECTOR)
+        await page.waitForSelector(selectors.NEW_FILE_SELECTOR, { timeout: PAGE_WAIT * 3 })
         await page.waitForTimeout(PAGE_WAIT)
-        await page.waitForSelector('#appBarPerformActionButton')
-        await page.click('#appBarPerformActionButton')
+        await page.click(selectors.NEW_FILE_SELECTOR)
+        await page.waitForTimeout(PAGE_WAIT)
+        await page.waitForSelector(selectors.CONFIRM_NEW_PAGE_SELECTOR)
+        await page.click(selectors.CONFIRM_NEW_PAGE_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT * 2)
 
         await page.waitForFunction(() => {
@@ -81,8 +84,9 @@ describe('EEG and Dipole Plot Test using Tutorial#1', () => {
             return el == null || el.clientHeight === 0;
         }, { timeout: TIMEOUT });
 
-
         await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT * 10 })
+
+        console.log('Page opened successfully')
 
     })
 
@@ -116,7 +120,7 @@ describe('EEG and Dipole Plot Test using Tutorial#1', () => {
         await page.waitForSelector(selectors.TRACES_TO_RECORD_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT)
         await page.waitForSelector(selectors.DIPOLE_LFPYKIT_SELECTOR)
-        await expect(page).toClick(selectors.DIPOLE_LFPYKIT_SELECTOR)
+        // await expect(page).toClick(selectors.DIPOLE_LFPYKIT_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT)
         await page.click(selectors.DIPOLE_LFPYKIT_SELECTOR)
         await page.waitForTimeout(PAGE_WAIT)

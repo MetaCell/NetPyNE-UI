@@ -10,24 +10,24 @@ import * as selectors from './selectors'
 
 
 //PAGE INFO:
-const baseURL = process.env.url || 'https://stage.netpyne.metacell.us/'
+const baseURL = process.env.url || 'https://test.netpyne.metacell.us/'
 const PAGE_WAIT = 3000;
 const TIMEOUT = 60000;
 
 //SNAPSHOT:
 const SNAPSHOT_OPTIONS = {
-  customSnapshotsDir:  `./tests/snapshots/${scriptName}`,
+  customSnapshotsDir: `./tests/snapshots/${scriptName}`,
   comparisonMethod: 'ssim',
   failureThresholdType: 'percent',
   failureThreshold: 0.5
 };
 
 
+let r = (Math.random() + 1).toString(36).substring(2);
 
 //USERS:
-const USERNAME = 'test_user_tut_1'
-const PASSWORD =  'testpassword'
-
+const USERNAME = `TestUser${r}`
+const PASSWORD = 'testpassword'
 
 //TESTS:
 
@@ -42,7 +42,7 @@ describe('Tutorial #1 for Smoke Testing', () => {
     await page.waitForSelector(selectors.LOGIN_PAGE_SELECTOR);
     await page.waitForSelector(selectors.USERNAME_SELECTOR)
     await expect(page)
-      .toFill(selectors.USERNAME_SELECTOR,USERNAME, { timeout: TIMEOUT });
+      .toFill(selectors.USERNAME_SELECTOR, USERNAME, { timeout: TIMEOUT });
 
     await page.waitForSelector(selectors.PASSWORD_SELECTOR)
     await expect(page)
@@ -61,12 +61,13 @@ describe('Tutorial #1 for Smoke Testing', () => {
     console.log('Opening a new NetPyNE page')
 
     await page.on("dialog", dialog =>
-        dialog.accept());
+      dialog.accept());
 
-    await page.waitForSelector(selectors.FILE_TAB_SELECTOR, { timeout: PAGE_WAIT * 20 })
-    await page.waitForTimeout(PAGE_WAIT * 7)
+    await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT * 6, visible: true })
+    await page.waitForSelector(selectors.FILE_TAB_SELECTOR, { timeout: PAGE_WAIT * 3 })
+    await page.waitForTimeout(PAGE_WAIT)
     await page.click(selectors.FILE_TAB_SELECTOR)
-    await page.waitForSelector(selectors.NEW_FILE_SELECTOR, { timeout: PAGE_WAIT * 10 })
+    await page.waitForSelector(selectors.NEW_FILE_SELECTOR, { timeout: PAGE_WAIT * 3 })
     await page.waitForTimeout(PAGE_WAIT)
     await page.click(selectors.NEW_FILE_SELECTOR)
     await page.waitForTimeout(PAGE_WAIT)
@@ -75,21 +76,21 @@ describe('Tutorial #1 for Smoke Testing', () => {
     await page.waitForTimeout(PAGE_WAIT * 2)
 
     await page.waitForFunction(() => {
-        let el = document.querySelector('#loading-spinner');
-        return el == null || el.clientHeight === 0;
+      let el = document.querySelector('#loading-spinner');
+      return el == null || el.clientHeight === 0;
     }, { timeout: TIMEOUT });
-
-    
 
     await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT * 10 })
 
-})
+    console.log('Page opened successfully')
+
+  })
 
 
   it('Create and Simulate network', async () => {
 
     await page.waitForTimeout(PAGE_WAIT * 2)
-    await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT})
+    await page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT })
 
     console.log('Tutorial #1')
 
@@ -105,9 +106,9 @@ describe('Tutorial #1 for Smoke Testing', () => {
     await click(page, selectors.MODEL_BUTTON_SELECTOR, { timeout: TIMEOUT });
     await page.waitForSelector(selectors.CREATE_NETWORK_SELECTOR)
     await click(page, selectors.CREATE_NETWORK_SELECTOR, { timeout: TIMEOUT });
-    
+
     console.log('Create network')
-   
+
     await page.waitForTimeout(PAGE_WAIT)
 
     console.log('... taking snapshot ...');
@@ -118,7 +119,7 @@ describe('Tutorial #1 for Smoke Testing', () => {
         customSnapshotIdentifier: 'Tutorial#1 Network'
       });
 
-    await click(page,selectors.MODEL_BUTTON_SELECTOR, { timeout: TIMEOUT });
+    await click(page, selectors.MODEL_BUTTON_SELECTOR, { timeout: TIMEOUT });
     await click(page, selectors.SIMULATE_NETWORK_SELECTOR, { timeout: TIMEOUT });
     console.log('Simulate network')
 
@@ -130,10 +131,10 @@ describe('Tutorial #1 for Smoke Testing', () => {
 
 
   it('Connections Plot', async () => {
-    
+
     await page.waitForTimeout(PAGE_WAIT * 2);
     await click(page, selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
-    await page.waitForSelector(selectors.CANVAS_SELECTOR,{ timeout: TIMEOUT })
+    await page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
     console.log('View Connections Plot ...')
     await page.waitForTimeout(PAGE_WAIT);
 
@@ -147,9 +148,9 @@ describe('Tutorial #1 for Smoke Testing', () => {
   });
 
   it('2D Net Plot', async () => {
-    
+
     await click(page, selectors.TWO_D_NET_PLOT_SELECTOR, { timeout: TIMEOUT })
-    await page.waitForSelector(selectors.CANVAS_SELECTOR,{ timeout: TIMEOUT })
+    await page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
     console.log('View 2D Net Plot ...')
     await page.waitForTimeout(PAGE_WAIT * 2);
 
@@ -162,9 +163,9 @@ describe('Tutorial #1 for Smoke Testing', () => {
   });
 
   it('Cell Traces Plot', async () => {
-    
+
     await click(page, selectors.CELL_TRACES_PLOT_SELECTOR, { timeout: TIMEOUT })
-    await page.waitForSelector(selectors.CANVAS_SELECTOR,{ timeout: TIMEOUT })
+    await page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
     console.log('View Cell Traces Plot ...')
     await page.waitForTimeout(PAGE_WAIT);
 
@@ -177,9 +178,9 @@ describe('Tutorial #1 for Smoke Testing', () => {
   });
 
   it('Raster Plot', async () => {
-    
+
     await click(page, selectors.RASTER_PLOT_SELECTOR, { timeout: TIMEOUT })
-    await page.waitForSelector(selectors.CANVAS_SELECTOR,{ timeout: TIMEOUT })
+    await page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
     console.log('View Raster Plot ...')
     await page.waitForTimeout(PAGE_WAIT);
 
@@ -192,9 +193,9 @@ describe('Tutorial #1 for Smoke Testing', () => {
   });
 
   it('Spike Hist Plot', async () => {
-    
+
     await click(page, selectors.SPIKE_HIST_PLOT_SELECTOR, { timeout: TIMEOUT })
-    await page.waitForSelector(selectors.CANVAS_SELECTOR,{ timeout: TIMEOUT })
+    await page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
     console.log('View Spike Hist Plot ...')
     await page.waitForTimeout(PAGE_WAIT);
 
@@ -207,9 +208,9 @@ describe('Tutorial #1 for Smoke Testing', () => {
   });
 
   it('Granger Plot', async () => {
-    
+
     await click(page, selectors.GRANGER_PLOT_SELECTOR, { timeout: TIMEOUT })
-    await page.waitForSelector(selectors.CANVAS_SELECTOR,{ timeout: TIMEOUT })
+    await page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
     console.log('View Granger Plot ...')
     await page.waitForTimeout(PAGE_WAIT);
 
@@ -222,19 +223,19 @@ describe('Tutorial #1 for Smoke Testing', () => {
   });
 
   it('Rate Spectogram Plot', async () => {
-    
+
     await click(page, selectors.RATE_SPECTROGRAM_PLOT_SELECTOR, { timeout: TIMEOUT })
-    await page.waitForSelector(selectors.CANVAS_SELECTOR,{ timeout: TIMEOUT })
+    await page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
 
     await page.waitForTimeout(PAGE_WAIT);
 
     await click(page, selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
-    await page.waitForSelector(selectors.CANVAS_SELECTOR,{ timeout: TIMEOUT })
+    await page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
 
     await page.waitForTimeout(PAGE_WAIT);
 
     await click(page, selectors.RATE_SPECTROGRAM_PLOT_SELECTOR, { timeout: TIMEOUT })
-    await page.waitForSelector(selectors.CANVAS_SELECTOR,{ timeout: TIMEOUT })
+    await page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
 
     console.log('View Rate Spectogram Plot ...')
     await page.waitForTimeout(PAGE_WAIT);
