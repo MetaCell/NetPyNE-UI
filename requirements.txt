@@ -84,7 +84,7 @@ PyYAML==5.3.1
 pyzmq==19.0.1
 qtconsole==4.7.5
 QtPy==1.9.0
-RestrictedPython==5.0
+RestrictedPython==6.1
 ruamel-yaml==0.15.80
 ruamel.yaml.clib==0.2.0
 scipy==1.4.1
