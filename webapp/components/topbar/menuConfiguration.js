@@ -14,6 +14,7 @@ import {
   setTheme,
 } from '../../redux/actions/general';
 import {
+  MODEL_STATE,
   TOPBAR_CONSTANTS, THEMES, TUTORIALS_LIST,
 } from '../../constants';
 import { openLaunchDialog } from '../../redux/actions/experiments';
@@ -75,7 +76,7 @@ export const getTutorials = () => {
   }
   return tuts.sort()
     .map((tutFile) => {
-      const tutName = tutFile.replace('.py', '')
+      const tutName = tutFile.split("/").pop().replace('.py', '')
         .replace('gui', '')
         .replace('_', '');
       const tutLabel = TUTORIALS_LIST[tutName] !== undefined ? TUTORIALS_LIST[tutName] : tutName;
@@ -162,7 +163,7 @@ export default {
           icon: '',
           action: {
             handlerAction: 'redux',
-            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.LOAD],
+            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.LOAD_INDEX_WORKSPACE],
           },
         },
         {
@@ -170,8 +171,30 @@ export default {
           icon: '',
           action: {
             handlerAction: 'redux',
-            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.SAVE],
+            parameters: [openTopbarDialog, TOPBAR_CONSTANTS.SAVE_INDEX_WORKSPACE],
           },
+        },
+        {
+          label: 'Legacy',
+          icon: '',
+          list: [
+            {
+              label: 'Open...',
+              icon: '',
+              action: {
+                handlerAction: 'redux',
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.LOAD],
+              },
+            },
+            {
+              label: 'Save...',
+              icon: '',
+              action: {
+                handlerAction: 'redux',
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.SAVE],
+              },
+            },
+          ],
         },
         {
           label: 'Import',
@@ -183,6 +206,22 @@ export default {
               action: {
                 handlerAction: 'redux',
                 parameters: [openTopbarDialog, TOPBAR_CONSTANTS.IMPORT_HLS],
+              },
+            },
+            {
+              label: 'From NeuroML2 (beta)...',
+              icon: '',
+              action: {
+                handlerAction: 'redux',
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.IMPORT_NEUROML],
+              },
+            },
+            {
+              label: 'From LEMS Simulation  (beta)...',
+              icon: '',
+              action: {
+                handlerAction: 'redux',
+                parameters: [openTopbarDialog, TOPBAR_CONSTANTS.IMPORT_LEMS],
               },
             },
           ],
@@ -247,7 +286,7 @@ export default {
       },
     },
     {
-      label: 'Tutorials',
+      label: 'Examples',
       icon: '',
       position: 'bottom-start',
       style: topLevelMenuItemStyle,
@@ -269,6 +308,36 @@ export default {
             handlerAction: TOPBAR_CONSTANTS.NEW_PAGE,
             parameters: ['http://netpyne.org/'],
           },
+        },
+        {
+          label: 'Tutorials',
+          icon: '',
+          list: [
+            {
+              label: 'Open tutorial 1',
+              icon: '',
+              action: {
+                handlerAction: 'triggerTutorials',
+                parameters: [0],
+              },
+            },
+            {
+              label: 'Open tutorial 2',
+              icon: '',
+              action: {
+                handlerAction: 'triggerTutorials',
+                parameters: [1],
+              },
+            },
+            {
+              label: 'Open tutorial 3',
+              icon: '',
+              action: {
+                handlerAction: 'triggerTutorials',
+                parameters: [2],
+              },
+            },
+          ],
         },
       ],
     },
@@ -328,7 +397,8 @@ export const getModelMenu = (props) => (
           ? [openLaunchDialog()]
           // TODO: (#263) this logic causes issues by potentially simulating
           //  old instance with modified netParams and simConfig
-          : [props.modelState ? createAndSimulateNetwork : simulateNetwork],
+          // : [props.modelState ? createAndSimulateNetwork : simulateNetwork],
+          : [props.modelState === MODEL_STATE.NOT_INSTANTIATED ? createAndSimulateNetwork : simulateNetwork()],
       },
     },
     {

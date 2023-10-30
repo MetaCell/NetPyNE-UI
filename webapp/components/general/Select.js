@@ -4,6 +4,12 @@ import FormControl from '@material-ui/core/FormControl';
 import MuiSelect from '@material-ui/core/Select';
 
 class Select extends React.Component {
+  
+  componentDidUpdate (prevProps, prevState) {
+    if (this.props.commands !== prevProps.commands)
+      this.forceUpdate();
+  }
+  
   render () {
     let value = this.props.value || '';
     if (this.props.multiple && value.constructor.name != 'Array') {
@@ -21,7 +27,7 @@ class Select extends React.Component {
           value={value}
           onChange={this.props.onChange}
           multiple={!!this.props.multiple}
-          pythonParams={this.props.pythonParams}
+          pythonparams={this.props.pythonparams}
         >
           {this.props.children}
         </MuiSelect>

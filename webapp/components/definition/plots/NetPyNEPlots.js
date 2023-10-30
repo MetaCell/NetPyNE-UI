@@ -30,6 +30,11 @@ export default class NetPyNEPlots extends React.Component {
     this.handleNewPlot = this.handleNewPlot.bind(this);
   }
 
+  componentDidUpdate (prevProps, prevState) {
+    if (this.props.commands !== prevProps.commands)
+      this.forceUpdate();
+  }
+
   selectPlot (plot) {
     this.setState({ selectedPlot: plot });
   }

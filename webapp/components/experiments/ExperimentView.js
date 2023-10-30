@@ -564,7 +564,7 @@ const ExperimentView = (props) => {
                   experimentFinished={experimentFinished}
                 />
                 <TableBody>
-                  {stableSort(filteredRows, getComparator(order, 'indices'))
+                  {stableSort(filteredRows, getComparator(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => (
                       <TableRow tabIndex={-1} key={row.name}>
