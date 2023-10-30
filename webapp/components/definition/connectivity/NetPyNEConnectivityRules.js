@@ -103,6 +103,8 @@ export default class NetPyNEConnectivityRules extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
+    if (this.props.commands !== prevProps.commands)
+      this.forceUpdate();
     // we need to check if any of the three entities have been renamed and if that's the case change the state for the selection variable
     const newConnectivityRuleName = this.hasSelectedConnectivityRuleBeenRenamed(
       prevState,

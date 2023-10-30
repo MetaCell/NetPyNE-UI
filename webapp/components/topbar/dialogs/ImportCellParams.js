@@ -114,6 +114,7 @@ class ImportCellParams extends React.Component {
       >
         <Box mb={1}>
           <TextField
+            id="importCellParamsRuleLabel"
             variant="filled"
             value={label}
             fullWidth
@@ -124,6 +125,7 @@ class ImportCellParams extends React.Component {
 
         <NetPyNEField id="netParams.importCellParams.cellName" className={classes.textField}>
           <TextField
+            id="importCellParamsCellName"
             variant="filled"
             fullWidth
             value={cellName}
@@ -133,6 +135,7 @@ class ImportCellParams extends React.Component {
 
         <NetPyNEField id="netParams.importCellParams.fileName">
           <TextField
+            id="importCellParamsFileName"
             variant="filled"
             fullWidth
             value={fileName}
@@ -155,6 +158,7 @@ class ImportCellParams extends React.Component {
 
         <NetPyNEField id="netParams.importCellParams.modFolder">
           <TextField
+            id="importCellParamsModFolder"
             fullWidth
             variant="filled"
             value={modFolder}
@@ -198,6 +202,7 @@ class ImportCellParams extends React.Component {
           <Grid item>
             <NetPyNEField id="netParams.importCellParams.compileMod">
               <Checkbox
+                id="importCellParamsCompileMod"
                 fullWidth
                 noBackground
                 checked={compileMod}

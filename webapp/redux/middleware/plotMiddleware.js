@@ -35,9 +35,10 @@ const plotFigure = async (plotId, plotMethod, plotType = false, uri = null, them
       new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve(null);
-        }, 30000);
+        }, 2 * 60 * 1000); // Timeout set to 2 minutes, previously, 30000 (30s)
       })]);
 
+    // let response = await Utils.evalPythonMessage(NETPYNE_COMMANDS.plotFigure, [plotMethod, plotType, theme], false)
     console.log('Plot response received for', plotId);
     if (!response && !uri) { //png plots return null response but they provide a uri so they can be grabbed from the workspace
       return null;

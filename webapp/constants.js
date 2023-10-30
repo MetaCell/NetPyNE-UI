@@ -1,34 +1,35 @@
-import { WidgetStatus } from '@metacell/geppetto-meta-client/common/layout/model';
+import { WidgetStatus } from '@metacell/geppetto-meta-client/common/layout/model'
 
-export const MINIMIZED_PANEL = 'border_bottom';
-export { WidgetStatus };
-export const TOP_PANEL = 'hlsPanel';
-export const TOOLS_LIST = 'tools';
+export const MINIMIZED_PANEL = 'border_bottom'
+export { WidgetStatus }
+export const TOP_PANEL = 'hlsPanel'
+export const TOOLS_LIST = 'tools'
 
-export const DEFAULT_CONFIRMATION_DIALOG_MESSAGE = 'A NetPyNE model has already been instantiated or simulated.'
-+ ' Continuing with this action will use the old value of netParams and simConfig for the new model. Do you want to continue?';
+export const DEFAULT_CONFIRMATION_DIALOG_MESSAGE = 'A NetPyNE model has already been instantiated or simulated.' +
+' Continuing with this action will use the old value of netParams and simConfig for the new model. Do you want to continue?'
 
 export const THEMES = {
   DARK: 'gui',
   BLACK: 'guiBlack',
-  LIGHT: 'guiWhite',
-};
+  LIGHT: 'guiWhite'
+}
 
 export const MODEL_STATE = {
   NOT_INSTANTIATED: 'NOT_INSTANTIATED',
   INSTANTIATED: 'INSTANTIATED',
-  SIMULATED: 'SIMULATED',
-};
+  SIMULATED: 'SIMULATED'
+}
 
 export const DEFAULT_COLOR = {
-  g: 0.50, b: 0.60, r: 1, a: 1,
-};
+  g: 0.50, b: 0.60, r: 1, a: 1
+}
 
 export const NETPYNE_COMMANDS = {
   instantiateModel: 'netpyne_geppetto.instantiateNetPyNEModelInGeppetto',
   simulateModel: 'netpyne_geppetto.simulateNetPyNEModelInGeppetto',
   importModel: 'netpyne_geppetto.importModel',
   exportModel: 'netpyne_geppetto.exportModel',
+  saveModel: 'netpyne_geppetto.saveToIndexFile',
   exportHLS: 'netpyne_geppetto.exportHLS',
   plotFigure: 'netpyne_geppetto.getPlot',
   deleteParam: 'netpyne_geppetto.deleteParam',
@@ -36,7 +37,9 @@ export const NETPYNE_COMMANDS = {
   getExperiments: 'netpyne_geppetto.experiments.get_experiments',
   cloneExperiment: 'netpyne_geppetto.cloneExperiment',
   viewExperimentResults: 'netpyne_geppetto.viewExperimentResult',
-};
+  importNeuroML: 'netpyne_geppetto.importNeuroML',
+  importLEMS: 'netpyne_geppetto.importLEMS'
+}
 
 export const REAL_TYPE = {
   INT: 'int',
@@ -45,8 +48,8 @@ export const REAL_TYPE = {
   STR: 'str',
   FUNC: 'func',
   DICT: 'dict',
-  DICT_DICT: 'dict(dict)',
-};
+  DICT_DICT: 'dict(dict)'
+}
 
 export const PYTHON_CONSOLE_WIDGET = {
   id: 'python',
@@ -62,14 +65,17 @@ export const PYTHON_CONSOLE_WIDGET = {
   enableRename: false,
   hideOnClose: true,
   pos: 1000,
-  specification: TOOLS_LIST,
-};
+  specification: TOOLS_LIST
+}
 /*
  * ------------------------------------------------------------------------------ //
  * ------------------------------------------------------------------------------ //
  */
 export const TOPBAR_CONSTANTS = {
   LOAD: 'LOAD',
+  LOAD_INDEX: 'LOAD_INDEX',
+  LOAD_INDEX_WORKSPACE: 'LOAD_INDEX_WORKSPACE',
+  SAVE_INDEX_WORKSPACE: 'SAVE_INDEX_WORKSPACE',
   SAVE: 'SAVE',
   IMPORT_HLS: 'IMPORT_HLS',
   EXPORT_HLS: 'EXPORT_HLS',
@@ -84,7 +90,9 @@ export const TOPBAR_CONSTANTS = {
   BACK_TO_EDITION: 'BACK TO EDIT',
   NEW_PAGE: 'NEW_PAGE',
   NETWORK_MODEL: 'NETWORK_MODEL',
-};
+  IMPORT_NEUROML: 'IMPORT_NEUROML',
+  IMPORT_LEMS: 'IMPORT_LEMS'
+}
 
 /*
  * ------------------------------------------------------------------------------ //
@@ -108,9 +116,9 @@ export const NETWORK_PLOT_WIDGETS = {
       method: {
         plotKey: 'plotConn',
         plotMethod: 'iplotConn',
-        plotType: false,
-      },
-    },
+        plotType: false
+      }
+    }
   },
   d2NetPlot: {
     id: 'd2NetPlot',
@@ -129,11 +137,11 @@ export const NETWORK_PLOT_WIDGETS = {
       method: {
         plotKey: 'plot2Dnet',
         plotMethod: 'iplot2Dnet',
-        plotType: false,
-      },
-    },
-  },
-};
+        plotType: false
+      }
+    }
+  }
+}
 
 export const PLOT_WIDGETS = {
   ...NETWORK_PLOT_WIDGETS,
@@ -155,9 +163,9 @@ export const PLOT_WIDGETS = {
       method: {
         plotKey: 'plotTraces',
         plotMethod: 'iplotTraces',
-        plotType: false,
-      },
-    },
+        plotType: false
+      }
+    }
   },
   rasterPlot: {
     id: 'rasterPlot',
@@ -177,9 +185,9 @@ export const PLOT_WIDGETS = {
       method: {
         plotKey: 'plotRaster',
         plotMethod: 'iplotRaster',
-        plotType: false,
-      },
-    },
+        plotType: false
+      }
+    }
   },
   spikePlot: {
     id: 'spikePlot',
@@ -199,10 +207,10 @@ export const PLOT_WIDGETS = {
       method: {
         plotKey: 'plotSpikeHist',
         plotMethod: 'iplotSpikeHist',
-        plotType: false,
+        plotType: false
       },
-      pos: 5,
-    },
+      pos: 5
+    }
   },
   spikeStatsPlot: {
     id: 'spikeStatsPlot',
@@ -222,9 +230,9 @@ export const PLOT_WIDGETS = {
       method: {
         key: 'plotSpikeStats',
         plotMethod: 'iplotSpikeStats',
-        plotType: false,
-      },
-    },
+        plotType: false
+      }
+    }
   },
   ratePSDPlot: {
     id: 'ratePSDPlot',
@@ -240,7 +248,7 @@ export const PLOT_WIDGETS = {
     method: {
       key: 'plotRatePSD',
       plotMethod: 'iplotRatePSD',
-      plotType: false,
+      plotType: false
     },
     pos: 7,
     config: {
@@ -249,9 +257,9 @@ export const PLOT_WIDGETS = {
       method: {
         key: 'plotRatePSD',
         plotMethod: 'iplotRatePSD',
-        plotType: false,
-      },
-    },
+        plotType: false
+      }
+    }
   },
   LFPTimeSeriesPlot: {
     id: 'LFPTimeSeriesPlot',
@@ -267,7 +275,7 @@ export const PLOT_WIDGETS = {
     method: {
       plotKey: 'plotLFP',
       plotMethod: 'iplotLFP',
-      plotType: 'timeSeries',
+      plotType: 'timeSeries'
     },
     pos: 8,
     config: {
@@ -276,9 +284,9 @@ export const PLOT_WIDGETS = {
       method: {
         plotKey: 'plotLFP',
         plotMethod: 'iplotLFP',
-        plotType: 'timeSeries',
-      },
-    },
+        plotType: 'timeSeries'
+      }
+    }
   },
   LFPPSDPlot: {
     id: 'LFPPSDPlot',
@@ -294,7 +302,7 @@ export const PLOT_WIDGETS = {
     method: {
       plotKey: 'plotLFP',
       plotMethod: 'iplotLFP',
-      plotType: 'PSD',
+      plotType: 'PSD'
     },
     pos: 9,
     config: {
@@ -303,9 +311,9 @@ export const PLOT_WIDGETS = {
       method: {
         plotKey: 'plotLFP',
         plotMethod: 'iplotLFP',
-        plotType: 'PSD',
-      },
-    },
+        plotType: 'PSD'
+      }
+    }
   },
   LFPSpectrogramPlot: {
     id: 'LFPSpectrogramPlot',
@@ -321,7 +329,7 @@ export const PLOT_WIDGETS = {
     method: {
       plotKey: 'plotLFP',
       plotMethod: 'iplotLFP',
-      plotType: 'spectrogram',
+      plotType: 'spectrogram'
     },
     pos: 10,
     config: {
@@ -330,9 +338,9 @@ export const PLOT_WIDGETS = {
       method: {
         plotKey: 'plotLFP',
         plotMethod: 'iplotLFP',
-        plotType: 'spectrogram',
-      },
-    },
+        plotType: 'spectrogram'
+      }
+    }
   },
   grangerPlot: {
     id: 'grangerPlot',
@@ -348,7 +356,7 @@ export const PLOT_WIDGETS = {
     method: {
       plotKey: 'granger',
       plotMethod: 'granger',
-      plotType: false,
+      plotType: false
     },
     pos: 11,
     config: {
@@ -357,9 +365,9 @@ export const PLOT_WIDGETS = {
       method: {
         plotKey: 'granger',
         plotMethod: 'granger',
-        plotType: false,
-      },
-    },
+        plotType: false
+      }
+    }
   },
   rxdConcentrationPlot: {
     id: 'rxdConcentrationPlot',
@@ -375,7 +383,7 @@ export const PLOT_WIDGETS = {
     method: {
       plotKey: 'plotRxDConcentration',
       plotMethod: 'iplotRxDConcentration',
-      plotType: false,
+      plotType: false
     },
     pos: 12,
     config: {
@@ -384,9 +392,9 @@ export const PLOT_WIDGETS = {
       method: {
         plotKey: 'plotRxDConcentration',
         plotMethod: 'iplotRxDConcentration',
-        plotType: false,
-      },
-    },
+        plotType: false
+      }
+    }
   },
   plotDipole: {
     id: 'plotDipole',
@@ -402,7 +410,7 @@ export const PLOT_WIDGETS = {
     method: {
       plotKey: 'plotDipole',
       plotMethod: 'plotDipole',
-      plotType: false,
+      plotType: false
     },
     pos: 13,
     config: {
@@ -412,9 +420,9 @@ export const PLOT_WIDGETS = {
       method: {
         plotKey: 'plotDipole',
         plotMethod: 'plotDipole',
-        plotType: false,
-      },
-    },
+        plotType: false
+      }
+    }
   },
   plotEEG: {
     id: 'plotEEG',
@@ -430,7 +438,7 @@ export const PLOT_WIDGETS = {
     method: {
       plotKey: 'plotEEG',
       plotMethod: 'plotEEG',
-      plotType: false,
+      plotType: false
     },
     pos: 14,
     config: {
@@ -440,9 +448,9 @@ export const PLOT_WIDGETS = {
       method: {
         plotKey: 'plotEEG',
         plotMethod: 'plotEEG',
-        plotType: false,
-      },
-    },
+        plotType: false
+      }
+    }
   },
   plotRateSpectrogram: {
     id: 'plotRateSpectrogram',
@@ -458,7 +466,7 @@ export const PLOT_WIDGETS = {
     method: {
       plotKey: 'plotRateSpectrogram',
       plotMethod: 'plotRateSpectrogram',
-      plotType: false,
+      plotType: false
     },
     pos: 15,
     config: {
@@ -467,11 +475,11 @@ export const PLOT_WIDGETS = {
       method: {
         plotKey: 'plotRateSpectrogram',
         plotMethod: 'plotRateSpectrogram',
-        plotType: false,
-      },
-    },
-  },
-};
+        plotType: false
+      }
+    }
+  }
+}
 
 export const DEFAULT_NETWORK_WIDGETS = {
   D3Canvas: {
@@ -482,7 +490,7 @@ export const DEFAULT_NETWORK_WIDGETS = {
     panelName: 'morphoPanel',
     enableRename: false,
     hideOnClose: true,
-    pos: 0,
+    pos: 0
   },
   experimentManager: {
     id: 'experimentManager',
@@ -494,7 +502,7 @@ export const DEFAULT_NETWORK_WIDGETS = {
     defaultPanel: TOP_PANEL,
     enableRename: false,
     pos: 14,
-    specification: TOOLS_LIST,
+    specification: TOOLS_LIST
   },
   experimentControlPanel: {
     id: 'experimentControlPanel',
@@ -506,11 +514,11 @@ export const DEFAULT_NETWORK_WIDGETS = {
     defaultPanel: 'plotPanel',
     enableRename: false,
     pos: 13,
-    specification: TOOLS_LIST,
+    specification: TOOLS_LIST
   },
   ...PLOT_WIDGETS,
-  [PYTHON_CONSOLE_WIDGET.id]: PYTHON_CONSOLE_WIDGET,
-};
+  [PYTHON_CONSOLE_WIDGET.id]: PYTHON_CONSOLE_WIDGET
+}
 
 export const EDIT_WIDGETS = {
   [PYTHON_CONSOLE_WIDGET.id]: PYTHON_CONSOLE_WIDGET,
@@ -525,8 +533,8 @@ export const EDIT_WIDGETS = {
     hideOnClose: true,
     pos: 0,
     props: {
-      model: 'netParams.cellParams',
-    },
+      model: 'netParams.cellParams'
+    }
   },
   popParams: {
     id: 'popParams',
@@ -539,8 +547,8 @@ export const EDIT_WIDGETS = {
     hideOnClose: true,
     pos: 1,
     props: {
-      model: 'netParams.popParams',
-    },
+      model: 'netParams.popParams'
+    }
   },
   synMechParams: {
     id: 'synMechParams',
@@ -553,8 +561,8 @@ export const EDIT_WIDGETS = {
     hideOnClose: true,
     pos: 2,
     props: {
-      model: 'netParams.synMechParams',
-    },
+      model: 'netParams.synMechParams'
+    }
   },
   connParams: {
     id: 'connParams',
@@ -567,8 +575,22 @@ export const EDIT_WIDGETS = {
     enableRename: false,
     pos: 3,
     props: {
-      model: 'netParams.connParams',
-    },
+      model: 'netParams.connParams'
+    }
+  },
+  subConnParams: {
+    id: 'subConnParams',
+    name: 'Sub-cellular Connectivity Rules',
+    model: 'netParams.subConnParams',
+    status: WidgetStatus.HIDDEN,
+    component: 'subConnParams',
+    panelName: TOP_PANEL,
+    hideOnClose: true,
+    enableRename: false,
+    pos: 4,
+    props: {
+      model: 'netParams.subConnParams'
+    }
   },
   stimSourceParams: {
     id: 'stimSourceParams',
@@ -579,10 +601,10 @@ export const EDIT_WIDGETS = {
     hideOnClose: true,
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 4,
+    pos: 5,
     props: {
-      model: 'netParams.stimSourceParams',
-    },
+      model: 'netParams.stimSourceParams'
+    }
   },
   stimTargetParams: {
     id: 'stimTargetParams',
@@ -593,10 +615,10 @@ export const EDIT_WIDGETS = {
     hideOnClose: true,
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 5,
+    pos: 6,
     props: {
-      model: 'netParams.stimTargetParams',
-    },
+      model: 'netParams.stimTargetParams'
+    }
   },
   rxd: {
     id: 'rxd',
@@ -607,10 +629,10 @@ export const EDIT_WIDGETS = {
     component: 'rxd',
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 6,
+    pos: 7,
     props: {
-      model: 'netParams.rxdParams',
-    },
+      model: 'netParams.rxdParams'
+    }
   },
   analysis: {
     id: 'analysis',
@@ -621,10 +643,10 @@ export const EDIT_WIDGETS = {
     component: 'analysis',
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 7,
+    pos: 8,
     props: {
-      model: 'simConfig.analysis',
-    },
+      model: 'simConfig.analysis'
+    }
   },
 
   simConfig: {
@@ -635,7 +657,7 @@ export const EDIT_WIDGETS = {
     hideOnClose: true,
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 8,
+    pos: 9
   },
   experimentManager: {
     id: 'experimentManager',
@@ -645,10 +667,10 @@ export const EDIT_WIDGETS = {
     component: 'experimentManager',
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 9,
-    specification: TOOLS_LIST,
-  },
-};
+    pos: 10,
+    specification: TOOLS_LIST
+  }
+}
 
 export const EXPERIMENT_STATE = {
   DESIGN: 'DESIGN',
@@ -657,14 +679,14 @@ export const EXPERIMENT_STATE = {
   SIMULATED: 'SIMULATED',
   INSTANTIATING: 'INSTANTIATING',
   INSTANTIATED: 'INSTANTIATED',
-  ERROR: 'ERROR',
-};
+  ERROR: 'ERROR'
+}
 
 export const SIDEBAR_HEADINGS = {
   MODEL: 'Model Specification',
   TOOLS: 'Tools',
-  PLOTS: 'Plots',
-};
+  PLOTS: 'Plots'
+}
 
 export const EXPERIMENT_TEXTS = {
   WARNING: 'Warning: You need at least two parameters for the grouping to work.',
@@ -678,14 +700,14 @@ export const EXPERIMENT_TEXTS = {
   CLONE_EXPERIMENT: 'Clone Experiment',
   CLONE_EXPERIMENT_MESSAGE: 'Replaces the Experiment in design with the stored Experiment.',
   VIEW_EXPERIMENTS_RESULTS: 'View simulation results',
-  VIEW_EXPERIMENTS_RESULTS_MESSAGE: 'This will replace the currently loaded results in Explore, '
-    + 'are you sure you want to proceed?',
+  VIEW_EXPERIMENTS_RESULTS_MESSAGE: 'This will replace the currently loaded results in Explore, ' +
+    'are you sure you want to proceed?',
   LOAD_TRIAL_MODEL_SPEC: 'Load Model Specification',
-  LOAD_TRIAL_MODEL_SPEC_MESSAGE: 'This will replace the currently loaded model specification, '
-    + 'are you sure you want to proceed?',
+  LOAD_TRIAL_MODEL_SPEC_MESSAGE: 'This will replace the currently loaded model specification, ' +
+    'are you sure you want to proceed?',
   ERROR_EXPERIMENT_WITH_NAME_EXISTS: 'This name is already taken',
-  ERROR_EXPERIMENT_EMPTY: 'Please enter experiment name',
-};
+  ERROR_EXPERIMENT_EMPTY: 'Please enter experiment name'
+}
 
 export const TUTORIALS_LIST = {
   tut1: 'Tut 1: Simple cell network',
@@ -693,34 +715,34 @@ export const TUTORIALS_LIST = {
   tut3: 'Tut 3a: Multiscale network (low IP3)',
   tut3_ip3high: 'Tut 3b: Multiscale network (high IP3)',
   tut3_norxd: 'Tut 3c: Multiscale network (no RxD)',
-  tut_osc: 'Tut 4: Simple oscillatory network',
-};
+  tut_osc: 'Tut 4: Simple oscillatory network'
+}
 
 export const EXPERIMENT_VIEWS = {
   list: 'list',
   viewExperiment: 'viewExperiment',
   jsonViewer: 'jsonViewer',
-  edit: 'edit',
-};
+  edit: 'edit'
+}
 
 export const LAUNCH_MODAL = {
   title: 'What do you want to simulate ?',
   modelState: 'model',
   experimentState: 'experiment',
   actionSimulate: 'Simulate',
-  defaultResource: 'Local Machine',
-  errorText: 'Please check the input',
-};
+  defaultResource: 'Server',
+  errorText: 'Please check the input'
+}
 
 export const geometryClasses = [
   'DistributedBoundary',
   'FractionalVolume',
   'FixedCrossSection',
   'ScalableBorder',
-  'Shell',
-];
+  'Shell'
+]
 
 export const geometryStrings = [
   'inside',
-  'membrane',
-];
+  'membrane'
+]

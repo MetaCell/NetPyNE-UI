@@ -198,12 +198,9 @@ export default class NetPyNEConnectivityRule extends React.Component {
                 `netParams.connParams['${this.props.name}']['synMech']`
               }
               fullWidth
+              multiple
               method="netpyne_geppetto.getAvailableSynMech"
-              postProcessItems={(pythonData, selected) => pythonData.map((name) => (
-                <MenuItem id={`${name}MenuItem`} key={name} value={name}>
-                  {name}
-                </MenuItem>
-              ))}
+              postProcessItems={this.postProcessMenuItems}
             />
           </NetPyNEField>
 

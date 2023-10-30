@@ -12,6 +12,7 @@ import { ActionDialog, Tooltip } from 'netpyne/components';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import FileBrowser from '../../general/FileBrowser';
 import Checkbox from '../../general/Checkbox';
+import { registerModelPath } from '../../../redux/actions/general';
 
 const styles = ({
   spacing,
@@ -83,10 +84,12 @@ class LoadFile extends React.Component {
         case 'modFolder':
           newState.modFolder = fieldValue.path;
           newState.modPath = path;
+          registerModelPath(path);
           break;
         case 'jsonModelFolder':
           newState.jsonModelFolder = fieldValue.path;
           newState.jsonPath = path;
+          registerModelPath(path);
           break;
         default:
           throw Error('Not a valid parameter!');

@@ -26,13 +26,13 @@ const AboutContent = withStyles(styles)(({ classes }) => (
     <img width="250" src={logoNetpyne} />
     <Box m={1}>
       <Link variant="h5" style={{ display: 'block' }} href="https://github.com/MetaCell/NetPyNE-UI" target="_blank">
-        NetPyNE-UI v0.9.0
+        NetPyNE-UI v1.0.0
       </Link>
       <Link variant="h5" style={{ display: 'block' }} href="https://github.com/Neurosim-lab/netpyne" target="_blank">
-        NetPyNE v1.0.3
+        NetPyNE v1.0.4.1
       </Link>
       <Link variant="h5" style={{ display: 'block' }} href="https://www.neuron.yale.edu/neuron/" target="_blank">
-        NEURON v8.0.2
+        NEURON v8.2.2
       </Link>
     </Box>
 
@@ -40,7 +40,7 @@ const AboutContent = withStyles(styles)(({ classes }) => (
       <Typography variant="body2" color={secondaryColor}>
         NetPyNE is a Python package to facilitate the development, simulation,
         parallelization, and analysis of biological neuronal networks using the
-        NEURON simulator. Checkout our
+        NEURON simulator. Check out our
         {' '}
         <Link href="https://elifesciences.org/articles/44494" target="_blank">
           eLife paper.

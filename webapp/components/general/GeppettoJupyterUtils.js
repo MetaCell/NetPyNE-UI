@@ -40,11 +40,15 @@ const execPythonMessage = function (command, callback = handle_output) {
   }));
 };
 
+const addslashes = function (str) {
+  return (str + '').replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
+}
+
 const evalPythonMessage = function (command, parameters, parse = true) {
   let parametersString = '';
   if (parameters) {
     if (parameters.length > 0) {
-      parametersString = `(${parameters.map((parameter) => `utils.convertToPython('${JSON.stringify(parameter)}')`).join(',')})`;
+      parametersString = `(${parameters.map((parameter) => `utils.convertToPython('${addslashes(JSON.stringify(parameter))}')`).join(',')})`;
     } else {
       parametersString = '()';
     }

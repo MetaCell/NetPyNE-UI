@@ -10,8 +10,9 @@ import {
   Dialog,
   ConfirmationDialog,
   LaunchDialog,
+  TutorialObserver
 } from 'netpyne/components';
-
+import { loadModel } from '../redux/actions/general';
 
 const styles = ({ zIndex }) => ({
   root: {
@@ -40,11 +41,11 @@ const styles = ({ zIndex }) => ({
 });
 
 
-
 class NetPyNE extends React.Component {
   constructor (props) {
     super(props);
     this.openPythonCallDialog = this.openPythonCallDialog.bind(this);
+    this.loaded = false;
   }
 
   componentDidMount () {
@@ -55,6 +56,35 @@ class NetPyNE extends React.Component {
     } = this.props;
 
     setDefaultWidgets();
+
+    // Listen messages
+    const loadFromEvent = (event) => {
+      // Here we would expect some cross-origin check, but we don't do anything more than load a model here
+      switch (event.data.type) {
+        case 'INIT_INSTANCE':
+          if (this.loaded) {
+            return;
+          }
+          this.loaded = true;
+          console.log('Netpyne is ready');
+          if (window !== window.parent) {
+            window.parent.postMessage({
+              type: 'APP_READY',
+            }, '*');
+          }
+          break;
+        case 'LOAD_RESOURCE':
+          // eslint-disable-next-line no-case-declarations
+          const resource = event.data.payload;
+          this.props.dispatchAction(loadModel(resource));
+          break;
+        default:
+          break;
+      }
+    };
+    // A message from the parent frame can specify the file to load
+    window.addEventListener('message', loadFromEvent);
+    // window.load = loadFromEvent
   }
 
   componentWillUnmount () {
@@ -75,34 +105,34 @@ class NetPyNE extends React.Component {
     }
   }
 
-  
-
   render () {
     const { classes } = this.props;
 
     const Layout = LayoutManager();
     return (
-      <div className={classes.root}>
-        <div className={classes.container}>
-          <div className={classes.topbar}>
-            <Topbar />
+      <TutorialObserver>
+        <div className={classes.root}>
+          <div className={classes.container}>
+            <div className={classes.topbar}>
+              <Topbar />
+            </div>
+            <Box p={1} flex={1} display="flex" alignItems="stretch">
+              <Grid container spacing={1} className={classes.content} alignItems="stretch">
+                <Grid item className={classes.noGrow}>
+                  <Drawer />
+                </Grid>
+                <Grid item>
+                  <Layout />
+                </Grid>
+              </Grid>
+            </Box>
           </div>
-          <Box p={1} flex={1} display="flex" alignItems="stretch">
-            <Grid container spacing={1} className={classes.content} alignItems="stretch">
-              <Grid item className={classes.noGrow}>
-                <Drawer />
-              </Grid>
-              <Grid item>
-                <Layout />
-              </Grid>
-            </Grid>
-          </Box>
+          <Dialog />
+          <ConfirmationDialog />
+          <ErrorDialog />
+          <LaunchDialog />
         </div>
-        <Dialog />
-        <ConfirmationDialog />
-        <ErrorDialog />
-        <LaunchDialog />
-      </div>
+      </TutorialObserver>
     );
   }
 }
