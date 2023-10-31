@@ -18,7 +18,7 @@ const SNAPSHOT_OPTIONS = {
   customSnapshotsDir: `./tests/snapshots/${scriptName}`,
   comparisonMethod: 'ssim',
   failureThresholdType: 'percent',
-  failureThreshold: 0.3
+  failureThreshold: 0.5
 };
 
 

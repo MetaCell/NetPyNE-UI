@@ -36,8 +36,8 @@ WORKDIR $FOLDER
 COPY --chown=1000:1000 requirements.txt requirements.txt
 RUN --mount=type=cache,target=/root/.cache python -m pip install --upgrade pip && pip install -r requirements.txt --prefer-binary
 
-COPY --chown=$NB_UID:1000 . .
-COPY --from=jsbuild --chown=$NB_UID:1000 /app webapp
+COPY --chown=jovyan:1000 . .
+COPY --from=jsbuild --chown=jovyan:1000 /app webapp
 
 
 RUN jupyter nbextension install --py --symlink --sys-prefix jupyter_geppetto

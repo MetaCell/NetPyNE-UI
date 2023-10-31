@@ -1,9 +1,10 @@
 /* eslint-disable quote-props */
-import * as React from 'react';
+import * as React from 'react'
 import {
   NetPyNEInstantiated,
   NetPyNESynapses,
   NetPyNEConnectivityRules,
+  NetPyNESubcellsConnectivityRules,
   NetPyNECellRules,
   NetPyNEStimulationSources,
   NetPyNEStimulationTargets,
@@ -13,10 +14,10 @@ import {
   NetPyNEPythonConsole,
   ExperimentManager,
   ExperimentControlPanel,
-  Rxd,
-} from '..';
+  Rxd
+} from '..'
 
-import PlotViewer from '../general/PlotViewer';
+import PlotViewer from '../general/PlotViewer'
 
 /**
  * Key of the component is the `component` attribute of the widgetConfiguration.
@@ -31,13 +32,14 @@ const componentMap = {
   'cellParams': NetPyNECellRules,
   'synMechParams': NetPyNESynapses,
   'connParams': NetPyNEConnectivityRules,
+  'subConnParams': NetPyNESubcellsConnectivityRules,
   'stimSourceParams': NetPyNEStimulationSources,
   'stimTargetParams': NetPyNEStimulationTargets,
   'simConfig': NetPyNESimConfig,
   'analysis': NetPyNEPlots,
   'experimentManager': ExperimentManager,
   'experimentControlPanel': ExperimentControlPanel,
-  'rxd': Rxd,
-};
+  'rxd': Rxd
+}
 
-export default componentMap;
+export default componentMap
