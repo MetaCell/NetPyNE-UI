@@ -1,3 +1,41 @@
+const registerKernelListeners = () => {
+  try {
+    if(IPython.notebook.kernel == null) {
+      console.warn("Kernel not initialized. Waiting to register kernel event listeners");
+      setTimeout(registerKernelListeners, 500);
+      return;
+    }
+  } catch (error) {
+    console.warn("IPython not initialized.  Waiting to register kernel event listeners");
+    setTimeout(registerKernelListeners, 500);
+    return
+  }
+
+  const notebook = IPython.notebook;
+  const handleKernelStatusChange = (event, data) => {
+    const kernelStatusEvent = new CustomEvent("kernelstatus", {
+        detail: {
+          "type": event.type,
+          ...data
+        },
+    });
+    window.dispatchEvent(kernelStatusEvent);
+  };
+
+  notebook.events.on('kernel_created.Kernel', handleKernelStatusChange);
+  notebook.events.on('kernel_reconnecting.Kernel', handleKernelStatusChange);
+  notebook.events.on('kernel_connected.Kernel', handleKernelStatusChange);
+  notebook.events.on('kernel_starting.Kernel', handleKernelStatusChange);
+  notebook.events.on('kernel_restarting.Kernel', handleKernelStatusChange);
+  notebook.events.on('kernel_autorestarting.Kernel', handleKernelStatusChange);
+  notebook.events.on('kernel_interrupting.Kernel', handleKernelStatusChange);
+  notebook.events.on('kernel_disconnected.Kernel', handleKernelStatusChange);
+  notebook.events.on('kernel_ready.Kernel', handleKernelStatusChange);
+  notebook.events.on('kernel_killed.Kernel', handleKernelStatusChange);
+  notebook.events.on('kernel_dead.Kernel', handleKernelStatusChange);
+}
+registerKernelListeners();
+
 const handle_output = function (data) {
   // data is the object passed to the callback from the kernel execution
   switch (data.msg_type) {

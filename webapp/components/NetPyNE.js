@@ -66,7 +66,7 @@ class NetPyNE extends React.Component {
             return;
           }
           this.loaded = true;
-          console.log('Netpyne is ready');
+          console.log('NetPyNE-UI component is ready');
           if (window !== window.parent) {
             window.parent.postMessage({
               type: 'APP_READY',
@@ -85,6 +85,10 @@ class NetPyNE extends React.Component {
     // A message from the parent frame can specify the file to load
     window.addEventListener('message', loadFromEvent);
     // window.load = loadFromEvent
+    const logme = (event) => {
+      console.log("!!!! EVENT", event)
+    }
+    window.addEventListener('kernelstatus', logme)
   }
 
   componentWillUnmount () {
