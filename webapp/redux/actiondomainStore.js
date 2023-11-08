@@ -1,5 +1,6 @@
 // import action types
-import { RECORD_COMMAND, REPLAY_COMMANDS } from "./actions/actiondomain";
+import { DROP_LAST_COMMAND, FLUSH_COMMANDS, RECORD_COMMAND } from "./actions/actiondomain";
+// import redux from 'redux'
 
 // Default state for general
 export const ACTION_DOMAIN_DEFAULT_STATE = {
@@ -15,8 +16,18 @@ const recordCommand = (state, { kernel, command }) => {
   return newState;
 }
 
-const replayCommands = (state, { kernel }) => {
-  console.log("TODO, REPLAY COMMANDS")
+const dropLastCommand = (state, { kernel }) => {
+  const newState = { ...state };
+  if (!newState[kernel]) {
+    newState[kernel] = []
+    return newState
+  }
+  newState[kernel].pop()
+  return newState;
+}
+
+const flushCommands = (state, { kernel }) => {
+  return { ...state, [kernel]: [] };
 }
 
 // reducer
@@ -24,8 +35,10 @@ const reducer = (state = ACTION_DOMAIN_DEFAULT_STATE, action) => {
   switch (action.type) {
     case RECORD_COMMAND:
       return recordCommand(state, action.payload)
-    case REPLAY_COMMANDS:
-      return replayCommands(state, action.payload)
+    case DROP_LAST_COMMAND:
+      return dropLastCommand(state, action.payload)
+    case FLUSH_COMMANDS:
+      return flushCommands(state, action.payload)
     default:
       return state
   }

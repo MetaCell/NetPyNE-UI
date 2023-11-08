@@ -1,5 +1,5 @@
 import { store } from '../../redux/actiondomainStore'
-import { recordCommand } from '../../redux/actions/actiondomain';
+import { recordCommand, dropLastCommand } from '../../redux/actions/actiondomain';
 import { execPythonMessageWithoutRecording } from './GeppettoJupyterUtils';
 
 
@@ -32,7 +32,6 @@ const registerKernelListeners = () => {
       return
     }
     const { kernel, content } = data;
-    console.log("Kernel", kernel.id, "execute", content.code)
     record(kernel.id, content.code);
   }
 
@@ -57,8 +56,6 @@ registerKernelListeners();
 
 const record = (kernelID, command) => {
   store.dispatch(recordCommand(kernelID, command))
-  const actionStore = store.getState();
-  console.log("store", actionStore)
 }
 
 const replayAll = (kernelID) => {
@@ -68,8 +65,13 @@ const replayAll = (kernelID) => {
     "from netpyne_ui.netpyne_geppetto import netpyne_geppetto",
     "netpyne_geppetto.deleteModel({})",
     ...store.getState()[kernelID]];
-  commands.pop()  // we drop the last command which is probably the faulty one
-  execPythonMessageWithoutRecording(commands.join('\n'))
+  const lastCommand = commands.pop()  // we drop the last command which is probably the faulty one
+  const script = commands.join('\n')
+  console.log("Playing", script)
+  console.log("Skipping last command", lastCommand)
+  execPythonMessageWithoutRecording(script).then(() => {
+    store.dispatch(dropLastCommand(kernelID))
+  })
 }
 
 export { record, replayAll }

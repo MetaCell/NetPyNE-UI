@@ -34,7 +34,6 @@ const handle_output = function (data) {
 
 const execPythonMessage = function (command, callback = handle_output, record = true) {
   const { kernel } = IPython.notebook;
-  console.log("Kernel", kernel.id, "executes", command)
   if (record) {
     recordCommand(kernel.id, command)
   }
