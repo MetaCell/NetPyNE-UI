@@ -93,10 +93,10 @@ class NetPyNE extends React.Component {
 
     // Logic for kernel reinit
     const logme = ({ detail: { kernel, type } }) => {
-      console.log("!!!! EVENT", type)
       switch (this.kernelRestartState.state) {
         case "restarting":
           if (type === "kernel_ready" || type === "kernel_autorestarting") {
+            console.log("Replaying all commands since the beginning of the session")
             replayAll(this.kernelRestartState.kernelID)
             this.kernelRestartState = {
               state: "idle",
@@ -104,10 +104,26 @@ class NetPyNE extends React.Component {
             }
           }
         case "idle":
+          if (type === "kernel_connected") {
+            console.log("Kernel is connecting/starting, being init")
+            this.kernelRestartState = {
+              state: "init",
+              kernelID: kernel.id
+            }
+          }
           if (type === "kernel_restarting") {
+            console.log("Kernel restart event caught, trying to re-init the current model")
             this.kernelRestartState = {
               state: "restarting",
               kernelID: kernel.id
+            }
+          }
+        case "init":
+          if (type === "kernel_ready") {
+            console.log("Kernel properly initialized")
+            this.kernelRestartState = {
+              state: "idle",
+              kernelID: undefined
             }
           }
       }
@@ -143,6 +159,9 @@ class NetPyNE extends React.Component {
           <div className={classes.container}>
             <div className={classes.topbar}>
               <Topbar />
+        {/* <button onClick={() => {
+          execPythonMessage("utils.convertToJS(netpyne_geppetto.importCellTemplate(utils.convertToPython('{\"cellArgs\":{},\"fileName\":\"/home/vince/git-repository/metacell/NetPyNE-UI/workspace/cells/FScell.hoc\",\"cellName\":\"FScell\",\"label\":\"CellType1\",\"modFolder\":\"/home/vince/git-repository/metacell/NetPyNE-UI/workspace/mod\",\"importSynMechs\":false,\"compileMod\":false}')))")
+        }}>CRASH ME</button> */}
             </div>
             <Box p={1} flex={1} display="flex" alignItems="stretch">
               <Grid container spacing={1} className={classes.content} alignItems="stretch">
