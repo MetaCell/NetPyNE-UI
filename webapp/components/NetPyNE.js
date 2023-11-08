@@ -13,6 +13,8 @@ import {
   TutorialObserver
 } from 'netpyne/components';
 import { loadModel } from '../redux/actions/general';
+import { execPythonMessage } from './general/GeppettoJupyterUtils';
+import { replayAll } from './general/CommandRecorder';
 
 const styles = ({ zIndex }) => ({
   root: {
@@ -46,6 +48,10 @@ class NetPyNE extends React.Component {
     super(props);
     this.openPythonCallDialog = this.openPythonCallDialog.bind(this);
     this.loaded = false;
+    this.kernelRestartState = {
+      state: "idle",
+      kernelID: undefined
+    }
   }
 
   componentDidMount () {
@@ -84,9 +90,27 @@ class NetPyNE extends React.Component {
     };
     // A message from the parent frame can specify the file to load
     window.addEventListener('message', loadFromEvent);
-    // window.load = loadFromEvent
-    const logme = (event) => {
-      console.log("!!!! EVENT", event)
+
+    // Logic for kernel reinit
+    const logme = ({ detail: { kernel, type } }) => {
+      console.log("!!!! EVENT", type)
+      switch (this.kernelRestartState.state) {
+        case "restarting":
+          if (type === "kernel_ready" || type === "kernel_autorestarting") {
+            replayAll(this.kernelRestartState.kernelID)
+            this.kernelRestartState = {
+              state: "idle",
+              kernelID: undefined
+            }
+          }
+        case "idle":
+          if (type === "kernel_restarting") {
+            this.kernelRestartState = {
+              state: "restarting",
+              kernelID: kernel.id
+            }
+          }
+      }
     }
     window.addEventListener('kernelstatus', logme)
   }

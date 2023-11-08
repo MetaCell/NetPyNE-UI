@@ -1,40 +1,5 @@
-const registerKernelListeners = () => {
-  try {
-    if(IPython.notebook.kernel == null) {
-      console.warn("Kernel not initialized. Waiting to register kernel event listeners");
-      setTimeout(registerKernelListeners, 500);
-      return;
-    }
-  } catch (error) {
-    console.warn("IPython not initialized.  Waiting to register kernel event listeners");
-    setTimeout(registerKernelListeners, 500);
-    return
-  }
+import { record as recordCommand } from './CommandRecorder';
 
-  const notebook = IPython.notebook;
-  const handleKernelStatusChange = (event, data) => {
-    const kernelStatusEvent = new CustomEvent("kernelstatus", {
-        detail: {
-          "type": event.type,
-          ...data
-        },
-    });
-    window.dispatchEvent(kernelStatusEvent);
-  };
-
-  notebook.events.on('kernel_created.Kernel', handleKernelStatusChange);
-  notebook.events.on('kernel_reconnecting.Kernel', handleKernelStatusChange);
-  notebook.events.on('kernel_connected.Kernel', handleKernelStatusChange);
-  notebook.events.on('kernel_starting.Kernel', handleKernelStatusChange);
-  notebook.events.on('kernel_restarting.Kernel', handleKernelStatusChange);
-  notebook.events.on('kernel_autorestarting.Kernel', handleKernelStatusChange);
-  notebook.events.on('kernel_interrupting.Kernel', handleKernelStatusChange);
-  notebook.events.on('kernel_disconnected.Kernel', handleKernelStatusChange);
-  notebook.events.on('kernel_ready.Kernel', handleKernelStatusChange);
-  notebook.events.on('kernel_killed.Kernel', handleKernelStatusChange);
-  notebook.events.on('kernel_dead.Kernel', handleKernelStatusChange);
-}
-registerKernelListeners();
 
 const handle_output = function (data) {
   // data is the object passed to the callback from the kernel execution
@@ -67,9 +32,24 @@ const handle_output = function (data) {
   }
 };
 
-const execPythonMessage = function (command, callback = handle_output) {
+const execPythonMessage = function (command, callback = handle_output, record = true) {
   const { kernel } = IPython.notebook;
-  const messageID = kernel.execute(command, { iopub: { output: callback } }, { silent: false, stop_on_error: true, store_history: true });
+  console.log("Kernel", kernel.id, "executes", command)
+  if (record) {
+    recordCommand(kernel.id, command)
+  }
+  const messageID = kernel.execute(
+    command,
+    {
+      iopub: { output: callback }
+    },
+    {
+      silent: false,
+      stop_on_error: true,
+      store_history: true,
+      netpyne_ui_triggered: true
+    });
+
 
   return new Promise((resolve, reject) => GEPPETTO.on(GEPPETTO.Events.Receive_Python_Message, (data) => {
     if (data.data.id == messageID) {
@@ -77,6 +57,10 @@ const execPythonMessage = function (command, callback = handle_output) {
     }
   }));
 };
+
+const execPythonMessageWithoutRecording = function (command, callback = handle_output) {
+  return execPythonMessage(command, callback, false)
+}
 
 const addslashes = function (str) {
   return (str + '').replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
@@ -99,4 +83,4 @@ const evalPythonMessage = function (command, parameters, parse = true) {
   return execPythonMessage(finalCommand, handle_output);
 };
 
-export { execPythonMessage, evalPythonMessage };
+export { execPythonMessage, evalPythonMessage, execPythonMessageWithoutRecording };
