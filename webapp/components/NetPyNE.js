@@ -13,7 +13,7 @@ import {
   TutorialObserver,
 } from 'netpyne/components';
 import { loadModel, openDialog } from '../redux/actions/general';
-import { execPythonMessage } from './general/GeppettoJupyterUtils';
+// import { execPythonMessage } from './general/GeppettoJupyterUtils';
 import { replayAll } from './general/CommandRecorder';
 
 const styles = ({ zIndex }) => ({
@@ -163,9 +163,9 @@ class NetPyNE extends React.Component {
           <div className={classes.container}>
             <div className={classes.topbar}>
               <Topbar />
-        <button onClick={() => {
+        {/* <button onClick={() => {
           execPythonMessage("utils.convertToJS(netpyne_geppetto.importCellTemplate(utils.convertToPython('{\"cellArgs\":{},\"fileName\":\"/home/vince/git-repository/metacell/NetPyNE-UI/workspace/cells/FScell.hoc\",\"cellName\":\"FScell\",\"label\":\"CellType1\",\"modFolder\":\"/home/vince/git-repository/metacell/NetPyNE-UI/workspace/mod\",\"importSynMechs\":false,\"compileMod\":false}')))")
-        }}>CRASH ME</button>
+        }}>CRASH ME</button> */}
             </div>
             <Box p={1} flex={1} display="flex" alignItems="stretch">
               <Grid container spacing={1} className={classes.content} alignItems="stretch">
