@@ -111,7 +111,7 @@ class NetPyNE extends React.Component {
               kernelID: kernel.id
             }
           }
-          if (type === "kernel_restarting") {
+          if (type === "kernel_autorestarting") {
             console.log("Kernel restart event caught, trying to re-init the current model")
             this.kernelRestartState = {
               state: "restarting",
