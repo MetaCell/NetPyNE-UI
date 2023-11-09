@@ -10,9 +10,9 @@ import {
   Dialog,
   ConfirmationDialog,
   LaunchDialog,
-  TutorialObserver
+  TutorialObserver,
 } from 'netpyne/components';
-import { loadModel } from '../redux/actions/general';
+import { loadModel, openDialog } from '../redux/actions/general';
 import { execPythonMessage } from './general/GeppettoJupyterUtils';
 import { replayAll } from './general/CommandRecorder';
 
@@ -92,7 +92,7 @@ class NetPyNE extends React.Component {
     window.addEventListener('message', loadFromEvent);
 
     // Logic for kernel reinit
-    const logme = ({ detail: { kernel, type } }) => {
+    const handleKernelRestart = ({ detail: { kernel, type } }) => {
       switch (this.kernelRestartState.state) {
         case "restarting":
           if (type === "kernel_ready" || type === "kernel_autorestarting") {
@@ -117,6 +117,10 @@ class NetPyNE extends React.Component {
               state: "restarting",
               kernelID: kernel.id
             }
+            this.props.dispatchAction(openDialog({
+              title: "Kernel restart",
+              message: "An action occured that made the kernel restart. We are reloading your model and all the actions you applied on it."
+            }))
           }
         case "init":
           if (type === "kernel_ready") {
@@ -128,7 +132,7 @@ class NetPyNE extends React.Component {
           }
       }
     }
-    window.addEventListener('kernelstatus', logme)
+    window.addEventListener('kernelstatus', handleKernelRestart)
   }
 
   componentWillUnmount () {
@@ -159,9 +163,9 @@ class NetPyNE extends React.Component {
           <div className={classes.container}>
             <div className={classes.topbar}>
               <Topbar />
-        {/* <button onClick={() => {
+        <button onClick={() => {
           execPythonMessage("utils.convertToJS(netpyne_geppetto.importCellTemplate(utils.convertToPython('{\"cellArgs\":{},\"fileName\":\"/home/vince/git-repository/metacell/NetPyNE-UI/workspace/cells/FScell.hoc\",\"cellName\":\"FScell\",\"label\":\"CellType1\",\"modFolder\":\"/home/vince/git-repository/metacell/NetPyNE-UI/workspace/mod\",\"importSynMechs\":false,\"compileMod\":false}')))")
-        }}>CRASH ME</button> */}
+        }}>CRASH ME</button>
             </div>
             <Box p={1} flex={1} display="flex" alignItems="stretch">
               <Grid container spacing={1} className={classes.content} alignItems="stretch">
