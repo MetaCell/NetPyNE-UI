@@ -104,14 +104,15 @@ export class NetPyNEPythonConsole extends Component {
 
   render () {
     const notebookName = GEPPETTO_CONFIGURATION.notebookName || "notebook.ipynb";
+    const offScreenLeft = -window.innerWidth - 100; //plus additional buffer just in case
 
-      // Define the style to hide the iframe by positioning it off-screen
-      const iframeStyle = {
-        position: 'absolute',
-        left: '-10000px',
-        width: '1px',    
-        height: '1px',   
-      };
+    const iframeStyle = {
+      position: 'absolute',
+      left: `${offScreenLeft}px`,
+      width: '1px',    
+      height: '1px',   
+    };
+    
     return (
       <ReactResizeDetector handleWidth handleHeight>
       {({ width, height }) => (
