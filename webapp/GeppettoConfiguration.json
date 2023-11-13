@@ -1,8 +1,8 @@
 {
     "_README" : "http://docs.geppetto.org/en/latest/build.html",
     "contextPath": "org.geppetto.frontend",
-    "useSsl": false,
-    "embedded": false,
+    "useSsl": true,
+    "embedded": true,
     "embedderURL": ["/"],
     "rootRedirect":"",
     "noTest": false,
