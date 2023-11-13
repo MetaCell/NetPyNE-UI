@@ -230,11 +230,7 @@ describe('RxD testing', () => {
 
         await page.waitForSelector('button[aria-selected="true"][id = "simple-tab-1"]')
 
-        const no_regions_text = await page.$$eval('#simple-tabpanel-1', no_regions_text => {
-            return no_regions_text.map(no_regions_text => no_regions_text.innerText)
-        })
-
-        expect(no_regions_text).toContain('There are no Species yet.')
+        await page.waitForSelector('#ip3')
         console.log('Species tab opened')
         await page.waitForTimeout(PAGE_WAIT)
         
