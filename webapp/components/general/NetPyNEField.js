@@ -46,7 +46,11 @@ export default class NetPyNEField extends Component {
         !this.model.split('.')[0].startsWith('simConfig')
         || this.model.split('.')[1].startsWith('analysis')
       ) {
-        Utils.execPythonMessage(`del netpyne_geppetto.${this.model}`);
+        Utils.execPythonMessage(`
+        try:
+          del netpyne_geppetto.${this.model}
+        except KeyError:
+          ...`);
       }
     }
     return value;
