@@ -104,10 +104,26 @@ export class NetPyNEPythonConsole extends Component {
 
   render () {
     const notebookName = GEPPETTO_CONFIGURATION.notebookName || "notebook.ipynb";
+    const offScreenLeft = -window.innerWidth - 100; //plus additional buffer just in case
+
+    const iframeStyle = {
+      position: 'absolute',
+      left: `${offScreenLeft}px`,
+      width: '1px',    
+      height: '1px',   
+    };
+    
     return (
       <ReactResizeDetector handleWidth handleHeight>
-        {({ width, height }) => <PythonConsole pythonNotebookPath={`notebooks/${notebookName}`} extensionLoaded={this.props.extensionLoaded} iframeHeight={height} />}
-      </ReactResizeDetector>
+      {({ width, height }) => (
+        <PythonConsole
+          pythonNotebookPath={`notebooks/${notebookName}`}
+          extensionLoaded={this.props.extensionLoaded}
+          iframeHeight={height}
+          style={iframeStyle} 
+        />
+      )}
+    </ReactResizeDetector>
     );
   }
 }
