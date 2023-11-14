@@ -208,7 +208,8 @@ describe('Experiment Manager test using Tut#1', () => {
         await click(page, selectors.SIMULATE_NETWORK_SELECTOR, { timeout: TIMEOUT });
 
         console.log('Simulating all conditions')
-
+        await page.waitForSelector(selectors.SIMULATE_POPUP_SELECTOR)
+        await page.click(selectors.SIMULATE_POPUP_SELECTOR)
         await page.waitForSelector(selectors.CONFIRM_SIMULATE_SELECTOR)
         await page.click(selectors.CONFIRM_SIMULATE_SELECTOR)
 
