@@ -13,12 +13,12 @@ export const USERNAME_SELECTOR = '#username_input';
 export const PASSWORD_SELECTOR = '#password_input';
 export const LOGIN_BUTTON_SELECTOR = '#login_submit';
 export const SELECT_CELL_BUTTON_SELECTOR = '#selectCellButton';
-export const TUTORIAL_1_SELECTOR = "li[id='Model 1: Simple cell network']";
-export const TUTORIAL_2_SELECTOR = "li[id='Model 2: Detailed cell network']"
-export const TUTORIAL_3A_SELECTOR =  "li[id='Model 3a: Multiscale network (low IP3)']"
-export const TUTORIAL_3B_SELECTOR = "li[id='Model 3b: Multiscale network (high IP3)']"
-export const TUTORIAL_3C_SELECTOR = "li[id='Model 3c: Multiscale network (no RxD)']"
-export const TUTORIAL_4_SELECTOR = "li[id='Model 4: Simple oscillatory network']"
+export const TUTORIAL_1_SELECTOR = "li[id='Tut 1: Simple cell network']";
+export const TUTORIAL_2_SELECTOR = "li[id='Tut 2: Detailed cell network']"
+export const TUTORIAL_3A_SELECTOR =  "li[id='Tut 3a: Multiscale network (low IP3)']"
+export const TUTORIAL_3B_SELECTOR = "li[id='Tut 3b: Multiscale network (high IP3)']"
+export const TUTORIAL_3C_SELECTOR = "li[id='Tut 3c: Multiscale network (no RxD)']"
+export const TUTORIAL_4_SELECTOR = "li[id='Tut 4: Simple oscillatory network']"
 export const PYR_CELL_SELECTOR = '#pyr';
 export const PYR_2_CELL_SELECTOR = '#PYR'
 export const INT_CELL_SELECTOR = '#INT'
