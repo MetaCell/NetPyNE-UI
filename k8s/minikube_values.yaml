@@ -20,7 +20,7 @@ hub:
       c.Spawner.port = 8000
       c.Spawner.http_timeout = 300
       c.Spawner.start_timeout = 300
-      c.Spawner.notebook_dir = '/home/jovyan/work/NetPyNE-UI'
+      c.Spawner.notebook_dir = '/opt/workspace'
       c.Spawner.default_url = '/geppetto'
       c.Spawner.debug = True
       c.Spawner.disable_check_xsrf=True
