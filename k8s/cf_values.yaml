@@ -11,7 +11,7 @@ hub:
   shutdownOnLogout: true
   extraConfig:
     timing: |
-      c.Spawner.notebook_dir = '/home/jovyan/work/NetPyNE-UI'
+      c.Spawner.notebook_dir = '/opt/workspace'
       c.Spawner.default_url = '/geppetto'
     spawner: >-
       c.Spawner.args = ["--library=netpyne_ui"]
