@@ -105,6 +105,15 @@ class NetPyNEPopulation extends React.Component {
       />,
     );
 
+    modelParameters.push(
+      <BottomNavigationAction
+        key="Stimulation"
+        label="Stimulation"
+        icon={<FontIcon className="fa fa-list" />}
+        onClick={() => select(4, 'Stimulation')}
+      />,
+    );
+
     return modelParameters;
   };
 
@@ -271,6 +280,58 @@ class NetPyNEPopulation extends React.Component {
     } else if (this.state.sectionId == 'CellList') {
       var content = (
         <div>Option to provide individual list of cells. Coming soon ...</div>
+      );
+    } else if (this.state.sectionId == 'Stimulation') {
+      var content = (
+        <Box className="scrollbar scrollchild" mt={1}>
+          <NetPyNECoordsRange
+            id="xRangePopParams"
+            name={this.props.name}
+            model="netParams.popParams"
+            items={[
+              {
+                value: 'xRange',
+                label: 'Absolute',
+              },
+              {
+                value: 'xnormRange',
+                label: 'Normalized',
+              },
+            ]}
+          />
+
+          <NetPyNECoordsRange
+            id="yRangePopParams"
+            name={this.props.name}
+            model="netParams.popParams"
+            items={[
+              {
+                value: 'yRange',
+                label: 'Absolute',
+              },
+              {
+                value: 'ynormRange',
+                label: 'Normalized',
+              },
+            ]}
+          />
+
+          <NetPyNECoordsRange
+            id="zRangePopParams"
+            name={this.props.name}
+            model="netParams.popParams"
+            items={[
+              {
+                value: 'zRange',
+                label: 'Absolute',
+              },
+              {
+                value: 'znormRange',
+                label: 'Normalized',
+              },
+            ]}
+          />
+        </Box>
       );
     } else {
       var content = <div>{this.state.cellModelFields}</div>;
