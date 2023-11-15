@@ -21,6 +21,7 @@ FROM jupyter/base-notebook:hub-1.5.0
 ENV NB_UID=jovyan
 ENV FOLDER=netpyne
 ENV NP_LFPYKIT_HEAD_FILE=/home/jovyan/nyhead.mat
+ARG BUILD_ARGS=""
 
 USER root
 
@@ -65,8 +66,8 @@ RUN jupyter nbextension enable --py --sys-prefix jupyter_geppetto
 RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension
 RUN jupyter serverextension enable --py --sys-prefix jupyter_geppetto
 
-RUN --mount=type=cache,target=/root/.cache python -m pip install --upgrade pip &&\ 
-  python utilities/install.py --npm-skip --no-test
+RUN --mount=type=cache,target=/root/.cache python -m pip install --upgrade pip &&\
+  python utilities/install.py ${BUILD_ARGS} --npm-skip --no-test
 
 
 RUN mv workspace /opt/workspace/tutorials
