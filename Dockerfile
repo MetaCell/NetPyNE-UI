@@ -22,6 +22,7 @@ ENV NB_UID=jovyan
 ENV FOLDER=netpyne
 ENV NP_LFPYKIT_HEAD_FILE=/home/jovyan/nyhead.mat
 ARG BUILD_ARGS=""
+ARG WORKSPACE_VERSION=master
 
 USER root
 
@@ -67,7 +68,7 @@ RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension
 RUN jupyter serverextension enable --py --sys-prefix jupyter_geppetto
 
 RUN --mount=type=cache,target=/root/.cache python -m pip install --upgrade pip &&\
-  python utilities/install.py ${BUILD_ARGS} --npm-skip --no-test
+  python utilities/install.py ${BUILD_ARGS} --workspace $WORKSPACE_VERSION
 
 
 RUN mv workspace /opt/workspace/tutorials
