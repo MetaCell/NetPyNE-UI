@@ -21,8 +21,6 @@ FROM jupyter/base-notebook:hub-1.5.0
 ENV NB_UID=jovyan
 ENV FOLDER=netpyne
 ENV NP_LFPYKIT_HEAD_FILE=/home/jovyan/nyhead.mat
-ARG BUILD_ARGS=""
-ARG WORKSPACE_VERSION=master
 
 USER root
 
@@ -55,8 +53,6 @@ RUN mkdir -p /opt/workspace
 RUN mkdir -p /opt/user
 
 
-
-
 ENV NEURON_HOME=/opt/conda
 
 
@@ -67,6 +63,8 @@ RUN jupyter nbextension enable --py --sys-prefix jupyter_geppetto
 RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension
 RUN jupyter serverextension enable --py --sys-prefix jupyter_geppetto
 
+ARG BUILD_ARGS=""
+ARG WORKSPACE_VERSION=master
 RUN --mount=type=cache,target=/root/.cache python -m pip install --upgrade pip &&\
   python utilities/install.py ${BUILD_ARGS} --workspace $WORKSPACE_VERSION
 
