@@ -64,6 +64,7 @@ const replayAll = (kernelID) => {
     "from jupyter_geppetto import utils",
     "from netpyne_ui.netpyne_geppetto import netpyne_geppetto",
     "netpyne_geppetto.deleteModel({})",
+    "netpyne_geppetto.loadFromIndexFile('/tmp/tmpmodel')",
     ...store.getState()[kernelID]];
   const lastCommand = commands.pop()  // we drop the last command which is probably the faulty one
   const script = commands.join('\n')

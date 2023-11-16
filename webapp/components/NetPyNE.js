@@ -111,7 +111,7 @@ class NetPyNE extends React.Component {
               kernelID: kernel.id
             }
           }
-          if (type === "kernel_autorestarting") {
+          else if (type === "kernel_autorestarting") {
             console.log("Kernel restart event caught, trying to re-init the current model")
             this.kernelRestartState = {
               state: "restarting",
@@ -122,11 +122,32 @@ class NetPyNE extends React.Component {
               message: "An action occured that made the kernel restart. We are reloading your model and all the actions you applied on it."
             }))
           }
+          else if (type === "kernel_restarting") {
+            console.log("Kernel restart, perhaps it's a special restart?")
+            this.kernelRestartState = {
+              state: "special_restart",
+              kernelID: kernel.id
+            }
+          }
         case "init":
           if (type === "kernel_ready") {
             console.log("Kernel properly initialized")
             this.kernelRestartState = {
               state: "idle",
+              kernelID: undefined
+            }
+          }
+        case "special_restart":
+          if (type == "kernel_autorestarting") {
+            console.log("Kernel autorestart after a start, we might not have the ready event, we force it then")
+            replayAll(this.kernelRestartState.kernelID)
+            this.kernelRestartState = {
+              state: 'restarting',
+              kernelID: kernel.id
+            }
+          } else {
+            this.kernelRestartState = {
+              state: 'idle',
               kernelID: undefined
             }
           }

@@ -290,6 +290,7 @@ export default (store) => (next) => (action) => {
           next(GeppettoActions.modelLoaded())
           getExperiments()
         });
+      Utils.execPythonMessage('netpyne_geppetto.saveToIndexFile(None, "/tmp/tmpmodel", True, True)', ()=>{}, false);
 
       setTimeout(() => {
         if (!responded) {
