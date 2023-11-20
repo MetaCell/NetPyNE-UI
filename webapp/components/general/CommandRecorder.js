@@ -1,6 +1,7 @@
+import { KERNEL_HANDLING } from '../../constants';
 import { store } from '../../redux/actiondomainStore'
-import { recordCommand, dropLastCommand } from '../../redux/actions/actiondomain';
-import { execPythonMessageWithoutRecording } from './GeppettoJupyterUtils';
+import { recordCommand, dropLastCommand, dropFromIndex } from '../../redux/actions/actiondomain';
+import { execPythonMessage, execPythonMessageWithoutRecording } from './GeppettoJupyterUtils';
 
 
 const registerKernelListeners = () => {
@@ -58,18 +59,42 @@ const record = (kernelID, command) => {
   store.dispatch(recordCommand(kernelID, command))
 }
 
-const replayAll = (kernelID) => {
-  const commands = [
+const TIMEFRAME = 10 * 1000; // 10s
+let lastReplayTime = 0
+
+const getCommands = (kernelID) => {
+  return [
     "from jupyter_geppetto import jupyter_geppetto",
     "from jupyter_geppetto import utils",
     "from netpyne_ui.netpyne_geppetto import netpyne_geppetto",
     "netpyne_geppetto.deleteModel({})",
-    "netpyne_geppetto.loadFromIndexFile('/tmp/tmpmodel')",
-    ...store.getState()[kernelID]];
+    `netpyne_geppetto.loadFromIndexFile("${KERNEL_HANDLING.tmpModelPath}")`,
+    ...store.getState()[kernelID]
+  ]
+}
+
+const replayAll = (kernelID, fromRec = false) => {
+  const currentTimestamp = Date.now();
+  const commands = getCommands(kernelID);
+
+  if (!fromRec && currentTimestamp - lastReplayTime < TIMEFRAME) {
+    const restartLoop = new CustomEvent("kernelRestartLoop", {
+        detail: {
+          "kernel": kernelID,
+          "state": "looping"
+        }
+    });
+    window.dispatchEvent(restartLoop);
+    store.dispatch(dropLastCommand(kernelID))
+    replayAll(kernelID, true)
+    return
+  }
+
   const lastCommand = commands.pop()  // we drop the last command which is probably the faulty one
   const script = commands.join('\n')
   console.log("Playing", script)
   console.log("Skipping last command", lastCommand)
+  lastReplayTime = currentTimestamp
   execPythonMessageWithoutRecording(script).then(() => {
     store.dispatch(dropLastCommand(kernelID))
   })
