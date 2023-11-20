@@ -96,9 +96,9 @@ describe('Tutorial #3c for Smoke Testing', () => {
     console.log('Tutorial #3c')
 
     await page.waitForTimeout(PAGE_WAIT)
-
+    await page.waitForSelector(selectors.TUTORIALS_BUTTON_SELECTOR, { timeout: TIMEOUT })
     await page.click(selectors.TUTORIALS_BUTTON_SELECTOR, { timeout: TIMEOUT })
-
+    await page.waitForSelector(selectors.TUTORIAL_3C_SELECTOR, { timeout: TIMEOUT })
     await page.click(selectors.TUTORIAL_3C_SELECTOR, { timeout: TIMEOUT })
     await page.waitForSelector(selectors.E_CELL_TYPE_SELECTOR)
     await page.waitForSelector(selectors.I_CELL_TYPE_SELECTOR)

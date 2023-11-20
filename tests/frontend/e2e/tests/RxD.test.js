@@ -98,10 +98,10 @@ describe('RxD testing', () => {
         console.log('Loading Tutorial #3b ...')
 
         await page.waitForTimeout(PAGE_WAIT)
-
+        await page.waitForSelector(selectors.TUTORIALS_BUTTON_SELECTOR, { timeout: TIMEOUT })
         await page.click(selectors.TUTORIALS_BUTTON_SELECTOR, { timeout: TIMEOUT })
-
-        await page.click("li[id='Model 3b: Multiscale network (high IP3)']", { timeout: TIMEOUT })
+        await page.waitForSelector(selectors.TUTORIAL_3B_SELECTOR, { timeout: TIMEOUT })
+        await page.click(selectors.TUTORIAL_3B_SELECTOR, { timeout: TIMEOUT })
         await page.waitForSelector('#E')
         await page.waitForSelector('#I')
         await page.waitForTimeout(PAGE_WAIT)
@@ -123,8 +123,9 @@ describe('RxD testing', () => {
         await page.waitForTimeout(PAGE_WAIT * 3)
 
         await page.waitForSelector('div[title="3D Representation"][aria-disabled="false"]')
-
+        await page.waitForSelector(selectors.MODEL_BUTTON_SELECTOR, { timeout: TIMEOUT });
         await page.click(selectors.MODEL_BUTTON_SELECTOR, { timeout: TIMEOUT });
+        await page.waitForSelector(selectors.SIMULATE_NETWORK_SELECTOR, { timeout: TIMEOUT });
         await page.click(selectors.SIMULATE_NETWORK_SELECTOR, { timeout: TIMEOUT });
         console.log('Simulating network ...')
 
@@ -230,11 +231,7 @@ describe('RxD testing', () => {
 
         await page.waitForSelector('button[aria-selected="true"][id = "simple-tab-1"]')
 
-        const no_regions_text = await page.$$eval('#simple-tabpanel-1', no_regions_text => {
-            return no_regions_text.map(no_regions_text => no_regions_text.innerText)
-        })
-
-        expect(no_regions_text).toContain('There are no Species yet.')
+        await page.waitForSelector('#ip3')
         console.log('Species tab opened')
         await page.waitForTimeout(PAGE_WAIT)
         
