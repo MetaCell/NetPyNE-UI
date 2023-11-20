@@ -16,15 +16,15 @@ RUN /bin/bash -c "INCUBATOR_VER=${INCUBATOR_VER} source activate snakes && pip i
 # Clone NetPyNE-UI and install the development version
 RUN wget https://github.com/MetaCell/NetPyNE-UI/archive/$netpyneuiBranch.zip -q
 RUN unzip $netpyneuiBranch.zip
-WORKDIR /home/jovyan/work/NetPyNE-UI-$netpyneuiBranch/utilities
+WORKDIR /opt/workspace-$netpyneuiBranch/utilities
 RUN /bin/bash -c "source activate snakes && python --version"
 RUN /bin/bash -c "source activate snakes && exec python install.py branch $netpyneuiBranch"
 WORKDIR /home/jovyan
 RUN git clone https://github.com/Neurosim-lab/netpyne_workspace
 WORKDIR /home/jovyan/workspace
-RUN ln -sfn /home/jovyan/work/NetPyNE-UI-$netpyneuiBranch/netpyne_ui/tests tests
+RUN ln -sfn /opt/workspace-$netpyneuiBranch/netpyne_ui/tests tests
 
 # Copy jupyterhub_config
-# RUN cp /home/jovyan/work/NetPyNE-UI-$netpyneuiBranch/jupyterhub_config.py .
+# RUN cp /opt/workspace-$netpyneuiBranch/jupyterhub_config.py .
 
 CMD /bin/bash -c "source activate snakes && exec jupyterhub-singleuser --debug --NotebookApp.default_url=/geppetto --NotebookApp.token='' --library=netpyne_ui"
