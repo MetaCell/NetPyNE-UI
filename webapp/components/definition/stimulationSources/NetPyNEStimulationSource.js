@@ -16,9 +16,15 @@ import {
   NetPyNEField,
   NetPyNETextField,
   ListComponent,
+  NetPyNESelectField
 } from 'netpyne/components';
 import Utils from '../../../Utils';
 import Select from '../../general/Select';
+import Checkbox from '../../general/Checkbox';
+import { Grid, Typography } from '@material-ui/core';
+import { vars } from '../../../theme';
+
+const { textColor, primaryColor, experimentLabelColor } = vars;
 
 const styles = ({ spacing }) => ({
   selectField: {
@@ -417,8 +423,159 @@ class NetPyNEStimulationSource extends React.Component {
 
     return (
       <Box className="scrollbar scrollchild" mt={1}>
-        <div>
-          <Box mb={1}>
+        <Box display='flex' flexDirection='column' style={ { gap: '0.5rem' } }>
+            <TextField
+              variant="filled"
+              fullWidth
+              onChange={this.handleRenameChange}
+              value={this.state.currentName}
+              disabled={this.renaming}
+              label="Seed"
+            />
+            <NetPyNEField mb={0} id="netParams.popParams.cellType">
+              <NetPyNESelectField
+                style={{mb: 0}}
+                method="netpyne_geppetto.getAvailableCellTypes"
+                model={
+                  `netParams.popParams['${this.props.name}']['cellType']`
+                }
+                postProcessItems={this.postProcessMenuItems}
+              />
+            </NetPyNEField>
+
+            <TextField
+              variant="filled"
+              fullWidth
+              onChange={this.handleRenameChange}
+              value={this.state.currentName}
+              disabled={this.renaming}
+              label="Seed"
+            />
+
+            <Grid container alignItems='center' spacing={1}>
+              <Grid item xs={3}>
+                <Typography style={ {
+                  color: experimentLabelColor, paddingLeft: '0.625rem', fontSize: '0.875rem', lineHeight: '130%', fontWeight: 400
+                } }
+                >Spiking Pulse / Rate</Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  variant="filled"
+                  fullWidth
+                  onChange={this.handleRenameChange}
+                  value={this.state.currentName}
+                  disabled={this.renaming}
+                  label="Start"
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  variant="filled"
+                  fullWidth
+                  onChange={this.handleRenameChange}
+                  value={this.state.currentName}
+                  disabled={this.renaming}
+                  label="End"
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  variant="filled"
+                  fullWidth
+                  onChange={this.handleRenameChange}
+                  value={this.state.currentName}
+                  disabled={this.renaming}
+                  label="Noise"
+                />
+              </Grid>
+            </Grid>
+
+            <Box pl={1.25}>
+              <Button
+                className='noHover'
+                disableRipple
+                style={ { color: primaryColor, padding: 0, textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.01rem', lineHeight: '200%', fontWeight: 700 } }
+                variant='text'
+              >+ add another pulse</Button>
+            </Box>
+
+            <TextField
+              variant="filled"
+              fullWidth
+              onChange={this.handleRenameChange}
+              value={this.state.currentName}
+              disabled={this.renaming}
+              label="Spike intervals (ms)"
+            />
+
+
+            <NetPyNEField mb={0} id="netParams.importCellParams.importSynMechs">
+              <Checkbox
+                fullWidth
+                noBackground
+              />
+            </NetPyNEField>
+
+
+            <NetPyNEField mb={0} id="netParams.popParams.cellType">
+              <NetPyNESelectField
+                style={{mb: 0}}
+                method="netpyne_geppetto.getAvailableCellTypes"
+                model={
+                  `netParams.popParams['${this.props.name}']['cellType']`
+                }
+                postProcessItems={this.postProcessMenuItems}
+              />
+            </NetPyNEField>
+
+            <Grid container alignItems='center' spacing={1}>
+              <Grid item xs={2} justifyContent='center'>
+                <Typography style={{color: experimentLabelColor, fontSize: '0.875rem', lineHeight: '130%', fontWeight: 400}}>Start</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  variant="filled"
+                  fullWidth
+                  onChange={this.handleRenameChange}
+                  value={this.state.currentName}
+                  disabled={this.renaming}
+                  label="Start"
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <TextField
+                  variant="filled"
+                  fullWidth
+                  onChange={this.handleRenameChange}
+                  value={this.state.currentName}
+                  disabled={this.renaming}
+                  label="End"
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <TextField
+                  variant="filled"
+                  fullWidth
+                  onChange={this.handleRenameChange}
+                  value={this.state.currentName}
+                  disabled={this.renaming}
+                  label="Noise"
+                />
+              </Grid>
+            </Grid>
+
+            <TextField
+              variant="filled"
+              fullWidth
+              onChange={this.handleRenameChange}
+              value={this.state.currentName}
+              disabled={this.renaming}
+              label="Frequency (Hz)"
+            />
+          </Box>
+        {/* <div> */}
+          {/* <Box mb={1}>
             <TextField
               fullWidth
               variant="filled"
@@ -454,10 +611,10 @@ class NetPyNEStimulationSource extends React.Component {
                 ))
                 : null}
             </Select>
-          </NetPyNEField>
-        </div>
-        {variableContent}
-        {dialogPop}
+          </NetPyNEField> */}
+        {/* </div> */}
+        {/* {variableContent} */}
+        {/* {dialogPop} */}
       </Box>
     );
   }

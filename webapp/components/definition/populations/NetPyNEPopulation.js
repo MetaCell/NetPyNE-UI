@@ -1,6 +1,6 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
-import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
+import { BottomNavigation, BottomNavigationAction, Grid, Switch, Typography } from '@material-ui/core';
 import FontIcon from '@material-ui/core/Icon';
 import Box from '@material-ui/core/Box';
 import Dialog from '@material-ui/core/Dialog/Dialog';
@@ -20,13 +20,18 @@ import {
   NetPyNESelectField,
 } from 'netpyne/components';
 import Utils from '../../../Utils';
+import Checkbox from '../../general/Checkbox';
+import { vars } from '../../../theme';
+import { BASE_PATH } from '../../general/NetPyNEIcons';
 
 const styles = ({ spacing }) => ({
   fields: {
     marginTop: spacing(3),
     width: '100%',
   },
-});
+} );
+
+const { textColor, primaryColor, experimentLabelColor } = vars;
 
 class NetPyNEPopulation extends React.Component {
   constructor (props) {
@@ -109,7 +114,7 @@ class NetPyNEPopulation extends React.Component {
       <BottomNavigationAction
         key="Stimulation"
         label="Stimulation"
-        icon={<FontIcon className="fa fa-list" />}
+        icon={<FontIcon><img src={`${BASE_PATH}stimSourceParams.svg`} style={{ height: '100%', filter: this.state.sectionId === 'Stimulation' ? 'none' : 'brightness(0) invert(1)' }} /></FontIcon>}
         onClick={() => select(4, 'Stimulation')}
       />,
     );
@@ -283,8 +288,224 @@ class NetPyNEPopulation extends React.Component {
       );
     } else if (this.state.sectionId == 'Stimulation') {
       var content = (
-        <Box className="scrollbar scrollchild" mt={1}>
-          <NetPyNECoordsRange
+        <Box className="scrollbar scrollchild" mt={ 1 }>
+          <Box mb={ 3.5 } display='flex' style={ { gap: '0.5rem' } }>
+            <Box>
+              <Switch checked={true} />
+            </Box>
+            <Box>
+              <Typography style={ {
+                fontSize: '0.875rem',
+                lineHeight: '130%',
+                color: textColor
+              }}>Override stimulation</Typography>
+              <Typography style={ {
+                marginBottom: '0.25rem',
+                opacity: '0.7',
+                fontSize: '0.75rem',
+                lineHeight: '130%',
+                color: textColor
+              }}>
+                Stimulation is automatically set to the same configurations as the VectStim’s stimulation that has been set in ‘Stim. Sources’
+              </Typography>
+              <Button
+                className='noHover'
+                disableRipple
+                style={ { color: primaryColor, padding: 0, textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.01rem', lineHeight: '200%' } }
+                variant='text'
+              >View Configurations in stim. source</Button>
+            </Box>
+          </Box>
+          <Box display='flex' flexDirection='column' style={ { gap: '0.5rem' } }>
+            <NetPyNEField mb={0} id="netParams.popParams.cellType">
+              <NetPyNESelectField
+                style={{mb: 0}}
+                method="netpyne_geppetto.getAvailableCellTypes"
+                model={
+                  `netParams.popParams['${this.props.name}']['cellType']`
+                }
+                postProcessItems={this.postProcessMenuItems}
+              />
+            </NetPyNEField>
+
+            <TextField
+              variant="filled"
+              fullWidth
+              onChange={this.handleRenameChange}
+              value={this.state.currentName}
+              disabled={this.renaming}
+              label="Seed"
+            />
+
+            <Box display='flex' alignItems='center' style={{gap: '1rem'}}>
+              <Typography style={ {
+                  color: experimentLabelColor, paddingLeft: '0.625rem', fontSize: '0.875rem', lineHeight: '130%', fontWeight: 400
+                } }
+              >
+                Spiking Pulse / Rate
+              </Typography>
+              <Grid container alignItems='center' spacing={1}>
+                <Grid item xs={4}>
+                  <TextField
+                    variant="filled"
+                    fullWidth
+                    onChange={this.handleRenameChange}
+                    value={this.state.currentName}
+                    disabled={this.renaming}
+                    label="Start"
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    variant="filled"
+                    fullWidth
+                    onChange={this.handleRenameChange}
+                    value={this.state.currentName}
+                    disabled={this.renaming}
+                    label="End"
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    variant="filled"
+                    fullWidth
+                    onChange={this.handleRenameChange}
+                    value={this.state.currentName}
+                    disabled={this.renaming}
+                    label="Noise"
+                  />
+                </Grid>
+              </Grid>
+            </Box>
+
+
+            <Box display='flex' alignItems='center' style={{gap: '1rem'}}>
+              <Typography style={ {
+                  color: experimentLabelColor, paddingLeft: '0.625rem', fontSize: '0.875rem', lineHeight: '130%', fontWeight: 400, visibility: 'hidden'
+                } }
+              >
+                Spiking Pulse / Rate
+              </Typography>
+              <Grid container alignItems='center' spacing={1}>
+                <Grid item xs={4}>
+                  <TextField
+                    variant="filled"
+                    fullWidth
+                    onChange={this.handleRenameChange}
+                    value={this.state.currentName}
+                    disabled={this.renaming}
+                    label="Start"
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    variant="filled"
+                    fullWidth
+                    onChange={this.handleRenameChange}
+                    value={this.state.currentName}
+                    disabled={this.renaming}
+                    label="End"
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    variant="filled"
+                    fullWidth
+                    onChange={this.handleRenameChange}
+                    value={this.state.currentName}
+                    disabled={this.renaming}
+                    label="Noise"
+                  />
+                </Grid>
+              </Grid>
+            </Box>
+
+            <Box pl={1.25}>
+              <Button
+                className='noHover'
+                disableRipple
+                style={ { color: primaryColor, padding: 0, textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.01rem', lineHeight: '200%' } }
+                variant='text'
+              >+ add another pulse</Button>
+            </Box>
+
+            <TextField
+              variant="filled"
+              fullWidth
+              onChange={this.handleRenameChange}
+              value={this.state.currentName}
+              disabled={this.renaming}
+              label="Spike intervals (ms)"
+            />
+
+
+            <NetPyNEField mb={0} id="netParams.importCellParams.importSynMechs">
+              <Checkbox
+                fullWidth
+                noBackground
+              />
+            </NetPyNEField>
+
+
+            <NetPyNEField mb={0} id="netParams.popParams.cellType">
+              <NetPyNESelectField
+                style={{mb: 0}}
+                method="netpyne_geppetto.getAvailableCellTypes"
+                model={
+                  `netParams.popParams['${this.props.name}']['cellType']`
+                }
+                postProcessItems={this.postProcessMenuItems}
+              />
+            </NetPyNEField>
+
+            <Box display='flex' alignItems='center' style={ { gap: '1rem' } }>
+              <Typography style={ { color: experimentLabelColor, fontSize: '0.875rem', paddingLeft: '0.625rem', lineHeight: '130%', fontWeight: 400 } }>Start</Typography>
+              <Grid container alignItems='center' spacing={1}>
+                <Grid item xs={6}>
+                  <TextField
+                    variant="filled"
+                    fullWidth
+                    onChange={this.handleRenameChange}
+                    value={this.state.currentName}
+                    disabled={this.renaming}
+                    label="Start"
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    variant="filled"
+                    fullWidth
+                    onChange={this.handleRenameChange}
+                    value={this.state.currentName}
+                    disabled={this.renaming}
+                    label="End"
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    variant="filled"
+                    fullWidth
+                    onChange={this.handleRenameChange}
+                    value={this.state.currentName}
+                    disabled={this.renaming}
+                    label="Noise"
+                  />
+                </Grid>
+              </Grid>
+            </Box>
+
+
+
+            <TextField
+              variant="filled"
+              fullWidth
+              onChange={this.handleRenameChange}
+              value={this.state.currentName}
+              disabled={this.renaming}
+              label="Frequency (Hz)"
+            />
+          </Box>
+          {/* <NetPyNECoordsRange
             id="xRangePopParams"
             name={this.props.name}
             model="netParams.popParams"
@@ -330,7 +551,7 @@ class NetPyNEPopulation extends React.Component {
                 label: 'Normalized',
               },
             ]}
-          />
+          /> */}
         </Box>
       );
     } else {
