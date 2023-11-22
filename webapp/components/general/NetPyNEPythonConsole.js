@@ -74,11 +74,25 @@ export class NetPyNEPythonConsole extends Component {
     if (this.props.extensionLoaded !== nextProps.extensionLoaded) {
       return true;
     }
+    const iframeStyle = {
+      position: 'absolute',
+      left: `${offScreenLeft}px`,
+      width: '1px',    
+      height: '1px',   
+    };
+    var iframeWindow     = this.container.contentWindow;
+    const offScreenLeft = -window.innerWidth - 100; //plus additional buffer just in case
+
     if (nextProps.notebookVisible)
     {
-      var iframeWindow     = this.container.contentWindow;
       iframeWindow.onblur  = this.handleIframeBlur ;
       iframeWindow.onfocus = this.handleIframeFocus ;
+    }
+    else{
+      iframeWindow.position = 'absolute';
+      iframeWindow.left = `${offScreenLeft}px`;
+      iframeWindow.width = '1px';    
+      iframeWindow.height = '1px';
     }
     return false;
   }
@@ -104,14 +118,6 @@ export class NetPyNEPythonConsole extends Component {
 
   render () {
     const notebookName = GEPPETTO_CONFIGURATION.notebookName || "notebook.ipynb";
-    const offScreenLeft = -window.innerWidth - 100; //plus additional buffer just in case
-
-    const iframeStyle = {
-      position: 'absolute',
-      left: `${offScreenLeft}px`,
-      width: '1px',    
-      height: '1px',   
-    };
     
     return (
       <ReactResizeDetector handleWidth handleHeight>
@@ -120,7 +126,6 @@ export class NetPyNEPythonConsole extends Component {
           pythonNotebookPath={`notebooks/${notebookName}`}
           extensionLoaded={this.props.extensionLoaded}
           iframeHeight={height}
-          style={iframeStyle} 
         />
       )}
     </ReactResizeDetector>
