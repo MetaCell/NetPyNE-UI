@@ -289,7 +289,7 @@ class NetPyNEPopulation extends React.Component {
     } else if (this.state.sectionId == 'Stimulation') {
       var content = (
         <Box className="scrollbar scrollchild" mt={ 1 }>
-          <Box mb={ 3.5 } display='flex' style={ { gap: '0.5rem' } }>
+          {/* <Box mb={ 3.5 } display='flex' style={ { gap: '0.5rem' } }>
             <Box>
               <Switch checked={true} />
             </Box>
@@ -315,7 +315,7 @@ class NetPyNEPopulation extends React.Component {
                 variant='text'
               >View Configurations in stim. source</Button>
             </Box>
-          </Box>
+          </Box> */}
           <Box display='flex' flexDirection='column' style={ { gap: '0.5rem' } }>
             <NetPyNEField mb={0} id="netParams.popParams.cellType">
               <NetPyNESelectField

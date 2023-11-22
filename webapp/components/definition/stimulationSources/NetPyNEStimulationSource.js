@@ -423,7 +423,7 @@ class NetPyNEStimulationSource extends React.Component {
 
     return (
       <Box className="scrollbar scrollchild" mt={1}>
-        <Box display='flex' flexDirection='column' style={ { gap: '0.5rem' } }>
+        {/* <Box display='flex' flexDirection='column' style={ { gap: '0.5rem' } }>
             <TextField
               variant="filled"
               fullWidth
@@ -573,9 +573,9 @@ class NetPyNEStimulationSource extends React.Component {
               disabled={this.renaming}
               label="Frequency (Hz)"
             />
-          </Box>
-        {/* <div> */}
-          {/* <Box mb={1}>
+          </Box> */}
+        <div>
+          <Box mb={1}>
             <TextField
               fullWidth
               variant="filled"
@@ -611,10 +611,10 @@ class NetPyNEStimulationSource extends React.Component {
                 ))
                 : null}
             </Select>
-          </NetPyNEField> */}
-        {/* </div> */}
-        {/* {variableContent} */}
-        {/* {dialogPop} */}
+          </NetPyNEField>
+        </div>
+        {variableContent}
+        {dialogPop}
       </Box>
     );
   }
