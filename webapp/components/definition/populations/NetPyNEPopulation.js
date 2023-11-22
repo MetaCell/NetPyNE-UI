@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { BottomNavigation, BottomNavigationAction, Grid, Switch, Typography } from '@material-ui/core';
 import FontIcon from '@material-ui/core/Icon';
@@ -32,6 +32,11 @@ const styles = ({ spacing }) => ({
 } );
 
 const { textColor, primaryColor, experimentLabelColor } = vars;
+const newPulseObject = {
+  start: null,
+  end: null,
+  noise: null,
+};
 
 class NetPyNEPopulation extends React.Component {
   constructor (props) {
@@ -42,6 +47,9 @@ class NetPyNEPopulation extends React.Component {
       sectionId: 'General',
       errorMessage: undefined,
       errorDetails: undefined,
+      pulses: [{
+        ...newPulseObject,
+      }],
     };
   }
 
@@ -171,8 +179,16 @@ class NetPyNEPopulation extends React.Component {
       </MenuItem>
     ));
   }
+  addAnotherPulse = () => {
+    this.setState((prevState) => ({
+      ...prevState, // Spread the current state to retain other properties
+      pulses: [...prevState.pulses, { ...newPulseObject }], // Push the new object into the 'pulses' array
+    }));
+  };
+ 
 
   render () {
+
     const { classes } = this.props;
 
     const dialogPop = this.state.errorMessage != undefined ? (
@@ -337,87 +353,48 @@ class NetPyNEPopulation extends React.Component {
               label="Seed"
             />
 
-            <Box display='flex' alignItems='center' style={{gap: '1rem'}}>
+            <Box display='flex' alignItems='flex-start' style={{gap: '1rem'}}>
               <Typography style={ {
-                  color: experimentLabelColor, paddingLeft: '0.625rem', fontSize: '0.875rem', lineHeight: '130%', fontWeight: 400
+                  color: experimentLabelColor, flexShrink: 0, padding: '18.5px 0 18.5px 10px', fontSize: '0.875rem', lineHeight: '130%', fontWeight: 400
                 } }
               >
                 Spiking Pulse / Rate
               </Typography>
-              <Grid container alignItems='center' spacing={1}>
-                <Grid item xs={4}>
-                  <TextField
-                    variant="filled"
-                    fullWidth
-                    onChange={this.handleRenameChange}
-                    value={this.state.currentName}
-                    disabled={this.renaming}
-                    label="Start"
-                  />
-                </Grid>
-                <Grid item xs={4}>
-                  <TextField
-                    variant="filled"
-                    fullWidth
-                    onChange={this.handleRenameChange}
-                    value={this.state.currentName}
-                    disabled={this.renaming}
-                    label="End"
-                  />
-                </Grid>
-                <Grid item xs={4}>
-                  <TextField
-                    variant="filled"
-                    fullWidth
-                    onChange={this.handleRenameChange}
-                    value={this.state.currentName}
-                    disabled={this.renaming}
-                    label="Noise"
-                  />
-                </Grid>
-              </Grid>
-            </Box>
+              <Box display='flex' flexDirection='column' style={{gap: '0.5rem'}}>
+                { this.state.pulses.map((pulse, index) => (<Grid container alignItems='center' spacing={1} key={`pulse_${index}`}>
+                  <Grid item xs={4}>
+                    <TextField
+                      variant="filled"
+                      fullWidth
+                      onChange={this.handleRenameChange}
+                      value={pulse.start}
+                      disabled={this.renaming}
+                      label="Start"
+                    />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <TextField
+                      variant="filled"
+                      fullWidth
+                      onChange={this.handleRenameChange}
+                      value={pulse.end}
+                      disabled={this.renaming}
+                      label="End"
+                    />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <TextField
+                      variant="filled"
+                      fullWidth
+                      onChange={this.handleRenameChange}
+                      value={pulse.noise}
+                      disabled={this.renaming}
+                      label="Noise"
+                    />
+                  </Grid>
+                </Grid>)) }
 
-
-            <Box display='flex' alignItems='center' style={{gap: '1rem'}}>
-              <Typography style={ {
-                  color: experimentLabelColor, paddingLeft: '0.625rem', fontSize: '0.875rem', lineHeight: '130%', fontWeight: 400, visibility: 'hidden'
-                } }
-              >
-                Spiking Pulse / Rate
-              </Typography>
-              <Grid container alignItems='center' spacing={1}>
-                <Grid item xs={4}>
-                  <TextField
-                    variant="filled"
-                    fullWidth
-                    onChange={this.handleRenameChange}
-                    value={this.state.currentName}
-                    disabled={this.renaming}
-                    label="Start"
-                  />
-                </Grid>
-                <Grid item xs={4}>
-                  <TextField
-                    variant="filled"
-                    fullWidth
-                    onChange={this.handleRenameChange}
-                    value={this.state.currentName}
-                    disabled={this.renaming}
-                    label="End"
-                  />
-                </Grid>
-                <Grid item xs={4}>
-                  <TextField
-                    variant="filled"
-                    fullWidth
-                    onChange={this.handleRenameChange}
-                    value={this.state.currentName}
-                    disabled={this.renaming}
-                    label="Noise"
-                  />
-                </Grid>
-              </Grid>
+              </Box>
             </Box>
 
             <Box pl={1.25}>
@@ -426,6 +403,7 @@ class NetPyNEPopulation extends React.Component {
                 disableRipple
                 style={ { color: primaryColor, padding: 0, textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.01rem', lineHeight: '200%' } }
                 variant='text'
+                onClick={() => this.addAnotherPulse()}
               >+ add another pulse</Button>
             </Box>
 
