@@ -32,7 +32,11 @@ const styles = ({ spacing }) => ({
     width: '100%',
   },
 });
-
+const newPulseObject = {
+  start: null,
+  end: null,
+  noise: null,
+};
 class NetPyNEStimulationSource extends React.Component {
   constructor (props) {
     super(props);
@@ -41,6 +45,9 @@ class NetPyNEStimulationSource extends React.Component {
       sourceType: 'NetStim',
       errorMessage: undefined,
       errorDetails: undefined,
+      pulses: [{
+        ...newPulseObject,
+      }],
     };
     this.stimSourceTypeOptions = [
       { type: 'NetStim' },
@@ -149,6 +156,13 @@ class NetPyNEStimulationSource extends React.Component {
     this.setState({ sourceType: event.target.value });
     this.props.updateCards();
   }
+
+  addAnotherPulse = () => {
+    this.setState((prevState) => ({
+      ...prevState, // Spread the current state to retain other properties
+      pulses: [...prevState.pulses, { ...newPulseObject }], // Push the new object into the 'pulses' array
+    }));
+  };
 
   render () {
     const { classes } = this.props;
@@ -452,44 +466,49 @@ class NetPyNEStimulationSource extends React.Component {
               label="Seed"
             />
 
-            <Grid container alignItems='center' spacing={1}>
-              <Grid item xs={3}>
-                <Typography style={ {
-                  color: experimentLabelColor, paddingLeft: '0.625rem', fontSize: '0.875rem', lineHeight: '130%', fontWeight: 400
+<Box display='flex' alignItems='flex-start' style={{gap: '1rem'}}>
+              <Typography style={ {
+                  color: experimentLabelColor, flexShrink: 0, padding: '18.5px 0 18.5px 10px', fontSize: '0.875rem', lineHeight: '130%', fontWeight: 400
                 } }
-                >Spiking Pulse / Rate</Typography>
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  variant="filled"
-                  fullWidth
-                  onChange={this.handleRenameChange}
-                  value={this.state.currentName}
-                  disabled={this.renaming}
-                  label="Start"
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  variant="filled"
-                  fullWidth
-                  onChange={this.handleRenameChange}
-                  value={this.state.currentName}
-                  disabled={this.renaming}
-                  label="End"
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  variant="filled"
-                  fullWidth
-                  onChange={this.handleRenameChange}
-                  value={this.state.currentName}
-                  disabled={this.renaming}
-                  label="Noise"
-                />
-              </Grid>
-            </Grid>
+              >
+                Spiking Pulse / Rate
+              </Typography>
+              <Box display='flex' flexDirection='column' style={{gap: '0.5rem'}}>
+                { this.state.pulses.map((pulse, index) => ( <Grid container alignItems='center' spacing={1} key={`stimpulse_${index}`}>
+                  <Grid item xs={4}>
+                    <TextField
+                      variant="filled"
+                      fullWidth
+                      onChange={this.handleRenameChange}
+                      value={this.state.currentName}
+                      disabled={this.renaming}
+                      label="Start"
+                    />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <TextField
+                      variant="filled"
+                      fullWidth
+                      onChange={this.handleRenameChange}
+                      value={this.state.currentName}
+                      disabled={this.renaming}
+                      label="End"
+                    />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <TextField
+                      variant="filled"
+                      fullWidth
+                      onChange={this.handleRenameChange}
+                      value={this.state.currentName}
+                      disabled={this.renaming}
+                      label="Noise"
+                    />
+                  </Grid>
+                </Grid> )
+                )}
+              </Box>
+            </Box>
 
             <Box pl={1.25}>
               <Button
@@ -497,6 +516,7 @@ class NetPyNEStimulationSource extends React.Component {
                 disableRipple
                 style={ { color: primaryColor, padding: 0, textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.01rem', lineHeight: '200%', fontWeight: 700 } }
                 variant='text'
+                onClick={() => this.addAnotherPulse()}
               >+ add another pulse</Button>
             </Box>
 
