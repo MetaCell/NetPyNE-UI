@@ -18,11 +18,13 @@ import {
   NetPyNEField,
   NetPyNECoordsRange,
   NetPyNESelectField,
+  NetPyNETextField,
 } from 'netpyne/components';
 import Utils from '../../../Utils';
 import Checkbox from '../../general/Checkbox';
 import { vars } from '../../../theme';
 import { BASE_PATH } from '../../general/NetPyNEIcons';
+import { evalPythonMessage, execPythonMessage } from '../../general/GeppettoJupyterUtils';
 
 const styles = ({ spacing }) => ({
   fields: {
@@ -50,6 +52,9 @@ class NetPyNEPopulation extends React.Component {
       pulses: [{
         ...newPulseObject,
       }],
+      // cellModel: undefined,
+      cellModel: "VecStim",
+      patternType: undefined,
     };
   }
 
@@ -185,7 +190,170 @@ class NetPyNEPopulation extends React.Component {
       pulses: [...prevState.pulses, { ...newPulseObject }], // Push the new object into the 'pulses' array
     }));
   };
- 
+
+  changeCellModel = (newValue) => {
+    this.setState((prevState) => ({
+      ...prevState,
+      cellModel: newValue
+    }))
+  }
+
+  changeCellPattern = (newValue) => {
+    if (!newValue) {
+      execPythonMessage(`del netpyne_geppetto.netParams.popParams['${this.props.name}']['spikePattern']`)
+    }
+    else {
+      execPythonMessage(`netpyne_geppetto.netParams.popParams['${this.props.name}']['spikePattern'] = {}
+netpyne_geppetto.netParams.popParams['${this.props.name}']['spikePattern']['type'] = '${newValue}'`)
+    }
+    this.setState((prevState) => ({
+      ...prevState,
+      patternType: newValue
+    }))
+  }
+
+  cellStimulationLayout = () => {
+    if (!["VecStim", "NetStim"].includes(this.state.cellModel)) {
+      return <></>
+    }
+    return <>
+      <NetPyNEField id="netParams.popParams.seed">
+        <NetPyNETextField
+          fullWidth
+          variant="filled"
+          model={`netParams.popParams['${this.props.name}']['seed']`}
+        />
+      </NetPyNEField>
+      <Box display='flex' alignItems='flex-start' style={{gap: '1rem'}}>
+        <Typography style={ {
+            color: experimentLabelColor, flexShrink: 0, padding: '18.5px 0 18.5px 10px', fontSize: '0.875rem', lineHeight: '130%', fontWeight: 400
+          } }
+        >
+          Spiking Pulse / Rate
+        </Typography>
+        <Box display='flex' flexDirection='column' style={{gap: '0.5rem'}}>
+          { this.state.pulses.map((pulse, index) => (<Grid container alignItems='center' spacing={1} key={`pulse_${index}`}>
+            <Grid item xs={4}>
+              <TextField
+                variant="filled"
+                fullWidth
+                onChange={this.handleRenameChange}
+                value={pulse.start}
+                disabled={this.renaming}
+                label="Start"
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                variant="filled"
+                fullWidth
+                onChange={this.handleRenameChange}
+                value={pulse.end}
+                disabled={this.renaming}
+                label="End"
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                variant="filled"
+                fullWidth
+                onChange={this.handleRenameChange}
+                value={pulse.noise}
+                disabled={this.renaming}
+                label="Noise"
+              />
+            </Grid>
+          </Grid>)) }
+        </Box>
+      </Box>
+
+      <Box pl={1.25}>
+        <Button
+          className='noHover'
+          disableRipple
+          style={ { color: primaryColor, padding: 0, textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.01rem', lineHeight: '200%' } }
+          variant='text'
+          onClick={() => this.addAnotherPulse()}
+        >+ add another pulse</Button>
+      </Box>
+
+      <TextField
+        variant="filled"
+        fullWidth
+        onChange={this.handleRenameChange}
+        value={this.state.currentName}
+        disabled={this.renaming}
+        label="Spike intervals (ms)"
+      />
+
+      <NetPyNEField mb={0} id="netParams.popParams.interval">
+        <NetPyNETextField
+          fullWidth
+          variant="filled"
+          model={`netParams.popParams['${this.props.name}']['interval']`}
+        />
+      </NetPyNEField>
+
+
+      {/* <NetPyNEField mb={0} id="netParams.importCellParams.importSynMechs">
+        <Checkbox
+          fullWidth
+          noBackground
+        />
+      </NetPyNEField> */}
+
+
+      <NetPyNEField mb={0} id="netParams.popParams.spikePattern">
+        <NetPyNESelectField
+          style={{mb: 0}}
+          value={this.state.patternType}
+          method="netpyne_geppetto.getAvailableStimulationPattern"
+          model={
+            `netParams.popParams['${this.props.name}']['spikePattern']['type']`
+          }
+          // pythonParams={[this.props.name]}
+          postProcessItems={this.postProcessMenuItems}
+          postHandleChange={this.changeCellPattern}
+        />
+      </NetPyNEField>
+
+      <Box display='flex' alignItems='center' style={ { gap: '1rem' } }>
+        <Typography style={ { color: experimentLabelColor, fontSize: '0.875rem', paddingLeft: '0.625rem', lineHeight: '130%', fontWeight: 400 } }>Start</Typography>
+        <Grid container alignItems='center' spacing={1}>
+          <Grid item xs={6}>
+          <NetPyNEField mb={0} id="netParams.popParams.spikePattern.rhythmic.start">
+            <NetPyNETextField
+                fullWidth
+                variant="filled"
+                model={`netParams.popParams['${this.props.name}']['interval']`}
+              />
+            </NetPyNEField>
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              variant="filled"
+              fullWidth
+              onChange={this.handleRenameChange}
+              value={this.state.currentName}
+              disabled={this.renaming}
+              label="End"
+            />
+          </Grid>
+        </Grid>
+      </Box>
+
+
+
+      <TextField
+        variant="filled"
+        fullWidth
+        onChange={this.handleRenameChange}
+        value={this.state.currentName}
+        disabled={this.renaming}
+        label="Frequency (Hz)"
+      />
+</>
+  }
 
   render () {
 
@@ -234,6 +402,7 @@ class NetPyNEPopulation extends React.Component {
           <div id="netParams_popParams_cellType">
             <NetPyNEField id="netParams.popParams.cellType">
               <NetPyNESelectField
+                value=""
                 method="netpyne_geppetto.getAvailableCellTypes"
                 model={
                   `netParams.popParams['${this.props.name}']['cellType']`
@@ -333,155 +502,18 @@ class NetPyNEPopulation extends React.Component {
             </Box>
           </Box> */}
           <Box display='flex' flexDirection='column' style={ { gap: '0.5rem' } }>
-            <NetPyNEField mb={0} id="netParams.popParams.cellType">
+            <NetPyNEField mb={0} id="netParams.popParams.cellModel">
               <NetPyNESelectField
                 style={{mb: 0}}
-                method="netpyne_geppetto.getAvailableCellTypes"
+                method="netpyne_geppetto.getAvailableCellModels"
                 model={
-                  `netParams.popParams['${this.props.name}']['cellType']`
+                  `netParams.popParams['${this.props.name}']['cellModel']`
                 }
                 postProcessItems={this.postProcessMenuItems}
+                postHandleChange={this.changeCellModel}
               />
             </NetPyNEField>
-
-            <TextField
-              variant="filled"
-              fullWidth
-              onChange={this.handleRenameChange}
-              value={this.state.currentName}
-              disabled={this.renaming}
-              label="Seed"
-            />
-
-            <Box display='flex' alignItems='flex-start' style={{gap: '1rem'}}>
-              <Typography style={ {
-                  color: experimentLabelColor, flexShrink: 0, padding: '18.5px 0 18.5px 10px', fontSize: '0.875rem', lineHeight: '130%', fontWeight: 400
-                } }
-              >
-                Spiking Pulse / Rate
-              </Typography>
-              <Box display='flex' flexDirection='column' style={{gap: '0.5rem'}}>
-                { this.state.pulses.map((pulse, index) => (<Grid container alignItems='center' spacing={1} key={`pulse_${index}`}>
-                  <Grid item xs={4}>
-                    <TextField
-                      variant="filled"
-                      fullWidth
-                      onChange={this.handleRenameChange}
-                      value={pulse.start}
-                      disabled={this.renaming}
-                      label="Start"
-                    />
-                  </Grid>
-                  <Grid item xs={4}>
-                    <TextField
-                      variant="filled"
-                      fullWidth
-                      onChange={this.handleRenameChange}
-                      value={pulse.end}
-                      disabled={this.renaming}
-                      label="End"
-                    />
-                  </Grid>
-                  <Grid item xs={4}>
-                    <TextField
-                      variant="filled"
-                      fullWidth
-                      onChange={this.handleRenameChange}
-                      value={pulse.noise}
-                      disabled={this.renaming}
-                      label="Noise"
-                    />
-                  </Grid>
-                </Grid>)) }
-
-              </Box>
-            </Box>
-
-            <Box pl={1.25}>
-              <Button
-                className='noHover'
-                disableRipple
-                style={ { color: primaryColor, padding: 0, textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.01rem', lineHeight: '200%' } }
-                variant='text'
-                onClick={() => this.addAnotherPulse()}
-              >+ add another pulse</Button>
-            </Box>
-
-            <TextField
-              variant="filled"
-              fullWidth
-              onChange={this.handleRenameChange}
-              value={this.state.currentName}
-              disabled={this.renaming}
-              label="Spike intervals (ms)"
-            />
-
-
-            <NetPyNEField mb={0} id="netParams.importCellParams.importSynMechs">
-              <Checkbox
-                fullWidth
-                noBackground
-              />
-            </NetPyNEField>
-
-
-            <NetPyNEField mb={0} id="netParams.popParams.cellType">
-              <NetPyNESelectField
-                style={{mb: 0}}
-                method="netpyne_geppetto.getAvailableCellTypes"
-                model={
-                  `netParams.popParams['${this.props.name}']['cellType']`
-                }
-                postProcessItems={this.postProcessMenuItems}
-              />
-            </NetPyNEField>
-
-            <Box display='flex' alignItems='center' style={ { gap: '1rem' } }>
-              <Typography style={ { color: experimentLabelColor, fontSize: '0.875rem', paddingLeft: '0.625rem', lineHeight: '130%', fontWeight: 400 } }>Start</Typography>
-              <Grid container alignItems='center' spacing={1}>
-                <Grid item xs={6}>
-                  <TextField
-                    variant="filled"
-                    fullWidth
-                    onChange={this.handleRenameChange}
-                    value={this.state.currentName}
-                    disabled={this.renaming}
-                    label="Start"
-                  />
-                </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    variant="filled"
-                    fullWidth
-                    onChange={this.handleRenameChange}
-                    value={this.state.currentName}
-                    disabled={this.renaming}
-                    label="End"
-                  />
-                </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    variant="filled"
-                    fullWidth
-                    onChange={this.handleRenameChange}
-                    value={this.state.currentName}
-                    disabled={this.renaming}
-                    label="Noise"
-                  />
-                </Grid>
-              </Grid>
-            </Box>
-
-
-
-            <TextField
-              variant="filled"
-              fullWidth
-              onChange={this.handleRenameChange}
-              value={this.state.currentName}
-              disabled={this.renaming}
-              label="Frequency (Hz)"
-            />
+            {this.cellStimulationLayout()}
           </Box>
           {/* <NetPyNECoordsRange
             id="xRangePopParams"

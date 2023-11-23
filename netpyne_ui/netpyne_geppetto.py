@@ -912,11 +912,18 @@ class NetPyNEGeppetto:
                     cell_models.add(cm)
         return list(cell_models)
 
-    def getAvailableCellTypes(self):
-        cell_types = set([])
-        for p in self.netParams.cellParams:
-            cell_types.add(p)
-        return list(cell_types)
+    def getAvailableCellModels(self):
+        return ["", "VecStim", "NetStim", "IntFire1"]
+
+    def getAvailableStimulationPattern(self):
+        # self.netParams.popParams[name]['spikePattern'] = {}
+        return ["", "rhythmic", "evoked", "poisson", "gauss"]
+
+    # def getAvailableCellTypes(self):
+    #     cell_types = set([])
+    #     for p in self.netParams.cellParams:
+    #         cell_types.add(p)
+    #     return list(cell_types)
 
     def getAvailableSections(self):
         sections = {}
