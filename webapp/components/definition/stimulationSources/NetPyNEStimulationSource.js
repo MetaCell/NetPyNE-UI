@@ -593,9 +593,61 @@ class NetPyNEStimulationSource extends React.Component {
               disabled={this.renaming}
               label="Frequency (Hz)"
             />
-          </Box> */}
-        <div>
-          <Box mb={1}>
+            <TextField
+              variant="filled"
+              fullWidth
+              onChange={this.handleRenameChange}
+              value={this.state.currentName}
+              disabled={this.renaming}
+              label="freStd (Hz)"
+            />
+            <NetPyNEField mb={0} id="netParams.popParams.cellType">
+              <NetPyNESelectField
+                style={{mb: 0}}
+                method="netpyne_geppetto.getAvailableCellTypes"
+                model={
+                  `netParams.popParams['${this.props.name}']['cellType']`
+                }
+                postProcessItems={this.postProcessMenuItems}
+              />
+            </NetPyNEField>
+            <NetPyNEField mb={0} id="netParams.popParams.cellType">
+              <NetPyNESelectField
+                style={{mb: 0}}
+                method="netpyne_geppetto.getAvailableCellTypes"
+                model={
+                  `netParams.popParams['${this.props.name}']['cellType']`
+                }
+                postProcessItems={this.postProcessMenuItems}
+              />
+            </NetPyNEField>
+            <TextField
+              variant="filled"
+              fullWidth
+              onChange={this.handleRenameChange}
+              value={this.state.currentName}
+              disabled={this.renaming}
+              label="EventsPerCycle"
+            />
+            <TextField
+              variant="filled"
+              fullWidth
+              onChange={this.handleRenameChange}
+              value={this.state.currentName}
+              disabled={this.renaming}
+              label="Repeats"
+            />
+            <TextField
+              variant="filled"
+              fullWidth
+              onChange={this.handleRenameChange}
+              value={this.state.currentName}
+              disabled={this.renaming}
+              label="Stops"
+            />
+          </Box> *}
+        {/* <div> */}
+          {/* <Box mb={1}>
             <TextField
               fullWidth
               variant="filled"
