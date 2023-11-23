@@ -9,7 +9,7 @@ import Utils from '../../Utils';
 export default class NetPyNECoordsRange extends Component {
   constructor (props) {
     super(props);
-    this.state = { rangeType: undefined };
+    this.state = { rangeType: undefined, rangeValue: [undefined, undefined]  };
 
     this._isMounted = false;
   }
@@ -48,17 +48,34 @@ export default class NetPyNECoordsRange extends Component {
 
     const message = `netpyne_geppetto.${model}['${name}']${(conds !== undefined)
       ? `['${conds}']` : ''}`;
+    const evalMessage = `[key in ${message} for key in ['${items[0].value}', '${items[1].value}']]` ;
+
     Utils
-      .evalPythonMessage(`[key in ${message} for key in ['${items[0].value}', '${items[1].value}']]`)
-      .then((response) => {
-        if (response[0] && this._isMounted === true) {
-          this.setState({ rangeType: items[0].value });
-        } else if (response[1] && this._isMounted === true) {
-          this.setState({ rangeType: items[1].value });
-        } else if (this._isMounted === true) {
-          this.setState({ rangeType: undefined });
-        }
-      });
+    .evalPythonMessage(evalMessage)
+    .then((response) => {
+
+      let rangeType = undefined ;
+
+      if (response[0] && this._isMounted === true) {
+        rangeType = items[0].value ;
+      } else if (response[1] && this._isMounted === true) {
+        rangeType = items[1].value ;
+      } 
+
+      this.setState({ rangeType });
+
+      if (rangeType)
+      {
+        const pythonMessage = `netpyne_geppetto.${model}['${name}']['${this.state.rangeType}']` ;
+  
+        Utils
+        .evalPythonMessage(pythonMessage)
+        .then((response) => {
+          if (response && response.length > 0 ) {
+            this.setState({ rangeValue: response });
+        }});
+      }
+    });
   }
 
   createMenuItems = () => this.props.items.map((obj) => (
@@ -76,11 +93,18 @@ export default class NetPyNECoordsRange extends Component {
   }
 
   //preConds: pop, cellType, cellModel, x, y, z, xnorm, ynorm, znorm
-  handleCoordParamChange(a, b, newValue) {
-    const pythonMessage = `netpyne_geppetto.${this.model} = [${newValue}]` ;
+  handleCoordParamChange(index, newValue) {
+    const {
+      model,
+      name,
+    } = this.props;
+    const rangeValue = this.state.rangeValue ;
+    rangeValue[index] = newValue ;
+    const pythonMessage = `netpyne_geppetto.${model}['${name}']['${this.state.rangeType}'] = [${rangeValue}]` ;
     Utils.execPythonMessage(
       pythonMessage
     );
+    this.setState({ rangeValue })
   }
 
   render () {
@@ -93,6 +117,10 @@ export default class NetPyNECoordsRange extends Component {
     }
     const min = `${this.props.id}MinRange`;
     const max = `${this.props.id}MaxRange`;
+
+    const minVal = this.state.rangeValue[0];
+    const maxVal = this.state.rangeValue[1];
+
     return (
       <div>
         <NetPyNEField id={meta}>
@@ -108,28 +136,8 @@ export default class NetPyNECoordsRange extends Component {
         {(this.state.rangeType != undefined)
           ? (
             <Box width="100%" p={1}>
-              <AdapterComponent
-                model={path}
-                convertToPython={(state) => {
-                  if (!state[state.lastUpdated].toString()
-                    .endsWith('.')
-                    && ((!isNaN(parseFloat(state[min]))) && (!isNaN(parseFloat(state[max]))))) {
-                    return [parseFloat(state[min]), parseFloat(state[max])];
-                  }
-                }}
-                convertFromPython={(prevProps, prevState, value) => {
-                  if (value != undefined && prevProps.value != value && value != '') {
-                    const output = {};
-                    output[min] = value[0];
-                    output[max] = value[1];
-                    return output;
-                  }
-                }}
-                onChange={this.handleCoordParamChange}
-              >
-                <TextField label="Minimum" id={min} variant="filled" fullWidth />
-                <TextField label="Maximum" id={max} variant="filled" fullWidth />
-              </AdapterComponent>
+                <TextField label="Minimum" id={minVal} variant="filled" value={minVal} fullWidth onChange={ (e) => { this.handleCoordParamChange(0, parseInt(e.target.value)) } } />
+                <TextField label="Maximum" id={maxVal} variant="filled" value={maxVal} fullWidth onChange={ (e) => { this.handleCoordParamChange(1, parseInt(e.target.value)) } } />
             </Box>
           )
           : null}
