@@ -915,6 +915,9 @@ class NetPyNEGeppetto:
     def getAvailableCellModels(self):
         return ["", "VecStim", "NetStim", "IntFire1"]
 
+    def getAvailableStimulationDistribution(self):
+        return ["normal", "uniform"]
+
     def getAvailableStimulationPattern(self):
         # self.netParams.popParams[name]['spikePattern'] = {}
         return ["", "rhythmic", "evoked", "poisson", "gauss"]

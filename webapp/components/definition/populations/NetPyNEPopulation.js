@@ -212,6 +212,179 @@ netpyne_geppetto.netParams.popParams['${this.props.name}']['spikePattern']['type
     }))
   }
 
+  rhythmicLayout = () => {
+    return <>
+      <Box display='flex' alignItems='center' style={ { gap: '1rem' } }>
+        <Typography style={ { color: experimentLabelColor, fontSize: '0.875rem', paddingLeft: '0.625rem', lineHeight: '130%', fontWeight: 400 } }>Start</Typography>
+        <Grid container alignItems='center' spacing={1}>
+          <Grid item xs={4}>
+            <NetPyNEField mb={0} id="netParams.popParams.spikePattern.rhythmic.start">
+              <NetPyNETextField
+                  fullWidth
+                  variant="filled"
+                  model={`netParams.popParams['${this.props.name}']['interval']`}  // TODO
+                />
+            </NetPyNEField>
+          </Grid>
+          <Grid item xs={4}>
+            <NetPyNEField mb={0} id="netParams.popParams.spikePattern.rhythmic.startMax">
+              <NetPyNETextField
+                fullWidth
+                variant="filled"
+                model={`netParams.popParams['${this.props.name}']['interval']`}  // TODO
+              />
+            </NetPyNEField>
+          </Grid>
+          <Grid item xs={4}>
+            <NetPyNEField mb={0} id="netParams.popParams.spikePattern.rhythmic.startStd">
+              <NetPyNETextField
+                fullWidth
+                variant="filled"
+                model={`netParams.popParams['${this.props.name}']['spikePattern']['startStd']`}
+              />
+            </NetPyNEField>
+          </Grid>
+        </Grid>
+      </Box>
+
+      <NetPyNEField mb={0} id="netParams.popParams.spikePattern.rhythmic.freq">
+        <NetPyNETextField
+          fullWidth
+          variant="filled"
+          model={`netParams.popParams['${this.props.name}']['spikePattern']['freq']`}
+        />
+      </NetPyNEField>
+
+      <NetPyNEField mb={0} id="netParams.popParams.spikePattern.rhythmic.freqStd">
+        <NetPyNETextField
+          fullWidth
+          variant="filled"
+          model={`netParams.popParams['${this.props.name}']['spikePattern']['freq']`}
+        />
+      </NetPyNEField>
+
+      <NetPyNEField mb={0} id="netParams.popParams.spikePattern.rhythmic.distribution">
+        <NetPyNESelectField
+          style={{mb: 0}}
+          method="netpyne_geppetto.getAvailableStimulationDistribution"
+          model={
+            `netParams.popParams['${this.props.name}']['spikePattern']['distribution']`
+          }
+          postProcessItems={this.postProcessMenuItems}
+        />
+      </NetPyNEField>
+
+      <NetPyNEField mb={0} id="netParams.popParams.spikePattern.rhythmic.eventsPerCycle">
+        <NetPyNETextField
+          fullWidth
+          variant="filled"
+          model={`netParams.popParams['${this.props.name}']['spikePattern']['eventsPerCycle']`}
+        />
+      </NetPyNEField>
+
+      <NetPyNEField mb={0} id="netParams.popParams.spikePattern.rhythmic.repeats">
+        <NetPyNETextField
+          fullWidth
+          variant="filled"
+          model={`netParams.popParams['${this.props.name}']['spikePattern']['repeats']`}
+        />
+      </NetPyNEField>
+      <NetPyNEField mb={0} id="netParams.popParams.spikePattern.rhythmic.stop">
+        <NetPyNETextField
+          fullWidth
+          variant="filled"
+          model={`netParams.popParams['${this.props.name}']['spikePattern']['stop']`}
+        />
+      </NetPyNEField>
+    </>
+  }
+
+  evokedLayout = () => {
+    return <>
+      <NetPyNEField mb={0} id="netParams.popParams.spikePattern.evoked.start">
+        <NetPyNETextField
+          fullWidth
+          variant="filled"
+          model={`netParams.popParams['${this.props.name}']['spikePattern']['start']`}
+        />
+      </NetPyNEField>
+      <NetPyNEField mb={0} id="netParams.popParams.spikePattern.evoked.inc">
+        <NetPyNETextField
+          fullWidth
+          variant="filled"
+          model={`netParams.popParams['${this.props.name}']['spikePattern']['inc']`}
+        />
+      </NetPyNEField>
+      <NetPyNEField mb={0} id="netParams.popParams.spikePattern.evoked.startStd">
+        <NetPyNETextField
+          fullWidth
+          variant="filled"
+          model={`netParams.popParams['${this.props.name}']['spikePattern']['startStd']`}
+        />
+      </NetPyNEField>
+      <NetPyNEField mb={0} id="netParams.popParams.spikePattern.evoked.numspikes">
+        <NetPyNETextField
+          fullWidth
+          variant="filled"
+          model={`netParams.popParams['${this.props.name}']['spikePattern']['numspikes']`}
+        />
+      </NetPyNEField>
+    </>
+  }
+
+  poissonLayout = () => {
+    return <>
+      <NetPyNEField mb={0} id="netParams.popParams.spikePattern.poisson.start">
+        <NetPyNETextField
+          fullWidth
+          variant="filled"
+          model={`netParams.popParams['${this.props.name}']['spikePattern']['start']`}
+        />
+      </NetPyNEField>
+      <NetPyNEField mb={0} id="netParams.popParams.spikePattern.poisson.stop">
+        <NetPyNETextField
+          fullWidth
+          variant="filled"
+          model={`netParams.popParams['${this.props.name}']['spikePattern']['stop']`}
+        />
+      </NetPyNEField>
+      <NetPyNEField mb={0} id="netParams.popParams.spikePattern.poisson.frequency">
+        <NetPyNETextField
+          fullWidth
+          variant="filled"
+          model={`netParams.popParams['${this.props.name}']['spikePattern']['frequency']`}
+        />
+      </NetPyNEField>
+    </>
+  }
+
+  gaussLayout = () => {
+    return <>
+      <NetPyNEField mb={0} id="netParams.popParams.spikePattern.gauss.mu">
+        <NetPyNETextField
+          fullWidth
+          variant="filled"
+          model={`netParams.popParams['${this.props.name}']['spikePattern']['mu']`}
+        />
+      </NetPyNEField>
+      <NetPyNEField mb={0} id="netParams.popParams.spikePattern.gauss.sigma">
+        <NetPyNETextField
+          fullWidth
+          variant="filled"
+          model={`netParams.popParams['${this.props.name}']['spikePattern']['sigma']`}
+        />
+      </NetPyNEField>
+    </>
+  }
+
+  changeStimulationPatternLayout = (pattern) => {
+    const patternKey = `${pattern}Layout`;
+    if (!(patternKey in this)) {
+      return <></>
+    }
+    return this[patternKey]()
+  }
+
   cellStimulationLayout = () => {
     if (!["VecStim", "NetStim"].includes(this.state.cellModel)) {
       return <></>
@@ -317,41 +490,9 @@ netpyne_geppetto.netParams.popParams['${this.props.name}']['spikePattern']['type
         />
       </NetPyNEField>
 
-      <Box display='flex' alignItems='center' style={ { gap: '1rem' } }>
-        <Typography style={ { color: experimentLabelColor, fontSize: '0.875rem', paddingLeft: '0.625rem', lineHeight: '130%', fontWeight: 400 } }>Start</Typography>
-        <Grid container alignItems='center' spacing={1}>
-          <Grid item xs={6}>
-          <NetPyNEField mb={0} id="netParams.popParams.spikePattern.rhythmic.start">
-            <NetPyNETextField
-                fullWidth
-                variant="filled"
-                model={`netParams.popParams['${this.props.name}']['interval']`}
-              />
-            </NetPyNEField>
-          </Grid>
-          <Grid item xs={3}>
-            <TextField
-              variant="filled"
-              fullWidth
-              onChange={this.handleRenameChange}
-              value={this.state.currentName}
-              disabled={this.renaming}
-              label="End"
-            />
-          </Grid>
-        </Grid>
-      </Box>
+      {this.changeStimulationPatternLayout(this.state.patternType)}
 
 
-
-      <TextField
-        variant="filled"
-        fullWidth
-        onChange={this.handleRenameChange}
-        value={this.state.currentName}
-        disabled={this.renaming}
-        label="Frequency (Hz)"
-      />
 </>
   }
 
