@@ -109,23 +109,25 @@ export default class NetPyNECoordsRange extends Component {
       return list[1 - index];
     }
 
-    const opossiteRangeType = getOppositeObject(this.props.items, this.state.rangeType) ;
+    if (newValue === '' || (/^\d+$/.test(newValue))) {
+      const opossiteRangeType = getOppositeObject(this.props.items, this.state.rangeType) ;
 
-    if (opossiteRangeType)
-    {
-      const pythonMessageDelOpposite = `netpyne_geppetto.${model}['${name}']['${conds}'].pop('${opossiteRangeType.value}', None)`;
+      if (opossiteRangeType)
+      {
+        const pythonMessageDelOpposite = `netpyne_geppetto.${model}['${name}']['${conds}'].pop('${opossiteRangeType.value}', None)`;
+        Utils.execPythonMessage(
+          pythonMessageDelOpposite
+        );
+      }
+
+      const rangeValue = this.state.rangeValue ;
+      rangeValue[index] = newValue ;
+      const pythonMessage = `netpyne_geppetto.${model}['${name}']['${conds}']['${this.state.rangeType}'] = [${rangeValue}]` ;
       Utils.execPythonMessage(
-        pythonMessageDelOpposite
+        pythonMessage
       );
+      this.setState({ rangeValue })
     }
-
-    const rangeValue = this.state.rangeValue ;
-    rangeValue[index] = newValue ;
-    const pythonMessage = `netpyne_geppetto.${model}['${name}']['${conds}']['${this.state.rangeType}'] = [${rangeValue}]` ;
-    Utils.execPythonMessage(
-      pythonMessage
-    );
-    this.setState({ rangeValue })
   }
 
   render () {
