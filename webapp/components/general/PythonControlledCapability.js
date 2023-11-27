@@ -46,13 +46,13 @@ define((require) => {
         }
 
         connectToPython (componentType, model) {
-          const id = this.id.replace(/"/g, '\\"');
-          model = model.replace(/"/g, '\\"');
+          const id = this.id.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+          model = model.replace(/"/g, '\\"').replace(/\\/g, '\\\\');
           GeppettoUtils.execPythonMessage(`jupyter_geppetto.ComponentSync(componentType="${componentType}",model="${model}",id="${id}").connect()`);
         }
 
         disconnectFromPython () {
-          const id = this.id.replace(/"/g, '\\"');
+          const id = this.id.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
           GeppettoUtils.execPythonMessage(`jupyter_geppetto.remove_component_sync(componentType="${this.state.componentType}",model="${id}")`);
           GEPPETTO.ComponentFactory.removeExistingComponent(this.state.componentType, this);
         }

@@ -156,8 +156,8 @@ const Utils = {
   },
 
   renameKey (path, oldValue, newValue, callback) {
-    oldValue = oldValue.replace(/"/g, '\\"');
-    newValue = newValue.replace(/"/g, '\\"');
+    oldValue = oldValue.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    newValue = newValue.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
     this.execPythonMessage(`netpyne_geppetto.rename("${path}","${oldValue}","${newValue}")`)
       .then((response) => {
         callback(response, newValue);
