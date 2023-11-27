@@ -376,6 +376,7 @@ define((require) => {
         }
 
         updatePythonValue (newValue) {
+          const oldValue = this.state.value;
           this.setState({
             value: newValue,
             searchText: newValue,
@@ -383,6 +384,9 @@ define((require) => {
           });
           if (this.syncValueWithPython) {
             this.syncValueWithPython(newValue);
+          }
+          if (this.postHandleChange !== undefined) {
+            this.postHandleChange(newValue, oldValue)
           }
 
           this.forceUpdate();
@@ -396,9 +400,6 @@ define((require) => {
           }
           this.setState({ value: targetValue });
           this.updatePythonValue(targetValue);
-          if (this.postHandleChange !== undefined) {
-            this.postHandleChange(targetValue)
-          }
         }
 
         compareArrays (array1, array2) {

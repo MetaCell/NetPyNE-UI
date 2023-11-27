@@ -6,11 +6,14 @@ import Box from '@material-ui/core/Box';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
+import IconButton from '@material-ui/core/IconButton';
+import Icon from '@material-ui/core/Icon';
 
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+
 
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -19,6 +22,8 @@ import {
   NetPyNECoordsRange,
   NetPyNESelectField,
   NetPyNETextField,
+  ListComponent,
+  Tooltip,
 } from 'netpyne/components';
 import Utils from '../../../Utils';
 import Checkbox from '../../general/Checkbox';
@@ -35,9 +40,10 @@ const styles = ({ spacing }) => ({
 
 const { textColor, primaryColor, experimentLabelColor } = vars;
 const newPulseObject = {
-  start: null,
-  end: null,
-  noise: null,
+  start: 0,
+  end: 0,
+  rate: 0,
+  noise: 0,
 };
 
 class NetPyNEPopulation extends React.Component {
@@ -49,13 +55,18 @@ class NetPyNEPopulation extends React.Component {
       sectionId: 'General',
       errorMessage: undefined,
       errorDetails: undefined,
-      pulses: [{
-        ...newPulseObject,
-      }],
-      // cellModel: undefined,
-      cellModel: "VecStim",
-      patternType: undefined,
+      startParam: 'start',
+      model: undefined
     };
+
+    this.updateModel()
+  }
+
+  updateModel = async (componentName) => {
+    const name = componentName ? componentName : this.props.name;
+    const command = `utils.convertToJS(netpyne_geppetto.netParams.popParams['${name}'])`
+    const response = await execPythonMessage(command)
+    this.setState({model: response})
   }
 
   UNSAFE_componentWillReceiveProps (nextProps) {
@@ -64,6 +75,7 @@ class NetPyNEPopulation extends React.Component {
       selectedIndex: 0,
       sectionId: 'General',
     });
+    this.updateModel(nextProps.name)
   }
 
   shouldComponentUpdate (nextProps, nextState) {
@@ -73,6 +85,7 @@ class NetPyNEPopulation extends React.Component {
       || this.state.cellModelFields != nextState.cellModelFields
       || this.state.sectionId != nextState.sectionId
       || this.state.selectedIndex != nextState.selectedIndex
+      || this.state.model != nextState.model
     );
   }
 
@@ -184,18 +197,10 @@ class NetPyNEPopulation extends React.Component {
       </MenuItem>
     ));
   }
-  addAnotherPulse = () => {
-    this.setState((prevState) => ({
-      ...prevState, // Spread the current state to retain other properties
-      pulses: [...prevState.pulses, { ...newPulseObject }], // Push the new object into the 'pulses' array
-    }));
-  };
+
 
   changeCellModel = (newValue) => {
-    this.setState((prevState) => ({
-      ...prevState,
-      cellModel: newValue
-    }))
+    this.updateModel()
   }
 
   changeCellPattern = (newValue) => {
@@ -206,10 +211,27 @@ class NetPyNEPopulation extends React.Component {
       execPythonMessage(`netpyne_geppetto.netParams.popParams['${this.props.name}']['spikePattern'] = {}
 netpyne_geppetto.netParams.popParams['${this.props.name}']['spikePattern']['type'] = '${newValue}'`)
     }
-    this.setState((prevState) => ({
-      ...prevState,
-      patternType: newValue
-    }))
+    this.updateModel()
+  }
+
+  handleStartMaxChange = (newValue) => {
+    const maxIsSet = !( !newValue || newValue === '' )
+    if (maxIsSet) {
+      const command = `
+pattern = netpyne_geppetto.netParams.popParams['${this.props.name}']['spikePattern']
+pattern['start'], pattern['startMin'] = -1, pattern.get('start', '')`
+      execPythonMessage(command)
+    } else {
+      const command = `
+pattern = netpyne_geppetto.netParams.popParams['${this.props.name}']['spikePattern']
+pattern['start'] = pattern['startMin']
+del pattern['startMin']`
+      execPythonMessage(command)
+    }
+
+    this.setState({
+      startParam: maxIsSet ? "startMin" : "start"
+    })
   }
 
   rhythmicLayout = () => {
@@ -222,7 +244,7 @@ netpyne_geppetto.netParams.popParams['${this.props.name}']['spikePattern']['type
               <NetPyNETextField
                   fullWidth
                   variant="filled"
-                  model={`netParams.popParams['${this.props.name}']['interval']`}  // TODO
+                  model={`netParams.popParams['${this.props.name}']['spikePattern']['${this.state.startParam}']`}
                 />
             </NetPyNEField>
           </Grid>
@@ -231,7 +253,8 @@ netpyne_geppetto.netParams.popParams['${this.props.name}']['spikePattern']['type
               <NetPyNETextField
                 fullWidth
                 variant="filled"
-                model={`netParams.popParams['${this.props.name}']['interval']`}  // TODO
+                model={`netParams.popParams['${this.props.name}']['spikePattern']['startMax']`}
+                callback={this.handleStartMaxChange}
               />
             </NetPyNEField>
           </Grid>
@@ -385,8 +408,84 @@ netpyne_geppetto.netParams.popParams['${this.props.name}']['spikePattern']['type
     return this[patternKey]()
   }
 
+  addAnotherPulse = () => {
+    const command = `
+pulse = {'start': 0, 'end': 0, 'rate': 0, 'noise': 0}
+netpyne_geppetto.netParams.popParams['${this.props.name}'].setdefault('pulses', []).append(pulse)
+pulse`
+    execPythonMessage(command).then((_) => {
+      this.updateModel()
+    })
+  };
+
+  removePulse = (index) => {
+    const command = `
+netpyne_geppetto.netParams.popParams['${this.props.name}']['pulses'].pop(${index})`
+    execPythonMessage(command).then((_) => {
+      this.updateModel()
+    })
+}
+
+  displayPulses = () => {
+    if (!this.state.model || !this.state.model.pulses) {
+      return <></>
+    }
+    return this.state.model.pulses.map((pulse, index) => (
+      <Grid container alignItems='center' spacing={1} key={`pulse_${index}`}>
+        <Tooltip title="Delete pulse" placement="top">
+          <IconButton size="small" onClick={() => this.removePulse(index)}>
+            <Icon fontSize="inherit" style={ { color: primaryColor } } className="fa fa-trash-o" />
+          </IconButton>
+        </Tooltip>
+        <Grid item xs={3}>
+          <NetPyNEField mb={0} id="netParams.popParams.pulses.start">
+            <NetPyNETextField
+              fullWidth
+              variant="filled"
+              model={`netParams.popParams['${this.props.name}']['pulses'][${index}]['start']`}
+            />
+          </NetPyNEField>
+        </Grid>
+        <Grid item xs={3}>
+          <NetPyNEField mb={0} id="netParams.popParams.pulses.end">
+            <NetPyNETextField
+              fullWidth
+              variant="filled"
+              model={`netParams.popParams['${this.props.name}']['pulses'][${index}]['end']`}
+            />
+          </NetPyNEField>
+        </Grid>
+        <Grid item xs={2}>
+          <NetPyNEField mb={0} id="netParams.popParams.pulses.rate">
+            <NetPyNETextField
+              fullWidth
+              variant="filled"
+              model={`netParams.popParams['${this.props.name}']['pulses'][${index}]['rate']`}
+            />
+          </NetPyNEField>
+        </Grid>
+        <Grid item xs={2}>
+          <NetPyNEField mb={0} id="netParams.popParams.pulses.noise">
+            <NetPyNETextField
+              fullWidth
+              variant="filled"
+              model={`netParams.popParams['${this.props.name}']['pulses'][${index}]['noise']`}
+            />
+          </NetPyNEField>
+        </Grid>
+        {/* <Grid item xs={1}>
+          <IconButton size="small" onClick={() => this.removePulse(index)} >
+            <Icon fontSize="inherit" style={ { color: primaryColor } } className="fa fa-trash-o" />
+          </IconButton>
+        </Grid> */}
+      </Grid>))
+  }
+
   cellStimulationLayout = () => {
-    if (!["VecStim", "NetStim"].includes(this.state.cellModel)) {
+    if (!this.state.model) {
+      return <></>
+    }
+    if (!["VecStim", "NetStim"].includes(this.state.model.cellModel)) {
       return <></>
     }
     return <>
@@ -397,46 +496,23 @@ netpyne_geppetto.netParams.popParams['${this.props.name}']['spikePattern']['type
           model={`netParams.popParams['${this.props.name}']['seed']`}
         />
       </NetPyNEField>
+      <NetPyNEField
+            id="netParams.popParams.spkTimes"
+            className="listStyle"
+        >
+        <ListComponent
+          model={`netParams.popParams['${this.props.name}']['spkTimes']`}
+        />
+      </NetPyNEField>
       <Box display='flex' alignItems='flex-start' style={{gap: '1rem'}}>
         <Typography style={ {
             color: experimentLabelColor, flexShrink: 0, padding: '18.5px 0 18.5px 10px', fontSize: '0.875rem', lineHeight: '130%', fontWeight: 400
           } }
         >
-          Spiking Pulse / Rate
+          Spiking Pulse
         </Typography>
         <Box display='flex' flexDirection='column' style={{gap: '0.5rem'}}>
-          { this.state.pulses.map((pulse, index) => (<Grid container alignItems='center' spacing={1} key={`pulse_${index}`}>
-            <Grid item xs={4}>
-              <TextField
-                variant="filled"
-                fullWidth
-                onChange={this.handleRenameChange}
-                value={pulse.start}
-                disabled={this.renaming}
-                label="Start"
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                variant="filled"
-                fullWidth
-                onChange={this.handleRenameChange}
-                value={pulse.end}
-                disabled={this.renaming}
-                label="End"
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                variant="filled"
-                fullWidth
-                onChange={this.handleRenameChange}
-                value={pulse.noise}
-                disabled={this.renaming}
-                label="Noise"
-              />
-            </Grid>
-          </Grid>)) }
+          { this.displayPulses() }
         </Box>
       </Box>
 
@@ -449,15 +525,6 @@ netpyne_geppetto.netParams.popParams['${this.props.name}']['spikePattern']['type
           onClick={() => this.addAnotherPulse()}
         >+ add another pulse</Button>
       </Box>
-
-      <TextField
-        variant="filled"
-        fullWidth
-        onChange={this.handleRenameChange}
-        value={this.state.currentName}
-        disabled={this.renaming}
-        label="Spike intervals (ms)"
-      />
 
       <NetPyNEField mb={0} id="netParams.popParams.interval">
         <NetPyNETextField
@@ -479,18 +546,16 @@ netpyne_geppetto.netParams.popParams['${this.props.name}']['spikePattern']['type
       <NetPyNEField mb={0} id="netParams.popParams.spikePattern">
         <NetPyNESelectField
           style={{mb: 0}}
-          value={this.state.patternType}
           method="netpyne_geppetto.getAvailableStimulationPattern"
           model={
             `netParams.popParams['${this.props.name}']['spikePattern']['type']`
           }
-          // pythonParams={[this.props.name]}
           postProcessItems={this.postProcessMenuItems}
           postHandleChange={this.changeCellPattern}
         />
       </NetPyNEField>
 
-      {this.changeStimulationPatternLayout(this.state.patternType)}
+      {this.changeStimulationPatternLayout(this.state.model?.spikePattern?.type)}
 
 
 </>
