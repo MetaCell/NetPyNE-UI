@@ -97,7 +97,7 @@ function isGeppettoModel(obj) {
 const createSimulateBackendCall = async (cmd, payload, consoleMessage, spinnerType) => {
   console.log(consoleMessage);
 
-  const response = await Utils.evalPythonMessage(cmd, [payload]);
+  const response = await Utils.evalPythonMessage(cmd, [payload], true, false);
   console.log('Python response', response);
 
   const responsePayload = processError(response);

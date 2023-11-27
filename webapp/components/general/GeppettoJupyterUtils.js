@@ -65,7 +65,7 @@ const addslashes = function (str) {
   return (str + '').replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
 }
 
-const evalPythonMessage = function (command, parameters, parse = true) {
+const evalPythonMessage = function (command, parameters, parse = true, record = true) {
   let parametersString = '';
   if (parameters) {
     if (parameters.length > 0) {
@@ -79,7 +79,7 @@ const evalPythonMessage = function (command, parameters, parse = true) {
   if (parse) {
     finalCommand = `utils.convertToJS(${finalCommand})`;
   }
-  return execPythonMessage(finalCommand, handle_output);
+  return execPythonMessage(finalCommand, handle_output, record);
 };
 
 export { execPythonMessage, evalPythonMessage, execPythonMessageWithoutRecording };
