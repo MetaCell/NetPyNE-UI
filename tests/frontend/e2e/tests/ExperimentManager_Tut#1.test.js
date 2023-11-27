@@ -202,13 +202,15 @@ describe('Experiment Manager test using Tut#1', () => {
 
     it('Simulate All conditions', async () => {
 
-        await page.waitForSelector(selectors.SIMULATE_BUTTON_SELECTOR)
-        await click(page, selectors.SIMULATE_BUTTON_SELECTOR, { timeout: TIMEOUT });
+        await page.waitForSelector(selectors.MODEL_BUTTON_SELECTOR)
+        await click(page, selectors.MODEL_BUTTON_SELECTOR, { timeout: TIMEOUT });
+        await page.waitForSelector(selectors.SIMULATE_NETWORK_SELECTOR)
+        await click(page, selectors.SIMULATE_NETWORK_SELECTOR, { timeout: TIMEOUT });
 
         console.log('Simulating all conditions')
-
         await page.waitForSelector(selectors.SIMULATE_POPUP_SELECTOR)
         await page.click(selectors.SIMULATE_POPUP_SELECTOR)
+        await page.waitForSelector(selectors.CONFIRM_SIMULATE_SELECTOR)
         await page.click(selectors.CONFIRM_SIMULATE_SELECTOR)
 
         await page.waitForTimeout(PAGE_WAIT);
@@ -217,8 +219,8 @@ describe('Experiment Manager test using Tut#1', () => {
         await page.click(selectors.CONFIRM_EXPERIMENT_STARTED_SELECTOR)
 
         await page.waitForSelector(selectors.SIMULATION_PAGE_SELECTOR, { timeout: TIMEOUT * 2 });
-        await page.waitForSelector(selectors.SIMULATION_LOADER_SELECTOR, { hidden: false, timeout: TIMEOUT * 2 })
-        await page.waitForSelector(selectors.SIMULATION_LOADER_SELECTOR, { hidden: true, timeout: TIMEOUT * 5 })
+        await page.waitForSelector(selectors.SIMULATION_LOADER_SELECTOR, { hidden: false, timeout: TIMEOUT * 5 })
+        await page.waitForSelector(selectors.SIMULATION_LOADER_SELECTOR, { hidden: true, timeout: TIMEOUT * 10 })
         console.log('Experiment Simulation finished')
 
     });
