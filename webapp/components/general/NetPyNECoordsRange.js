@@ -186,8 +186,8 @@ export default class NetPyNECoordsRange extends Component {
         {(this.state.rangeType != undefined)
           ? (
             <Box width="100%" p={1}>
-                <TextField label="Minimum" id={minVal} variant="filled" value={minVal} fullWidth onChange={ (e) => { this.handleCoordParamChange(0, parseInt(e.target.value)) } } />
-                <TextField label="Maximum" id={maxVal} variant="filled" value={maxVal} fullWidth onChange={ (e) => { this.handleCoordParamChange(1, parseInt(e.target.value)) } } />
+                <TextField label="Minimum" id={min} variant="filled" value={minVal} fullWidth onChange={ (e) => { this.handleCoordParamChange(0, parseInt(e.target.value)) } } />
+                <TextField label="Maximum" id={max} variant="filled" value={maxVal} fullWidth onChange={ (e) => { this.handleCoordParamChange(1, parseInt(e.target.value)) } } />
             </Box>
           )
           : null}
