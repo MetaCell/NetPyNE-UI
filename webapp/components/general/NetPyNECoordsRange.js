@@ -66,7 +66,7 @@ export default class NetPyNECoordsRange extends Component {
 
       if (rangeType)
       {
-        const pythonMessage = `netpyne_geppetto.${model}['${name}']['${this.state.rangeType}']` ;
+        const pythonMessage = `netpyne_geppetto.${model}['${name}']['${conds}']['${this.state.rangeType}']` ;
   
         Utils
         .evalPythonMessage(pythonMessage)
@@ -90,6 +90,33 @@ export default class NetPyNECoordsRange extends Component {
 
   componentWillUnmount () {
     this._isMounted = false;
+  }
+
+  handleRangeTypeChange(event) {
+    const {
+      model,
+      conds,
+      name,
+    } = this.props;
+
+    const rangeType = event.target.value ;
+
+    const pythonMessageDelAll = `netpyne_geppetto.${model}['${name}']['${conds}'] = {}`;
+    Utils.execPythonMessage(
+      pythonMessageDelAll
+    );
+
+    const rangeValue = this.state.rangeValue ;
+
+    if (!rangeValue.some(e => e === undefined))
+    {
+      const pythonMessage = `netpyne_geppetto.${model}['${name}']['${conds}']['${rangeType}'] = [${rangeValue}]` ;
+      Utils.execPythonMessage(
+        pythonMessage
+      );
+    }
+
+    this.setState({ rangeType})
   }
 
   //preConds: pop, cellType, cellModel, x, y, z, xnorm, ynorm, znorm
@@ -151,7 +178,7 @@ export default class NetPyNECoordsRange extends Component {
             id={`${this.props.id}Select`}
             label="Range type"
             value={this.state.rangeType || ''}
-            onChange={(event) => this.setState({ rangeType: event.target.value })}
+            onChange={(event) => { this.handleRangeTypeChange(event); }}
           >
             {this.createMenuItems()}
           </SelectField>
