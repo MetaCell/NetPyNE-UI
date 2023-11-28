@@ -47,7 +47,7 @@ define((require) => {
 
         connectToPython (componentType, model) {
           const id = this.id.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
-          model = model.replace(/"/g, '\\"').replace(/\\/g, '\\\\');
+          model = model.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
           GeppettoUtils.execPythonMessage(`jupyter_geppetto.ComponentSync(componentType="${componentType}",model="${model}",id="${id}").connect()`);
         }
 

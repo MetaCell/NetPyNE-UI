@@ -155,6 +155,10 @@ const Utils = {
     return modelFields;
   },
 
+  asEscapedString (value) {
+    return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')
+  },
+
   renameKey (path, oldValue, newValue, callback) {
     oldValue = oldValue.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
     newValue = newValue.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
