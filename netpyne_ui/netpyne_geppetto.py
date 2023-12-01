@@ -47,6 +47,10 @@ from netpyne_ui.mod_utils import loadModMechFiles
 os.chdir(constants.NETPYNE_WORKDIR_PATH)
 
 
+class NepyneValidationError(Exception):
+    ...
+
+
 class NetPyNEGeppetto:
 
     def __init__(self):
@@ -256,6 +260,24 @@ class NetPyNEGeppetto:
                 response = json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
                 return response
 
+    def validate_netParams(self):
+        _, failed = sim.validator.validateNetParams(self.netParams)
+        if failed:
+            message = "One or more components in your model have issues, see details below:\n"
+            components_error = {}
+            for entry in failed:
+                components_error.setdefault(entry.component, []).append((entry.keyPath, entry.summary))
+            for component, details in components_error.items():
+                message = message + f" * Error validating {component}\n"
+                for (keyPath, summary) in details:
+                    path = ' -> '.join(f"{key!r}" for key in keyPath)
+                    message = message + f"     Error in {path}\n"
+                    for line in summary:
+                        message = message + f"       {line}\n"
+                message = message + "\n"
+            raise NepyneValidationError(message)
+
+
     def simulateNetPyNEModelInGeppetto(self, args):
         """ Starts simulation of the currently loaded NetPyNe model.
 
@@ -270,8 +292,9 @@ class NetPyNEGeppetto:
         allTrials = args.get('allTrials', True)
         use_prev_inst = args.get('usePrevInst', False)
         sim_id = args.get('simId', 0)
-
         try:
+            self.validate_netParams()
+
             experiment = experiments.get_current()
             if experiment:
                 if self.experiments.any_in_state([model.ExperimentState.PENDING, model.ExperimentState.SIMULATING]):
