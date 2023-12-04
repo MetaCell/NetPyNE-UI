@@ -7,7 +7,9 @@ extended.devServer = {
   port: 8081,
   inline: true,
   publicPath: '/geppetto/build',
-
+  headers: {
+    'Content-Security-Policy': "frame-ancestors 'self' https://example.com"
+  },
   proxy: [
     {
       path: '/',
