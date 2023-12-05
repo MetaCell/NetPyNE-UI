@@ -26,7 +26,7 @@ jsonschema==3.2.0
 jupyter_geppetto==1.1.5
 jupyter-client==7.0.6
 jupyter-core==4.9.1
-jupyter-server==1.11.2
+jupyter-server==2.11.2
 jupyterhub==1.5.0
 jupyterlab==3.2.4
 neuromllite==0.5.1
