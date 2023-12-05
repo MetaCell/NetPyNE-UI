@@ -101,19 +101,24 @@ export default class NetPyNECoordsRange extends Component {
 
     const rangeType = event.target.value ;
 
-    const pythonMessageDelAll = `netpyne_geppetto.${model}['${name}']['${conds}'] = {}`;
-    Utils.execPythonMessage(
-      pythonMessageDelAll
-    );
-
-    const rangeValue = this.state.rangeValue ;
-
-    if (!rangeValue.some(e => e === undefined))
+    if (this.state.rangeType && this.state.rangeType.length > 0)
     {
-      const pythonMessage = `netpyne_geppetto.${model}['${name}']['${conds}']['${rangeType}'] = [${rangeValue}]` ;
+      const pyPath = `netpyne_geppetto.${model}['${name}']['${conds}']`;
+      const startLetter = String(this.state.rangeType)[0];
+      const pythonMessageDelOpposite = `${pyPath} = {k: v for k, v in ${pyPath}.items() if not k.startswith('${startLetter}')}`;
       Utils.execPythonMessage(
-        pythonMessage
+        pythonMessageDelOpposite
       );
+
+      const rangeValue = this.state.rangeValue ;
+
+      if (!rangeValue.some(e => e === undefined))
+      {
+        const pythonMessage = `netpyne_geppetto.${model}['${name}']['${conds}']['${rangeType}'] = [${rangeValue}]` ;
+        Utils.execPythonMessage(
+          pythonMessage
+        );
+      }
     }
 
     this.setState({ rangeType})
@@ -127,21 +132,13 @@ export default class NetPyNECoordsRange extends Component {
       name,
     } = this.props;
 
-    function getOppositeObject(list, givenValue) {
-      const index = list.findIndex(obj => obj.value === givenValue);
-
-      if (index === -1 || list.length !== 2) {
-          return null;
-      }
-      return list[1 - index];
-    }
 
     if (newValue === '' || (/^\d+$/.test(newValue))) {
-      const opossiteRangeType = getOppositeObject(this.props.items, this.state.rangeType) ;
-
-      if (opossiteRangeType)
+      if (this.state.rangeType && this.state.rangeType.length > 0)
       {
-        const pythonMessageDelOpposite = `netpyne_geppetto.${model}['${name}']['${conds}'].pop('${opossiteRangeType.value}', None)`;
+        const pyPath = `netpyne_geppetto.${model}['${name}']['${conds}']`;
+        const startLetter = String(this.state.rangeType)[0];
+        const pythonMessageDelOpposite = `${pyPath} = {k: v for k, v in ${pyPath}.items() if not k.startswith('${startLetter}')}`;
         Utils.execPythonMessage(
           pythonMessageDelOpposite
         );
@@ -149,10 +146,15 @@ export default class NetPyNECoordsRange extends Component {
 
       const rangeValue = this.state.rangeValue ;
       rangeValue[index] = newValue ;
-      const pythonMessage = `netpyne_geppetto.${model}['${name}']['${conds}']['${this.state.rangeType}'] = [${rangeValue}]` ;
-      Utils.execPythonMessage(
-        pythonMessage
-      );
+
+      if (!rangeValue.some(e => e === undefined))
+      {
+        const pythonMessage = `netpyne_geppetto.${model}['${name}']['${conds}']['${this.state.rangeType}'] = [${rangeValue}]` ;
+        Utils.execPythonMessage(
+          pythonMessage
+        );
+      }
+
       this.setState({ rangeValue })
     }
   }
