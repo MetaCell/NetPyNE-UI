@@ -29,11 +29,11 @@ jupyter-core==4.9.1
 jupyter-server==1.11.2
 jupyterhub==1.5.0
 jupyterlab==3.2.4
-neuromllite==0.5.1
+neuromllite==0.5.4
 jupyterthemes==0.20.0
 kiwisolver==1.2.0
 lesscpy==0.14.0
-libNeuroML==0.4.0
+libNeuroML==0.5.1
 lfpykit==0.5.1
 lxml==4.5.1
 Mako==1.1.0
@@ -65,7 +65,7 @@ pycparser==2.20
 pyecore==0.11.7
 pygeppetto==0.8.1
 PyLEMS==0.5.9
-pyNeuroML==0.7.1
+pyNeuroML==1.0.10
 sentry_sdk==1.5.2
 dacite==1.6.0
 h5py==3.7.0
