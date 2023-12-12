@@ -81,6 +81,9 @@ export class NetPyNEPythonConsole extends Component {
       height: '1px',   
     };
     var iframeWindow     = this.container.contentWindow;
+    var iframeElement = iframeWindow.frameElement;
+    var parentDiv = iframeElement.parentElement;
+    var containerDiv = parentDiv.parentElement;
     const offScreenLeft = -window.innerWidth - 100; //plus additional buffer just in case
 
     if (nextProps.notebookVisible)
@@ -93,6 +96,8 @@ export class NetPyNEPythonConsole extends Component {
       iframeWindow.left = `${offScreenLeft}px`;
       iframeWindow.width = '1px';    
       iframeWindow.height = '1px';
+
+      containerDiv.style.display = 'block';
     }
     return false;
   }
