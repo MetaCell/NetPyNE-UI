@@ -44,6 +44,10 @@ class DimensionsComponent extends Component {
         label: 'Grid spacing',
         value: 'gridSpacing',
       },
+      {
+        label: 'Population List',
+        value: 'populationList',
+      },
     ];
   }
 

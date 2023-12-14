@@ -96,14 +96,6 @@ class NetPyNEPopulation extends React.Component {
         />,
       );
     }
-    modelParameters.push(
-      <BottomNavigationAction
-        key="CellList"
-        label="Cell List"
-        icon={<FontIcon className="fa fa-list" />}
-        onClick={() => select(3, 'CellList')}
-      />,
-    );
 
     return modelParameters;
   };
