@@ -37,21 +37,25 @@ describe('Tutorial #2 for Smoke Testing', () => {
 
   beforeAll(async () => {
     await page.goto(baseURL);
-    await page.waitForSelector(selectors.LOGIN_PAGE_SELECTOR);
-    await page.waitForSelector(selectors.USERNAME_SELECTOR)
-    await expect(page)
-      .toFill(selectors.USERNAME_SELECTOR, USERNAME, { timeout: TIMEOUT });
+    if (baseURL.includes('test.netpyne.metacell.us')) {
+      console.log('Logging in as test user ...')
+      await page.waitForSelector(selectors.LOGIN_PAGE_SELECTOR);
+      await page.waitForSelector(selectors.USERNAME_SELECTOR)
+      await expect(page)
+        .toFill(selectors.USERNAME_SELECTOR, USERNAME, { timeout: TIMEOUT });
 
-    await page.waitForSelector(selectors.PASSWORD_SELECTOR)
-    await expect(page)
-      .toFill(selectors.PASSWORD_SELECTOR, PASSWORD, { timeout: TIMEOUT });
+      await page.waitForSelector(selectors.PASSWORD_SELECTOR)
+      await expect(page)
+        .toFill(selectors.PASSWORD_SELECTOR, PASSWORD, { timeout: TIMEOUT });
 
-    await page.click(selectors.LOGIN_BUTTON_SELECTOR)
-    // Wait for initial loading spinner to disappear
-    await page.waitForFunction(() => {
-      let el = document.querySelector('#loading-spinner');
-      return el == null || el.clientHeight === 0;
-    }, { timeout: TIMEOUT });
+      await page.click(selectors.LOGIN_BUTTON_SELECTOR)
+      // Wait for initial loading spinner to disappear
+      await page.waitForFunction(() => {
+        let el = document.querySelector('#loading-spinner');
+        return el == null || el.clientHeight === 0;
+      }, { timeout: TIMEOUT });
+      console.log('Logged in successfully')
+    }
   });
 
   it('Open new page', async () => {

@@ -4,7 +4,8 @@
   "description": "NetPyNe UI tests",
   "license": "unlicensed",
   "scripts": {
-    "test": "jest --verbose Tut#1_smoke",
+    "test": "jest --verbose Tut#1_smoke && jest --verbose Tut#2_smoke && jest --verbose Tut#3a_smoke && jest --verbose Tut#3b_smoke && jest --verbose Tut#4_smoke && jest --verbose ControlPanel && jest --verbose SaveOpenFile && jest --verbose RxD && jest --verbose EEG_and_Dipole_Tut#1 && jest --verbose ExperimentManager_Tut#1",
+    "puppeteer_test" : "jest --verbose",
     "EEG_Dipole_test": "jest --verbose EEG_and_Dipole_Tut#1 ",
     "Experiment_Manager_test": "jest --verbose ExperimentManager_Tut#1 ",
     "Tutorial_1_test":"jest --verbose Tut#1_smoke ",
