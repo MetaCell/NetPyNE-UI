@@ -34,7 +34,7 @@ require('./css/flexlayout.less');
 require('./css/tree.less');
 
 ReactDOM.render(
-  <div>
+  <div id="iframefix">
     <MuiThemeProvider theme={theme}>
       <Provider store={store}>
         <LoadingSpinner />
