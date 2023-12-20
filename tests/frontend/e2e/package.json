@@ -4,7 +4,7 @@
   "description": "NetPyNe UI tests",
   "license": "unlicensed",
   "scripts": {
-    "test": "jest --verbose",
+    "test": "jest --verbose Tut#1_smoke",
     "EEG_Dipole_test": "jest --verbose EEG_and_Dipole_Tut#1 ",
     "Experiment_Manager_test": "jest --verbose ExperimentManager_Tut#1 ",
     "Tutorial_1_test":"jest --verbose Tut#1_smoke ",
