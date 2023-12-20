@@ -171,7 +171,7 @@ def main(netpyne_branch, workspace_branch, geppetto_branch=None, skipNpm=False,
             _ = config['NotebookApp']['tornado_settings']
         except KeyError:
             config['NotebookApp']['tornado_settings'] = {}
-        config['NotebookApp']['tornado_settings']['headers'] = { 'Content-Security-Policy': "frame-ancestors 'self' *" }
+        config['NotebookApp']['tornado_settings']['headers'] = { 'Content-Security-Policy': "frame-ancestors 'self' http: https: http://localhost:8081 *" }
         config['NotebookApp']['tornado_settings']['gzip'] = True
         f.seek(0)
         json.dump(config, f, indent=4, sort_keys=True)

@@ -153,7 +153,7 @@ module.exports = function (env) {
         'script-src': ["'self'", "'unsafe-inline'"],
         'style-src': ["'self'", "'unsafe-inline'"],
         'img-src': ["'self'", 'data:', 'blob:'],
-        'frame-ancestors': ['*'] 
+        'frame-ancestors': ["'self' http: https: http://localhost http://localhost:8081 *"] 
       }, {
         enabled: true,
         hashingMethod: 'sha256',
