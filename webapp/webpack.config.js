@@ -2,7 +2,6 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const CspHtmlWebpackPlugin = require('csp-html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 /*
  *var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
@@ -147,16 +146,6 @@ module.exports = function (env) {
          * which we have errors
          */
         chunks: [],
-      }),
-      new CspHtmlWebpackPlugin({
-        'default-src': "'self'",
-        'script-src': ["'self'", "'unsafe-inline'"],
-        'style-src': ["'self'", "'unsafe-inline'"],
-        'img-src': ["'self'", 'data:', 'blob:'],
-        'frame-ancestors': ["'self' http: https: http://localhost http://localhost:8081 *"] 
-      }, {
-        enabled: true,
-        hashingMethod: 'sha256',
       }),
       new webpack.DefinePlugin({ 'process.env': { NODE_ENV: JSON.stringify(isProduction ? 'production' : 'development') } }),
       new MiniCssExtractPlugin({ filename: '[name].css' }),
