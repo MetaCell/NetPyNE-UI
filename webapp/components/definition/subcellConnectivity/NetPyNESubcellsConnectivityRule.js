@@ -32,7 +32,7 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
       sectionId: 'General',
       errorMessage: undefined,
       errorDetails: undefined,
-      type: 'uniform',
+      type: props.type,
       coord: '',
     };
   }
@@ -105,7 +105,7 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
   }
 
   UNSAFE_componentWillReceiveProps (nextProps) {
-    this.setState({ currentName: nextProps.name });
+    this.setState({ currentName: nextProps.name, type: nextProps.model.density });
   }
 
   handleDensity (value) {
