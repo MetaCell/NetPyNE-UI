@@ -136,8 +136,8 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
     }
   }
 
-  densityExtraFun () {
-    switch (this.state.type) {
+  densityExtraFun (type, name) {
+    switch (type) {
       case '2DMap':
       case '1DMap':
         Utils.execPythonMessage(`netpyne_geppetto.netParams.defineCellShapes = True`)
@@ -145,23 +145,23 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
           <>
             <NetPyNEField id="netParams.subConnParams.density.gridY" className="listStyle">
               <ListComponent
-                model={`netParams.subConnParams['${this.props.name}']['density']['gridY']`}
+                model={`netParams.subConnParams['${name}']['density']['gridY']`}
               />
             </NetPyNEField>
-            {this.state.type === "2DMap" ?
+            {type === "2DMap" ?
               <NetPyNEField id="netParams.subConnParams.density.gridX" className="listStyle">
                 <ListComponent
-                  model={`netParams.subConnParams['${this.props.name}']['density']['gridX']`}
+                  model={`netParams.subConnParams['${name}']['density']['gridX']`}
                 />
             </NetPyNEField> : <></>}
             <NetPyNEField id="netParams.subConnParams.density.fixedSomaY" className="listStyle">
               <ListComponent
-                model={`netParams.subConnParams['${this.props.name}']['density']['fixedSomaY']`}
+                model={`netParams.subConnParams['${name}']['density']['fixedSomaY']`}
               />
             </NetPyNEField>
             <NetPyNEField id="netParams.subConnParams.density.gridValues" className="listStyle">
               <ListComponent
-                model={`netParams.subConnParams['${this.props.name}']['density']['gridValues']`}
+                model={`netParams.subConnParams['${name}']['density']['gridValues']`}
               />
             </NetPyNEField>
 
@@ -175,27 +175,27 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
               <NetPyNETextField
                 fullWidth
                 variant="filled"
-                model={`netParams.subConnParams['${this.props.name}']['density']['ref_sec']`}
+                model={`netParams.subConnParams['${name}']['density']['ref_sec']`}
               />
             </NetPyNEField>
             <NetPyNEField id="netParams.subConnParams.density.ref_seg">
               <NetPyNETextField
                 fullWidth
                 variant="filled"
-                model={`netParams.subConnParams['${this.props.name}']['density']['ref_seg']`}
+                model={`netParams.subConnParams['${name}']['density']['ref_seg']`}
               />
             </NetPyNEField>
             <NetPyNEField id="netParams.subConnParams.density.target_distance">
             <NetPyNETextField
                 fullWidth
                 variant="filled"
-                model={`netParams.subConnParams['${this.props.name}']['density']['target_distance']`}
+                model={`netParams.subConnParams['${name}']['density']['target_distance']`}
               />
             </NetPyNEField>
             <NetPyNEField id="netParams.subConnParams.density.coord">
               <Select
                 onChange={(event) => this.handleCoord(event.target.value)}
-                value={this.state.coord}
+                value={this.props.coord}
                 fullWidth >
                 {["", "cartesian"].map((name, idx) => (
                   <MenuItem id={`${name}MenuItem`} key={`_${name}`} value={name}>
@@ -212,7 +212,7 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
   }
 
   render () {
-    const densityExtras = this.densityExtraFun();
+    const densityExtras = this.densityExtraFun(this.props.model.density, this.props.name);
     const dialogPop = this.state.errorMessage !== undefined ? (
       <Dialog open style={{ whiteSpace: 'pre-wrap' }}>
         <DialogTitle id="alert-dialog-title">

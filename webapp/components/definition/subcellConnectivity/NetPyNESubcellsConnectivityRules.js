@@ -108,6 +108,7 @@ export default class NetPyNESubCellsConnectivityRules extends Component {
       prevState,
       this.state,
     );
+    //update state values
     if (newConnectivityRuleName !== undefined) {
       this.setState({
         selectedConnectivityRule: newConnectivityRuleName,
