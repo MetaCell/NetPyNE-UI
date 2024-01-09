@@ -6,9 +6,9 @@ import Box from '@material-ui/core/Box';
 
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
-
 import {
   NetPyNEField,
+  ListComponent,
   NetPyNETextField,
 } from 'netpyne/components';
 import Utils from '../../../Utils';
@@ -44,6 +44,10 @@ class DimensionsComponent extends Component {
         label: 'Grid spacing',
         value: 'gridSpacing',
       },
+      {
+        label: 'Cell List',
+        value: 'cellList',
+      },
     ];
   }
 
@@ -52,7 +56,6 @@ class DimensionsComponent extends Component {
       this.updateLayout();
     }
   }
-
   componentWillUnmount () {
     this.mounted = false;
   }
@@ -108,6 +111,8 @@ class DimensionsComponent extends Component {
 
   render () {
     const { classes } = this.props;
+    console.log('this.props', this.props);
+
     return (
       <div>
         <NetPyNEField id="netParams.popParams.numCells" className={classes.selectField}>
@@ -143,18 +148,52 @@ class DimensionsComponent extends Component {
                 id={`netParams.popParams.${this.state.dimension}`}
                 className={classes.fields}
               >
-                <NetPyNETextField
-                  fullWidth
-                  variant="filled"
-                  handleChange={this.handleDimValueChange}
-                  model={`netParams.popParams['${this.state.modelName}']['${this.state.dimension}']`}
-                  modelName={this.state.modelName}
-                  dimensionType={this.state.dimension}
-                  callback={(newValue, oldValue) => {
-                    this.props.updateCards();
-                  }}
-                />
+                {this.state.dimension === 'cellList' ? (
+                  <ListComponent
+                    model={`netParams.popParams['${this.state.modelName}']['${this.state.dimension}']`}
+                  />
+                ) : (
+                    <NetPyNETextField
+                      fullWidth
+                      variant="filled"
+                      handleChange={this.handleDimValueChange}
+                      model={`netParams.popParams['${this.state.modelName}']['${this.state.dimension}']`}
+                      modelName={this.state.modelName}
+                      dimensionType={this.state.dimension}
+                      callback={(newValue, oldValue) => {
+                        this.props.updateCards();
+                      }}
+                    /> 
+                )}
               </NetPyNEField>
+            </Box>
+          )
+        }
+        {
+          // if this state dimensino is cellList
+          (
+            <Box ml={1}>
+              {/* <NetPyNEField id={`netParams.popParams.${this.state.dimension}`} className="listStyle"> */}
+              {/* <NetPyNEField id="simConfig.saveDataInclude"> */}
+              {/* {this.state.dimension != undefined && this.state.dimension != '' && this.state.dimension === 'cellList' && (
+                <ListComponent
+                  model={`netParams.popParams['${this.state.modelName}']['${this.state.dimension}']`}
+                  items={[
+                    {
+                      value: 'zRange',
+                      label: 'Absolute',
+                    },
+                    {
+                      value: 'znormRange',
+                      label: 'Normalized',
+                    },
+                  ]}
+                // model={'simConfig.hParams'}
+                // realType
+                // value
+                />
+              )} */}
+              {/* </NetPyNEField> */}
             </Box>
           )
         }
