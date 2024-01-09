@@ -922,12 +922,6 @@ class NetPyNEGeppetto:
         # self.netParams.popParams[name]['spikePattern'] = {}
         return ["", "rhythmic", "evoked", "poisson", "gauss"]
 
-    # def getAvailableCellTypes(self):
-    #     cell_types = set([])
-    #     for p in self.netParams.cellParams:
-    #         cell_types.add(p)
-    #     return list(cell_types)
-
     def getAvailableSections(self):
         sections = {}
         for cellRule in self.netParams.cellParams:
