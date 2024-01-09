@@ -282,7 +282,7 @@ del pattern['startMin']`
         <NetPyNETextField
           fullWidth
           variant="filled"
-          model={`netParams.popParams['${this.props.name}']['spikePattern']['freq']`}
+          model={`netParams.popParams['${this.props.name}']['spikePattern']['freqStd']`}
         />
       </NetPyNEField>
 
