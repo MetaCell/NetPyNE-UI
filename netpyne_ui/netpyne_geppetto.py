@@ -774,7 +774,8 @@ class NetPyNEGeppetto:
         return {'haveInstance': out[0], 'haveSimData': out[1]}
 
     def rename(self, path, oldValue, newValue):
-        command = 'sim.rename(self.' + path + ',"' + oldValue + '","' + newValue + '")'
+        # command = 'sim.rename(self.' + path + ',"' + oldValue + '","' + newValue + '")'
+        command = f'sim.rename(self.{path}, {oldValue!r}, {newValue!r})'
         logging.debug('renaming ' + command)
 
         eval(command)
