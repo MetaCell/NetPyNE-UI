@@ -49,6 +49,7 @@ describe.skip('Save / Open File testing', () => {
         SaveOpen_File_browser = await puppeteer.launch(
             {
               headless: 'new',
+              args: ['--no-sandbox', '--disable-setuid-sandbox'],
               defaultViewport: {
                 width: 1300,
                 height: 1024

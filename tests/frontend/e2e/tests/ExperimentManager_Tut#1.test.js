@@ -46,6 +46,7 @@ describe('Experiment Manager test using Tut#1', () => {
         browser_experiment_manager = await puppeteer.launch(
             {
               headless: 'new',
+              args: ['--no-sandbox', '--disable-setuid-sandbox'],
               defaultViewport: {
                 width: 1300,
                 height: 1024

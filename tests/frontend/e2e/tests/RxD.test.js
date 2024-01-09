@@ -48,6 +48,7 @@ describe('RxD testing', () => {
         browser_RxD = await puppeteer.launch(
             {
               headless: 'new',
+              args: ['--no-sandbox', '--disable-setuid-sandbox'],
               defaultViewport: {
                 width: 1300,
                 height: 1024

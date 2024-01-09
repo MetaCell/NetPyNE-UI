@@ -45,6 +45,7 @@ beforeAll(async () => {
     browser_EEG_Dipole = await puppeteer.launch(
         {
           headless: 'new',
+          args: ['--no-sandbox', '--disable-setuid-sandbox'],
           defaultViewport: {
             width: 1300,
             height: 1024

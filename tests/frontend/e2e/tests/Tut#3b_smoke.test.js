@@ -43,6 +43,7 @@ describe('Tutorial #3b for Smoke Testing', () => {
     browser3b = await puppeteer.launch(
       {
         headless: 'new',
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
         defaultViewport: {
           width: 1300,
           height: 1024
