@@ -96,15 +96,6 @@ class NetPyNEPopulation extends React.Component {
         />,
       );
     }
-    modelParameters.push(
-      <BottomNavigationAction
-        key="CellList"
-        label="Cell List"
-        icon={<FontIcon className="fa fa-list" />}
-        onClick={() => select(3, 'CellList')}
-      />,
-    );
-
     return modelParameters;
   };
 
@@ -267,10 +258,6 @@ class NetPyNEPopulation extends React.Component {
             ]}
           />
         </Box>
-      );
-    } else if (this.state.sectionId == 'CellList') {
-      var content = (
-        <div>Option to provide individual list of cells. Coming soon ...</div>
       );
     } else {
       var content = <div>{this.state.cellModelFields}</div>;
