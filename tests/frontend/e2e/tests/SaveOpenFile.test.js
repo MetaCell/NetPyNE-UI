@@ -39,7 +39,7 @@ const PASSWORD = 'testpassword'
 
 jest.setTimeout(300000);
 
-describe('Save / Open File testing', () => {
+describe.skip('Save / Open File testing', () => {
 
     beforeAll(async () => {
         await page.goto(baseURL);

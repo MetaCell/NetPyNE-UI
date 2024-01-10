@@ -61,7 +61,7 @@ export default class NetPyNEField extends Component {
   }
 
   render () {
-    const { id, children } = this.props;
+    const { id, children, mb = 1 } = this.props;
 
     const help = Utils.getMetadataField(id, 'help');
     const childWithProp = React.Children.map(children, (child) => {
@@ -142,7 +142,7 @@ export default class NetPyNEField extends Component {
                 open={this.state.open}
               >
                 <Box
-                  mb={1}
+                  mb={mb}
                   width="100%"
                   onMouseEnter={() => { this.handleTooltip(true); }}
                   onMouseLeave={() => { this.handleTooltip(false); }}
@@ -153,7 +153,7 @@ export default class NetPyNEField extends Component {
               </Tooltip>
             )
             : (
-              <Box mb={1} width="100%">
+              <Box mb={mb} width="100%">
                 {childWithProp}
               </Box>
             )}

@@ -40,6 +40,7 @@ export const {
   fabDisableBg,
   navShadow,
   tabsTextColor,
+  textColor
 } = vars;
 
 const rawTheme = {
@@ -74,6 +75,41 @@ const rawTheme = {
         boxShadow: 'none !important',
       },
       root: { color: fontColor },
+    },
+    MuiSwitch: {
+      root: {
+        padding: 0,
+        width: '2.25rem',
+        height: '1.25rem'
+      },
+
+      thumb: {
+        width: '1rem',
+        backgroundColor: textColor,
+        height: '1rem',
+        boxShadow: '0rem 0.0625rem 0.125rem 0rem rgba(16, 24, 40, 0.06), 0rem 0.0625rem 0.1875rem 0rem rgba(16, 24, 40, 0.10)'
+      },
+
+      switchBase: {
+        padding: '0 !important',
+        left: '0.125rem',
+        top: '0.125rem',
+
+        '&.Mui-checked': {
+          transform: 'translateX(1rem)',
+
+          '& + .MuiSwitch-track': {
+            opacity: 1,
+            backgroundColor: `${primaryColor} !important`
+          }
+        }
+      },
+
+      track: {
+        borderRadius: '0.75rem',
+        opacity: 1,
+        backgroundColor: 'rgba(255, 255, 255, 0.05)'
+      }
     },
     MuiSelect: {
       root: {
@@ -157,6 +193,9 @@ const rawTheme = {
         '&.MuiButtonGroup-grouped': {
           minWidth: '2.5rem',
         },
+        '&.noHover': {
+          backgroundColor: 'transparent'
+        }
       },
       contained: {
         color: fontColor,
