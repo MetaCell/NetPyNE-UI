@@ -47,8 +47,38 @@ from netpyne_ui.mod_utils import loadModMechFiles
 os.chdir(constants.NETPYNE_WORKDIR_PATH)
 
 
-class NepyneValidationError(Exception):
+class NetpyneValidationError(Exception):
     ...
+
+
+def deepcopy_wout_empty(d, memo=None):
+    def is_empty(x):
+        return x == '' or x == [] or x == () or x == set() or x == {} or x is None
+
+    # if is_empty(d):
+    #     return None
+    memo = {} if memo is None else memo
+    if id(d) in memo:
+        return memo[id(d)]
+    if isinstance(d, dict):
+        cpy = {}
+        for k, v in d.items():
+            v_cpy = deepcopy_wout_empty(v, memo=memo)
+            if is_empty(v_cpy):
+                continue
+            cpy[k] = memo.setdefault(id(v), v_cpy)
+        return cpy
+    elif isinstance(d, (list, set, tuple)):
+        return d.__class__(memo.setdefault(id(v), deepcopy_wout_empty(v, memo=memo)) for v in d if not is_empty(v))
+    elif hasattr(d, '__dict__'):
+        cpy = d.__new__(d.__class__)  # We skip the initializer, in case it needs some arguments
+        for k, v in d.__dict__.items():
+            v_cpy = deepcopy_wout_empty(v, memo=memo)
+            # if is_empty(v_cpy):  #
+            #     continue
+            cpy.__dict__[k] = memo.setdefault(id(v), v_cpy)
+        return cpy
+    return d
 
 
 class NetPyNEGeppetto:
@@ -189,6 +219,11 @@ class NetPyNEGeppetto:
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
 
                 return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
+        except NetpyneValidationError as e:
+            message = ("Error while validating the NetPyNE model before instantiation.\n"
+                       "One or more components in your model have issues, see details below:")
+            logging.exception(message)
+            return utils.getJSONError(message, '\n'.join(e.args))
         except Exception as e:
             message = "Error while instantiating the NetPyNE model"
             logging.exception(message)
@@ -260,22 +295,24 @@ class NetPyNEGeppetto:
                 response = json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
                 return response
 
+
     def validate_netParams(self):
-        _, failed = sim.validator.validateNetParams(self.netParams)
+        cpy = deepcopy_wout_empty(self.netParams)
+        _, failed = sim.validator.validateNetParams(cpy)
         if failed:
-            message = "One or more components in your model have issues, see details below:\n"
+            message = ""
             components_error = {}
             for entry in failed:
                 components_error.setdefault(entry.component, []).append((entry.keyPath, entry.summary))
             for component, details in components_error.items():
-                message = message + f" * Error validating {component}\n"
+                message = message + f"* Error validating {component}\n"
                 for (keyPath, summary) in details:
-                    path = ' -> '.join(f"{key!r}" for key in keyPath)
-                    message = message + f"     Error in {path}\n"
+                    path = ' -> '.join(f"{key}" for key in keyPath)
+                    message = message + f"    Error in {path}\n"
                     for line in summary:
-                        message = message + f"       {line}\n"
+                        message = message + f"      {line}\n"
                 message = message + "\n"
-            raise NepyneValidationError(message)
+            raise NetpyneValidationError(message)
 
 
     def simulateNetPyNEModelInGeppetto(self, args):
@@ -323,6 +360,11 @@ class NetPyNEGeppetto:
 
             else:
                 return self.simulate_single_model(use_prev_inst=use_prev_inst)
+        except NetpyneValidationError as e:
+            message = (f"Error while validating the NetPyNE model before simualtion {sim_id}.\n"
+                       "One or more components in your model have issues, see details below:")
+            logging.exception(message)
+            return utils.getJSONError(message, '\n'.join(e.args))
 
         except Exception as e :
             message = f"Error while simulating the NetPyNE model: {e}. SimulationId {sim_id}"
@@ -763,6 +805,7 @@ class NetPyNEGeppetto:
         return utils.getJSONReply()
 
     def instantiateNetPyNEModel(self):
+        self.validate_netParams()
         with redirect_stdout(sys.__stdout__):
             saveData = sim.allSimData if hasattr(sim, 'allSimData') and 'spkt' in sim.allSimData.keys() and len(
                 sim.allSimData['spkt']) > 0 else False
