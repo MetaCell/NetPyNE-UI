@@ -361,7 +361,7 @@ class NetPyNEGeppetto:
             else:
                 return self.simulate_single_model(use_prev_inst=use_prev_inst)
         except NetpyneValidationError as e:
-            message = (f"Error while validating the NetPyNE model before simualtion {sim_id}.\n"
+            message = (f"Error while validating the NetPyNE model before simulation {sim_id}.\n"
                        "One or more components in your model have issues, see details below:")
             logging.exception(message)
             return utils.getJSONError(message, '\n'.join(e.args))
