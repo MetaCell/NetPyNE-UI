@@ -774,7 +774,8 @@ class NetPyNEGeppetto:
         return {'haveInstance': out[0], 'haveSimData': out[1]}
 
     def rename(self, path, oldValue, newValue):
-        command = 'sim.rename(self.' + path + ',"' + oldValue + '","' + newValue + '")'
+        # command = 'sim.rename(self.' + path + ',"' + oldValue + '","' + newValue + '")'
+        command = f'sim.rename(self.{path}, {oldValue!r}, {newValue!r})'
         logging.debug('renaming ' + command)
 
         eval(command)
@@ -912,11 +913,15 @@ class NetPyNEGeppetto:
                     cell_models.add(cm)
         return list(cell_models)
 
-    def getAvailableCellTypes(self):
-        cell_types = set([])
-        for p in self.netParams.cellParams:
-            cell_types.add(p)
-        return list(cell_types)
+    def getAvailableCellModels(self):
+        return ["", "VecStim", "NetStim", "IntFire1"]
+
+    def getAvailableStimulationDistribution(self):
+        return ["normal", "uniform"]
+
+    def getAvailableStimulationPattern(self):
+        # self.netParams.popParams[name]['spikePattern'] = {}
+        return ["", "rhythmic", "evoked", "poisson", "gauss"]
 
     def getAvailableSections(self):
         sections = {}
