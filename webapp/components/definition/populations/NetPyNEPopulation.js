@@ -127,15 +127,6 @@ class NetPyNEPopulation extends React.Component {
         />,
       );
     }
-    // modelParameters.push(
-    //   <BottomNavigationAction
-    //     key="CellList"
-    //     label="Cell List"
-    //     icon={<FontIcon className="fa fa-list" />}
-    //     onClick={() => select(3, 'CellList')}
-    //   />,
-    // );
-
     modelParameters.push(
       <BottomNavigationAction
         key="Stimulation"
@@ -673,13 +664,7 @@ netpyne_geppetto.netParams.popParams['${this.props.name}']['pulses'].pop(${index
           />
         </Box>
       );
-    }
-    // else if (this.state.sectionId == 'CellList') {
-    //   var content = (
-    //     <div>Option to provide individual list of cells. Coming soon ...</div>
-    //   );
-    // } 
-    else if (this.state.sectionId == 'Stimulation') {
+    } else if (this.state.sectionId == 'Stimulation') {
       var content = (
         <Box className="scrollbar scrollchild" mt={1}>
           {/* <Box mb={ 3.5 } display='flex' style={ { gap: '0.5rem' } }>
