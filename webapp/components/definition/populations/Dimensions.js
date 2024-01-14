@@ -111,7 +111,6 @@ class DimensionsComponent extends Component {
 
   render () {
     const { classes } = this.props;
-    console.log('this.props', this.props);
 
     return (
       <div>
@@ -144,15 +143,16 @@ class DimensionsComponent extends Component {
           this.state.dimension != undefined && this.state.dimension != ''
           && (
             <Box ml={1}>
-              <NetPyNEField
-                id={`netParams.popParams.${this.state.dimension}`}
-                className={classes.fields}
-              >
-                {this.state.dimension === 'cellList' ? (
-                  <ListComponent
-                    model={`netParams.popParams['${this.state.modelName}']['${this.state.dimension}']`}
-                  />
-                ) : (
+              {this.state.dimension === 'cellList' ? (
+                <ListComponent
+                  model={`netParams.popParams['${this.state.modelName}']['${this.state.dimension}']`}
+                  realType="list(dict)"
+                />
+              ) : (
+                  <NetPyNEField
+                    id={`netParams.popParams.${this.state.dimension}`}
+                    className={classes.fields}
+                  >
                     <NetPyNETextField
                       fullWidth
                       variant="filled"
@@ -163,37 +163,9 @@ class DimensionsComponent extends Component {
                       callback={(newValue, oldValue) => {
                         this.props.updateCards();
                       }}
-                    /> 
-                )}
-              </NetPyNEField>
-            </Box>
-          )
-        }
-        {
-          // if this state dimensino is cellList
-          (
-            <Box ml={1}>
-              {/* <NetPyNEField id={`netParams.popParams.${this.state.dimension}`} className="listStyle"> */}
-              {/* <NetPyNEField id="simConfig.saveDataInclude"> */}
-              {/* {this.state.dimension != undefined && this.state.dimension != '' && this.state.dimension === 'cellList' && (
-                <ListComponent
-                  model={`netParams.popParams['${this.state.modelName}']['${this.state.dimension}']`}
-                  items={[
-                    {
-                      value: 'zRange',
-                      label: 'Absolute',
-                    },
-                    {
-                      value: 'znormRange',
-                      label: 'Normalized',
-                    },
-                  ]}
-                // model={'simConfig.hParams'}
-                // realType
-                // value
-                />
-              )} */}
-              {/* </NetPyNEField> */}
+                    />
+                  </NetPyNEField>
+              )}
             </Box>
           )
         }
