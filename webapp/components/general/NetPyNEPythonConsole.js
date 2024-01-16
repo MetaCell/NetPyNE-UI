@@ -70,36 +70,19 @@ export class NetPyNEPythonConsole extends Component {
     return currentNotebookValues ;
   }
   
+  componentDidUpdate (prevProps) {
+    document.getElementById('pythonConsoleFrame').parentElement.parentElement.style.display = 'block';
+  }
+  
   shouldComponentUpdate (nextProps) {
-    if (this.props.extensionLoaded !== nextProps.extensionLoaded) {
-      return true;
-    }
-    const iframeStyle = {
-      position: 'absolute',
-      left: `${offScreenLeft}px`,
-      width: '1px',    
-      height: '1px',   
-    };
-    var iframeWindow     = this.container.contentWindow;
-    var iframeElement = iframeWindow.frameElement;
-    var parentDiv = iframeElement.parentElement;
-    var containerDiv = parentDiv.parentElement;
-    const offScreenLeft = -window.innerWidth - 100; //plus additional buffer just in case
 
     if (nextProps.notebookVisible)
     {
+      var iframeWindow     = this.container.contentWindow;
       iframeWindow.onblur  = this.handleIframeBlur ;
       iframeWindow.onfocus = this.handleIframeFocus ;
     }
-    else{
-      iframeWindow.position = 'absolute';
-      iframeWindow.left = `${offScreenLeft}px`;
-      iframeWindow.width = '1px';    
-      iframeWindow.height = '1px';
-
-      containerDiv.style.display = 'block';
-    }
-    return false;
+    return true;
   }
 
   handleIframeBlur = (event) => {
@@ -123,17 +106,10 @@ export class NetPyNEPythonConsole extends Component {
 
   render () {
     const notebookName = GEPPETTO_CONFIGURATION.notebookName || "notebook.ipynb";
-    
     return (
       <ReactResizeDetector handleWidth handleHeight>
-      {({ width, height }) => (
-        <PythonConsole
-          pythonNotebookPath={`notebooks/${notebookName}`}
-          extensionLoaded={this.props.extensionLoaded}
-          iframeHeight={height}
-        />
-      )}
-    </ReactResizeDetector>
+        {({ width, height }) => <PythonConsole pythonNotebookPath={`notebooks/${notebookName}`} extensionLoaded={this.props.extensionLoaded} iframeHeight={height} />}
+      </ReactResizeDetector>
     );
   }
 }
