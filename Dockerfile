@@ -1,7 +1,6 @@
 FROM node:14 as jsbuild
 
 ENV FOLDER=netpyne
-RUN echo "no-cache 2023-7-14"
 
 WORKDIR $FOLDER/webapp
 COPY webapp/package.json .
@@ -11,10 +10,6 @@ RUN yarn install  --network-timeout 1000000000
 
 COPY webapp .
 RUN yarn build-dev
-
-RUN rm -Rf node_modules/*
-
-
 
 ###
 FROM jupyter/base-notebook:hub-1.5.0
