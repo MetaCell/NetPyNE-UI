@@ -28,7 +28,7 @@ jupyter-client==7.0.6
 jupyter-core==4.9.1
 jupyter-server==1.11.2
 jupyterhub==1.5.0
-jupyterlab==3.2.4
+jupyterlab==3.6.7
 neuromllite==0.5.1
 jupyterthemes==0.20.0
 kiwisolver==1.2.0
