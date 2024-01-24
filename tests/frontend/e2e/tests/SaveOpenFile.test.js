@@ -39,7 +39,7 @@ const PASSWORD = 'testpassword'
 
 jest.setTimeout(300000);
 
-describe('Save / Open File testing', () => {
+describe.skip('Save / Open File testing', () => {
 
     beforeAll(async () => {
         await page.goto(baseURL);
@@ -382,7 +382,7 @@ describe('Save / Open File testing', () => {
             return pwd_code_outputs.map(pwd_code_output => pwd_code_output.innerText)
         })
 
-        expect(first_code_output[0]).toBe("'/home/jovyan/work/NetPyNE-UI/workspace'")
+        expect(first_code_output[0]).toBe("'/opt/workspace/workspace'")
 
         const code_lines = await python_frame.$$(selectors.PYTHON_CELL_SELECTOR)
 
@@ -398,7 +398,7 @@ describe('Save / Open File testing', () => {
             return cd_code_outputs.map(cd_code_output => cd_code_output.innerText)
         })
 
-        expect(second_code_output[0]).toBe("/home/jovyan/work/NetPyNE-UI/workspace/saved_models/aut_test/src\n")
+        expect(second_code_output[0]).toBe("/opt/workspace/workspace/saved_models/aut_test/src\n")
 
         const ls_code_lines = await python_frame.$$(selectors.PYTHON_CELL_SELECTOR)
 

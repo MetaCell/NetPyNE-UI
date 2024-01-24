@@ -13,12 +13,12 @@ export const USERNAME_SELECTOR = '#username_input';
 export const PASSWORD_SELECTOR = '#password_input';
 export const LOGIN_BUTTON_SELECTOR = '#login_submit';
 export const SELECT_CELL_BUTTON_SELECTOR = '#selectCellButton';
-export const TUTORIAL_1_SELECTOR = "li[id='Model 1: Simple cell network']";
-export const TUTORIAL_2_SELECTOR = "li[id='Model 2: Detailed cell network']"
-export const TUTORIAL_3A_SELECTOR =  "li[id='Model 3a: Multiscale network (low IP3)']"
-export const TUTORIAL_3B_SELECTOR = "li[id='Model 3b: Multiscale network (high IP3)']"
-export const TUTORIAL_3C_SELECTOR = "li[id='Model 3c: Multiscale network (no RxD)']"
-export const TUTORIAL_4_SELECTOR = "li[id='Model 4: Simple oscillatory network']"
+export const TUTORIAL_1_SELECTOR = "li[id='Tut 1: Simple cell network']";
+export const TUTORIAL_2_SELECTOR = "li[id='Tut 2: Detailed cell network']"
+export const TUTORIAL_3A_SELECTOR =  "li[id='Tut 3a: Multiscale network (low IP3)']"
+export const TUTORIAL_3B_SELECTOR = "li[id='Tut 3b: Multiscale network (high IP3)']"
+export const TUTORIAL_3C_SELECTOR = "li[id='Tut 3c: Multiscale network (no RxD)']"
+export const TUTORIAL_4_SELECTOR = "li[id='Tut 4: Simple oscillatory network']"
 export const PYR_CELL_SELECTOR = '#pyr';
 export const PYR_2_CELL_SELECTOR = '#PYR'
 export const INT_CELL_SELECTOR = '#INT'
@@ -57,10 +57,13 @@ export const TO_VALUE_SELECTOR = '#undefined-to'
 export const STEP_VALUE_SELECTOR = '#undefined-step'
 export const CREATE_EXPERIMENT_BUTTON_SELECTOR = 'button[class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"]'
 export const EXPERIMENT_TABLE_HEADER_SELECTOR = 'th[class="MuiTableCell-root MuiTableCell-body"]'
-export const SIMULATE_POPUP_SELECTOR = 'div[class="MuiBox-root MuiBox-root-185 wrap"]'
+// export const SIMULATE_POPUP_SELECTOR = 'div[class="MuiBox-root MuiBox-root-185 wrap"]'
+export const SIMULATE_POPUP_SELECTOR = '.MuiDialogContent-root > .MuiBox-root.custom-radio > :nth-child(2) > div'
+
 export const CONFIRM_SIMULATE_SELECTOR = '#appBarPerformActionButton'
 export const CONFIRM_EXPERIMENT_STARTED_SELECTOR = 'button[class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"]'
-export const SIMULATION_LOADER_SELECTOR = 'div[class = "MuiBox-root MuiBox-root-186 MuiChip-icon MuiChipLoader"]'
+// export const SIMULATION_LOADER_SELECTOR = 'div[class = "MuiBox-root MuiBox-root-186 MuiChip-icon MuiChipLoader"]'
+export const SIMULATION_LOADER_SELECTOR = '.MuiTableCell-root.MuiTableCell-body.experimentTableCell.MuiTableCell-alignLeft > div > .MuiChipLoader '
 export const BACK_TO_EDIT_SELECTOR = 'span[class="MuiButton-startIcon MuiButton-iconSizeMedium"]'
 export const CELL_TYPES_TAB_SELECTOR = 'div[title="Cell Types"]'
 export const EXPERIMENT_TABLE_SELECTOR = 'table[class="MuiTable-root"]'

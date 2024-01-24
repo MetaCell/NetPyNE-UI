@@ -46,6 +46,9 @@ const ActionValidationDialog = (props) => {
     if (props.onAction) {
       props.onAction()
     }
+    if (props.onRequestClose) {
+      props.onRequestClose()
+    }
   }
 
   const clearErrorDialogBox = () => {

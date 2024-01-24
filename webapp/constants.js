@@ -746,3 +746,7 @@ export const geometryStrings = [
   'inside',
   'membrane'
 ]
+
+export const KERNEL_HANDLING = {
+  tmpModelPath: '/tmp/tmpmodel'
+}

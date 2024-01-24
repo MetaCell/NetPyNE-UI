@@ -2,7 +2,7 @@ import React from 'react';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import Icon from '@material-ui/core/Icon';
 
-const BASE_PATH = 'geppetto/build/static/icons/';
+export const BASE_PATH = 'geppetto/build/static/icons/';
 
 export default ({
   name, selected, highlight = false, disabled = false, fontSize = 'medium', color,

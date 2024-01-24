@@ -7,7 +7,6 @@ extended.devServer = {
   port: 8081,
   inline: true,
   publicPath: '/geppetto/build',
-
   proxy: [
     {
       path: '/',

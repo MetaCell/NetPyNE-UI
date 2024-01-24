@@ -155,7 +155,13 @@ const Utils = {
     return modelFields;
   },
 
+  asEscapedString (value) {
+    return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')
+  },
+
   renameKey (path, oldValue, newValue, callback) {
+    oldValue = oldValue.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    newValue = newValue.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
     this.execPythonMessage(`netpyne_geppetto.rename("${path}","${oldValue}","${newValue}")`)
       .then((response) => {
         callback(response, newValue);

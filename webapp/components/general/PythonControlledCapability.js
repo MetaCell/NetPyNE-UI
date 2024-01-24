@@ -46,11 +46,14 @@ define((require) => {
         }
 
         connectToPython (componentType, model) {
-          GeppettoUtils.execPythonMessage(`jupyter_geppetto.ComponentSync(componentType="${componentType}",model="${model}",id="${this.id}").connect()`);
+          const id = this.id.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+          model = model.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+          GeppettoUtils.execPythonMessage(`jupyter_geppetto.ComponentSync(componentType="${componentType}",model="${model}",id="${id}").connect()`);
         }
 
         disconnectFromPython () {
-          GeppettoUtils.execPythonMessage(`jupyter_geppetto.remove_component_sync(componentType="${this.state.componentType}",model="${this.id}")`);
+          const id = this.id.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+          GeppettoUtils.execPythonMessage(`jupyter_geppetto.remove_component_sync(componentType="${this.state.componentType}",model="${id}")`);
           GEPPETTO.ComponentFactory.removeExistingComponent(this.state.componentType, this);
         }
 
@@ -150,7 +153,7 @@ define((require) => {
               if ((this.state.model !== nextProps.model) && (nextProps.model !== undefined)) {
                 this.setState({ model: nextProps.model });
             }
-          }          
+          }
         }
 
         componentDidUpdate (prevProps, prevState) {
@@ -362,6 +365,7 @@ define((require) => {
           };
           // If a handleChange method is passed as a props it will overwrite the handleChange python controlled capability
           this.handleChange = (this.props.handleChange === undefined) ? this.handleChange.bind(this) : this.props.handleChange.bind(this);
+          this.postHandleChange = (this.props.postHandleChange !== undefined) ? this.props.postHandleChange.bind(this) : undefined
           this.callPythonMethod();
         }
 
@@ -375,6 +379,7 @@ define((require) => {
         }
 
         updatePythonValue (newValue) {
+          const oldValue = this.state.value;
           this.setState({
             value: newValue,
             searchText: newValue,
@@ -382,6 +387,9 @@ define((require) => {
           });
           if (this.syncValueWithPython) {
             this.syncValueWithPython(newValue);
+          }
+          if (this.postHandleChange !== undefined) {
+            this.postHandleChange(newValue, oldValue)
           }
 
           this.forceUpdate();

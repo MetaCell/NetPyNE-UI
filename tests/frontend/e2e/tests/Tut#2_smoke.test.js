@@ -93,9 +93,9 @@ describe('Tutorial #2 for Smoke Testing', () => {
     console.log('Tutorial #2')
 
     await page.waitForTimeout(PAGE_WAIT)
-
+    await page.waitForSelector(selectors.TUTORIALS_BUTTON_SELECTOR, { visible: true })
     await page.click(selectors.TUTORIALS_BUTTON_SELECTOR, { timeout: TIMEOUT })
-
+    await page.waitForSelector(selectors.TUTORIAL_2_SELECTOR, { visible: true })
     await page.click(selectors.TUTORIAL_2_SELECTOR, { timeout: TIMEOUT })
     await page.waitForSelector(selectors.PYR_2_CELL_SELECTOR)
     await page.waitForSelector(selectors.INT_CELL_SELECTOR)
@@ -225,7 +225,7 @@ describe('Tutorial #2 for Smoke Testing', () => {
   });
 
   it('Rate Spectogram Plot', async () => {
-
+    await page.waitForSelector(selectors.RATE_SPECTROGRAM_PLOT_SELECTOR, { visible: true })
     await page.click(selectors.RATE_SPECTROGRAM_PLOT_SELECTOR, { timeout: TIMEOUT })
     await page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
 
