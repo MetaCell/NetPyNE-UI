@@ -70,17 +70,19 @@ export class NetPyNEPythonConsole extends Component {
     return currentNotebookValues ;
   }
   
+  componentDidUpdate (prevProps) {
+    document.getElementById('pythonConsoleFrame').parentElement.parentElement.style.display = 'block';
+  }
+  
   shouldComponentUpdate (nextProps) {
-    if (this.props.extensionLoaded !== nextProps.extensionLoaded) {
-      return true;
-    }
+
     if (nextProps.notebookVisible)
     {
       var iframeWindow     = this.container.contentWindow;
       iframeWindow.onblur  = this.handleIframeBlur ;
       iframeWindow.onfocus = this.handleIframeFocus ;
     }
-    return false;
+    return true;
   }
 
   handleIframeBlur = (event) => {
