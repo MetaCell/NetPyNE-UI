@@ -14,7 +14,7 @@ hub:
       c.Spawner.notebook_dir = '/opt/workspace'
       c.Spawner.default_url = '/geppetto'
     spawner: >-
-      c.Spawner.args = ["--library=netpyne_ui"]
+      c.Spawner.args = ["--library=netpyne_ui", "--NotebookApp.default_url=/geppetto"]
 singleuser:
   storage:
     type: none
