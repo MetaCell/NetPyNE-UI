@@ -46,9 +46,12 @@ class ActionDialog extends React.Component {
         }
       }
     }
-    this.setState({ hide: true });
     if (this.props.onAction) {
       this.props.onAction();
+    }
+    this.setState({ hide: true });
+    if (this.props.onRequestClose) {
+      this.props.onRequestClose();
     }
   };
 
