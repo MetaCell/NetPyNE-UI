@@ -32,9 +32,32 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
       sectionId: 'General',
       errorMessage: undefined,
       errorDetails: undefined,
-      type: 'uniform',
-      coord: '',
+      type: undefined,
+      density: undefined,
+      coord: undefined,
     };
+  }
+
+  refreshComponent() {
+    //get initial values
+    Utils.evalPythonMessage(`netpyne_geppetto.netParams.subConnParams["${
+      this.props.name
+    }"]`)
+    .then((response) => {
+      if ((typeof response == 'object') && (response.density))
+      {
+        this.setState({ type: response.density.type, density: response.density }) //splitting so it fires update
+      }
+    })
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (JSON.stringify(prevProps.model) != JSON.stringify(this.props.model))
+      this.refreshComponent();
+  }
+
+  componentDidMount() {
+    this.refreshComponent();
   }
 
   handleRenameChange = (event) => {
@@ -105,20 +128,14 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
   }
 
   UNSAFE_componentWillReceiveProps (nextProps) {
-    this.setState({ currentName: nextProps.name });
+    this.setState({ currentName: nextProps.name, type: nextProps.model.density });
   }
 
   handleDensity (value) {
     this.setState({ type: value })
-    if (value === 'uniform') {
-      Utils.execPythonMessage(
-        `netpyne_geppetto.netParams.subConnParams['${this.props.name}']['density'] = 'uniform'`,
-      )
-    } else {
-      Utils.execPythonMessage(
-        `netpyne_geppetto.netParams.subConnParams['${this.props.name}']['density'] = {}`,
-      )
-    }
+    Utils.execPythonMessage(
+      `netpyne_geppetto.netParams.subConnParams['${this.props.name}']['density'] = { 'type': '${value}' }`,
+    )
   }
 
   handleCoord(value) {
