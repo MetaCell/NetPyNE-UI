@@ -229,8 +229,7 @@ class ListComponent extends Component {
               children.push(element);
             });
           } else if (this.isChildValidDict(newValue)) {
-            newValue = newValue.replace(/'([^']+)':/g, '"$1":').replace(/"/g, "'");
-            newValue = newValue.replace(/'/g, '"');
+            newValue = newValue.replace(/'([^']+)':/g, '"$1":').replace(/"/g, "'").replace(/'/g, '"');
             const parsedNewValue = JSON.parse(newValue);
             children.push(parsedNewValue);
           }
