@@ -46,7 +46,7 @@ class DimensionsComponent extends Component {
       },
       {
         label: 'Cell List',
-        value: 'cellList',
+        value: 'cellsList',
       },
     ];
   }
@@ -143,7 +143,7 @@ class DimensionsComponent extends Component {
           this.state.dimension != undefined && this.state.dimension != ''
           && (
             <Box ml={1}>
-              {this.state.dimension === 'cellList' ? (
+              {this.state.dimension === 'cellsList' ? (
                 <ListComponent
                   model={`netParams.popParams['${this.state.modelName}']['${this.state.dimension}']`}
                   realType="list(dict)"
