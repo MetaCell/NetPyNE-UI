@@ -6,9 +6,9 @@ import Box from '@material-ui/core/Box';
 
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
-
 import {
   NetPyNEField,
+  ListComponent,
   NetPyNETextField,
 } from 'netpyne/components';
 import Utils from '../../../Utils';
@@ -44,6 +44,10 @@ class DimensionsComponent extends Component {
         label: 'Grid spacing',
         value: 'gridSpacing',
       },
+      {
+        label: 'Cell List',
+        value: 'cellsList',
+      },
     ];
   }
 
@@ -52,7 +56,6 @@ class DimensionsComponent extends Component {
       this.updateLayout();
     }
   }
-
   componentWillUnmount () {
     this.mounted = false;
   }
@@ -108,6 +111,7 @@ class DimensionsComponent extends Component {
 
   render () {
     const { classes } = this.props;
+
     return (
       <div>
         <NetPyNEField id="netParams.popParams.numCells" className={classes.selectField}>
@@ -139,22 +143,29 @@ class DimensionsComponent extends Component {
           this.state.dimension != undefined && this.state.dimension != ''
           && (
             <Box ml={1}>
-              <NetPyNEField
-                id={`netParams.popParams.${this.state.dimension}`}
-                className={classes.fields}
-              >
-                <NetPyNETextField
-                  fullWidth
-                  variant="filled"
-                  handleChange={this.handleDimValueChange}
+              {this.state.dimension === 'cellsList' ? (
+                <ListComponent
                   model={`netParams.popParams['${this.state.modelName}']['${this.state.dimension}']`}
-                  modelName={this.state.modelName}
-                  dimensionType={this.state.dimension}
-                  callback={(newValue, oldValue) => {
-                    this.props.updateCards();
-                  }}
+                  realType="list(dict)"
                 />
-              </NetPyNEField>
+              ) : (
+                  <NetPyNEField
+                    id={`netParams.popParams.${this.state.dimension}`}
+                    className={classes.fields}
+                  >
+                    <NetPyNETextField
+                      fullWidth
+                      variant="filled"
+                      handleChange={this.handleDimValueChange}
+                      model={`netParams.popParams['${this.state.modelName}']['${this.state.dimension}']`}
+                      modelName={this.state.modelName}
+                      dimensionType={this.state.dimension}
+                      callback={(newValue, oldValue) => {
+                        this.props.updateCards();
+                      }}
+                    />
+                  </NetPyNEField>
+              )}
             </Box>
           )
         }

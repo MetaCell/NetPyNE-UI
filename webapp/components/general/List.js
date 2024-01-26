@@ -34,6 +34,48 @@ class ListComponent extends Component {
     return this.props.realType == 'dict' || this.props.realType == 'dict(dict)';
   }
 
+  isChildValidListOfDict(value) {
+    // check if valid - square bracket  
+    var validBracket = value[0] == '[' && value[value.length - 1] == ']';
+    if (!validBracket) {
+      return false;
+    }
+    try {
+      value = value.replace(/'([^']+)':/g, '"$1":').replace(/'/g, '"');
+      const valueArray = JSON.parse(value);
+      let valid = true;
+      valueArray.forEach((element) => {
+        if (!this.isChildValidDict(JSON.stringify(element))) {
+          valid = false;
+        }
+      });
+      return valid;
+    } catch (e) {
+      // if not parsable then false
+      return false;
+    }
+  }
+
+  isChildValidDict(value) {
+    // validity of curly braces
+    var validBraces = value.indexOf('{') == 0 && value.indexOf('}') == value.length - 1;
+    if (!validBraces) {
+      return false;
+    }
+
+    var valid = true;
+
+    try {
+      // check if valid json after
+      value = value.replace(/'([^']+)':/g, '"$1":').replace(/'/g, '"');
+      const valueArray = JSON.parse(value);
+    } catch (e) {
+      return false;
+    }
+
+    return valid;
+  }
+
   isValid (value) {
     switch (this.props.realType) {
       case 'list(float)':
@@ -100,6 +142,9 @@ class ListComponent extends Component {
           }
         }
         break;
+      case 'list(dict)':
+        valid = this.isChildValidListOfDict(value) || this.isChildValidDict(value);
+        break
       default:
         var valid = true;
         break;
@@ -123,8 +168,11 @@ class ListComponent extends Component {
       case 'dict(dict)':
         message = 'Incorrect format. Example -> v_soma : { sec: soma, loc: 0.5, var: v}';
         break;
+      case 'list(dict)':
+        message = "Incorrect format. Example -> {'cellLabel':'gs21', 'x': 2}, or [{...}]";
+        break;
       default:
-        message = 'No a valid value';
+        message = 'Not a valid value';
         break;
     }
     return message;
@@ -172,6 +220,20 @@ class ListComponent extends Component {
             children[key][entry[0]] = entry[1];
           });
           break;
+        case 'list(dict)':
+          var newValue = this.state.newItemValue
+          if (this.isChildValidListOfDict(newValue)) {
+            newValue = newValue.replace(/'([^']+)':/g, '"$1":').replace(/'/g, '"');
+            const valueArray = JSON.parse(newValue);
+            valueArray.forEach((element) => {
+              children.push(element);
+            });
+          } else if (this.isChildValidDict(newValue)) {
+            newValue = newValue.replace(/'([^']+)':/g, '"$1":').replace(/"/g, "'").replace(/'/g, '"');
+            const parsedNewValue = JSON.parse(newValue);
+            children.push(parsedNewValue);
+          }
+          break;
         default:
           var newValue = this.state.newItemValue;
           children.push(newValue);
@@ -188,6 +250,8 @@ class ListComponent extends Component {
     const { children } = this.state;
     if (this.props.realType == 'dict' || this.props.realType == 'dict(dict)') {
       delete children[childIndex];
+    } else if (this.props.realType == 'list(dict)') {
+      children.splice(childIndex, 1);
     } else {
       children.splice(childIndex, 1);
     }
@@ -212,6 +276,9 @@ class ListComponent extends Component {
             break;
           case 'list(list(float))':
             var childConverted = JSON.parse(child);
+            break;
+          case 'list(dict)':
+            var childConverted = child;
             break;
           default:
             var childConverted = child;
@@ -238,6 +305,9 @@ class ListComponent extends Component {
       ) {
         return typeof value === 'string' ? JSON.parse(value) : value;
       }
+      if (this.props.realType == 'list(dict)') {
+        return typeof value === 'string' ? JSON.parse(value) : value;
+      }     
       if (!Array.isArray(value)) {
         value = [value];
       }
@@ -270,7 +340,14 @@ class ListComponent extends Component {
                 .replace(/["']/g, '')
                 .replace(/[:]/g, ': ')
                 .replace(/[,]/g, ', ')}`;
-          } else {
+          }
+          else if (this.props.realType == 'list(dict)') {
+            var value = `${JSON.stringify(this.state.children[key])
+              .replace(/["']/g, '')
+              .replace(/[:]/g, ': ')
+              .replace(/[,]/g, ', ')}`;
+          }
+          else {
             var value = this.state.children[key];
           }
           return (

@@ -1,14 +1,7 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
 import MuiDialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import Typography from '@material-ui/core/Typography';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
-import Link from '@material-ui/core/Link';
-import Icon from '@material-ui/core/Icon';
+import { Button,DialogActions, DialogContent, DialogTitle, DialogContentText } from '@material-ui/core';
+import { Typography, Paper, Box, Link, Icon } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { secondaryColor, bgLight } from '../../theme';
 import logoNetpyne from '../../static/netpyne-logo_white.png';
@@ -135,18 +128,31 @@ const ContributeContent = withStyles(styles)(({ classes }) => (
   </Paper>
 ));
 
+
+const titleContentMapping = {
+  Contribute: <ContributeContent />,
+  About: <AboutContent />
+}
+
 export default function Dialog ({
   open,
   title,
   message,
   handleClose,
 }) {
+  const selectMessageContent = () => {
+    if (title in titleContentMapping) {
+      return titleContentMapping[title]
+    }
+    return <DialogContentText>{message}</DialogContentText>
+  }
   return (
     <div>
       <MuiDialog fullWidth maxWidth="sm" open={open} onClose={handleClose}>
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
-          {title === 'Contribute' ? <ContributeContent /> : <AboutContent />}
+          {/* {title === 'Contribute' ? <ContributeContent /> : <AboutContent />} */}
+          {selectMessageContent()}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary" autoFocus>
