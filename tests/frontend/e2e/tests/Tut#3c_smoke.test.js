@@ -164,6 +164,7 @@ describe('Tutorial #3c for Smoke Testing', () => {
   it('Connections Plot', async () => {
 
     await tutorial_3c_page.waitForTimeout(PAGE_WAIT * 2);
+    await tutorial_3c_page.waitForSelector(selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
     await tutorial_3c_page.click(selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
     await tutorial_3c_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
     console.log('View Connections Plot ...')
@@ -179,7 +180,7 @@ describe('Tutorial #3c for Smoke Testing', () => {
   });
 
   it('2D Net Plot', async () => {
-
+    await tutorial_3c_page.waitForSelector(selectors.TWO_D_NET_PLOT_SELECTOR, { timeout: TIMEOUT })
     await tutorial_3c_page.click(selectors.TWO_D_NET_PLOT_SELECTOR, { timeout: TIMEOUT })
     await tutorial_3c_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
     console.log('View 2D Net Plot ...')
@@ -194,7 +195,7 @@ describe('Tutorial #3c for Smoke Testing', () => {
   });
 
   it('Cell Traces Plot', async () => {
-
+    await tutorial_3c_page.waitForSelector(selectors.CELL_TRACES_PLOT_SELECTOR, { timeout: TIMEOUT })
     await tutorial_3c_page.click(selectors.CELL_TRACES_PLOT_SELECTOR, { timeout: TIMEOUT })
     await tutorial_3c_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
     console.log('View Cell Traces Plot ...')
@@ -209,7 +210,7 @@ describe('Tutorial #3c for Smoke Testing', () => {
   });
 
   it('Raster Plot', async () => {
-
+    await tutorial_3c_page.waitForSelector(selectors.RASTER_PLOT_SELECTOR, { timeout: TIMEOUT })
     await tutorial_3c_page.click(selectors.RASTER_PLOT_SELECTOR, { timeout: TIMEOUT })
     await tutorial_3c_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
     console.log('View Raster Plot ...')
@@ -224,7 +225,7 @@ describe('Tutorial #3c for Smoke Testing', () => {
   });
 
   it('Spike Hist Plot', async () => {
-
+    await tutorial_3c_page.waitForSelector(selectors.SPIKE_HIST_PLOT_SELECTOR, { timeout: TIMEOUT })
     await tutorial_3c_page.click(selectors.SPIKE_HIST_PLOT_SELECTOR, { timeout: TIMEOUT })
     await tutorial_3c_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
     console.log('View Spike Hist Plot ...')
@@ -239,7 +240,7 @@ describe('Tutorial #3c for Smoke Testing', () => {
   });
 
   it('LFP Time Series Plot', async () => {
-
+    await tutorial_3c_page.waitForSelector(selectors.LFP_TS_PLOT_SELECTOR, { timeout: TIMEOUT })
     await tutorial_3c_page.click(selectors.LFP_TS_PLOT_SELECTOR, { timeout: TIMEOUT })
     await tutorial_3c_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
     console.log('View LFP Time Series Plot ...')
@@ -254,7 +255,7 @@ describe('Tutorial #3c for Smoke Testing', () => {
   });
 
   it('LFP PSD Plot', async () => {
-
+    await tutorial_3c_page.waitForSelector(selectors.LFP_PSD_PLOT_SELECTOR, { timeout: TIMEOUT })
     await tutorial_3c_page.click(selectors.LFP_PSD_PLOT_SELECTOR, { timeout: TIMEOUT })
     await tutorial_3c_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
     console.log('View LFP PSD Plot ...')
@@ -269,7 +270,7 @@ describe('Tutorial #3c for Smoke Testing', () => {
   });
 
   it('LFP Spectrogram Plot', async () => {
-
+    await tutorial_3c_page.waitForSelector(selectors.LFP_SPECTOGRAM_PLOT_SELECTOR, { timeout: TIMEOUT })
     await tutorial_3c_page.click(selectors.LFP_SPECTOGRAM_PLOT_SELECTOR, { timeout: TIMEOUT })
     await tutorial_3c_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
     console.log('View LFP Spectrogram Plot ...')
@@ -284,7 +285,7 @@ describe('Tutorial #3c for Smoke Testing', () => {
   });
 
   it('Granger Plot', async () => {
-
+    await tutorial_3c_page.waitForSelector(selectors.GRANGER_PLOT_SELECTOR, { timeout: TIMEOUT })
     await tutorial_3c_page.click(selectors.GRANGER_PLOT_SELECTOR, { timeout: TIMEOUT })
     await tutorial_3c_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
     console.log('View Granger Plot ...')
@@ -300,12 +301,12 @@ describe('Tutorial #3c for Smoke Testing', () => {
 
 
   it('Rate Spectogram Plot', async () => {
-
+    await tutorial_3c_page.waitForSelector(selectors.RATE_SPECTROGRAM_PLOT_SELECTOR, { timeout: TIMEOUT })
     await tutorial_3c_page.click(selectors.RATE_SPECTROGRAM_PLOT_SELECTOR, { timeout: TIMEOUT })
     await tutorial_3c_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
 
     await tutorial_3c_page.waitForTimeout(PAGE_WAIT);
-
+    await tutorial_3c_page.waitForSelector(selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
     await tutorial_3c_page.click(selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
     await tutorial_3c_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
 

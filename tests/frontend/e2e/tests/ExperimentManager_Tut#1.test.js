@@ -161,11 +161,11 @@ describe('Experiment Manager test using Tut#1', () => {
 
         await experiment_manager_page.waitForSelector(selectors.CREATE_NEW_EXPERIMENT_POPUP_SELECTOR)
         await experiment_manager_page.click(selectors.CONFIRM_SELECTOR)
-        await experiment_manager_page.waitForSelector(selectors.EXPERIMENT_NAME_SELECTOR)
+        await experiment_manager_page.waitForSelector(selectors.EXPERIMENT_NAME_SELECTOR, { timeout: TIMEOUT , visible: true})
 
         await expect(experiment_manager_page).toFill(selectors.EXPERIMENT_NAME_SELECTOR, 'Test Experiment')
         await experiment_manager_page.waitForTimeout(PAGE_WAIT);
-
+        await experiment_manager_page.waitForSelector(selectors.PARAMETER_SELECTION_SELECTOR)
         await experiment_manager_page.click(selectors.PARAMETER_SELECTION_SELECTOR)
 
 
@@ -177,7 +177,7 @@ describe('Experiment Manager test using Tut#1', () => {
         });
 
         await experiment_manager_page.waitForTimeout(PAGE_WAIT);
-
+        await experiment_manager_page.waitForSelector(selectors.FROM_VALUE_SELECTOR);
         const inputFromValue = await experiment_manager_page.$eval('#undefined-from', el => el.value);
         await experiment_manager_page.click(selectors.FROM_VALUE_SELECTOR);
         for (let i = 0; i < inputFromValue.length; i++) {
@@ -185,7 +185,7 @@ describe('Experiment Manager test using Tut#1', () => {
         }
 
         await experiment_manager_page.type(selectors.FROM_VALUE_SELECTOR, '1')
-
+        await experiment_manager_page.waitForSelector(selectors.TO_VALUE_SELECTOR);
         const inputToValue = await experiment_manager_page.$eval('#undefined-to', el => el.value);
         await experiment_manager_page.click(selectors.TO_VALUE_SELECTOR);
         for (let i = 0; i < inputToValue.length; i++) {
@@ -193,7 +193,7 @@ describe('Experiment Manager test using Tut#1', () => {
         }
 
         await experiment_manager_page.type(selectors.TO_VALUE_SELECTOR, '4')
-
+        await experiment_manager_page.waitForSelector(selectors.STEP_VALUE_SELECTOR);
         const inputStepValue = await experiment_manager_page.$eval('#undefined-step', el => el.value);
         await experiment_manager_page.click(selectors.STEP_VALUE_SELECTOR);
         for (let i = 0; i < inputStepValue.length; i++) {
@@ -203,7 +203,7 @@ describe('Experiment Manager test using Tut#1', () => {
         await experiment_manager_page.type(selectors.STEP_VALUE_SELECTOR, '1')
 
         await experiment_manager_page.waitForTimeout(PAGE_WAIT);
-
+        await experiment_manager_page.waitForSelector(selectors.CREATE_EXPERIMENT_BUTTON_SELECTOR)
         await experiment_manager_page.click(selectors.CREATE_EXPERIMENT_BUTTON_SELECTOR)
 
         await experiment_manager_page.waitForSelector(selectors.EXPERIMENT_TABLE_HEADER_SELECTOR)
@@ -250,7 +250,7 @@ describe('Experiment Manager test using Tut#1', () => {
     it('Check Experiment Condition #1', async () => {
 
         console.log('Checking experiment condition #1')
-
+        await experiment_manager_page.waitForSelector(selectors.BACK_TO_EDIT_SELECTOR)
         await experiment_manager_page.click(selectors.BACK_TO_EDIT_SELECTOR)
 
         await experiment_manager_page.waitForTimeout(PAGE_WAIT * 2)
@@ -333,6 +333,7 @@ describe('Experiment Manager test using Tut#1', () => {
         console.log('Checking experiment condition #3')
 
         await experiment_manager_page.waitForTimeout(PAGE_WAIT)
+        await experiment_manager_page.waitForSelector(selectors.BACK_TO_EDIT_SELECTOR)
         await experiment_manager_page.click(selectors.BACK_TO_EDIT_SELECTOR)
 
         await experiment_manager_page.waitForTimeout(PAGE_WAIT * 3)
@@ -364,10 +365,11 @@ describe('Experiment Manager test using Tut#1', () => {
         console.log('Deleting experiment')
 
         await experiment_manager_page.waitForTimeout(PAGE_WAIT)
+        await experiment_manager_page.waitForSelector(selectors.BACK_TO_EDIT_SELECTOR)
         await experiment_manager_page.click(selectors.BACK_TO_EDIT_SELECTOR)
 
         await experiment_manager_page.waitForTimeout(PAGE_WAIT)
-
+        await experiment_manager_page.waitForSelector(selectors.EDIT_EXPERIMENT_BACK_SELECTOR)
         await experiment_manager_page.click(selectors.EDIT_EXPERIMENT_BACK_SELECTOR)
 
         await experiment_manager_page.waitForTimeout(PAGE_WAIT)

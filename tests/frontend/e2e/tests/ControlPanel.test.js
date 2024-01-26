@@ -111,10 +111,11 @@ describe('Test for the Control Panel - color picker', () => {
         await control_panel_page.waitForTimeout(PAGE_WAIT * 2)
         await control_panel_page.waitForSelector(selectors.SELECT_CELL_BUTTON_SELECTOR, { timeout: TIMEOUT })
         await control_panel_page.waitForTimeout(PAGE_WAIT)
+        await control_panel_page.waitForSelector(selectors.TUTORIALS_BUTTON_SELECTOR, { timeout: TIMEOUT })
         await control_panel_page.click(selectors.TUTORIALS_BUTTON_SELECTOR, { timeout: TIMEOUT })
 
         console.log('Loading Tutorial #2')
-
+        await control_panel_page.waitForSelector(selectors.TUTORIAL_2_SELECTOR, { timeout: TIMEOUT })
         await control_panel_page.click(selectors.TUTORIAL_2_SELECTOR, { timeout: TIMEOUT })
         await control_panel_page.waitForTimeout(PAGE_WAIT)
         await control_panel_page.waitForSelector(selectors.PYR_2_CELL_SELECTOR)
@@ -211,7 +212,7 @@ describe('Test for the Control Panel - color picker', () => {
     it('Randomize Sub level E network color', async () => {
 
         console.log('Randomize Sub Level E network color')
-
+        await control_panel_page.waitForSelector(selectors.CONTROL_PANEL_NETWORK_ROWS_SELECTOR, { timeout: TIMEOUT })
         const rows = await control_panel_page.$$(selectors.CONTROL_PANEL_NETWORK_ROWS_SELECTOR)
         for (var i = 0; i < rows.length; i++) {
             await rows[1].click()
@@ -254,7 +255,7 @@ describe('Test for the Control Panel - color picker', () => {
     it('Pick a color for the sublevel I netowrk', async () => {
 
         console.log('Selecting a color for the I network')
-
+        await control_panel_page.waitForSelector(selectors.CONTROL_PANEL_NETWORK_ROWS_SELECTOR, { timeout: TIMEOUT })
         const rows = await control_panel_page.$$(selectors.CONTROL_PANEL_NETWORK_ROWS_SELECTOR)
         for (var i = 0; i < rows.length; i++) {
             await rows[1].click()
@@ -319,7 +320,7 @@ describe('Test for the Control Panel - color picker', () => {
         await control_panel_page.waitForTimeout(PAGE_WAIT)
         console.log('Filtering results')
 
-        await control_panel_page.waitForTimeout(selectors.CONTROL_PANEL_FILTER_SELECTOR, {timeout: PAGE_WAIT})
+        await control_panel_page.waitForSelector(selectors.CONTROL_PANEL_FILTER_SELECTOR, {timeout: PAGE_WAIT})
         await control_panel_page.type(selectors.CONTROL_PANEL_FILTER_SELECTOR, 'E')
 
         await control_panel_page.waitForTimeout(PAGE_WAIT)
