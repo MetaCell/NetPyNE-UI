@@ -6,7 +6,7 @@
   "scripts": {
     "test": "sleep 60 && npm run simple_tutorials_test && npm run complex_tutorials_test && npm run features_test",
     "puppeteer_test": "jest --verbose",
-    "simple_tutorials_test": "jest --verbose Tut#1_smoke Tut#2_smoke Tut#4_smoke",
+    "simple_tutorials_test": "sleep 60 && jest --verbose Tut#1_smoke Tut#2_smoke Tut#4_smoke",
     "complex_tutorials_test": "jest --verbose Tut#3a_smoke Tut#3b_smoke Tut#3c_smoke",
     "features_test": "jest --verbose ControlPanel SaveOpenFile  RxD EEG_and_Dipole_Tut#1 ExperimentManager_Tut#1",
     "EEG_Dipole_test": "jest --verbose EEG_and_Dipole_Tut#1 ",
