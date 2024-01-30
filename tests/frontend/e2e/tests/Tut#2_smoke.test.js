@@ -134,7 +134,7 @@ describe('Tutorial #2 for Smoke Testing', () => {
 
     await tutorial_2_page.waitForTimeout(PAGE_WAIT * 3)
 
-    await tutorial_2_page.waitForSelector(selectors.THREE_D_REP_SELECTOR, { timeout: TIMEOUT })
+    await tutorial_2_page.waitForSelector(selectors.THREE_D_REP_SELECTOR, { timeout: TIMEOUT * 3 })
 
     console.log('... taking snapshot ...');
     await tutorial_2_page.waitForTimeout(PAGE_WAIT);

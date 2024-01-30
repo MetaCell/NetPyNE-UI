@@ -162,7 +162,7 @@ describe('Experiment Manager test using Tut#1', () => {
         await experiment_manager_page.waitForSelector(selectors.CREATE_NEW_EXPERIMENT_POPUP_SELECTOR)
         await experiment_manager_page.click(selectors.CONFIRM_SELECTOR)
         await experiment_manager_page.waitForSelector(selectors.EXPERIMENT_NAME_SELECTOR, { timeout: TIMEOUT , visible: true})
-
+        await experiment_manager_page.waitForTimeout(PAGE_WAIT);
         await expect(experiment_manager_page).toFill(selectors.EXPERIMENT_NAME_SELECTOR, 'Test Experiment')
         await experiment_manager_page.waitForTimeout(PAGE_WAIT);
         await experiment_manager_page.waitForSelector(selectors.PARAMETER_SELECTION_SELECTOR)
