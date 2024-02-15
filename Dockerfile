@@ -1,4 +1,4 @@
-FROM node:14 as jsbuild
+FROM node:18 as jsbuild
 
 ENV FOLDER=netpyne
 
@@ -50,10 +50,11 @@ RUN mkdir -p /opt/user
 COPY netpyne_ui netpyne_ui
 COPY utilities utilities
 COPY setup.py .
-COPY  tests tests
+COPY tests tests
 COPY NetPyNE-UI .
 COPY README.rst .
 COPY requirements-test.txt .
+
 
 USER $NB_UID
 
@@ -72,12 +73,13 @@ RUN jupyter serverextension enable --py --sys-prefix jupyter_geppetto
 
 ARG BUILD_ARGS=""
 ARG WORKSPACE_VERSION=master
+
 RUN --mount=type=cache,target=/root/.cache python -m pip install --upgrade pip &&\
   python utilities/install.py ${BUILD_ARGS} --workspace $WORKSPACE_VERSION --npm-skip
 
 
 RUN mv workspace /opt/workspace/tutorials
-RUN chown -R $NB_UID /opt/workspace/tutorials
+RUN chown -R $NB_UID /opt/workspace
 RUN ln -s /opt/workspace workspace
 
 RUN jupyter labextension disable @jupyterlab/hub-extension
@@ -85,6 +87,8 @@ RUN jupyter labextension disable @jupyterlab/hub-extension
 COPY --from=downloads --chown=1000:1000 /nyhead.mat $NP_LFPYKIT_HEAD_FILE
 COPY --from=jsbuild --chown=1000:1000 $FOLDER/webapp/build webapp/build
 
+RUN chown -R $NB_UID /home/jovyan/.jupyter
+RUN touch app.log && chown $NB_UID app.log
 USER $NB_UID
 
 
