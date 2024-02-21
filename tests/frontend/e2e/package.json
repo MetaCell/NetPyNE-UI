@@ -21,7 +21,7 @@
   "dependencies": {
     "jest": "^27.5.1",
     "jest-image-snapshot": "^4.5.1",
-    "jest-puppeteer": "^6.1.0",
+    "jest-puppeteer": "^10.0.1",
     "puppeteer": "^13.5.1"
   },
   "devDependencies": {
