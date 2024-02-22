@@ -1001,6 +1001,9 @@ class NetPyNEGeppetto:
         for p in self.netParams.cellParams:
             cell_types.add(p)
         return sorted(cell_types)
+    
+    def getAvailableDensityTypes(self):
+        return ['uniform', '1DMap', '2DMap', 'distance']
 
     def getAvailableRxDSections(self, selectedRegion = None):
         sections = set([])
