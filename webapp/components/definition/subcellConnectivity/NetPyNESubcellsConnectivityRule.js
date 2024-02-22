@@ -21,8 +21,6 @@ import {
 import Select from 'netpyne/components/general/Select';
 import Utils from '../../../Utils';
 
-const densityStrings = ["uniform", "1DMap", "2DMap", "distance"]
-
 export default class NetPyNESubCellsConnectivityRule extends React.Component {
   constructor (props) {
     super(props);
@@ -36,27 +34,27 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
       density: undefined,
       coord: undefined,
     };
+
+    this.postProcessDensity = this.postProcessDensity.bind(this);
   }
 
-  refreshComponent() {
-    //get initial values
+  refreshComponent () {
+    // get initial values
     Utils.evalPythonMessage(`netpyne_geppetto.netParams.subConnParams["${
       this.props.name
     }"]`)
-    .then((response) => {
-      if ((typeof response == 'object') && (response.density))
-      {
-        this.setState({ type: response.density.type, density: response.density }) //splitting so it fires update
-      }
-    })
+      .then((response) => {
+        if ((typeof response === 'object') && (response.density)) {
+          this.setState({ type: response.density.type, density: response.density }); // splitting so it fires update
+        }
+      });
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (JSON.stringify(prevProps.model) != JSON.stringify(this.props.model))
-      this.refreshComponent();
+  componentDidUpdate (prevProps, prevState) {
+    if (JSON.stringify(prevProps.model) != JSON.stringify(this.props.model)) this.refreshComponent();
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.refreshComponent();
   }
 
@@ -127,29 +125,48 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
     ));
   }
 
+  postProcessDensity (pythonData, selected) {
+    // TODO: the following line is a hack to handle the pythoncontrolledcapab that sometime return an array and sometime a string
+    if (typeof selected === 'string' || selected instanceof String) {
+      this.handleDensity(selected);
+    } else if (Array.isArray(selected) && selected.length > 0) {
+      this.handleDensity(selected[selected.length - 1]);
+    }
+    return pythonData.map((name) => (
+      <MenuItem
+        id={`${name}MenuItem`}
+        key={name}
+        checked={selected.indexOf(name) > -1}
+        value={name}
+      >
+        {name}
+      </MenuItem>
+    ));
+  }
+
   UNSAFE_componentWillReceiveProps (nextProps) {
     this.setState({ currentName: nextProps.name, type: nextProps.model.density });
   }
 
   handleDensity (value) {
-    this.setState({ type: value })
+    this.setState({ type: value });
     Utils.execPythonMessage(
       `netpyne_geppetto.netParams.subConnParams['${this.props.name}']['density'] = { 'type': '${value}' }`,
-    )
+    );
   }
 
-  handleCoord(value) {
-    this.setState({ coord: value })
+  handleCoord (value) {
+    this.setState({ coord: value });
     if (value === 'cartesian') {
       Utils.execPythonMessage(
         `netpyne_geppetto.netParams.subConnParams['${this.props.name}']['density']['coord'] = '${value}'`,
-      )
-      Utils.execPythonMessage(`netpyne_geppetto.netParams.defineCellShapes = True`)
+      );
+      Utils.execPythonMessage('netpyne_geppetto.netParams.defineCellShapes = True');
     } else {
-      Utils.execPythonMessage(`netpyne_geppetto.netParams.defineCellShapes = False`)
+      Utils.execPythonMessage('netpyne_geppetto.netParams.defineCellShapes = False');
       Utils.execPythonMessage(
         `del netpyne_geppetto.netParams.subConnParams['${this.props.name}']['density']['coord']`,
-      )
+      );
     }
   }
 
@@ -157,7 +174,7 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
     switch (this.state.type) {
       case '2DMap':
       case '1DMap':
-        Utils.execPythonMessage(`netpyne_geppetto.netParams.defineCellShapes = True`)
+        Utils.execPythonMessage('netpyne_geppetto.netParams.defineCellShapes = True');
         return (
           <>
             <NetPyNEField id="netParams.subConnParams.density.gridY" className="listStyle">
@@ -165,12 +182,14 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
                 model={`netParams.subConnParams['${this.props.name}']['density']['gridY']`}
               />
             </NetPyNEField>
-            {this.state.type === "2DMap" ?
-              <NetPyNEField id="netParams.subConnParams.density.gridX" className="listStyle">
-                <ListComponent
-                  model={`netParams.subConnParams['${this.props.name}']['density']['gridX']`}
-                />
-            </NetPyNEField> : <></>}
+            {this.state.type === '2DMap'
+              ? (
+                <NetPyNEField id="netParams.subConnParams.density.gridX" className="listStyle">
+                  <ListComponent
+                    model={`netParams.subConnParams['${this.props.name}']['density']['gridX']`}
+                  />
+                </NetPyNEField>
+              ) : <></>}
             <NetPyNEField id="netParams.subConnParams.density.fixedSomaY" className="listStyle">
               <ListComponent
                 model={`netParams.subConnParams['${this.props.name}']['density']['fixedSomaY']`}
@@ -183,9 +202,9 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
             </NetPyNEField>
 
           </>
-        )
+        );
       case 'distance':
-        Utils.execPythonMessage(`netpyne_geppetto.netParams.defineCellShapes = False`)
+        Utils.execPythonMessage('netpyne_geppetto.netParams.defineCellShapes = False');
         return (
           <>
             <NetPyNEField id="netParams.subConnParams.density.ref_sec">
@@ -203,7 +222,7 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
               />
             </NetPyNEField>
             <NetPyNEField id="netParams.subConnParams.density.target_distance">
-            <NetPyNETextField
+              <NetPyNETextField
                 fullWidth
                 variant="filled"
                 model={`netParams.subConnParams['${this.props.name}']['density']['target_distance']`}
@@ -213,8 +232,9 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
               <Select
                 onChange={(event) => this.handleCoord(event.target.value)}
                 value={this.state.coord}
-                fullWidth >
-                {["", "cartesian"].map((name, idx) => (
+                fullWidth
+              >
+                {['', 'cartesian'].map((name, idx) => (
                   <MenuItem id={`${name}MenuItem`} key={`_${name}`} value={name}>
                     {name}
                   </MenuItem>
@@ -222,9 +242,9 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
               </Select>
             </NetPyNEField>
           </>
-        )
+        );
       default:
-        Utils.execPythonMessage(`netpyne_geppetto.netParams.defineCellShapes = False`)
+        Utils.execPythonMessage('netpyne_geppetto.netParams.defineCellShapes = False');
     }
   }
 
@@ -292,14 +312,16 @@ export default class NetPyNESubCellsConnectivityRule extends React.Component {
             />
           </NetPyNEField>
 
-          <NetPyNEField id="netParams.subConnParams.density">
-            <Select variant="filled" value={this.state.type} onChange={(event) => this.handleDensity(event.target.value)}>
-              {densityStrings.map((item) => (
-                <MenuItem id={`${item}MenuItem`} key={item} value={item}>
-                  {`${item}`}
-                </MenuItem>
-              ))}
-            </Select>
+          <NetPyNEField id="netParams.subConnParams.density.type">
+            <NetPyNESelectField
+              multiple={1}
+              fullWidth
+              method="netpyne_geppetto.getAvailableDensityTypes"
+              model={
+                `netParams.subConnParams['${this.props.name}']['density']['type']`
+              }
+              postProcessItems={this.postProcessDensity}
+            />
           </NetPyNEField>
 
           {densityExtras}
