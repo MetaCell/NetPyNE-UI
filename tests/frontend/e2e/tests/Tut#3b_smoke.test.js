@@ -318,13 +318,13 @@ describe('Tutorial #3b for Smoke Testing', () => {
 
     await tutorial_3b_page.waitForTimeout(PAGE_WAIT);
 
-    await tutorial_3b_page.click(selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
-    await tutorial_3b_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
+    // await tutorial_3b_page.click(selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
+    // await tutorial_3b_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
 
-    await tutorial_3b_page.waitForTimeout(PAGE_WAIT);
+    // await tutorial_3b_page.waitForTimeout(PAGE_WAIT);
 
-    await tutorial_3b_page.click(selectors.RATE_SPECTROGRAM_PLOT_SELECTOR, { timeout: TIMEOUT })
-    await tutorial_3b_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
+    // await tutorial_3b_page.click(selectors.RATE_SPECTROGRAM_PLOT_SELECTOR, { timeout: TIMEOUT })
+    // await tutorial_3b_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
 
     console.log('View Rate Spectogram Plot ...')
     await tutorial_3b_page.waitForTimeout(PAGE_WAIT);

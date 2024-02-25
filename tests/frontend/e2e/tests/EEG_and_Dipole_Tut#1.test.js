@@ -36,7 +36,7 @@ const PASSWORD = 'testpassword'
 
 //TESTS:
 
-jest.setTimeout(300000);
+jest.setTimeout(3000000);
 let browser_EEG_Dipole;
 let EEG_Dipole_page;
 

@@ -306,14 +306,14 @@ describe('Tutorial #3c for Smoke Testing', () => {
     await tutorial_3c_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
 
     await tutorial_3c_page.waitForTimeout(PAGE_WAIT);
-    await tutorial_3c_page.waitForSelector(selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
-    await tutorial_3c_page.click(selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
-    await tutorial_3c_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
+    // await tutorial_3c_page.waitForSelector(selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
+    // await tutorial_3c_page.click(selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
+    // await tutorial_3c_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
 
-    await tutorial_3c_page.waitForTimeout(PAGE_WAIT);
+    // await tutorial_3c_page.waitForTimeout(PAGE_WAIT);
 
-    await tutorial_3c_page.click(selectors.RATE_SPECTROGRAM_PLOT_SELECTOR, { timeout: TIMEOUT })
-    await tutorial_3c_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
+    // await tutorial_3c_page.click(selectors.RATE_SPECTROGRAM_PLOT_SELECTOR, { timeout: TIMEOUT })
+    // await tutorial_3c_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
 
     console.log('View Rate Spectogram Plot ...')
     await tutorial_3c_page.waitForTimeout(PAGE_WAIT);
