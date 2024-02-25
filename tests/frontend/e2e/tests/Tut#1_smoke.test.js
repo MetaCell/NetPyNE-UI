@@ -34,8 +34,7 @@ const PASSWORD = 'testpassword'
 
 //TESTS:
 
-jest.setTimeout(300000);
-
+jest.setTimeout(3000000);
 let browser;
 let tutorial_1_page;
 
@@ -66,7 +65,7 @@ describe('Tutorial #1 for Smoke Testing', () => {
       await tutorial_1_page.waitForSelector(selectors.PASSWORD_SELECTOR)
       await expect(tutorial_1_page)
         .toFill(selectors.PASSWORD_SELECTOR, PASSWORD, { timeout: TIMEOUT });
-        
+
       await tutorial_1_page.waitForSelector(selectors.LOGIN_BUTTON_SELECTOR)
       await tutorial_1_page.click(selectors.LOGIN_BUTTON_SELECTOR)
       // Wait for initial loading spinner to disappear

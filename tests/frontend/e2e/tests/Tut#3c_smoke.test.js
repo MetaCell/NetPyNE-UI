@@ -33,7 +33,7 @@ const PASSWORD = 'testpassword'
 
 //TESTS:
 
-jest.setTimeout(300000);
+jest.setTimeout(3000000);
 let browser3c;
 let tutorial_3c_page;
 

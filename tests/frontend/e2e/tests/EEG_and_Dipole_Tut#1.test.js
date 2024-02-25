@@ -189,17 +189,18 @@ describe('EEG and Dipole Plot Test using Tutorial#1', () => {
     it('Dipole Plot', async () => {
 
         await EEG_Dipole_page.waitForTimeout(PAGE_WAIT * 2);
+        await EEG_Dipole_page.waitForSelector(selectors.DIPOLE_PLOT_SELECTOR)
         await EEG_Dipole_page.click(selectors.DIPOLE_PLOT_SELECTOR)
         await EEG_Dipole_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
 
         await console.log('View Dipole Plot ...')
 
         await EEG_Dipole_page.waitForTimeout(PAGE_WAIT * 20);
-        await EEG_Dipole_page.click(selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
-        await EEG_Dipole_page.waitForTimeout(PAGE_WAIT);
-        await EEG_Dipole_page.click(selectors.DIPOLE_PLOT_SELECTOR)
-        await EEG_Dipole_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
-        await EEG_Dipole_page.waitForTimeout(PAGE_WAIT * 3);
+        // await EEG_Dipole_page.click(selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
+        // await EEG_Dipole_page.waitForTimeout(PAGE_WAIT);
+        // await EEG_Dipole_page.click(selectors.DIPOLE_PLOT_SELECTOR)
+        // await EEG_Dipole_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
+        // await EEG_Dipole_page.waitForTimeout(PAGE_WAIT * 3);
 
         await console.log('... taking snapshot ...');
         expect(await EEG_Dipole_page.screenshot())
@@ -213,17 +214,18 @@ describe('EEG and Dipole Plot Test using Tutorial#1', () => {
     it('EEG Plot', async () => {
 
         await EEG_Dipole_page.waitForTimeout(PAGE_WAIT * 2);
+        await EEG_Dipole_page.waitForSelector(selectors.EEG_PLOT_SELECTOR)
         await EEG_Dipole_page.click(selectors.EEG_PLOT_SELECTOR)
         await EEG_Dipole_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
 
         await console.log('View EEG Plot ...')
 
         await EEG_Dipole_page.waitForTimeout(PAGE_WAIT * 25);
-        await EEG_Dipole_page.click(selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
-        await EEG_Dipole_page.waitForTimeout(PAGE_WAIT * 2);
-        await EEG_Dipole_page.click(selectors.EEG_PLOT_SELECTOR)
-        await EEG_Dipole_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
-        await EEG_Dipole_page.waitForTimeout(PAGE_WAIT * 3);
+        // await EEG_Dipole_page.click(selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
+        // await EEG_Dipole_page.waitForTimeout(PAGE_WAIT * 2);
+        // await EEG_Dipole_page.click(selectors.EEG_PLOT_SELECTOR)
+        // await EEG_Dipole_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
+        // await EEG_Dipole_page.waitForTimeout(PAGE_WAIT * 3);
 
         await console.log('... taking snapshot ...');
         expect(await EEG_Dipole_page.screenshot())

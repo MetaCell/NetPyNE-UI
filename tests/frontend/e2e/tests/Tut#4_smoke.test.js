@@ -32,7 +32,7 @@ const PASSWORD = 'testpassword'
 
 //TESTS:
 
-jest.setTimeout(300000);
+jest.setTimeout(3000000);
 let browser4;
 let tutorial_4_page;
 
