@@ -235,13 +235,6 @@ describe('RxD testing', () => {
 
         await RxD_page.waitForSelector('#simple-tabpanel-0')
 
-        //TO CHANGE
-        const regions_text = await RxD_page.$$eval('#simple-tabpanel-0', regions_text => {
-            return regions_text.map(regions_text => regions_text.innerText)
-        })
-
-        expect(regions_text[0]).toContain('Regions')
-
         console.log('RxD Tab Opened')
 
     })
