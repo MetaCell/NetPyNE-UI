@@ -122,7 +122,7 @@ describe('EEG and Dipole Plot Test using Tutorial#1', () => {
 
         await console.log('Loading Tutorial #1')
         await EEG_Dipole_page.click(selectors.TUTORIAL_1_SELECTOR, { timeout: TIMEOUT })
-        await EEG_Dipole_page.waitForSelector(selectors.PYR_CELL_SELECTOR)
+        await EEG_Dipole_page.waitForSelector(selectors.PYR_CELL_SELECTOR, { timeout: TIMEOUT * 2 })
         await EEG_Dipole_page.waitForTimeout(PAGE_WAIT)
 
 
@@ -195,7 +195,9 @@ describe('EEG and Dipole Plot Test using Tutorial#1', () => {
 
         await console.log('View Dipole Plot ...')
 
-        await EEG_Dipole_page.waitForTimeout(PAGE_WAIT * 20);
+        await EEG_Dipole_page.waitForSelector('#plot > div > div > img', { timeout: TIMEOUT * 10, hidden: false})
+
+        await EEG_Dipole_page.waitForTimeout(PAGE_WAIT * 2);
         // await EEG_Dipole_page.click(selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
         // await EEG_Dipole_page.waitForTimeout(PAGE_WAIT);
         // await EEG_Dipole_page.click(selectors.DIPOLE_PLOT_SELECTOR)
@@ -216,11 +218,13 @@ describe('EEG and Dipole Plot Test using Tutorial#1', () => {
         await EEG_Dipole_page.waitForTimeout(PAGE_WAIT * 2);
         await EEG_Dipole_page.waitForSelector(selectors.EEG_PLOT_SELECTOR)
         await EEG_Dipole_page.click(selectors.EEG_PLOT_SELECTOR)
-        await EEG_Dipole_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT })
+        await EEG_Dipole_page.waitForSelector(selectors.CANVAS_SELECTOR, { timeout: TIMEOUT, hidden: false})
 
         await console.log('View EEG Plot ...')
 
-        await EEG_Dipole_page.waitForTimeout(PAGE_WAIT * 25);
+        await EEG_Dipole_page.waitForSelector('#plot > div > div > img', { timeout: TIMEOUT * 10, hidden: false})
+
+        await EEG_Dipole_page.waitForTimeout(PAGE_WAIT * 7);
         // await EEG_Dipole_page.click(selectors.CONNECTIONS_PLOT_SELECTOR, { timeout: TIMEOUT })
         // await EEG_Dipole_page.waitForTimeout(PAGE_WAIT * 2);
         // await EEG_Dipole_page.click(selectors.EEG_PLOT_SELECTOR)
