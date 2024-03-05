@@ -109,6 +109,7 @@ class NetPyNEInstantiated extends React.Component {
           }
           onSelection={this.onSelection}
           linesThreshold="10000"
+          renderingThreshold="2000"
         />
       </div>
     );
