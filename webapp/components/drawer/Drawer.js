@@ -138,7 +138,9 @@ const DrawerList = ({
   function getMenu () {
     const [modelDrawerItems, toolsDrawerItems] = [[], []];
     // eslint-disable-next-line array-callback-return
-    Object.values(widgets).sort((w1, w2) => w1.pos - w2.pos).filter((widget) => {
+    Object.values(widgets)
+    //.sort((w1, w2) => w1.pos - w2.pos)
+    .filter((widget) => {
       widget.specification !== TOOLS_LIST
         ? modelDrawerItems.push(widget) : toolsDrawerItems.push(widget);
     });
