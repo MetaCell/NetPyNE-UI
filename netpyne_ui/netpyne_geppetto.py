@@ -47,6 +47,40 @@ from netpyne_ui.mod_utils import loadModMechFiles
 os.chdir(constants.NETPYNE_WORKDIR_PATH)
 
 
+class NetpyneValidationError(Exception):
+    ...
+
+
+def deepcopy_wout_empty(d, memo=None):
+    def is_empty(x):
+        return x == '' or x == [] or x == () or x == set() or x == {} or x is None
+
+    # if is_empty(d):
+    #     return None
+    memo = {} if memo is None else memo
+    if id(d) in memo:
+        return memo[id(d)]
+    if isinstance(d, dict):
+        cpy = {}
+        for k, v in d.items():
+            v_cpy = deepcopy_wout_empty(v, memo=memo)
+            if is_empty(v_cpy):
+                continue
+            cpy[k] = memo.setdefault(id(v), v_cpy)
+        return cpy
+    elif isinstance(d, (list, set, tuple)):
+        return d.__class__(memo.setdefault(id(v), deepcopy_wout_empty(v, memo=memo)) for v in d if not is_empty(v))
+    elif hasattr(d, '__dict__'):
+        cpy = d.__new__(d.__class__)  # We skip the initializer, in case it needs some arguments
+        for k, v in d.__dict__.items():
+            v_cpy = deepcopy_wout_empty(v, memo=memo)
+            # if is_empty(v_cpy):  #
+            #     continue
+            cpy.__dict__[k] = memo.setdefault(id(v), v_cpy)
+        return cpy
+    return d
+
+
 class NetPyNEGeppetto:
 
     def __init__(self):
@@ -185,6 +219,11 @@ class NetPyNEGeppetto:
                     self.geppetto_model = self.model_interpreter.getGeppettoModel(netpyne_model)
 
                 return json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
+        except NetpyneValidationError as e:
+            message = ("Error while validating the NetPyNE model before instantiation.\n"
+                       "One or more components in your model have issues, see details below:")
+            logging.exception(message)
+            return utils.getJSONError(message, '\n'.join(e.args))
         except Exception as e:
             message = "Error while instantiating the NetPyNE model"
             logging.exception(message)
@@ -256,6 +295,26 @@ class NetPyNEGeppetto:
                 response = json.loads(GeppettoModelSerializer.serialize(self.geppetto_model))
                 return response
 
+
+    def validate_netParams(self):
+        cpy = deepcopy_wout_empty(self.netParams)
+        _, failed = sim.validator.validateNetParams(cpy)
+        if failed:
+            message = ""
+            components_error = {}
+            for entry in failed:
+                components_error.setdefault(entry.component, []).append((entry.keyPath, entry.summary))
+            for component, details in components_error.items():
+                message = message + f"* Error validating {component}\n"
+                for (keyPath, summary) in details:
+                    path = ' -> '.join(f"{key}" for key in keyPath)
+                    message = message + f"    Error in {path}\n"
+                    for line in summary:
+                        message = message + f"      {line}\n"
+                message = message + "\n"
+            raise NetpyneValidationError(message)
+
+
     def simulateNetPyNEModelInGeppetto(self, args):
         """ Starts simulation of the currently loaded NetPyNe model.
 
@@ -270,8 +329,9 @@ class NetPyNEGeppetto:
         allTrials = args.get('allTrials', True)
         use_prev_inst = args.get('usePrevInst', False)
         sim_id = args.get('simId', 0)
-
         try:
+            self.validate_netParams()
+
             experiment = experiments.get_current()
             if experiment:
                 if self.experiments.any_in_state([model.ExperimentState.PENDING, model.ExperimentState.SIMULATING]):
@@ -300,6 +360,11 @@ class NetPyNEGeppetto:
 
             else:
                 return self.simulate_single_model(use_prev_inst=use_prev_inst)
+        except NetpyneValidationError as e:
+            message = (f"Error while validating the NetPyNE model before simulation {sim_id}.\n"
+                       "One or more components in your model have issues, see details below:")
+            logging.exception(message)
+            return utils.getJSONError(message, '\n'.join(e.args))
 
         except Exception as e :
             message = f"Error while simulating the NetPyNE model: {e}. SimulationId {sim_id}"
@@ -740,6 +805,7 @@ class NetPyNEGeppetto:
         return utils.getJSONReply()
 
     def instantiateNetPyNEModel(self):
+        self.validate_netParams()
         with redirect_stdout(sys.__stdout__):
             saveData = sim.allSimData if hasattr(sim, 'allSimData') and 'spkt' in sim.allSimData.keys() and len(
                 sim.allSimData['spkt']) > 0 else False
@@ -774,7 +840,8 @@ class NetPyNEGeppetto:
         return {'haveInstance': out[0], 'haveSimData': out[1]}
 
     def rename(self, path, oldValue, newValue):
-        command = 'sim.rename(self.' + path + ',"' + oldValue + '","' + newValue + '")'
+        # command = 'sim.rename(self.' + path + ',"' + oldValue + '","' + newValue + '")'
+        command = f'sim.rename(self.{path}, {oldValue!r}, {newValue!r})'
         logging.debug('renaming ' + command)
 
         eval(command)
@@ -912,11 +979,15 @@ class NetPyNEGeppetto:
                     cell_models.add(cm)
         return list(cell_models)
 
-    def getAvailableCellTypes(self):
-        cell_types = set([])
-        for p in self.netParams.cellParams:
-            cell_types.add(p)
-        return list(cell_types)
+    def getAvailableCellModels(self):
+        return ["", "VecStim", "NetStim", "IntFire1"]
+
+    def getAvailableStimulationDistribution(self):
+        return ["normal", "uniform"]
+
+    def getAvailableStimulationPattern(self):
+        # self.netParams.popParams[name]['spikePattern'] = {}
+        return ["", "rhythmic", "evoked", "poisson", "gauss"]
 
     def getAvailableSections(self):
         sections = {}
@@ -930,6 +1001,9 @@ class NetPyNEGeppetto:
         for p in self.netParams.cellParams:
             cell_types.add(p)
         return sorted(cell_types)
+    
+    def getAvailableDensityTypes(self):
+        return ['uniform', '1DMap', '2DMap', 'distance']
 
     def getAvailableRxDSections(self, selectedRegion = None):
         sections = set([])

@@ -26,12 +26,13 @@ import {
   addInstancesToCanvas,
   openConfirmationDialog,
   registerModelPath,
+  loadModel,
   LOAD_MODEL
 } from '../actions/general';
 import { OPEN_BACKEND_ERROR_DIALOG, CLOSE_BACKEND_ERROR_DIALOG, openBackendErrorDialog } from '../actions/errors';
 import { closeDrawerDialogBox } from '../actions/drawer';
 import Utils from '../../Utils';
-import { downloadJsonResponse, downloadPythonResponse } from './utils';
+import { downloadJsonResponse, downloadPythonResponse, initParentFrameMessaging } from './utils';
 import * as Constants from '../../constants';
 import { ADD_EXPERIMENT, REMOVE_EXPERIMENT } from '../actions/experiments';
 
@@ -97,7 +98,7 @@ function isGeppettoModel(obj) {
 const createSimulateBackendCall = async (cmd, payload, consoleMessage, spinnerType) => {
   console.log(consoleMessage);
 
-  const response = await Utils.evalPythonMessage(cmd, [payload]);
+  const response = await Utils.evalPythonMessage(cmd, [payload], true, false);
   console.log('Python response', response);
 
   const responsePayload = processError(response);
@@ -249,6 +250,36 @@ export default (store) => (next) => (action) => {
 
   }
 
+  
+  /**
+   * Notify parent frame that the app is ready
+   * Used in Open Source Brain integration
+   */
+  function initParentFrameMessaging () {
+    if (window !== window.parent) {
+      window.parent.postMessage({
+        type: 'APP_READY',
+      }, '*');
+    
+
+    // Listen messages from the parent frame (Open Source Brain integration)
+      const loadFromEvent = (event) => {
+        // Here we would expect some cross-origin check, but we don't do anything more than load a model here
+        switch (event.data.type) {
+          case 'LOAD_RESOURCE':
+            // eslint-disable-next-line no-case-declarations
+            const resource = event.data.payload;
+            store.dispatch(loadModel(resource));
+            break;
+          default:
+            break;
+        }
+      };
+      // A message from the parent frame can specify the file to load
+      window.addEventListener('message', loadFromEvent);
+    }
+  }
+
   switch (action.type) {
     case GeppettoActions.layoutActions.SET_WIDGETS: {
       if (Object.values(action.data).length == 1) {
@@ -290,6 +321,10 @@ export default (store) => (next) => (action) => {
           next(GeppettoActions.modelLoaded())
           getExperiments()
         });
+      Utils.execPythonMessage(`netpyne_geppetto.saveToIndexFile(None, "${Constants.KERNEL_HANDLING.tmpModelPath}", True, True)`, ()=>{}, false);
+      
+
+      initParentFrameMessaging();
 
       setTimeout(() => {
         if (!responded) {
@@ -298,6 +333,8 @@ export default (store) => (next) => (action) => {
             .then(() => window.location.reload());
         }
       }, TIMEOUT);
+
+      
       break;
     }
     case OPEN_BACKEND_ERROR_DIALOG:
@@ -528,3 +565,4 @@ export default (store) => (next) => (action) => {
     }
   }
 };
+

@@ -1,3 +1,6 @@
+import { record as recordCommand } from './CommandRecorder';
+
+
 const handle_output = function (data) {
   // data is the object passed to the callback from the kernel execution
   switch (data.msg_type) {
@@ -29,9 +32,23 @@ const handle_output = function (data) {
   }
 };
 
-const execPythonMessage = function (command, callback = handle_output) {
+const execPythonMessage = function (command, callback = handle_output, record = true) {
   const { kernel } = IPython.notebook;
-  const messageID = kernel.execute(command, { iopub: { output: callback } }, { silent: false, stop_on_error: true, store_history: true });
+  if (record) {
+    recordCommand(kernel.id, command)
+  }
+  const messageID = kernel.execute(
+    command,
+    {
+      iopub: { output: callback }
+    },
+    {
+      silent: false,
+      stop_on_error: true,
+      store_history: true,
+      netpyne_ui_triggered: true
+    });
+
 
   return new Promise((resolve, reject) => GEPPETTO.on(GEPPETTO.Events.Receive_Python_Message, (data) => {
     if (data.data.id == messageID) {
@@ -40,11 +57,19 @@ const execPythonMessage = function (command, callback = handle_output) {
   }));
 };
 
-const evalPythonMessage = function (command, parameters, parse = true) {
+const execPythonMessageWithoutRecording = function (command, callback = handle_output) {
+  return execPythonMessage(command, callback, false)
+}
+
+const addslashes = function (str) {
+  return (str + '').replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
+}
+
+const evalPythonMessage = function (command, parameters, parse = true, record = true) {
   let parametersString = '';
   if (parameters) {
     if (parameters.length > 0) {
-      parametersString = `(${parameters.map((parameter) => `utils.convertToPython('${JSON.stringify(parameter)}')`).join(',')})`;
+      parametersString = `(${parameters.map((parameter) => `utils.convertToPython('${addslashes(JSON.stringify(parameter))}')`).join(',')})`;
     } else {
       parametersString = '()';
     }
@@ -54,7 +79,7 @@ const evalPythonMessage = function (command, parameters, parse = true) {
   if (parse) {
     finalCommand = `utils.convertToJS(${finalCommand})`;
   }
-  return execPythonMessage(finalCommand, handle_output);
+  return execPythonMessage(finalCommand, handle_output, record);
 };
 
-export { execPythonMessage, evalPythonMessage };
+export { execPythonMessage, evalPythonMessage, execPythonMessageWithoutRecording };

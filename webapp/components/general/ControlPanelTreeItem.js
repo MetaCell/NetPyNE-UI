@@ -325,7 +325,7 @@ const ControlPanelTreeItem = (props) => {
                 event.preventDefault();
                 setShowColorPicker(true)
               }}>
-                <SquareIcon fillColor={getColor(nodeId).hex}/>
+                <SquareIcon fillColor={getColor(nodeId)?.hex}/>
 
               </IconButton>
                 {showColorPicker && isHoveredOver

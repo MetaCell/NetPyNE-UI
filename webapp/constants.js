@@ -91,7 +91,7 @@ export const TOPBAR_CONSTANTS = {
   NEW_PAGE: 'NEW_PAGE',
   NETWORK_MODEL: 'NETWORK_MODEL',
   IMPORT_NEUROML: 'IMPORT_NEUROML',
-  IMPORT_LEMS: 'IMPORT_LEMS'
+  IMPORT_LEMS: 'IMPORT_LEMS',
 };
 
 /*
@@ -501,7 +501,7 @@ export const DEFAULT_NETWORK_WIDGETS = {
     panelName: MINIMIZED_PANEL,
     defaultPanel: TOP_PANEL,
     enableRename: false,
-    pos: 14,
+    pos: 17,
     specification: TOOLS_LIST,
   },
   experimentControlPanel: {
@@ -513,7 +513,7 @@ export const DEFAULT_NETWORK_WIDGETS = {
     panelName: MINIMIZED_PANEL,
     defaultPanel: 'plotPanel',
     enableRename: false,
-    pos: 13,
+    pos: 16,
     specification: TOOLS_LIST,
   },
   ...PLOT_WIDGETS,
@@ -578,6 +578,20 @@ export const EDIT_WIDGETS = {
       model: 'netParams.connParams',
     },
   },
+  subConnParams: {
+    id: 'subConnParams',
+    name: 'Sub-cellular Connectivity Rules',
+    model: 'netParams.subConnParams',
+    status: WidgetStatus.HIDDEN,
+    component: 'subConnParams',
+    panelName: TOP_PANEL,
+    hideOnClose: true,
+    enableRename: false,
+    pos: 4,
+    props: {
+      model: 'netParams.subConnParams',
+    },
+  },
   stimSourceParams: {
     id: 'stimSourceParams',
     name: 'Stim. sources',
@@ -587,7 +601,7 @@ export const EDIT_WIDGETS = {
     hideOnClose: true,
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 4,
+    pos: 5,
     props: {
       model: 'netParams.stimSourceParams',
     },
@@ -601,7 +615,7 @@ export const EDIT_WIDGETS = {
     hideOnClose: true,
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 5,
+    pos: 6,
     props: {
       model: 'netParams.stimTargetParams',
     },
@@ -615,7 +629,7 @@ export const EDIT_WIDGETS = {
     component: 'rxd',
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 6,
+    pos: 7,
     props: {
       model: 'netParams.rxdParams',
     },
@@ -629,7 +643,7 @@ export const EDIT_WIDGETS = {
     component: 'analysis',
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 7,
+    pos: 8,
     props: {
       model: 'simConfig.analysis',
     },
@@ -643,7 +657,7 @@ export const EDIT_WIDGETS = {
     hideOnClose: true,
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 8,
+    pos: 9,
   },
   experimentManager: {
     id: 'experimentManager',
@@ -653,7 +667,7 @@ export const EDIT_WIDGETS = {
     component: 'experimentManager',
     panelName: TOP_PANEL,
     enableRename: false,
-    pos: 9,
+    pos: 10,
     specification: TOOLS_LIST,
   },
 };
@@ -696,12 +710,12 @@ export const EXPERIMENT_TEXTS = {
 };
 
 export const TUTORIALS_LIST = {
-  tut1: 'Model 1: Simple cell network',
-  tut2: 'Model 2: Detailed cell network',
-  tut3: 'Model 3a: Multiscale network (low IP3)',
-  tut3_ip3high: 'Model 3b: Multiscale network (high IP3)',
-  tut3_norxd: 'Model 3c: Multiscale network (no RxD)',
-  tut_osc: 'Model 4: Simple oscillatory network',
+  tut1: 'Tut 1: Simple cell network',
+  tut2: 'Tut 2: Detailed cell network',
+  tut3: 'Tut 3a: Multiscale network (low IP3)',
+  tut3_ip3high: 'Tut 3b: Multiscale network (high IP3)',
+  tut3_norxd: 'Tut 3c: Multiscale network (no RxD)',
+  tut_osc: 'Tut 4: Simple oscillatory network',
 };
 
 export const EXPERIMENT_VIEWS = {
@@ -732,3 +746,7 @@ export const geometryStrings = [
   'inside',
   'membrane',
 ];
+
+export const KERNEL_HANDLING = {
+  tmpModelPath: '/tmp/tmpmodel',
+};

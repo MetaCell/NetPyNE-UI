@@ -37,7 +37,7 @@ export default class NetPyNEMechanism extends React.Component {
           name={name}
           model={`${tag}['${name}']`}
           label={name}
-          realType="float"
+          realType="func"
         />
       </Box>
     ));
