@@ -12,7 +12,7 @@ import {
   LaunchDialog,
   TutorialObserver,
 } from 'netpyne/components';
-import { loadModel, openDialog } from '../redux/actions/general';
+import { openDialog } from '../redux/actions/general';
 // import { execPythonMessage } from './general/GeppettoJupyterUtils';
 import { replayAll } from './general/CommandRecorder';
 
@@ -47,7 +47,6 @@ class NetPyNE extends React.Component {
   constructor (props) {
     super(props);
     this.openPythonCallDialog = this.openPythonCallDialog.bind(this);
-    this.loaded = false;
     this.kernelRestartState = {
       state: "idle",
       kernelID: undefined,
@@ -64,33 +63,7 @@ class NetPyNE extends React.Component {
 
     setDefaultWidgets();
 
-    // Listen messages
-    const loadFromEvent = (event) => {
-      // Here we would expect some cross-origin check, but we don't do anything more than load a model here
-      switch (event.data.type) {
-        case 'INIT_INSTANCE':
-          if (this.loaded) {
-            return;
-          }
-          this.loaded = true;
-          console.log('NetPyNE-UI component is ready');
-          if (window !== window.parent) {
-            window.parent.postMessage({
-              type: 'APP_READY',
-            }, '*');
-          }
-          break;
-        case 'LOAD_RESOURCE':
-          // eslint-disable-next-line no-case-declarations
-          const resource = event.data.payload;
-          this.props.dispatchAction(loadModel(resource));
-          break;
-        default:
-          break;
-      }
-    };
-    // A message from the parent frame can specify the file to load
-    window.addEventListener('message', loadFromEvent);
+
 
     // Logic for kernel reinit
     const handleKernelRestart = ({ detail: { kernel, type } }) => {
@@ -222,9 +195,6 @@ class NetPyNE extends React.Component {
           <div className={classes.container}>
             <div className={classes.topbar}>
               <Topbar />
-        {/* <button onClick={() => {
-          execPythonMessage("utils.convertToJS(netpyne_geppetto.importCellTemplate(utils.convertToPython('{\"cellArgs\":{},\"fileName\":\"/home/vince/git-repository/metacell/NetPyNE-UI/workspace/cells/FScell.hoc\",\"cellName\":\"FScell\",\"label\":\"CellType1\",\"modFolder\":\"/home/vince/git-repository/metacell/NetPyNE-UI/workspace/mod\",\"importSynMechs\":false,\"compileMod\":false}')))")
-        }}>CRASH ME</button> */}
             </div>
             <Box p={1} flex={1} display="flex" alignItems="stretch">
               <Grid container spacing={1} className={classes.content} alignItems="stretch">

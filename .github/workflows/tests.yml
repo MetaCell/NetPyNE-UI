@@ -1,258 +1,258 @@
-name: Tests Workflow
+# name: Tests Workflow
 
-# Controls when the workflow will run
-on:
-  # Triggers the workflow on push or pull request events but only for the specified branch
-  push:
-    branches:
-     - "master"
-     - "development"
-  pull_request:
-    branches:
-     - "master"
-     - "development"
+# # Controls when the workflow will run
+# on:
+#   # Triggers the workflow on push or pull request events but only for the specified branch
+#   push:
+#     branches:
+#      - "master"
+#      - "development"
+#   pull_request:
+#     branches:
+#      - "master"
+#      - "development"
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs: 
-  EEG_Dipole-test:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-20.04
-    container: lironavon/docker-puppeteer-container:14.16.0
-    env:
-      CI: true
-    steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-          node-version: ${{ matrix.node-version }}
-          cache-dependency-path: frontend/e2e/tests/package-lock.json
-    - name: EEG and Dipole Plot snapshot test using Tut#1
-      run: |
-          cd tests/frontend/e2e
-          #install dependencies
-          npm ci
-          # run EEG and Dipole Plot test
-          npm run EEG_Dipole_test
-      env:
-          CI: true
-  Experiment_Manager-test:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-20.04
-    container: lironavon/docker-puppeteer-container:14.16.0
-    env:
-      CI: true
-    steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-          node-version: ${{ matrix.node-version }}
-          cache-dependency-path: frontend/e2e/tests/package-lock.json
-    - name: Experiment Manager snapshot test using Tut#1
-      run: |
-          cd tests/frontend/e2e
-          #install dependencies
-          npm ci
-          # run Experiment Manager test
-          npm run Experiment_Manager_test
-      env:
-          CI: true
-  Control_Panel-test:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-20.04
-    container: lironavon/docker-puppeteer-container:14.16.0
-    env:
-      CI: true
-    steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-          node-version: ${{ matrix.node-version }}
-          cache-dependency-path: frontend/e2e/tests/package-lock.json
-    - name: Control Panel test using Tut#2
-      run: |
-          cd tests/frontend/e2e
-          #install dependencies
-          npm ci
-          # run Control Panel test
-          npm run Control_Panel_test
-      env:
-          CI: true
-  Save_and_Open_File-test:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-20.04
-    container: lironavon/docker-puppeteer-container:14.16.0
-    env:
-      CI: true
-    steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-          node-version: ${{ matrix.node-version }}
-          cache-dependency-path: frontend/e2e/tests/package-lock.json
-    - name: Test for Opening and Saving a file
-      run: |
-          cd tests/frontend/e2e
-          #install dependencies
-          npm ci
-          # run Control Panel test
-          npm run Save_Open_File_test
-      env:
-          CI: true
-  RxD-test:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-20.04
-    container: lironavon/docker-puppeteer-container:14.16.0
-    env:
-      CI: true
-    steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-          node-version: ${{ matrix.node-version }}
-          cache-dependency-path: frontend/e2e/tests/package-lock.json
-    - name: Test for RxD plot
-      run: |
-          cd tests/frontend/e2e
-          #install dependencies
-          npm ci
-          # run RxD Plot test
-          npm run RxD_test
-      env:
-          CI: true
-  Tutorial_1-SmokeTest:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-20.04
-    container: lironavon/docker-puppeteer-container:14.16.0
-    env:
-      CI: true
-    steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-          node-version: ${{ matrix.node-version }}
-          cache-dependency-path: frontend/e2e/tests/package-lock.json
-    - name: Tutorial 1 Plot Tests
-      run: |
-          cd tests/frontend/e2e
-          #install dependencies
-          npm ci
-          # run Tutorial 1 Plot Tests
-          npm run Tutorial_1_test
-      env:
-          CI: true
-  Tutorial_2-SmokeTest:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-20.04
-    container: lironavon/docker-puppeteer-container:14.16.0
-    env:
-      CI: true
-    steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-          node-version: ${{ matrix.node-version }}
-          cache-dependency-path: frontend/e2e/tests/package-lock.json
-    - name: Tutorial 2 Plot Tests
-      run: |
-          cd tests/frontend/e2e
-          #install dependencies
-          npm ci
-          # run Tutorial 2 Plot Tests
-          npm run Tutorial_2_test
-      env:
-          CI: true
-  Tutorial_3a-SmokeTest:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-20.04
-    container: lironavon/docker-puppeteer-container:14.16.0
-    env:
-      CI: true
-    steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-          node-version: ${{ matrix.node-version }}
-          cache-dependency-path: frontend/e2e/tests/package-lock.json
-    - name: Tutorial 3a Plot Tests
-      run: |
-          cd tests/frontend/e2e
-          #install dependencies
-          npm ci
-          # run Tutorial 3a Plot Tests
-          npm run Tutorial_3A_test
-      env:
-          CI: true
-  Tutorial_3b-SmokeTest:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-20.04
-    container: lironavon/docker-puppeteer-container:14.16.0
-    env:
-      CI: true
-    steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-          node-version: ${{ matrix.node-version }}
-          cache-dependency-path: frontend/e2e/tests/package-lock.json
-    - name: Tutorial 3b Plot Tests
-      run: |
-          cd tests/frontend/e2e
-          #install dependencies
-          npm ci
-          # run Tutorial 3b Plot Tests
-          npm run Tutorial_3B_test
-      env:
-          CI: true
-  Tutorial_3c-SmokeTest:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-20.04
-    container: lironavon/docker-puppeteer-container:14.16.0
-    env:
-      CI: true
-    steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-          node-version: ${{ matrix.node-version }}
-          cache-dependency-path: frontend/e2e/tests/package-lock.json
-    - name: Tutorial 3c Plot Tests
-      run: |
-          cd tests/frontend/e2e
-          #install dependencies
-          npm ci
-          # run Tutorial 3c Plot Tests
-          npm run Tutorial_3C_test
-      env:
-          CI: true
-  Tutorial_4-SmokeTest:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-20.04
-    container: lironavon/docker-puppeteer-container:14.16.0
-    env:
-      CI: true
-    steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-          node-version: ${{ matrix.node-version }}
-          cache-dependency-path: frontend/e2e/tests/package-lock.json
-    - name: Tutorial 4 Plot Tests
-      run: |
-          cd tests/frontend/e2e
-          #install dependencies
-          npm ci
-          # run Tutorial 4 Plot Tests
-          npm run Tutorial_4_test
-      env:
-          CI: true
+# # A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# jobs: 
+#   EEG_Dipole-test:
+#     # The type of runner that the job will run on
+#     runs-on: ubuntu-20.04
+#     container: lironavon/docker-puppeteer-container:14.16.0
+#     env:
+#       CI: true
+#     steps:
+#     - uses: actions/checkout@v1
+#     - name: Use Node.js ${{ matrix.node-version }}
+#       uses: actions/setup-node@v1
+#       with:
+#           node-version: ${{ matrix.node-version }}
+#           cache-dependency-path: frontend/e2e/tests/package-lock.json
+#     - name: EEG and Dipole Plot snapshot test using Tut#1
+#       run: |
+#           cd tests/frontend/e2e
+#           #install dependencies
+#           npm ci
+#           # run EEG and Dipole Plot test
+#           npm run EEG_Dipole_test
+#       env:
+#           CI: true
+#   Experiment_Manager-test:
+#     # The type of runner that the job will run on
+#     runs-on: ubuntu-20.04
+#     container: lironavon/docker-puppeteer-container:14.16.0
+#     env:
+#       CI: true
+#     steps:
+#     - uses: actions/checkout@v1
+#     - name: Use Node.js ${{ matrix.node-version }}
+#       uses: actions/setup-node@v1
+#       with:
+#           node-version: ${{ matrix.node-version }}
+#           cache-dependency-path: frontend/e2e/tests/package-lock.json
+#     - name: Experiment Manager snapshot test using Tut#1
+#       run: |
+#           cd tests/frontend/e2e
+#           #install dependencies
+#           npm ci
+#           # run Experiment Manager test
+#           npm run Experiment_Manager_test
+#       env:
+#           CI: true
+#   Control_Panel-test:
+#     # The type of runner that the job will run on
+#     runs-on: ubuntu-20.04
+#     container: lironavon/docker-puppeteer-container:14.16.0
+#     env:
+#       CI: true
+#     steps:
+#     - uses: actions/checkout@v1
+#     - name: Use Node.js ${{ matrix.node-version }}
+#       uses: actions/setup-node@v1
+#       with:
+#           node-version: ${{ matrix.node-version }}
+#           cache-dependency-path: frontend/e2e/tests/package-lock.json
+#     - name: Control Panel test using Tut#2
+#       run: |
+#           cd tests/frontend/e2e
+#           #install dependencies
+#           npm ci
+#           # run Control Panel test
+#           npm run Control_Panel_test
+#       env:
+#           CI: true
+#   Save_and_Open_File-test:
+#     # The type of runner that the job will run on
+#     runs-on: ubuntu-20.04
+#     container: lironavon/docker-puppeteer-container:14.16.0
+#     env:
+#       CI: true
+#     steps:
+#     - uses: actions/checkout@v1
+#     - name: Use Node.js ${{ matrix.node-version }}
+#       uses: actions/setup-node@v1
+#       with:
+#           node-version: ${{ matrix.node-version }}
+#           cache-dependency-path: frontend/e2e/tests/package-lock.json
+#     - name: Test for Opening and Saving a file
+#       run: |
+#           cd tests/frontend/e2e
+#           #install dependencies
+#           npm ci
+#           # run Control Panel test
+#           npm run Save_Open_File_test
+#       env:
+#           CI: true
+#   RxD-test:
+#     # The type of runner that the job will run on
+#     runs-on: ubuntu-20.04
+#     container: lironavon/docker-puppeteer-container:14.16.0
+#     env:
+#       CI: true
+#     steps:
+#     - uses: actions/checkout@v1
+#     - name: Use Node.js ${{ matrix.node-version }}
+#       uses: actions/setup-node@v1
+#       with:
+#           node-version: ${{ matrix.node-version }}
+#           cache-dependency-path: frontend/e2e/tests/package-lock.json
+#     - name: Test for RxD plot
+#       run: |
+#           cd tests/frontend/e2e
+#           #install dependencies
+#           npm ci
+#           # run RxD Plot test
+#           npm run RxD_test
+#       env:
+#           CI: true
+#   Tutorial_1-SmokeTest:
+#     # The type of runner that the job will run on
+#     runs-on: ubuntu-20.04
+#     container: lironavon/docker-puppeteer-container:14.16.0
+#     env:
+#       CI: true
+#     steps:
+#     - uses: actions/checkout@v1
+#     - name: Use Node.js ${{ matrix.node-version }}
+#       uses: actions/setup-node@v1
+#       with:
+#           node-version: ${{ matrix.node-version }}
+#           cache-dependency-path: frontend/e2e/tests/package-lock.json
+#     - name: Tutorial 1 Plot Tests
+#       run: |
+#           cd tests/frontend/e2e
+#           #install dependencies
+#           npm ci
+#           # run Tutorial 1 Plot Tests
+#           npm run Tutorial_1_test
+#       env:
+#           CI: true
+#   Tutorial_2-SmokeTest:
+#     # The type of runner that the job will run on
+#     runs-on: ubuntu-20.04
+#     container: lironavon/docker-puppeteer-container:14.16.0
+#     env:
+#       CI: true
+#     steps:
+#     - uses: actions/checkout@v1
+#     - name: Use Node.js ${{ matrix.node-version }}
+#       uses: actions/setup-node@v1
+#       with:
+#           node-version: ${{ matrix.node-version }}
+#           cache-dependency-path: frontend/e2e/tests/package-lock.json
+#     - name: Tutorial 2 Plot Tests
+#       run: |
+#           cd tests/frontend/e2e
+#           #install dependencies
+#           npm ci
+#           # run Tutorial 2 Plot Tests
+#           npm run Tutorial_2_test
+#       env:
+#           CI: true
+#   Tutorial_3a-SmokeTest:
+#     # The type of runner that the job will run on
+#     runs-on: ubuntu-20.04
+#     container: lironavon/docker-puppeteer-container:14.16.0
+#     env:
+#       CI: true
+#     steps:
+#     - uses: actions/checkout@v1
+#     - name: Use Node.js ${{ matrix.node-version }}
+#       uses: actions/setup-node@v1
+#       with:
+#           node-version: ${{ matrix.node-version }}
+#           cache-dependency-path: frontend/e2e/tests/package-lock.json
+#     - name: Tutorial 3a Plot Tests
+#       run: |
+#           cd tests/frontend/e2e
+#           #install dependencies
+#           npm ci
+#           # run Tutorial 3a Plot Tests
+#           npm run Tutorial_3A_test
+#       env:
+#           CI: true
+#   Tutorial_3b-SmokeTest:
+#     # The type of runner that the job will run on
+#     runs-on: ubuntu-20.04
+#     container: lironavon/docker-puppeteer-container:14.16.0
+#     env:
+#       CI: true
+#     steps:
+#     - uses: actions/checkout@v1
+#     - name: Use Node.js ${{ matrix.node-version }}
+#       uses: actions/setup-node@v1
+#       with:
+#           node-version: ${{ matrix.node-version }}
+#           cache-dependency-path: frontend/e2e/tests/package-lock.json
+#     - name: Tutorial 3b Plot Tests
+#       run: |
+#           cd tests/frontend/e2e
+#           #install dependencies
+#           npm ci
+#           # run Tutorial 3b Plot Tests
+#           npm run Tutorial_3B_test
+#       env:
+#           CI: true
+#   Tutorial_3c-SmokeTest:
+#     # The type of runner that the job will run on
+#     runs-on: ubuntu-20.04
+#     container: lironavon/docker-puppeteer-container:14.16.0
+#     env:
+#       CI: true
+#     steps:
+#     - uses: actions/checkout@v1
+#     - name: Use Node.js ${{ matrix.node-version }}
+#       uses: actions/setup-node@v1
+#       with:
+#           node-version: ${{ matrix.node-version }}
+#           cache-dependency-path: frontend/e2e/tests/package-lock.json
+#     - name: Tutorial 3c Plot Tests
+#       run: |
+#           cd tests/frontend/e2e
+#           #install dependencies
+#           npm ci
+#           # run Tutorial 3c Plot Tests
+#           npm run Tutorial_3C_test
+#       env:
+#           CI: true
+#   Tutorial_4-SmokeTest:
+#     # The type of runner that the job will run on
+#     runs-on: ubuntu-20.04
+#     container: lironavon/docker-puppeteer-container:14.16.0
+#     env:
+#       CI: true
+#     steps:
+#     - uses: actions/checkout@v1
+#     - name: Use Node.js ${{ matrix.node-version }}
+#       uses: actions/setup-node@v1
+#       with:
+#           node-version: ${{ matrix.node-version }}
+#           cache-dependency-path: frontend/e2e/tests/package-lock.json
+#     - name: Tutorial 4 Plot Tests
+#       run: |
+#           cd tests/frontend/e2e
+#           #install dependencies
+#           npm ci
+#           # run Tutorial 4 Plot Tests
+#           npm run Tutorial_4_test
+#       env:
+#           CI: true

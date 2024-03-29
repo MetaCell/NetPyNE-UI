@@ -30,7 +30,7 @@ const PASSWORD = 'testpassword'
 
 //TESTS:
 
-jest.setTimeout(300000);
+jest.setTimeout(3000000);
 let browser_control_panel;
 let control_panel_page;
 

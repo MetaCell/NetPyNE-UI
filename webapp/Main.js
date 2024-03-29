@@ -25,7 +25,7 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-window.$ = Array; // TODO Temporary fix -- remove upon https://github.com/MetaCell/geppetto-meta/issues/380 
+window.$ = Array; // TODO Temporary fix -- remove upon https://github.com/MetaCell/geppetto-meta/issues/380
 initGeppetto();
 require('./css/netpyne.less');
 require('./css/material.less');

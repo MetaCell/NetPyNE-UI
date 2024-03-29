@@ -2,7 +2,9 @@ import os
 import sys
 import logging
 from netpyne.specs import simConfig
+from packaging import version
 
+import pyneuroml
 from pyneuroml import pynml
 from pyneuroml.lems import generate_lems_file_for_neuroml
 from pyneuroml.pynml import read_neuroml2_file
@@ -13,16 +15,18 @@ from netpyne_ui.mod_utils import loadModMechFiles
 def convertLEMSSimulation(lemsFileName, compileMod=True):
     """Converts a LEMS Simulation file
 
-    Converts a LEMS Simulation file (https://docs.neuroml.org/Userdocs/LEMSSimulation.html)
-    pointing to a NeuroML 2 file into the equivalent in NetPyNE
+    Converts a LEMS Simulation file
+    (https://docs.neuroml.org/Userdocs/LEMSSimulation.html) pointing to a
+    NeuroML 2 file into the equivalent in NetPyNE
+
     Returns:
         simConfig, netParams for the model in NetPyNE
     """
     current_path = os.getcwd()
     try:
-        
+
         fullLemsFileName = os.path.abspath(lemsFileName)
-        tmp_path = os.path.dirname(fullLemsFileName) 
+        tmp_path = os.path.dirname(fullLemsFileName)
         if tmp_path:
             os.chdir(tmp_path)
         logging.info(
@@ -30,27 +34,36 @@ def convertLEMSSimulation(lemsFileName, compileMod=True):
             % fullLemsFileName
         )
 
-        result = pynml.run_lems_with_jneuroml_netpyne(
-            lemsFileName, only_generate_json=True, exit_on_fail=False)
-        
-        if result == False:
-            raise Exception("Error loading lems file")
+        # feature to return output added in 1.0.9
+        if version.parse(pyneuroml.__version__) >= version.parse("1.0.9"):
+            result, output_msg = pynml.run_lems_with_jneuroml_netpyne(
+                lemsFileName, only_generate_json=True, exit_on_fail=False,
+                return_string=True, max_memory="1G")
+
+            if result is False:
+                raise Exception(f"Error loading lems file: {output_msg}")
+        else:
+            result = pynml.run_lems_with_jneuroml_netpyne(
+                lemsFileName, only_generate_json=True, exit_on_fail=False,
+                max_memory="1G")
+
+            if result is False:
+                raise Exception("Error loading lems file")
+
         lems = pynml.read_lems_file(lemsFileName)
 
         np_json_fname = fullLemsFileName.replace('.xml','_netpyne_data.json')
-    
+
         return np_json_fname
     finally:
         os.chdir(current_path)
 
 
-
-
 def convertNeuroML2(nml2FileName,  compileMod=True):
     """Loads a NeuroML 2 file into NetPyNE
     Loads a NeuroML 2 file into NetPyNE by creating a new LEMS Simulation
-    file (https://docs.neuroml.org/Userdocs/LEMSSimulation.html) and using jNeuroML
-    to convert it.
+    file (https://docs.neuroml.org/Userdocs/LEMSSimulation.html) and using
+    jNeuroML to convert it.
 
     Returns:
         simConfig, netParams for the model in NetPyNE
@@ -58,12 +71,11 @@ def convertNeuroML2(nml2FileName,  compileMod=True):
     current_path = os.getcwd()
     try:
         fullNmlFileName = os.path.abspath(nml2FileName)
-        work_path = os.path.dirname(fullNmlFileName) 
+        work_path = os.path.dirname(fullNmlFileName)
         if not os.path.exists(work_path):
             os.makedirs(work_path)
         os.chdir(work_path)
         sys.path.append(work_path)
-        
 
         logging.info(
                 "Importing NeuroML 2 network from: %s"
