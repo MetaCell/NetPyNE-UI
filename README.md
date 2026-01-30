@@ -104,6 +104,31 @@ yarn start
 
 You can then navigate to `http://127.0.0.1:8081/` to access the dev version of the UI.
 
+### Troubleshooting
+If you encounter issues during installation or startup, try the following steps:
+
+1. **Dependency Conflicts (npm v7+)**
+   If `npm install` fails with upstream dependency conflicts, use the legacy peer deps flag:
+   ```bash
+   cd webapp
+   npm install --legacy-peer-deps
+   ```
+
+2. **Missing Frontend Assets (500 Error / FileNotFoundError)**
+   If the UI loads but fails to connect to the backend (or you see a 500 error regarding `geppetto.vm`), you must build the frontend manually:
+   ```bash
+   cd webapp
+   npm run build
+   ```
+
+3. **Jupyter Extension Issues**
+   If the NetPyNE dashboard does not appear at `localhost:8081`, manually enable the extensions:
+   ```bash
+   jupyter nbextension install --py --symlink --sys-prefix netpyne_ui
+   jupyter nbextension enable --py --sys-prefix netpyne_ui
+   jupyter serverextension enable --py --sys-prefix jupyter_geppetto
+   ```
+
 ## Run NetPyNE User Interface in Docker
 
 Ensure that you have Docker installed on your system.
@@ -124,6 +149,7 @@ docker run -p 8888:8888 netpyne-ui
 
 End-to-end tests are located in `tests/deployment/frontend/e2e`. Ensure that the application is running in a blank
 state, since end-to-end tests interact with the running application.
+
 
 Install packages
 
@@ -159,3 +185,4 @@ docker-compose up --abort-on-container-exit --exit-code-from netpyne-ui-e2e
 
 NetPyNE-UI is being developed in collaboration with the [Neurosim Lab](http://neurosimlab.org/). See
 the [Wiki](https://github.com/MetaCell/NetPyNE-UI/wiki) for more info!
+
