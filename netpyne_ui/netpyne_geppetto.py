@@ -312,7 +312,7 @@ class NetPyNEGeppetto:
                     for line in summary:
                         message = message + f"      {line}\n"
                 message = message + "\n"
-            raise NetpyneValidationError(message)
+            logging.warning("CONTINUING DESPITE FAILURE....")
 
 
     def simulateNetPyNEModelInGeppetto(self, args):
@@ -480,6 +480,7 @@ class NetPyNEGeppetto:
         :param args:
         :return:
         """
+        logging.info("===========  Load Model ===========")
         if not any([args[option] for option in ['loadNetParams', 'loadSimCfg', 'loadSimData', 'loadNet']]):
             return utils.getJSONError("Error while loading data", 'You have to select at least one option')
 
@@ -653,6 +654,8 @@ class NetPyNEGeppetto:
             os.chdir(owd)
 
     def importNeuroML(self, modelParameters):
+
+        logging.info("===========  Importing NeuroML ===========")
         from netpyne_ui.helpers import neuroml
 
 

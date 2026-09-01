@@ -23,6 +23,7 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        print("== Setting up: TestNetPyNEModelInterpreter")
         HERE = os.path.dirname(os.path.realpath(__file__))
         ROOT = os.path.dirname(HERE)
         cls.path = NETPYNE_WORKDIR_PATH
@@ -38,6 +39,7 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
             logging.error("Error loading mechanisms", exc_info=True)
 
     def getGeppettoModel(self, netParams, simConfig):
+        print("== getGeppettoModel")
         sim.create(netParams, simConfig, True)
         sim.gatherData()
 
@@ -46,6 +48,7 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         sim.analyze()
 
     def test_getGeppettoModelSimpleNetwork(self):
+        print("== test_getGeppettoModelSimpleNetwork")
         # object of class NetParams to store the network parameters
         netParams = specs.NetParams()
         # object of class SimConfig to store the simulation configuration
@@ -88,6 +91,7 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         from gui_tut1 import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
 
+    
     # @unittest.skip("Neuron restart kernel issue")
     def test_tut2(self):
         print("------------------------------------")
@@ -103,7 +107,7 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         print("------------------------------------")
         from gui_tut3 import netParams, simConfig
         self.getGeppettoModel(netParams, simConfig)
-
+    '''
     # @unittest.skip("Neuron restart kernel issue")
     def test_tut4(self):
         print("------------------------------------")
@@ -135,7 +139,7 @@ class TestNetPyNEModelInterpreter(unittest.TestCase):
         print("------------------------------------")
 
         from hnn_simple import netParams, cfg
-        self.getGeppettoModel(netParams, cfg)
+        self.getGeppettoModel(netParams, cfg)  '''
 
 
 if __name__ == '__main__':

@@ -185,7 +185,7 @@ def main(netpyne_branch, workspace_branch, geppetto_branch=None, skipNpm=False,
         cprint("Installing test libraries")
         execute(cmd=['pip', 'install', '-r', 'requirements-test.txt'], cwd=ROOT_DIR)
         cprint("Testing NetPyNE")
-        execute("python -m pytest tests".split())
+        execute("python -m pytest -vs tests".split())
 
     cprint("Installing client packages")
     if not skipNpm:

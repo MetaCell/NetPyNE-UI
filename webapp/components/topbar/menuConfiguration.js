@@ -201,7 +201,7 @@ export default {
           icon: '',
           list: [
             {
-              label: 'From python...',
+              label: 'From Python...',
               icon: '',
               action: {
                 handlerAction: 'redux',
@@ -209,7 +209,7 @@ export default {
               },
             },
             {
-              label: 'From NeuroML2 (beta)...',
+              label: 'From NeuroML2...',
               icon: '',
               action: {
                 handlerAction: 'redux',
@@ -217,7 +217,7 @@ export default {
               },
             },
             {
-              label: 'From LEMS Simulation  (beta)...',
+              label: 'From LEMS Simulation...',
               icon: '',
               action: {
                 handlerAction: 'redux',
@@ -231,7 +231,7 @@ export default {
           icon: '',
           list: [
             {
-              label: 'To python...',
+              label: 'To Python...',
               icon: '',
               action: {
                 handlerAction: 'redux',

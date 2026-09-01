@@ -1,4 +1,4 @@
-FROM node:18 as jsbuild
+FROM node:18 AS jsbuild
 
 ENV FOLDER=netpyne
 
@@ -12,12 +12,12 @@ COPY webapp .
 RUN yarn build-dev
 
 ### Download on a separate stage to run in parallel with buildkit
-FROM jupyter/base-notebook:hub-1.5.0 as downloads
+FROM quay.io/jupyter/base-notebook:python-3.12 AS downloads
 USER root
 RUN wget --no-check-certificate -O /nyhead.mat https://www.parralab.org/nyhead/sa_nyhead.mat
 
 ###
-FROM jupyter/base-notebook:hub-1.5.0
+FROM quay.io/jupyter/base-notebook:python-3.12
 ENV NB_UID=jovyan
 ENV FOLDER=netpyne
 ENV NP_LFPYKIT_HEAD_FILE=/home/jovyan/nyhead.mat
@@ -28,13 +28,14 @@ RUN rm -rf /var/lib/apt/lists
 RUN apt-get update -qq &&\
     apt-get install python3-tk vim nano unzip git make libtool g++ -qq pkg-config libfreetype6-dev libpng-dev libopenmpi-dev -y
 RUN apt-get install openjdk-11-jre-headless -y
-RUN conda install python=3.7 -y
+RUN apt-get install libxml2-dev libxslt-dev -y
+# RUN conda install python=3.7 -y
 
 
 WORKDIR $FOLDER
 COPY  --chown=1000:1000 requirements.txt requirements.txt
 RUN --mount=type=cache,target=/root/.cache python -m pip install --upgrade pip &&\
-    pip install -r requirements.txt --prefer-binary
+    pip install -r requirements.txt
 
 
 # ToDo: fixme, for now remove the jupyter hub config json file because it overrides the default
@@ -82,7 +83,7 @@ RUN mv workspace /opt/workspace/tutorials
 RUN chown -R $NB_UID /opt/workspace
 RUN ln -s /opt/workspace workspace
 
-RUN jupyter labextension disable @jupyterlab/hub-extension
+# RUN jupyter labextension disable @jupyterlab/hub-extension
 
 COPY --from=downloads --chown=1000:1000 /nyhead.mat $NP_LFPYKIT_HEAD_FILE
 COPY --from=jsbuild --chown=1000:1000 $FOLDER/webapp/build webapp/build

@@ -98,7 +98,7 @@ class NetPyNEModelInterpreter(ModelInterpreter):
                     index=len(populations[cell['tags']['pop']].defaultValue.elements),
                     position=Point(
                         x=float(cell['tags']['x'] * netpyne_model.net.params.cellsVisualizationSpacingMultiplier[0]),
-                        y=-float(cell['tags']['y'] * netpyne_model.net.params.cellsVisualizationSpacingMultiplier[1]),
+                        y=float(cell['tags']['y'] * netpyne_model.net.params.cellsVisualizationSpacingMultiplier[1]),
                         z=float(cell['tags']['z'] * netpyne_model.net.params.cellsVisualizationSpacingMultiplier[2])
                     )
                 )
